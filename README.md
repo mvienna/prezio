@@ -19,6 +19,8 @@ Helpful links:
 
 ## Setting up
 
+> Don't forget to setup .env for your development environment
+
 ### 🔒️ Backend
 
 ```
@@ -27,7 +29,6 @@ PHP 8.2
 git clone git@gitlab.com:nomadicsoft/ru/prezio.git prezio
 cd prezio
 cp .env.example .env
-ln .env ./frontend/.env
 
 Add DB, PUSHER , MAIL settings to .env file
 
@@ -47,6 +48,8 @@ Node v18
 npm i -g @quasar/cli
 
 cd frontend/
+cp .env.example .env
+
 npm install
 npm serve
 
