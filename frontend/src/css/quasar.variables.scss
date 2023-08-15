@@ -1,25 +1,144 @@
-// Quasar SCSS (& Sass) Variables
-// --------------------------------------------------
-// To customize the look and feel of this app, you can override
-// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+$black: #1F1F29;
+$primary: #4971FF;
+$dark: #12123A;
 
-// Check documentation for full list of Quasar variables
+$grey-5: #DEDEE4;
+$grey-2: #F4F6F8;
+$white: #FFFFFF;
 
-// Your own variables (that are declared here) and Quasar's own
-// ones will be available out of the box in your .vue/.scss/.sass files
+//$secondary : #26A69A;
+//$accent    : #9C27B0;
 
-// It's highly recommended to change the default colors
-// to match your app's branding.
-// Tip: Use the "Theme Builder" on Quasar's documentation website.
+//$dark      : #1D1D1D;
+//$dark-page : #121212;
 
-$primary   : #1976D2;
-$secondary : #26A69A;
-$accent    : #9C27B0;
+//$positive  : #21BA45;
+//$negative  : #C10015;
+//$info      : #31CCEC;
+//$warning   : #F2C037;
 
-$dark      : #1D1D1D;
-$dark-page : #121212;
+$green-1: #EFFBF1;
+$green-2: #DFF8E3;
+$green-3: #CFF4D5;
+$green-4: #BFF0C7;
+$green-5: #AFEDB9;
+$green-6: #A0E9AB;
+$green-7: #90E59D;
+$green-8: #80E18F;
+$green-9: #70DE81;
+$green-10: #52D767;
+$green-11: #34D04C;
+$green-12: #2AB440;
+$green-13: #239635;
+$green-14: #1C782A;
+$green-15: #155A20;
+$green-16: #0E3C15;
+$green-17: #071E0B;
 
-$positive  : #21BA45;
-$negative  : #C10015;
-$info      : #31CCEC;
-$warning   : #F2C037;
+$red-1: #FDF0F0;
+$red-2: #FBE2E2;
+$red-3: #FAD3D3;
+$red-4: #F8C4C4;
+$red-5: #F6B5B5;
+$red-6: #F4A7A7;
+$red-7: #F29898;
+$red-8: #F18989;
+$red-9: #EF7A7A;
+$red-10: #EA5757;
+$red-11: #E63333;
+$red-12: #D61A1A;
+$red-13: #B31616;
+$red-14: #8F1212;
+$red-15: #6B0D0D;
+$red-16: #470909;
+$red-17: #240404;
+
+$yellow-1: #FFFBEF;
+$yellow-2: #FFF7E0;
+$yellow-3: #FFF3D0;
+$yellow-4: #FFEFC1;
+$yellow-5: #FFEBB1;
+$yellow-6: #FFE7A2;
+$yellow-7: #FFE392;
+$yellow-8: #FFDF83;
+$yellow-9: #FFDB73;
+$yellow-10: #FFD04A;
+$yellow-11: #FFC621;
+$yellow-12: #F7B700;
+$yellow-13: #CE9900;
+$yellow-14: #A47A00;
+$yellow-15: #7B5C00;
+$yellow-16: #523D00;
+$yellow-17: #291F00;
+
+$blue-1: #EBEFFF;
+$blue-2: #D7E0FF;
+$blue-3: #C2D0FF;
+$blue-4: #AEC0FF;
+$blue-5: #9AB0FF;
+$blue-6: #86A1FF;
+$blue-7: #7291FF;
+$blue-8: #5D81FF;
+$blue-9: #4971FF;
+$blue-10: #2555FF;
+$blue-11: #0038FF;
+$blue-12: #0030DB;
+$blue-13: #0028B6;
+$blue-14: #002092;
+$blue-15: #00186D;
+$blue-16: #001049;
+$blue-17: #000824;
+
+$pink-1: #FBEFFB;
+$pink-2: #F7DFF8;
+$pink-3: #F3CFF4;
+$pink-4: #EFBFF0;
+$pink-5: #EBAFED;
+$pink-6: #E7A0E9;
+$pink-7: #E390E5;
+$pink-8: #DF80E1;
+$pink-9: #DC70DE;
+$pink-10: #D452D7;
+$pink-11: #CD34D0;
+$pink-12: #B22AB4;
+$pink-13: #942396;
+$pink-14: #761C78;
+$pink-15: #59155A;
+$pink-16: #3B0E3C;
+$pink-17: #1E071E;
+
+$cyan-1: #F0FCFA;
+$cyan-2: #E0F9F6;
+$cyan-3: #D1F6F1;
+$cyan-4: #C2F3ED;
+$cyan-5: #B2EFE8;
+$cyan-6: #A3ECE4;
+$cyan-7: #94E9DF;
+$cyan-8: #85E6DA;
+$cyan-9: #75E3D6;
+$cyan-10: #55DDCC;
+$cyan-11: #36D6C3;
+$cyan-12: #27BFAD;
+$cyan-13: #209F90;
+$cyan-14: #1A7F73;
+$cyan-15: #135F56;
+$cyan-16: #0D403A;
+$cyan-17: #06201D;
+
+$purple-1: #F4EFFB;
+$purple-2: #EADFF8;
+$purple-3: #DFCFF4;
+$purple-4: #D5BFF0;
+$purple-5: #CAAFED;
+$purple-6: #C0A0E9;
+$purple-7: #B590E5;
+$purple-8: #AB80E1;
+$purple-9: #A070DE;
+$purple-10: #8C52D7;
+$purple-11: #7834D0;
+$purple-12: #672AB4;
+$purple-13: #562396;
+$purple-14: #451C78;
+$purple-15: #33155A;
+$purple-16: #220E3C;
+$purple-17: #11071E;
