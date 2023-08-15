@@ -17,6 +17,8 @@ import { ref } from "vue";
 
 const leftDrawerOpen = ref(false);
 
+const VERSION = process.env.VERSION?.substring(0, 7)?.replaceAll('"', "");
+
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };

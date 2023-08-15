@@ -13,6 +13,9 @@ const path = require("path");
 
 const env = require("dotenv").config().parsed;
 
+const { gitDescribeSync } = require("git-describe");
+const VERSION = JSON.stringify(new gitDescribeSync()?.hash) || "";
+
 module.exports = configure(function (ctx) {
   return {
     eslint: {
@@ -42,6 +45,7 @@ module.exports = configure(function (ctx) {
     build: {
       env: {
         LANG: env.LANG,
+        VERSION: VERSION,
       },
 
       target: {
