@@ -46,6 +46,8 @@ module.exports = configure(function (ctx) {
       env: {
         LANG: env.LANG,
         VERSION: VERSION,
+
+        baseURL: ctx.dev ? env.API_DEV_URL : env.API_PROD_URL,
       },
 
       target: {
