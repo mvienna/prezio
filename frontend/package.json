@@ -8,7 +8,9 @@
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "icons-font": "fantasticon src/assets/icons -o public/icons-font --normalize -t woff woff2 -g css",
+    "icons-font:watch": "watch 'npm run icons-font' src/assets/icons"
   },
   "dependencies": {
     "axios": "^0.21.1",
