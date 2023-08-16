@@ -1,1 +1,7 @@
-export default {};
+export default {
+  auth: {
+    login: {
+      title: "Log In",
+    },
+  },
+};
