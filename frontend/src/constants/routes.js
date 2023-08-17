@@ -1,8 +1,10 @@
 export const ROUTE_PATHS = {
   INDEX: "/",
+  DASHBOARD: "/dashboard",
 
   AUTH: {
     LOGIN: "/login",
+    LOGOUT: "/logout",
     SIGNUP: "/signup",
     RESTORE_PASSWORD: "/restore-password",
   },

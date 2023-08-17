@@ -5,10 +5,14 @@ const routes = [
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      // {
-      //   path: ROUTE_PATHS.INDEX,
-      //   component: () => import("pages/LogInPage.vue"),
-      // },
+      {
+        path: ROUTE_PATHS.INDEX,
+        redirect: ROUTE_PATHS.DASHBOARD,
+      },
+      {
+        path: ROUTE_PATHS.DASHBOARD,
+        component: () => import("pages/DashboardPage.vue"),
+      },
     ],
   },
 

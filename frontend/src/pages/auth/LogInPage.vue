@@ -43,6 +43,7 @@
             no-error-icon
             :label="$t('auth.login.form.email')"
             :rules="[emailRule]"
+            lazy-rules
           >
             <template #prepend>
               <q-icon name="o_mail" class="grey-2" />
@@ -58,6 +59,7 @@
               no-error-icon
               :label="$t('auth.login.form.password')"
               :rules="[passwordRule]"
+              lazy-rules
             >
               <template #prepend>
                 <q-icon name="o_lock" class="grey-2" />
@@ -91,6 +93,7 @@
             unelevated
             no-caps
             type="submit"
+            :loading="isLoading"
             class="q-py-md text-bold"
             :label="$t('auth.login.form.submit')"
           />
@@ -110,11 +113,21 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { useI18n } from "vue-i18n";
+import { useAuthStore } from "stores/auth";
+import { useRouter } from "vue-router";
+import { api } from "boot/axios";
 
+/*
+ * variables
+ */
 const { t } = useI18n({ useScope: "global" });
+
+const store = useAuthStore();
+
+const router = useRouter();
 
 /*
  * form
@@ -125,6 +138,8 @@ const form = ref({
 });
 
 const isPasswordVisible = ref(false);
+
+const isLoading = ref(false);
 
 // email validation
 const emailRule = (value) => {
@@ -145,8 +160,6 @@ const isValidEmail = (email) => {
 const passwordRule = (value) => {
   if (!value) {
     return t("auth.login.form.errors.password.required");
-  } else if (value.length < 6) {
-    return t("auth.login.form.errors.password.invalid");
   }
   return true;
 };
@@ -154,8 +167,20 @@ const passwordRule = (value) => {
 /*
  * submit
  */
-const submit = () => {
-  console.log("login");
+const submit = async () => {
+  isLoading.value = true;
+
+  store
+    .login(form.value.email, form.value.password)
+    .then(() => {
+      router.push(ROUTE_PATHS.DASHBOARD);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 };
 </script>
 

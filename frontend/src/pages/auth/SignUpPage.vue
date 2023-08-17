@@ -43,6 +43,7 @@
             outlined
             :label="$t('auth.signup.form.name')"
             :rules="[nameRule]"
+            lazy-rules
           >
             <template #prepend>
               <q-icon name="o_account_circle" class="grey-2" />
@@ -57,6 +58,7 @@
             no-error-icon
             :label="$t('auth.signup.form.email')"
             :rules="[emailRule]"
+            lazy-rules
           >
             <template #prepend>
               <q-icon name="o_mail" class="grey-2" />
@@ -71,6 +73,7 @@
             outlined
             :label="$t('auth.signup.form.password')"
             :rules="[passwordRule]"
+            lazy-rules
           >
             <template #prepend>
               <q-icon name="o_lock" class="grey-2" />
@@ -97,12 +100,13 @@
             unelevated
             no-caps
             type="submit"
+            :loading="isLoading"
             class="q-py-md text-bold"
             :label="$t('auth.signup.form.submit')"
           />
         </div>
 
-        <!-- signup-->
+        <!-- signup -->
         <div class="form__login q-mt-lg">
           {{ $t("auth.signup.form.oldUser") }}
 
@@ -119,8 +123,17 @@
 import { ref } from "vue";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { useI18n } from "vue-i18n";
+import { useAuthStore } from "stores/auth";
+import { useRouter } from "vue-router";
 
+/*
+ * variables
+ */
 const { t } = useI18n({ useScope: "global" });
+
+const store = useAuthStore();
+
+const router = useRouter();
 
 /*
  * form
@@ -132,6 +145,8 @@ const form = ref({
 });
 
 const isPasswordVisible = ref(false);
+
+const isLoading = ref(false);
 
 // name validation
 const nameRule = (value) => {
@@ -169,8 +184,27 @@ const passwordRule = (value) => {
 /*
  * submit
  */
-const submit = () => {
-  console.log("signup");
+const submit = async () => {
+  isLoading.value = true;
+
+  await store
+    .register(form.value.name, form.value.email, form.value.password)
+    .catch((error) => {
+      console.log(error);
+      isLoading.value = false;
+    });
+
+  await store
+    .login(form.value.email, form.value.password)
+    .then(() => {
+      router.push(ROUTE_PATHS.DASHBOARD);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 };
 </script>
 
