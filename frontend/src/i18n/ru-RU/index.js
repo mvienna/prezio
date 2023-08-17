@@ -21,7 +21,6 @@ export default {
           },
           password: {
             required: "Требуется ввести пароль",
-            invalid: "Пароль должен иметь 6 или больше символов",
           },
         },
       },
@@ -35,7 +34,7 @@ export default {
         name: "Ваше имя",
         email: "Введите email",
         password: "Введите пароль",
-        disclaimer: `Нажимая на кнопку “Зарегистрироваться”, вы подтверждаете, что ознакомились с <a href="${ROUTE_PATHS.POLICIES.PRIVACY_POLICY}" target="_blank">Политикой конфиденциальности</a> и <a href="${ROUTE_PATHS.POLICIES.PRIVACY_POLICY}" target="_blank">Пользовательским соглашением</a>`,
+        disclaimer: `Нажимая на кнопку “Зарегистрироваться”, вы подтверждаете, что ознакомились с <a href="${ROUTE_PATHS.POLICIES.PRIVACY_POLICY}" target="_blank">Политикой конфиденциальности</a> и <a href="${ROUTE_PATHS.POLICIES.USER_AGREEMENT}" target="_blank">Пользовательским соглашением</a>`,
         submit: "Зарегистрироваться",
         oldUser: "Уже были у нас?",
         login: "Войдите",
@@ -63,6 +62,12 @@ export default {
         email: "Введите email",
         submit: "Сбросить пароль",
         login: "Войти",
+        errors: {
+          email: {
+            required: "Требуется ввести email",
+            invalid: "Неверный формат email",
+          },
+        },
       },
     },
   },

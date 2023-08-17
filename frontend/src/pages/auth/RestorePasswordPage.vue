@@ -67,9 +67,9 @@ const form = ref({
 // email validation
 const emailRule = (value) => {
   if (!value) {
-    return t("auth.login.form.errors.email.required");
+    return t("auth.restorePassword.form.errors.email.required");
   } else if (!isValidEmail(value)) {
-    return t("auth.login.form.errors.email.invalid");
+    return t("auth.restorePassword.form.errors.email.invalid");
   }
   return true;
 };

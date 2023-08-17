@@ -9,6 +9,6 @@ export const ROUTE_PATHS = {
 
   POLICIES: {
     PRIVACY_POLICY: "/privacy-policy",
-    TERMS_AND_CONDITIONS: "/terms-and-conditions",
+    USER_AGREEMENT: "/user-agreement",
   },
 };
