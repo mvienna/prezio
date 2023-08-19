@@ -56,17 +56,38 @@ export default {
     },
 
     restorePassword: {
-      title: "Password Recovery",
-      description:
-        "We will send you instructions on how to change your password to your email",
+      titles: {
+        email: "Restoring Access",
+        code: "Restoring Access",
+        password: "Restoring Access",
+        login: "Password has been updated successfully",
+      },
+      descriptions: {
+        email:
+          "We will send you instructions on how to change your password to your email",
+        code: "Enter the code from email that has been sent to",
+        password: "Almost done! Enter your new password",
+        login: "Log in to your account using a new password",
+      },
       form: {
         email: "Enter email",
-        submit: "Reset Password",
+        sendEmail: "Send",
+        checkVerificationCode: "Submit",
+        resendVerificationCode: "Resend code",
+        resetPassword: "Reset Password",
         login: "Log In",
         errors: {
           email: {
             required: "Email is required",
             invalid: "Invalid email format",
+          },
+          code: {
+            required: "Code is required",
+            invalid: "Invalid code",
+          },
+          password: {
+            required: "Password is required",
+            invalid: "Password must be 6 characters or more",
           },
         },
       },

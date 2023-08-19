@@ -59,7 +59,6 @@ class AuthController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            \Log::info($validator->errors());
             return $this->errorResponse(trans('errors.invalidFields'), 422);
         }
 
@@ -83,6 +82,38 @@ class AuthController extends Controller
          */
         $request->user()->tokens()->delete();
         $request->user()->currentAccessToken()->delete();
+
+        return $this->successResponse();
+    }
+
+    public function update(Request $request): JsonResponse
+    {
+        /*
+         * auth
+         */
+        $user = Auth()->user();
+
+        /*
+         * validate
+         */
+        $rules = [];
+        if ($request->filled('name')) {
+            $rules['name'] = 'required|string|max:255';
+        }
+        if ($request->filled('email')) {
+            $rules['email'] = 'required|email|unique:users|max:255';
+        }
+        if ($request->filled('password')) {
+            $rules['password'] = 'required|string|min:6';
+        }
+        $this->validate($request, $rules);
+
+
+        /*
+         * update & save
+         */
+        $user->fill($request->all());
+        $user->save();
 
         return $this->successResponse();
     }
