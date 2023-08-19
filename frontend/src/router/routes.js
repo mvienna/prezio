@@ -1,19 +1,44 @@
+import { ROUTE_PATHS } from "src/constants/routes";
 
 const routes = [
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: "/",
+    component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
-    ]
+      {
+        path: ROUTE_PATHS.INDEX,
+        redirect: ROUTE_PATHS.DASHBOARD,
+      },
+      {
+        path: ROUTE_PATHS.DASHBOARD,
+        component: () => import("pages/DashboardPage.vue"),
+      },
+    ],
   },
 
-  // Always leave this as last one,
-  // but you can also remove it
   {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
-  }
-]
+    path: "/",
+    component: () => import("layouts/AuthLayout.vue"),
+    children: [
+      {
+        path: ROUTE_PATHS.AUTH.LOGIN,
+        component: () => import("pages/auth/LogInPage.vue"),
+      },
+      {
+        path: ROUTE_PATHS.AUTH.SIGNUP,
+        component: () => import("pages/auth/SignUpPage.vue"),
+      },
+      {
+        path: ROUTE_PATHS.AUTH.RESTORE_PASSWORD,
+        component: () => import("pages/auth/RestorePasswordPage.vue"),
+      },
+    ],
+  },
 
-export default routes
+  {
+    path: "/:catchAll(.*)*",
+    component: () => import("pages/ErrorNotFound.vue"),
+  },
+];
+
+export default routes;

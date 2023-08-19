@@ -1,5 +1,8 @@
 <?php
 
+use App\Mail\VerificationCodeMail;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,3 +13,7 @@
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+//Route::get('/preview-verification-email', function () {
+//    return new VerificationCodeMail(9999);
+//});
