@@ -44,6 +44,7 @@
             :label="$t('auth.login.form.email')"
             :rules="[emailRule]"
             lazy-rules
+            :error="!!invalidCredentialsError"
           >
             <template #prepend>
               <q-icon name="o_mail" class="grey-2" />
@@ -60,6 +61,8 @@
               :label="$t('auth.login.form.password')"
               :rules="[passwordRule]"
               lazy-rules
+              :error-message="invalidCredentialsError"
+              :error="!!invalidCredentialsError"
             >
               <template #prepend>
                 <q-icon name="o_lock" class="grey-2" />
@@ -139,6 +142,8 @@ const form = ref({
 
 const isPasswordVisible = ref(false);
 
+const invalidCredentialsError = ref();
+
 const isLoading = ref(false);
 
 // email validation
@@ -169,6 +174,7 @@ const passwordRule = (value) => {
  */
 const submit = async () => {
   isLoading.value = true;
+  invalidCredentialsError.value = null;
 
   store
     .login(form.value.email, form.value.password)
@@ -176,7 +182,7 @@ const submit = async () => {
       router.push(ROUTE_PATHS.DASHBOARD);
     })
     .catch((error) => {
-      console.log(error);
+      invalidCredentialsError.value = error.response.data.error;
     })
     .finally(() => {
       isLoading.value = false;

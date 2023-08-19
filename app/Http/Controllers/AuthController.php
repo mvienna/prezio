@@ -27,7 +27,7 @@ class AuthController extends Controller
         ];
         $validator = Validator::make($request->only('email', 'password'), $rules);
         if ($validator->fails()) {
-            return $this->errorResponse(trans('errors.missingCredentials'), 422);
+            return $this->errorResponse(trans('errors.auth.missingCredentials'), 422);
         }
 
         /*
@@ -44,7 +44,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return $this->errorResponse(trans('errors.invalidCredentials'), 422);
+        return $this->errorResponse(trans('errors.auth.invalidCredentials'), 422);
     }
 
     public function register(Request $request): JsonResponse
@@ -59,7 +59,7 @@ class AuthController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return $this->errorResponse(trans('errors.invalidFields'), 422);
+            return $this->errorResponse(trans('errors.auth.invalidFields'), 422);
         }
 
         /*

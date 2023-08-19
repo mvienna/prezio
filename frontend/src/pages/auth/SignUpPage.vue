@@ -41,6 +41,7 @@
             type="text"
             no-error-icon
             outlined
+            autofocus
             :label="$t('auth.signup.form.name')"
             :rules="[nameRule]"
             lazy-rules
