@@ -65,10 +65,10 @@
         </div>
 
         <div class="container">
-            <p class="header">Verification Code</p>
+            <p class="header">{{ trans('emails.verificationCode.title') }}</p>
             <p class="verification-code">{{ $verificationCode }}</p>
-            <p class="instructions">Please use the verification code above to confirm your email address.</p>
-            <p class="footer">If you did not request this verification, please ignore this email.</p>
+            <p class="instructions">{{ trans('emails.verificationCode.instruction') }}</p>
+            <p class="footer">{{ trans('emails.verificationCode.footer') }}</p>
     </div>
     </body>
 </html>
