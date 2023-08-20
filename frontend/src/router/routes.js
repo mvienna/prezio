@@ -32,6 +32,29 @@ const routes = [
         path: ROUTE_PATHS.AUTH.RESTORE_PASSWORD,
         component: () => import("pages/auth/RestorePasswordPage.vue"),
       },
+      {
+        path: ROUTE_PATHS.AUTH.LOGOUT,
+        component: () => import("pages/auth/LogOutPage.vue"),
+      },
+    ],
+  },
+
+  {
+    path: "/",
+    component: () => import("layouts/UserLayout.vue"),
+    children: [
+      {
+        path: ROUTE_PATHS.USER.PROFILE,
+        component: () => import("pages/user/ProfilePage.vue"),
+      },
+      {
+        path: ROUTE_PATHS.USER.MY_PLAN,
+        component: () => import("pages/user/MyPlanPage.vue"),
+      },
+      {
+        path: ROUTE_PATHS.USER.PAYMENTS,
+        component: () => import("pages/user/PaymentsPage.vue"),
+      },
     ],
   },
 

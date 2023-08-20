@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
+import { ROUTE_PATHS } from "src/constants/routes";
 
 export const useAuthStore = defineStore("auth", {
   state: () => {
@@ -24,13 +25,29 @@ export const useAuthStore = defineStore("auth", {
             "Authorization"
           ] = `Bearer ${response.data.token}`;
 
-          if (process.env.DEV) {
-            localStorage.setItem("credentials", JSON.stringify(credentials));
-          }
+          this.setUserCredentialsForDev(credentials);
         })
         .catch((error) => {
           throw error;
         });
+    },
+
+    setUserCredentialsForDev(credentials) {
+      if (process.env.DEV) {
+        let savedCredentials = JSON.parse(localStorage.getItem("credentials"));
+
+        if (savedCredentials) {
+          savedCredentials = {
+            email: credentials.email || savedCredentials.email,
+            password: credentials.password || savedCredentials.password,
+          };
+        }
+
+        localStorage.setItem(
+          "credentials",
+          JSON.stringify(savedCredentials || credentials)
+        );
+      }
     },
 
     /*
@@ -69,6 +86,7 @@ export const useAuthStore = defineStore("auth", {
       try {
         await api.post("/logout");
         this.clearUserData();
+        window.location = ROUTE_PATHS.AUTH.LOGIN;
       } catch (error) {
         throw error;
       }

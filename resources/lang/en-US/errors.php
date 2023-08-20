@@ -4,7 +4,8 @@ return [
     'auth' => [
         'missingCredentials' => 'Email or Password is missing',
         'invalidCredentials' => 'Invalid credentials',
-        'invalidFields' => 'Invalid form field(s)'
+        'invalidFields' => 'Invalid form field(s)',
+        'invalidPassword' => 'Invalid password',
     ],
     'verification' => [
         'userNotFound' => "User not found",

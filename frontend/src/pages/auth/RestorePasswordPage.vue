@@ -3,7 +3,7 @@
     <div class="container">
       <!-- logo -->
       <div class="container__logo q-pb-xl">
-        <q-img src="/public/logo.png" />
+        <q-img src="/public/logo_black.png" />
       </div>
 
       <q-form @submit.prevent="submit()">
@@ -216,10 +216,7 @@ const isLoading = ref(false);
 
 const submit = async () => {
   isLoading.value = true;
-  errors.value = {
-    email: null,
-    code: null,
-  };
+  errors.value = {};
 
   // send verification code
   if (step.value === STEPS.email) {

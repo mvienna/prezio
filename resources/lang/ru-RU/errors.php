@@ -4,7 +4,8 @@ return [
     'auth' => [
         'missingCredentials' => 'Email или пароль отсутствуют',
         'invalidCredentials' => 'Неверные данные',
-        'invalidFields' => 'Неверные поле/поля формы'
+        'invalidFields' => 'Неверные поле/поля формы',
+        'invalidPassword' => 'Неверный пароль',
     ],
     'verification' => [
         'userNotFound' => "Пользователь не найден",

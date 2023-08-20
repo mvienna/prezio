@@ -13,11 +13,19 @@ use Illuminate\Support\Facades\Mail;
 class VerificationController extends Controller
 {
     public function sendVerificationCode(Request $request, VerificationCodeRepository $codeRepository): JsonResponse {
-        $user = User::where('email', $request->email);
-        if (!$user->exists()) {
-            return $this->errorResponse(trans('errors.verification.userNotFound'), 422);
+        /*
+         * check email for existence if it's not a new one
+         */
+        if (!$request->isNewEmail) {
+            $user = User::where('email', $request->email);
+            if (!$user->exists()) {
+                return $this->errorResponse(trans('errors.verification.userNotFound'), 422);
+            }
         }
 
+        /*
+         * generate & send verification code
+         */
         $codeRepository->setAllCodesAsExpired($request->email);
         $code = $codeRepository->generateCode($request->email);
         $recipient = EmailService::getRecipient($request->email);
@@ -31,14 +39,24 @@ class VerificationController extends Controller
         $codeModel = $codeRepository->findByCodeAndEmailNotExpired($request->code, $request->email);
 
         if ($codeModel) {
+            /*
+             * set code as expired
+             */
             $codeModel->update([
                 'expires_at' => now(),
             ]);
 
-            $user = User::where('email', $request->email)->first();
-            $token = $user->createToken('password-reset')->plainTextToken;
+            /*
+             * generate temp token for changing the password
+             */
+            if ($request->generateTempToken) {
+                $user = User::where('email', $request->email)->first();
+                $token = $user->createToken('passwordReset')->plainTextToken;
 
-            return $this->jsonResponse(['token' => $token]);
+                return $this->jsonResponse(['token' => $token]);
+            }
+
+            return $this->successResponse();
         }
 
         return $this->errorResponse(trans('errors.verification.invalidCode'), 422);

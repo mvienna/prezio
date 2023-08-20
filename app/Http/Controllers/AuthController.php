@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -94,6 +95,13 @@ class AuthController extends Controller
         $user = Auth()->user();
 
         /*
+         * check old password
+         */
+        if ($request->filled('currentPassword') && !Hash::check($request->currentPassword, $user->password)) {
+            return $this->errorResponse(trans('errors.auth.invalidPassword'), 422);
+        }
+
+        /*
          * validate
          */
         $rules = [];
@@ -101,20 +109,24 @@ class AuthController extends Controller
             $rules['name'] = 'required|string|max:255';
         }
         if ($request->filled('email')) {
-            $rules['email'] = 'required|email|unique:users|max:255';
+            $rules['email'] = [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($user->email, 'email'),
+                'max:255',
+            ];
         }
         if ($request->filled('password')) {
             $rules['password'] = 'required|string|min:6';
         }
         $this->validate($request, $rules);
 
-
         /*
          * update & save
          */
-        $user->fill($request->all());
+        $user->fill($request->except('currentPassword'));
         $user->save();
 
-        return $this->successResponse();
+        return $this->jsonResponse($user->toArray());
     }
 }

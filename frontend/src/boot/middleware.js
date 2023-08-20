@@ -34,7 +34,8 @@ export default async ({ app, router }) => {
         return;
       }
 
-      if (to.path === ROUTE_PATHS.AUTH.LOGIN) {
+      // redirect from unauthorized routes
+      if (allowedUnauthenticatedPaths.includes(to.path)) {
         next(ROUTE_PATHS.INDEX);
         return;
       }
@@ -52,7 +53,11 @@ export default async ({ app, router }) => {
     const credentials = JSON.parse(localStorage.getItem("credentials"));
 
     if (credentials) {
-      await store.login(credentials.email, credentials.password);
+      try {
+        await store.login(credentials.email, credentials.password);
+      } catch (error) {
+        // await store.logout();
+      }
     }
   }
 
@@ -62,11 +67,11 @@ export default async ({ app, router }) => {
       try {
         await store.auth();
 
-        if (
-          allowedUnauthenticatedPaths.includes(router.currentRoute._value.path)
-        ) {
-          router.push(ROUTE_PATHS.DASHBOARD);
-        }
+        // if (
+        //   allowedUnauthenticatedPaths.includes(router.currentRoute._value.path)
+        // ) {
+        //   router.push(ROUTE_PATHS.DASHBOARD);
+        // }
       } catch (error) {
         await store.logout();
       }

@@ -92,4 +92,67 @@ export default {
       },
     },
   },
+
+  mainLayout: {
+    header: {
+      search: "Найти презентацию",
+      goPro: "Перейти на Pro",
+      userMenuLinks: {
+        profile: "Профиль",
+        myPlan: "Мой план",
+        payments: "Платежи",
+        logout: "Выйти",
+      },
+    },
+    drawer: {
+      links: {
+        myPresentations: "Мои презентации",
+        templates: "Шаблоны",
+        sharedWithMe: "Поделились со мной",
+        subscriptionPlans: "Тарифные планы",
+      },
+    },
+  },
+
+  userLayout: {
+    drawer: {
+      links: {
+        settings: "Настройки",
+        myPlan: "Мой план",
+        payments: "Платежи",
+        logout: "Выйти",
+      },
+    },
+  },
+
+  user: {
+    profile: {
+      title: "Профиль",
+      save: "Сохранить",
+      form: {
+        name: "Имя",
+        email: "Email",
+        currentPassword: "Старый пароль",
+        newPassword: "Новый пароль",
+        success: "Данные успешно обновлены",
+        errors: {
+          name: {
+            required: "Требуется ввести ваше имя",
+          },
+          email: {
+            required: "Требуется ввести email",
+            invalid: "Неверный формат email",
+          },
+          password: {
+            required: "Требуется ввести пароль",
+            invalid: "Пароль должен иметь 6 или больше символов",
+          },
+          code: {
+            required: "Требуется ввести код",
+            invalid: "Неверный код",
+          },
+        },
+      },
+    },
+  },
 };

@@ -13,4 +13,18 @@ export const ROUTE_PATHS = {
     PRIVACY_POLICY: "/privacy-policy",
     USER_AGREEMENT: "/user-agreement",
   },
+
+  USER: {
+    PROFILE: "/user/profile",
+    MY_PLAN: "/user/my-plan",
+    PAYMENTS: "/user/payments",
+  },
+
+  PRESENTATIONS: {
+    INDEX: "/presentations",
+    TEMPLATES: "/presentations/templates",
+    SHARED_WITH_ME: "/presentations/shared-with-me",
+  },
+
+  SUBSCRIPTION_PLANS: "/subscriptions-plans",
 };

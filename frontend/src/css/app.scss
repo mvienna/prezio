@@ -2,6 +2,7 @@
 
 body {
   font-family: 'Raleway', sans-serif;
+  background: $grey-2;
 }
 
 /*
@@ -15,6 +16,10 @@ a, .link {
   &:hover {
     text-decoration: underline;
 
+    &.q-item, &.q-btn {
+      text-decoration: none;
+    }
+
   }
 }
 
@@ -22,7 +27,12 @@ a, .link {
  * button
  */
 .q-btn {
-  border-radius: 6px;
+  //border-radius: 6px;
+  border-radius: 8px;
+}
+
+.q-btn--bordered {
+  border: 1px solid currentColor;
 }
 
 /*
@@ -45,6 +55,7 @@ a, .link {
  */
 .q-menu {
   border-radius: 8px;
+  box-shadow: 0 7px 15px 0 rgba(0, 0, 0, 0.07);
 }
 
 /*
@@ -131,4 +142,26 @@ a, .link {
 
 .q-date__calendar-item > div, .q-date__calendar-item button {
   border-radius: 4px;
+}
+
+/*
+ * layout elevated
+ */
+.q-layout__shadow:after {
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.05);
+}
+
+/*
+ * typography
+ */
+.text-semibold {
+  font-weight: 600;
+}
+
+/*
+ * notification
+ */
+.q-notification {
+  border-radius: 8px;
+  box-shadow: none;
 }

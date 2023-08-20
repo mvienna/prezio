@@ -93,4 +93,67 @@ export default {
       },
     },
   },
+
+  mainLayout: {
+    header: {
+      search: "Find presentation",
+      goPro: "Go Pro",
+      userMenuLinks: {
+        profile: "Profile",
+        myPlan: "My Plan",
+        payments: "Payments",
+        logout: "Logout",
+      },
+    },
+    drawer: {
+      links: {
+        myPresentations: "My Presentations",
+        templates: "Templates",
+        sharedWithMe: "Shared with Me",
+        subscriptionPlans: "Subscription Plans",
+      },
+    },
+  },
+
+  userLayout: {
+    drawer: {
+      links: {
+        settings: "Settings",
+        myPlan: "My Plan",
+        payments: "Payments",
+        logout: "Logout",
+      },
+    },
+  },
+
+  user: {
+    profile: {
+      title: "Profile",
+      save: "Save",
+      form: {
+        name: "Name",
+        email: "Email",
+        currentPassword: "Current password",
+        newPassword: "New password",
+        success: "Updated successfully",
+        errors: {
+          name: {
+            required: "Your name is required",
+          },
+          email: {
+            required: "Email is required",
+            invalid: "Invalid email",
+          },
+          password: {
+            required: "Password is required",
+            invalid: "Password must be 6 characters or more",
+          },
+          code: {
+            required: "Code is required",
+            invalid: "Invalid code",
+          },
+        },
+      },
+    },
+  },
 };
