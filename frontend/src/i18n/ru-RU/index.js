@@ -129,12 +129,18 @@ export default {
     profile: {
       title: "Профиль",
       save: "Сохранить",
+      verifyEmail: {
+        title: "Подтвердите почту",
+        description: "Введите код из письма, которое было отправлено на",
+      },
       form: {
         name: "Имя",
         email: "Email",
         currentPassword: "Старый пароль",
         newPassword: "Новый пароль",
         success: "Данные успешно обновлены",
+        checkVerificationCode: "Проверить",
+        resendVerificationCode: "Отправить повторно",
         errors: {
           name: {
             required: "Требуется ввести ваше имя",

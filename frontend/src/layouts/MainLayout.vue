@@ -54,7 +54,7 @@
               :user="user"
               size="27px"
               color="primary"
-              style="border-radius: 4px"
+              style="border-radius: 50%"
             />
 
             <q-menu

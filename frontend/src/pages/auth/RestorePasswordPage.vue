@@ -113,7 +113,7 @@
           <div
             v-else
             class="link"
-            :class="isLoading ? 'text-grey-5 cursor-no-allowed' : ''"
+            :class="isLoading ? 'text-grey-5 cursor-not-allowed' : ''"
             @click="handleResendingVerificationCode()"
           >
             {{ $t("auth.restorePassword.form.resendVerificationCode") }}
@@ -132,7 +132,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { useI18n } from "vue-i18n";
 import {
@@ -142,6 +142,7 @@ import {
 import { api } from "boot/axios";
 import DoneCheckmark from "components/animations/DoneCheckmark.vue";
 import { useRouter } from "vue-router";
+import { countdown, startCountdown, timeLeft } from "src/helpers/countdown";
 
 const { t } = useI18n({ useScope: "global" });
 
@@ -242,38 +243,13 @@ const submit = async () => {
 };
 
 /*
- * countdown
- */
-const SECONDS_UNTIL_RESEND_CODE = 60;
-const timeLeft = ref();
-const countdownInterval = ref();
-
-const startCountdown = () => {
-  timeLeft.value = SECONDS_UNTIL_RESEND_CODE;
-
-  countdownInterval.value = setInterval(() => {
-    timeLeft.value--;
-
-    if (timeLeft.value === 0) {
-      clearInterval(countdownInterval.value);
-    }
-  }, 1000);
-};
-
-const countdown = computed(() => {
-  const minutes = Math.floor(timeLeft.value / 60);
-  const seconds = timeLeft.value % 60;
-  return `${minutes}:${String(seconds).padStart(2, "0")}`;
-});
-
-/*
  * verification code
  */
 const handleSendingVerificationCode = async () => {
   await sendVerificationCode(form.value.email)
     .then(() => {
       step.value = STEPS.code;
-      startCountdown();
+      startCountdown(process.env.SECONDS_UNTIL_RESEND_CODE);
     })
     .catch((error) => {
       errors.value.email = error;

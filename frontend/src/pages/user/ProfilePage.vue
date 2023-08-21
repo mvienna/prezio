@@ -3,12 +3,24 @@
     <div class="container">
       <q-form @submit.prevent="submit()">
         <!-- title -->
-        <div class="form__title q-mb-lg">{{ $t("user.profile.title") }}</div>
+        <div class="form__title">
+          <template v-if="isVerificationCodeSent">
+            {{ $t("user.profile.verifyEmail.title") }}
+          </template>
 
-        <!-- avatar -->
-        <EditUserAvatar class="q-mb-xl" />
+          <template v-else>{{ $t("user.profile.title") }}</template>
+        </div>
 
-        <div class="column q-gutter-sm">
+        <!-- description -->
+        <div v-if="isVerificationCodeSent" class="form__description q-mt-md">
+          {{ $t("user.profile.verifyEmail.description") }}
+
+          <a :href="`mailto:${form.email}`">
+            {{ form.email }}
+          </a>
+        </div>
+
+        <div class="column q-gutter-sm q-pt-lg">
           <!-- verification code -->
           <q-input
             v-if="isVerificationCodeSent"
@@ -27,6 +39,9 @@
           />
 
           <template v-else>
+            <!-- avatar -->
+            <EditUserAvatar class="q-mb-lg" />
+
             <!-- name -->
             <q-input
               v-model="form.name"
@@ -109,8 +124,27 @@
           :disable="!isVerificationCodeSent ? isNoChanges : false"
           :loading="isLoading"
           class="q-py-md q-mt-lg text-bold full-width"
-          :label="$t('user.profile.save')"
+          :label="
+            isVerificationCodeSent
+              ? $t('user.profile.form.checkVerificationCode')
+              : $t('user.profile.save')
+          "
         />
+
+        <div v-if="isVerificationCodeSent" class="text-center q-mt-md">
+          <div v-if="timeLeft" class="text-grey-5 cursor-not-allowed">
+            {{ countdown }}
+          </div>
+
+          <div
+            v-else
+            class="link"
+            :class="isLoading ? 'text-grey-5 cursor-not-allowed' : ''"
+            @click="handleResendingVerificationCode()"
+          >
+            {{ $t("user.profile.form.resendVerificationCode") }}
+          </div>
+        </div>
       </q-form>
     </div>
   </q-page>
@@ -128,6 +162,7 @@ import {
   sendVerificationCode,
 } from "src/services/API/email";
 import EditUserAvatar from "components/user/profile/EditUserAvatar.vue";
+import { countdown, startCountdown, timeLeft } from "src/helpers/countdown";
 
 /*
  * variables
@@ -255,7 +290,7 @@ const submit = async () => {
   } else {
     // send verification code on email change
     if (form.value.email !== user.value.email) {
-      handleSendingVerificationCode();
+      await handleSendingVerificationCode();
       return;
     }
   }
@@ -267,10 +302,11 @@ const submit = async () => {
  * verification code
  * on email change
  */
-const handleSendingVerificationCode = () => {
-  sendVerificationCode(form.value.email, true)
+const handleSendingVerificationCode = async () => {
+  await sendVerificationCode(form.value.email, true)
     .then(() => {
       isVerificationCodeSent.value = true;
+      startCountdown(process.env.SECONDS_UNTIL_RESEND_CODE);
     })
     .catch((error) => {
       console.log(error);
@@ -278,6 +314,16 @@ const handleSendingVerificationCode = () => {
     .finally(() => {
       isLoading.value = false;
     });
+};
+
+const handleResendingVerificationCode = async () => {
+  if (isLoading.value) {
+    return;
+  }
+
+  isLoading.value = true;
+  await handleSendingVerificationCode();
+  isLoading.value = false;
 };
 
 const handleCheckingVerificationCode = async () => {
@@ -369,6 +415,13 @@ const handleUpdatingUserData = () => {
       text-align: center;
       font-size: 18px;
       font-weight: 600;
+    }
+
+    .form__description {
+      text-align: center;
+      font-size: 16px;
+      opacity: 0.8;
+      font-weight: 500;
     }
   }
 }

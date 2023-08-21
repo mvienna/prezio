@@ -130,12 +130,18 @@ export default {
     profile: {
       title: "Profile",
       save: "Save",
+      verifyEmail: {
+        title: "Verify Email",
+        code: "Enter the code from email that has been sent to",
+      },
       form: {
         name: "Name",
         email: "Email",
         currentPassword: "Current password",
         newPassword: "New password",
         success: "Updated successfully",
+        checkVerificationCode: "Submit",
+        resendVerificationCode: "Resend code",
         errors: {
           name: {
             required: "Your name is required",
