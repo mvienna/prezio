@@ -172,3 +172,9 @@ const links = ref([
   },
 ]);
 </script>
+
+<style scoped lang="scss">
+::v-deep(.q-drawer) {
+  height: calc(100vh - 66px);
+}
+</style>
