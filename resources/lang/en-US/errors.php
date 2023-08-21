@@ -13,5 +13,8 @@ return [
     ],
     'email' => [
         'missingDevRecipientEmail' => 'Set MAIL_DEV_RECIPIENT email variable in the .env file'
+    ],
+    'media' => [
+        'fileNotFound' => 'File not found',
     ]
 ];

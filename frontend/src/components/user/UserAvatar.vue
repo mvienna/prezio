@@ -1,6 +1,15 @@
 <template>
   <q-avatar color="primary" text-color="white">
-    {{ user?.name?.charAt(0).toUpperCase() }}
+    <!-- uploaded avatar -->
+    <q-img
+      v-if="user.avatar"
+      :src="user.avatar.original_url"
+      :alt="user.name"
+      fit="cover"
+    />
+
+    <!-- default avatar -->
+    <q-icon v-else name="person" size="24px" />
   </q-avatar>
 </template>
 

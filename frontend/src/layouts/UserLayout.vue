@@ -16,6 +16,18 @@
 
         <q-space />
 
+        <!-- notifications -->
+        <q-btn
+          text-color="grey-5"
+          unelevated
+          no-caps
+          no-wrap
+          round
+          size="12px"
+          icon="o_notifications"
+          class="q-mr-md q-btn--bordered"
+        />
+
         <!-- go premium -->
         <q-btn
           color="yellow-9"
@@ -25,21 +37,29 @@
           no-wrap
           icon="o_workspace_premium"
           :label="$t('mainLayout.header.goPro')"
-          class="q-mr-lg text-semibold q-px-lg"
+          class="q-mr-md text-semibold q-px-lg"
         />
 
-        <!-- user menu -->
-        <div class="row no-wrap q-gutter-sm items-center">
-          <div class="text-black text-semibold">
-            {{ user.name }}
-          </div>
-          <UserAvatar
-            :user="user"
-            size="36px"
-            color="primary"
-            style="border-radius: 8px"
-          />
-        </div>
+        <!-- user -->
+        <q-btn
+          unelevated
+          no-caps
+          no-wrap
+          text-color="black"
+          class="text-semibold q-pa-xs q-pl-md"
+        >
+          <template #default>
+            <div class="q-mr-md">
+              {{ user.name }}
+            </div>
+            <UserAvatar
+              :user="user"
+              size="27px"
+              color="primary"
+              style="border-radius: 4px"
+            />
+          </template>
+        </q-btn>
       </q-toolbar>
     </q-header>
 

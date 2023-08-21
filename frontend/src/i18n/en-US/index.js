@@ -153,6 +153,13 @@ export default {
             invalid: "Invalid code",
           },
         },
+        avatar: {
+          upload: "Upload",
+          success: {
+            upload: "Uploaded successfully",
+            delete: "Deleted successfully",
+          },
+        },
       },
     },
   },

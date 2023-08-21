@@ -5,6 +5,9 @@
         <!-- title -->
         <div class="form__title q-mb-lg">{{ $t("user.profile.title") }}</div>
 
+        <!-- avatar -->
+        <EditUserAvatar class="q-mb-xl" />
+
         <div class="column q-gutter-sm">
           <!-- verification code -->
           <q-input
@@ -124,6 +127,7 @@ import {
   checkVerificationCode,
   sendVerificationCode,
 } from "src/services/API/email";
+import EditUserAvatar from "components/user/profile/EditUserAvatar.vue";
 
 /*
  * variables
@@ -243,39 +247,53 @@ const codeRule = (value) => {
  */
 const submit = async () => {
   errors.value = {};
-
   isLoading.value = true;
 
   // check verification code if it's been sent
   if (isVerificationCodeSent.value) {
-    await checkVerificationCode(form.value.email, form.value.code, false).catch(
-      (error) => {
-        isLoading.value = false;
-        errors.value.code = error;
-        throw error;
-      }
-    );
+    await handleCheckingVerificationCode();
   } else {
     // send verification code on email change
     if (form.value.email !== user.value.email) {
-      await sendVerificationCode(form.value.email, true)
-        .then(() => {
-          isVerificationCodeSent.value = true;
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          isLoading.value = false;
-        });
-
+      handleSendingVerificationCode();
       return;
     }
   }
 
-  /*
-   * update user's data
-   */
+  handleUpdatingUserData();
+};
+
+/*
+ * verification code
+ * on email change
+ */
+const handleSendingVerificationCode = () => {
+  sendVerificationCode(form.value.email, true)
+    .then(() => {
+      isVerificationCodeSent.value = true;
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+};
+
+const handleCheckingVerificationCode = async () => {
+  await checkVerificationCode(form.value.email, form.value.code, false).catch(
+    (error) => {
+      isLoading.value = false;
+      errors.value.code = error;
+      throw error;
+    }
+  );
+};
+
+/*
+ * update user data
+ */
+const handleUpdatingUserData = () => {
   let data = {
     name: form.value.name,
     email: form.value.email,
@@ -312,7 +330,11 @@ const submit = async () => {
       /*
        * update user's local data
        */
-      user.value = response.data;
+      user.value = {
+        ...user.value,
+        name: response.data.name,
+        email: response.data.email,
+      };
       loadUsersDataIntoForm();
 
       /*
@@ -320,7 +342,7 @@ const submit = async () => {
        */
       $q.notify({
         message: t("user.profile.form.success"),
-        color: "primary",
+        icon: "done",
       });
     })
     .catch((error) => {
@@ -339,7 +361,7 @@ const submit = async () => {
   max-width: 500px;
   width: 100%;
   padding: 36px;
-  border-radius: 8px;
+  border-radius: 16px;
   margin: 0 auto;
 
   form {

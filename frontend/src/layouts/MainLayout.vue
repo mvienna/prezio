@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header class="bg-grey-2 q-pt-md q-pb-sm q-px-sm">
+    <q-header class="bg-grey-2 q-pa-sm">
       <q-toolbar style="max-width: 1000px; margin: 0 auto">
         <!-- search -->
         <q-input
@@ -43,7 +43,6 @@
           unelevated
           no-caps
           no-wrap
-          color="blue-2"
           text-color="black"
           class="text-semibold q-pa-xs q-pl-md"
         >

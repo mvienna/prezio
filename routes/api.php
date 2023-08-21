@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +27,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::patch('/user', [AuthController::class, 'update']);
+
+    /*
+     * media
+     */
+    Route::post('/media', [MediaController::class, 'store']);
+    Route::delete('/media/{file_id}', [MediaController::class, 'deletePermanently']);
 });

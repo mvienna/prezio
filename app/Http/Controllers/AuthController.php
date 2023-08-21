@@ -14,7 +14,10 @@ class AuthController extends Controller
 {
     public function user(Request $request): JsonResponse
     {
-        return $this->jsonResponse($request->user()->toArray());
+        $user = $request->user();
+        $user['avatar'] = $user->getMedia('avatar')->sortByDesc('created_at')->first();
+
+        return $this->jsonResponse($user->toArray());
     }
 
     public function login(Request $request): JsonResponse
@@ -36,6 +39,7 @@ class AuthController extends Controller
          */
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
+            $user['avatar'] = $user->getMedia('avatar')->sortByDesc('created_at')->first();
 
             $token = $user->createToken('authToken')->plainTextToken;
 

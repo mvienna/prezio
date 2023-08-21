@@ -13,5 +13,8 @@ return [
     ],
     'email' => [
         'missingDevRecipientEmail' => 'Создайте переменную электронной почты MAIL_DEV_RECIPIENT в файле .env'
+    ],
+    'media' => [
+        'fileNotFound' => 'Файл не найден',
     ]
 ];
