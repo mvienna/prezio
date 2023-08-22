@@ -1,6 +1,9 @@
 import { ROUTE_PATHS } from "src/constants/routes";
 
 export default {
+  /*
+   * auth
+   */
   auth: {
     login: {
       title: "Войти",
@@ -93,6 +96,9 @@ export default {
     },
   },
 
+  /*
+   * main layout
+   */
   mainLayout: {
     header: {
       search: "Найти презентацию",
@@ -114,6 +120,9 @@ export default {
     },
   },
 
+  /*
+   * user layout
+   */
   userLayout: {
     drawer: {
       links: {
@@ -125,7 +134,13 @@ export default {
     },
   },
 
+  /*
+   * user
+   */
   user: {
+    /*
+     * profile
+     */
     profile: {
       title: "Профиль",
       save: "Сохранить",
@@ -165,6 +180,46 @@ export default {
             delete: "Аватарка удалена успешно",
           },
         },
+      },
+    },
+  },
+
+  /*
+   * presentation layout
+   */
+  presentationLayout: {
+    header: {
+      preview: "Предпросмотр",
+      run: "Запустить",
+    },
+    leftDrawer: {
+      newSlide: "Новый слайд",
+      import: "Импорт",
+    },
+    rightDrawer: {
+      tabs: {
+        design: "Дизайн",
+        template: "Шаблон",
+        audio: "Аудио",
+      },
+    },
+  },
+
+  /*
+   * presentation editor
+   */
+  presentationEditor: {
+    drawing: {
+      options: {
+        color: "Цвет",
+        erase: "Режим стирания",
+        brushSize: "Размер кисти",
+        brushType: "Тип кисти",
+      },
+      brushTypes: {
+        pen: "Ручка",
+        pencil: "Карандаш",
+        marker: "Маркер",
       },
     },
   },

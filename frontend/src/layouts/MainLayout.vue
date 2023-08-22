@@ -257,8 +257,4 @@ const VERSION = process.env.VERSION?.substring(0, 7)?.replaceAll('"', "");
 .drawer__logo {
   width: 112px;
 }
-
-::v-deep(.q-drawer) {
-  height: 100vh;
-}
 </style>

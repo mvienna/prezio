@@ -59,6 +59,17 @@ const routes = [
   },
 
   {
+    path: "/",
+    component: () => import("layouts/PresentationLayout.vue"),
+    children: [
+      {
+        path: ROUTE_PATHS.PRESENTATIONS.PRESENTATION,
+        component: () => import("pages/presentations/PresentationPage.vue"),
+      },
+    ],
+  },
+
+  {
     path: "/:catchAll(.*)*",
     component: () => import("pages/ErrorNotFound.vue"),
   },

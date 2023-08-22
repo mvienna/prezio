@@ -1,6 +1,9 @@
 import { ROUTE_PATHS } from "src/constants/routes";
 
 export default {
+  /*
+   * auth
+   */
   auth: {
     login: {
       title: "Log In",
@@ -94,6 +97,9 @@ export default {
     },
   },
 
+  /*
+   * main layout
+   */
   mainLayout: {
     header: {
       search: "Find presentation",
@@ -115,6 +121,9 @@ export default {
     },
   },
 
+  /*
+   * user layout
+   */
   userLayout: {
     drawer: {
       links: {
@@ -126,7 +135,13 @@ export default {
     },
   },
 
+  /*
+   * user
+   */
   user: {
+    /*
+     * profile
+     */
     profile: {
       title: "Profile",
       save: "Save",
@@ -166,6 +181,25 @@ export default {
             delete: "Deleted successfully",
           },
         },
+      },
+    },
+  },
+
+  /*
+   * presentation layout
+   */
+  presentationEditor: {
+    drawing: {
+      options: {
+        color: "Color",
+        erase: "Eraser Mode",
+        brushSize: "Brush Size",
+        brushType: "Brush Type",
+      },
+      brushTypes: {
+        pen: "Pen",
+        pencil: "Pencil",
+        marker: "Marker",
       },
     },
   },

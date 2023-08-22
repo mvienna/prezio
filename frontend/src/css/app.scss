@@ -5,6 +5,15 @@ body {
   background: $grey-2;
 }
 
+html, body {
+  touch-action: manipulation;
+  -ms-content-zooming: none;
+  -ms-overflow-style: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
 /*
  * link
  */
@@ -164,4 +173,11 @@ a, .link {
 .q-notification {
   border-radius: 8px;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.05);
+}
+
+/*
+ * card
+ */
+.q-card {
+  border-radius: 6px;
 }
