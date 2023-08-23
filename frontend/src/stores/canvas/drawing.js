@@ -291,10 +291,14 @@ export const useDrawingStore = defineStore("canvasDrawing", {
       }
 
       if (!foundLine) {
-        this.drawingState.currentIndex = -1;
-        this.drawingState.selectedLineIndex = -1;
-        this.redrawCanvas();
+        this.deselectLine();
       }
+    },
+
+    deselectLine() {
+      this.drawingState.currentIndex = -1;
+      this.drawingState.selectedLineIndex = -1;
+      this.redrawCanvas();
     },
 
     drawBorder(x, y, width, height) {
@@ -431,6 +435,11 @@ export const useDrawingStore = defineStore("canvasDrawing", {
         } else {
           this.undo();
         }
+      }
+
+      // deselect
+      if (event.key === "Escape") {
+        this.deselectLine();
       }
     },
   },

@@ -163,16 +163,27 @@
         @click="drawingStore.redo()"
       />
 
-      <!-- delete line button -->
-      <q-btn
-        v-if="drawingState.selectedLineIndex !== -1"
-        icon="o_backspace"
-        unelevated
-        text-color="dark"
-        size="12px"
-        round
-        @click="drawingStore.deleteSelectedLine()"
-      />
+      <template v-if="drawingState.selectedLineIndex !== -1">
+        <!-- deselect line button -->
+        <q-btn
+          icon="done"
+          unelevated
+          text-color="dark"
+          size="12px"
+          round
+          @click="drawingStore.deselectLine()"
+        />
+
+        <!-- delete line button -->
+        <q-btn
+          icon="o_backspace"
+          unelevated
+          text-color="dark"
+          size="12px"
+          round
+          @click="drawingStore.deleteSelectedLine()"
+        />
+      </template>
     </div>
 
     <!-- slide -->
