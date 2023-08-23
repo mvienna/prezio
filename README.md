@@ -30,7 +30,7 @@ git clone git@gitlab.com:nomadicsoft/ru/prezio.git prezio
 cd prezio
 cp .env.example .env
 
-Add DB, PUSHER , MAIL settings to .env file
+Add DB , MAIL settings to .env file
 
 composer install
 
@@ -56,6 +56,7 @@ npm install
 quasar dev
 
 # build prod
+quasar build
 
 http://localhost:9000
 ```
