@@ -51,7 +51,11 @@ cd frontend/
 cp .env.example .env
 
 npm install
-npm serve
+
+# serve dev
+quasar dev
+
+# build prod
 
 http://localhost:9000
 ```
