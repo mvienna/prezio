@@ -28,6 +28,7 @@ PHP 8.2
 
 git clone git@gitlab.com:nomadicsoft/ru/prezio.git prezio
 cd prezio
+
 cp .env.example .env
 ln .env ./frontend/.env
 
