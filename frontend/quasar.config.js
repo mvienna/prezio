@@ -44,12 +44,12 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       env: {
-        LANG: env.LANG,
+        LANG: env.APP_LANG,
         VERSION: VERSION,
 
         SECONDS_UNTIL_RESEND_CODE: env.SECONDS_UNTIL_RESEND_CODE,
 
-        baseURL: ctx.dev ? env.API_DEV_URL : env.API_PROD_URL,
+        baseURL: env.APP_URL,
       },
 
       target: {

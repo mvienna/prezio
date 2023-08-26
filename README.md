@@ -29,8 +29,7 @@ PHP 8.2
 git clone git@gitlab.com:nomadicsoft/ru/prezio.git prezio
 cd prezio
 cp .env.example .env
-
-Add DB , MAIL settings to .env file
+ln .env ./frontend/.env
 
 composer install
 
@@ -48,15 +47,12 @@ Node v18
 npm i -g @quasar/cli
 
 cd frontend/
-cp .env.example .env
 
 npm install
 
-# serve dev
+# serve
 quasar dev
 
-# build prod
+# build
 quasar build
-
-http://localhost:9000
 ```
