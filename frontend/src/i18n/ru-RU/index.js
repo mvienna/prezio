@@ -222,5 +222,15 @@ export default {
         marker: "Маркер",
       },
     },
+    text: {
+      formatting: {
+        title: "Форматирование",
+      },
+      options: {
+        font: "Шрифт",
+        fontSize: "Размер шрифта",
+      },
+      apply: "Применить",
+    },
   },
 };

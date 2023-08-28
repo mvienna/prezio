@@ -3,8 +3,18 @@
     <!-- header -->
     <div class="bg-white q-py-md q-px-lg row no-wrap q-gutter-md">
       <!-- drawing -->
-      <q-btn icon="gesture" unelevated text-color="dark" round size="12px">
+      <q-btn
+        icon="gesture"
+        unelevated
+        text-color="dark"
+        round
+        size="12px"
+        :class="mode === 'drawing' ? 'bg-grey-2' : ''"
+        @click="canvasStore.switchMode('drawing')"
+        @mouseover="showTextMenu = false"
+      >
         <q-menu
+          v-model="showDrawingMenu"
           anchor="bottom left"
           self="top left"
           transition-show="jump-down"
@@ -119,7 +129,186 @@
         text-color="dark"
         round
         size="12px"
-      />
+        :class="mode === 'text' ? 'bg-grey-2' : ''"
+        @click="canvasStore.switchMode('text')"
+        @mouseover="showDrawingMenu = false"
+      >
+        <q-menu
+          v-model="showTextMenu"
+          anchor="bottom left"
+          self="top left"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :offset="[0, 8]"
+          class="q-pa-sm"
+        >
+          <!-- formatting -->
+          <div class="row no-wrap q-mx-sm q-mt-sm">
+            <q-btn
+              outline
+              size="10px"
+              round
+              icon="format_bold"
+              style="width: 100%"
+              :text-color="
+                textState.customization.formatting.isBold ? 'white' : 'black'
+              "
+              :class="
+                textState.customization.formatting.isBold
+                  ? 'bg-primary'
+                  : 'bg-white'
+              "
+              v-close-popup
+              @click="
+                textState.customization.formatting.isBold =
+                  !textState.customization.formatting.isBold;
+                textStore.applyFormattingToSelectedText('b');
+              "
+            />
+            <q-btn
+              outline
+              size="10px"
+              round
+              icon="format_underlined"
+              style="width: 100%"
+              class="q-mx-sm"
+              :text-color="
+                textState.customization.formatting.isUnderline
+                  ? 'white'
+                  : 'black'
+              "
+              :class="
+                textState.customization.formatting.isUnderline
+                  ? 'bg-primary'
+                  : 'bg-white'
+              "
+              v-close-popup
+              @click="
+                textState.customization.formatting.isUnderline =
+                  !textState.customization.formatting.isUnderline;
+                textStore.applyFormattingToSelectedText('u');
+              "
+            />
+            <q-btn
+              outline
+              size="10px"
+              round
+              icon="format_italic"
+              class="full-width"
+              :text-color="
+                textState.customization.formatting.isItalic ? 'white' : 'black'
+              "
+              :class="
+                textState.customization.formatting.isItalic
+                  ? 'bg-primary'
+                  : 'bg-white'
+              "
+              style="width: 100%"
+              v-close-popup
+              @click="
+                textState.customization.formatting.isItalic =
+                  !textState.customization.formatting.isItalic;
+                textStore.applyFormattingToSelectedText('i');
+              "
+            />
+          </div>
+
+          <!-- color picker -->
+          <q-item
+            dense
+            class="items-center text-semibold justify-start rounded-borders q-mt-md"
+          >
+            <q-icon
+              name="o_palette"
+              class="q-mr-md text-semibold"
+              :style="`color: ${textState.customization.color}`"
+              size="20px"
+            />
+            <div
+              class="q-mr-lg"
+              :style="`color: ${textState.customization.color}`"
+            >
+              {{ $t("presentationEditor.drawing.options.color") }}
+            </div>
+
+            <q-space />
+
+            <input
+              type="color"
+              class="color_input"
+              v-model="textState.customization.color"
+              @input="textStore.applyFormattingToSelectedText(`span`)"
+            />
+          </q-item>
+
+          <!-- font -->
+          <q-item
+            dense
+            class="items-center text-semibold justify-start rounded-borders q-mt-sm"
+          >
+            <q-select
+              v-model="textState.customization.font"
+              :options="textState.customization.fontOptions"
+              emit-value
+              borderless
+              :label="$t('presentationEditor.text.options.font')"
+              class="full-width"
+              color="dark"
+              @update:model-value="
+                textStore.applyFormattingToSelectedText(`span`)
+              "
+            >
+              <template #prepend>
+                <q-icon
+                  name="text_fields"
+                  class="q-mr-xs text-semibold text-dark"
+                  size="20px"
+                />
+              </template>
+            </q-select>
+          </q-item>
+
+          <!-- font size -->
+          <q-item
+            dense
+            class="items-center text-semibold justify-start rounded-borders"
+          >
+            <q-select
+              v-model="textState.customization.fontSize"
+              :options="textState.customization.fontSizeOptions"
+              emit-value
+              borderless
+              :label="$t('presentationEditor.text.options.fontSize')"
+              class="full-width"
+              color="dark"
+              @update:model-value="
+                textStore.applyFormattingToSelectedText(`span`)
+              "
+            >
+              <template #prepend>
+                <q-icon
+                  name="sort_by_alpha"
+                  class="q-mr-xs text-semibold text-dark"
+                  size="20px"
+                />
+              </template>
+            </q-select>
+          </q-item>
+
+          <!-- apply -->
+          <q-item class="q-px-sm">
+            <q-btn
+              :label="$t('presentationEditor.text.apply')"
+              icon="done"
+              color="black"
+              no-caps
+              class="full-width"
+              v-close-popup
+              @click="textStore.applyFormattingToSelectedText(`span`)"
+            />
+          </q-item>
+        </q-menu>
+      </q-btn>
 
       <!-- image -->
       <q-btn icon="o_image" unelevated text-color="dark" round size="12px" />
@@ -163,7 +352,12 @@
         @click="drawingStore.redo()"
       />
 
-      <template v-if="drawingState.selectedLineIndex !== -1">
+      <template
+        v-if="
+          drawingState.selectedLineIndex !== -1 ||
+          textState.selectedTextIndex !== -1
+        "
+      >
         <!-- deselect line button -->
         <q-btn
           icon="done"
@@ -171,7 +365,11 @@
           text-color="dark"
           size="12px"
           round
-          @click="drawingStore.deselectLine()"
+          @click="
+            drawingState.selectedLineIndex !== -1
+              ? drawingStore.deselectLine()
+              : textStore.deselectText()
+          "
         />
 
         <!-- delete line button -->
@@ -181,7 +379,11 @@
           text-color="dark"
           size="12px"
           round
-          @click="drawingStore.deleteSelectedLine()"
+          @click="
+            drawingState.selectedLineIndex !== -1
+              ? drawingStore.deleteSelectedLine()
+              : textStore.deleteSelectedText
+          "
         />
       </template>
     </div>
@@ -195,7 +397,7 @@
         @mousedown="handleCanvasMouseDown"
         @mousemove="handleCanvasMouseMove"
         @mouseup="handleCanvasMouseUp"
-        @click="drawingStore.selectLine($event)"
+        @click="handleCanvasClick"
       ></canvas>
 
       <!-- mouse position -->
@@ -212,17 +414,30 @@ import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useDrawingStore } from "stores/canvas/drawing";
 import { useCanvasStore } from "stores/canvas";
+import { useTextStore } from "stores/canvas/text";
 
 /*
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
 
-const { canvas, ctx, mouse } = storeToRefs(useCanvasStore());
+// canvas store
 const canvasStore = useCanvasStore();
+const { canvas, ctx, mouse, mode, texts } = storeToRefs(canvasStore);
 
-const { drawingState } = storeToRefs(useDrawingStore());
+// drawing store
 const drawingStore = useDrawingStore();
+const { drawingState } = storeToRefs(drawingStore);
+
+// text store
+const textStore = useTextStore();
+const { textState } = storeToRefs(textStore);
+
+/*
+ * menu
+ */
+const showTextMenu = ref(false);
+const showDrawingMenu = ref(false);
 
 /*
  * canvas init, setup
@@ -232,6 +447,7 @@ const canvasRef = ref();
 onMounted(() => {
   canvas.value = canvasRef.value;
   ctx.value = canvas.value.getContext("2d");
+  ctx.value.imageSmoothingEnabled = true;
 
   // set default stroke color
   ctx.value.strokeStyle = drawingState.value.customization.strokeColor;
@@ -242,8 +458,8 @@ onMounted(() => {
 
   // shortcuts
   document.addEventListener("keydown", (event) => {
-    event.preventDefault();
-    drawingStore.shortcuts(event);
+    if (mode.value === "drawing") drawingStore.shortcuts(event);
+    if (mode.value === "text") textStore.shortcuts(event);
   });
 });
 
@@ -252,43 +468,107 @@ const resizeCanvas = () => {
   const aspectRatio = 16 / 9;
   canvas.value.width = page.offsetWidth;
   canvas.value.height = page.offsetWidth / aspectRatio;
+
+  canvasStore.clearCanvas();
   drawingStore.redrawCanvas();
+  textStore.redrawCanvas();
 };
 
 /*
  * canvas events
  */
 const handleCanvasMouseDown = (event) => {
-  if (drawingState.value.selectedLineIndex !== -1) {
-    drawingStore.startDrag(event);
-  } else {
-    drawingStore.startPainting(event);
+  if (mode.value === "drawing") {
+    if (drawingState.value.selectedLineIndex !== -1) {
+      drawingStore.startDrag(event);
+    } else {
+      drawingStore.startPainting(event);
+    }
+  }
+
+  if (mode.value === "text") {
+    if (textState.value.selectedTextIndex !== 1) {
+      textStore.startDrag(event);
+    }
+  }
+};
+
+const handleCanvasMouseUp = () => {
+  if (mode.value === "drawing") {
+    if (drawingState.value.selectedLineIndex !== -1) {
+      drawingStore.endDrag();
+    } else {
+      drawingStore.finishedPainting();
+    }
+  }
+
+  if (mode.value === "text") {
+    if (textState.value.selectedTextIndex !== 1) {
+      textStore.endDrag();
+    }
   }
 };
 
 const handleCanvasMouseMove = (event) => {
+  // track mouse
   mouse.value = {
     x: event.clientX - canvasStore.canvasRect().left,
     y: event.clientY - canvasStore.canvasRect().top,
   };
 
-  if (drawingState.value.selectedLineIndex !== -1) {
-    drawingStore.dragLine(event);
-  } else {
-    drawingStore.draw(event);
+  if (mode.value === "drawing") {
+    if (drawingState.value.selectedLineIndex !== -1) {
+      drawingStore.dragLine(event);
+    } else {
+      drawingStore.draw(event);
+    }
+  }
+
+  if (mode.value === "text") {
+    if (textState.value.selectedTextIndex !== -1) {
+      textStore.dragText(event);
+    } else {
+      const hoveredTextIndex = textStore.findText(event);
+
+      if (hoveredTextIndex !== -1) {
+        const hoveredText = texts.value[hoveredTextIndex];
+
+        const { paddingLeft } = canvasStore.getPaddings();
+        const paddingTop = 8;
+
+        textStore.drawBorder(
+          hoveredText.x + paddingLeft,
+          hoveredText.y + paddingTop,
+          hoveredText.box.width,
+          hoveredText.box.height
+        );
+      } else {
+        textStore.redrawCanvas();
+      }
+    }
   }
 };
 
-const handleCanvasMouseUp = () => {
-  if (drawingState.value.selectedLineIndex !== -1) {
-    drawingStore.endDrag();
-  } else {
-    drawingStore.finishedPainting();
+const handleCanvasClick = (event) => {
+  if (mode.value === "drawing") {
+    drawingStore.selectLine(event);
+  }
+
+  if (mode.value === "text") {
+    const clickedTextIndex = textStore.findText(event);
+
+    if (clickedTextIndex !== -1) {
+      textStore.selectText(clickedTextIndex);
+    } else {
+      textStore.createNewText(event);
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
 .q-page {
   height: calc(100vh - 66px);
   overflow-y: scroll;

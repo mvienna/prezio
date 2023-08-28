@@ -1,11 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
-import { api } from "boot/axios";
-import { ROUTE_PATHS } from "src/constants/routes";
-import { useI18n } from "vue-i18n";
-import { computed } from "vue";
 import { useCanvasStore } from "stores/canvas/index";
 
-const { canvas, ctx } = storeToRefs(useCanvasStore());
+const { ctx, lines } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
 export const useDrawingStore = defineStore("canvasDrawing", {
@@ -14,7 +10,6 @@ export const useDrawingStore = defineStore("canvasDrawing", {
       /*
        * lines
        */
-      lines: [],
       currentLine: null,
       currentIndex: -1,
       selectedLineIndex: -1,
@@ -39,7 +34,7 @@ export const useDrawingStore = defineStore("canvasDrawing", {
       /*
        * dragging
        */
-      draggingLine: null,
+      isDraggingLine: null,
       dragStart: {
         x: 0,
         y: 0,
@@ -151,7 +146,7 @@ export const useDrawingStore = defineStore("canvasDrawing", {
           points: [],
         };
 
-        this.drawingState.lines.push(this.drawingState.currentLine);
+        lines.value.push(this.drawingState.currentLine);
         this.drawingState.currentIndex++;
       }
 
@@ -199,10 +194,6 @@ export const useDrawingStore = defineStore("canvasDrawing", {
       ctx.value.moveTo(x, y);
     },
 
-    clearCanvas() {
-      ctx.value.clearRect(0, 0, canvas.value.width, canvas.value.height);
-    },
-
     toggleEraser() {
       this.drawingState.eraserMode = !this.drawingState.eraserMode;
       this.drawingState.last.x = null;
@@ -210,49 +201,7 @@ export const useDrawingStore = defineStore("canvasDrawing", {
     },
 
     redrawCanvas() {
-      this.clearCanvas();
-      this.drawingState.lines.forEach((line, index) => {
-        ctx.value.strokeStyle = line.color;
-        ctx.value.lineWidth = line.brushSize;
-
-        // reset default styles
-        ctx.value.globalAlpha = 1;
-        ctx.value.shadowBlur = null;
-        ctx.value.shadowColor = null;
-
-        switch (line.brushType) {
-          case "pen":
-            break;
-
-          case "pencil":
-            ctx.value.globalAlpha = 0.1;
-            break;
-
-          case "marker":
-            ctx.value.shadowBlur = 4;
-            ctx.value.shadowColor = line.color;
-            break;
-        }
-
-        ctx.value.beginPath();
-        line.points.forEach((point, pointIndex) => {
-          if (pointIndex === 0) {
-            ctx.value.moveTo(point.x, point.y);
-          } else {
-            ctx.value.lineTo(point.x, point.y);
-            ctx.value.stroke();
-          }
-        });
-
-        if (index === this.drawingState.currentIndex) {
-          const minX = Math.min(...line.points.map((point) => point.x));
-          const maxX = Math.max(...line.points.map((point) => point.x));
-          const minY = Math.min(...line.points.map((point) => point.y));
-          const maxY = Math.max(...line.points.map((point) => point.y));
-          this.drawBorder(minX, minY, maxX - minX, maxY - minY);
-        }
-      });
-      ctx.value.beginPath();
+      canvasStore.redrawCanvas();
     },
 
     /*
@@ -268,8 +217,8 @@ export const useDrawingStore = defineStore("canvasDrawing", {
 
       let foundLine = false;
 
-      for (let i = 0; i < this.drawingState.lines.length; i++) {
-        const line = this.drawingState.lines[i];
+      for (let i = 0; i < lines.value.length; i++) {
+        const line = lines.value[i];
         const minX = Math.min(...line.points.map((point) => point.x));
         const maxX = Math.max(...line.points.map((point) => point.x));
         const minY = Math.min(...line.points.map((point) => point.y));
@@ -334,7 +283,7 @@ export const useDrawingStore = defineStore("canvasDrawing", {
 
     deleteSelectedLine() {
       if (this.drawingState.selectedLineIndex !== -1) {
-        const deletedLine = this.drawingState.lines.splice(
+        const deletedLine = lines.value.splice(
           this.drawingState.selectedLineIndex,
           1
         )[0];
@@ -348,8 +297,8 @@ export const useDrawingStore = defineStore("canvasDrawing", {
      * dragging
      */
     startDrag(event) {
-      this.drawingState.draggingLine = true;
-      const line = this.drawingState.lines[this.drawingState.selectedLineIndex];
+      this.drawingState.isDraggingLine = true;
+      const line = lines.value[this.drawingState.selectedLineIndex];
       const bounds = this.getLineBoundingBox(line);
       this.drawingState.dragStart.x =
         event.clientX - canvasStore.canvasRect().left - bounds.x;
@@ -358,11 +307,11 @@ export const useDrawingStore = defineStore("canvasDrawing", {
     },
 
     endDrag() {
-      this.drawingState.draggingLine = false;
+      this.drawingState.isDraggingLine = false;
     },
 
     dragLine(event) {
-      if (this.drawingState.draggingLine) {
+      if (this.drawingState.isDraggingLine) {
         const newX =
           event.clientX -
           canvasStore.canvasRect().left -
@@ -384,7 +333,7 @@ export const useDrawingStore = defineStore("canvasDrawing", {
     },
 
     moveLine(newX, newY) {
-      const line = this.drawingState.lines[this.drawingState.selectedLineIndex];
+      const line = lines.value[this.drawingState.selectedLineIndex];
       const deltaX = newX - line.points[0].x;
       const deltaY = newY - line.points[0].y;
 
@@ -402,7 +351,7 @@ export const useDrawingStore = defineStore("canvasDrawing", {
     undo() {
       if (this.drawingState.undoStack.length > 0) {
         const line = this.drawingState.undoStack.pop();
-        this.drawingState.lines.pop();
+        lines.value.pop();
         this.drawingState.redoStack.push(line);
         this.redrawCanvas();
         this.drawingState.customization.brushSize = line.brushSize;
@@ -412,7 +361,7 @@ export const useDrawingStore = defineStore("canvasDrawing", {
     redo() {
       if (this.drawingState.redoStack.length > 0) {
         const line = this.drawingState.redoStack.pop();
-        this.drawingState.lines.push(line);
+        lines.value.push(line);
         this.drawingState.undoStack.push(line);
         this.redrawCanvas();
         this.drawingState.customization.brushSize = line.brushSize;
@@ -425,11 +374,13 @@ export const useDrawingStore = defineStore("canvasDrawing", {
     shortcuts(event) {
       // delete selected line
       if (event.key === "Delete" || event.key === "Backspace") {
+        event.preventDefault();
         this.deleteSelectedLine();
       }
 
       // undo & redo
       if ((event.ctrlKey || event.metaKey) && event.key === "z") {
+        event.preventDefault();
         if (event.shiftKey) {
           this.redo();
         } else {
@@ -439,6 +390,7 @@ export const useDrawingStore = defineStore("canvasDrawing", {
 
       // deselect
       if (event.key === "Escape") {
+        event.preventDefault();
         this.deselectLine();
       }
     },
