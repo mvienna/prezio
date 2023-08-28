@@ -21,7 +21,7 @@
         <template #default>
           <form ref="form">
             <input type="file" :id="fileInputId" @change="uploadFile" />
-            <label :for="fileInputId" class="btn-1">
+            <label :for="fileInputId">
               <q-icon name="attach_file" size="sm" class="q-pr-sm" />
               {{ $t("user.profile.form.avatar.upload") }}
             </label>
@@ -78,6 +78,7 @@ const uploadFile = async (event) => {
   formData.append("file", file);
   formData.append("model_type", "App\\Models\\User");
   formData.append("model_id", user.value.id);
+  formData.append("collection", "avatar");
 
   api
     .post("/media", formData, {
@@ -102,6 +103,8 @@ const uploadFile = async (event) => {
 
 // delete
 const deleteFile = () => {
+  isLoading.value = true;
+
   api
     .delete(`/media/${user.value.avatar.id}`)
     .then(() => {
@@ -127,7 +130,7 @@ const deleteFile = () => {
 
 [type="file"] + label {
   border-radius: 8px;
-  padding: 12px 24px;
+  padding: 16px 24px;
   text-align: center;
   min-height: 40px;
   font-weight: 600;

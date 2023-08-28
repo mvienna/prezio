@@ -311,7 +311,18 @@
       </q-btn>
 
       <!-- image -->
-      <q-btn icon="o_image" unelevated text-color="dark" round size="12px" />
+      <q-btn
+        icon="o_image"
+        unelevated
+        text-color="dark"
+        round
+        size="12px"
+        :class="mode === 'media' ? 'bg-grey-2' : ''"
+        @click="
+          canvasStore.switchMode('media');
+          showSelectMediaDialog = true;
+        "
+      />
 
       <!-- gif -->
       <q-btn icon="o_gif_box" unelevated text-color="dark" round size="12px" />
@@ -405,6 +416,16 @@
         Mouse Position: {{ mouse.x }}, {{ Math.round(mouse.y) }}
       </div>
     </div>
+
+    <q-dialog v-model="showSelectMediaDialog">
+      <SelectMedia
+        @close="showSelectMediaDialog = false"
+        @select="
+          mediaStore.addImage($event.original_url);
+          showSelectMediaDialog = false;
+        "
+      />
+    </q-dialog>
   </q-page>
 </template>
 
@@ -412,9 +433,11 @@
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
-import { useDrawingStore } from "stores/canvas/drawing";
+import { useCanvasDrawingStore } from "stores/canvas/drawing";
 import { useCanvasStore } from "stores/canvas";
-import { useTextStore } from "stores/canvas/text";
+import { useCanvasTextStore } from "stores/canvas/text";
+import SelectMedia from "components/media/SelectMedia.vue";
+import { useCanvasMediaStore } from "stores/canvas/media";
 
 /*
  * variables
@@ -426,12 +449,19 @@ const canvasStore = useCanvasStore();
 const { canvas, ctx, mouse, mode, texts } = storeToRefs(canvasStore);
 
 // drawing store
-const drawingStore = useDrawingStore();
+const drawingStore = useCanvasDrawingStore();
 const { drawingState } = storeToRefs(drawingStore);
 
 // text store
-const textStore = useTextStore();
+const textStore = useCanvasTextStore();
 const { textState } = storeToRefs(textStore);
+
+// text store
+const mediaStore = useCanvasMediaStore();
+const { mediaState } = storeToRefs(mediaStore);
+
+// media
+const showSelectMediaDialog = ref(false);
 
 /*
  * menu

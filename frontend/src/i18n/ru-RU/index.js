@@ -223,14 +223,42 @@ export default {
       },
     },
     text: {
-      formatting: {
-        title: "Форматирование",
-      },
       options: {
         font: "Шрифт",
         fontSize: "Размер шрифта",
       },
       apply: "Применить",
+    },
+  },
+
+  /*
+   * media
+   */
+  media: {
+    select: {
+      title: "Выбор изображения",
+      tabs: {
+        upload: {
+          title: "Загрузка",
+          description: "Загрузите изображение с устройства",
+        },
+        mine: {
+          title: "Мои картинки",
+          empty: "У вас пока что нет загруженных фотографий",
+        },
+        stock: {
+          title: "Стоковые",
+        },
+        gifsAndStickers: {
+          title: "GIF и стикеры",
+        },
+      },
+      submit: "Выбрать",
+    },
+    actions: {
+      delete: {
+        title: "Удалить",
+      },
     },
   },
 };

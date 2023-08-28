@@ -4,7 +4,7 @@ import { useCanvasStore } from "stores/canvas/index";
 const { ctx, texts } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
-export const useTextStore = defineStore("canvasText", {
+export const useCanvasTextStore = defineStore("canvasText", {
   state: () => ({
     textState: {
       input: null,

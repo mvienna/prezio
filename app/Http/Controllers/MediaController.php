@@ -15,6 +15,7 @@ class MediaController extends Controller
     {
         $modelType = $request->input('model_type');
         $modelId = $request->input('model_id');
+        $collection = $request->input('collection');
 
         $model = $modelType::findOrFail($modelId);
 
@@ -22,9 +23,20 @@ class MediaController extends Controller
             ->addMediaFromRequest('file')
             ->usingName($request->file('file')->getClientOriginalName())
             ->usingFileName(uniqid() . '.' . $request->file('file')->getClientOriginalExtension())
-            ->toMediaCollection('avatar');
+            ->toMediaCollection($collection);
 
         return $this->jsonResponse($media->toArray());
+    }
+
+    /*
+     * get
+     */
+    public function get (): jsonResponse
+    {
+        $user = auth()->user();
+        $media = $user->getMedia()->toArray();
+
+        return $this->jsonResponse($media);
     }
 
     /*

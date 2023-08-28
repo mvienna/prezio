@@ -32,5 +32,6 @@ Route::middleware('auth:sanctum')->group(function () {
      * media
      */
     Route::post('/media', [MediaController::class, 'store']);
+    Route::get('/media', [MediaController::class, 'get']);
     Route::delete('/media/{file_id}', [MediaController::class, 'deletePermanently']);
 });

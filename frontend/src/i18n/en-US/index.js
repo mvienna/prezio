@@ -202,5 +202,12 @@ export default {
         marker: "Marker",
       },
     },
+    text: {
+      options: {
+        font: "Font",
+        fontSize: "Font size",
+      },
+      apply: "Apply",
+    },
   },
 };

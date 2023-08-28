@@ -4,7 +4,7 @@ import { useCanvasStore } from "stores/canvas/index";
 const { ctx, lines } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
-export const useDrawingStore = defineStore("canvasDrawing", {
+export const useCanvasDrawingStore = defineStore("canvasDrawing", {
   state: () => ({
     drawingState: {
       /*
