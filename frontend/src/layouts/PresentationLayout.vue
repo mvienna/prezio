@@ -12,7 +12,7 @@
           size="10px"
         >
           <template #default>
-            <q-img src="/public/favicon.ico" />
+            <q-img src="/favicon.ico" />
           </template>
         </q-btn>
 
@@ -36,7 +36,7 @@
           />
         </div>
 
-        <div class="presentation_title">
+        <div class="text-h6 text-semibold text-black">
           <span>Новая презентация</span>
           <q-icon name="o_visibility" color="grey-5" class="q-ml-sm" />
         </div>
@@ -255,12 +255,6 @@ const rightDrawerTab = ref(rightDrawerTabs[0].name);
 </script>
 
 <style scoped lang="scss">
-.presentation_title {
-  font-size: 20px;
-  font-weight: 600;
-  color: $dark;
-}
-
 /*
  * tabs
  */

@@ -120,7 +120,7 @@
     >
       <!-- logo -->
       <div class="drawer__logo q-ma-lg">
-        <q-img src="/public/logo_white.png" />
+        <q-img src="/logo_white.png" />
       </div>
 
       <!-- links -->
