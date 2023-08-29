@@ -73,6 +73,10 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
   }),
 
   actions: {
+    redrawCanvas() {
+      canvasStore.redrawCanvas();
+    },
+
     /*
      * drawing
      */
@@ -198,10 +202,6 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       this.drawingState.eraserMode = !this.drawingState.eraserMode;
       this.drawingState.last.x = null;
       this.drawingState.last.y = null;
-    },
-
-    redrawCanvas() {
-      canvasStore.redrawCanvas();
     },
 
     /*
@@ -389,7 +389,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       }
 
       // deselect
-      if (event.key === "Escape") {
+      if (event.key === "Escape" || event.key === "Enter") {
         event.preventDefault();
         this.deselectLine();
       }

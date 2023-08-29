@@ -366,7 +366,8 @@
       <template
         v-if="
           drawingState.selectedLineIndex !== -1 ||
-          textState.selectedTextIndex !== -1
+          textState.selectedTextIndex !== -1 ||
+          mediaState.selectedImageIndex !== -1
         "
       >
         <!-- deselect line button -->
@@ -379,7 +380,11 @@
           @click="
             drawingState.selectedLineIndex !== -1
               ? drawingStore.deselectLine()
-              : textStore.deselectText()
+              : textState.selectedTextIndex !== -1
+              ? textStore.deselectText()
+              : mediaState.selectedImageIndex !== -1
+              ? mediaStore.deselectImage()
+              : ''
           "
         />
 
@@ -393,7 +398,11 @@
           @click="
             drawingState.selectedLineIndex !== -1
               ? drawingStore.deleteSelectedLine()
-              : textStore.deleteSelectedText
+              : textState.selectedTextIndex !== -1
+              ? textStore.deleteSelectedText
+              : mediaState.selectedImageIndex !== -1
+              ? mediaStore.deleteSelectedImage()
+              : ''
           "
         />
       </template>
@@ -405,6 +414,7 @@
       <canvas
         ref="canvasRef"
         id="canvas"
+        :style="`cursor: ${canvasCursor}`"
         @mousedown="handleCanvasMouseDown"
         @mousemove="handleCanvasMouseMove"
         @mouseup="handleCanvasMouseUp"
@@ -430,7 +440,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
@@ -456,7 +466,7 @@ const { drawingState } = storeToRefs(drawingStore);
 const textStore = useCanvasTextStore();
 const { textState } = storeToRefs(textStore);
 
-// text store
+// media store
 const mediaStore = useCanvasMediaStore();
 const { mediaState } = storeToRefs(mediaStore);
 
@@ -490,6 +500,13 @@ onMounted(() => {
   document.addEventListener("keydown", (event) => {
     if (mode.value === "drawing") drawingStore.shortcuts(event);
     if (mode.value === "text") textStore.shortcuts(event);
+    if (mode.value === "media") mediaStore.shortcuts(event);
+  });
+
+  document.addEventListener("keyup", (event) => {
+    if (event.key === "Shift") {
+      mediaState.value.isShiftKeyPressed = false;
+    }
   });
 });
 
@@ -507,6 +524,26 @@ const resizeCanvas = () => {
 /*
  * canvas events
  */
+const canvasCursor = computed(() => {
+  return mediaState.value.resizeHandle
+    ? mediaState.value.resizeHandle === "top-left"
+      ? "nw-resize"
+      : mediaState.value.resizeHandle === "top-right"
+      ? "ne-resize"
+      : mediaState.value.resizeHandle === "bottom-left"
+      ? "sw-resize"
+      : mediaState.value.resizeHandle === "bottom-right"
+      ? "se-resize"
+      : ""
+    : mediaState.value.rotationHandle
+    ? "crosshair"
+    : drawingState.value.selectedLineIndex !== -1 ||
+      textState.value.selectedTextIndex !== -1 ||
+      mediaState.value.selectedImageIndex !== -1
+    ? "move"
+    : "default";
+});
+
 const handleCanvasMouseDown = (event) => {
   if (mode.value === "drawing") {
     if (drawingState.value.selectedLineIndex !== -1) {
@@ -517,8 +554,20 @@ const handleCanvasMouseDown = (event) => {
   }
 
   if (mode.value === "text") {
-    if (textState.value.selectedTextIndex !== 1) {
+    if (textState.value.selectedTextIndex !== -1) {
       textStore.startDrag(event);
+    }
+  }
+
+  if (mode.value === "media") {
+    if (mediaState.value.selectedImageIndex !== -1) {
+      if (mediaState.value.resizeHandle) {
+        mediaStore.startResize(event);
+      } else if (mediaState.value.rotationHandle) {
+        mediaStore.startRotate(event);
+      } else {
+        mediaStore.startDrag(event);
+      }
     }
   }
 };
@@ -533,8 +582,20 @@ const handleCanvasMouseUp = () => {
   }
 
   if (mode.value === "text") {
-    if (textState.value.selectedTextIndex !== 1) {
+    if (textState.value.selectedTextIndex !== -1) {
       textStore.endDrag();
+    }
+  }
+
+  if (mode.value === "media") {
+    if (mediaState.value.selectedImageIndex !== -1) {
+      if (mediaState.value.isResizing) {
+        mediaStore.endResize();
+      } else if (mediaState.value.isRotating) {
+        mediaStore.endRotate();
+      } else {
+        mediaStore.endDrag();
+      }
     }
   }
 };
@@ -577,6 +638,21 @@ const handleCanvasMouseMove = (event) => {
       }
     }
   }
+
+  if (mode.value === "media") {
+    if (mediaState.value.selectedImageIndex !== -1) {
+      mediaState.value.resizeHandle = mediaStore.getResizeHandle(event);
+      mediaState.value.rotationHandle = mediaStore.getRotationHandle(event);
+
+      if (mediaState.value.isResizing) {
+        mediaStore.resizeImage(event);
+      } else if (mediaState.value.isRotating) {
+        mediaStore.rotateImage(event);
+      } else {
+        mediaStore.dragImage(event);
+      }
+    }
+  }
 };
 
 const handleCanvasClick = (event) => {
@@ -593,6 +669,10 @@ const handleCanvasClick = (event) => {
       textStore.createNewText(event);
     }
   }
+
+  if (mode.value === "media") {
+    mediaStore.selectImage(event);
+  }
 };
 </script>
 
@@ -607,7 +687,6 @@ const handleCanvasClick = (event) => {
 canvas {
   background-color: $white;
   border-radius: 6px;
-  cursor: crosshair;
   width: 100%;
 }
 

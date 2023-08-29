@@ -14,6 +14,7 @@ export const useCanvasStore = defineStore("canvas", {
 
     texts: [],
     lines: [],
+    images: [],
   }),
 
   actions: {
@@ -46,6 +47,7 @@ export const useCanvasStore = defineStore("canvas", {
       this.clearCanvas();
       this.redrawTexts();
       this.redrawLines();
+      this.redrawImages();
     },
 
     /*
@@ -202,6 +204,28 @@ export const useCanvasStore = defineStore("canvas", {
       tempDiv.remove();
 
       return formattedSegments.filter((segment) => segment !== null);
+    },
+
+    /*
+     * REDRAW IMAGES
+     */
+    redrawImages() {
+      for (const imageData of this.images) {
+        this.ctx.save();
+        this.ctx.translate(
+          imageData.x + imageData.width / 2,
+          imageData.y + imageData.height / 2
+        );
+        this.ctx.rotate((imageData.rotation * Math.PI) / 180);
+        this.ctx.drawImage(
+          imageData.image,
+          -imageData.width / 2,
+          -imageData.height / 2,
+          imageData.width,
+          imageData.height
+        );
+        this.ctx.restore();
+      }
     },
   },
 });

@@ -72,32 +72,12 @@ export const useCanvasTextStore = defineStore("canvasText", {
   }),
 
   actions: {
-    /*
-     * redraw canvas
-     */
     redrawCanvas() {
       canvasStore.redrawCanvas();
     },
 
-    underline(ctx, text, x, y, size, color, thickness) {
-      ctx.font = `${size}px ${this.textState.customization.font}`;
-      ctx.fillStyle = color;
-
-      const width = ctx.measureText(text).width;
-      ctx.fillText(text, x, y);
-
-      const underlineY = y + size + 2;
-
-      ctx.beginPath();
-      ctx.strokeStyle = color;
-      ctx.lineWidth = thickness;
-      ctx.moveTo(x, underlineY);
-      ctx.lineTo(x + width, underlineY);
-      ctx.stroke();
-    },
-
     /*
-     * new text
+     * add new text
      */
     createTextInput() {
       this.textState.input = document.createElement("div");
@@ -261,10 +241,9 @@ export const useCanvasTextStore = defineStore("canvasText", {
     deleteSelectedText(event) {
       if (this.textState.selectedTextIndex !== -1) {
         event.preventDefault();
-        texts.value = texts.value.splice(
-          this.textState.selectedTextIndex,
-          1
-        )[0];
+        texts.value = texts.value.filter(
+          (text, index) => index !== this.textState.selectedTextIndex
+        );
         this.textState.selectedTextIndex = -1;
         this.redrawCanvas();
       }
@@ -418,6 +397,23 @@ export const useCanvasTextStore = defineStore("canvasText", {
       }
     },
 
+    underline(ctx, text, x, y, size, color, thickness) {
+      ctx.font = `${size}px ${this.textState.customization.font}`;
+      ctx.fillStyle = color;
+
+      const width = ctx.measureText(text).width;
+      ctx.fillText(text, x, y);
+
+      const underlineY = y + size + 2;
+
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = thickness;
+      ctx.moveTo(x, underlineY);
+      ctx.lineTo(x + width, underlineY);
+      ctx.stroke();
+    },
+
     /*
      * shortcuts
      */
@@ -428,7 +424,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       }
 
       // deselect
-      if (event.key === "Escape") {
+      if (event.key === "Escape" || event.key === "Enter") {
         event.preventDefault();
         this.deselectText();
       }

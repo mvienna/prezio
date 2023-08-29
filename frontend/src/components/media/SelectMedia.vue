@@ -3,8 +3,10 @@
     <!-- toolbar -->
     <q-card-section class="q-card__toolbar_section q-pa-lg">
       <q-toolbar class="justify-between">
+        <!-- title -->
         <div class="text-h6 text-bold">{{ $t("media.select.title") }}</div>
 
+        <!-- close -->
         <q-btn
           text-color="grey-5"
           unelevated
@@ -35,9 +37,9 @@
 
     <!-- content -->
     <q-card-section class="q-pa-lg">
-      <q-tab-panels v-model="tab" animated class="q-pt-md">
+      <q-tab-panels v-model="tab" animated>
         <!-- upload -->
-        <q-tab-panel name="upload">
+        <q-tab-panel name="upload" class="q-pa-none">
           <template v-if="selectedFile">
             <!-- uploaded file -->
             <q-img
@@ -47,18 +49,33 @@
               :alt="selectedFile.filename"
             />
 
-            <!-- reset file -->
-            <q-btn
-              color="red"
-              flat
-              icon="delete"
-              round
-              class="absolute-right q-mr-md q-mt-md"
-              style="height: 24px"
-              @click="deleteFile(selectedFile)"
-            />
+            <div class="absolute-right q-mr-lg q-mt-lg row no-wrap">
+              <!-- delete file -->
+              <q-btn
+                color="grey-5"
+                unelevated
+                icon="delete"
+                round
+                style="height: 24px"
+                class="q-mr-sm"
+                size="10px"
+                @click="deleteFile(selectedFile)"
+              />
+
+              <!-- reset file -->
+              <q-btn
+                color="grey-5"
+                unelevated
+                icon="close"
+                round
+                style="height: 24px"
+                size="10px"
+                @click="selectedFile = null"
+              />
+            </div>
           </template>
 
+          <!-- illustration -->
           <template v-else>
             <div class="row justify-center">
               <q-img src="/assets/images/upload.svg" width="300px" />
@@ -114,7 +131,7 @@
               :class="
                 selectedFile?.id === file.id ? 'masonry__item--selected' : ''
               "
-              @click="selectedFile = file"
+              @click="selectedFile = selectedFile?.id === file.id ? null : file"
             >
               <q-img
                 v-if="file?.mime_type?.includes('image')"
@@ -153,21 +170,27 @@
       </q-tab-panels>
     </q-card-section>
 
-    <q-card-section
-      v-if="selectedFile"
-      class="q-card__submit_button_section q-pa-lg"
+    <transition
+      appear
+      enter-active-class="animated fadeInUp"
+      leave-active-class="animated fadeOutDown"
     >
-      <q-btn
-        round
-        no-caps
-        class="full-width q-py-md"
-        color="primary"
-        unelevated
-        :label="$t('media.select.submit')"
-        @click="$emit('select', selectedFile)"
-        icon="done"
-      />
-    </q-card-section>
+      <q-card-section
+        v-if="selectedFile"
+        class="q-card__submit_button_section q-px-lg q-pb-lg q-pt-none"
+      >
+        <q-btn
+          round
+          no-caps
+          class="full-width q-py-md"
+          color="primary"
+          unelevated
+          :label="$t('media.select.submit')"
+          @click="$emit('select', selectedFile)"
+          icon="done"
+        />
+      </q-card-section>
+    </transition>
   </q-card>
 </template>
 
@@ -296,7 +319,7 @@ const deleteFile = (file) => {
 .q-card__submit_button_section {
   position: sticky;
   bottom: 0;
-  background: $white;
+  //background: $white;
 }
 
 /*
@@ -366,6 +389,7 @@ const deleteFile = (file) => {
 .masonry {
   columns: 2 200px;
   column-gap: 16px;
+  margin-bottom: -16px;
 
   .masonry__item {
     margin-bottom: 16px;
@@ -374,6 +398,7 @@ const deleteFile = (file) => {
     width: 100%;
     cursor: pointer;
     transition: 0.2s;
+    border-width: 1.5px;
     outline: 3px solid transparent;
 
     &:hover {

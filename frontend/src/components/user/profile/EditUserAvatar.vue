@@ -130,7 +130,7 @@ const deleteFile = () => {
 
 [type="file"] + label {
   border-radius: 8px;
-  padding: 16px 24px;
+  padding: 12px 24px;
   text-align: center;
   min-height: 40px;
   font-weight: 600;
