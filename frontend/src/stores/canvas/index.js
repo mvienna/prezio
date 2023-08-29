@@ -10,7 +10,7 @@ export const useCanvasStore = defineStore("canvas", {
       y: null,
     },
 
-    mode: "text",
+    mode: "drawing",
 
     texts: [],
     lines: [],
