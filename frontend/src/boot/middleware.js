@@ -24,7 +24,7 @@ export default async ({ app, router }) => {
       try {
         await store.login(credentials.email, credentials.password);
       } catch (error) {
-        // await store.logout();
+        await store.logout();
       }
     }
   }
@@ -33,13 +33,7 @@ export default async ({ app, router }) => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        await store.auth();
-
-        if (
-          allowedUnauthenticatedPaths.includes(router.currentRoute._value.path)
-        ) {
-          router.push(ROUTE_PATHS.DASHBOARD);
-        }
+        state.user.value = await store.auth();
       } catch (error) {
         await store.logout();
       }

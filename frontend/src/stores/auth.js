@@ -71,14 +71,11 @@ export const useAuthStore = defineStore("auth", {
      * auth
      */
     async auth() {
-      await api
-        .get("/user")
-        .then((response) => {
-          this.user = response.data.user;
-        })
-        .catch((error) => {
-          throw error;
-        });
+      const response = await api.get("/user").catch((error) => {
+        throw error;
+      });
+
+      return response.data;
     },
 
     /*
