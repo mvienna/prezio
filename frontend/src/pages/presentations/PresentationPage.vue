@@ -302,6 +302,7 @@
               icon="done"
               color="black"
               no-caps
+              unelevated
               class="full-width"
               v-close-popup
               @click="textStore.applyFormattingToSelectedText(`span`)"
