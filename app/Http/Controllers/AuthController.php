@@ -83,10 +83,8 @@ class AuthController extends Controller
     {
         /*
          * delete all tokens, essentially logging the user out
-         * delete the current token that was used for the request
          */
         $request->user()->tokens()->delete();
-        $request->user()->currentAccessToken()->delete();
 
         return $this->successResponse();
     }
