@@ -6,22 +6,54 @@ export default async ({ app, router }) => {
   const store = useAuthStore();
   const state = storeToRefs(useAuthStore());
 
-  const token = localStorage.getItem("token");
-
   const allowedUnauthenticatedPaths = [
     ROUTE_PATHS.AUTH.LOGIN,
     ROUTE_PATHS.AUTH.RESTORE_PASSWORD,
     ROUTE_PATHS.AUTH.SIGNUP,
   ];
 
+  /*
+   * laravel sanctum is designed for authentication within a single domain and doesn't support sharing sessions or authentication across different domains
+   * for that reason, only in DEV mode the app saves user credentials and logs in using them afterwords
+   * in PROD mode the app is hosting frontend & backend on the same domain, so there aren't any issues with that
+   */
+  if (process.env.DEV) {
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+
+    if (credentials) {
+      try {
+        await store.login(credentials.email, credentials.password);
+      } catch (error) {
+        // await store.logout();
+      }
+    }
+  }
+
+  if (process.env.PROD) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        await store.auth();
+
+        if (
+          allowedUnauthenticatedPaths.includes(router.currentRoute._value.path)
+        ) {
+          router.push(ROUTE_PATHS.DASHBOARD);
+        }
+      } catch (error) {
+        await store.logout();
+      }
+    }
+  }
+
+  /*
+   * route middleware
+   */
   router.beforeEach(async (to, from, next) => {
     /*
      * not authenticated
      */
-    if (
-      !token &&
-      (state.user.value === undefined || state.user.value === null)
-    ) {
+    if (state.user.value === undefined || state.user.value === null) {
       if (!allowedUnauthenticatedPaths.includes(to.path)) {
         next(ROUTE_PATHS.AUTH.LOGIN);
         return;
@@ -48,37 +80,4 @@ export default async ({ app, router }) => {
 
     next();
   });
-
-  /*
-   * laravel sanctum is designed for authentication within a single domain and doesn't support sharing sessions or authentication across different domains
-   * for that reason, only in DEV mode the app saves user credentials and logs in using them afterwords
-   * in PROD mode the app is hosting frontend & backend on the same domain, so there aren't any issues with that
-   */
-  if (process.env.DEV) {
-    const credentials = JSON.parse(localStorage.getItem("credentials"));
-
-    if (credentials) {
-      try {
-        await store.login(credentials.email, credentials.password);
-      } catch (error) {
-        // await store.logout();
-      }
-    }
-  }
-
-  if (process.env.PROD) {
-    if (token) {
-      try {
-        await store.auth();
-
-        if (
-          allowedUnauthenticatedPaths.includes(router.currentRoute._value.path)
-        ) {
-          router.push(ROUTE_PATHS.DASHBOARD);
-        }
-      } catch (error) {
-        await store.logout();
-      }
-    }
-  }
 };
