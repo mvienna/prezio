@@ -25,6 +25,8 @@ export const useAuthStore = defineStore("auth", {
             "Authorization"
           ] = `Bearer ${response.data.token}`;
 
+          localStorage.setItem("token", response.data.token);
+
           this.setUserCredentialsForDev(credentials);
         })
         .catch((error) => {

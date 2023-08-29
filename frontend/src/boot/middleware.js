@@ -67,11 +67,11 @@ export default async ({ app, router }) => {
       try {
         await store.auth();
 
-        // if (
-        //   allowedUnauthenticatedPaths.includes(router.currentRoute._value.path)
-        // ) {
-        //   router.push(ROUTE_PATHS.DASHBOARD);
-        // }
+        if (
+          allowedUnauthenticatedPaths.includes(router.currentRoute._value.path)
+        ) {
+          router.push(ROUTE_PATHS.DASHBOARD);
+        }
       } catch (error) {
         await store.logout();
       }
