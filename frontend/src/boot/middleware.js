@@ -6,6 +6,8 @@ export default async ({ app, router }) => {
   const store = useAuthStore();
   const state = storeToRefs(useAuthStore());
 
+  const token = localStorage.getItem("token");
+
   const allowedUnauthenticatedPaths = [
     ROUTE_PATHS.AUTH.LOGIN,
     ROUTE_PATHS.AUTH.RESTORE_PASSWORD,
@@ -16,7 +18,10 @@ export default async ({ app, router }) => {
     /*
      * not authenticated
      */
-    if (state.user.value === undefined || state.user.value === null) {
+    if (
+      !token &&
+      (state.user.value === undefined || state.user.value === null)
+    ) {
       if (!allowedUnauthenticatedPaths.includes(to.path)) {
         next(ROUTE_PATHS.AUTH.LOGIN);
         return;
@@ -62,7 +67,6 @@ export default async ({ app, router }) => {
   }
 
   if (process.env.PROD) {
-    const token = localStorage.getItem("token");
     if (token) {
       try {
         await store.auth();
