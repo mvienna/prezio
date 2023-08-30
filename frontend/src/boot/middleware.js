@@ -24,7 +24,6 @@ export default async ({ app, router }) => {
       try {
         await store.login(credentials.email, credentials.password);
       } catch (error) {
-        store.clearUserData();
         window.location = ROUTE_PATHS.AUTH.LOGIN;
       }
     }
