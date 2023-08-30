@@ -9,8 +9,8 @@
         text-color="dark"
         round
         size="12px"
-        :class="mode === 'drawing' ? 'bg-grey-2' : ''"
-        @click="canvasStore.switchMode('drawing')"
+        :class="isDrawingMode ? 'bg-grey-2' : ''"
+        @click="canvasStore.switchMode(modes.drawing)"
         @mouseover="showTextMenu = false"
       >
         <q-menu
@@ -129,8 +129,8 @@
         text-color="dark"
         round
         size="12px"
-        :class="mode === 'text' ? 'bg-grey-2' : ''"
-        @click="canvasStore.switchMode('text')"
+        :class="isTextMode ? 'bg-grey-2' : ''"
+        @click="canvasStore.switchMode(modes.text)"
         @mouseover="showDrawingMenu = false"
       >
         <q-menu
@@ -318,15 +318,15 @@
         text-color="dark"
         round
         size="12px"
-        :class="mode === 'media' ? 'bg-grey-2' : ''"
+        :class="isMediaMode ? 'bg-grey-2' : ''"
         @click="
-          canvasStore.switchMode('media');
+          canvasStore.switchMode(modes.media);
           showSelectMediaDialog = true;
         "
       />
 
       <!-- gif -->
-      <q-btn icon="o_gif_box" unelevated text-color="dark" round size="12px" />
+      <!--      <q-btn icon="o_gif_box" unelevated text-color="dark" round size="12px" />-->
 
       <!-- emoji -->
       <q-btn icon="mood" unelevated text-color="dark" round size="12px" />
@@ -338,31 +338,61 @@
         text-color="dark"
         round
         size="12px"
-      />
+        @click="canvasStore.switchMode(modes.mediaShapes)"
+      >
+        <q-menu
+          v-model="showShapesMenu"
+          anchor="bottom left"
+          self="top left"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :offset="[0, 8]"
+          class="q-pa-sm"
+          style="width: 140px"
+        >
+          <div class="row q-gutter-sm">
+            <q-btn
+              v-for="shape in shapes"
+              :key="shape.name"
+              unelevated
+              round
+              size="12px"
+              class="q-pa-sm"
+              @click="mediaStore.addImage(shape.src)"
+            >
+              <template #default>
+                <q-img :src="shape.src" />
+              </template>
+            </q-btn>
+          </div>
+        </q-menu>
+      </q-btn>
 
       <q-space />
 
-      <!-- undo button -->
-      <q-btn
-        icon="undo"
-        unelevated
-        text-color="dark"
-        size="12px"
-        round
-        :disable="!drawingState.undoStack.length"
-        @click="drawingStore.undo()"
-      />
+      <template v-if="isDrawingMode">
+        <!-- undo button -->
+        <q-btn
+          icon="undo"
+          unelevated
+          text-color="dark"
+          size="12px"
+          round
+          :disable="!drawingState.undoStack.length"
+          @click="drawingStore.undo()"
+        />
 
-      <!-- redo button -->
-      <q-btn
-        icon="redo"
-        unelevated
-        text-color="dark"
-        size="12px"
-        round
-        :disable="!drawingState.redoStack.length"
-        @click="drawingStore.redo()"
-      />
+        <!-- redo button -->
+        <q-btn
+          icon="redo"
+          unelevated
+          text-color="dark"
+          size="12px"
+          round
+          :disable="!drawingState.redoStack.length"
+          @click="drawingStore.redo()"
+        />
+      </template>
 
       <template
         v-if="
@@ -441,7 +471,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
@@ -475,10 +505,49 @@ const { mediaState } = storeToRefs(mediaStore);
 const showSelectMediaDialog = ref(false);
 
 /*
+ * mode
+ */
+const modes = {
+  drawing: "drawing",
+  text: "text",
+  media: "media",
+  mediaShapes: "media-shapes",
+};
+
+const isDrawingMode = computed(() => {
+  return mode.value === modes.drawing;
+});
+
+const isTextMode = computed(() => {
+  return mode.value === modes.text;
+});
+
+const isMediaMode = computed(() => {
+  return mode.value === modes.media;
+});
+
+const isMediaShapesMode = computed(() => {
+  return mode.value === modes.mediaShapes;
+});
+
+/*
  * menu
  */
 const showTextMenu = ref(false);
 const showDrawingMenu = ref(false);
+const showShapesMenu = ref(false);
+
+/*
+ * shapes
+ */
+const shapes = [
+  { name: "circle", src: "/assets/icons/shapes/circle.svg" },
+  { name: "square", src: "/assets/icons/shapes/square.svg" },
+  { name: "triangle", src: "/assets/icons/shapes/triangle.svg" },
+  { name: "star", src: "/assets/icons/shapes/star.svg" },
+  { name: "line", src: "/assets/icons/shapes/line.svg" },
+  { name: "arrow", src: "/assets/icons/shapes/arrow.svg" },
+];
 
 /*
  * canvas init, setup
@@ -499,9 +568,10 @@ onMounted(() => {
 
   // shortcuts
   document.addEventListener("keydown", (event) => {
-    if (mode.value === "drawing") drawingStore.shortcuts(event);
-    if (mode.value === "text") textStore.shortcuts(event);
-    if (mode.value === "media") mediaStore.shortcuts(event);
+    if (isDrawingMode.value) drawingStore.shortcuts(event);
+    if (isTextMode.value) textStore.shortcuts(event);
+    if (isMediaMode.value || isMediaShapesMode.value)
+      mediaStore.shortcuts(event);
   });
 
   document.addEventListener("keyup", (event) => {
@@ -546,7 +616,7 @@ const canvasCursor = computed(() => {
 });
 
 const handleCanvasMouseDown = (event) => {
-  if (mode.value === "drawing") {
+  if (isDrawingMode.value) {
     if (drawingState.value.selectedLineIndex !== -1) {
       drawingStore.startDrag(event);
     } else {
@@ -554,13 +624,13 @@ const handleCanvasMouseDown = (event) => {
     }
   }
 
-  if (mode.value === "text") {
+  if (isTextMode.value) {
     if (textState.value.selectedTextIndex !== -1) {
       textStore.startDrag(event);
     }
   }
 
-  if (mode.value === "media") {
+  if (isMediaMode.value || isMediaShapesMode.value) {
     if (mediaState.value.selectedImageIndex !== -1) {
       if (mediaState.value.resizeHandle) {
         mediaStore.startResize(event);
@@ -574,7 +644,7 @@ const handleCanvasMouseDown = (event) => {
 };
 
 const handleCanvasMouseUp = () => {
-  if (mode.value === "drawing") {
+  if (isDrawingMode.value) {
     if (drawingState.value.selectedLineIndex !== -1) {
       drawingStore.endDrag();
     } else {
@@ -582,13 +652,13 @@ const handleCanvasMouseUp = () => {
     }
   }
 
-  if (mode.value === "text") {
+  if (isTextMode.value) {
     if (textState.value.selectedTextIndex !== -1) {
       textStore.endDrag();
     }
   }
 
-  if (mode.value === "media") {
+  if (isMediaMode.value || isMediaShapesMode.value) {
     if (mediaState.value.selectedImageIndex !== -1) {
       if (mediaState.value.isResizing) {
         mediaStore.endResize();
@@ -608,7 +678,7 @@ const handleCanvasMouseMove = (event) => {
     y: event.clientY - canvasStore.canvasRect().top,
   };
 
-  if (mode.value === "drawing") {
+  if (isDrawingMode.value) {
     if (drawingState.value.selectedLineIndex !== -1) {
       drawingStore.dragLine(event);
     } else {
@@ -616,7 +686,7 @@ const handleCanvasMouseMove = (event) => {
     }
   }
 
-  if (mode.value === "text") {
+  if (isTextMode.value) {
     if (textState.value.selectedTextIndex !== -1) {
       textStore.dragText(event);
     } else {
@@ -640,7 +710,7 @@ const handleCanvasMouseMove = (event) => {
     }
   }
 
-  if (mode.value === "media") {
+  if (isMediaMode.value || isMediaShapesMode.value) {
     if (mediaState.value.selectedImageIndex !== -1) {
       mediaState.value.resizeHandle = mediaStore.getResizeHandle(event);
       mediaState.value.rotationHandle = mediaStore.getRotationHandle(event);
@@ -657,11 +727,11 @@ const handleCanvasMouseMove = (event) => {
 };
 
 const handleCanvasClick = (event) => {
-  if (mode.value === "drawing") {
+  if (isDrawingMode.value) {
     drawingStore.selectLine(event);
   }
 
-  if (mode.value === "text") {
+  if (isTextMode.value) {
     const clickedTextIndex = textStore.findText(event);
 
     if (clickedTextIndex !== -1) {
@@ -671,7 +741,7 @@ const handleCanvasClick = (event) => {
     }
   }
 
-  if (mode.value === "media") {
+  if (isMediaMode.value || isMediaShapesMode.value) {
     mediaStore.selectImage(event);
   }
 };
