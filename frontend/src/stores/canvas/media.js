@@ -246,8 +246,8 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         }
 
         if (
-          Math.abs(rotatedMouseX - handleX) <= paddingLeft &&
-          Math.abs(rotatedMouseY - handleY) <= paddingTop
+          Math.abs(rotatedMouseX - handleX) <= paddingLeft / 1.5 &&
+          Math.abs(rotatedMouseY - handleY) <= paddingTop / 1.5
         ) {
           return handle;
         }
@@ -414,18 +414,18 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         if (handle.includes("left")) {
           handleX = image.x;
         } else {
-          handleX = image.x + image.width - paddingLeft * 4;
+          handleX = image.x + image.width - paddingLeft * 2;
         }
 
         if (handle.includes("top")) {
           handleY = image.y;
         } else {
-          handleY = image.y + image.height - paddingTop * 4;
+          handleY = image.y + image.height - paddingTop * 2;
         }
 
         if (
-          Math.abs(rotatedMouseX - handleX) <= paddingLeft + 24 &&
-          Math.abs(rotatedMouseY - handleY) <= paddingTop + 24
+          Math.abs(rotatedMouseX - handleX) <= paddingLeft * 1.5 &&
+          Math.abs(rotatedMouseY - handleY) <= paddingTop * 1.5
         ) {
           return handle;
         }

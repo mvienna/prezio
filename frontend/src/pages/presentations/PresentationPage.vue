@@ -1,475 +1,39 @@
 <template>
   <q-page>
-    <!-- header -->
-    <div class="bg-white q-py-md q-px-lg row no-wrap q-gutter-md">
-      <!-- drawing -->
-      <q-btn
-        icon="gesture"
-        unelevated
-        text-color="dark"
-        round
-        size="12px"
-        :class="isDrawingMode ? 'bg-grey-2' : ''"
-        @click="canvasStore.switchMode(modes.drawing)"
-      >
-        <q-menu
-          anchor="bottom left"
-          self="top left"
-          transition-show="jump-down"
-          transition-hide="jump-up"
-          :offset="[0, 8]"
-          class="q-pa-sm"
-          style="width: 230px"
-        >
-          <!-- color picker -->
-          <q-item
-            dense
-            class="items-center text-semibold justify-start rounded-borders"
-          >
-            <q-icon
-              name="o_palette"
-              class="q-mr-md text-semibold"
-              :style="`color: ${drawingState.customization.strokeColor}`"
-              size="20px"
-            />
-            <div
-              class="q-mr-lg"
-              :style="`color: ${drawingState.customization.strokeColor}`"
-            >
-              {{ $t("presentationEditor.drawing.options.color") }}
-            </div>
+    <!-- toolbar -->
+    <PresentationToolbar
+      :modes="modes"
+      :is-drawing-mode="isDrawingMode"
+      :is-media-mode="isMediaMode"
+      :is-text-mode="isTextMode"
+      @switch-mode="canvasStore.switchMode($event)"
+      @deselect="
+        drawingState.selectedLineIndex !== -1
+          ? drawingStore.deselectLine()
+          : textState.selectedTextIndex !== -1
+          ? textStore.deselectText()
+          : mediaState.selectedImageIndex !== -1
+          ? mediaStore.deselectImage()
+          : ''
+      "
+      @delete="
+        drawingState.selectedLineIndex !== -1
+          ? drawingStore.deleteSelectedLine()
+          : textState.selectedTextIndex !== -1
+          ? textStore.deleteSelectedText
+          : mediaState.selectedImageIndex !== -1
+          ? mediaStore.deleteSelectedImage()
+          : ''
+      "
+      @undo="drawingStore.undo()"
+      @redo="drawingStore.redo()"
+      @add-image="mediaStore.addImage($event)"
+      @format-text="textStore.applyFormattingToSelectedText($event)"
+      @toggle-eraser="drawingStore.toggleEraser()"
+    />
 
-            <q-space />
-
-            <input
-              type="color"
-              class="color_input"
-              v-model="drawingState.customization.strokeColor"
-            />
-          </q-item>
-
-          <!-- eraser -->
-          <q-item
-            dense
-            class="items-center text-semibold justify-start rounded-borders q-py-sm q-mt-md"
-            :class="drawingState.eraserMode ? 'text-black' : 'text-grey-5'"
-            clickable
-            v-close-popup
-            @click="drawingStore.toggleEraser()"
-          >
-            <q-icon
-              name="icon-eraser"
-              class="q-mr-md text-semibold"
-              size="20px"
-            />
-            <div class="q-mr-lg text-no-wrap">
-              {{ $t("presentationEditor.drawing.options.erase") }}
-            </div>
-          </q-item>
-
-          <!-- brush size -->
-          <q-item
-            dense
-            class="items-center text-semibold justify-start rounded-borders q-mt-sm"
-          >
-            <q-select
-              v-model="drawingState.customization.brushSize"
-              :options="drawingState.customization.brushSizeOptions"
-              map-options
-              emit-value
-              borderless
-              :label="$t('presentationEditor.drawing.options.brushSize')"
-              class="full-width"
-              color="dark"
-            >
-              <template #prepend>
-                <q-icon
-                  name="line_weight"
-                  class="q-mr-xs text-semibold text-dark"
-                  size="20px"
-                />
-              </template>
-            </q-select>
-          </q-item>
-
-          <!-- brush type -->
-          <q-item
-            dense
-            class="items-center text-semibold justify-start rounded-borders"
-          >
-            <q-select
-              v-model="drawingState.customization.selectedBrushType"
-              :options="drawingState.customization.brushTypes"
-              map-options
-              emit-value
-              :option-label="(option) => $t(option.label)"
-              borderless
-              class="full-width"
-              color="dark"
-              :label="$t('presentationEditor.drawing.options.brushType')"
-            >
-              <template #prepend>
-                <q-icon
-                  name="brush"
-                  class="q-mr-xs text-semibold text-dark"
-                  size="20px"
-                />
-              </template>
-            </q-select>
-          </q-item>
-        </q-menu>
-      </q-btn>
-
-      <!-- text -->
-      <q-btn
-        icon="text_fields"
-        unelevated
-        text-color="dark"
-        round
-        size="12px"
-        :class="isTextMode ? 'bg-grey-2' : ''"
-        @click="canvasStore.switchMode(modes.text)"
-      >
-        <q-menu
-          anchor="bottom left"
-          self="top left"
-          transition-show="jump-down"
-          transition-hide="jump-up"
-          :offset="[0, 8]"
-          class="q-pa-sm"
-        >
-          <!-- formatting -->
-          <div class="row no-wrap q-mx-sm q-mt-sm">
-            <q-btn
-              outline
-              size="10px"
-              round
-              icon="format_bold"
-              style="width: 100%"
-              :text-color="
-                textState.customization.formatting.isBold ? 'white' : 'black'
-              "
-              :class="
-                textState.customization.formatting.isBold
-                  ? 'bg-primary'
-                  : 'bg-white'
-              "
-              v-close-popup
-              @click="
-                textState.customization.formatting.isBold =
-                  !textState.customization.formatting.isBold;
-                textStore.applyFormattingToSelectedText('b');
-              "
-            />
-            <q-btn
-              outline
-              size="10px"
-              round
-              icon="format_underlined"
-              style="width: 100%"
-              class="q-mx-sm"
-              :text-color="
-                textState.customization.formatting.isUnderline
-                  ? 'white'
-                  : 'black'
-              "
-              :class="
-                textState.customization.formatting.isUnderline
-                  ? 'bg-primary'
-                  : 'bg-white'
-              "
-              v-close-popup
-              @click="
-                textState.customization.formatting.isUnderline =
-                  !textState.customization.formatting.isUnderline;
-                textStore.applyFormattingToSelectedText('u');
-              "
-            />
-            <q-btn
-              outline
-              size="10px"
-              round
-              icon="format_italic"
-              class="full-width"
-              :text-color="
-                textState.customization.formatting.isItalic ? 'white' : 'black'
-              "
-              :class="
-                textState.customization.formatting.isItalic
-                  ? 'bg-primary'
-                  : 'bg-white'
-              "
-              style="width: 100%"
-              v-close-popup
-              @click="
-                textState.customization.formatting.isItalic =
-                  !textState.customization.formatting.isItalic;
-                textStore.applyFormattingToSelectedText('i');
-              "
-            />
-          </div>
-
-          <!-- color picker -->
-          <q-item
-            dense
-            class="items-center text-semibold justify-start rounded-borders q-mt-md"
-          >
-            <q-icon
-              name="o_palette"
-              class="q-mr-md text-semibold"
-              :style="`color: ${textState.customization.color}`"
-              size="20px"
-            />
-            <div
-              class="q-mr-lg"
-              :style="`color: ${textState.customization.color}`"
-            >
-              {{ $t("presentationEditor.drawing.options.color") }}
-            </div>
-
-            <q-space />
-
-            <input
-              type="color"
-              class="color_input"
-              v-model="textState.customization.color"
-              @input="textStore.applyFormattingToSelectedText(`span`)"
-            />
-          </q-item>
-
-          <!-- font -->
-          <q-item
-            dense
-            class="items-center text-semibold justify-start rounded-borders q-mt-sm"
-          >
-            <q-select
-              v-model="textState.customization.font"
-              :options="textState.customization.fontOptions"
-              emit-value
-              borderless
-              :label="$t('presentationEditor.text.options.font')"
-              class="full-width"
-              color="dark"
-              @update:model-value="
-                textStore.applyFormattingToSelectedText(`span`)
-              "
-            >
-              <template #prepend>
-                <q-icon
-                  name="text_fields"
-                  class="q-mr-xs text-semibold text-dark"
-                  size="20px"
-                />
-              </template>
-            </q-select>
-          </q-item>
-
-          <!-- font size -->
-          <q-item
-            dense
-            class="items-center text-semibold justify-start rounded-borders"
-          >
-            <q-select
-              v-model="textState.customization.fontSize"
-              :options="textState.customization.fontSizeOptions"
-              emit-value
-              borderless
-              :label="$t('presentationEditor.text.options.fontSize')"
-              class="full-width"
-              color="dark"
-              @update:model-value="
-                textStore.applyFormattingToSelectedText(`span`)
-              "
-            >
-              <template #prepend>
-                <q-icon
-                  name="sort_by_alpha"
-                  class="q-mr-xs text-semibold text-dark"
-                  size="20px"
-                />
-              </template>
-            </q-select>
-          </q-item>
-
-          <!-- apply -->
-          <q-item class="q-px-sm">
-            <q-btn
-              :label="$t('presentationEditor.text.apply')"
-              icon="done"
-              color="black"
-              no-caps
-              unelevated
-              class="full-width"
-              v-close-popup
-              @click="textStore.applyFormattingToSelectedText(`span`)"
-            />
-          </q-item>
-        </q-menu>
-      </q-btn>
-
-      <!-- image -->
-      <q-btn
-        icon="o_image"
-        unelevated
-        text-color="dark"
-        round
-        size="12px"
-        :class="isMediaMode ? 'bg-grey-2' : ''"
-        @click="
-          canvasStore.switchMode(modes.media);
-          showSelectMediaDialog = true;
-        "
-      />
-
-      <!-- gif -->
-      <!--      <q-btn icon="o_gif_box" unelevated text-color="dark" round size="12px" />-->
-
-      <!-- emoji -->
-      <q-btn
-        icon="mood"
-        unelevated
-        text-color="dark"
-        round
-        size="12px"
-        @click="canvasStore.switchMode(modes.mediaEmojis)"
-      >
-        <q-menu
-          anchor="bottom left"
-          self="top left"
-          transition-show="jump-down"
-          transition-hide="jump-up"
-          :offset="[0, 8]"
-          class="q-pa-sm"
-          style="width: 240px"
-        >
-          <div class="row q-gutter-sm">
-            <q-btn
-              v-for="emoji in emojis"
-              :key="emoji.name"
-              unelevated
-              round
-              size="16px"
-              class="q-pa-sm"
-              @click="mediaStore.addImage(emoji.src)"
-            >
-              <template #default>
-                <q-img :src="emoji.src" />
-              </template>
-            </q-btn>
-          </div>
-        </q-menu>
-      </q-btn>
-
-      <!-- shapes -->
-      <q-btn
-        icon="o_shape_line"
-        unelevated
-        text-color="dark"
-        round
-        size="12px"
-        @click="canvasStore.switchMode(modes.mediaShapes)"
-      >
-        <q-menu
-          anchor="bottom left"
-          self="top left"
-          transition-show="jump-down"
-          transition-hide="jump-up"
-          :offset="[0, 8]"
-          class="q-pa-sm"
-          style="width: 140px"
-        >
-          <div class="row q-gutter-sm">
-            <q-btn
-              v-for="shape in shapes"
-              :key="shape.name"
-              unelevated
-              round
-              size="12px"
-              class="q-pa-sm"
-              @click="mediaStore.addImage(shape.src)"
-            >
-              <template #default>
-                <q-img :src="shape.src" />
-              </template>
-            </q-btn>
-          </div>
-        </q-menu>
-      </q-btn>
-
-      <q-space />
-
-      <template v-if="isDrawingMode">
-        <!-- undo button -->
-        <q-btn
-          icon="undo"
-          unelevated
-          text-color="dark"
-          size="12px"
-          round
-          :disable="!drawingState.undoStack.length"
-          @click="drawingStore.undo()"
-        />
-
-        <!-- redo button -->
-        <q-btn
-          icon="redo"
-          unelevated
-          text-color="dark"
-          size="12px"
-          round
-          :disable="!drawingState.redoStack.length"
-          @click="drawingStore.redo()"
-        />
-      </template>
-
-      <template
-        v-if="
-          drawingState.selectedLineIndex !== -1 ||
-          textState.selectedTextIndex !== -1 ||
-          mediaState.selectedImageIndex !== -1
-        "
-      >
-        <!-- deselect line button -->
-        <q-btn
-          icon="done"
-          unelevated
-          text-color="dark"
-          size="12px"
-          round
-          @click="
-            drawingState.selectedLineIndex !== -1
-              ? drawingStore.deselectLine()
-              : textState.selectedTextIndex !== -1
-              ? textStore.deselectText()
-              : mediaState.selectedImageIndex !== -1
-              ? mediaStore.deselectImage()
-              : ''
-          "
-        />
-
-        <!-- delete line button -->
-        <q-btn
-          icon="o_backspace"
-          unelevated
-          text-color="dark"
-          size="12px"
-          round
-          @click="
-            drawingState.selectedLineIndex !== -1
-              ? drawingStore.deleteSelectedLine()
-              : textState.selectedTextIndex !== -1
-              ? textStore.deleteSelectedText
-              : mediaState.selectedImageIndex !== -1
-              ? mediaStore.deleteSelectedImage()
-              : ''
-          "
-        />
-      </template>
-    </div>
-
-    <!-- slide -->
+    <!-- canvas -->
     <div class="q-pa-lg">
-      <!-- canvas -->
       <canvas
         ref="canvasRef"
         id="canvas"
@@ -485,16 +49,6 @@
         Mouse Position: {{ mouse.x }}, {{ Math.round(mouse.y) }}
       </div>
     </div>
-
-    <q-dialog v-model="showSelectMediaDialog">
-      <SelectMedia
-        @close="showSelectMediaDialog = false"
-        @select="
-          mediaStore.addImage($event.original_url);
-          showSelectMediaDialog = false;
-        "
-      />
-    </q-dialog>
   </q-page>
 </template>
 
@@ -505,8 +59,8 @@ import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
 import { useCanvasStore } from "stores/canvas";
 import { useCanvasTextStore } from "stores/canvas/text";
-import SelectMedia from "components/media/SelectMedia.vue";
 import { useCanvasMediaStore } from "stores/canvas/media";
+import PresentationToolbar from "components/presentation/PresentationToolbar.vue";
 
 /*
  * variables
@@ -527,11 +81,6 @@ const { textState } = storeToRefs(textStore);
 
 const mediaStore = useCanvasMediaStore();
 const { mediaState } = storeToRefs(mediaStore);
-
-/*
- * select media
- */
-const showSelectMediaDialog = ref(false);
 
 /*
  * modes
@@ -563,52 +112,6 @@ const isMediaShapesMode = computed(() => {
 const isMediaEmojisMode = computed(() => {
   return mode.value === modes.mediaEmojis;
 });
-
-/*
- * shapes
- */
-const shapes = [
-  { name: "circle", src: "/assets/icons/shapes/circle.svg" },
-  { name: "square", src: "/assets/icons/shapes/square.svg" },
-  { name: "triangle", src: "/assets/icons/shapes/triangle.svg" },
-  { name: "star", src: "/assets/icons/shapes/star.svg" },
-  { name: "line", src: "/assets/icons/shapes/line.svg" },
-  { name: "arrow", src: "/assets/icons/shapes/arrow.svg" },
-];
-
-/*
- * emojis
- */
-const emojis = [
-  { name: "Winking", src: "/assets/icons/emojis/Winking.png" },
-  { name: "Partying", src: "/assets/icons/emojis/Partying.png" },
-  { name: "Emotional", src: "/assets/icons/emojis/Emotional.png" },
-  { name: "Dollar Bill", src: "/assets/icons/emojis/Dollar Bill.png" },
-  { name: "Grinning", src: "/assets/icons/emojis/Grinning.png" },
-  { name: "Zany Face", src: "/assets/icons/emojis/Zany Face.png" },
-  { name: "Perplex", src: "/assets/icons/emojis/Perplex.png" },
-  { name: "Vomiting Face", src: "/assets/icons/emojis/Vomiting Face.png" },
-  { name: "Cool", src: "/assets/icons/emojis/Cool.png" },
-  { name: "Student", src: "/assets/icons/emojis/Student.png" },
-  { name: "Very Angry", src: "/assets/icons/emojis/Very Angry.png" },
-  { name: "Exploding Face", src: "/assets/icons/emojis/Exploding Face.png" },
-  { name: "Laughing", src: "/assets/icons/emojis/Laughing.png" },
-  { name: "Fire", src: "/assets/icons/emojis/Fire.png" },
-  { name: "Strawberry", src: "/assets/icons/emojis/Strawberry.png" },
-  { name: "RocknRoll", src: "/assets/icons/emojis/RocknRoll.png" },
-  { name: "Cowboy", src: "/assets/icons/emojis/Cowboy.png" },
-  { name: "Party", src: "/assets/icons/emojis/Party.png" },
-  { name: "Banana", src: "/assets/icons/emojis/Banana.png" },
-  { name: "Sleeping", src: "/assets/icons/emojis/Sleeping.png" },
-  { name: "Angry", src: "/assets/icons/emojis/Angry.png" },
-  { name: "Loving Eyes", src: "/assets/icons/emojis/Loving Eyes.png" },
-  { name: "Loving Hearts", src: "/assets/icons/emojis/Loving Hearts.png" },
-  { name: "Shy", src: "/assets/icons/emojis/Shy.png" },
-  { name: "Devil", src: "/assets/icons/emojis/Devil.png" },
-  { name: "Wiking Love", src: "/assets/icons/emojis/Wiking Love.png" },
-  { name: "Mr Poopy", src: "/assets/icons/emojis/Mr Poopy.png" },
-  { name: "Robot2D2", src: "/assets/icons/emojis/Robot2D2.png" },
-];
 
 /*
  * canvas init, setup
@@ -654,7 +157,7 @@ const resizeCanvas = () => {
 };
 
 /*
- * canvas events
+ * canvas cursor
  */
 const canvasCursor = computed(() => {
   return mediaState.value.resizeHandle
@@ -668,15 +171,19 @@ const canvasCursor = computed(() => {
       ? "se-resize"
       : ""
     : mediaState.value.rotationHandle
-    ? "crosshair"
+    ? "alias"
     : drawingState.value.selectedLineIndex !== -1 ||
       textState.value.selectedTextIndex !== -1 ||
       mediaState.value.selectedImageIndex !== -1
     ? "move"
-    : "default";
+    : "crosshair";
 });
 
+/*
+ * canvas events
+ */
 const handleCanvasMouseDown = (event) => {
+  // drawing
   if (isDrawingMode.value) {
     if (drawingState.value.selectedLineIndex !== -1) {
       drawingStore.startDrag(event);
@@ -685,12 +192,14 @@ const handleCanvasMouseDown = (event) => {
     }
   }
 
+  // text
   if (isTextMode.value) {
     if (textState.value.selectedTextIndex !== -1) {
       textStore.startDrag(event);
     }
   }
 
+  // media
   if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
     if (mediaState.value.selectedImageIndex !== -1) {
       if (mediaState.value.resizeHandle) {
@@ -705,6 +214,7 @@ const handleCanvasMouseDown = (event) => {
 };
 
 const handleCanvasMouseUp = () => {
+  // drawing
   if (isDrawingMode.value) {
     if (drawingState.value.selectedLineIndex !== -1) {
       drawingStore.endDrag();
@@ -713,12 +223,14 @@ const handleCanvasMouseUp = () => {
     }
   }
 
+  // text
   if (isTextMode.value) {
     if (textState.value.selectedTextIndex !== -1) {
       textStore.endDrag();
     }
   }
 
+  // media
   if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
     if (mediaState.value.selectedImageIndex !== -1) {
       if (mediaState.value.isResizing) {
@@ -739,6 +251,7 @@ const handleCanvasMouseMove = (event) => {
     y: event.clientY - canvasStore.canvasRect().top,
   };
 
+  // drawing
   if (isDrawingMode.value) {
     if (drawingState.value.selectedLineIndex !== -1) {
       drawingStore.dragLine(event);
@@ -747,6 +260,7 @@ const handleCanvasMouseMove = (event) => {
     }
   }
 
+  // text
   if (isTextMode.value) {
     if (textState.value.selectedTextIndex !== -1) {
       textStore.dragText(event);
@@ -771,6 +285,7 @@ const handleCanvasMouseMove = (event) => {
     }
   }
 
+  // media
   if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
     if (mediaState.value.selectedImageIndex !== -1) {
       mediaState.value.resizeHandle = mediaStore.getResizeHandle(event);
@@ -788,10 +303,12 @@ const handleCanvasMouseMove = (event) => {
 };
 
 const handleCanvasClick = (event) => {
+  // drawing
   if (isDrawingMode.value) {
     drawingStore.selectLine(event);
   }
 
+  // text
   if (isTextMode.value) {
     const clickedTextIndex = textStore.findText(event);
 
@@ -802,6 +319,7 @@ const handleCanvasClick = (event) => {
     }
   }
 
+  // media
   if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
     mediaStore.selectImage(event);
   }
@@ -820,24 +338,5 @@ canvas {
   background-color: $white;
   border-radius: 6px;
   width: 100%;
-}
-
-.color_input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  width: calc(36px * 1.5);
-  height: 36px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-.color_input::-webkit-color-swatch {
-  border-radius: 8px;
-  border: none;
-}
-.color_input::-moz-color-swatch {
-  border-radius: 8px;
-  border: none;
 }
 </style>
