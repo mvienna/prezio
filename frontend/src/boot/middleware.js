@@ -21,14 +21,24 @@ export default async ({ app, router }) => {
     const credentials = JSON.parse(localStorage.getItem("credentials"));
 
     if (credentials) {
-      await store.login(credentials.email, credentials.password);
+      try {
+        await store.login(credentials.email, credentials.password);
+      } catch (error) {
+        store.clearUserData();
+        window.location = ROUTE_PATHS.AUTH.LOGIN;
+      }
     }
   }
 
   if (process.env.PROD) {
     const token = localStorage.getItem("token");
     if (token) {
-      state.user.value = await store.auth();
+      try {
+        state.user.value = await store.auth();
+      } catch (error) {
+        store.clearUserData();
+        window.location = ROUTE_PATHS.AUTH.LOGIN;
+      }
     }
   }
 
