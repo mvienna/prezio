@@ -11,10 +11,8 @@
         size="12px"
         :class="isDrawingMode ? 'bg-grey-2' : ''"
         @click="canvasStore.switchMode(modes.drawing)"
-        @mouseover="showTextMenu = false"
       >
         <q-menu
-          v-model="showDrawingMenu"
           anchor="bottom left"
           self="top left"
           transition-show="jump-down"
@@ -131,10 +129,8 @@
         size="12px"
         :class="isTextMode ? 'bg-grey-2' : ''"
         @click="canvasStore.switchMode(modes.text)"
-        @mouseover="showDrawingMenu = false"
       >
         <q-menu
-          v-model="showTextMenu"
           anchor="bottom left"
           self="top left"
           transition-show="jump-down"
@@ -329,7 +325,40 @@
       <!--      <q-btn icon="o_gif_box" unelevated text-color="dark" round size="12px" />-->
 
       <!-- emoji -->
-      <q-btn icon="mood" unelevated text-color="dark" round size="12px" />
+      <q-btn
+        icon="mood"
+        unelevated
+        text-color="dark"
+        round
+        size="12px"
+        @click="canvasStore.switchMode(modes.mediaEmojis)"
+      >
+        <q-menu
+          anchor="bottom left"
+          self="top left"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :offset="[0, 8]"
+          class="q-pa-sm"
+          style="width: 240px"
+        >
+          <div class="row q-gutter-sm">
+            <q-btn
+              v-for="emoji in emojis"
+              :key="emoji.name"
+              unelevated
+              round
+              size="16px"
+              class="q-pa-sm"
+              @click="mediaStore.addImage(emoji.src)"
+            >
+              <template #default>
+                <q-img :src="emoji.src" />
+              </template>
+            </q-btn>
+          </div>
+        </q-menu>
+      </q-btn>
 
       <!-- shapes -->
       <q-btn
@@ -341,7 +370,6 @@
         @click="canvasStore.switchMode(modes.mediaShapes)"
       >
         <q-menu
-          v-model="showShapesMenu"
           anchor="bottom left"
           self="top left"
           transition-show="jump-down"
@@ -485,33 +513,35 @@ import { useCanvasMediaStore } from "stores/canvas/media";
  */
 const { t } = useI18n({ useScope: "global" });
 
-// canvas store
+/*
+ * stores
+ */
 const canvasStore = useCanvasStore();
 const { canvas, ctx, mouse, mode, texts } = storeToRefs(canvasStore);
 
-// drawing store
 const drawingStore = useCanvasDrawingStore();
 const { drawingState } = storeToRefs(drawingStore);
 
-// text store
 const textStore = useCanvasTextStore();
 const { textState } = storeToRefs(textStore);
 
-// media store
 const mediaStore = useCanvasMediaStore();
 const { mediaState } = storeToRefs(mediaStore);
 
-// media
+/*
+ * select media
+ */
 const showSelectMediaDialog = ref(false);
 
 /*
- * mode
+ * modes
  */
 const modes = {
   drawing: "drawing",
   text: "text",
   media: "media",
   mediaShapes: "media-shapes",
+  mediaEmojis: "media-emojis",
 };
 
 const isDrawingMode = computed(() => {
@@ -530,12 +560,9 @@ const isMediaShapesMode = computed(() => {
   return mode.value === modes.mediaShapes;
 });
 
-/*
- * menu
- */
-const showTextMenu = ref(false);
-const showDrawingMenu = ref(false);
-const showShapesMenu = ref(false);
+const isMediaEmojisMode = computed(() => {
+  return mode.value === modes.mediaEmojis;
+});
 
 /*
  * shapes
@@ -547,6 +574,40 @@ const shapes = [
   { name: "star", src: "/assets/icons/shapes/star.svg" },
   { name: "line", src: "/assets/icons/shapes/line.svg" },
   { name: "arrow", src: "/assets/icons/shapes/arrow.svg" },
+];
+
+/*
+ * emojis
+ */
+const emojis = [
+  { name: "Winking", src: "/assets/icons/emojis/Winking.png" },
+  { name: "Partying", src: "/assets/icons/emojis/Partying.png" },
+  { name: "Emotional", src: "/assets/icons/emojis/Emotional.png" },
+  { name: "Dollar Bill", src: "/assets/icons/emojis/Dollar Bill.png" },
+  { name: "Grinning", src: "/assets/icons/emojis/Grinning.png" },
+  { name: "Zany Face", src: "/assets/icons/emojis/Zany Face.png" },
+  { name: "Perplex", src: "/assets/icons/emojis/Perplex.png" },
+  { name: "Vomiting Face", src: "/assets/icons/emojis/Vomiting Face.png" },
+  { name: "Cool", src: "/assets/icons/emojis/Cool.png" },
+  { name: "Student", src: "/assets/icons/emojis/Student.png" },
+  { name: "Very Angry", src: "/assets/icons/emojis/Very Angry.png" },
+  { name: "Exploding Face", src: "/assets/icons/emojis/Exploding Face.png" },
+  { name: "Laughing", src: "/assets/icons/emojis/Laughing.png" },
+  { name: "Fire", src: "/assets/icons/emojis/Fire.png" },
+  { name: "Strawberry", src: "/assets/icons/emojis/Strawberry.png" },
+  { name: "RocknRoll", src: "/assets/icons/emojis/RocknRoll.png" },
+  { name: "Cowboy", src: "/assets/icons/emojis/Cowboy.png" },
+  { name: "Party", src: "/assets/icons/emojis/Party.png" },
+  { name: "Banana", src: "/assets/icons/emojis/Banana.png" },
+  { name: "Sleeping", src: "/assets/icons/emojis/Sleeping.png" },
+  { name: "Angry", src: "/assets/icons/emojis/Angry.png" },
+  { name: "Loving Eyes", src: "/assets/icons/emojis/Loving Eyes.png" },
+  { name: "Loving Hearts", src: "/assets/icons/emojis/Loving Hearts.png" },
+  { name: "Shy", src: "/assets/icons/emojis/Shy.png" },
+  { name: "Devil", src: "/assets/icons/emojis/Devil.png" },
+  { name: "Wiking Love", src: "/assets/icons/emojis/Wiking Love.png" },
+  { name: "Mr Poopy", src: "/assets/icons/emojis/Mr Poopy.png" },
+  { name: "Robot2D2", src: "/assets/icons/emojis/Robot2D2.png" },
 ];
 
 /*
@@ -570,7 +631,7 @@ onMounted(() => {
   document.addEventListener("keydown", (event) => {
     if (isDrawingMode.value) drawingStore.shortcuts(event);
     if (isTextMode.value) textStore.shortcuts(event);
-    if (isMediaMode.value || isMediaShapesMode.value)
+    if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value)
       mediaStore.shortcuts(event);
   });
 
@@ -630,7 +691,7 @@ const handleCanvasMouseDown = (event) => {
     }
   }
 
-  if (isMediaMode.value || isMediaShapesMode.value) {
+  if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
     if (mediaState.value.selectedImageIndex !== -1) {
       if (mediaState.value.resizeHandle) {
         mediaStore.startResize(event);
@@ -658,7 +719,7 @@ const handleCanvasMouseUp = () => {
     }
   }
 
-  if (isMediaMode.value || isMediaShapesMode.value) {
+  if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
     if (mediaState.value.selectedImageIndex !== -1) {
       if (mediaState.value.isResizing) {
         mediaStore.endResize();
@@ -710,7 +771,7 @@ const handleCanvasMouseMove = (event) => {
     }
   }
 
-  if (isMediaMode.value || isMediaShapesMode.value) {
+  if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
     if (mediaState.value.selectedImageIndex !== -1) {
       mediaState.value.resizeHandle = mediaStore.getResizeHandle(event);
       mediaState.value.rotationHandle = mediaStore.getRotationHandle(event);
@@ -741,7 +802,7 @@ const handleCanvasClick = (event) => {
     }
   }
 
-  if (isMediaMode.value || isMediaShapesMode.value) {
+  if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
     mediaStore.selectImage(event);
   }
 };
