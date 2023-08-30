@@ -21,22 +21,14 @@ export default async ({ app, router }) => {
     const credentials = JSON.parse(localStorage.getItem("credentials"));
 
     if (credentials) {
-      try {
-        await store.login(credentials.email, credentials.password);
-      } catch (error) {
-        await store.logout();
-      }
+      await store.login(credentials.email, credentials.password);
     }
   }
 
   if (process.env.PROD) {
     const token = localStorage.getItem("token");
     if (token) {
-      try {
-        state.user.value = await store.auth();
-      } catch (error) {
-        await store.logout();
-      }
+      state.user.value = await store.auth();
     }
   }
 
