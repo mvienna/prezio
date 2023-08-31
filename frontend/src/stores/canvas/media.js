@@ -76,22 +76,19 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
     /*
      * select image
      */
-    selectImage(event) {
-      const mouseX = event.offsetX;
-      const mouseY = event.offsetY;
-
+    selectImage() {
       for (let index = 0; index < images.value.length; index++) {
         const imageData = images.value[index];
 
         const centerX = imageData.x + imageData.width / 2;
         const centerY = imageData.y + imageData.height / 2;
         const rotatedMouseX =
-          Math.cos(-imageData.rotation) * (mouseX - centerX) -
-          Math.sin(-imageData.rotation) * (mouseY - centerY) +
+          Math.cos(-imageData.rotation) * (mouse.value.x - centerX) -
+          Math.sin(-imageData.rotation) * (mouse.value.y - centerY) +
           centerX;
         const rotatedMouseY =
-          Math.sin(-imageData.rotation) * (mouseX - centerX) +
-          Math.cos(-imageData.rotation) * (mouseY - centerY) +
+          Math.sin(-imageData.rotation) * (mouse.value.x - centerX) +
+          Math.cos(-imageData.rotation) * (mouse.value.y - centerY) +
           centerY;
 
         if (
@@ -168,31 +165,24 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
     /*
      * dragging
      */
-    startDrag(event) {
+    startDrag() {
       this.mediaState.isDraggingLine = true;
       const image = images.value[this.mediaState.selectedImageIndex];
 
-      this.mediaState.dragStart.x =
-        event.clientX - canvasStore.canvasRect().left - image.x;
-      this.mediaState.dragStart.y =
-        event.clientY - canvasStore.canvasRect().top - image.y;
+      this.mediaState.dragStart.x = mouse.value.x - image.x;
+      this.mediaState.dragStart.y = mouse.value.y - image.y;
     },
 
     endDrag() {
       this.mediaState.isDraggingLine = false;
     },
 
-    dragImage(event) {
+    dragImage() {
       if (this.mediaState.isDraggingLine) {
-        const newX =
-          event.clientX -
-          canvasStore.canvasRect().left -
-          this.mediaState.dragStart.x;
-        const newY =
-          event.clientY -
-          canvasStore.canvasRect().top -
-          this.mediaState.dragStart.y;
-        this.moveImage(newX, newY);
+        this.moveImage(
+          mouse.value.x - this.mediaState.dragStart.x,
+          mouse.value.y - this.mediaState.dragStart.y
+        );
       }
     },
 
@@ -210,22 +200,23 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
     /*
      * resizing
      */
-    getResizeHandle(event) {
-      const canvasRect = canvasStore.canvasRect();
+    getResizeHandle() {
       const { paddingLeft, paddingTop } = canvasStore.getPaddings();
-      const mouseX = event.clientX - canvasRect.left;
-      const mouseY = event.clientY - canvasRect.top;
 
       const image = images.value[this.mediaState.selectedImageIndex];
 
       const rotatedMouseX =
-        Math.cos(-image.rotation) * (mouseX - (image.x + image.width / 2)) -
-        Math.sin(-image.rotation) * (mouseY - (image.y + image.height / 2)) +
+        Math.cos(-image.rotation) *
+          (mouse.value.x - (image.x + image.width / 2)) -
+        Math.sin(-image.rotation) *
+          (mouse.value.y - (image.y + image.height / 2)) +
         (image.x + image.width / 2);
 
       const rotatedMouseY =
-        Math.sin(-image.rotation) * (mouseX - (image.x + image.width / 2)) +
-        Math.cos(-image.rotation) * (mouseY - (image.y + image.height / 2)) +
+        Math.sin(-image.rotation) *
+          (mouse.value.x - (image.x + image.width / 2)) +
+        Math.cos(-image.rotation) *
+          (mouse.value.y - (image.y + image.height / 2)) +
         (image.y + image.height / 2);
 
       const handles = ["top-left", "top-right", "bottom-left", "bottom-right"];
@@ -246,8 +237,8 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         }
 
         if (
-          Math.abs(rotatedMouseX - handleX) <= paddingLeft / 1.5 &&
-          Math.abs(rotatedMouseY - handleY) <= paddingTop / 1.5
+          Math.abs(rotatedMouseX - handleX) <= paddingLeft &&
+          Math.abs(rotatedMouseY - handleY) <= paddingTop
         ) {
           return handle;
         }
@@ -388,22 +379,23 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
     /*
      * rotation
      */
-    getRotationHandle(event) {
-      const canvasRect = canvasStore.canvasRect();
+    getRotationHandle() {
       const { paddingLeft, paddingTop } = canvasStore.getPaddings();
-      const mouseX = event.clientX - canvasRect.left;
-      const mouseY = event.clientY - canvasRect.top;
 
       const image = images.value[this.mediaState.selectedImageIndex];
 
       const rotatedMouseX =
-        Math.cos(-image.rotation) * (mouseX - (image.x + image.width / 2)) -
-        Math.sin(-image.rotation) * (mouseY - (image.y + image.height / 2)) +
+        Math.cos(-image.rotation) *
+          (mouse.value.x - (image.x + image.width / 2)) -
+        Math.sin(-image.rotation) *
+          (mouse.value.y - (image.y + image.height / 2)) +
         (image.x + image.width / 2);
 
       const rotatedMouseY =
-        Math.sin(-image.rotation) * (mouseX - (image.x + image.width / 2)) +
-        Math.cos(-image.rotation) * (mouseY - (image.y + image.height / 2)) +
+        Math.sin(-image.rotation) *
+          (mouse.value.x - (image.x + image.width / 2)) +
+        Math.cos(-image.rotation) *
+          (mouse.value.y - (image.y + image.height / 2)) +
         (image.y + image.height / 2);
 
       const handles = ["top-left", "top-right", "bottom-left", "bottom-right"];
@@ -434,30 +426,24 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
       return null;
     },
 
-    startRotate(event) {
+    startRotate() {
       const image = images.value[this.mediaState.selectedImageIndex];
-      const canvasRect = canvasStore.canvasRect();
-      const mouseX = event.clientX - canvasRect.left;
-      const mouseY = event.clientY - canvasRect.top;
 
       this.mediaState.initialRotation = Math.atan2(
-        mouseY - (image.y + image.height / 2),
-        mouseX - (image.x + image.width / 2)
+        mouse.value.y - (image.y + image.height / 2),
+        mouse.value.x - (image.x + image.width / 2)
       );
 
       this.mediaState.isRotating = true;
     },
 
-    rotateImage(event) {
+    rotateImage() {
       if (this.mediaState.isRotating) {
         const image = images.value[this.mediaState.selectedImageIndex];
-        const canvasRect = canvasStore.canvasRect();
-        const mouseX = event.clientX - canvasRect.left;
-        const mouseY = event.clientY - canvasRect.top;
 
         const currentRotation = Math.atan2(
-          mouseY - (image.y + image.height / 2),
-          mouseX - (image.x + image.width / 2)
+          mouse.value.y - (image.y + image.height / 2),
+          mouse.value.x - (image.x + image.width / 2)
         );
 
         const rotationDelta = currentRotation - this.mediaState.initialRotation;

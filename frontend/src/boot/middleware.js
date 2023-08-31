@@ -24,7 +24,7 @@ export default async ({ app, router }) => {
       try {
         await store.login(credentials.email, credentials.password);
       } catch (error) {
-        window.location = ROUTE_PATHS.AUTH.LOGIN;
+        console.log(error);
       }
     }
   }

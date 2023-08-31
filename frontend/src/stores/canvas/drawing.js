@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 
-const { ctx, lines } = storeToRefs(useCanvasStore());
+const { ctx, lines, mouse } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
 export const useCanvasDrawingStore = defineStore("canvasDrawing", {
@@ -100,18 +100,15 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       this.drawingState.currentLine = null;
     },
 
-    draw(event) {
+    draw() {
       if (!this.drawingState.isPainting) return;
-
-      const x = event.clientX - canvasStore.canvasRect().left;
-      const y = event.clientY - canvasStore.canvasRect().top;
 
       if (
         this.drawingState.last.x !== null &&
         this.drawingState.last.y !== null
       ) {
-        const deltaX = x - this.drawingState.last.x;
-        const deltaY = y - this.drawingState.last.y;
+        const deltaX = mouse.value.x - this.drawingState.last.x;
+        const deltaY = mouse.value.y - this.drawingState.last.y;
         const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         const step = 1.5;
 
@@ -127,11 +124,11 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
           }
         }
       } else {
-        this.drawPoint(x, y);
+        this.drawPoint(mouse.value.x, mouse.value.y);
       }
 
-      this.drawingState.last.x = x;
-      this.drawingState.last.y = y;
+      this.drawingState.last.x = mouse.value.x;
+      this.drawingState.last.y = mouse.value.y;
     },
 
     drawPoint(x, y) {
@@ -207,13 +204,10 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
     /*
      * selection
      */
-    selectLine(event) {
+    selectLine() {
       if (this.drawingState.isPainting) {
         return;
       }
-
-      const clickedX = event.clientX - canvasStore.canvasRect().left;
-      const clickedY = event.clientY - canvasStore.canvasRect().top;
 
       let foundLine = false;
 
@@ -225,10 +219,10 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
         const maxY = Math.max(...line.points.map((point) => point.y));
 
         if (
-          clickedX >= minX &&
-          clickedX <= maxX &&
-          clickedY >= minY &&
-          clickedY <= maxY
+          mouse.value.x >= minX &&
+          mouse.value.x <= maxX &&
+          mouse.value.y >= minY &&
+          mouse.value.y <= maxY
         ) {
           this.drawingState.currentIndex = i;
           this.drawingState.selectedLineIndex = i;
@@ -310,17 +304,9 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       this.drawingState.isDraggingLine = false;
     },
 
-    dragLine(event) {
+    dragLine() {
       if (this.drawingState.isDraggingLine) {
-        const newX =
-          event.clientX -
-          canvasStore.canvasRect().left -
-          this.drawingState.dragStart.x;
-        const newY =
-          event.clientY -
-          canvasStore.canvasRect().top -
-          this.drawingState.dragStart.y;
-        this.moveLine(newX, newY);
+        this.moveLine(mouse.value.x, mouse.value.y);
       }
     },
 

@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 
-const { ctx, texts } = storeToRefs(useCanvasStore());
+const { ctx, mouse, texts } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
 export const useCanvasTextStore = defineStore("canvasText", {
@@ -91,6 +91,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       this.textState.input.style.borderRadius = "4px";
       this.textState.input.style.border = "2px solid #4971FF";
       this.textState.input.style.outline = "3px solid #D7E0FF";
+      this.textState.input.style.zIndex = "2";
 
       // customization
       this.textState.input.style.fontFamily = this.textState.customization.font;
@@ -123,9 +124,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
       this.textState.input.style.left = event.clientX + "px";
       this.textState.input.style.top = event.clientY + "px";
 
-      const x = event.clientX - canvasStore.canvasRect().left;
-      const y = event.clientY - canvasStore.canvasRect().top;
-
       this.textState.input.addEventListener("keydown", (event) => {
         if (event.key === "Enter" && !event.shiftKey) {
           const props = {
@@ -149,7 +147,12 @@ export const useCanvasTextStore = defineStore("canvasText", {
             },
           };
 
-          this.addTextToCanvas(this.textState.input.innerHTML, x, y, props);
+          this.addTextToCanvas(
+            this.textState.input.innerHTML,
+            mouse.value.x,
+            mouse.value.y,
+            props
+          );
           this.removeTextInput();
         }
       });
@@ -261,11 +264,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       return { width: textWidth, height: textHeight };
     },
 
-    findText(event, padding = 5) {
-      const canvasRect = canvasStore.canvasRect();
-      const x = event.clientX - canvasRect.left;
-      const y = event.clientY - canvasRect.top;
-
+    findText(padding = 5) {
       let foundTextIndex = -1;
 
       texts.value.forEach((textObject, index) => {
@@ -277,10 +276,10 @@ export const useCanvasTextStore = defineStore("canvasText", {
         const paddedHeight = dimensions.height + 2 * padding;
 
         if (
-          x >= paddedX &&
-          x <= paddedX + paddedWidth &&
-          y >= paddedY &&
-          y <= paddedY + paddedHeight
+          mouse.value.x >= paddedX &&
+          mouse.value.x <= paddedX + paddedWidth &&
+          mouse.value.y >= paddedY &&
+          mouse.value.y <= paddedY + paddedHeight
         ) {
           foundTextIndex = index;
         }
@@ -323,15 +322,13 @@ export const useCanvasTextStore = defineStore("canvasText", {
     /*
      * dragging
      */
-    startDrag(event) {
+    startDrag() {
       const text = texts.value?.[this.textState.selectedTextIndex];
       if (!text) return;
 
       this.textState.isDraggingText = true;
-      this.textState.dragStart.x =
-        event.clientX - canvasStore.canvasRect().left - text.x;
-      this.textState.dragStart.y =
-        event.clientY - canvasStore.canvasRect().top - text.y;
+      this.textState.dragStart.x = mouse.value.x - text.x;
+      this.textState.dragStart.y = mouse.value.y - text.y;
     },
 
     endDrag() {
@@ -340,15 +337,15 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
     dragText(event) {
       if (this.textState.isDraggingText) {
-        const newX =
-          event.clientX -
-          canvasStore.canvasRect().left -
-          this.textState.dragStart.x;
-        const newY =
-          event.clientY -
-          canvasStore.canvasRect().top -
-          this.textState.dragStart.y;
-        this.moveText(newX, newY);
+        // const newX =
+        //   event.clientX -
+        //   canvasStore.canvasRect().left -
+        //   this.textState.dragStart.x;
+        // const newY =
+        //   event.clientY -
+        //   canvasStore.canvasRect().top -
+        //   this.textState.dragStart.y;
+        this.moveText(mouse.value.x, mouse.value.y);
       }
     },
 

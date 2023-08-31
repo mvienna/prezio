@@ -5,13 +5,23 @@ export const useCanvasStore = defineStore("canvas", {
     canvas: null,
     ctx: null,
 
+    /*
+     * position & zoom
+     */
     mouse: {
       x: null,
       y: null,
     },
 
-    mode: "drawing",
+    scale: 1,
+    minZoom: 0.5,
+    maxZoom: 4,
+    sensitivity: 0.05,
 
+    /*
+     * elements
+     */
+    mode: "drawing",
     texts: [],
     lines: [],
     images: [],
@@ -34,6 +44,31 @@ export const useCanvasStore = defineStore("canvas", {
       const paddingTop = parseFloat(canvasContainerStyle.paddingTop);
 
       return { paddingLeft: paddingLeft, paddingTop: paddingTop };
+    },
+
+    /*
+     * zoom
+     */
+    handleZoom(delta, mouseX, mouseY, newScale = null) {
+      if (!newScale) {
+        newScale = Math.max(
+          this.minZoom,
+          Math.min(this.maxZoom, this.scale + delta * this.sensitivity)
+        );
+
+        const canvasRect = this.canvas.getBoundingClientRect();
+        const cursorX = (mouseX - canvasRect.left) / this.scale;
+        const cursorY = (mouseY - canvasRect.top) / this.scale;
+
+        this.canvas.style.transformOrigin = `${cursorX}px ${cursorY}px`;
+      }
+
+      this.canvas.style.transform = `scale(${newScale})`;
+      this.scale = newScale;
+
+      setTimeout(() => {
+        this.ctx.imageSmoothingEnabled = true;
+      }, 200);
     },
 
     /*

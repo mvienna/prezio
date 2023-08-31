@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-white q-py-md q-px-lg row no-wrap q-gutter-md">
+  <div
+    class="presentation_toolbar__top bg-white q-pb-md q-pr-lg row no-wrap q-gutter-md"
+  >
     <!-- drawing -->
     <q-btn
       icon="gesture"
@@ -441,18 +443,18 @@
         @click="$emit('delete')"
       />
     </template>
-  </div>
 
-  <!-- select media -->
-  <q-dialog v-model="showSelectMediaDialog">
-    <SelectMedia
-      @close="showSelectMediaDialog = false"
-      @select="
-        $emit('addImage', $event.original_url);
-        showSelectMediaDialog = false;
-      "
-    />
-  </q-dialog>
+    <!-- select media -->
+    <q-dialog v-model="showSelectMediaDialog">
+      <SelectMedia
+        @close="showSelectMediaDialog = false"
+        @select="
+          $emit('addImage', $event.original_url);
+          showSelectMediaDialog = false;
+        "
+      />
+    </q-dialog>
+  </div>
 </template>
 
 <script setup>
@@ -503,6 +505,15 @@ const showSelectMediaDialog = ref(false);
 </script>
 
 <style scoped lang="scss">
+.presentation_toolbar__top {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  left: 16px;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 6px 24px 0;
+}
+
 .color_input {
   -webkit-appearance: none;
   -moz-appearance: none;
