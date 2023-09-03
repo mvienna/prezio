@@ -24,18 +24,10 @@
         <!-- color picker -->
         <q-item
           dense
-          class="items-center text-semibold justify-start rounded-borders"
+          class="items-center text-semibold justify-start rounded-borders q-mt-sm"
         >
-          <q-icon
-            name="o_palette"
-            class="q-mr-md text-semibold"
-            :style="`color: ${drawingState.customization.strokeColor}`"
-            size="20px"
-          />
-          <div
-            class="q-mr-lg"
-            :style="`color: ${drawingState.customization.strokeColor}`"
-          >
+          <q-icon name="o_palette" class="q-mr-md text-semibold" size="20px" />
+          <div class="q-mr-lg">
             {{ $t("presentationEditor.drawing.options.color") }}
           </div>
 
@@ -44,25 +36,18 @@
           <input
             type="color"
             class="color_input"
-            v-model="drawingState.customization.strokeColor"
+            v-model="drawingState.customization.value.color"
+            @input="drawingStore.applyStyles()"
           />
         </q-item>
 
         <!-- eraser -->
         <q-item
           dense
-          class="items-center text-semibold justify-start rounded-borders q-py-sm q-mt-md"
-          :class="drawingState.eraserMode ? 'text-black' : 'text-grey-5'"
-          clickable
-          v-close-popup
-          @click="$emit('toggleEraser')"
+          class="items-center text-semibold justify-start rounded-borders q-px-sm q-mt-sm"
         >
-          <q-icon
-            name="icon-eraser"
-            class="q-mr-md text-semibold"
-            size="20px"
-          />
-          <div class="q-mr-lg text-no-wrap">
+          <q-checkbox v-model="drawingState.eraserMode.value" class="q-mr-xs" />
+          <div class="text-no-wrap">
             {{ $t("presentationEditor.drawing.options.erase") }}
           </div>
         </q-item>
@@ -70,17 +55,18 @@
         <!-- brush size -->
         <q-item
           dense
-          class="items-center text-semibold justify-start rounded-borders q-mt-sm"
+          class="items-center text-semibold justify-start rounded-borders"
         >
           <q-select
-            v-model="drawingState.customization.brushSize"
-            :options="drawingState.customization.brushSizeOptions"
+            v-model="drawingState.customization.value.brushSize"
+            :options="brushSizeOptions"
             map-options
             emit-value
             borderless
             :label="$t('presentationEditor.drawing.options.brushSize')"
             class="full-width"
             color="dark"
+            @update:model-value="drawingStore.applyStyles()"
           >
             <template #prepend>
               <q-icon
@@ -98,8 +84,8 @@
           class="items-center text-semibold justify-start rounded-borders"
         >
           <q-select
-            v-model="drawingState.customization.selectedBrushType"
-            :options="drawingState.customization.brushTypes"
+            v-model="drawingState.customization.value.selectedBrushType"
+            :options="brushTypes"
             map-options
             emit-value
             :option-label="(option) => $t(option.label)"
@@ -107,6 +93,7 @@
             class="full-width"
             color="dark"
             :label="$t('presentationEditor.drawing.options.brushType')"
+            @update:model-value="drawingStore.applyStyles()"
           >
             <template #prepend>
               <q-icon
@@ -139,70 +126,96 @@
         class="q-pa-sm"
       >
         <!-- formatting -->
-        <div class="row no-wrap q-mx-sm q-mt-sm">
+        <div class="row no-wrap justify-between q-px-sm q-pt-sm">
+          <!-- bold -->
           <q-btn
             outline
             size="10px"
             round
             icon="format_bold"
-            style="width: 100%"
             :text-color="
-              textState.customization.formatting.isBold ? 'white' : 'black'
+              textState.customization.value.formatting.isBold
+                ? 'white'
+                : 'black'
             "
             :class="
-              textState.customization.formatting.isBold
+              textState.customization.value.formatting.isBold
                 ? 'bg-primary'
                 : 'bg-white'
             "
-            v-close-popup
             @click="
-              textState.customization.formatting.isBold =
-                !textState.customization.formatting.isBold;
-              $emit('formatText', 'b');
+              textState.customization.value.formatting.isBold =
+                !textState.customization.value.formatting.isBold;
+              $emit('applyFormatting');
             "
           />
+
+          <!-- underline -->
           <q-btn
             outline
             size="10px"
             round
             icon="format_underlined"
-            style="width: 100%"
-            class="q-mx-sm"
             :text-color="
-              textState.customization.formatting.isUnderline ? 'white' : 'black'
+              textState.customization.value.formatting.isUnderline
+                ? 'white'
+                : 'black'
             "
             :class="
-              textState.customization.formatting.isUnderline
+              textState.customization.value.formatting.isUnderline
                 ? 'bg-primary'
                 : 'bg-white'
             "
-            v-close-popup
             @click="
-              textState.customization.formatting.isUnderline =
-                !textState.customization.formatting.isUnderline;
-              $emit('formatText', 'u');
+              textState.customization.value.formatting.isUnderline =
+                !textState.customization.value.formatting.isUnderline;
+              $emit('applyFormatting');
             "
           />
+
+          <!-- strike-through -->
+          <q-btn
+            outline
+            size="10px"
+            round
+            icon="strikethrough_s"
+            :text-color="
+              textState.customization.value.formatting.isLineThrough
+                ? 'white'
+                : 'black'
+            "
+            :class="
+              textState.customization.value.formatting.isLineThrough
+                ? 'bg-primary'
+                : 'bg-white'
+            "
+            @click="
+              textState.customization.value.formatting.isLineThrough =
+                !textState.customization.value.formatting.isLineThrough;
+              $emit('applyFormatting');
+            "
+          />
+
+          <!-- italic -->
           <q-btn
             outline
             size="10px"
             round
             icon="format_italic"
-            class="full-width"
             :text-color="
-              textState.customization.formatting.isItalic ? 'white' : 'black'
+              textState.customization.value.formatting.isItalic
+                ? 'white'
+                : 'black'
             "
             :class="
-              textState.customization.formatting.isItalic
+              textState.customization.value.formatting.isItalic
                 ? 'bg-primary'
                 : 'bg-white'
             "
-            style="width: 100%"
-            v-close-popup
             @click="
-              textState.customization.formatting.isItalic =
-                !textState.customization.formatting.isItalic;
-              $emit('formatText', 'i');
+              textState.customization.value.formatting.isItalic =
+                !textState.customization.value.formatting.isItalic;
+              $emit('applyFormatting');
             "
           />
         </div>
@@ -212,16 +225,8 @@
           dense
           class="items-center text-semibold justify-start rounded-borders q-mt-md"
         >
-          <q-icon
-            name="o_palette"
-            class="q-mr-md text-semibold"
-            :style="`color: ${textState.customization.color}`"
-            size="20px"
-          />
-          <div
-            class="q-mr-lg"
-            :style="`color: ${textState.customization.color}`"
-          >
+          <q-icon name="o_palette" class="q-mr-md text-semibold" size="20px" />
+          <div class="q-mr-lg">
             {{ $t("presentationEditor.drawing.options.color") }}
           </div>
 
@@ -230,8 +235,8 @@
           <input
             type="color"
             class="color_input"
-            v-model="textState.customization.color"
-            @input="$emit('formatText', 'span')"
+            v-model="textState.customization.value.color"
+            @input="$emit('applyFormatting')"
           />
         </q-item>
 
@@ -241,14 +246,14 @@
           class="items-center text-semibold justify-start rounded-borders q-mt-sm"
         >
           <q-select
-            v-model="textState.customization.font"
-            :options="textState.customization.fontOptions"
+            v-model="textState.customization.value.font"
+            :options="fontOptions"
             emit-value
             borderless
             :label="$t('presentationEditor.text.options.font')"
             class="full-width"
             color="dark"
-            @update:model-value="$emit('formatText', 'span')"
+            @update:model-value="$emit('applyFormatting')"
           >
             <template #prepend>
               <q-icon
@@ -266,14 +271,14 @@
           class="items-center text-semibold justify-start rounded-borders"
         >
           <q-select
-            v-model="textState.customization.fontSize"
-            :options="textState.customization.fontSizeOptions"
+            v-model="textState.customization.value.fontSize"
+            :options="fontSizeOptions"
             emit-value
             borderless
             :label="$t('presentationEditor.text.options.fontSize')"
             class="full-width"
             color="dark"
-            @update:model-value="$emit('formatText', 'span')"
+            @update:model-value="$emit('applyFormatting')"
           >
             <template #prepend>
               <q-icon
@@ -283,20 +288,6 @@
               />
             </template>
           </q-select>
-        </q-item>
-
-        <!-- apply -->
-        <q-item class="q-px-sm">
-          <q-btn
-            :label="$t('presentationEditor.text.apply')"
-            icon="done"
-            color="black"
-            no-caps
-            unelevated
-            class="full-width"
-            v-close-popup
-            @click="$emit('formatText', 'span')"
-          />
         </q-item>
       </q-menu>
     </q-btn>
@@ -357,6 +348,7 @@
       unelevated
       text-color="dark"
       round
+      disable
       size="12px"
       @click="$emit('switchMode', modes.mediaShapes)"
     >
@@ -386,6 +378,8 @@
           </q-btn>
         </div>
       </q-menu>
+
+      <q-tooltip> {{ $t("tooltips.in_development") }}</q-tooltip>
     </q-btn>
 
     <q-space />
@@ -393,36 +387,14 @@
     <!-- undo / redo -->
     <template v-if="isDrawingMode">
       <!-- undo button -->
-      <q-btn
-        icon="undo"
-        unelevated
-        text-color="dark"
-        size="12px"
-        round
-        :disable="!drawingState.undoStack.length"
-        @click="$emit('undo')"
-      />
+      <q-btn icon="undo" unelevated text-color="dark" size="12px" round />
 
       <!-- redo button -->
-      <q-btn
-        icon="redo"
-        unelevated
-        text-color="dark"
-        size="12px"
-        round
-        :disable="!drawingState.redoStack.length"
-        @click="$emit('redo')"
-      />
+      <q-btn icon="redo" unelevated text-color="dark" size="12px" round />
     </template>
 
     <!-- selected item actions -->
-    <template
-      v-if="
-        drawingState.selectedLineIndex !== -1 ||
-        textState.selectedTextIndex !== -1 ||
-        mediaState.selectedImageIndex !== -1
-      "
-    >
+    <template v-if="selectedElement">
       <!-- deselect line button -->
       <q-btn
         icon="done"
@@ -461,18 +433,26 @@
 import { emojis } from "src/constants/assets/emojis";
 import { shapes } from "src/constants/assets/shapes";
 import SelectMedia from "components/media/SelectMedia.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
 import { useCanvasTextStore } from "stores/canvas/text";
-import { useCanvasMediaStore } from "stores/canvas/media";
+import { useCanvasStore } from "stores/canvas";
+import { fontOptions, fontSizeOptions } from "src/constants/canvas/fonts";
+import { brushSizeOptions, brushTypes } from "src/constants/canvas/brushes";
 
 /*
  * stores
  */
-const { drawingState } = storeToRefs(useCanvasDrawingStore());
-const { textState } = storeToRefs(useCanvasTextStore());
-const { mediaState } = storeToRefs(useCanvasMediaStore());
+const drawingStore = useCanvasDrawingStore();
+const drawingState = storeToRefs(drawingStore);
+
+const textStore = useCanvasTextStore();
+const textState = storeToRefs(textStore);
+
+const { mode, modes, selectedElement, selectedElementIndex } = storeToRefs(
+  useCanvasStore()
+);
 
 /*
  * emits
@@ -481,22 +461,38 @@ defineEmits([
   "switchMode",
   "deselect",
   "delete",
-  "undo",
-  "redo",
   "addImage",
-  "formatText",
-  "toggleEraser",
+  "applyFormatting",
 ]);
 
 /*
  * props
  */
 defineProps({
-  modes: { type: Object, default: null },
   isDrawingMode: { type: Boolean },
   isMediaMode: { type: Boolean },
   isTextMode: { type: Boolean },
 });
+
+/*
+ * handle element selection - apply customization styles
+ */
+watch(
+  () => selectedElementIndex.value,
+  () => {
+    if (selectedElementIndex.value !== -1) {
+      switch (selectedElementIndex.value.mode) {
+        case modes.value.text:
+          textStore.loadSelectedElementCustomization();
+          break;
+
+        case modes.value.drawing:
+          drawingStore.loadSelectedElementCustomization();
+          break;
+      }
+    }
+  }
+);
 
 /*
  * variables

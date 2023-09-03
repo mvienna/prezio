@@ -219,7 +219,6 @@ export default {
       brushTypes: {
         pen: "Ручка",
         pencil: "Карандаш",
-        marker: "Маркер",
       },
     },
     text: {
@@ -227,7 +226,6 @@ export default {
         font: "Шрифт",
         fontSize: "Размер шрифта",
       },
-      apply: "Применить",
     },
   },
 
@@ -260,5 +258,12 @@ export default {
         title: "Удалить",
       },
     },
+  },
+
+  /*
+   * tooltips
+   */
+  tooltips: {
+    in_development: "В процессе разработки",
   },
 };

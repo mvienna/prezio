@@ -14,7 +14,7 @@ export default {
         password: "Enter password",
         forgotPassword: "Forgot password?",
         submit: "Log In",
-        newUser: "New here?",
+        newUser: "First time here?",
         register: "Register",
 
         errors: {
@@ -37,14 +37,14 @@ export default {
         name: "Your name",
         email: "Enter email",
         password: "Enter password",
-        disclaimer: `By clicking "Register", you confirm that you have read the <a href="${ROUTE_PATHS.POLICIES.PRIVACY_POLICY}" target="_blank">Privacy Policy</a> and <a href="${ROUTE_PATHS.POLICIES.USER_AGREEMENT}" target="_blank">User Agreement</a>`,
-        submit: "Register",
-        oldUser: "Been here before?",
+        disclaimer: `By clicking "Sign Up," you confirm that you have read the <a href="${ROUTE_PATHS.POLICIES.PRIVACY_POLICY}" target="_blank">Privacy Policy</a> and <a href="${ROUTE_PATHS.POLICIES.USER_AGREEMENT}" target="_blank">User Agreement</a>`,
+        submit: "Sign Up",
+        oldUser: "Already have an account?",
         login: "Log In",
 
         errors: {
           name: {
-            required: "Your name is required",
+            required: "Name is required",
           },
           email: {
             required: "Email is required",
@@ -52,7 +52,7 @@ export default {
           },
           password: {
             required: "Password is required",
-            invalid: "Password must be 6 characters or more",
+            invalid: "Password must have 6 or more characters",
           },
         },
       },
@@ -60,23 +60,22 @@ export default {
 
     restorePassword: {
       titles: {
-        email: "Restoring Access",
-        code: "Restoring Access",
-        password: "Restoring Access",
-        login: "Password has been updated successfully",
+        email: "Password Recovery",
+        code: "Password Recovery",
+        password: "Password Recovery",
+        login: "Password Successfully Changed",
       },
       descriptions: {
-        email:
-          "We will send you instructions on how to change your password to your email",
-        code: "Enter the code from email that has been sent to",
-        password: "Almost done! Enter your new password",
-        login: "Log in to your account using a new password",
+        email: "We will send instructions to your email for password reset",
+        code: "Enter the code from the email sent to",
+        password: "Almost there! Enter your new password",
+        login: "Log in to your account using the new password",
       },
       form: {
         email: "Enter email",
         sendEmail: "Send",
-        checkVerificationCode: "Submit",
-        resendVerificationCode: "Resend code",
+        checkVerificationCode: "Check",
+        resendVerificationCode: "Resend",
         resetPassword: "Reset Password",
         login: "Log In",
         errors: {
@@ -90,7 +89,7 @@ export default {
           },
           password: {
             required: "Password is required",
-            invalid: "Password must be 6 characters or more",
+            invalid: "Password must have 6 or more characters",
           },
         },
       },
@@ -102,13 +101,13 @@ export default {
    */
   mainLayout: {
     header: {
-      search: "Find presentation",
+      search: "Search Presentation",
       goPro: "Go Pro",
       userMenuLinks: {
         profile: "Profile",
         myPlan: "My Plan",
         payments: "Payments",
-        logout: "Logout",
+        logout: "Log Out",
       },
     },
     drawer: {
@@ -130,7 +129,7 @@ export default {
         settings: "Settings",
         myPlan: "My Plan",
         payments: "Payments",
-        logout: "Logout",
+        logout: "Log Out",
       },
     },
   },
@@ -147,27 +146,27 @@ export default {
       save: "Save",
       verifyEmail: {
         title: "Verify Email",
-        code: "Enter the code from email that has been sent to",
+        description: "Enter the code from the email sent to",
       },
       form: {
         name: "Name",
         email: "Email",
-        currentPassword: "Current password",
-        newPassword: "New password",
-        success: "Updated successfully",
-        checkVerificationCode: "Submit",
-        resendVerificationCode: "Resend code",
+        currentPassword: "Current Password",
+        newPassword: "New Password",
+        success: "Data successfully updated",
+        checkVerificationCode: "Check",
+        resendVerificationCode: "Resend",
         errors: {
           name: {
-            required: "Your name is required",
+            required: "Name is required",
           },
           email: {
             required: "Email is required",
-            invalid: "Invalid email",
+            invalid: "Invalid email format",
           },
           password: {
             required: "Password is required",
-            invalid: "Password must be 6 characters or more",
+            invalid: "Password must have 6 or more characters",
           },
           code: {
             required: "Code is required",
@@ -177,8 +176,8 @@ export default {
         avatar: {
           upload: "Upload",
           success: {
-            upload: "Uploaded successfully",
-            delete: "Deleted successfully",
+            upload: "Avatar uploaded successfully",
+            delete: "Avatar deleted successfully",
           },
         },
       },
@@ -187,6 +186,27 @@ export default {
 
   /*
    * presentation layout
+   */
+  presentationLayout: {
+    header: {
+      preview: "Preview",
+      run: "Run",
+    },
+    leftDrawer: {
+      newSlide: "New Slide",
+      import: "Import",
+    },
+    rightDrawer: {
+      tabs: {
+        design: "Design",
+        template: "Template",
+        audio: "Audio",
+      },
+    },
+  },
+
+  /*
+   * presentation editor
    */
   presentationEditor: {
     drawing: {
@@ -199,15 +219,51 @@ export default {
       brushTypes: {
         pen: "Pen",
         pencil: "Pencil",
-        marker: "Marker",
       },
     },
     text: {
       options: {
         font: "Font",
-        fontSize: "Font size",
+        fontSize: "Font Size",
       },
-      apply: "Apply",
     },
+  },
+
+  /*
+   * media
+   */
+  media: {
+    select: {
+      title: "Image Selection",
+      tabs: {
+        upload: {
+          title: "Upload",
+          description: "Upload an image from your device",
+        },
+        mine: {
+          title: "My Images",
+          empty: "You don't have any uploaded photos yet",
+        },
+        stock: {
+          title: "Stock",
+        },
+        gifsAndStickers: {
+          title: "GIFs and Stickers",
+        },
+      },
+      submit: "Select",
+    },
+    actions: {
+      delete: {
+        title: "Delete",
+      },
+    },
+  },
+
+  /*
+   * tooltips
+   */
+  tooltips: {
+    in_development: "In Development",
   },
 };

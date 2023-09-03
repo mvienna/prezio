@@ -1,72 +1,28 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 
-const { ctx, mouse, texts } = storeToRefs(useCanvasStore());
+const { modes, mouse, elements, canvas, selectedElement } = storeToRefs(
+  useCanvasStore()
+);
 const canvasStore = useCanvasStore();
 
 export const useCanvasTextStore = defineStore("canvasText", {
   state: () => ({
-    textState: {
-      input: null,
-      selectedTextIndex: -1,
+    input: null,
 
-      /*
-       * dragging
-       */
-      isDraggingText: null,
-      dragStart: {
-        x: 0,
-        y: 0,
-      },
-
-      /*
-       * customization
-       */
-      customization: {
-        color: "#000000",
-        fontSize: "16px",
-        fontSizeOptions: [
-          "8px",
-          "10px",
-          "11px",
-          "12px",
-          "14px",
-          "16px",
-          "18px",
-          "20px",
-          "22px",
-          "24px",
-          "28px",
-          "32px",
-          "36px",
-          "44px",
-          "48px",
-        ],
-        font: "Arial",
-        fontOptions: [
-          "Arial",
-          "Helvetica",
-          "Times New Roman",
-          "Times",
-          "Courier New",
-          "Courier",
-          "monospace",
-          "Georgia",
-          "Palatino",
-          "Palatino Linotype",
-          "Verdana",
-          "Geneva",
-          "Tahoma",
-          "Trebuchet MS",
-          "Impact",
-          "Montserrat",
-          "Roboto",
-        ],
-        formatting: {
-          isBold: false,
-          isUnderline: false,
-          isItalic: false,
-        },
+    /*
+     * customization
+     */
+    customization: {
+      color: "#000000",
+      fontSize: "16px",
+      font: "Arial",
+      lineHeight: 1.2,
+      formatting: {
+        isBold: false,
+        isUnderline: false,
+        isLineThrough: false,
+        isItalic: false,
       },
     },
   }),
@@ -77,373 +33,304 @@ export const useCanvasTextStore = defineStore("canvasText", {
     },
 
     /*
-     * add new text
+     * input
      */
     createTextInput() {
-      this.textState.input = document.createElement("div");
-      this.textState.input.setAttribute("contentEditable", "true");
-
-      this.textState.input.style.position = "absolute";
-      this.textState.input.style.resize = "both";
-      this.textState.input.style.overflow = "auto";
-      this.textState.input.style.minWidth = "1em";
-      this.textState.input.style.padding = "4px";
-      this.textState.input.style.borderRadius = "4px";
-      this.textState.input.style.border = "2px solid #4971FF";
-      this.textState.input.style.outline = "3px solid #D7E0FF";
-      this.textState.input.style.zIndex = "2";
-
-      // customization
-      this.textState.input.style.fontFamily = this.textState.customization.font;
-      this.textState.input.style.fontSize =
-        this.textState.customization.fontSize;
-      this.textState.input.style.fontWeight = this.textState.customization
-        .formatting.isBold
-        ? "bold"
-        : "normal";
-      this.textState.input.style.textDecoration = this.textState.customization
-        .formatting.isUnderline
-        ? "underline"
-        : "none";
-      this.textState.input.style.fontStyle = this.textState.customization
-        .formatting.isItalic
-        ? "italic"
-        : "none";
-      this.textState.input.style.color = this.textState.customization.color;
+      this.input = document.createElement("div");
+      this.input.setAttribute("contentEditable", "true");
+      this.applyStyles();
     },
 
     removeTextInput() {
-      this.textState.input.remove();
-      this.textState.input = null;
+      this.input.remove();
+      this.input = null;
     },
 
-    createNewText(event) {
-      if (this.textState.input) return;
+    /*
+     * new text
+     */
+    addNewText(event) {
+      /*
+       * create text input
+       */
+      this.createTextInput();
+      this.input.style.left = event.clientX + "px";
+      this.input.style.top = event.clientY + "px";
 
-      this.createTextInput(event);
-      this.textState.input.style.left = event.clientX + "px";
-      this.textState.input.style.top = event.clientY + "px";
+      document.body.appendChild(this.input);
+      this.input.focus();
 
-      this.textState.input.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" && !event.shiftKey) {
-          const props = {
-            font: this.textState.customization.font,
-            fontSize: this.textState.customization.fontSize,
-            lineHeight: 20,
-            color: this.textState.customization.color,
-            fontWeight: this.textState.customization.formatting.isBold
-              ? "bold"
-              : "normal",
-            textDecoration: this.textState.customization.formatting.isUnderline
-              ? "underline"
-              : "",
-            fontStyle: this.textState.customization.formatting.isItalic
-              ? "italic"
-              : "",
-            isVisible: true,
-            box: {
-              width: this.textState.input.offsetWidth,
-              height: this.textState.input.offsetHeight,
-            },
-          };
+      /*
+       * add text to canvas
+       */
+      canvasStore.computePosition(event);
+      const clickedX = mouse.value.x;
+      const clickedY = mouse.value.y;
 
-          this.addTextToCanvas(
-            this.textState.input.innerHTML,
-            mouse.value.x,
-            mouse.value.y,
-            props
-          );
-          this.removeTextInput();
-        }
-      });
+      const absoluteX = event.clientX;
+      const absoluteY = event.clientY;
 
-      document.body.appendChild(this.textState.input);
-      this.textState.input.focus();
-    },
+      const addTextToCanvas = () => {
+        elements.value.push(
+          this.computeTextElementProps(
+            { x: clickedX, y: clickedY },
+            { x: absoluteX, y: absoluteY }
+          )
+        );
 
-    addTextToCanvas(text, x, y, props) {
-      const newText = {
-        text,
-        x,
-        y,
-        ...props,
+        this.redrawCanvas();
+        this.removeTextInput();
       };
-      texts.value.push(newText);
-      this.redrawCanvas();
-    },
 
-    /*
-     * select
-     * edit
-     */
-    selectText(textIndex) {
-      const selectedText = texts.value[textIndex];
-
-      if (this.textState.selectedTextIndex === textIndex) {
-        this.createTextInput();
-        this.textState.input.style.width = selectedText.box.width + "px";
-        this.textState.input.style.height = selectedText.box.height + "px";
-
-        texts.value[textIndex].isVisible = false;
-        this.redrawCanvas();
-
-        const canvasRect = canvasStore.canvasRect();
-        this.textState.input.style.left =
-          selectedText.x + canvasRect.left + "px";
-        this.textState.input.style.top = selectedText.y + canvasRect.top + "px";
-
-        this.textState.input.innerHTML = selectedText.text;
-
-        this.textState.input.addEventListener("keydown", (event) => {
-          if (event.key === "Enter" && !event.shiftKey) {
-            this.textState.selectedTextIndex = -1;
-            this.editTextOnCanvas(textIndex, {
-              text: this.textState.input.innerHTML,
-              box: {
-                width: this.textState.input.offsetWidth,
-                height: this.textState.input.offsetHeight,
-              },
-            });
-            this.removeTextInput();
-            texts.value[textIndex].isVisible = true;
-            this.redrawCanvas();
-          }
-        });
-
-        document.body.appendChild(this.textState.input);
-        this.textState.input.focus();
-      } else {
-        this.textState.selectedTextIndex = textIndex;
-        this.redrawCanvas();
-
-        const selectedText = texts.value[textIndex];
-
-        const { paddingLeft } = canvasStore.getPaddings();
-        const paddingTop = 8;
-
-        this.drawBorder(
-          selectedText.x + paddingLeft,
-          selectedText.y + paddingTop,
-          selectedText.box.width,
-          selectedText.box.height
-        );
-      }
-    },
-
-    deselectText() {
-      this.textState.selectedTextIndex = -1;
-      this.redrawCanvas();
-    },
-
-    editTextOnCanvas(textIndex, props) {
-      texts.value[textIndex].text = props.text;
-      texts.value[textIndex].box = props.box;
-      this.redrawCanvas();
-    },
-
-    deleteSelectedText(event) {
-      if (this.textState.selectedTextIndex !== -1) {
-        event.preventDefault();
-        texts.value = texts.value.filter(
-          (text, index) => index !== this.textState.selectedTextIndex
-        );
-        this.textState.selectedTextIndex = -1;
-        this.redrawCanvas();
-      }
-    },
-
-    getTextDimensions(text) {
-      const lines = text.text.split("<br>");
-
-      const textWidth = lines.reduce((maxWidth, line) => {
-        const lineWidth = ctx.value.measureText(line).width;
-        return Math.max(maxWidth, lineWidth);
-      }, 0);
-      const textHeight = lines.length * text.lineHeight;
-
-      return { width: textWidth, height: textHeight };
-    },
-
-    findText(padding = 5) {
-      let foundTextIndex = -1;
-
-      texts.value.forEach((textObject, index) => {
-        const dimensions = this.getTextDimensions(textObject);
-
-        const paddedX = textObject.x - padding;
-        const paddedY = textObject.y - padding;
-        const paddedWidth = dimensions.width + 2 * padding;
-        const paddedHeight = dimensions.height + 2 * padding;
-
-        if (
-          mouse.value.x >= paddedX &&
-          mouse.value.x <= paddedX + paddedWidth &&
-          mouse.value.y >= paddedY &&
-          mouse.value.y <= paddedY + paddedHeight
-        ) {
-          foundTextIndex = index;
-        }
+      /*
+       * input events
+       */
+      this.input.addEventListener("blur", () => {
+        addTextToCanvas();
       });
 
-      return foundTextIndex;
-    },
-
-    drawBorder(x, y, width, height) {
-      ctx.value.lineWidth = 3;
-      ctx.value.strokeStyle = "#4971FF";
-      // const outlineColor = "#D7E0FF";
-      const padding = 10;
-      const borderRadius = 8;
-
-      const paddedX = x - padding;
-      const paddedY = y - padding;
-      const paddedWidth = width + 2 * padding;
-      const paddedHeight = height + 2 * padding;
-
-      // ctx.value.strokeStyle = outlineColor;
-      // ctx.value.strokeRect(
-      //   paddedX - 3,
-      //   paddedY - 3,
-      //   paddedWidth + 6,
-      //   paddedHeight + 6
-      // );
-
-      ctx.value.strokeStyle = "#4971FF";
-      ctx.value.lineJoin = "round";
-      ctx.value.strokeRect(
-        paddedX,
-        paddedY,
-        paddedWidth,
-        paddedHeight,
-        borderRadius
-      );
+      this.input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          this.input.blur();
+        }
+      });
     },
 
     /*
-     * dragging
+     * edit text
      */
-    startDrag() {
-      const text = texts.value?.[this.textState.selectedTextIndex];
-      if (!text) return;
-
-      this.textState.isDraggingText = true;
-      this.textState.dragStart.x = mouse.value.x - text.x;
-      this.textState.dragStart.y = mouse.value.y - text.y;
-    },
-
-    endDrag() {
-      this.textState.isDraggingText = false;
-    },
-
-    dragText(event) {
-      if (this.textState.isDraggingText) {
-        // const newX =
-        //   event.clientX -
-        //   canvasStore.canvasRect().left -
-        //   this.textState.dragStart.x;
-        // const newY =
-        //   event.clientY -
-        //   canvasStore.canvasRect().top -
-        //   this.textState.dragStart.y;
-        this.moveText(mouse.value.x, mouse.value.y);
-      }
-    },
-
-    moveText(newX, newY) {
-      const text = texts.value[this.textState.selectedTextIndex];
-      const deltaX = newX - text.x;
-      const deltaY = newY - text.y;
-
-      text.x += deltaX;
-      text.y += deltaY;
-
+    editText() {
+      /*
+       * remove text from canvas
+       */
+      selectedElement.value.isVisible = false;
+      canvasStore.updateSelectedElement();
       this.redrawCanvas();
+
+      /*
+       * create text input
+       */
+      this.createTextInput();
+
+      this.input.style.left = selectedElement.value.absoluteX + "px";
+      this.input.style.top = selectedElement.value.absoluteY + "px";
+
+      this.input.style.width = selectedElement.value.width;
+      this.input.style.height = selectedElement.value.height;
+
+      document.body.appendChild(this.input);
+      this.input.focus();
+
+      // paste text content
+      this.input.innerHTML = selectedElement.value.text;
+
+      // collapse the range to the end.
+      const range = document.createRange();
+      range.selectNodeContents(this.input);
+      range.collapse(false);
+
+      // clear any existing selections.
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      /*
+       * add text to canvas
+       */
+      const addTextToCanvas = () => {
+        elements.value.push(this.computeTextElementProps());
+
+        canvasStore.switchMode(modes.value.text);
+        this.redrawCanvas();
+        this.removeTextInput();
+      };
+
+      /*
+       * input events
+       */
+      this.input.addEventListener("blur", () => {
+        addTextToCanvas();
+      });
+
+      this.input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          this.input.blur();
+        }
+      });
     },
 
     /*
      * customization
      */
-    applyFormattingToSelectedText(tag) {
-      const selection = window.getSelection();
+    computeTextElementProps(
+      clickedPosition = {
+        x: selectedElement.value.x,
+        y: selectedElement.value.y,
+      },
+      absolutePosition = {
+        x: selectedElement.value.absoluteX,
+        y: selectedElement.value.absoluteY,
+      }
+    ) {
+      const newTextDecoration = `${
+        this.customization.formatting.isLineThrough ? "line-through" : ""
+      } ${this.customization.formatting.isUnderline ? "underline" : ""}`;
 
-      if (selection?.rangeCount) {
-        const range = selection.getRangeAt(0);
+      this.input.innerHTML = this.input.innerHTML.replace(/&nbsp;/g, "").trim();
 
-        if (
-          range.startContainer === range.endContainer &&
-          range.startContainer.nodeType === Node.TEXT_NODE
-        ) {
-          this.textState.customization.formatting.isBold = false;
-          this.textState.customization.formatting.isUnderline = false;
-          this.textState.customization.formatting.isItalic = false;
+      return {
+        mode: modes.value.text,
+        isVisible: true,
+        text: this.input.innerHTML,
+        x: clickedPosition.x,
+        y: clickedPosition.y,
+        absoluteX: absolutePosition.x,
+        absoluteY: absolutePosition.y,
+        width: this.input.offsetWidth,
+        height: this.input.offsetHeight,
+        lineHeight: this.customization.lineHeight,
+        fontFamily: this.customization.font,
+        fontSize: this.customization.fontSize,
+        fontWeight: this.customization.formatting.isBold ? "bold" : "normal",
+        textDecoration: newTextDecoration.trim().length
+          ? newTextDecoration
+          : "none",
+        fontStyle: this.customization.formatting.isItalic ? "italic" : "normal",
+        color: this.customization.color,
+      };
+    },
 
-          const selectedText = range.toString();
+    applyStyles() {
+      /*
+       * apply to active input
+       */
+      if (this.input) {
+        this.input.style.position = "absolute";
+        this.input.style.resize = "both";
+        this.input.style.overflow = "auto";
+        this.input.style.minWidth = "1em";
+        this.input.style.borderRadius = "4px";
+        this.input.style.border = "2px solid #4971FF";
+        this.input.style.marginLeft = "-2px";
+        this.input.style.outline = "3px solid #D7E0FF";
+        this.input.style.zIndex = "2";
 
-          const element = document.createElement(tag);
-          element.textContent = selectedText;
-          element.setAttribute(
-            "style",
-            `color: ${this.textState.customization.color}; font: ${this.textState.customization.font}; font-size: ${this.textState.customization.fontSize}`
-          );
+        // font family
+        this.input.style.fontFamily = this.customization.font;
 
-          range.deleteContents();
-          range.insertNode(element);
+        // font size
+        this.input.style.fontSize = this.customization.fontSize;
 
-          this.redrawCanvas();
-        }
+        // font weight
+        this.input.style.fontWeight = this.customization.formatting.isBold
+          ? "bold"
+          : "normal";
+
+        // text decoration
+        const newTextDecoration = `${
+          this.customization.formatting.isLineThrough ? "line-through" : ""
+        } ${this.customization.formatting.isUnderline ? "underline" : ""}`;
+        this.input.style.textDecoration = newTextDecoration.trim().length
+          ? newTextDecoration
+          : "none";
+
+        // font style
+        this.input.style.fontStyle = this.customization.formatting.isItalic
+          ? "italic"
+          : "normal";
+
+        // color
+        this.input.style.color = this.customization.color;
+      }
+
+      /*
+       * apply to selected element
+       */
+      if (
+        selectedElement.value &&
+        selectedElement.value.mode === modes.value.text
+      ) {
+        // font family
+        selectedElement.value.fontFamily = this.customization.font;
+
+        // font size
+        selectedElement.value.fontSize = this.customization.fontSize;
+
+        // color
+        selectedElement.value.color = this.customization.color;
+
+        // font weight
+        selectedElement.value.fontWeight = this.customization.formatting.isBold
+          ? "bold"
+          : "normal";
+
+        // text decoration
+        const newTextDecoration = `${
+          this.customization.formatting.isLineThrough ? "line-through" : ""
+        } ${this.customization.formatting.isUnderline ? "underline" : ""}`;
+        selectedElement.value.textDecoration = newTextDecoration.trim().length
+          ? newTextDecoration
+          : "none";
+
+        // font style
+        selectedElement.value.fontStyle = this.customization.formatting.isItalic
+          ? "italic"
+          : "normal";
+
+        canvasStore.updateSelectedElement();
+        this.redrawCanvas();
       }
     },
 
-    underline(ctx, text, x, y, size, color, thickness) {
-      ctx.font = `${size}px ${this.textState.customization.font}`;
-      ctx.fillStyle = color;
+    loadSelectedElementCustomization() {
+      this.customization.color = selectedElement.value.color;
+      this.customization.fontSize = selectedElement.value.fontSize;
+      this.customization.font = selectedElement.value.fontFamily;
+      this.customization.lineHeight = selectedElement.value.lineHeight;
 
-      const width = ctx.measureText(text).width;
-      ctx.fillText(text, x, y);
-
-      const underlineY = y + size + 2;
-
-      ctx.beginPath();
-      ctx.strokeStyle = color;
-      ctx.lineWidth = thickness;
-      ctx.moveTo(x, underlineY);
-      ctx.lineTo(x + width, underlineY);
-      ctx.stroke();
+      this.customization.formatting.isBold =
+        selectedElement.value.fontWeight === "bald";
+      this.customization.formatting.isUnderline =
+        selectedElement.value.textDecoration.includes("underline");
+      this.customization.formatting.isLineThrough =
+        selectedElement.value.textDecoration.includes("line-through");
+      this.customization.formatting.isItalic =
+        selectedElement.value.fontStyle === "italic";
     },
 
     /*
      * shortcuts
      */
     shortcuts(event) {
-      // delete selected text
-      if (event.key === "Delete" || event.key === "Backspace") {
-        this.deleteSelectedText(event);
-      }
-
-      // deselect
-      if (event.key === "Escape" || event.key === "Enter") {
-        event.preventDefault();
-        this.deselectText();
-      }
-
-      // formatting
       if (event.ctrlKey || event.metaKey) {
-        // bald
-        if (event.key === "b") {
-          this.textState.customization.formatting.isBold = true;
-          this.applyFormattingToSelectedText("b");
+        switch (event.key) {
+          case "b":
+            this.customization.formatting.isBold =
+              !this.customization.formatting.isBold;
+            this.applyStyles();
+            break;
+
+          case "u":
+            this.customization.formatting.isUnderline =
+              !this.customization.formatting.isUnderline;
+            this.applyStyles();
+            break;
+
+          case "i":
+            this.customization.formatting.isItalic =
+              !this.customization.formatting.isItalic;
+            this.applyStyles();
+            break;
         }
 
-        // underline
-        if (event.key === "u") {
-          this.textState.customization.formatting.isUnderline = true;
-          this.applyFormattingToSelectedText("u");
-        }
-
-        // italic
-        if (event.key === "i") {
-          this.textState.customization.formatting.isItalic = true;
-          this.applyFormattingToSelectedText("i");
+        if (event.shiftKey) {
+          switch (event.key) {
+            case "x":
+              this.customization.formatting.isLineThrough =
+                !this.customization.formatting.isLineThrough;
+              this.applyStyles();
+              break;
+          }
         }
       }
     },

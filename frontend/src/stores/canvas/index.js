@@ -19,12 +19,61 @@ export const useCanvasStore = defineStore("canvas", {
     sensitivity: 0.05,
 
     /*
-     * elements
+     * elements & modes
      */
-    mode: "drawing",
-    texts: [],
-    lines: [],
-    images: [],
+    mode: "text",
+    modes: {
+      drawing: "drawing",
+      text: "text",
+      textEditing: "text-editing",
+      media: "media",
+      mediaEmojis: "media-emojis",
+      shapes: "media-shapes",
+    },
+    elements: [],
+
+    /*
+     * selection
+     */
+    selectedElement: null,
+    selectedElementIndex: -1,
+
+    selectedElementBorder: {
+      borderWidth: 2,
+      borderColor: "#4971FF",
+      padding: 4,
+    },
+
+    /*
+     * dragging
+     */
+    isDraggingElement: false,
+    dragStart: {
+      x: null,
+      y: null,
+    },
+
+    /*
+     * resize
+     */
+    isResizing: false,
+    resizeStart: {
+      x: null,
+      y: null,
+      width: null,
+      height: null,
+      clientX: null,
+      clientY: null,
+    },
+    resizeHandle: null,
+    resizeHandles: {
+      topLeft: "top-left",
+      topRight: "top-right",
+      bottomLeft: "bottom-left",
+      bottomRight: "bottom-right",
+      centerLeft: "center-left",
+      centerRight: "center-right",
+    },
   }),
 
   actions: {
@@ -36,14 +85,16 @@ export const useCanvasStore = defineStore("canvas", {
       this.mode = mode;
     },
 
-    getPaddings() {
-      const canvasContainerStyle = window.getComputedStyle(
-        this.canvas.parentElement
-      );
-      const paddingLeft = parseFloat(canvasContainerStyle.paddingLeft);
-      const paddingTop = parseFloat(canvasContainerStyle.paddingTop);
-
-      return { paddingLeft: paddingLeft, paddingTop: paddingTop };
+    computePosition(event) {
+      const canvasRect = this.canvasRect();
+      this.mouse = {
+        x:
+          ((event.clientX - canvasRect.left) / canvasRect.width) *
+          this.canvas.width,
+        y:
+          ((event.clientY - canvasRect.top) / canvasRect.height) *
+          this.canvas.height,
+      };
     },
 
     /*
@@ -72,7 +123,362 @@ export const useCanvasStore = defineStore("canvas", {
     },
 
     /*
-     * REDRAW
+     * select
+     */
+    selectElement() {
+      const previousSelectedElementIndex = this.selectedElementIndex;
+
+      // clear selected previously elements
+      this.selectedElement = null;
+      this.selectedElementIndex = -1;
+
+      // search for clicked element
+      this.elements.map((element, index) => {
+        switch (element.mode) {
+          /*
+           * drawing
+           */
+          case this.modes.drawing:
+            const minX = Math.min(...element.points.map((point) => point.x));
+            const maxX = Math.max(...element.points.map((point) => point.x));
+            const minY = Math.min(...element.points.map((point) => point.y));
+            const maxY = Math.max(...element.points.map((point) => point.y));
+
+            if (
+              this.mouse.x >= minX &&
+              this.mouse.x <= maxX &&
+              this.mouse.y >= minY &&
+              this.mouse.y <= maxY
+            ) {
+              this.selectedElement = element;
+              this.selectedElementIndex = index;
+              this.redrawCanvas();
+            }
+            break;
+
+          /*
+           * text
+           */
+          case this.modes.text:
+            if (
+              Math.round(this.mouse.x) >= Math.round(element.x) &&
+              Math.round(this.mouse.x) <=
+                Math.round(
+                  element.x + this.computeAdjustedSize(element.width)
+                ) &&
+              Math.round(this.mouse.y) >= Math.round(element.y) &&
+              Math.round(this.mouse.y) <=
+                Math.round(element.y + this.computeAdjustedSize(element.height))
+            ) {
+              this.selectedElement = element;
+              this.selectedElementIndex = index;
+              this.redrawCanvas();
+            }
+            break;
+
+          /*
+           * media
+           */
+          case this.modes.media:
+            if (
+              Math.round(this.mouse.x) >= Math.round(element.x) &&
+              Math.round(this.mouse.x) <=
+                Math.round(
+                  element.x + this.computeAdjustedSize(element.width)
+                ) &&
+              Math.round(this.mouse.y) >= Math.round(element.y) &&
+              Math.round(this.mouse.y) <=
+                Math.round(element.y + this.computeAdjustedSize(element.height))
+            ) {
+              this.selectedElement = element;
+              this.selectedElementIndex = index;
+              this.redrawCanvas();
+            }
+            break;
+        }
+      });
+
+      if (!this.selectedElement) {
+        this.redrawCanvas();
+        return;
+      }
+
+      if (
+        previousSelectedElementIndex === this.selectedElementIndex &&
+        this.mode === this.modes.text
+      ) {
+        this.mode = this.modes.textEditing;
+      }
+    },
+
+    deselectElement() {
+      if (this.selectedElement) {
+        this.selectedElement = null;
+        this.selectedElementIndex = -1;
+        this.redrawCanvas();
+      }
+    },
+
+    deleteSelectedElement() {
+      if (this.selectedElement) {
+        this.elements = this.elements.filter(
+          (element, index) => index !== this.selectedElementIndex
+        );
+        this.selectedElement = null;
+        this.selectedElementIndex = -1;
+        this.redrawCanvas();
+      }
+    },
+
+    updateSelectedElement() {
+      this.elements[this.selectedElementIndex] = this.selectedElement;
+    },
+
+    /*
+     * dragging
+     */
+    startDrag() {
+      this.dragStart.x = this.mouse.x;
+      this.dragStart.y = this.mouse.y;
+      this.isDraggingElement = true;
+    },
+
+    endDrag() {
+      this.isDraggingElement = false;
+    },
+
+    dragElement() {
+      if (this.isDraggingElement && this.selectedElement) {
+        this.moveElement(this.mouse.x, this.mouse.y);
+      }
+    },
+
+    moveElement(newX, newY) {
+      let deltaX, deltaY;
+
+      switch (this.selectedElement.mode) {
+        case this.modes.drawing:
+          deltaX = newX - this.dragStart.x;
+          deltaY = newY - this.dragStart.y;
+          this.selectedElement.points.forEach((point) => {
+            point.x += deltaX;
+            point.y += deltaY;
+          });
+          break;
+
+        default:
+          this.selectedElement.x += newX - this.dragStart.x;
+          this.selectedElement.y += newY - this.dragStart.y;
+          break;
+      }
+
+      this.dragStart.x = newX;
+      this.dragStart.y = newY;
+
+      this.elements[this.selectedElementIndex] = this.selectedElement;
+      this.redrawCanvas();
+    },
+
+    /*
+     * resizing
+     */
+    getResizeHandle() {
+      if (this.selectedElement.mode === this.modes.drawing) return null;
+
+      let handles = [
+        this.resizeHandles.topLeft,
+        this.resizeHandles.topRight,
+        this.resizeHandles.bottomLeft,
+        this.resizeHandles.bottomRight,
+        this.resizeHandles.centerLeft,
+        this.resizeHandles.centerRight,
+      ];
+
+      /*
+       * compute props
+       */
+      const borderWidth = this.computeAdjustedSize(
+        this.selectedElementBorder.borderWidth
+      );
+      const handleSize = borderWidth * 3;
+      const padding = this.computeAdjustedSize(
+        this.selectedElementBorder.padding
+      );
+
+      let width, height;
+      switch (this.selectedElement.mode) {
+        case this.modes.media:
+        case this.modes.mediaEmojis:
+          width = this.selectedElement.width;
+          height = this.selectedElement.height;
+          break;
+
+        default:
+          width = this.computeAdjustedSize(this.selectedElement.width);
+          height = this.computeAdjustedSize(this.selectedElement.height);
+          break;
+      }
+
+      /*
+       * find active handle
+       */
+      let activeHandle = null;
+
+      handles.forEach((handle) => {
+        // compute position
+        const { minX, minY, maxX, maxY } = this.computeResizeHandlePosition(
+          handle,
+          this.selectedElement.x,
+          this.selectedElement.y,
+          width,
+          height,
+          handleSize,
+          padding
+        );
+
+        if (
+          this.mouse.x >= minX - padding &&
+          this.mouse.x <= maxX + padding &&
+          this.mouse.y >= minY - padding &&
+          this.mouse.y <= maxY + padding
+        ) {
+          activeHandle = handle;
+        }
+      });
+
+      return activeHandle;
+    },
+
+    startResize() {
+      this.isResizing = true;
+      this.resizeStart = {
+        x: this.selectedElement.x,
+        y: this.selectedElement.y,
+        width: this.selectedElement.width,
+        height: this.selectedElement.height,
+        clientX: this.mouse.x,
+        clientY: this.mouse.y,
+      };
+    },
+
+    endResize() {
+      this.isResizing = false;
+      this.resizeHandle = null;
+    },
+
+    resizeElement() {
+      if (!this.isResizing) return;
+
+      const deltaX = this.mouse.x - this.resizeStart.clientX;
+
+      const aspectRatio =
+        this.selectedElement.width / this.selectedElement.height;
+
+      switch (this.resizeHandle) {
+        /*
+         * top left
+         */
+        case this.resizeHandles.topLeft:
+          const newTopLeftWidth = Math.max(0, this.resizeStart.width - deltaX);
+          const newTopLeftHeight = Math.max(0, newTopLeftWidth / aspectRatio);
+
+          this.selectedElement.width = newTopLeftWidth;
+          this.selectedElement.height = newTopLeftHeight;
+
+          this.selectedElement.x =
+            this.resizeStart.x + (this.resizeStart.width - newTopLeftWidth);
+          this.selectedElement.y =
+            this.resizeStart.y + (this.resizeStart.height - newTopLeftHeight);
+
+          break;
+
+        /*
+         * top right
+         */
+        case this.resizeHandles.topRight:
+          const newTopRightWidth = Math.max(0, this.resizeStart.width + deltaX);
+          const newTopRightHeight = Math.max(0, newTopRightWidth / aspectRatio);
+
+          this.selectedElement.width = newTopRightWidth;
+          this.selectedElement.height = newTopRightHeight;
+
+          this.selectedElement.y =
+            this.resizeStart.y + (this.resizeStart.height - newTopRightHeight);
+
+          break;
+
+        /*
+         * bottom left
+         */
+        case this.resizeHandles.bottomLeft:
+          const newBottomLeftWidth = Math.max(
+            0,
+            this.resizeStart.width - deltaX
+          );
+          const newBottomLeftHeight = Math.max(
+            0,
+            newBottomLeftWidth / aspectRatio
+          );
+
+          this.selectedElement.width = newBottomLeftWidth;
+          this.selectedElement.height = newBottomLeftHeight;
+
+          this.selectedElement.x =
+            this.resizeStart.x + (this.resizeStart.width - newBottomLeftWidth);
+
+          break;
+
+        /*
+         * bottom right
+         */
+        case this.resizeHandles.bottomRight:
+          const newBottomRightWidth = Math.max(
+            0,
+            this.resizeStart.width + deltaX
+          );
+          const newBottomRightHeight = Math.max(
+            0,
+            newBottomRightWidth / aspectRatio
+          );
+
+          this.selectedElement.width = newBottomRightWidth;
+          this.selectedElement.height = newBottomRightHeight;
+
+          break;
+
+        /*
+         * center left
+         */
+        case this.resizeHandles.centerLeft:
+          const newCenterLeftWidth = Math.max(
+            0,
+            this.resizeStart.width - deltaX
+          );
+
+          this.selectedElement.width = newCenterLeftWidth;
+          this.selectedElement.x =
+            this.resizeStart.x + (this.resizeStart.width - newCenterLeftWidth);
+
+          break;
+
+        /*
+         * center right
+         */
+        case this.resizeHandles.centerRight:
+          this.selectedElement.width = Math.max(
+            0,
+            this.resizeStart.width + deltaX
+          );
+
+          break;
+      }
+
+      this.updateSelectedElement();
+      this.redrawCanvas();
+    },
+
+    /*
+     * canvas render
      */
     clearCanvas() {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -80,187 +486,307 @@ export const useCanvasStore = defineStore("canvas", {
 
     redrawCanvas() {
       this.clearCanvas();
-      this.redrawTexts();
-      this.redrawLines();
-      this.redrawImages();
-    },
 
-    /*
-     * REDRAW LINES
-     */
-    redrawLines() {
-      this.lines.forEach((line, index) => {
-        this.ctx.strokeStyle = line.color;
-        this.ctx.lineWidth = line.brushSize;
+      this.elements.forEach((element) => {
+        if (element.isVisible === false) return;
 
-        // reset default styles
-        this.ctx.globalAlpha = 1;
-        this.ctx.shadowBlur = null;
-        this.ctx.shadowColor = null;
+        switch (element.mode) {
+          /*
+           * drawing
+           */
+          case this.modes.drawing:
+            this.ctx.strokeStyle = element.color;
+            this.ctx.lineWidth = element.brushSize;
 
-        switch (line.brushType) {
-          case "pen":
-            break;
+            switch (element.brushType) {
+              case "pen":
+                break;
 
-          case "pencil":
-            this.ctx.globalAlpha = 0.1;
-            break;
-
-          case "marker":
-            this.ctx.shadowBlur = 4;
-            this.ctx.shadowColor = line.color;
-            break;
-        }
-
-        this.ctx.beginPath();
-        line.points.forEach((point, pointIndex) => {
-          if (pointIndex === 0) {
-            this.ctx.moveTo(point.x, point.y);
-          } else {
-            this.ctx.lineTo(point.x, point.y);
-            this.ctx.stroke();
-          }
-        });
-      });
-      this.ctx.beginPath();
-    },
-
-    /*
-     * REDRAW TEXTS
-     */
-    redrawTexts() {
-      this.texts.forEach((textObject, index) => {
-        if (!textObject.isVisible) {
-          return;
-        }
-
-        const lines = textObject.text.split("<br>");
-        const { paddingLeft, paddingTop } = this.getPaddings();
-
-        let lineY = textObject.y + paddingTop;
-
-        lines.forEach((line, lineIndex) => {
-          const formattedSegments = this.parseFormattedSegments(
-            line,
-            textObject
-          );
-          let currentX = textObject.x + paddingLeft;
-
-          formattedSegments.forEach((segment) => {
-            this.ctx.font = `${segment.fontStyle} ${segment.fontWeight} ${segment.fontSize} ${segment.font}`;
-            this.ctx.fillStyle = segment.color;
-
-            if (segment.textDecoration === "underline") {
-              const textMetrics = this.ctx.measureText(segment.text);
-              const segmentX = currentX;
-              const segmentY = lineY + textMetrics.actualBoundingBoxAscent;
-
-              this.ctx.beginPath();
-              this.ctx.strokeStyle = segment.color;
-              this.ctx.lineWidth = 1;
-              this.ctx.moveTo(segmentX, segmentY);
-              this.ctx.lineTo(segmentX + textMetrics.width, segmentY);
-              this.ctx.stroke();
+              case "pencil":
+                this.ctx.globalAlpha = 0.1;
+                break;
             }
 
-            this.ctx.fillText(segment.text, currentX, lineY);
-            const segmentWidth = this.ctx.measureText(segment.text).width;
-            currentX += segmentWidth;
-          });
+            this.ctx.beginPath();
+            element.points.forEach((point, pointIndex) => {
+              if (pointIndex === 0) {
+                this.ctx.moveTo(point.x, point.y);
+              } else {
+                this.ctx.lineTo(point.x, point.y);
+                this.ctx.stroke();
+              }
+            });
 
-          lineY += textObject.lineHeight;
-        });
+            this.ctx.globalAlpha = 1;
+
+            this.ctx.beginPath();
+            break;
+
+          /*
+           * text
+           */
+          case this.modes.text:
+            // process text
+            const wrapText = () => {
+              this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${element.fontSize} ${element.fontFamily}`;
+
+              let line = "";
+              let wrappedText = "";
+
+              for (const word of element.text.split(" ")) {
+                const testLine = line.length === 0 ? word : line + " " + word;
+                const testWidth = this.ctx.measureText(testLine).width;
+
+                if (testWidth <= element.width + 4) {
+                  line = testLine;
+                } else {
+                  wrappedText += line + "<br>";
+                  line = word;
+                }
+              }
+
+              if (wrappedText.length === 0) {
+                wrappedText = line;
+              } else {
+                wrappedText += line;
+              }
+
+              return wrappedText;
+            };
+
+            const lines = wrapText().split("<br>");
+
+            // adjust font size to canvas scale
+            const adjustedFontSize =
+              (parseFloat(element.fontSize) * this.canvas.width) /
+              this.canvasRect().width;
+
+            this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${adjustedFontSize}px ${element.fontFamily}`;
+            this.ctx.fillStyle = element.color;
+
+            // draw text lines
+            lines.map((line, index) => {
+              // compute position
+              const x = element.x;
+              const y =
+                element.y +
+                adjustedFontSize * element.lineHeight +
+                index * adjustedFontSize * element.lineHeight;
+
+              // underline
+              if (element.textDecoration.includes("underline")) {
+                this.ctx.fillStyle = element.color;
+                this.ctx.fillRect(
+                  x,
+                  y + 4,
+                  this.ctx.measureText(line).width,
+                  4
+                );
+              }
+
+              // line through
+              if (element.textDecoration.includes("line-through")) {
+                this.ctx.fillStyle = element.color;
+                this.ctx.fillRect(
+                  x,
+                  y - (adjustedFontSize * element.lineHeight) / 3 + 4,
+                  this.ctx.measureText(line).width,
+                  4
+                );
+              }
+
+              // render text
+              this.ctx.fillText(line, x, y);
+            });
+
+            break;
+
+          /*
+           * media
+           */
+          case this.modes.media:
+          case this.modes.mediaEmojis:
+            this.ctx.save();
+            this.ctx.translate(
+              element.x + element.width / 2,
+              element.y + element.height / 2
+            );
+            this.ctx.rotate((element.rotation * Math.PI) / 180);
+            this.ctx.drawImage(
+              element.image,
+              -element.width / 2,
+              -element.height / 2,
+              element.width,
+              element.height
+            );
+            this.ctx.restore();
+            break;
+        }
+      });
+
+      if (this.selectedElement && this.selectedElement.isVisible) {
+        switch (this.selectedElement.mode) {
+          /*
+           * drawing
+           */
+          case this.modes.drawing:
+            const minX = Math.min(
+              ...this.selectedElement.points.map((point) => point.x)
+            );
+            const maxX = Math.max(
+              ...this.selectedElement.points.map((point) => point.x)
+            );
+            const minY = Math.min(
+              ...this.selectedElement.points.map((point) => point.y)
+            );
+            const maxY = Math.max(
+              ...this.selectedElement.points.map((point) => point.y)
+            );
+
+            this.drawBorder(minX, minY, maxX - minX, maxY - minY, []);
+            break;
+
+          /*
+           * text
+           */
+          case this.modes.text:
+            this.drawBorder(
+              this.selectedElement.x,
+              this.selectedElement.y,
+              this.computeAdjustedSize(this.selectedElement.width),
+              this.computeAdjustedSize(this.selectedElement.height)
+            );
+            break;
+
+          /*
+           * media
+           */
+          case this.modes.media:
+          case this.modes.mediaEmojis:
+            this.drawBorder(
+              this.selectedElement.x,
+              this.selectedElement.y,
+              this.selectedElement.width,
+              this.selectedElement.height
+            );
+            break;
+        }
+      }
+    },
+
+    computeAdjustedSize(size) {
+      return (size * this.canvas.width) / this.canvasRect().width;
+    },
+
+    drawBorder(
+      x,
+      y,
+      width,
+      height,
+      handles = Object.values(this.resizeHandles)
+    ) {
+      const padding = this.computeAdjustedSize(
+        this.selectedElementBorder.padding
+      );
+
+      /*
+       * border
+       */
+      const borderWidth = this.computeAdjustedSize(
+        this.selectedElementBorder.borderWidth
+      );
+
+      this.ctx.strokeStyle = this.selectedElementBorder.borderColor;
+      this.ctx.lineWidth = borderWidth;
+      this.ctx.strokeRect(x - padding, y, width + padding, height);
+
+      /*
+       * resize handles
+       */
+      if (!handles.length) return;
+
+      const handleSize = borderWidth * 3;
+      this.ctx.fillStyle = this.selectedElementBorder.borderColor;
+
+      handles.forEach((handle) => {
+        const { minX, minY, maxX, maxY } = this.computeResizeHandlePosition(
+          handle,
+          x,
+          y,
+          width,
+          height,
+          handleSize,
+          padding
+        );
+        this.ctx.fillRect(minX, minY, handleSize, handleSize);
       });
     },
 
-    parseFormattedSegments(line, textObject) {
-      function computeSegment(node, parentSegment) {
-        const segment = {
-          ...textObject,
-          ...parentSegment,
-          text: node.textContent,
-        };
+    computeResizeHandlePosition(
+      handle,
+      x,
+      y,
+      width,
+      height,
+      handleSize,
+      padding
+    ) {
+      let minX, minY, maxX, maxY;
 
-        if (node.nodeType === Node.ELEMENT_NODE) {
-          const tagName = node.tagName?.toLowerCase();
-          const style = node.getAttribute("style");
+      switch (handle) {
+        /*
+         * top left
+         */
+        case this.resizeHandles.topLeft:
+          minX = x - padding - handleSize / 2;
+          minY = y - handleSize / 2;
+          break;
 
-          switch (tagName) {
-            case "b":
-              segment.fontWeight = "bold";
-              break;
-            case "u":
-              segment.textDecoration = "underline";
-              break;
-            case "s":
-              segment.textDecoration = "line-through";
-              break;
-            case "i":
-              segment.fontStyle = "italic";
-              break;
-            case "span":
-              const cssProps = {};
-              if (style) {
-                style.split(";").forEach((pair) => {
-                  const [property, value] = pair
-                    .split(":")
-                    .map((item) => item.trim());
-                  cssProps[property] = value;
-                });
-              }
-              segment.color = cssProps.color;
-              segment.fontFamily = cssProps.font;
-              segment.fontSize = cssProps["font-size"];
-              break;
-          }
-        }
+        /*
+         * top right
+         */
+        case this.resizeHandles.topRight:
+          minX = x + width - handleSize / 2;
+          minY = y - handleSize / 2;
+          break;
 
-        return segment;
+        /*
+         * bottom left
+         */
+        case this.resizeHandles.bottomLeft:
+          minX = x - padding - handleSize / 2;
+          minY = y + height - handleSize / 2;
+          break;
+
+        /*
+         * bottom right
+         */
+        case this.resizeHandles.bottomRight:
+          minX = x + width - handleSize / 2;
+          minY = y + height - handleSize / 2;
+          break;
+
+        /*
+         * center left
+         */
+        case this.resizeHandles.centerLeft:
+          minX = x - padding - handleSize / 2;
+          minY = y + height / 2 - handleSize / 2;
+          break;
+
+        /*
+         * center right
+         */
+        case this.resizeHandles.centerRight:
+          minX = x + width - handleSize / 2;
+          minY = y + height / 2 - handleSize / 2;
+          break;
       }
 
-      const formattedSegments = [];
+      maxX = minX + handleSize;
+      maxY = minY + handleSize;
 
-      function processNestedNodes(node, parentSegment = null) {
-        const childNodes = node.childNodes;
-        if (childNodes.length === 0) {
-          formattedSegments.push(parentSegment);
-          return;
-        }
-
-        Array.from(childNodes).forEach((childNode) => {
-          const segment = computeSegment(childNode, parentSegment);
-          processNestedNodes(childNode, segment);
-        });
-      }
-
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = line;
-      processNestedNodes(tempDiv);
-      tempDiv.remove();
-
-      return formattedSegments.filter((segment) => segment !== null);
-    },
-
-    /*
-     * REDRAW IMAGES
-     */
-    redrawImages() {
-      for (const imageData of this.images) {
-        this.ctx.save();
-        this.ctx.translate(
-          imageData.x + imageData.width / 2,
-          imageData.y + imageData.height / 2
-        );
-        this.ctx.rotate((imageData.rotation * Math.PI) / 180);
-        this.ctx.drawImage(
-          imageData.image,
-          -imageData.width / 2,
-          -imageData.height / 2,
-          imageData.width,
-          imageData.height
-        );
-        this.ctx.restore();
-      }
+      return { minX, minY, maxX, maxY };
     },
   },
 });

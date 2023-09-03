@@ -2,34 +2,14 @@
   <q-page style="">
     <!-- toolbar -->
     <PresentationToolbarTop
-      :modes="modes"
-      :is-drawing-mode="isDrawingMode"
-      :is-media-mode="isMediaMode"
-      :is-text-mode="isTextMode"
+      :is-drawing-mode="mode === modes.drawing"
+      :is-text-mode="mode === modes.text"
+      :is-media-mode="[modes.media, modes.mediaEmojis].includes(mode)"
       @switch-mode="canvasStore.switchMode($event)"
-      @deselect="
-        drawingState.selectedLineIndex !== -1
-          ? drawingStore.deselectLine()
-          : textState.selectedTextIndex !== -1
-          ? textStore.deselectText()
-          : mediaState.selectedImageIndex !== -1
-          ? mediaStore.deselectImage()
-          : ''
-      "
-      @delete="
-        drawingState.selectedLineIndex !== -1
-          ? drawingStore.deleteSelectedLine()
-          : textState.selectedTextIndex !== -1
-          ? textStore.deleteSelectedText
-          : mediaState.selectedImageIndex !== -1
-          ? mediaStore.deleteSelectedImage()
-          : ''
-      "
-      @undo="drawingStore.undo()"
-      @redo="drawingStore.redo()"
+      @deselect="selectedElement ? canvasStore.deselectElement() : ''"
+      @delete="selectedElement ? canvasStore.deleteSelectedElement() : ''"
       @add-image="mediaStore.addImage($event)"
-      @format-text="textStore.applyFormattingToSelectedText($event)"
-      @toggle-eraser="drawingStore.toggleEraser()"
+      @apply-formatting="textStore.applyStyles()"
     />
 
     <!-- canvas -->
@@ -54,7 +34,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
@@ -73,47 +53,29 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const canvasStore = useCanvasStore();
-const { canvas, ctx, mouse, scale, mode, texts } = storeToRefs(canvasStore);
+const {
+  // canvas
+  canvas,
+  ctx,
+  mouse,
+  scale,
+
+  // mode
+  mode,
+  modes,
+
+  // select
+  selectedElement,
+
+  //
+  isResizing,
+  resizeHandle,
+  resizeHandles,
+} = storeToRefs(canvasStore);
 
 const drawingStore = useCanvasDrawingStore();
-const { drawingState } = storeToRefs(drawingStore);
-
 const textStore = useCanvasTextStore();
-const { textState } = storeToRefs(textStore);
-
 const mediaStore = useCanvasMediaStore();
-const { mediaState } = storeToRefs(mediaStore);
-
-/*
- * modes
- */
-const modes = {
-  drawing: "drawing",
-  text: "text",
-  media: "media",
-  mediaShapes: "media-shapes",
-  mediaEmojis: "media-emojis",
-};
-
-const isDrawingMode = computed(() => {
-  return mode.value === modes.drawing;
-});
-
-const isTextMode = computed(() => {
-  return mode.value === modes.text;
-});
-
-const isMediaMode = computed(() => {
-  return mode.value === modes.media;
-});
-
-const isMediaShapesMode = computed(() => {
-  return mode.value === modes.mediaShapes;
-});
-
-const isMediaEmojisMode = computed(() => {
-  return mode.value === modes.mediaEmojis;
-});
 
 /*
  * canvas init, setup
@@ -125,10 +87,9 @@ onMounted(() => {
   ctx.value = canvas.value.getContext("2d");
   ctx.value.imageSmoothingEnabled = true;
 
-  // set default stroke color
-  ctx.value.strokeStyle = drawingState.value.customization.strokeColor;
-
-  // resize canvas
+  /*
+   * resize canvas
+   */
   resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
 
@@ -148,15 +109,25 @@ onMounted(() => {
    * canvas shortcuts
    */
   document.addEventListener("keydown", (event) => {
-    if (isDrawingMode.value) drawingStore.shortcuts(event);
-    if (isTextMode.value) textStore.shortcuts(event);
-    if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value)
-      mediaStore.shortcuts(event);
-  });
+    if (selectedElement.value) {
+      // delete selected element
+      if (event.key === "Delete" || event.key === "Backspace") {
+        event.preventDefault();
+        canvasStore.deleteSelectedElement();
+      }
 
-  document.addEventListener("keyup", (event) => {
-    if (event.key === "Shift") {
-      mediaState.value.isShiftKeyPressed = false;
+      // deselect
+      if (event.key === "Escape" || event.key === "Enter") {
+        event.preventDefault();
+        canvasStore.deselectElement();
+      }
+
+      if (selectedElement.value) {
+        switch (selectedElement.value.mode) {
+          case modes.value.text:
+            textStore.shortcuts(event);
+        }
+      }
     }
   });
 });
@@ -174,21 +145,29 @@ const resizeCanvas = () => {
  * canvas cursor
  */
 const canvasCursor = computed(() => {
-  return mediaState.value.resizeHandle
-    ? mediaState.value.resizeHandle === "top-left"
-      ? "cursor-nw-resize"
-      : mediaState.value.resizeHandle === "top-right"
-      ? "cursor-ne-resize"
-      : mediaState.value.resizeHandle === "bottom-left"
-      ? "cursor-sw-resize"
-      : mediaState.value.resizeHandle === "bottom-right"
-      ? "cursor-se-resize"
-      : ""
-    : mediaState.value.rotationHandle
-    ? "cursor-alias"
-    : drawingState.value.selectedLineIndex !== -1 ||
-      textState.value.selectedTextIndex !== -1 ||
-      mediaState.value.selectedImageIndex !== -1
+  let resizeCursor;
+  switch (resizeHandle.value) {
+    case resizeHandles.value.topLeft:
+      resizeCursor = "cursor-nw-resize";
+      break;
+    case resizeHandles.value.topRight:
+      resizeCursor = "cursor-ne-resize";
+      break;
+    case resizeHandles.value.bottomLeft:
+      resizeCursor = "cursor-sw-resize";
+      break;
+    case resizeHandles.value.bottomRight:
+      resizeCursor = "cursor-se-resize";
+      break;
+    case resizeHandles.value.centerLeft:
+    case resizeHandles.value.centerRight:
+      resizeCursor = "cursor-col-resize";
+      break;
+  }
+
+  return resizeHandle.value
+    ? resizeCursor
+    : selectedElement.value
     ? "cursor-move"
     : "cursor-crosshair";
 });
@@ -196,156 +175,131 @@ const canvasCursor = computed(() => {
 /*
  * canvas events
  */
-const handleCanvasMouseDown = (event) => {
-  // drawing
-  if (isDrawingMode.value) {
-    if (drawingState.value.selectedLineIndex !== -1) {
-      drawingStore.startDrag(event);
+const handleCanvasMouseDown = () => {
+  /*
+   * START:
+   *
+   * resize
+   * drag
+   */
+  if (selectedElement.value) {
+    if (resizeHandle.value) {
+      canvasStore.startResize();
     } else {
-      drawingStore.startPainting(event);
+      canvasStore.startDrag();
     }
+    return;
   }
 
-  // text
-  if (isTextMode.value) {
-    if (textState.value.selectedTextIndex !== -1) {
-      textStore.startDrag();
-    }
-  }
-
-  // media
-  if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
-    if (mediaState.value.selectedImageIndex !== -1) {
-      if (mediaState.value.resizeHandle) {
-        mediaStore.startResize(event);
-      } else if (mediaState.value.rotationHandle) {
-        mediaStore.startRotate();
-      } else {
-        mediaStore.startDrag();
-      }
-    }
+  /*
+   * START:
+   *
+   * draw
+   */
+  switch (mode.value) {
+    // drawing
+    case modes.value.drawing:
+      drawingStore.startDrawing();
+      break;
   }
 };
 
 const handleCanvasMouseUp = () => {
-  // drawing
-  if (isDrawingMode.value) {
-    if (drawingState.value.selectedLineIndex !== -1) {
-      drawingStore.endDrag();
+  /*
+   * END:
+   *
+   * resize
+   * drag
+   */
+  if (selectedElement.value) {
+    if (isResizing.value) {
+      canvasStore.endResize();
     } else {
-      drawingStore.finishedPainting();
+      canvasStore.endDrag();
     }
+    return;
   }
 
-  // text
-  if (isTextMode.value) {
-    if (textState.value.selectedTextIndex !== -1) {
-      textStore.endDrag();
-    }
-  }
-
-  // media
-  if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
-    if (mediaState.value.selectedImageIndex !== -1) {
-      if (mediaState.value.isResizing) {
-        mediaStore.endResize();
-      } else if (mediaState.value.isRotating) {
-        mediaStore.endRotate();
-      } else {
-        mediaStore.endDrag();
-      }
-    }
+  /*
+   * END:
+   *
+   * draw
+   */
+  switch (mode.value) {
+    // drawing
+    case modes.value.drawing:
+      drawingStore.finishDrawing();
+      break;
   }
 };
 
 const handleCanvasMouseMove = (event) => {
-  // track mouse
-  const canvasRect = canvasStore.canvasRect();
+  /*
+   * track mouse
+   */
+  canvasStore.computePosition(event);
 
-  const scaledX = event.clientX - canvasRect.left;
-  const scaledY = event.clientY - canvasRect.top;
+  /*
+   * DO:
+   *
+   * resize
+   * drag
+   */
+  if (selectedElement.value) {
+    resizeHandle.value = canvasStore.getResizeHandle();
 
-  const actualX = (scaledX / canvasRect.width) * canvas.value.width;
-  const actualY = (scaledY / canvasRect.height) * canvas.value.height;
-
-  mouse.value = {
-    x: actualX,
-    y: actualY,
-  };
-
-  // drawing
-  if (isDrawingMode.value) {
-    if (drawingState.value.selectedLineIndex !== -1) {
-      drawingStore.dragLine();
+    if (isResizing.value) {
+      canvasStore.resizeElement();
     } else {
+      canvasStore.dragElement();
+    }
+    return;
+  }
+
+  /*
+   * DO:
+   *
+   * draw
+   */
+  switch (mode.value) {
+    // drawing
+    case modes.value.drawing:
       drawingStore.draw();
-    }
-  }
-
-  // text
-  if (isTextMode.value) {
-    if (textState.value.selectedTextIndex !== -1) {
-      textStore.dragText(event);
-    } else {
-      const hoveredTextIndex = textStore.findText(event);
-
-      if (hoveredTextIndex !== -1) {
-        const hoveredText = texts.value[hoveredTextIndex];
-
-        const { paddingLeft } = canvasStore.getPaddings();
-        const paddingTop = 8;
-
-        textStore.drawBorder(
-          hoveredText.x + paddingLeft,
-          hoveredText.y + paddingTop,
-          hoveredText.box.width,
-          hoveredText.box.height
-        );
-      } else {
-        textStore.redrawCanvas();
-      }
-    }
-  }
-
-  // media
-  if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
-    if (mediaState.value.selectedImageIndex !== -1) {
-      mediaState.value.resizeHandle = mediaStore.getResizeHandle();
-      mediaState.value.rotationHandle = mediaStore.getRotationHandle();
-
-      if (mediaState.value.isResizing) {
-        mediaStore.resizeImage(event);
-      } else if (mediaState.value.isRotating) {
-        mediaStore.rotateImage();
-      } else {
-        mediaStore.dragImage();
-      }
-    }
+      break;
   }
 };
 
 const handleCanvasClick = (event) => {
-  // drawing
-  if (isDrawingMode.value) {
-    drawingStore.selectLine();
-  }
+  /*
+   * select element
+   */
+  canvasStore.selectElement();
 
-  // text
-  if (isTextMode.value) {
-    const clickedTextIndex = textStore.findText();
-
-    if (clickedTextIndex !== -1) {
-      textStore.selectText(clickedTextIndex);
-    } else {
-      textStore.createNewText(event);
+  /*
+   * no selected element, add text
+   */
+  if (!selectedElement.value) {
+    switch (mode.value) {
+      // text
+      case modes.value.text:
+        textStore.addNewText(event);
+        break;
     }
   }
-
-  // media
-  if (isMediaMode.value || isMediaShapesMode.value || isMediaEmojisMode.value) {
-    mediaStore.selectImage();
-  }
 };
+
+/*
+ * handle editing text
+ */
+watch(
+  () => mode.value,
+  () => {
+    switch (mode.value) {
+      case modes.value.textEditing:
+        textStore.editText();
+    }
+  }
+);
 </script>
 
 <style scoped lang="scss">
@@ -391,5 +345,8 @@ const handleCanvasClick = (event) => {
 }
 .cursor-crosshair {
   cursor: crosshair;
+}
+.cursor-col-resize {
+  cursor: col-resize;
 }
 </style>
