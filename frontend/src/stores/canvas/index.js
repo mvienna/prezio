@@ -624,16 +624,28 @@ export const useCanvasStore = defineStore("canvas", {
           case this.modes.text:
             // process text
             const wrapText = () => {
+              // change context to element customization
               this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${element.fontSize} ${element.fontFamily}`;
 
+              // define variables
+              const padding = 4;
               let line = "";
               let wrappedText = "";
 
-              for (const word of element.text.split(" ")) {
+              // exception: one-word string is always inline
+              const words = element.text.split(" ");
+              if (words.length === 1) {
+                element.width =
+                  this.ctx.measureText(element.text).width + padding;
+                return element.text;
+              }
+
+              // wrap text
+              for (const word of words) {
                 const testLine = line.length === 0 ? word : line + " " + word;
                 const testWidth = this.ctx.measureText(testLine).width;
 
-                if (testWidth <= element.width + 4) {
+                if (testWidth <= element.width + padding) {
                   line = testLine;
                 } else {
                   wrappedText += line + "<br>";
