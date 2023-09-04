@@ -11,8 +11,11 @@
       size="12px"
       :class="isDrawingMode ? 'bg-grey-2' : ''"
       @click="$emit('switchMode', modes.drawing)"
+      @mouseover="isDrawingMode ? (showDrawingCustomizationMenu = true) : ''"
     >
       <q-menu
+        v-model="showDrawingCustomizationMenu"
+        @mouseleave="showDrawingCustomizationMenu = false"
         anchor="bottom left"
         self="top left"
         transition-show="jump-down"
@@ -116,8 +119,11 @@
       size="12px"
       :class="isTextMode ? 'bg-grey-2' : ''"
       @click="$emit('switchMode', modes.text)"
+      @mouseover="isTextMode ? (showTextCustomizationMenu = true) : ''"
     >
       <q-menu
+        v-model="showTextCustomizationMenu"
+        @mouseleave="showTextCustomizationMenu = false"
         anchor="bottom left"
         self="top left"
         transition-show="jump-down"
@@ -498,6 +504,8 @@ watch(
  * variables
  */
 const showSelectMediaDialog = ref(false);
+const showDrawingCustomizationMenu = ref(false);
+const showTextCustomizationMenu = ref(false);
 </script>
 
 <style scoped lang="scss">
