@@ -8,7 +8,15 @@ const canvasStore = useCanvasStore();
 
 export const useCanvasTextStore = defineStore("canvasText", {
   state: () => ({
+    /*
+     * input
+     */
     input: null,
+
+    /*
+     * other
+     */
+    isNewText: false,
 
     /*
      * customization
@@ -50,6 +58,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
      * new text
      */
     addNewText(event) {
+      if (!this.isNewText) return;
+
       /*
        * create text input
        */
@@ -77,6 +87,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
             { x: absoluteX, y: absoluteY }
           )
         );
+
+        this.isNewText = false;
 
         this.redrawCanvas();
         this.removeTextInput();

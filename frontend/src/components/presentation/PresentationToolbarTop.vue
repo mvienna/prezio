@@ -295,6 +295,19 @@
             </template>
           </q-select>
         </q-item>
+
+        <q-item class="q-px-sm">
+          <q-btn
+            icon="fiber_new"
+            :label="$t('presentationEditor.text.options.newText')"
+            :color="!textState.isNewText.value ? 'primary' : 'grey'"
+            unelevated
+            no-caps
+            class="full-width"
+            v-close-popup
+            @click="textState.isNewText.value = !textState.isNewText.value"
+          />
+        </q-item>
       </q-menu>
     </q-btn>
 

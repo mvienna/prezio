@@ -225,6 +225,7 @@ export default {
       options: {
         font: "Font",
         fontSize: "Font Size",
+        newText: "New Field",
       },
     },
   },

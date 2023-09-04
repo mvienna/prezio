@@ -17,7 +17,7 @@
       <canvas
         ref="canvasRef"
         id="canvas"
-        :class="canvasCursor"
+        :class="[canvasCursor, canvasFocus]"
         @mousedown="handleCanvasMouseDown"
         @mousemove="handleCanvasMouseMove"
         @mouseup="handleCanvasMouseUp"
@@ -82,7 +82,10 @@ const {
 } = storeToRefs(canvasStore);
 
 const drawingStore = useCanvasDrawingStore();
+
 const textStore = useCanvasTextStore();
+const textState = storeToRefs(textStore);
+
 const mediaStore = useCanvasMediaStore();
 
 /*
@@ -130,12 +133,19 @@ onMounted(() => {
         canvasStore.deselectElement();
       }
 
-      if (selectedElement.value) {
-        switch (selectedElement.value.mode) {
-          case modes.value.text:
-            textStore.shortcuts(event);
-        }
+      switch (selectedElement.value.mode) {
+        case modes.value.text:
+          textStore.shortcuts(event);
       }
+    }
+
+    switch (mode.value) {
+      case modes.value.text:
+        // turn off adding new text
+        if (event.key === "Escape") {
+          textState.isNewText.value = false;
+        }
+        break;
     }
   });
 });
@@ -330,6 +340,20 @@ watch(
     }
   }
 );
+
+const canvasFocus = ref("");
+watch(
+  () => textState.isNewText.value,
+  () => {
+    if (textState.isNewText.value) {
+      canvasFocus.value = "canvas--focus";
+
+      setTimeout(() => {
+        canvasFocus.value = "";
+      }, 2000);
+    }
+  }
+);
 </script>
 
 <style scoped lang="scss">
@@ -352,6 +376,28 @@ watch(
     border-radius: 6px;
     width: 100%;
     z-index: 1;
+  }
+
+  /*
+   * highlight canvas
+   */
+  .canvas--focus {
+    border: 2px solid transparent;
+    animation: pulse 4s infinite;
+    box-shadow: 0 0 0 0 $primary;
+    transition: box-shadow 1s ease-in-out;
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 $primary;
+      }
+      50% {
+        box-shadow: 0 0 20px 10px transparent;
+      }
+      100% {
+        box-shadow: 0 0 0 0 transparent;
+      }
+    }
   }
 }
 

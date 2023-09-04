@@ -225,6 +225,7 @@ export default {
       options: {
         font: "Шрифт",
         fontSize: "Размер шрифта",
+        newText: "Новое поле",
       },
     },
   },
