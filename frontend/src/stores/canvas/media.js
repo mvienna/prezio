@@ -16,7 +16,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
     addImage(url) {
       const image = new Image();
 
-      image.onload = function () {
+      image.onload = () => {
         const newImageHeight = canvas.value.height * 0.5;
         const aspectRatio = image.width / image.height;
         const newImageWidth = newImageHeight * aspectRatio;
@@ -37,7 +37,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
 
         elements.value.push(imageData);
         ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);
-      }.bind(this);
+      };
 
       image.src = url;
     },

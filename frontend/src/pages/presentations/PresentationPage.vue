@@ -67,10 +67,14 @@ const {
   // select
   selectedElement,
 
-  //
+  // resize
   isResizing,
   resizeHandle,
   resizeHandles,
+
+  // rotation
+  isRotating,
+  rotationHandle,
 } = storeToRefs(canvasStore);
 
 const drawingStore = useCanvasDrawingStore();
@@ -159,6 +163,10 @@ const canvasCursor = computed(() => {
     case resizeHandles.value.bottomRight:
       resizeCursor = "cursor-se-resize";
       break;
+    case resizeHandles.value.centerTop:
+    case resizeHandles.value.centerBottom:
+      resizeCursor = "cursor-row-resize";
+      break;
     case resizeHandles.value.centerLeft:
     case resizeHandles.value.centerRight:
       resizeCursor = "cursor-col-resize";
@@ -167,6 +175,8 @@ const canvasCursor = computed(() => {
 
   return resizeHandle.value
     ? resizeCursor
+    : rotationHandle.value
+    ? "cursor-alias"
     : selectedElement.value
     ? "cursor-move"
     : "cursor-crosshair";
@@ -185,6 +195,8 @@ const handleCanvasMouseDown = () => {
   if (selectedElement.value) {
     if (resizeHandle.value) {
       canvasStore.startResize();
+    } else if (rotationHandle.value) {
+      canvasStore.startRotating();
     } else {
       canvasStore.startDrag();
     }
@@ -214,6 +226,8 @@ const handleCanvasMouseUp = () => {
   if (selectedElement.value) {
     if (isResizing.value) {
       canvasStore.endResize();
+    } else if (isRotating.value) {
+      canvasStore.endRotating();
     } else {
       canvasStore.endDrag();
     }
@@ -246,13 +260,21 @@ const handleCanvasMouseMove = (event) => {
    * drag
    */
   if (selectedElement.value) {
-    resizeHandle.value = canvasStore.getResizeHandle();
-
     if (isResizing.value) {
       canvasStore.resizeElement();
+      return;
     } else {
-      canvasStore.dragElement();
+      resizeHandle.value = canvasStore.getResizeHandle();
     }
+
+    if (isRotating.value) {
+      canvasStore.rotateElement();
+      return;
+    } else {
+      rotationHandle.value = canvasStore.getRotationHandle();
+    }
+
+    canvasStore.dragElement();
     return;
   }
 
@@ -325,6 +347,17 @@ watch(
   }
 }
 
+/*
+ * cursors
+ */
+.cursor-move {
+  cursor: move;
+}
+.cursor-crosshair {
+  cursor: crosshair;
+}
+
+// resize
 .cursor-nw-resize {
   cursor: nw-resize;
 }
@@ -337,16 +370,16 @@ watch(
 .cursor-se-resize {
   cursor: se-resize;
 }
-.cursor-alias {
-  cursor: alias;
-}
-.cursor-move {
-  cursor: move;
-}
-.cursor-crosshair {
-  cursor: crosshair;
-}
+
 .cursor-col-resize {
   cursor: col-resize;
+}
+.cursor-row-resize {
+  cursor: row-resize;
+}
+
+// rotate
+.cursor-alias {
+  cursor: alias;
 }
 </style>
