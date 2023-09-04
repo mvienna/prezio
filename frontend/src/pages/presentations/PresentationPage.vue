@@ -21,6 +21,7 @@
         @mousedown="handleCanvasMouseDown"
         @mousemove="handleCanvasMouseMove"
         @mouseup="handleCanvasMouseUp"
+        @mouseleave="handleCanvasMouseLeave"
         @click="handleCanvasClick"
       ></canvas>
     </div>
@@ -66,6 +67,9 @@ const {
 
   // select
   selectedElement,
+
+  // drag
+  isDragging,
 
   // resize
   isResizing,
@@ -308,6 +312,10 @@ const handleCanvasClick = (event) => {
         break;
     }
   }
+};
+
+const handleCanvasMouseLeave = () => {
+  isDragging.value = false;
 };
 
 /*

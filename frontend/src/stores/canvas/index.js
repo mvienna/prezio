@@ -52,7 +52,7 @@ export const useCanvasStore = defineStore("canvas", {
     /*
      * dragging
      */
-    isDraggingElement: false,
+    isDragging: false,
     dragStart: {
       x: null,
       y: null,
@@ -253,15 +253,15 @@ export const useCanvasStore = defineStore("canvas", {
     startDrag() {
       this.dragStart.x = this.mouse.x;
       this.dragStart.y = this.mouse.y;
-      this.isDraggingElement = true;
+      this.isDragging = true;
     },
 
     endDrag() {
-      this.isDraggingElement = false;
+      this.isDragging = false;
     },
 
     dragElement() {
-      if (this.isDraggingElement && this.selectedElement) {
+      if (this.isDragging && this.selectedElement) {
         this.moveElement(this.mouse.x, this.mouse.y);
       }
     },
