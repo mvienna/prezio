@@ -213,6 +213,7 @@ export const useCanvasStore = defineStore("canvas", {
       if (hoveredElement) {
         this.selectedElement = hoveredElement;
         this.selectedElementIndex = hoveredElementIndex;
+        this.switchMode(hoveredElement.mode);
       }
 
       this.redrawCanvas();
@@ -229,6 +230,7 @@ export const useCanvasStore = defineStore("canvas", {
       if (hoveredElement) {
         this.selectedElement = hoveredElement;
         this.selectedElementIndex = hoveredElementIndex;
+        this.switchMode(hoveredElement.mode);
 
         if (previousSelectedElementIndex === this.selectedElementIndex)
           switch (this.mode) {
@@ -760,17 +762,6 @@ export const useCanvasStore = defineStore("canvas", {
 
             this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${adjustedFontSize}px ${element.fontFamily}`;
             this.ctx.fillStyle = element.color;
-
-            console.log(
-              "x:",
-              element.x,
-              "y:",
-              element.y,
-              "w:",
-              element.width,
-              "h:",
-              element.height
-            );
 
             // draw text lines
             lines.map((line, index) => {

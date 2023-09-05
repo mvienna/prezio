@@ -5,7 +5,7 @@
       :is-drawing-mode="mode === modes.drawing"
       :is-text-mode="mode === modes.text"
       :is-media-mode="[modes.media, modes.mediaEmojis].includes(mode)"
-      @switch-mode="canvasStore.switchMode($event, true)"
+      @switch-mode="canvasStore.switchMode($event)"
       @deselect="selectedElement ? canvasStore.deselectElement() : ''"
       @delete="selectedElement ? canvasStore.deleteSelectedElement() : ''"
       @add-image="mediaStore.addImage($event)"
@@ -88,8 +88,6 @@ const textStore = useCanvasTextStore();
 const textState = storeToRefs(textStore);
 
 const mediaStore = useCanvasMediaStore();
-
-const isJustDragged = ref(false);
 
 /*
  * canvas init, setup
@@ -220,71 +218,45 @@ const canvasCursorClass = computed(() => {
 /*
  * canvas events
  */
+const isJustDragged = ref(false);
+
 const handleCanvasMouseDown = () => {
   isJustDragged.value = false;
 
-  if (selectedElement.value) {
-    // start resizing
-    if (resizeHandle.value) {
-      canvasStore.startResizing();
-      return;
-    }
-
-    // start rotating
-    if (rotationHandle.value) {
-      canvasStore.startRotating();
-      return;
-    }
-
-    // start dragging
-    if (isElementHovered.value) {
-      canvasStore.startDragging();
-    }
-
-    return;
-  }
-
   switch (mode.value) {
-    // start drawing
+    /*
+     * start drawing
+     */
     case modes.value.drawing:
       if (!isElementHovered.value) {
         drawingStore.startDrawing();
       }
       break;
-  }
-};
 
-const handleCanvasMouseUp = () => {
-  if (selectedElement.value) {
-    // stop resizing
-    if (isResizing.value) {
-      canvasStore.stopResizing();
-      return;
-    }
+    /*
+     * start resizing
+     * start rotating
+     * start dragging
+     */
+    default:
+      if (selectedElement.value) {
+        // start resizing
+        if (resizeHandle.value) {
+          canvasStore.startResizing();
+          return;
+        }
 
-    // stop rotating
-    if (isRotating.value) {
-      canvasStore.stopRotating();
-      return;
-    }
+        // start rotating
+        if (rotationHandle.value) {
+          canvasStore.startRotating();
+          return;
+        }
 
-    // stop dragging
-    if (isDragging.value) {
-      canvasStore.stopDragging();
-      return;
-    }
-
-    return;
-  }
-
-  switch (mode.value) {
-    case modes.value.drawing:
-      // stop drawing
-      if (drawingState.isDrawing.value) {
-        drawingStore.stopDrawing();
-        return;
+        // start dragging
+        if (isElementHovered.value) {
+          canvasStore.startDragging();
+        }
       }
-      break;
   }
 };
 
@@ -294,47 +266,93 @@ const handleCanvasMouseMove = (event) => {
    */
   canvasStore.computePosition(event);
 
-  /*
-   * action
-   */
-  if (selectedElement.value) {
-    // resizing
-    if (isResizing.value) {
-      canvasStore.resizeElement();
-      return;
-    } else {
-      resizeHandle.value = canvasStore.getResizeHandle();
-    }
-
-    // rotation
-    if (isRotating.value) {
-      canvasStore.rotateElement();
-      return;
-    } else {
-      rotationHandle.value = canvasStore.getRotationHandle();
-    }
-
-    // dragging
-    if (isDragging.value) {
-      canvasStore.dragElement();
-      isJustDragged.value = true;
-      return;
-    }
-
-    return;
-  }
-
   switch (mode.value) {
-    // drawing
+    /*
+     * drawing
+     */
     case modes.value.drawing:
       if (drawingState.isDrawing.value) {
         drawingStore.draw();
       }
       break;
+
+    /*
+     * resizing
+     * rotating
+     * dragging
+     */
+    default:
+      if (selectedElement.value) {
+        // resizing
+        if (isResizing.value) {
+          canvasStore.resizeElement();
+          return;
+        } else {
+          resizeHandle.value = canvasStore.getResizeHandle();
+        }
+
+        // rotation
+        if (isRotating.value) {
+          canvasStore.rotateElement();
+          return;
+        } else {
+          rotationHandle.value = canvasStore.getRotationHandle();
+        }
+
+        // dragging
+        if (isDragging.value) {
+          canvasStore.dragElement();
+          isJustDragged.value = true;
+          return;
+        }
+      }
   }
 
+  /*
+   * on hover on an element, display ability to select it
+   */
   const { hoveredElement } = canvasStore.getHoveredElement();
   isElementHovered.value = !!hoveredElement;
+};
+
+const handleCanvasMouseUp = () => {
+  switch (mode.value) {
+    /*
+     * stop drawing
+     */
+    case modes.value.drawing:
+      if (drawingState.isDrawing.value) {
+        drawingStore.stopDrawing();
+        return;
+      }
+      break;
+
+    /*
+     * stop resizing
+     * stop rotating
+     * stop dragging
+     */
+    default:
+      if (selectedElement.value) {
+        // stop resizing
+        if (isResizing.value) {
+          canvasStore.stopResizing();
+          return;
+        }
+
+        // stop rotating
+        if (isRotating.value) {
+          canvasStore.stopRotating();
+          return;
+        }
+
+        // stop dragging
+        if (isDragging.value) {
+          canvasStore.stopDragging();
+          return;
+        }
+      }
+  }
 };
 
 const handleCanvasClick = (event) => {
@@ -351,6 +369,7 @@ const handleCanvasClick = (event) => {
       // edit text on second selection
       // skip if just dragged
       if (selectedElement.value) {
+        console.log(isJustDragged.value);
         if (!isJustDragged.value) {
           canvasStore.doubleSelectElement();
           if (mode.value === modes.value.textEditing) {
