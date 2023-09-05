@@ -62,7 +62,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
        * create text input
        */
       this.createTextInput();
-      console.log(event.clientX, event.clientY);
       this.input.style.left = event.clientX + "px";
       this.input.style.top = event.clientY + "px";
 

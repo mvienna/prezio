@@ -94,19 +94,8 @@ export const useCanvasStore = defineStore("canvas", {
       return this.canvas.getBoundingClientRect();
     },
 
-    switchMode(mode, resetData = false) {
+    switchMode(mode) {
       this.mode = mode;
-
-      if (resetData) {
-        this.selectedElement = null;
-        this.selectedElementIndex = -1;
-
-        this.stopDragging();
-        this.stopRotating();
-        this.stopResizing();
-
-        this.redrawCanvas();
-      }
     },
 
     computePosition(event) {
@@ -403,127 +392,203 @@ export const useCanvasStore = defineStore("canvas", {
       const aspectRatio =
         this.selectedElement.width / this.selectedElement.height;
 
-      switch (this.resizeHandle) {
-        /*
-         * top left
-         */
-        case this.resizeHandles.topLeft:
-          const newTopLeftWidth = Math.max(0, this.resizeStart.width - deltaX);
-          const newTopLeftHeight = Math.max(0, newTopLeftWidth / aspectRatio);
+      switch (this.selectedElement.mode) {
+        case this.modes.media:
+        case this.modes.mediaEmojis:
+          switch (this.resizeHandle) {
+            /*
+             * top left
+             */
+            case this.resizeHandles.topLeft:
+              const newTopLeftWidth = Math.max(
+                0,
+                this.resizeStart.width - deltaX
+              );
+              const newTopLeftHeight = Math.max(
+                0,
+                newTopLeftWidth / aspectRatio
+              );
 
-          this.selectedElement.width = newTopLeftWidth;
-          this.selectedElement.height = newTopLeftHeight;
+              this.selectedElement.width = newTopLeftWidth;
+              this.selectedElement.height = newTopLeftHeight;
 
-          this.selectedElement.x =
-            this.resizeStart.x + (this.resizeStart.width - newTopLeftWidth);
-          this.selectedElement.y =
-            this.resizeStart.y + (this.resizeStart.height - newTopLeftHeight);
+              this.selectedElement.x =
+                this.resizeStart.x + (this.resizeStart.width - newTopLeftWidth);
+              this.selectedElement.y =
+                this.resizeStart.y +
+                (this.resizeStart.height - newTopLeftHeight);
+
+              break;
+
+            /*
+             * top right
+             */
+            case this.resizeHandles.topRight:
+              const newTopRightWidth = Math.max(
+                0,
+                this.resizeStart.width + deltaX
+              );
+              const newTopRightHeight = Math.max(
+                0,
+                newTopRightWidth / aspectRatio
+              );
+
+              this.selectedElement.width = newTopRightWidth;
+              this.selectedElement.height = newTopRightHeight;
+
+              this.selectedElement.y =
+                this.resizeStart.y +
+                (this.resizeStart.height - newTopRightHeight);
+
+              break;
+
+            /*
+             * bottom left
+             */
+            case this.resizeHandles.bottomLeft:
+              const newBottomLeftWidth = Math.max(
+                0,
+                this.resizeStart.width - deltaX
+              );
+              const newBottomLeftHeight = Math.max(
+                0,
+                newBottomLeftWidth / aspectRatio
+              );
+
+              this.selectedElement.width = newBottomLeftWidth;
+              this.selectedElement.height = newBottomLeftHeight;
+
+              this.selectedElement.x =
+                this.resizeStart.x +
+                (this.resizeStart.width - newBottomLeftWidth);
+
+              break;
+
+            /*
+             * bottom right
+             */
+            case this.resizeHandles.bottomRight:
+              const newBottomRightWidth = Math.max(
+                0,
+                this.resizeStart.width + deltaX
+              );
+              const newBottomRightHeight = Math.max(
+                0,
+                newBottomRightWidth / aspectRatio
+              );
+
+              this.selectedElement.width = newBottomRightWidth;
+              this.selectedElement.height = newBottomRightHeight;
+
+              break;
+
+            /*
+             * center top
+             */
+            case this.resizeHandles.centerTop:
+              const newCenterTopHeight = Math.max(
+                0,
+                this.resizeStart.height - deltaY
+              );
+              this.selectedElement.height = newCenterTopHeight;
+              this.selectedElement.y =
+                this.resizeStart.y +
+                (this.resizeStart.height - newCenterTopHeight);
+
+              break;
+
+            /*
+             * center bottom
+             */
+            case this.resizeHandles.centerBottom:
+              const newCenterBottomHeight = Math.max(
+                0,
+                this.resizeStart.height + deltaY
+              );
+              this.selectedElement.height = newCenterBottomHeight;
+
+              break;
+
+            /*
+             * center left
+             */
+            case this.resizeHandles.centerLeft:
+              const newCenterLeftWidth = Math.max(
+                0,
+                this.resizeStart.width - deltaX
+              );
+
+              this.selectedElement.width = newCenterLeftWidth;
+              this.selectedElement.x =
+                this.resizeStart.x +
+                (this.resizeStart.width - newCenterLeftWidth);
+
+              break;
+
+            /*
+             * center right
+             */
+            case this.resizeHandles.centerRight:
+              this.selectedElement.width = Math.max(
+                0,
+                this.resizeStart.width + deltaX
+              );
+
+              break;
+          }
 
           break;
 
-        /*
-         * top right
-         */
-        case this.resizeHandles.topRight:
-          const newTopRightWidth = Math.max(0, this.resizeStart.width + deltaX);
-          const newTopRightHeight = Math.max(0, newTopRightWidth / aspectRatio);
+        case this.modes.text:
+          switch (this.resizeHandle) {
+            /*
+             * top left
+             */
+            case this.resizeHandles.topLeft:
+              break;
 
-          this.selectedElement.width = newTopRightWidth;
-          this.selectedElement.height = newTopRightHeight;
+            /*
+             * top right
+             */
+            case this.resizeHandles.topRight:
+              break;
 
-          this.selectedElement.y =
-            this.resizeStart.y + (this.resizeStart.height - newTopRightHeight);
+            /*
+             * bottom left
+             */
+            case this.resizeHandles.bottomLeft:
+              break;
 
-          break;
+            /*
+             * bottom right
+             */
+            case this.resizeHandles.bottomRight:
+              break;
 
-        /*
-         * bottom left
-         */
-        case this.resizeHandles.bottomLeft:
-          const newBottomLeftWidth = Math.max(
-            0,
-            this.resizeStart.width - deltaX
-          );
-          const newBottomLeftHeight = Math.max(
-            0,
-            newBottomLeftWidth / aspectRatio
-          );
+            /*
+             * center top
+             */
+            case this.resizeHandles.centerTop:
+              break;
 
-          this.selectedElement.width = newBottomLeftWidth;
-          this.selectedElement.height = newBottomLeftHeight;
+            /*
+             * center bottom
+             */
+            case this.resizeHandles.centerBottom:
+              break;
 
-          this.selectedElement.x =
-            this.resizeStart.x + (this.resizeStart.width - newBottomLeftWidth);
+            /*
+             * center left
+             */
+            case this.resizeHandles.centerLeft:
+              break;
 
-          break;
-
-        /*
-         * bottom right
-         */
-        case this.resizeHandles.bottomRight:
-          const newBottomRightWidth = Math.max(
-            0,
-            this.resizeStart.width + deltaX
-          );
-          const newBottomRightHeight = Math.max(
-            0,
-            newBottomRightWidth / aspectRatio
-          );
-
-          this.selectedElement.width = newBottomRightWidth;
-          this.selectedElement.height = newBottomRightHeight;
-
-          break;
-
-        /*
-         * center top
-         */
-        case this.resizeHandles.centerTop:
-          const newCenterTopHeight = Math.max(
-            0,
-            this.resizeStart.height - deltaY
-          );
-          this.selectedElement.height = newCenterTopHeight;
-          this.selectedElement.y =
-            this.resizeStart.y + (this.resizeStart.height - newCenterTopHeight);
-
-          break;
-
-        /*
-         * center bottom
-         */
-        case this.resizeHandles.centerBottom:
-          const newCenterBottomHeight = Math.max(
-            0,
-            this.resizeStart.height + deltaY
-          );
-          this.selectedElement.height = newCenterBottomHeight;
-
-          break;
-
-        /*
-         * center left
-         */
-        case this.resizeHandles.centerLeft:
-          const newCenterLeftWidth = Math.max(
-            0,
-            this.resizeStart.width - deltaX
-          );
-
-          this.selectedElement.width = newCenterLeftWidth;
-          this.selectedElement.x =
-            this.resizeStart.x + (this.resizeStart.width - newCenterLeftWidth);
-
-          break;
-
-        /*
-         * center right
-         */
-        case this.resizeHandles.centerRight:
-          this.selectedElement.width = Math.max(
-            0,
-            this.resizeStart.width + deltaX
-          );
+            /*
+             * center right
+             */
+            case this.resizeHandles.centerRight:
+              break;
+          }
 
           break;
       }
@@ -695,6 +760,17 @@ export const useCanvasStore = defineStore("canvas", {
 
             this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${adjustedFontSize}px ${element.fontFamily}`;
             this.ctx.fillStyle = element.color;
+
+            console.log(
+              "x:",
+              element.x,
+              "y:",
+              element.y,
+              "w:",
+              element.width,
+              "h:",
+              element.height
+            );
 
             // draw text lines
             lines.map((line, index) => {
