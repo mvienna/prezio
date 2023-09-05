@@ -94,8 +94,19 @@ export const useCanvasStore = defineStore("canvas", {
       return this.canvas.getBoundingClientRect();
     },
 
-    switchMode(mode) {
+    switchMode(mode, resetData = false) {
       this.mode = mode;
+
+      if (resetData) {
+        this.selectedElement = null;
+        this.selectedElementIndex = -1;
+
+        this.stopDragging();
+        this.stopRotating();
+        this.stopResizing();
+
+        this.redrawCanvas();
+      }
     },
 
     computePosition(event) {
@@ -136,16 +147,12 @@ export const useCanvasStore = defineStore("canvas", {
     },
 
     /*
-     * select
+     * hover & select
      */
-    selectElement() {
-      const previousSelectedElementIndex = this.selectedElementIndex;
+    getHoveredElement() {
+      let hoveredElement = null;
+      let hoveredElementIndex = -1;
 
-      // clear selected previously elements
-      this.selectedElement = null;
-      this.selectedElementIndex = -1;
-
-      // search for clicked element
       this.elements.map((element, index) => {
         switch (element.mode) {
           /*
@@ -163,9 +170,8 @@ export const useCanvasStore = defineStore("canvas", {
               this.mouse.y >= minY &&
               this.mouse.y <= maxY
             ) {
-              this.selectedElement = element;
-              this.selectedElementIndex = index;
-              this.redrawCanvas();
+              hoveredElement = element;
+              hoveredElementIndex = index;
             }
             break;
 
@@ -183,9 +189,8 @@ export const useCanvasStore = defineStore("canvas", {
               Math.round(this.mouse.y) <=
                 Math.round(element.y + this.computeAdjustedSize(element.height))
             ) {
-              this.selectedElement = element;
-              this.selectedElementIndex = index;
-              this.redrawCanvas();
+              hoveredElement = element;
+              hoveredElementIndex = index;
             }
             break;
 
@@ -196,31 +201,52 @@ export const useCanvasStore = defineStore("canvas", {
             if (
               Math.round(this.mouse.x) >= Math.round(element.x) &&
               Math.round(this.mouse.x) <=
-                Math.round(
-                  element.x + this.computeAdjustedSize(element.width)
-                ) &&
+                Math.round(element.x + element.width) &&
               Math.round(this.mouse.y) >= Math.round(element.y) &&
-              Math.round(this.mouse.y) <=
-                Math.round(element.y + this.computeAdjustedSize(element.height))
+              Math.round(this.mouse.y) <= Math.round(element.y + element.height)
             ) {
-              this.selectedElement = element;
-              this.selectedElementIndex = index;
-              this.redrawCanvas();
+              hoveredElement = element;
+              hoveredElementIndex = index;
             }
             break;
         }
       });
 
-      if (!this.selectedElement) {
-        this.redrawCanvas();
-        return;
+      return { hoveredElement, hoveredElementIndex };
+    },
+
+    selectElement() {
+      this.selectedElement = null;
+      this.selectedElementIndex = -1;
+
+      const { hoveredElement, hoveredElementIndex } = this.getHoveredElement();
+
+      if (hoveredElement) {
+        this.selectedElement = hoveredElement;
+        this.selectedElementIndex = hoveredElementIndex;
       }
 
-      if (
-        previousSelectedElementIndex === this.selectedElementIndex &&
-        this.mode === this.modes.text
-      ) {
-        this.mode = this.modes.textEditing;
+      this.redrawCanvas();
+    },
+
+    doubleSelectElement() {
+      const previousSelectedElementIndex = this.selectedElementIndex;
+
+      this.selectedElement = null;
+      this.selectedElementIndex = -1;
+
+      const { hoveredElement, hoveredElementIndex } = this.getHoveredElement();
+
+      if (hoveredElement) {
+        this.selectedElement = hoveredElement;
+        this.selectedElementIndex = hoveredElementIndex;
+
+        if (previousSelectedElementIndex === this.selectedElementIndex)
+          switch (this.mode) {
+            case this.modes.text:
+              this.switchMode(this.modes.textEditing);
+              break;
+          }
       }
     },
 
@@ -250,20 +276,18 @@ export const useCanvasStore = defineStore("canvas", {
     /*
      * dragging
      */
-    startDrag() {
+    startDragging() {
+      this.isDragging = true;
       this.dragStart.x = this.mouse.x;
       this.dragStart.y = this.mouse.y;
-      this.isDragging = true;
     },
 
-    endDrag() {
+    stopDragging() {
       this.isDragging = false;
     },
 
     dragElement() {
-      if (this.isDragging && this.selectedElement) {
-        this.moveElement(this.mouse.x, this.mouse.y);
-      }
+      this.moveElement(this.mouse.x, this.mouse.y);
     },
 
     moveElement(newX, newY) {
@@ -288,7 +312,7 @@ export const useCanvasStore = defineStore("canvas", {
       this.dragStart.x = newX;
       this.dragStart.y = newY;
 
-      this.elements[this.selectedElementIndex] = this.selectedElement;
+      this.updateSelectedElement();
       this.redrawCanvas();
     },
 
@@ -353,7 +377,7 @@ export const useCanvasStore = defineStore("canvas", {
       return activeHandle;
     },
 
-    startResize() {
+    startResizing() {
       this.isResizing = true;
       this.resizeStart = {
         x: this.selectedElement.x,
@@ -365,7 +389,7 @@ export const useCanvasStore = defineStore("canvas", {
       };
     },
 
-    endResize() {
+    stopResizing() {
       this.isResizing = false;
       this.resizeHandle = null;
     },
@@ -566,7 +590,7 @@ export const useCanvasStore = defineStore("canvas", {
       this.isRotating = true;
     },
 
-    endRotating() {
+    stopRotating() {
       this.isRotating = false;
       this.rotateHandle = null;
     },
@@ -811,9 +835,9 @@ export const useCanvasStore = defineStore("canvas", {
       /*
        * resize handles
        */
+      this.ctx.fillStyle = this.selectedElementBorder.borderColor;
       if (handles.length) {
         const handleSize = borderWidth * 3;
-        this.ctx.fillStyle = this.selectedElementBorder.borderColor;
 
         handles.forEach((handle) => {
           const { minX, minY, maxX, maxY } = this.computeResizeHandlePosition(

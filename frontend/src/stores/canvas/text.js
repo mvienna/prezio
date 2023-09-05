@@ -58,8 +58,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
      * new text
      */
     addNewText(event) {
-      if (!this.isNewText) return;
-
       /*
        * create text input
        */

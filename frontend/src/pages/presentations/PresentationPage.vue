@@ -5,7 +5,7 @@
       :is-drawing-mode="mode === modes.drawing"
       :is-text-mode="mode === modes.text"
       :is-media-mode="[modes.media, modes.mediaEmojis].includes(mode)"
-      @switch-mode="canvasStore.switchMode($event)"
+      @switch-mode="canvasStore.switchMode($event, true)"
       @deselect="selectedElement ? canvasStore.deselectElement() : ''"
       @delete="selectedElement ? canvasStore.deleteSelectedElement() : ''"
       @add-image="mediaStore.addImage($event)"
@@ -17,7 +17,7 @@
       <canvas
         ref="canvasRef"
         id="canvas"
-        :class="[canvasCursor, canvasFocus]"
+        :class="[canvasCursorClass, canvasHighlightClass]"
         @mousedown="handleCanvasMouseDown"
         @mousemove="handleCanvasMouseMove"
         @mouseup="handleCanvasMouseUp"
@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
@@ -82,16 +82,73 @@ const {
 } = storeToRefs(canvasStore);
 
 const drawingStore = useCanvasDrawingStore();
+const drawingState = storeToRefs(drawingStore);
 
 const textStore = useCanvasTextStore();
 const textState = storeToRefs(textStore);
 
 const mediaStore = useCanvasMediaStore();
 
+const isJustDragged = ref(false);
+
 /*
  * canvas init, setup
  */
 const canvasRef = ref();
+
+const resizeCanvas = () => {
+  canvas.value.width = 1920;
+  canvas.value.height = 1080;
+
+  ctx.value.scale(scale.value, scale.value);
+
+  canvasStore.redrawCanvas();
+};
+
+const handleWheelEvent = (event) => {
+  if (event.ctrlKey || event.metaKey) {
+    event.preventDefault();
+
+    const delta = event.deltaY > 0 ? -1 : 1;
+    canvasStore.handleZoom(delta, event.clientX, event.clientY);
+  }
+};
+
+const handleKeyDownEvent = (event) => {
+  if (selectedElement.value) {
+    // delete selected element
+    if (event.key === "Delete" || event.key === "Backspace") {
+      event.preventDefault();
+      canvasStore.deleteSelectedElement();
+    }
+
+    // deselect
+    if (event.key === "Escape" || event.key === "Enter") {
+      event.preventDefault();
+      canvasStore.deselectElement();
+    }
+
+    switch (selectedElement.value?.mode) {
+      case modes.value.text:
+        textStore.shortcuts(event);
+    }
+  }
+
+  switch (mode.value) {
+    case modes.value.text:
+      // turn off adding new text
+      if (event.key === "Escape") {
+        event.preventDefault();
+        textState.isNewText.value = false;
+      }
+
+      if (event.key === "t") {
+        event.preventDefault();
+        textState.isNewText.value = !textState.isNewText.value;
+      }
+      break;
+  }
+};
 
 onMounted(() => {
   canvas.value = canvasRef.value;
@@ -107,62 +164,26 @@ onMounted(() => {
   /*
    * canvas zoom
    */
-  canvas.value.addEventListener("wheel", (event) => {
-    if (event.ctrlKey || event.metaKey) {
-      event.preventDefault();
-
-      const delta = event.deltaY > 0 ? -1 : 1;
-      canvasStore.handleZoom(delta, event.clientX, event.clientY);
-    }
-  });
+  canvas.value.addEventListener("wheel", handleWheelEvent);
 
   /*
-   * canvas shortcuts
+   * shortcuts
    */
-  document.addEventListener("keydown", (event) => {
-    if (selectedElement.value) {
-      // delete selected element
-      if (event.key === "Delete" || event.key === "Backspace") {
-        event.preventDefault();
-        canvasStore.deleteSelectedElement();
-      }
-
-      // deselect
-      if (event.key === "Escape" || event.key === "Enter") {
-        event.preventDefault();
-        canvasStore.deselectElement();
-      }
-
-      switch (selectedElement.value.mode) {
-        case modes.value.text:
-          textStore.shortcuts(event);
-      }
-    }
-
-    switch (mode.value) {
-      case modes.value.text:
-        // turn off adding new text
-        if (event.key === "Escape") {
-          textState.isNewText.value = false;
-        }
-        break;
-    }
-  });
+  document.addEventListener("keydown", handleKeyDownEvent);
 });
 
-const resizeCanvas = () => {
-  canvas.value.width = 1920;
-  canvas.value.height = 1080;
-
-  ctx.value.scale(scale.value, scale.value);
-
-  canvasStore.redrawCanvas();
-};
+onUnmounted(() => {
+  document.removeEventListener("resize", resizeCanvas);
+  document.removeEventListener("keydown", handleKeyDownEvent);
+  canvas.value.removeEventListener("wheel", handleWheelEvent);
+});
 
 /*
  * canvas cursor
  */
-const canvasCursor = computed(() => {
+const isElementHovered = ref(false);
+
+const canvasCursorClass = computed(() => {
   let resizeCursor;
   switch (resizeHandle.value) {
     case resizeHandles.value.topLeft:
@@ -191,7 +212,7 @@ const canvasCursor = computed(() => {
     ? resizeCursor
     : rotationHandle.value
     ? "cursor-alias"
-    : selectedElement.value
+    : isElementHovered.value
     ? "cursor-move"
     : "cursor-crosshair";
 });
@@ -200,80 +221,84 @@ const canvasCursor = computed(() => {
  * canvas events
  */
 const handleCanvasMouseDown = () => {
-  /*
-   * START:
-   *
-   * resize
-   * drag
-   */
+  isJustDragged.value = false;
+
   if (selectedElement.value) {
+    // start resizing
     if (resizeHandle.value) {
-      canvasStore.startResize();
-    } else if (rotationHandle.value) {
-      canvasStore.startRotating();
-    } else {
-      canvasStore.startDrag();
+      canvasStore.startResizing();
+      return;
     }
+
+    // start rotating
+    if (rotationHandle.value) {
+      canvasStore.startRotating();
+      return;
+    }
+
+    // start dragging
+    if (isElementHovered.value) {
+      canvasStore.startDragging();
+    }
+
     return;
   }
 
-  /*
-   * START:
-   *
-   * draw
-   */
   switch (mode.value) {
-    // drawing
+    // start drawing
     case modes.value.drawing:
-      drawingStore.startDrawing();
+      if (!isElementHovered.value) {
+        drawingStore.startDrawing();
+      }
       break;
   }
 };
 
 const handleCanvasMouseUp = () => {
-  /*
-   * END:
-   *
-   * resize
-   * drag
-   */
   if (selectedElement.value) {
+    // stop resizing
     if (isResizing.value) {
-      canvasStore.endResize();
-    } else if (isRotating.value) {
-      canvasStore.endRotating();
-    } else {
-      canvasStore.endDrag();
+      canvasStore.stopResizing();
+      return;
     }
+
+    // stop rotating
+    if (isRotating.value) {
+      canvasStore.stopRotating();
+      return;
+    }
+
+    // stop dragging
+    if (isDragging.value) {
+      canvasStore.stopDragging();
+      return;
+    }
+
     return;
   }
 
-  /*
-   * END:
-   *
-   * draw
-   */
   switch (mode.value) {
-    // drawing
     case modes.value.drawing:
-      drawingStore.finishDrawing();
+      // stop drawing
+      if (drawingState.isDrawing.value) {
+        drawingStore.stopDrawing();
+        return;
+      }
       break;
   }
 };
 
 const handleCanvasMouseMove = (event) => {
   /*
-   * track mouse
+   * track mouse position
    */
   canvasStore.computePosition(event);
 
   /*
-   * DO:
-   *
-   * resize
-   * drag
+   * action
    */
   if (selectedElement.value) {
+    // resizing
     if (isResizing.value) {
       canvasStore.resizeElement();
       return;
@@ -281,6 +306,7 @@ const handleCanvasMouseMove = (event) => {
       resizeHandle.value = canvasStore.getResizeHandle();
     }
 
+    // rotation
     if (isRotating.value) {
       canvasStore.rotateElement();
       return;
@@ -288,39 +314,62 @@ const handleCanvasMouseMove = (event) => {
       rotationHandle.value = canvasStore.getRotationHandle();
     }
 
-    canvasStore.dragElement();
+    // dragging
+    if (isDragging.value) {
+      canvasStore.dragElement();
+      isJustDragged.value = true;
+      return;
+    }
+
     return;
   }
 
-  /*
-   * DO:
-   *
-   * draw
-   */
   switch (mode.value) {
     // drawing
     case modes.value.drawing:
-      drawingStore.draw();
+      if (drawingState.isDrawing.value) {
+        drawingStore.draw();
+      }
       break;
   }
+
+  const { hoveredElement } = canvasStore.getHoveredElement();
+  isElementHovered.value = !!hoveredElement;
 };
 
 const handleCanvasClick = (event) => {
-  /*
-   * select element
-   */
-  canvasStore.selectElement();
-
-  /*
-   * no selected element, add text
-   */
-  if (!selectedElement.value) {
-    switch (mode.value) {
-      // text
-      case modes.value.text:
+  switch (mode.value) {
+    /*
+     * text
+     */
+    case modes.value.text:
+      if (!selectedElement.value && textState.isNewText.value) {
         textStore.addNewText(event);
-        break;
-    }
+        return;
+      }
+
+      // edit text on second selection
+      // skip if just dragged
+      if (selectedElement.value) {
+        if (!isJustDragged.value) {
+          canvasStore.doubleSelectElement();
+          if (mode.value === modes.value.textEditing) {
+            textStore.editText();
+            return;
+          }
+        }
+      } else {
+        // select element
+        canvasStore.selectElement();
+      }
+      break;
+
+    /*
+     * other
+     */
+    default:
+      // select element
+      canvasStore.selectElement();
   }
 };
 
@@ -329,27 +378,17 @@ const handleCanvasMouseLeave = () => {
 };
 
 /*
- * handle editing text
+ * highlight canvas on
  */
-watch(
-  () => mode.value,
-  () => {
-    switch (mode.value) {
-      case modes.value.textEditing:
-        textStore.editText();
-    }
-  }
-);
-
-const canvasFocus = ref("");
+const canvasHighlightClass = ref("");
 watch(
   () => textState.isNewText.value,
   () => {
     if (textState.isNewText.value) {
-      canvasFocus.value = "canvas--focus";
+      canvasHighlightClass.value = "canvas--highlighted";
 
       setTimeout(() => {
-        canvasFocus.value = "";
+        canvasHighlightClass.value = "";
       }, 2000);
     }
   }
@@ -381,7 +420,7 @@ watch(
   /*
    * highlight canvas
    */
-  .canvas--focus {
+  .canvas--highlighted {
     border: 2px solid transparent;
     animation: pulse 4s infinite;
     box-shadow: 0 0 0 0 $primary;

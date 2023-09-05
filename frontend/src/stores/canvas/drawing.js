@@ -49,7 +49,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       this.draw();
     },
 
-    finishDrawing() {
+    stopDrawing() {
       this.isDrawing = false;
       this.last.x = null;
       this.last.y = null;
