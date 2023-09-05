@@ -62,6 +62,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
        * create text input
        */
       this.createTextInput();
+      console.log(event.clientX, event.clientY);
       this.input.style.left = event.clientX + "px";
       this.input.style.top = event.clientY + "px";
 
@@ -75,16 +76,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
       const clickedX = mouse.value.x;
       const clickedY = mouse.value.y;
 
-      const absoluteX = event.clientX;
-      const absoluteY = event.clientY;
-
       const addTextToCanvas = () => {
-        elements.value.push(
-          this.computeTextElementProps(
-            { x: clickedX, y: clickedY },
-            { x: absoluteX, y: absoluteY }
-          )
-        );
+        elements.value.push(this.computeTextElementProps(clickedX, clickedY));
 
         this.isNewText = false;
 
@@ -122,8 +115,15 @@ export const useCanvasTextStore = defineStore("canvasText", {
        */
       this.createTextInput();
 
-      this.input.style.left = selectedElement.value.absoluteX + "px";
-      this.input.style.top = selectedElement.value.absoluteY + "px";
+      const canvasRect = canvasStore.canvasRect();
+      this.input.style.left =
+        canvasRect.left +
+        (selectedElement.value.x * canvasRect.width) / canvas.value.width +
+        "px";
+      this.input.style.top =
+        canvasRect.top +
+        (selectedElement.value.y * canvasRect.width) / canvas.value.width +
+        "px";
 
       this.input.style.width = selectedElement.value.width;
       this.input.style.height = selectedElement.value.height;
@@ -173,14 +173,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
      * customization
      */
     computeTextElementProps(
-      clickedPosition = {
-        x: selectedElement.value.x,
-        y: selectedElement.value.y,
-      },
-      absolutePosition = {
-        x: selectedElement.value.absoluteX,
-        y: selectedElement.value.absoluteY,
-      }
+      x = selectedElement.value.x,
+      y = selectedElement.value.y
     ) {
       const newTextDecoration = `${
         this.customization.formatting.isLineThrough ? "line-through" : ""
@@ -192,10 +186,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
         mode: modes.value.text,
         isVisible: true,
         text: this.input.innerHTML,
-        x: clickedPosition.x,
-        y: clickedPosition.y,
-        absoluteX: absolutePosition.x,
-        absoluteY: absolutePosition.y,
+        x: x,
+        y: y,
         width: this.input.offsetWidth,
         height: this.input.offsetHeight,
         lineHeight: this.customization.lineHeight,
