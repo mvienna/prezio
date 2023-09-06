@@ -30,7 +30,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       color: "#000000",
       fontSize: "16px",
       font: "Arial",
-      lineHeight: 1.2,
+      lineHeight: 1.4,
       formatting: {
         isBold: false,
         isUnderline: false,
@@ -59,10 +59,12 @@ export const useCanvasTextStore = defineStore("canvasText", {
       this.applyStyles();
 
       const removeTagsExceptBr = () => {
-        this.input.innerHTML = this.input.innerHTML.replace(
-          /<(?!br\s*\/?)[^>]+>/gi,
-          ""
-        );
+        const pattern = /<(?!br\s*\/?)[^>]+>/gi;
+
+        if (pattern.test(this.input.textContent)) {
+          this.input.innerHTML = this.input.textContent.replace(pattern, "");
+          this.moveInputCursorToTheEnd();
+        }
       };
 
       this.input.addEventListener("input", removeTagsExceptBr);
@@ -154,16 +156,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
       // paste text content
       this.input.innerHTML = selectedElement.value.text;
-
-      // collapse the range to the end.
-      const range = document.createRange();
-      range.selectNodeContents(this.input);
-      range.collapse(false);
-
-      // clear any existing selections.
-      const selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(range);
+      this.moveInputCursorToTheEnd();
 
       /*
        * add text to canvas
@@ -188,6 +181,18 @@ export const useCanvasTextStore = defineStore("canvasText", {
           this.input.blur();
         }
       });
+    },
+
+    moveInputCursorToTheEnd() {
+      // collapse the range to the end.
+      const range = document.createRange();
+      range.selectNodeContents(this.input);
+      range.collapse(false);
+
+      // clear any existing selections.
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
     },
 
     /*
