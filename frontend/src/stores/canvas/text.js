@@ -57,6 +57,15 @@ export const useCanvasTextStore = defineStore("canvasText", {
       this.input.setAttribute("contentEditable", "true");
 
       this.applyStyles();
+
+      const removeTagsExceptBr = () => {
+        this.input.innerHTML = this.input.innerHTML.replace(
+          /<(?!br\s*\/?)[^>]+>/gi,
+          ""
+        );
+      };
+
+      this.input.addEventListener("input", removeTagsExceptBr);
     },
 
     removeTextInput() {
