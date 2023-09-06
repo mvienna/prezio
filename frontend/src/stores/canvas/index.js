@@ -394,6 +394,9 @@ export const useCanvasStore = defineStore("canvas", {
       const aspectRatio =
         this.selectedElement.width / this.selectedElement.height;
 
+      const minWidth = this.computeAdjustedSize(50);
+      const minHeight = minWidth / aspectRatio;
+
       switch (this.selectedElement.mode) {
         case this.modes.media:
         case this.modes.mediaEmojis:
@@ -403,11 +406,11 @@ export const useCanvasStore = defineStore("canvas", {
              */
             case this.resizeHandles.topLeft:
               const newTopLeftWidth = Math.max(
-                0,
+                minWidth,
                 this.resizeStart.width - deltaX
               );
               const newTopLeftHeight = Math.max(
-                0,
+                minHeight,
                 newTopLeftWidth / aspectRatio
               );
 
@@ -427,11 +430,11 @@ export const useCanvasStore = defineStore("canvas", {
              */
             case this.resizeHandles.topRight:
               const newTopRightWidth = Math.max(
-                0,
+                minWidth,
                 this.resizeStart.width + deltaX
               );
               const newTopRightHeight = Math.max(
-                0,
+                minHeight,
                 newTopRightWidth / aspectRatio
               );
 
@@ -449,11 +452,11 @@ export const useCanvasStore = defineStore("canvas", {
              */
             case this.resizeHandles.bottomLeft:
               const newBottomLeftWidth = Math.max(
-                0,
+                minWidth,
                 this.resizeStart.width - deltaX
               );
               const newBottomLeftHeight = Math.max(
-                0,
+                minHeight,
                 newBottomLeftWidth / aspectRatio
               );
 
@@ -471,11 +474,11 @@ export const useCanvasStore = defineStore("canvas", {
              */
             case this.resizeHandles.bottomRight:
               const newBottomRightWidth = Math.max(
-                0,
+                minWidth,
                 this.resizeStart.width + deltaX
               );
               const newBottomRightHeight = Math.max(
-                0,
+                minHeight,
                 newBottomRightWidth / aspectRatio
               );
 
@@ -489,7 +492,7 @@ export const useCanvasStore = defineStore("canvas", {
              */
             case this.resizeHandles.centerTop:
               const newCenterTopHeight = Math.max(
-                0,
+                minHeight,
                 this.resizeStart.height - deltaY
               );
               this.selectedElement.height = newCenterTopHeight;
@@ -504,7 +507,7 @@ export const useCanvasStore = defineStore("canvas", {
              */
             case this.resizeHandles.centerBottom:
               const newCenterBottomHeight = Math.max(
-                0,
+                minHeight,
                 this.resizeStart.height + deltaY
               );
               this.selectedElement.height = newCenterBottomHeight;
@@ -516,7 +519,7 @@ export const useCanvasStore = defineStore("canvas", {
              */
             case this.resizeHandles.centerLeft:
               const newCenterLeftWidth = Math.max(
-                0,
+                minWidth,
                 this.resizeStart.width - deltaX
               );
 
@@ -532,7 +535,7 @@ export const useCanvasStore = defineStore("canvas", {
              */
             case this.resizeHandles.centerRight:
               this.selectedElement.width = Math.max(
-                0,
+                minWidth,
                 this.resizeStart.width + deltaX
               );
 
