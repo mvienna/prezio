@@ -223,40 +223,40 @@ const isJustDragged = ref(false);
 const handleCanvasMouseDown = () => {
   isJustDragged.value = false;
 
+  /*
+   * start resizing
+   * start rotating
+   * start dragging
+   */
+  if (selectedElement.value) {
+    // start resizing
+    if (resizeHandle.value) {
+      canvasStore.startResizing();
+      return;
+    }
+
+    // start rotating
+    if (rotationHandle.value) {
+      canvasStore.startRotating();
+      return;
+    }
+
+    // start dragging
+    if (isElementHovered.value) {
+      canvasStore.startDragging();
+      return;
+    }
+  }
+
+  /*
+   * start drawing
+   */
   switch (mode.value) {
-    /*
-     * start drawing
-     */
     case modes.value.drawing:
       if (!isElementHovered.value) {
         drawingStore.startDrawing();
       }
       break;
-
-    /*
-     * start resizing
-     * start rotating
-     * start dragging
-     */
-    default:
-      if (selectedElement.value) {
-        // start resizing
-        if (resizeHandle.value) {
-          canvasStore.startResizing();
-          return;
-        }
-
-        // start rotating
-        if (rotationHandle.value) {
-          canvasStore.startRotating();
-          return;
-        }
-
-        // start dragging
-        if (isElementHovered.value) {
-          canvasStore.startDragging();
-        }
-      }
   }
 };
 
@@ -266,92 +266,90 @@ const handleCanvasMouseMove = (event) => {
    */
   canvasStore.computePosition(event);
 
-  switch (mode.value) {
-    /*
-     * drawing
-     */
-    case modes.value.drawing:
-      if (drawingState.isDrawing.value) {
-        drawingStore.draw();
-      }
-      break;
-
-    /*
-     * resizing
-     * rotating
-     * dragging
-     */
-    default:
-      if (selectedElement.value) {
-        // resizing
-        if (isResizing.value) {
-          canvasStore.resizeElement();
-          return;
-        } else {
-          resizeHandle.value = canvasStore.getResizeHandle();
-        }
-
-        // rotation
-        if (isRotating.value) {
-          canvasStore.rotateElement();
-          return;
-        } else {
-          rotationHandle.value = canvasStore.getRotationHandle();
-        }
-
-        // dragging
-        if (isDragging.value) {
-          canvasStore.dragElement();
-          isJustDragged.value = true;
-          return;
-        }
-      }
-  }
-
   /*
    * on hover on an element, display ability to select it
    */
   const { hoveredElement } = canvasStore.getHoveredElement();
   isElementHovered.value = !!hoveredElement;
+
+  /*
+   * resizing
+   * rotating
+   * dragging
+   */
+  if (selectedElement.value) {
+    // resizing
+    if (isResizing.value) {
+      canvasStore.resizeElement();
+      return;
+    } else {
+      resizeHandle.value = canvasStore.getResizeHandle();
+    }
+
+    // rotation
+    if (isRotating.value) {
+      canvasStore.rotateElement();
+      return;
+    } else {
+      rotationHandle.value = canvasStore.getRotationHandle();
+    }
+
+    // dragging
+    if (isDragging.value) {
+      canvasStore.dragElement();
+      isJustDragged.value = true;
+      return;
+    }
+  }
+
+  /*
+   * drawing
+   */
+  switch (mode.value) {
+    case modes.value.drawing:
+      if (drawingState.isDrawing.value) {
+        drawingStore.draw();
+      }
+      break;
+  }
 };
 
 const handleCanvasMouseUp = () => {
+  /*
+   * stop resizing
+   * stop rotating
+   * stop dragging
+   */
+  if (selectedElement.value) {
+    // stop resizing
+    if (isResizing.value) {
+      canvasStore.stopResizing();
+      return;
+    }
+
+    // stop rotating
+    if (isRotating.value) {
+      canvasStore.stopRotating();
+      return;
+    }
+
+    // stop dragging
+    if (isDragging.value) {
+      canvasStore.stopDragging();
+      return;
+    }
+  }
+
+  /*
+   * stop drawing
+   */
   switch (mode.value) {
-    /*
-     * stop drawing
-     */
     case modes.value.drawing:
       if (drawingState.isDrawing.value) {
         drawingStore.stopDrawing();
         return;
       }
       break;
-
-    /*
-     * stop resizing
-     * stop rotating
-     * stop dragging
-     */
-    default:
-      if (selectedElement.value) {
-        // stop resizing
-        if (isResizing.value) {
-          canvasStore.stopResizing();
-          return;
-        }
-
-        // stop rotating
-        if (isRotating.value) {
-          canvasStore.stopRotating();
-          return;
-        }
-
-        // stop dragging
-        if (isDragging.value) {
-          canvasStore.stopDragging();
-          return;
-        }
-      }
   }
 };
 
@@ -377,16 +375,14 @@ const handleCanvasClick = (event) => {
           }
         }
       } else {
-        // select element
         canvasStore.selectElement();
       }
       break;
 
     /*
-     * other
+     * other elements
      */
     default:
-      // select element
       canvasStore.selectElement();
   }
 };

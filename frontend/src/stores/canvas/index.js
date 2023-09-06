@@ -143,6 +143,8 @@ export const useCanvasStore = defineStore("canvas", {
       let hoveredElement = null;
       let hoveredElementIndex = -1;
 
+      let angle, centerX, centerY, rotatedMouseX, rotatedMouseY;
+
       this.elements.map((element, index) => {
         switch (element.mode) {
           /*
@@ -165,6 +167,37 @@ export const useCanvasStore = defineStore("canvas", {
             }
             break;
 
+          // case this.modes.drawing:
+          //   angle = (element.rotationAngle * Math.PI) / 180;
+          //   centerX = element.x + element.width / 2;
+          //   centerY = element.y + element.height / 2;
+          //
+          //   // Rotate the mouse coordinates around the element's center
+          //   rotatedMouseX =
+          //       centerX +
+          //       Math.cos(angle) * (this.mouse.x - centerX) -
+          //       Math.sin(angle) * (this.mouse.y - centerY);
+          //   rotatedMouseY =
+          //       centerY +
+          //       Math.sin(angle) * (this.mouse.x - centerX) +
+          //       Math.cos(angle) * (this.mouse.y - centerY);
+          //
+          //   const minX = Math.min(...element.points.map((point) => point.x));
+          //   const maxX = Math.max(...element.points.map((point) => point.x));
+          //   const minY = Math.min(...element.points.map((point) => point.y));
+          //   const maxY = Math.max(...element.points.map((point) => point.y));
+          //
+          //   if (
+          //       rotatedMouseX >= minX &&
+          //       rotatedMouseX <= maxX &&
+          //       rotatedMouseY >= minY &&
+          //       rotatedMouseY <= maxY
+          //   ) {
+          //     hoveredElement = element;
+          //     hoveredElementIndex = index;
+          //   }
+          //   break;
+
           /*
            * text
            */
@@ -184,16 +217,63 @@ export const useCanvasStore = defineStore("canvas", {
             }
             break;
 
+          // case this.modes.text:
+          // const angle = (element.rotationAngle * Math.PI) / 180;
+          // const centerX =
+          //   element.x + this.computeAdjustedSize(element.width) / 2;
+          // const centerY =
+          //   element.y + this.computeAdjustedSize(element.height) / 2;
+          //
+          // // Rotate the mouse coordinates around the element's center
+          // const rotatedMouseX =
+          //   centerX +
+          //   Math.cos(angle) * (this.mouse.x - centerX) -
+          //   Math.sin(angle) * (this.mouse.y - centerY);
+          // const rotatedMouseY =
+          //   centerY +
+          //   Math.sin(angle) * (this.mouse.x - centerX) +
+          //   Math.cos(angle) * (this.mouse.y - centerY);
+          //
+          // if (
+          //   Math.round(rotatedMouseX) >= Math.round(element.x) &&
+          //   Math.round(rotatedMouseX) <=
+          //     Math.round(
+          //       element.x + this.computeAdjustedSize(element.width)
+          //     ) &&
+          //   Math.round(rotatedMouseY) >= Math.round(element.y) &&
+          //   Math.round(rotatedMouseY) <=
+          //     Math.round(element.y + this.computeAdjustedSize(element.height))
+          // ) {
+          //   hoveredElement = element;
+          //   hoveredElementIndex = index;
+          // }
+          // break;
+
           /*
            * media
            */
           case this.modes.media:
+            angle = (element.rotationAngle * Math.PI) / 180;
+            centerX = element.x + element.width / 2;
+            centerY = element.y + element.height / 2;
+
+            // Rotate the mouse coordinates around the element's center
+            rotatedMouseX =
+              centerX +
+              Math.cos(angle) * (this.mouse.x - centerX) -
+              Math.sin(angle) * (this.mouse.y - centerY);
+            rotatedMouseY =
+              centerY +
+              Math.sin(angle) * (this.mouse.x - centerX) +
+              Math.cos(angle) * (this.mouse.y - centerY);
+
             if (
-              Math.round(this.mouse.x) >= Math.round(element.x) &&
-              Math.round(this.mouse.x) <=
+              Math.round(rotatedMouseX) >= Math.round(element.x) &&
+              Math.round(rotatedMouseX) <=
                 Math.round(element.x + element.width) &&
-              Math.round(this.mouse.y) >= Math.round(element.y) &&
-              Math.round(this.mouse.y) <= Math.round(element.y + element.height)
+              Math.round(rotatedMouseY) >= Math.round(element.y) &&
+              Math.round(rotatedMouseY) <=
+                Math.round(element.y + element.height)
             ) {
               hoveredElement = element;
               hoveredElementIndex = index;
@@ -349,8 +429,11 @@ export const useCanvasStore = defineStore("canvas", {
        */
       let activeHandle = null;
 
+      const centerX = this.selectedElement.x + width / 2;
+      const centerY = this.selectedElement.y + height / 2;
+      const angle = (this.selectedElement.rotationAngle * Math.PI) / 180;
+
       Object.values(this.resizeHandles).forEach((handle) => {
-        // compute position
         const { minX, minY, maxX, maxY } = this.computeResizeHandlePosition(
           handle,
           this.selectedElement.x,
@@ -361,11 +444,28 @@ export const useCanvasStore = defineStore("canvas", {
           padding
         );
 
+        const rotatedMinX =
+          centerX +
+          Math.cos(angle) * (minX - centerX) -
+          Math.sin(angle) * (minY - centerY);
+        const rotatedMinY =
+          centerY +
+          Math.sin(angle) * (minX - centerX) +
+          Math.cos(angle) * (minY - centerY);
+        const rotatedMaxX =
+          centerX +
+          Math.cos(angle) * (maxX - centerX) -
+          Math.sin(angle) * (maxY - centerY);
+        const rotatedMaxY =
+          centerY +
+          Math.sin(angle) * (maxX - centerX) +
+          Math.cos(angle) * (maxY - centerY);
+
         if (
-          this.mouse.x >= minX - padding &&
-          this.mouse.x <= maxX + padding &&
-          this.mouse.y >= minY - padding &&
-          this.mouse.y <= maxY + padding
+          this.mouse.x >= rotatedMinX - padding &&
+          this.mouse.x <= rotatedMaxX + padding &&
+          this.mouse.y >= rotatedMinY - padding &&
+          this.mouse.y <= rotatedMaxY + padding
         ) {
           activeHandle = handle;
         }
@@ -566,6 +666,27 @@ export const useCanvasStore = defineStore("canvas", {
           height = this.selectedElement.height;
           break;
 
+        case this.modes.drawing:
+          const minX = Math.min(
+            ...this.selectedElement.points.map((point) => point.x)
+          );
+          const maxX = Math.max(
+            ...this.selectedElement.points.map((point) => point.x)
+          );
+          const minY = Math.min(
+            ...this.selectedElement.points.map((point) => point.y)
+          );
+          const maxY = Math.max(
+            ...this.selectedElement.points.map((point) => point.y)
+          );
+
+          width = maxX - minX;
+          height = maxY - minY;
+
+          this.selectedElement.x = minX;
+          this.selectedElement.y = minY;
+          break;
+
         default:
           width = this.computeAdjustedSize(this.selectedElement.width);
           height = this.computeAdjustedSize(this.selectedElement.height);
@@ -575,26 +696,34 @@ export const useCanvasStore = defineStore("canvas", {
       const rotationHandleWidth = borderWidth / 2;
 
       /*
-       * compute position
+       * compute position with rotation angle
        */
-      const minX =
-        this.selectedElement.x +
-        width / 2 -
-        borderWidth -
-        rotationHandleWidth / 2;
-      const minY =
-        this.selectedElement.y - this.selectedElementRotationHandle.height;
-      const maxX = minX + this.selectedElementRotationHandle.radius;
-      const maxY = minY + this.selectedElementRotationHandle.radius;
+      const centerX = this.selectedElement.x + width / 2;
+      const centerY = this.selectedElement.y + height / 2;
+      const angle = (this.selectedElement.rotationAngle * Math.PI) / 180;
+
+      const handleOffsetX = -rotationHandleWidth / 2;
+      const handleOffsetY =
+        -height / 2 - this.selectedElementRotationHandle.height - padding;
+
+      const handleX =
+        centerX +
+        Math.cos(angle) * handleOffsetX -
+        Math.sin(angle) * handleOffsetY;
+      const handleY =
+        centerY +
+        Math.sin(angle) * handleOffsetX +
+        Math.cos(angle) * handleOffsetY;
 
       /*
        * check if hovered
        */
       return (
-        this.mouse.x >= minX - padding &&
-        this.mouse.x <= maxX + padding &&
-        this.mouse.y >= minY - padding &&
-        this.mouse.y <= maxY + padding
+        this.mouse.x >= handleX - padding &&
+        this.mouse.x <= handleX + rotationHandleWidth + padding &&
+        this.mouse.y >= handleY - padding &&
+        this.mouse.y <=
+          handleY + this.selectedElementRotationHandle.height + padding
       );
     },
 
@@ -604,10 +733,29 @@ export const useCanvasStore = defineStore("canvas", {
 
     stopRotating() {
       this.isRotating = false;
-      this.rotateHandle = null;
+      this.rotationHandle = null;
     },
 
-    rotateElement() {},
+    rotateElement() {
+      if (!this.isRotating || !this.selectedElement) return;
+
+      const centerX = this.selectedElement.x + this.selectedElement.width / 2;
+      const centerY = this.selectedElement.y + this.selectedElement.height / 2;
+      const deltaX = this.mouse.x - centerX;
+      const deltaY = this.mouse.y - centerY;
+
+      let newRotationAngle = 90 + (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
+
+      newRotationAngle = (newRotationAngle + 360) % 360;
+
+      const rotationChange =
+        newRotationAngle - this.selectedElement.rotationAngle;
+
+      this.selectedElement.rotationAngle += rotationChange;
+
+      this.updateSelectedElement();
+      this.redrawCanvas();
+    },
 
     /*
      * canvas render
@@ -621,6 +769,16 @@ export const useCanvasStore = defineStore("canvas", {
 
       this.elements.forEach((element) => {
         if (element.isVisible === false) return;
+
+        this.ctx.save();
+
+        if (element.rotationAngle) {
+          const centerX = element.x + element.width / 2;
+          const centerY = element.y + element.height / 2;
+          this.ctx.translate(centerX, centerY);
+          this.ctx.rotate((element.rotationAngle * Math.PI) / 180);
+          this.ctx.translate(-centerX, -centerY);
+        }
 
         switch (element.mode) {
           /*
@@ -832,12 +990,25 @@ export const useCanvasStore = defineStore("canvas", {
             this.ctx.restore();
             break;
         }
+
+        this.ctx.restore();
       });
 
       /*
        * border
        */
       if (this.selectedElement && this.selectedElement.isVisible) {
+        this.ctx.save();
+        if (this.selectedElement.rotationAngle) {
+          const centerX =
+            this.selectedElement.x + this.selectedElement.width / 2;
+          const centerY =
+            this.selectedElement.y + this.selectedElement.height / 2;
+          this.ctx.translate(centerX, centerY);
+          this.ctx.rotate((this.selectedElement.rotationAngle * Math.PI) / 180);
+          this.ctx.translate(-centerX, -centerY);
+        }
+
         switch (this.selectedElement.mode) {
           /*
            * drawing
@@ -856,7 +1027,7 @@ export const useCanvasStore = defineStore("canvas", {
               ...this.selectedElement.points.map((point) => point.y)
             );
 
-            this.drawBorder(minX, minY, maxX - minX, maxY - minY, []);
+            this.drawBorder(minX, minY, maxX - minX, maxY - minY, [], false);
             break;
 
           /*
@@ -868,7 +1039,8 @@ export const useCanvasStore = defineStore("canvas", {
               this.selectedElement.y,
               this.computeAdjustedSize(this.selectedElement.width),
               this.computeAdjustedSize(this.selectedElement.height),
-              []
+              [],
+              false
             );
             break;
 
@@ -885,6 +1057,8 @@ export const useCanvasStore = defineStore("canvas", {
             );
             break;
         }
+
+        this.ctx.restore();
       }
     },
 
@@ -897,7 +1071,8 @@ export const useCanvasStore = defineStore("canvas", {
       y,
       width,
       height,
-      handles = Object.values(this.resizeHandles)
+      resizeHandles = Object.values(this.resizeHandles),
+      drawRotationHandle = true
     ) {
       const padding = this.computeAdjustedSize(
         this.selectedElementBorder.padding
@@ -918,10 +1093,10 @@ export const useCanvasStore = defineStore("canvas", {
        * resize handles
        */
       this.ctx.fillStyle = this.selectedElementBorder.borderColor;
-      if (handles.length) {
+      if (resizeHandles.length) {
         const handleSize = borderWidth * 3;
 
-        handles.forEach((handle) => {
+        resizeHandles.forEach((handle) => {
           const { minX, minY, maxX, maxY } = this.computeResizeHandlePosition(
             handle,
             x,
@@ -938,29 +1113,31 @@ export const useCanvasStore = defineStore("canvas", {
       /*
        * rotation handle
        */
-      const rotationHandleWidth = borderWidth / 2;
+      if (drawRotationHandle) {
+        const rotationHandleWidth = borderWidth / 2;
 
-      const rotationHandleX =
-        x + width / 2 - borderWidth - rotationHandleWidth / 2;
-      const rotationHandleY = y - this.selectedElementRotationHandle.height;
+        const rotationHandleX =
+          x + width / 2 - borderWidth - rotationHandleWidth / 2;
+        const rotationHandleY = y - this.selectedElementRotationHandle.height;
 
-      this.ctx.lineWidth = borderWidth / 2;
-      this.ctx.strokeRect(
-        rotationHandleX,
-        rotationHandleY,
-        rotationHandleWidth,
-        this.selectedElementRotationHandle.height
-      );
+        this.ctx.lineWidth = borderWidth / 2;
+        this.ctx.strokeRect(
+          rotationHandleX,
+          rotationHandleY,
+          rotationHandleWidth,
+          this.selectedElementRotationHandle.height
+        );
 
-      this.ctx.beginPath();
-      this.ctx.arc(
-        rotationHandleX + rotationHandleWidth / 2,
-        rotationHandleY,
-        this.selectedElementRotationHandle.radius,
-        0,
-        2 * Math.PI
-      );
-      this.ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.arc(
+          rotationHandleX + rotationHandleWidth / 2,
+          rotationHandleY,
+          this.selectedElementRotationHandle.radius,
+          0,
+          2 * Math.PI
+        );
+        this.ctx.fill();
+      }
     },
 
     computeResizeHandlePosition(

@@ -138,6 +138,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
       this.input.style.width = selectedElement.value.width + "px";
       this.input.style.height = selectedElement.value.height + "px";
 
+      this.input.style.transform = `rotate(${selectedElement.value.rotationAngle}deg)`;
+
       document.body.appendChild(this.input);
       this.input.focus();
 
@@ -183,9 +185,11 @@ export const useCanvasTextStore = defineStore("canvasText", {
      * customization
      */
     computeTextElementProps(
-      x = selectedElement.value.x,
-      y = selectedElement.value.y
+      x = selectedElement.value?.x,
+      y = selectedElement.value?.y
     ) {
+      if (!x || !y) return;
+
       const newTextDecoration = `${
         this.customization.formatting.isLineThrough ? "line-through" : ""
       } ${this.customization.formatting.isUnderline ? "underline" : ""}`;
@@ -211,6 +215,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         fontStyle: this.customization.formatting.isItalic ? "italic" : "normal",
         textAlign: this.customization.formatting.alignment.horizontal,
         verticalAlign: this.customization.formatting.alignment.vertical,
+        rotationAngle: selectedElement.value?.rotationAngle || 0,
       };
     },
 

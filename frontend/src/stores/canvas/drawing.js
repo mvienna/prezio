@@ -99,6 +99,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
           brushSize: this.customization.brushSize,
           brushType: this.customization.selectedBrushType,
           points: [],
+          rotationAngle: 0,
         };
 
         elements.value.push(this.currentLine);
