@@ -7,7 +7,7 @@
       :is-media-mode="[modes.media, modes.mediaEmojis].includes(mode)"
       @switch-mode="canvasStore.switchMode($event)"
       @deselect="selectedElement ? canvasStore.deselectElement() : ''"
-      @delete="selectedElement ? canvasStore.deleteSelectedElement() : ''"
+      @delete="selectedElement ? canvasStore.deleteElement() : ''"
       @add-image="mediaStore.addImage($event)"
       @apply-formatting="textStore.applyStyles()"
     />
@@ -117,7 +117,7 @@ const handleKeyDownEvent = (event) => {
     // delete selected element
     if (event.key === "Delete" || event.key === "Backspace") {
       event.preventDefault();
-      canvasStore.deleteSelectedElement();
+      canvasStore.deleteElement();
     }
 
     // deselect

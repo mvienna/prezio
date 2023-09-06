@@ -198,9 +198,18 @@ export default {
     },
     rightDrawer: {
       tabs: {
+        layers: "Слои",
         design: "Дизайн",
         template: "Шаблон",
         audio: "Аудио",
+      },
+      layers: {
+        names: {
+          drawing: "Линия",
+          text: "Текст",
+          media: "Фотография",
+          mediaEmojis: "Эмоджи",
+        },
       },
     },
   },

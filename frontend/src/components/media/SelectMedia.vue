@@ -366,7 +366,7 @@ const deleteFile = (file) => {
   cursor: pointer;
   display: inline-block;
   position: relative;
-  transition: all 0.275s;
+  transition: all 0.2s;
   vertical-align: middle;
   outline: 6px solid $white;
 

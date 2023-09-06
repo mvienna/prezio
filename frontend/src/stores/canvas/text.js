@@ -1,10 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
-import {
-  alignment,
-  fontOptions,
-  fontSizeOptions,
-} from "src/constants/canvas/canvasVariables";
+import { alignment } from "src/constants/canvas/canvasVariables";
+import { generateUniqueId } from "src/helpers/generateUniqueId";
 
 const { modes, mouse, elements, canvas, selectedElement } = storeToRefs(
   useCanvasStore()
@@ -211,6 +208,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       this.input.innerHTML = this.input.innerHTML.replace(/&nbsp;/g, "").trim();
 
       return {
+        id: generateUniqueId(undefined, elements.value),
         mode: modes.value.text,
         isVisible: true,
         text: this.input.innerHTML,

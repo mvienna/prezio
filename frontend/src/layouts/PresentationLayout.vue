@@ -171,13 +171,13 @@
       show-if-above
       side="right"
       class="bg-white"
-      :width="400"
+      :width="300"
     >
       <q-tabs
         v-model="rightDrawerTab"
         align="justify"
         indicator-color="primary"
-        class="bg-white text-black text-white"
+        class="bg-white text-black text-white drawer_header"
         inline-label
       >
         <q-tab
@@ -185,12 +185,22 @@
           :key="tab.name"
           :name="tab.name"
           :icon="tab.icon"
-          :label="tab.label"
           no-caps
-        />
+        >
+          <q-tooltip :offset="[0, 4]"> {{ tab.label }}</q-tooltip>
+        </q-tab>
       </q-tabs>
 
       <q-tab-panels v-model="rightDrawerTab" animated>
+        <!-- layers -->
+        <q-tab-panel name="layers">
+          <div class="text-h6 q-pb-md">
+            {{ $t("presentationLayout.rightDrawer.tabs.layers") }}.
+          </div>
+
+          <PresentationLayersManagement />
+        </q-tab-panel>
+
         <!-- design -->
         <q-tab-panel name="design"> design </q-tab-panel>
 
@@ -215,6 +225,7 @@ import { storeToRefs } from "pinia";
 import { useAuthStore } from "stores/auth";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+import PresentationLayersManagement from "components/presentation/PresentationLayersManagement.vue";
 
 /*
  * variables
@@ -235,6 +246,11 @@ const rightDrawerOpen = ref(true);
 
 // tabs
 const rightDrawerTabs = [
+  {
+    name: "layers",
+    icon: "layers",
+    label: t("presentationLayout.rightDrawer.tabs.layers"),
+  },
   {
     name: "design",
     icon: "format_paint",
@@ -277,5 +293,11 @@ const rightDrawerTab = ref(rightDrawerTabs[0].name);
     opacity: 1;
     height: 2px;
   }
+}
+
+.drawer_header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 </style>

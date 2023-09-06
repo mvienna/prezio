@@ -1,5 +1,6 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
+import { generateUniqueId } from "src/helpers/generateUniqueId";
 
 const { ctx, elements, mouse, modes, selectedElement } = storeToRefs(
   useCanvasStore()
@@ -93,6 +94,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
 
       if (!this.currentLine) {
         this.currentLine = {
+          id: generateUniqueId(undefined, elements.value),
           mode: modes.value.drawing,
           isVisible: true,
           color: this.eraserMode ? "white" : this.customization.color,

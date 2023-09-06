@@ -285,16 +285,27 @@ export const useCanvasStore = defineStore("canvas", {
       return { hoveredElement, hoveredElementIndex };
     },
 
-    selectElement() {
-      this.selectedElement = null;
-      this.selectedElementIndex = -1;
+    selectElement(element = null) {
+      if (element) {
+        this.selectedElement = element;
+        this.selectedElementIndex = this.elements.findIndex(
+          (item) => item.id === element.id
+        );
+      } else {
+        this.selectedElement = null;
+        this.selectedElementIndex = -1;
 
-      const { hoveredElement, hoveredElementIndex } = this.getHoveredElement();
+        const { hoveredElement, hoveredElementIndex } =
+          this.getHoveredElement();
 
-      if (hoveredElement) {
-        this.selectedElement = hoveredElement;
-        this.selectedElementIndex = hoveredElementIndex;
-        this.switchMode(hoveredElement.mode);
+        if (hoveredElement) {
+          this.selectedElement = hoveredElement;
+          this.selectedElementIndex = hoveredElementIndex;
+        }
+      }
+
+      if (this.selectedElement) {
+        this.switchMode(this.selectedElement.mode);
       }
 
       this.redrawCanvas();
@@ -330,13 +341,13 @@ export const useCanvasStore = defineStore("canvas", {
       }
     },
 
-    deleteSelectedElement() {
-      if (this.selectedElement) {
-        this.elements = this.elements.filter(
-          (element, index) => index !== this.selectedElementIndex
-        );
+    deleteElement(element = this.selectedElement) {
+      if (element) {
+        this.elements = this.elements.filter((item) => item.id !== element.id);
+
         this.selectedElement = null;
         this.selectedElementIndex = -1;
+
         this.redrawCanvas();
       }
     },
@@ -1074,9 +1085,10 @@ export const useCanvasStore = defineStore("canvas", {
       resizeHandles = Object.values(this.resizeHandles),
       drawRotationHandle = true
     ) {
-      const padding = this.computeAdjustedSize(
-        this.selectedElementBorder.padding
-      );
+      const padding =
+        this.selectedElement.mode === this.modes.text
+          ? this.computeAdjustedSize(this.selectedElementBorder.padding)
+          : 0;
 
       /*
        * border
