@@ -369,7 +369,6 @@ const handleCanvasClick = (event) => {
       // edit text on second selection
       // skip if just dragged
       if (selectedElement.value) {
-        console.log(isJustDragged.value);
         if (!isJustDragged.value) {
           canvasStore.doubleSelectElement();
           if (mode.value === modes.value.textEditing) {

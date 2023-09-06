@@ -311,7 +311,12 @@ export const useCanvasStore = defineStore("canvas", {
      * resizing
      */
     getResizeHandle() {
-      if (this.selectedElement.mode === this.modes.drawing) return null;
+      if (
+        [this.modes.drawing, this.modes.text].includes(
+          this.selectedElement.mode
+        )
+      )
+        return null;
 
       /*
        * compute props
@@ -397,203 +402,139 @@ export const useCanvasStore = defineStore("canvas", {
       const minWidth = this.computeAdjustedSize(50);
       const minHeight = minWidth / aspectRatio;
 
-      switch (this.selectedElement.mode) {
-        case this.modes.media:
-        case this.modes.mediaEmojis:
-          switch (this.resizeHandle) {
-            /*
-             * top left
-             */
-            case this.resizeHandles.topLeft:
-              const newTopLeftWidth = Math.max(
-                minWidth,
-                this.resizeStart.width - deltaX
-              );
-              const newTopLeftHeight = Math.max(
-                minHeight,
-                newTopLeftWidth / aspectRatio
-              );
+      switch (this.resizeHandle) {
+        /*
+         * top left
+         */
+        case this.resizeHandles.topLeft:
+          const newTopLeftWidth = Math.max(
+            minWidth,
+            this.resizeStart.width - deltaX
+          );
+          const newTopLeftHeight = Math.max(
+            minHeight,
+            newTopLeftWidth / aspectRatio
+          );
 
-              this.selectedElement.width = newTopLeftWidth;
-              this.selectedElement.height = newTopLeftHeight;
+          this.selectedElement.width = newTopLeftWidth;
+          this.selectedElement.height = newTopLeftHeight;
 
-              this.selectedElement.x =
-                this.resizeStart.x + (this.resizeStart.width - newTopLeftWidth);
-              this.selectedElement.y =
-                this.resizeStart.y +
-                (this.resizeStart.height - newTopLeftHeight);
-
-              break;
-
-            /*
-             * top right
-             */
-            case this.resizeHandles.topRight:
-              const newTopRightWidth = Math.max(
-                minWidth,
-                this.resizeStart.width + deltaX
-              );
-              const newTopRightHeight = Math.max(
-                minHeight,
-                newTopRightWidth / aspectRatio
-              );
-
-              this.selectedElement.width = newTopRightWidth;
-              this.selectedElement.height = newTopRightHeight;
-
-              this.selectedElement.y =
-                this.resizeStart.y +
-                (this.resizeStart.height - newTopRightHeight);
-
-              break;
-
-            /*
-             * bottom left
-             */
-            case this.resizeHandles.bottomLeft:
-              const newBottomLeftWidth = Math.max(
-                minWidth,
-                this.resizeStart.width - deltaX
-              );
-              const newBottomLeftHeight = Math.max(
-                minHeight,
-                newBottomLeftWidth / aspectRatio
-              );
-
-              this.selectedElement.width = newBottomLeftWidth;
-              this.selectedElement.height = newBottomLeftHeight;
-
-              this.selectedElement.x =
-                this.resizeStart.x +
-                (this.resizeStart.width - newBottomLeftWidth);
-
-              break;
-
-            /*
-             * bottom right
-             */
-            case this.resizeHandles.bottomRight:
-              const newBottomRightWidth = Math.max(
-                minWidth,
-                this.resizeStart.width + deltaX
-              );
-              const newBottomRightHeight = Math.max(
-                minHeight,
-                newBottomRightWidth / aspectRatio
-              );
-
-              this.selectedElement.width = newBottomRightWidth;
-              this.selectedElement.height = newBottomRightHeight;
-
-              break;
-
-            /*
-             * center top
-             */
-            case this.resizeHandles.centerTop:
-              const newCenterTopHeight = Math.max(
-                minHeight,
-                this.resizeStart.height - deltaY
-              );
-              this.selectedElement.height = newCenterTopHeight;
-              this.selectedElement.y =
-                this.resizeStart.y +
-                (this.resizeStart.height - newCenterTopHeight);
-
-              break;
-
-            /*
-             * center bottom
-             */
-            case this.resizeHandles.centerBottom:
-              const newCenterBottomHeight = Math.max(
-                minHeight,
-                this.resizeStart.height + deltaY
-              );
-              this.selectedElement.height = newCenterBottomHeight;
-
-              break;
-
-            /*
-             * center left
-             */
-            case this.resizeHandles.centerLeft:
-              const newCenterLeftWidth = Math.max(
-                minWidth,
-                this.resizeStart.width - deltaX
-              );
-
-              this.selectedElement.width = newCenterLeftWidth;
-              this.selectedElement.x =
-                this.resizeStart.x +
-                (this.resizeStart.width - newCenterLeftWidth);
-
-              break;
-
-            /*
-             * center right
-             */
-            case this.resizeHandles.centerRight:
-              this.selectedElement.width = Math.max(
-                minWidth,
-                this.resizeStart.width + deltaX
-              );
-
-              break;
-          }
+          this.selectedElement.x =
+            this.resizeStart.x + (this.resizeStart.width - newTopLeftWidth);
+          this.selectedElement.y =
+            this.resizeStart.y + (this.resizeStart.height - newTopLeftHeight);
 
           break;
 
-        case this.modes.text:
-          switch (this.resizeHandle) {
-            /*
-             * top left
-             */
-            case this.resizeHandles.topLeft:
-              break;
+        /*
+         * top right
+         */
+        case this.resizeHandles.topRight:
+          const newTopRightWidth = Math.max(
+            minWidth,
+            this.resizeStart.width + deltaX
+          );
+          const newTopRightHeight = Math.max(
+            minHeight,
+            newTopRightWidth / aspectRatio
+          );
 
-            /*
-             * top right
-             */
-            case this.resizeHandles.topRight:
-              break;
+          this.selectedElement.width = newTopRightWidth;
+          this.selectedElement.height = newTopRightHeight;
 
-            /*
-             * bottom left
-             */
-            case this.resizeHandles.bottomLeft:
-              break;
+          this.selectedElement.y =
+            this.resizeStart.y + (this.resizeStart.height - newTopRightHeight);
 
-            /*
-             * bottom right
-             */
-            case this.resizeHandles.bottomRight:
-              break;
+          break;
 
-            /*
-             * center top
-             */
-            case this.resizeHandles.centerTop:
-              break;
+        /*
+         * bottom left
+         */
+        case this.resizeHandles.bottomLeft:
+          const newBottomLeftWidth = Math.max(
+            minWidth,
+            this.resizeStart.width - deltaX
+          );
+          const newBottomLeftHeight = Math.max(
+            minHeight,
+            newBottomLeftWidth / aspectRatio
+          );
 
-            /*
-             * center bottom
-             */
-            case this.resizeHandles.centerBottom:
-              break;
+          this.selectedElement.width = newBottomLeftWidth;
+          this.selectedElement.height = newBottomLeftHeight;
 
-            /*
-             * center left
-             */
-            case this.resizeHandles.centerLeft:
-              break;
+          this.selectedElement.x =
+            this.resizeStart.x + (this.resizeStart.width - newBottomLeftWidth);
 
-            /*
-             * center right
-             */
-            case this.resizeHandles.centerRight:
-              break;
-          }
+          break;
+
+        /*
+         * bottom right
+         */
+        case this.resizeHandles.bottomRight:
+          const newBottomRightWidth = Math.max(
+            minWidth,
+            this.resizeStart.width + deltaX
+          );
+          const newBottomRightHeight = Math.max(
+            minHeight,
+            newBottomRightWidth / aspectRatio
+          );
+
+          this.selectedElement.width = newBottomRightWidth;
+          this.selectedElement.height = newBottomRightHeight;
+
+          break;
+
+        /*
+         * center top
+         */
+        case this.resizeHandles.centerTop:
+          const newCenterTopHeight = Math.max(
+            minHeight,
+            this.resizeStart.height - deltaY
+          );
+          this.selectedElement.height = newCenterTopHeight;
+          this.selectedElement.y =
+            this.resizeStart.y + (this.resizeStart.height - newCenterTopHeight);
+
+          break;
+
+        /*
+         * center bottom
+         */
+        case this.resizeHandles.centerBottom:
+          const newCenterBottomHeight = Math.max(
+            minHeight,
+            this.resizeStart.height + deltaY
+          );
+          this.selectedElement.height = newCenterBottomHeight;
+
+          break;
+
+        /*
+         * center left
+         */
+        case this.resizeHandles.centerLeft:
+          const newCenterLeftWidth = Math.max(
+            minWidth,
+            this.resizeStart.width - deltaX
+          );
+
+          this.selectedElement.width = newCenterLeftWidth;
+          this.selectedElement.x =
+            this.resizeStart.x + (this.resizeStart.width - newCenterLeftWidth);
+
+          break;
+
+        /*
+         * center right
+         */
+        case this.resizeHandles.centerRight:
+          this.selectedElement.width = Math.max(
+            minWidth,
+            this.resizeStart.width + deltaX
+          );
 
           break;
       }
@@ -856,7 +797,8 @@ export const useCanvasStore = defineStore("canvas", {
               this.selectedElement.x,
               this.selectedElement.y,
               this.computeAdjustedSize(this.selectedElement.width),
-              this.computeAdjustedSize(this.selectedElement.height)
+              this.computeAdjustedSize(this.selectedElement.height),
+              []
             );
             break;
 
