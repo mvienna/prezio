@@ -124,6 +124,7 @@
         transition-hide="jump-up"
         :offset="[0, 8]"
         class="q-pa-sm"
+        style="width: 230px"
       >
         <!-- formatting -->
         <div class="row no-wrap justify-between q-px-sm q-pt-sm">
@@ -218,6 +219,102 @@
               $emit('applyFormatting');
             "
           />
+
+          <!-- alignment -->
+          <q-btn
+            unelevated
+            size="10px"
+            round
+            color="black"
+            :icon="
+              textState.customization.value.formatting.alignment.horizontal ===
+              alignment.horizontal.left
+                ? 'format_align_left'
+                : textState.customization.value.formatting.alignment
+                    .horizontal === alignment.horizontal.right
+                ? 'format_align_right'
+                : textState.customization.value.formatting.alignment
+                    .horizontal === alignment.horizontal.center
+                ? 'format_align_center'
+                : textState.customization.value.formatting.alignment
+                    .horizontal === alignment.horizontal.justify
+                ? 'format_align_justify'
+                : ''
+            "
+          >
+            <q-menu
+              anchor="bottom right"
+              self="top right"
+              transition-show="jump-down"
+              transition-hide="jump-up"
+              :offset="[0, 8]"
+              class="q-pa-sm"
+            >
+              <div class="column no-wrap">
+                <div class="row no-wrap">
+                  <q-btn
+                    v-for="item in Object.keys(alignment.horizontal)"
+                    :key="item"
+                    flat
+                    size="10px"
+                    round
+                    :class="
+                      item ===
+                      textState.customization.value.formatting.alignment
+                        .horizontal
+                        ? 'text-black'
+                        : 'text-grey'
+                    "
+                    :icon="
+                      item === alignment.horizontal.left
+                        ? 'format_align_left'
+                        : item === alignment.horizontal.right
+                        ? 'format_align_right'
+                        : item === alignment.horizontal.center
+                        ? 'format_align_center'
+                        : ''
+                    "
+                    @click="
+                      textState.customization.value.formatting.alignment.horizontal =
+                        item;
+                      $emit('applyFormatting');
+                    "
+                  />
+                </div>
+
+                <div class="row no-wrap q-mt-sm">
+                  <q-btn
+                    v-for="item in Object.keys(alignment.vertical)"
+                    :key="item"
+                    flat
+                    size="10px"
+                    round
+                    :class="
+                      item ===
+                      textState.customization.value.formatting.alignment
+                        .vertical
+                        ? 'text-black'
+                        : 'text-grey'
+                    "
+                    :icon="
+                      item === alignment.vertical.top
+                        ? 'vertical_align_top'
+                        : item === alignment.vertical.bottom
+                        ? 'vertical_align_bottom'
+                        : item === alignment.vertical.middle
+                        ? 'align_vertical_center'
+                        : ''
+                    "
+                    @click="
+                      textState.customization.value.formatting.alignment.vertical =
+                        item;
+                      $emit('applyFormatting');
+                    "
+                  />
+                </div>
+              </div>
+            </q-menu>
+          </q-btn>
         </div>
 
         <!-- color picker -->
@@ -451,8 +548,13 @@ import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { useCanvasStore } from "stores/canvas";
-import { fontOptions, fontSizeOptions } from "src/constants/canvas/fonts";
-import { brushSizeOptions, brushTypes } from "src/constants/canvas/brushes";
+import {
+  brushSizeOptions,
+  brushTypes,
+  fontOptions,
+  fontSizeOptions,
+  alignment,
+} from "src/constants/canvas/canvasVariables";
 
 /*
  * stores

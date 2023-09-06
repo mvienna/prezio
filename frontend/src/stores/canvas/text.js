@@ -1,5 +1,10 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
+import {
+  alignment,
+  fontOptions,
+  fontSizeOptions,
+} from "src/constants/canvas/canvasVariables";
 
 const { modes, mouse, elements, canvas, selectedElement } = storeToRefs(
   useCanvasStore()
@@ -31,6 +36,10 @@ export const useCanvasTextStore = defineStore("canvasText", {
         isUnderline: false,
         isLineThrough: false,
         isItalic: false,
+        alignment: {
+          horizontal: alignment.horizontal.left,
+          vertical: alignment.vertical.top,
+        },
       },
     },
   }),
@@ -46,6 +55,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
     createTextInput() {
       this.input = document.createElement("div");
       this.input.setAttribute("contentEditable", "true");
+
       this.applyStyles();
     },
 
@@ -62,7 +72,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
        * create text input
        */
       this.createTextInput();
-      this.input.style.left = event.clientX + "px";
+      const borderWidth = 2;
+      this.input.style.left = event.clientX - borderWidth + "px";
       this.input.style.top = event.clientY + "px";
 
       document.body.appendChild(this.input);
@@ -124,8 +135,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
         (selectedElement.value.y * canvasRect.width) / canvas.value.width +
         "px";
 
-      this.input.style.width = selectedElement.value.width;
-      this.input.style.height = selectedElement.value.height;
+      this.input.style.width = selectedElement.value.width + "px";
+      this.input.style.height = selectedElement.value.height + "px";
 
       document.body.appendChild(this.input);
       this.input.focus();
@@ -189,15 +200,17 @@ export const useCanvasTextStore = defineStore("canvasText", {
         y: y,
         width: this.input.offsetWidth,
         height: this.input.offsetHeight,
-        lineHeight: this.customization.lineHeight,
+        color: this.customization.color,
         fontFamily: this.customization.font,
         fontSize: this.customization.fontSize,
+        lineHeight: this.customization.lineHeight,
         fontWeight: this.customization.formatting.isBold ? "bold" : "normal",
         textDecoration: newTextDecoration.trim().length
           ? newTextDecoration
           : "none",
         fontStyle: this.customization.formatting.isItalic ? "italic" : "normal",
-        color: this.customization.color,
+        textAlign: this.customization.formatting.alignment.horizontal,
+        verticalAlign: this.customization.formatting.alignment.vertical,
       };
     },
 
@@ -212,7 +225,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.input.style.minWidth = "1em";
         this.input.style.borderRadius = "4px";
         this.input.style.border = "2px solid #4971FF";
-        this.input.style.marginLeft = "-2px";
         this.input.style.outline = "3px solid #D7E0FF";
         this.input.style.zIndex = "2";
 
@@ -242,6 +254,37 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
         // color
         this.input.style.color = this.customization.color;
+
+        // alignment
+        this.input.style.display = "flex";
+
+        switch (this.customization.formatting.alignment.horizontal) {
+          case alignment.horizontal.left:
+            this.input.style.justifyContent = "flex-start";
+            break;
+
+          case alignment.horizontal.center:
+            this.input.style.justifyContent = "center";
+            break;
+
+          case alignment.horizontal.right:
+            this.input.style.justifyContent = "flex-end";
+            break;
+        }
+
+        switch (this.customization.formatting.alignment.vertical) {
+          case alignment.vertical.top:
+            this.input.style.alignItems = "flex-start";
+            break;
+
+          case alignment.vertical.middle:
+            this.input.style.alignItems = "center";
+            break;
+
+          case alignment.vertical.bottom:
+            this.input.style.alignItems = "flex-end";
+            break;
+        }
       }
 
       /*
@@ -278,6 +321,11 @@ export const useCanvasTextStore = defineStore("canvasText", {
           ? "italic"
           : "normal";
 
+        selectedElement.value.textAlign =
+          this.customization.formatting.alignment.horizontal;
+        selectedElement.value.verticalAlign =
+          this.customization.formatting.alignment.vertical;
+
         canvasStore.updateSelectedElement();
         this.redrawCanvas();
       }
@@ -297,6 +345,11 @@ export const useCanvasTextStore = defineStore("canvasText", {
         selectedElement.value.textDecoration.includes("line-through");
       this.customization.formatting.isItalic =
         selectedElement.value.fontStyle === "italic";
+
+      this.customization.formatting.alignment.horizontal =
+        selectedElement.value.textAlign;
+      this.customization.formatting.alignment.vertical =
+        selectedElement.value.verticalAlign;
     },
 
     /*

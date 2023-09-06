@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { alignment } from "src/constants/canvas/canvasVariables";
 
 export const useCanvasStore = defineStore("canvas", {
   state: () => ({
@@ -657,13 +658,21 @@ export const useCanvasStore = defineStore("canvas", {
            * text
            */
           case this.modes.text:
-            // process text
+            /*
+             * compute props
+             */
+            const padding = 4;
+            const adjustedFontSize =
+              (parseFloat(element.fontSize) * this.canvas.width) /
+              this.canvasRect().width;
+
+            /*
+             * wrap text
+             */
             const wrapText = () => {
               // change context to element customization
               this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${element.fontSize} ${element.fontFamily}`;
 
-              // define variables
-              const padding = 4;
               let line = "";
               let wrappedText = "";
 
@@ -675,7 +684,6 @@ export const useCanvasStore = defineStore("canvas", {
                 return element.text;
               }
 
-              // wrap text
               for (const word of words) {
                 const testLine = line.length === 0 ? word : line + " " + word;
                 const testWidth = this.ctx.measureText(testLine).width;
@@ -697,24 +705,83 @@ export const useCanvasStore = defineStore("canvas", {
               return wrappedText;
             };
 
-            const lines = wrapText().split("<br>");
+            /*
+             * break text into lines
+             */
+            let lines = wrapText().split("<br>");
 
-            // adjust font size to canvas scale
-            const adjustedFontSize =
-              (parseFloat(element.fontSize) * this.canvas.width) /
-              this.canvasRect().width;
+            /*
+             * align
+             */
+            let linesPosition = [];
 
-            this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${adjustedFontSize}px ${element.fontFamily}`;
-            this.ctx.fillStyle = element.color;
+            const width = this.computeAdjustedSize(element.width);
+            const height = this.computeAdjustedSize(element.height);
 
-            // draw text lines
-            lines.map((line, index) => {
-              // compute position
-              const x = element.x;
-              const y =
+            lines.forEach((line, index) => {
+              /*
+               * x
+               */
+              let x = element.x;
+              const lineWidth = this.computeAdjustedSize(
+                this.ctx.measureText(line).width
+              );
+
+              this.computeAdjustedSize(element.width);
+
+              switch (element.textAlign) {
+                case alignment.horizontal.right:
+                  x =
+                    element.x +
+                    width -
+                    lineWidth -
+                    this.computeAdjustedSize(padding / 2);
+                  break;
+
+                case alignment.horizontal.center:
+                  x = element.x + width / 2 - lineWidth / 2;
+                  break;
+              }
+
+              /*
+               * y
+               */
+              let y =
                 element.y +
                 adjustedFontSize * element.lineHeight +
                 index * adjustedFontSize * element.lineHeight;
+
+              switch (element.verticalAlign) {
+                case alignment.vertical.bottom:
+                  y +=
+                    height -
+                    adjustedFontSize * element.lineHeight -
+                    this.computeAdjustedSize(padding - 1) * 3;
+                  break;
+
+                case alignment.vertical.middle:
+                  y +=
+                    height / 2 -
+                    adjustedFontSize * element.lineHeight +
+                    this.computeAdjustedSize(padding + 1);
+                  break;
+              }
+
+              linesPosition.push({ x: x, y: y });
+            });
+
+            /*
+             * apply text customization
+             */
+            this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${adjustedFontSize}px ${element.fontFamily}`;
+            this.ctx.fillStyle = element.color;
+
+            /*
+             * draw text lines
+             */
+            lines.map((line, index) => {
+              const x = linesPosition[index].x;
+              const y = linesPosition[index].y;
 
               // underline
               if (element.textDecoration.includes("underline")) {
@@ -767,6 +834,9 @@ export const useCanvasStore = defineStore("canvas", {
         }
       });
 
+      /*
+       * border
+       */
       if (this.selectedElement && this.selectedElement.isVisible) {
         switch (this.selectedElement.mode) {
           /*
