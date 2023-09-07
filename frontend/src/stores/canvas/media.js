@@ -2,9 +2,7 @@ import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
 
-const { ctx, canvas, elements, MODES_OPTIONS, mouse } = storeToRefs(
-  useCanvasStore()
-);
+const { ctx, canvas, elements, MODES_OPTIONS } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
 export const useCanvasMediaStore = defineStore("canvasMedia", {

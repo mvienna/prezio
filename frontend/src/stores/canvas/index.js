@@ -701,7 +701,7 @@ export const useCanvasStore = defineStore("canvas", {
         const handleSize = borderWidth * 3;
 
         RESIZE_HANDLES_OPTIONS.forEach((handle) => {
-          const { minX, minY, maxX, maxY } = this.computeResizeHandlePosition(
+          const { minX, minY } = this.computeResizeHandlePosition(
             handle,
             x,
             y,
