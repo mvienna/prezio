@@ -272,9 +272,9 @@ const handleCanvasMouseDown = () => {
    */
   switch (mode.value) {
     case MODES_OPTIONS.value.drawing:
-      if (!isElementHovered.value) {
-        drawingStore.startDrawing();
-      }
+      // if (!isElementHovered.value) {
+      drawingStore.startDrawing();
+      // }
       break;
   }
 };
@@ -327,7 +327,11 @@ const handleCanvasMouseMove = (event) => {
   switch (mode.value) {
     case MODES_OPTIONS.value.drawing:
       if (drawingState.isDrawing.value) {
-        drawingStore.draw();
+        if (drawingState.eraserMode.value) {
+          drawingStore.erase();
+        } else {
+          drawingStore.draw();
+        }
       }
       break;
   }

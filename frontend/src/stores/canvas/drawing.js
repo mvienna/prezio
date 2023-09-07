@@ -46,8 +46,6 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
     startDrawing() {
       this.isDrawing = true;
       ctx.value.strokeStyle = this.customization.color;
-      this.redrawCanvas();
-      this.draw();
     },
 
     stopDrawing() {
@@ -109,37 +107,50 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
 
       this.currentLine.points.push({ x, y });
 
-      /*
-       * erase
-       */
-      if (this.eraserMode) {
-        ctx.value.globalCompositeOperation = "destination-out";
-        ctx.value.arc(x, y, this.customization.brushSize / 2, 0, Math.PI * 2);
-        ctx.value.fill();
-        ctx.value.globalCompositeOperation = "source-over";
+      ctx.value.globalCompositeOperation = "source-over";
 
-        /*
-         * draw
-         */
-      } else {
-        ctx.value.globalCompositeOperation = "source-over";
+      switch (this.currentLine.brushType) {
+        case "pen":
+          break;
 
-        switch (this.currentLine.brushType) {
-          case "pen":
-            break;
-
-          case "pencil":
-            ctx.value.globalAlpha = 0.1;
-            break;
-        }
-
-        ctx.value.lineTo(x, y);
-        ctx.value.stroke();
+        case "pencil":
+          ctx.value.globalAlpha = 0.1;
+          break;
       }
+
+      ctx.value.lineTo(x, y);
+      ctx.value.stroke();
 
       ctx.value.beginPath();
       ctx.value.moveTo(x, y);
       ctx.value.globalAlpha = 1;
+    },
+
+    erase() {
+      elements.value.forEach((element, index) => {
+        if (element.mode === MODES_OPTIONS.value.drawing) {
+          element.points.forEach((point, pointIndex) => {
+            if (
+              Math.round(mouse.value.x) >=
+                Math.round(point.x) - this.customization.brushSize &&
+              Math.round(mouse.value.x) <=
+                Math.round(point.x) + this.customization.brushSize &&
+              Math.round(mouse.value.y) >=
+                Math.round(point.y) - this.customization.brushSize &&
+              Math.round(mouse.value.y) <=
+                Math.round(point.y) + this.customization.brushSize
+            ) {
+              elements.value[index].points.splice(pointIndex, 1);
+            }
+          });
+
+          if (!element.points.length) {
+            elements.value.splice(index, 1);
+          }
+        }
+      });
+
+      this.redrawCanvas();
     },
 
     /*

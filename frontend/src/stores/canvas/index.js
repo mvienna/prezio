@@ -115,6 +115,10 @@ export const useCanvasStore = defineStore("canvas", {
       };
     },
 
+    computeAdjustedSize(size) {
+      return (size * this.canvas.width) / this.canvasRect().width;
+    },
+
     /*
      * zoom
      */
@@ -401,18 +405,28 @@ export const useCanvasStore = defineStore("canvas", {
             }
 
             this.ctx.beginPath();
-            element.points.forEach((point, pointIndex) => {
-              if (pointIndex === 0) {
+
+            for (let i = 0; i < element.points.length; i++) {
+              const point = element.points[i];
+
+              if (i === 0) {
                 this.ctx.moveTo(point.x, point.y);
               } else {
                 this.ctx.lineTo(point.x, point.y);
-                this.ctx.stroke();
               }
-            });
+
+              if (
+                i === element.points.length - 1 ||
+                Math.abs(point.x - element.points[i + 1].x) >
+                  element.brushSize ||
+                Math.abs(point.y - element.points[i + 1].y) > element.brushSize
+              ) {
+                this.ctx.stroke();
+                this.ctx.beginPath();
+              }
+            }
 
             this.ctx.globalAlpha = 1;
-
-            this.ctx.beginPath();
             break;
 
           /*
@@ -663,10 +677,6 @@ export const useCanvasStore = defineStore("canvas", {
 
         this.ctx.restore();
       }
-    },
-
-    computeAdjustedSize(size) {
-      return (size * this.canvas.width) / this.canvasRect().width;
     },
 
     drawBorder(
