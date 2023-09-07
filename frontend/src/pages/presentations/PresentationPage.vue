@@ -8,8 +8,8 @@
         [MODES_OPTIONS.media, MODES_OPTIONS.mediaEmojis].includes(mode)
       "
       @switch-mode="canvasStore.switchMode($event)"
-      @deselect="selectedElement ? canvasStore.deselectElement() : ''"
-      @delete="selectedElement ? canvasStore.deleteElement() : ''"
+      @deselect="selectedElement ? deselectElement() : ''"
+      @delete="selectedElement ? deleteElement() : ''"
       @add-image="mediaStore.addImage($event)"
       @apply-formatting="textStore.applyStyles()"
     />
