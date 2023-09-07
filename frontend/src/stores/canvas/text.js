@@ -43,10 +43,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
   }),
 
   actions: {
-    redrawCanvas() {
-      canvasStore.redrawCanvas();
-    },
-
     /*
      * input
      */
@@ -100,7 +96,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
         this.isNewText = false;
 
-        this.redrawCanvas();
+        canvasStore.redrawCanvas();
         this.removeTextInput();
       };
 
@@ -127,7 +123,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
        */
       selectedElement.value.isVisible = false;
       updateSelectedElement();
-      this.redrawCanvas();
+      canvasStore.redrawCanvas();
 
       /*
        * create text input
@@ -163,7 +159,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         elements.value.push(this.computeTextElementProps());
 
         canvasStore.switchMode(MODES_OPTIONS.value.text);
-        this.redrawCanvas();
+        canvasStore.redrawCanvas();
         this.removeTextInput();
       };
 
@@ -345,7 +341,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
           this.customization.formatting.alignment.vertical;
 
         updateSelectedElement();
-        this.redrawCanvas();
+        canvasStore.redrawCanvas();
       }
     },
 

@@ -37,10 +37,6 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
   }),
 
   actions: {
-    redrawCanvas() {
-      canvasStore.redrawCanvas();
-    },
-
     /*
      * drawing
      */
@@ -151,7 +147,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
         }
       });
 
-      this.redrawCanvas();
+      canvasStore.redrawCanvas();
     },
 
     /*
@@ -167,7 +163,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
         selectedElement.value.brushType = this.customization.selectedBrushType;
 
         updateSelectedElement();
-        this.redrawCanvas();
+        canvasStore.redrawCanvas();
       }
     },
 
