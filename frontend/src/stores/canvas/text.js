@@ -41,7 +41,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         isItalic: false,
         alignment: {
           horizontal: ALIGNMENT.horizontal.left,
-          vertical: ALIGNMENT.vertical.middle,
+          vertical: ALIGNMENT.vertical.top,
         },
       },
     },
