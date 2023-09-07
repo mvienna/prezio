@@ -290,11 +290,11 @@ export const useCanvasStore = defineStore("canvas", {
                     element.x +
                     width -
                     lineWidth -
-                    this.computeAdjustedSize(padding / 2);
+                    this.computeAdjustedSize(padding);
                   break;
 
                 case ALIGNMENT.horizontal.center:
-                  x = element.x + width / 2 - lineWidth / 2;
+                  x = element.x + width / 2 - lineWidth / 2 - padding * 2;
                   break;
               }
 
@@ -310,15 +310,15 @@ export const useCanvasStore = defineStore("canvas", {
                 case ALIGNMENT.vertical.bottom:
                   y +=
                     height -
-                    adjustedFontSize * element.lineHeight -
-                    this.computeAdjustedSize(padding - 1) * 3;
+                    adjustedFontSize * element.lineHeight * lines.length -
+                    this.computeAdjustedSize(padding);
                   break;
 
                 case ALIGNMENT.vertical.middle:
                   y +=
                     height / 2 -
-                    adjustedFontSize * element.lineHeight +
-                    this.computeAdjustedSize(padding + 1);
+                    adjustedFontSize * element.lineHeight -
+                    this.computeAdjustedSize(padding);
                   break;
               }
 
@@ -343,7 +343,7 @@ export const useCanvasStore = defineStore("canvas", {
                 this.ctx.fillStyle = element.color;
                 this.ctx.fillRect(
                   x,
-                  y + 4,
+                  y + padding,
                   this.ctx.measureText(line).width,
                   4
                 );
@@ -354,7 +354,7 @@ export const useCanvasStore = defineStore("canvas", {
                 this.ctx.fillStyle = element.color;
                 this.ctx.fillRect(
                   x,
-                  y - (adjustedFontSize * element.lineHeight) / 3 + 4,
+                  y - (adjustedFontSize * element.lineHeight) / 3 + padding,
                   this.ctx.measureText(line).width,
                   4
                 );

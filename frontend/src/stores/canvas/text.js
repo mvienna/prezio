@@ -4,9 +4,14 @@ import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
 import { updateSelectedElement } from "stores/canvas/helpers/select";
 
-const { MODES_OPTIONS, mouse, elements, canvas, selectedElement } = storeToRefs(
-  useCanvasStore()
-);
+const {
+  MODES_OPTIONS,
+  mouse,
+  selectedElementBorder,
+  elements,
+  canvas,
+  selectedElement,
+} = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
 export const useCanvasTextStore = defineStore("canvasText", {
@@ -28,7 +33,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       color: "#000000",
       fontSize: "16px",
       font: "Arial",
-      lineHeight: 1.4,
+      lineHeight: 1.2,
       formatting: {
         isBold: false,
         isUnderline: false,
@@ -36,50 +41,50 @@ export const useCanvasTextStore = defineStore("canvasText", {
         isItalic: false,
         alignment: {
           horizontal: ALIGNMENT.horizontal.left,
-          vertical: ALIGNMENT.vertical.top,
+          vertical: ALIGNMENT.vertical.middle,
         },
       },
     },
   }),
 
   actions: {
+    sanitize() {
+      const pattern = /<(?!br\s*\/?)[^>]+>/gi;
+      if (pattern.test(this.input.textContent)) {
+        this.input.innerHTML = this.input.textContent.replace(pattern, "");
+        this.moveInputCursorToTheEnd();
+      }
+    },
+
     /*
-     * input
+     * input life-cycle
      */
     createTextInput() {
       this.input = document.createElement("div");
       this.input.setAttribute("contentEditable", "true");
 
       this.applyStyles();
-
-      const removeTagsExceptBr = () => {
-        const pattern = /<(?!br\s*\/?)[^>]+>/gi;
-
-        if (pattern.test(this.input.textContent)) {
-          this.input.innerHTML = this.input.textContent.replace(pattern, "");
-          this.moveInputCursorToTheEnd();
-        }
-      };
-
-      this.input.addEventListener("input", removeTagsExceptBr);
     },
 
     removeTextInput() {
+      this.input.removeEventListener("input", this.sanitize);
       this.input.remove();
       this.input = null;
     },
 
     /*
-     * new text
+     * add new text
      */
     addNewText(event) {
       /*
        * create text input
        */
       this.createTextInput();
-      const borderWidth = 2;
-      this.input.style.left = event.clientX - borderWidth + "px";
-      this.input.style.top = event.clientY + "px";
+
+      this.input.style.left =
+        event.clientX - selectedElementBorder.value.borderWidth + "px";
+      this.input.style.top =
+        event.clientY + selectedElementBorder.value.borderWidth + "px";
 
       document.body.appendChild(this.input);
       this.input.focus();
@@ -133,11 +138,13 @@ export const useCanvasTextStore = defineStore("canvasText", {
       const canvasRect = canvasStore.canvasRect();
       this.input.style.left =
         canvasRect.left +
-        (selectedElement.value.x * canvasRect.width) / canvas.value.width +
+        (selectedElement.value.x * canvasRect.width) / canvas.value.width -
+        selectedElementBorder.value.borderWidth +
         "px";
       this.input.style.top =
         canvasRect.top +
         (selectedElement.value.y * canvasRect.width) / canvas.value.width +
+        selectedElementBorder.value.borderWidth +
         "px";
 
       this.input.style.width = selectedElement.value.width + "px";
@@ -242,15 +249,15 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.input.style.outline = "3px solid #D7E0FF";
         this.input.style.zIndex = "2";
 
-        // font family
+        this.input.style.color = this.customization.color;
+        this.input.style.lineHeight = this.customization.lineHeight;
         this.input.style.fontFamily = this.customization.font;
-
-        // font size
         this.input.style.fontSize = this.customization.fontSize;
-
-        // font weight
         this.input.style.fontWeight = this.customization.formatting.isBold
           ? "bold"
+          : "normal";
+        this.input.style.fontStyle = this.customization.formatting.isItalic
+          ? "italic"
           : "normal";
 
         // text decoration
@@ -260,14 +267,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.input.style.textDecoration = newTextDecoration.trim().length
           ? newTextDecoration
           : "none";
-
-        // font style
-        this.input.style.fontStyle = this.customization.formatting.isItalic
-          ? "italic"
-          : "normal";
-
-        // color
-        this.input.style.color = this.customization.color;
 
         // alignment
         this.input.style.display = "flex";
@@ -308,18 +307,15 @@ export const useCanvasTextStore = defineStore("canvasText", {
         selectedElement.value &&
         selectedElement.value.mode === MODES_OPTIONS.value.text
       ) {
-        // font family
-        selectedElement.value.fontFamily = this.customization.font;
-
-        // font size
-        selectedElement.value.fontSize = this.customization.fontSize;
-
-        // color
         selectedElement.value.color = this.customization.color;
 
-        // font weight
+        selectedElement.value.fontFamily = this.customization.font;
+        selectedElement.value.fontSize = this.customization.fontSize;
         selectedElement.value.fontWeight = this.customization.formatting.isBold
           ? "bold"
+          : "normal";
+        selectedElement.value.fontStyle = this.customization.formatting.isItalic
+          ? "italic"
           : "normal";
 
         // text decoration
@@ -330,16 +326,13 @@ export const useCanvasTextStore = defineStore("canvasText", {
           ? newTextDecoration
           : "none";
 
-        // font style
-        selectedElement.value.fontStyle = this.customization.formatting.isItalic
-          ? "italic"
-          : "normal";
-
+        // alignment
         selectedElement.value.textAlign =
           this.customization.formatting.alignment.horizontal;
         selectedElement.value.verticalAlign =
           this.customization.formatting.alignment.vertical;
 
+        // update
         updateSelectedElement();
         canvasStore.redrawCanvas();
       }
