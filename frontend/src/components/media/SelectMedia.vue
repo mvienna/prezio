@@ -97,7 +97,12 @@
           >
             <template #default>
               <form ref="form" class="full-width">
-                <input type="file" :id="fileInputId" @change="uploadFile" />
+                <input
+                  :id="fileInputId"
+                  type="file"
+                  accept="image/*"
+                  @change="uploadFile"
+                />
                 <label :for="fileInputId" class="full-width">
                   <q-icon name="attach_file" size="sm" class="q-pr-sm" />
                   {{ $t("user.profile.form.avatar.upload") }}
@@ -368,11 +373,6 @@ const deleteFile = (file) => {
   position: relative;
   transition: all 0.2s;
   vertical-align: middle;
-  outline: 6px solid $white;
-
-  &:hover {
-    outline: 6px solid $blue-3;
-  }
 }
 
 /*

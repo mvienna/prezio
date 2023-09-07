@@ -20,7 +20,12 @@
       <q-btn round flat no-caps>
         <template #default>
           <form ref="form">
-            <input type="file" :id="fileInputId" @change="uploadFile" />
+            <input
+              :id="fileInputId"
+              type="file"
+              accept="image/*"
+              @change="uploadFile"
+            />
             <label :for="fileInputId">
               <q-icon name="attach_file" size="sm" class="q-pr-sm" />
               {{ $t("user.profile.form.avatar.upload") }}
