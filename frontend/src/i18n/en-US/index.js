@@ -204,6 +204,9 @@ export default {
         audio: "Audio",
       },
       layers: {
+        layer: {
+          title: "Layer",
+        },
         names: {
           drawing: "Line",
           text: "Text",

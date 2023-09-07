@@ -1,55 +1,82 @@
 <template>
-  <draggable
-    v-model="elements"
-    :component-data="{
-      tag: 'ul',
-      type: 'transition-group',
-      class: 'column no-wrap q-gutter-md',
-    }"
-    v-bind="layersDraggingOptions"
-    item-key="id"
-    handle=".layer_handle"
-    @start="handleStartDragging"
-    @end="handleLayersReorder"
-    @reordered="handleLayersReorder"
-  >
-    <template #item="{ element }">
-      <q-card
-        flat
-        class="layer bg-grey-2 cursor-pointer"
-        :class="element.id === selectedElement?.id ? 'layer--active' : ''"
-      >
-        <q-card-section class="row no-wrap items-center">
-          <!-- drag handle -->
-          <q-icon
-            name="drag_indicator"
-            color="grey"
-            size="sm"
-            class="layer_handle"
-          />
+  <div>
+    <draggable
+      v-if="elements.length"
+      v-model="elements"
+      :component-data="{
+        tag: 'ul',
+        type: 'transition-group',
+        class: 'column no-wrap q-gutter-md',
+      }"
+      v-bind="layersDraggingOptions"
+      item-key="id"
+      handle=".layer_handle"
+      @start="handleStartDragging"
+      @end="handleLayersReorder"
+      @reordered="handleLayersReorder"
+    >
+      <template #item="{ element }">
+        <q-card
+          flat
+          class="layer bg-grey-2 cursor-pointer"
+          :class="element.id === selectedElement?.id ? 'layer--active' : ''"
+        >
+          <q-card-section class="row no-wrap items-center">
+            <!-- drag handle -->
+            <q-icon
+              name="drag_indicator"
+              color="grey"
+              size="sm"
+              class="layer_handle"
+            />
 
-          <!-- layer name -->
-          <span class="text-semibold q-pl-md" @click="selectElement(element)">
-            {{
-              $t(`presentationLayout.rightDrawer.layers.names.${element.mode}`)
-            }}
-          </span>
+            <!-- layer name -->
+            <span class="text-semibold q-pl-md" @click="selectElement(element)">
+              {{
+                $t(
+                  `presentationLayout.rightDrawer.layers.names.${element.mode}`
+                )
+              }}
+            </span>
 
-          <q-space />
+            <q-space />
 
-          <!-- delete button -->
-          <q-btn
-            icon="delete"
-            flat
-            round
-            color="red"
-            size="10px"
-            @click="deleteElement(element)"
-          />
-        </q-card-section>
-      </q-card>
-    </template>
-  </draggable>
+            <!-- delete button -->
+            <q-btn
+              icon="delete"
+              flat
+              round
+              color="red"
+              size="10px"
+              @click="deleteElement(element)"
+            />
+          </q-card-section>
+        </q-card>
+      </template>
+    </draggable>
+
+    <q-card v-else flat class="layer layer--disabled bg-grey-2">
+      <q-card-section class="row no-wrap items-center">
+        <!-- drag handle -->
+        <q-icon
+          name="drag_indicator"
+          color="grey"
+          size="sm"
+          class="layer_handle"
+        />
+
+        <!-- layer name -->
+        <span class="text-semibold q-pl-md">
+          {{ $t("presentationLayout.rightDrawer.layers.layer.title") }}
+        </span>
+
+        <q-space />
+
+        <!-- delete button -->
+        <q-btn icon="delete" flat round color="red" size="10px" />
+      </q-card-section>
+    </q-card>
+  </div>
 </template>
 
 <script setup>
@@ -112,6 +139,11 @@ const handleLayersReorder = async () => {
     width: 100%;
     line-height: 30px;
   }
+}
+
+.layer--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .layer--active {

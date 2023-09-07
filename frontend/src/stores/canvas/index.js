@@ -25,7 +25,7 @@ export const useCanvasStore = defineStore("canvas", {
     /*
      * modes
      */
-    mode: "shape",
+    mode: "text",
     MODES_OPTIONS: {
       drawing: "drawing",
       text: "text",
