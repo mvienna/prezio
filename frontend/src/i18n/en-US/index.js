@@ -198,9 +198,19 @@ export default {
     },
     rightDrawer: {
       tabs: {
+        layers: "Layers",
         design: "Design",
         template: "Template",
         audio: "Audio",
+      },
+      layers: {
+        names: {
+          drawing: "Line",
+          text: "Text",
+          media: "Image",
+          mediaEmoji: "Emoji",
+          shape: "Shape",
+        },
       },
     },
   },
@@ -226,6 +236,13 @@ export default {
         font: "Font",
         fontSize: "Font Size",
         newText: "New Field",
+      },
+    },
+    shapes: {
+      options: {
+        color: "Color",
+        fill: "Fill",
+        lineWidth: "Line Width",
       },
     },
   },

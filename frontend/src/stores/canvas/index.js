@@ -1,5 +1,8 @@
 import { defineStore } from "pinia";
-import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
+import {
+  ALIGNMENT,
+  SHAPES_OPTIONS,
+} from "src/constants/canvas/canvasVariables";
 
 export const useCanvasStore = defineStore("canvas", {
   state: () => ({
@@ -22,14 +25,14 @@ export const useCanvasStore = defineStore("canvas", {
     /*
      * modes
      */
-    mode: "text",
+    mode: "shape",
     MODES_OPTIONS: {
       drawing: "drawing",
       text: "text",
       textEditing: "text-editing",
       media: "media",
-      mediaEmojis: "media-emojis",
-      shapes: "media-shapes",
+      mediaEmoji: "media-emojis",
+      shape: "shape",
     },
 
     /*
@@ -187,8 +190,15 @@ export const useCanvasStore = defineStore("canvas", {
            * media
            */
           case this.MODES_OPTIONS.media:
-          case this.MODES_OPTIONS.mediaEmojis:
+          case this.MODES_OPTIONS.mediaEmoji:
             this.renderImage(element);
+            break;
+
+          /*
+           * shape
+           */
+          case this.MODES_OPTIONS.shape:
+            this.renderShape(element);
             break;
         }
 
@@ -416,6 +426,155 @@ export const useCanvasStore = defineStore("canvas", {
     },
 
     /*
+     * render shape
+     */
+    renderShape(element) {
+      this.ctx.strokeStyle = element.color;
+      this.ctx.lineWidth = element.lineWidth;
+      this.ctx.beginPath();
+
+      switch (element.type) {
+        /*
+         * circle
+         */
+        case SHAPES_OPTIONS.circle:
+          this.ctx.arc(
+            element.x + element.width / 2,
+            element.y + element.width / 2,
+            element.width / 2,
+            0,
+            2 * Math.PI
+          );
+
+          if (element.fill) {
+            this.ctx.fillStyle = element.fill;
+            this.ctx.fill();
+          }
+
+          break;
+
+        /*
+         * square
+         */
+        case SHAPES_OPTIONS.square:
+          this.ctx.rect(element.x, element.y, element.width, element.width);
+
+          if (element.fill) {
+            this.ctx.fillStyle = element.fill;
+            this.ctx.fill();
+          }
+
+          break;
+
+        /*
+         * triangle
+         */
+        case SHAPES_OPTIONS.triangle:
+          const triangleX1 = element.x + element.width / 2;
+          const triangleY1 = element.y;
+          const triangleX2 = element.x;
+          const triangleY2 = element.y + element.width;
+          const triangleX3 = element.x + element.width;
+          const triangleY3 = element.y + element.width;
+
+          this.ctx.moveTo(triangleX1, triangleY1);
+
+          this.ctx.lineTo(triangleX2, triangleY2);
+          this.ctx.lineTo(triangleX3, triangleY3);
+          this.ctx.lineTo(triangleX1, triangleY1);
+
+          if (element.fill) {
+            this.ctx.fillStyle = element.fill;
+            this.ctx.fill();
+          }
+
+          break;
+
+        /*
+         * star
+         */
+        case SHAPES_OPTIONS.star:
+          const size = element.width;
+          const cx = element.x + size / 2;
+          const cy = element.y + size / 2;
+          const spikes = 5;
+          const outerRadius = size / 2;
+          const innerRadius = outerRadius / 2;
+          const rot = (Math.PI / 2) * 3;
+
+          const angleIncrement = (2 * Math.PI) / (spikes * 2);
+
+          this.ctx.moveTo(cx, cy - outerRadius);
+
+          for (let i = 0; i < spikes * 2; i++) {
+            const radius = i % 2 === 0 ? outerRadius : innerRadius;
+            const x = cx + Math.cos(rot + angleIncrement * i) * radius;
+            const y = cy + Math.sin(rot + angleIncrement * i) * radius;
+            this.ctx.lineTo(x, y);
+          }
+
+          this.ctx.lineTo(cx, cy - outerRadius);
+
+          if (element.fill) {
+            this.ctx.fillStyle = element.fill;
+            this.ctx.fill();
+          }
+
+          break;
+
+        /*
+         * line
+         */
+        case SHAPES_OPTIONS.line:
+          const x1 = element.x;
+          const y1 = element.y + element.height;
+          const x2 = element.x + element.width;
+          const y2 = element.y;
+
+          this.ctx.moveTo(x1, y1);
+          this.ctx.lineTo(x2, y2);
+          break;
+
+        /*
+         * arrow
+         */
+        case SHAPES_OPTIONS.arrow:
+          const arrowBaseX = element.x;
+          const arrowBaseY = element.y + element.height;
+          const arrowTipX = element.x + element.width;
+          const arrowTipY = element.y;
+          const arrowHeadSize = element.width / 4;
+
+          this.ctx.moveTo(arrowBaseX, arrowBaseY);
+          this.ctx.lineTo(arrowTipX, arrowTipY);
+
+          const angle = Math.atan2(
+            arrowTipY - arrowBaseY,
+            arrowTipX - arrowBaseX
+          );
+
+          const arrowX1 =
+            arrowTipX - arrowHeadSize * Math.cos(angle - Math.PI / 6);
+          const arrowY1 =
+            arrowTipY - arrowHeadSize * Math.sin(angle - Math.PI / 6);
+          const arrowX2 =
+            arrowTipX - arrowHeadSize * Math.cos(angle + Math.PI / 6);
+          const arrowY2 =
+            arrowTipY - arrowHeadSize * Math.sin(angle + Math.PI / 6);
+
+          this.ctx.moveTo(arrowTipX, arrowTipY);
+          this.ctx.lineTo(arrowX1, arrowY1);
+
+          this.ctx.moveTo(arrowTipX, arrowTipY);
+          this.ctx.lineTo(arrowX2, arrowY2);
+          break;
+      }
+
+      this.ctx.stroke();
+      this.ctx.closePath();
+    },
+
+    /*
      * render border for selected element
      */
     renderBorderForSelectedElement() {
@@ -468,12 +627,28 @@ export const useCanvasStore = defineStore("canvas", {
          * media
          */
         case this.MODES_OPTIONS.media:
-        case this.MODES_OPTIONS.mediaEmojis:
+        case this.MODES_OPTIONS.mediaEmoji:
           this.drawBorder(
             this.selectedElement.x,
             this.selectedElement.y,
             this.selectedElement.width,
-            this.selectedElement.height
+            this.selectedElement.height,
+            undefined,
+            true
+          );
+          break;
+
+        /*
+         * shape
+         */
+        case this.MODES_OPTIONS.shape:
+          this.drawBorder(
+            this.selectedElement.x,
+            this.selectedElement.y,
+            this.selectedElement.width,
+            this.selectedElement.height,
+            ["top-left", "top-right", "bottom-left", "bottom-right"],
+            true
           );
           break;
       }

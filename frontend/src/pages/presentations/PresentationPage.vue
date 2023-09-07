@@ -5,13 +5,14 @@
       :is-drawing-mode="mode === MODES_OPTIONS.drawing"
       :is-text-mode="mode === MODES_OPTIONS.text"
       :is-media-mode="
-        [MODES_OPTIONS.media, MODES_OPTIONS.mediaEmojis].includes(mode)
+        [MODES_OPTIONS.media, MODES_OPTIONS.mediaEmoji].includes(mode)
       "
       @switch-mode="canvasStore.switchMode($event)"
       @deselect="selectedElement ? deselectElement() : ''"
       @delete="selectedElement ? deleteElement() : ''"
       @add-image="mediaStore.addImage($event)"
       @apply-formatting="textStore.applyStyles()"
+      @add-shape="shapeStore.addShape($event)"
     />
 
     <!-- canvas -->
@@ -70,6 +71,7 @@ import {
   getHoveredElement,
   selectElement,
 } from "stores/canvas/helpers/select";
+import { useCanvasShapeStore } from "stores/canvas/shape";
 
 /*
  * variables
@@ -114,6 +116,8 @@ const textStore = useCanvasTextStore();
 const textState = storeToRefs(textStore);
 
 const mediaStore = useCanvasMediaStore();
+
+const shapeStore = useCanvasShapeStore();
 
 /*
  * canvas init, setup

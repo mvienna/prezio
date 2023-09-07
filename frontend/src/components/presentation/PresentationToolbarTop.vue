@@ -419,7 +419,7 @@
       text-color="dark"
       round
       size="12px"
-      @click="$emit('switchMode', MODES_OPTIONS.mediaEmojis)"
+      @click="$emit('switchMode', MODES_OPTIONS.mediaEmoji)"
     >
       <q-menu
         anchor="bottom left"
@@ -455,9 +455,8 @@
       unelevated
       text-color="dark"
       round
-      disable
       size="12px"
-      @click="$emit('switchMode', MODES_OPTIONS.mediaShapes)"
+      @click="$emit('switchMode', MODES_OPTIONS.shape)"
     >
       <q-menu
         anchor="bottom left"
@@ -466,7 +465,7 @@
         transition-hide="jump-up"
         :offset="[0, 8]"
         class="q-pa-sm"
-        style="width: 140px"
+        style="width: 184px"
       >
         <div class="row q-gutter-sm">
           <q-btn
@@ -477,16 +476,101 @@
             size="12px"
             class="q-pa-sm"
             v-close-popup
-            @click="$emit('addImage', shape.src)"
+            @click="$emit('addShape', shape.name)"
           >
             <template #default>
               <q-img :src="shape.src" />
             </template>
           </q-btn>
         </div>
-      </q-menu>
 
-      <q-tooltip> {{ $t("tooltips.in_development") }}</q-tooltip>
+        <q-separator class="q-my-sm" />
+
+        <!-- color picker -->
+        <q-item
+          dense
+          class="items-center text-semibold justify-start rounded-borders q-mt-sm q-pl-sm q-pr-none"
+        >
+          <q-icon name="o_palette" class="q-mr-md text-semibold" size="20px" />
+          <div class="q-mr-lg">
+            {{ $t("presentationEditor.shapes.options.color") }}
+          </div>
+
+          <q-space />
+
+          <input
+            type="color"
+            class="color_input"
+            v-model="shapeState.customization.value.color"
+            @input="shapeStore.applyStyles()"
+          />
+        </q-item>
+
+        <!-- fill color picker -->
+        <q-item
+          dense
+          class="items-center text-semibold justify-start rounded-borders q-mt-sm q-pl-sm q-pr-none"
+        >
+          <q-icon
+            :name="
+              [
+                SHAPES_OPTIONS.circle,
+                SHAPES_OPTIONS.square,
+                SHAPES_OPTIONS.triangle,
+                SHAPES_OPTIONS.star,
+              ].includes(selectedElement?.type) &&
+              shapeState.customization.value.fill
+                ? 'done'
+                : 'close'
+            "
+            class="q-mr-md text-semibold"
+            size="20px"
+            @click="
+              shapeState.customization.value.fill = null;
+              shapeStore.applyStyles();
+            "
+          />
+
+          <div class="q-mr-lg">
+            {{ $t("presentationEditor.shapes.options.fill") }}
+          </div>
+
+          <q-space />
+
+          <input
+            type="color"
+            class="color_input"
+            v-model="shapeState.customization.value.fill"
+            @input="shapeStore.applyStyles()"
+          />
+        </q-item>
+
+        <!-- line width -->
+        <q-item
+          dense
+          class="items-center text-semibold justify-start rounded-borders"
+        >
+          <q-select
+            v-model="shapeState.customization.value.lineWidth"
+            :options="SHAPE_LINE_WIDTH_OPTIONS"
+            map-options
+            emit-value
+            borderless
+            :label="$t('presentationEditor.shapes.options.lineWidth')"
+            class="full-width"
+            color="dark"
+            @update:model-value="shapeStore.applyStyles()"
+          >
+            <template #prepend>
+              <q-icon
+                name="line_weight"
+                class="q-mr-xs text-semibold text-dark"
+                size="20px"
+              />
+            </template>
+          </q-select>
+        </q-item>
+      </q-menu>
     </q-btn>
 
     <q-space />
@@ -551,7 +635,10 @@ import {
   FONT_OPTIONS,
   FONT_SIZE_OPTIONS,
   ALIGNMENT,
+  SHAPE_LINE_WIDTH_OPTIONS,
+  SHAPES_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
+import { useCanvasShapeStore } from "stores/canvas/shape";
 
 /*
  * stores
@@ -561,6 +648,9 @@ const drawingState = storeToRefs(drawingStore);
 
 const textStore = useCanvasTextStore();
 const textState = storeToRefs(textStore);
+
+const shapeStore = useCanvasShapeStore();
+const shapeState = storeToRefs(shapeStore);
 
 const { mode, MODES_OPTIONS, selectedElement, selectedElementIndex } =
   storeToRefs(useCanvasStore());
@@ -574,6 +664,7 @@ defineEmits([
   "delete",
   "addImage",
   "applyFormatting",
+  "addShape",
 ]);
 
 /*

@@ -66,3 +66,29 @@ export const ALIGNMENT = {
     bottom: "bottom",
   },
 };
+
+export const SHAPES_OPTIONS = {
+  circle: "circle",
+  square: "square",
+  triangle: "triangle",
+  star: "star",
+  line: "line",
+  arrow: "arrow",
+};
+
+export const SHAPE_LINE_WIDTH_OPTIONS = [
+  { value: 1, label: "1px" },
+  { value: 2, label: "2px" },
+  { value: 3, label: "3px" },
+  { value: 4, label: "4px" },
+  { value: 8, label: "8px" },
+  { value: 12, label: "12px" },
+  { value: 16, label: "16px" },
+  { value: 24, label: "24px" },
+  { value: 28, label: "28px" },
+  { value: 32, label: "32px" },
+  { value: 36, label: "36px" },
+  { value: 40, label: "40px" },
+  { value: 44, label: "44px" },
+  { value: 48, label: "48px" },
+];

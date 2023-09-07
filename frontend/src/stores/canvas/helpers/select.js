@@ -127,6 +127,8 @@ export const getHoveredElement = () => {
        * media
        */
       case MODES_OPTIONS.value.media:
+      case MODES_OPTIONS.value.mediaEmoji:
+      case MODES_OPTIONS.value.shape:
         angle = (element.rotationAngle * Math.PI) / 180;
         centerX = element.x + element.width / 2;
         centerY = element.y + element.height / 2;

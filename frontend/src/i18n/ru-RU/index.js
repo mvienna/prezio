@@ -208,7 +208,8 @@ export default {
           drawing: "Линия",
           text: "Текст",
           media: "Фотография",
-          mediaEmojis: "Эмоджи",
+          mediaEmoji: "Эмоджи",
+          shape: "Форма",
         },
       },
     },
@@ -235,6 +236,13 @@ export default {
         font: "Шрифт",
         fontSize: "Размер шрифта",
         newText: "Новое поле",
+      },
+    },
+    shapes: {
+      options: {
+        color: "Цвет",
+        fill: "Заливка",
+        lineWidth: "Размер",
       },
     },
   },

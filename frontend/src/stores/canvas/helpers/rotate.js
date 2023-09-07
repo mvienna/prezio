@@ -30,7 +30,8 @@ export const getRotationHandle = () => {
   let width, height;
   switch (selectedElement.value.mode) {
     case MODES_OPTIONS.value.media:
-    case MODES_OPTIONS.value.mediaEmojis:
+    case MODES_OPTIONS.value.mediaEmoji:
+    case MODES_OPTIONS.value.shape:
       width = selectedElement.value.width;
       height = selectedElement.value.height;
       break;
