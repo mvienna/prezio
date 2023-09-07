@@ -163,9 +163,10 @@ export const useCanvasTextStore = defineStore("canvasText", {
        * add text to canvas
        */
       const addTextToCanvas = () => {
-        elements.value.push(this.computeTextElementProps());
-
+        selectedElement.value = this.computeTextElementProps();
         canvasStore.switchMode(MODES_OPTIONS.value.text);
+        updateSelectedElement();
+
         canvasStore.redrawCanvas();
         this.removeTextInput();
       };
