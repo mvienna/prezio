@@ -145,7 +145,7 @@ export const useCanvasStore = defineStore("canvas", {
     },
 
     /*
-     * canvas render
+     * render canvas
      */
     clearCanvas() {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -172,197 +172,14 @@ export const useCanvasStore = defineStore("canvas", {
            * drawing
            */
           case this.MODES_OPTIONS.drawing:
-            this.ctx.strokeStyle = element.color;
-            this.ctx.lineWidth = element.brushSize;
-
-            switch (element.brushType) {
-              case "pen":
-                break;
-
-              case "pencil":
-                this.ctx.globalAlpha = 0.1;
-                break;
-            }
-
-            this.ctx.beginPath();
-
-            for (let i = 0; i < element.points.length; i++) {
-              const point = element.points[i];
-
-              if (i === 0) {
-                this.ctx.moveTo(point.x, point.y);
-              } else {
-                this.ctx.lineTo(point.x, point.y);
-              }
-
-              if (
-                i === element.points.length - 1 ||
-                Math.abs(point.x - element.points[i + 1].x) >
-                  element.brushSize ||
-                Math.abs(point.y - element.points[i + 1].y) > element.brushSize
-              ) {
-                this.ctx.stroke();
-                this.ctx.beginPath();
-              }
-            }
-
-            this.ctx.globalAlpha = 1;
+            this.renderLine(element);
             break;
 
           /*
            * text
            */
           case this.MODES_OPTIONS.text:
-            /*
-             * compute props
-             */
-            const padding = 4;
-            const adjustedFontSize =
-              (parseFloat(element.fontSize) * this.canvas.width) /
-              this.canvasRect().width;
-
-            /*
-             * wrap text
-             */
-            const wrapText = () => {
-              // change context to element customization
-              this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${element.fontSize} ${element.fontFamily}`;
-
-              let line = "";
-              let wrappedText = "";
-
-              // exception: one-word string is always inline
-              const words = element.text.split(" ");
-              if (words.length === 1) {
-                element.width =
-                  this.ctx.measureText(element.text).width + padding;
-                return element.text;
-              }
-
-              for (const word of words) {
-                const testLine = line.length === 0 ? word : line + " " + word;
-                const testWidth = this.ctx.measureText(testLine).width;
-
-                if (testWidth <= element.width + padding) {
-                  line = testLine;
-                } else {
-                  wrappedText += line + "<br>";
-                  line = word;
-                }
-              }
-
-              if (wrappedText.length === 0) {
-                wrappedText = line;
-              } else {
-                wrappedText += line;
-              }
-
-              return wrappedText;
-            };
-
-            /*
-             * break text into lines
-             */
-            let lines = wrapText().split("<br>");
-
-            /*
-             * align
-             */
-            let linesPosition = [];
-
-            const width = this.computeAdjustedSize(element.width);
-            const height = this.computeAdjustedSize(element.height);
-
-            lines.forEach((line, index) => {
-              /*
-               * x
-               */
-              let x = element.x;
-              const lineWidth = this.computeAdjustedSize(
-                this.ctx.measureText(line).width
-              );
-
-              this.computeAdjustedSize(element.width);
-
-              switch (element.textAlign) {
-                case ALIGNMENT.horizontal.right:
-                  x =
-                    element.x +
-                    width -
-                    lineWidth -
-                    this.computeAdjustedSize(padding);
-                  break;
-
-                case ALIGNMENT.horizontal.center:
-                  x = element.x + width / 2 - lineWidth / 2 - padding * 2;
-                  break;
-              }
-
-              /*
-               * y
-               */
-              let y =
-                element.y +
-                adjustedFontSize * element.lineHeight +
-                index * adjustedFontSize * element.lineHeight;
-
-              switch (element.verticalAlign) {
-                case ALIGNMENT.vertical.bottom:
-                  y +=
-                    height -
-                    adjustedFontSize * element.lineHeight * lines.length -
-                    this.computeAdjustedSize(padding);
-                  break;
-
-                case ALIGNMENT.vertical.middle:
-                  y +=
-                    height / 2 -
-                    adjustedFontSize * element.lineHeight -
-                    this.computeAdjustedSize(padding);
-                  break;
-              }
-
-              linesPosition.push({ x: x, y: y });
-            });
-
-            /*
-             * apply text customization
-             */
-            this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${adjustedFontSize}px ${element.fontFamily}`;
-            this.ctx.fillStyle = element.color;
-
-            /*
-             * draw text lines
-             */
-            lines.map((line, index) => {
-              const x = linesPosition[index].x;
-              const y = linesPosition[index].y;
-
-              // underline
-              if (element.textDecoration.includes("underline")) {
-                this.ctx.fillStyle = element.color;
-                this.ctx.fillRect(
-                  x,
-                  y + padding,
-                  this.ctx.measureText(line).width,
-                  4
-                );
-              }
-
-              // line through
-              if (element.textDecoration.includes("line-through")) {
-                this.ctx.fillStyle = element.color;
-                this.ctx.fillRect(
-                  x,
-                  y - (adjustedFontSize * element.lineHeight) / 3 + padding,
-                  this.ctx.measureText(line).width,
-                  4
-                );
-              }
-
-              // render text
-              this.ctx.fillText(line, x, y);
-            });
+            this.renderText(element);
 
             break;
 
@@ -371,20 +188,7 @@ export const useCanvasStore = defineStore("canvas", {
            */
           case this.MODES_OPTIONS.media:
           case this.MODES_OPTIONS.mediaEmojis:
-            this.ctx.save();
-            this.ctx.translate(
-              element.x + element.width / 2,
-              element.y + element.height / 2
-            );
-            this.ctx.rotate((element.rotation * Math.PI) / 180);
-            this.ctx.drawImage(
-              element.image,
-              -element.width / 2,
-              -element.height / 2,
-              element.width,
-              element.height
-            );
-            this.ctx.restore();
+            this.renderImage(element);
             break;
         }
 
@@ -395,70 +199,291 @@ export const useCanvasStore = defineStore("canvas", {
        * border
        */
       if (this.selectedElement && this.selectedElement.isVisible) {
-        this.ctx.save();
-        if (this.selectedElement.rotationAngle) {
-          const centerX =
-            this.selectedElement.x + this.selectedElement.width / 2;
-          const centerY =
-            this.selectedElement.y + this.selectedElement.height / 2;
-          this.ctx.translate(centerX, centerY);
-          this.ctx.rotate((this.selectedElement.rotationAngle * Math.PI) / 180);
-          this.ctx.translate(-centerX, -centerY);
-        }
-
-        switch (this.selectedElement.mode) {
-          /*
-           * drawing
-           */
-          case this.MODES_OPTIONS.drawing:
-            const minX = Math.min(
-              ...this.selectedElement.points.map((point) => point.x)
-            );
-            const maxX = Math.max(
-              ...this.selectedElement.points.map((point) => point.x)
-            );
-            const minY = Math.min(
-              ...this.selectedElement.points.map((point) => point.y)
-            );
-            const maxY = Math.max(
-              ...this.selectedElement.points.map((point) => point.y)
-            );
-
-            this.drawBorder(minX, minY, maxX - minX, maxY - minY, [], false);
-            break;
-
-          /*
-           * text
-           */
-          case this.MODES_OPTIONS.text:
-            this.drawBorder(
-              this.selectedElement.x,
-              this.selectedElement.y,
-              this.computeAdjustedSize(this.selectedElement.width),
-              this.computeAdjustedSize(this.selectedElement.height),
-              [],
-              false
-            );
-            break;
-
-          /*
-           * media
-           */
-          case this.MODES_OPTIONS.media:
-          case this.MODES_OPTIONS.mediaEmojis:
-            this.drawBorder(
-              this.selectedElement.x,
-              this.selectedElement.y,
-              this.selectedElement.width,
-              this.selectedElement.height
-            );
-            break;
-        }
-
-        this.ctx.restore();
+        this.renderBorderForSelectedElement();
       }
     },
 
+    /*
+     * render line
+     */
+    renderLine(element) {
+      this.ctx.strokeStyle = element.color;
+      this.ctx.lineWidth = element.brushSize;
+
+      switch (element.brushType) {
+        case "pen":
+          break;
+
+        case "pencil":
+          this.ctx.globalAlpha = 0.1;
+          break;
+      }
+
+      this.ctx.beginPath();
+
+      for (let i = 0; i < element.points.length; i++) {
+        const point = element.points[i];
+
+        if (i === 0) {
+          this.ctx.moveTo(point.x, point.y);
+        } else {
+          this.ctx.lineTo(point.x, point.y);
+        }
+
+        if (
+          i === element.points.length - 1 ||
+          Math.abs(point.x - element.points[i + 1].x) > element.brushSize ||
+          Math.abs(point.y - element.points[i + 1].y) > element.brushSize
+        ) {
+          this.ctx.stroke();
+          this.ctx.beginPath();
+        }
+      }
+
+      this.ctx.globalAlpha = 1;
+    },
+
+    /*
+     * render text
+     */
+    renderText(element) {
+      /*
+       * compute props
+       */
+      const padding = 4;
+      const adjustedFontSize =
+        (parseFloat(element.fontSize) * this.canvas.width) /
+        this.canvasRect().width;
+
+      /*
+       * wrap text
+       */
+      const wrapText = () => {
+        // change context to element customization
+        this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${element.fontSize} ${element.fontFamily}`;
+
+        let line = "";
+        let wrappedText = "";
+
+        // exception: one-word string is always inline
+        const words = element.text.split(" ");
+        if (words.length === 1) {
+          element.width = this.ctx.measureText(element.text).width + padding;
+          return element.text;
+        }
+
+        for (const word of words) {
+          const testLine = line.length === 0 ? word : line + " " + word;
+          const testWidth = this.ctx.measureText(testLine).width;
+
+          if (testWidth <= element.width + padding) {
+            line = testLine;
+          } else {
+            wrappedText += line + "<br>";
+            line = word;
+          }
+        }
+
+        if (wrappedText.length === 0) {
+          wrappedText = line;
+        } else {
+          wrappedText += line;
+        }
+
+        return wrappedText;
+      };
+
+      /*
+       * break text into lines
+       */
+      let lines = wrapText().split("<br>");
+
+      /*
+       * align
+       */
+      let linesPosition = [];
+
+      const width = this.computeAdjustedSize(element.width);
+      const height = this.computeAdjustedSize(element.height);
+
+      lines.forEach((line, index) => {
+        /*
+         * x
+         */
+        let x = element.x;
+        const lineWidth = this.computeAdjustedSize(
+          this.ctx.measureText(line).width
+        );
+
+        this.computeAdjustedSize(element.width);
+
+        switch (element.textAlign) {
+          case ALIGNMENT.horizontal.right:
+            x =
+              element.x + width - lineWidth - this.computeAdjustedSize(padding);
+            break;
+
+          case ALIGNMENT.horizontal.center:
+            x = element.x + width / 2 - lineWidth / 2 - padding * 2;
+            break;
+        }
+
+        /*
+         * y
+         */
+        let y =
+          element.y +
+          adjustedFontSize * element.lineHeight +
+          index * adjustedFontSize * element.lineHeight;
+
+        switch (element.verticalAlign) {
+          case ALIGNMENT.vertical.bottom:
+            y +=
+              height -
+              adjustedFontSize * element.lineHeight * lines.length -
+              this.computeAdjustedSize(padding);
+            break;
+
+          case ALIGNMENT.vertical.middle:
+            y +=
+              height / 2 -
+              adjustedFontSize * element.lineHeight -
+              this.computeAdjustedSize(padding);
+            break;
+        }
+
+        linesPosition.push({ x: x, y: y });
+      });
+
+      /*
+       * apply text customization
+       */
+      this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${adjustedFontSize}px ${element.fontFamily}`;
+      this.ctx.fillStyle = element.color;
+
+      /*
+       * draw text lines
+       */
+      lines.map((line, index) => {
+        const x = linesPosition[index].x;
+        const y = linesPosition[index].y;
+
+        // underline
+        if (element.textDecoration.includes("underline")) {
+          this.ctx.fillStyle = element.color;
+          this.ctx.fillRect(
+            x,
+            y + padding,
+            this.ctx.measureText(line).width,
+            4
+          );
+        }
+
+        // line through
+        if (element.textDecoration.includes("line-through")) {
+          this.ctx.fillStyle = element.color;
+          this.ctx.fillRect(
+            x,
+            y - (adjustedFontSize * element.lineHeight) / 3 + padding,
+            this.ctx.measureText(line).width,
+            4
+          );
+        }
+
+        // render text
+        this.ctx.fillText(line, x, y);
+      });
+    },
+
+    /*
+     * render image
+     */
+    renderImage(element) {
+      this.ctx.save();
+      this.ctx.translate(
+        element.x + element.width / 2,
+        element.y + element.height / 2
+      );
+      this.ctx.rotate((element.rotation * Math.PI) / 180);
+      this.ctx.drawImage(
+        element.image,
+        -element.width / 2,
+        -element.height / 2,
+        element.width,
+        element.height
+      );
+      this.ctx.restore();
+    },
+
+    /*
+     * render border for selected element
+     */
+    renderBorderForSelectedElement() {
+      this.ctx.save();
+      if (this.selectedElement.rotationAngle) {
+        const centerX = this.selectedElement.x + this.selectedElement.width / 2;
+        const centerY =
+          this.selectedElement.y + this.selectedElement.height / 2;
+        this.ctx.translate(centerX, centerY);
+        this.ctx.rotate((this.selectedElement.rotationAngle * Math.PI) / 180);
+        this.ctx.translate(-centerX, -centerY);
+      }
+
+      switch (this.selectedElement.mode) {
+        /*
+         * drawing
+         */
+        case this.MODES_OPTIONS.drawing:
+          const minX = Math.min(
+            ...this.selectedElement.points.map((point) => point.x)
+          );
+          const maxX = Math.max(
+            ...this.selectedElement.points.map((point) => point.x)
+          );
+          const minY = Math.min(
+            ...this.selectedElement.points.map((point) => point.y)
+          );
+          const maxY = Math.max(
+            ...this.selectedElement.points.map((point) => point.y)
+          );
+
+          this.drawBorder(minX, minY, maxX - minX, maxY - minY, [], false);
+          break;
+
+        /*
+         * text
+         */
+        case this.MODES_OPTIONS.text:
+          this.drawBorder(
+            this.selectedElement.x,
+            this.selectedElement.y,
+            this.computeAdjustedSize(this.selectedElement.width),
+            this.computeAdjustedSize(this.selectedElement.height),
+            [],
+            false
+          );
+          break;
+
+        /*
+         * media
+         */
+        case this.MODES_OPTIONS.media:
+        case this.MODES_OPTIONS.mediaEmojis:
+          this.drawBorder(
+            this.selectedElement.x,
+            this.selectedElement.y,
+            this.selectedElement.width,
+            this.selectedElement.height
+          );
+          break;
+      }
+
+      this.ctx.restore();
+    },
+
+    /*
+     * border
+     */
     drawBorder(
       x,
       y,
