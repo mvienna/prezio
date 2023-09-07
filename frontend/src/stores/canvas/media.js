@@ -2,7 +2,9 @@ import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
 
-const { ctx, canvas, elements, modes, mouse } = storeToRefs(useCanvasStore());
+const { ctx, canvas, elements, MODES_OPTIONS, mouse } = storeToRefs(
+  useCanvasStore()
+);
 const canvasStore = useCanvasStore();
 
 export const useCanvasMediaStore = defineStore("canvasMedia", {
@@ -27,7 +29,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
 
         const imageData = {
           id: generateUniqueId(undefined, elements.value),
-          mode: modes.value.media,
+          mode: MODES_OPTIONS.value.media,
           isVisible: true,
           image,
           x,

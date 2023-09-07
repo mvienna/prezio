@@ -1,9 +1,9 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
-import { alignment } from "src/constants/canvas/canvasVariables";
+import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
 
-const { modes, mouse, elements, canvas, selectedElement } = storeToRefs(
+const { MODES_OPTIONS, mouse, elements, canvas, selectedElement } = storeToRefs(
   useCanvasStore()
 );
 const canvasStore = useCanvasStore();
@@ -34,8 +34,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
         isLineThrough: false,
         isItalic: false,
         alignment: {
-          horizontal: alignment.horizontal.left,
-          vertical: alignment.vertical.top,
+          horizontal: ALIGNMENT.horizontal.left,
+          vertical: ALIGNMENT.vertical.top,
         },
       },
     },
@@ -161,7 +161,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       const addTextToCanvas = () => {
         elements.value.push(this.computeTextElementProps());
 
-        canvasStore.switchMode(modes.value.text);
+        canvasStore.switchMode(MODES_OPTIONS.value.text);
         this.redrawCanvas();
         this.removeTextInput();
       };
@@ -209,7 +209,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
       return {
         id: generateUniqueId(undefined, elements.value),
-        mode: modes.value.text,
+        mode: MODES_OPTIONS.value.text,
         isVisible: true,
         text: this.input.innerHTML,
         x: x,
@@ -276,29 +276,29 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.input.style.display = "flex";
 
         switch (this.customization.formatting.alignment.horizontal) {
-          case alignment.horizontal.left:
+          case ALIGNMENT.horizontal.left:
             this.input.style.justifyContent = "flex-start";
             break;
 
-          case alignment.horizontal.center:
+          case ALIGNMENT.horizontal.center:
             this.input.style.justifyContent = "center";
             break;
 
-          case alignment.horizontal.right:
+          case ALIGNMENT.horizontal.right:
             this.input.style.justifyContent = "flex-end";
             break;
         }
 
         switch (this.customization.formatting.alignment.vertical) {
-          case alignment.vertical.top:
+          case ALIGNMENT.vertical.top:
             this.input.style.alignItems = "flex-start";
             break;
 
-          case alignment.vertical.middle:
+          case ALIGNMENT.vertical.middle:
             this.input.style.alignItems = "center";
             break;
 
-          case alignment.vertical.bottom:
+          case ALIGNMENT.vertical.bottom:
             this.input.style.alignItems = "flex-end";
             break;
         }
@@ -309,7 +309,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
        */
       if (
         selectedElement.value &&
-        selectedElement.value.mode === modes.value.text
+        selectedElement.value.mode === MODES_OPTIONS.value.text
       ) {
         // font family
         selectedElement.value.fontFamily = this.customization.font;

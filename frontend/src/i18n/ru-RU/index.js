@@ -225,7 +225,7 @@ export default {
         brushSize: "Размер кисти",
         brushType: "Тип кисти",
       },
-      brushTypes: {
+      BRUSH_TYPES: {
         pen: "Ручка",
         pencil: "Карандаш",
       },

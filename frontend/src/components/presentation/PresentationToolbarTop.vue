@@ -10,7 +10,7 @@
       round
       size="12px"
       :class="isDrawingMode ? 'bg-grey-2' : ''"
-      @click="$emit('switchMode', modes.drawing)"
+      @click="$emit('switchMode', MODES_OPTIONS.drawing)"
     >
       <q-menu
         anchor="bottom left"
@@ -59,7 +59,7 @@
         >
           <q-select
             v-model="drawingState.customization.value.brushSize"
-            :options="brushSizeOptions"
+            :options="BRUSH_SIZE_OPTIONS"
             map-options
             emit-value
             borderless
@@ -85,7 +85,7 @@
         >
           <q-select
             v-model="drawingState.customization.value.selectedBrushType"
-            :options="brushTypes"
+            :options="BRUSH_TYPES"
             map-options
             emit-value
             :option-label="(option) => $t(option.label)"
@@ -115,7 +115,7 @@
       round
       size="12px"
       :class="isTextMode ? 'bg-grey-2' : ''"
-      @click="$emit('switchMode', modes.text)"
+      @click="$emit('switchMode', MODES_OPTIONS.text)"
     >
       <q-menu
         anchor="bottom left"
@@ -228,17 +228,14 @@
             color="black"
             :icon="
               textState.customization.value.formatting.alignment.horizontal ===
-              alignment.horizontal.left
+              ALIGNMENT.horizontal.left
                 ? 'format_align_left'
                 : textState.customization.value.formatting.alignment
-                    .horizontal === alignment.horizontal.right
+                    .horizontal === ALIGNMENT.horizontal.right
                 ? 'format_align_right'
                 : textState.customization.value.formatting.alignment
-                    .horizontal === alignment.horizontal.center
+                    .horizontal === ALIGNMENT.horizontal.center
                 ? 'format_align_center'
-                : textState.customization.value.formatting.alignment
-                    .horizontal === alignment.horizontal.justify
-                ? 'format_align_justify'
                 : ''
             "
           >
@@ -253,7 +250,7 @@
               <div class="column no-wrap">
                 <div class="row no-wrap">
                   <q-btn
-                    v-for="item in Object.keys(alignment.horizontal)"
+                    v-for="item in Object.keys(ALIGNMENT.horizontal)"
                     :key="item"
                     flat
                     size="10px"
@@ -266,11 +263,11 @@
                         : 'text-grey'
                     "
                     :icon="
-                      item === alignment.horizontal.left
+                      item === ALIGNMENT.horizontal.left
                         ? 'format_align_left'
-                        : item === alignment.horizontal.right
+                        : item === ALIGNMENT.horizontal.right
                         ? 'format_align_right'
-                        : item === alignment.horizontal.center
+                        : item === ALIGNMENT.horizontal.center
                         ? 'format_align_center'
                         : ''
                     "
@@ -284,7 +281,7 @@
 
                 <div class="row no-wrap q-mt-sm">
                   <q-btn
-                    v-for="item in Object.keys(alignment.vertical)"
+                    v-for="item in Object.keys(ALIGNMENT.vertical)"
                     :key="item"
                     flat
                     size="10px"
@@ -297,11 +294,11 @@
                         : 'text-grey'
                     "
                     :icon="
-                      item === alignment.vertical.top
+                      item === ALIGNMENT.vertical.top
                         ? 'vertical_align_top'
-                        : item === alignment.vertical.bottom
+                        : item === ALIGNMENT.vertical.bottom
                         ? 'vertical_align_bottom'
-                        : item === alignment.vertical.middle
+                        : item === ALIGNMENT.vertical.middle
                         ? 'align_vertical_center'
                         : ''
                     "
@@ -344,7 +341,7 @@
         >
           <q-select
             v-model="textState.customization.value.font"
-            :options="fontOptions"
+            :options="FONT_OPTIONS"
             emit-value
             borderless
             :label="$t('presentationEditor.text.options.font')"
@@ -369,7 +366,7 @@
         >
           <q-select
             v-model="textState.customization.value.fontSize"
-            :options="fontSizeOptions"
+            :options="FONT_SIZE_OPTIONS"
             emit-value
             borderless
             :label="$t('presentationEditor.text.options.fontSize')"
@@ -410,7 +407,7 @@
       round
       size="12px"
       @click="
-        $emit('switchMode', modes.media);
+        $emit('switchMode', MODES_OPTIONS.media);
         showSelectMediaDialog = true;
       "
     />
@@ -422,7 +419,7 @@
       text-color="dark"
       round
       size="12px"
-      @click="$emit('switchMode', modes.mediaEmojis)"
+      @click="$emit('switchMode', MODES_OPTIONS.mediaEmojis)"
     >
       <q-menu
         anchor="bottom left"
@@ -435,7 +432,7 @@
       >
         <div class="row q-gutter-sm">
           <q-btn
-            v-for="emoji in emojis"
+            v-for="emoji in EMOJIS"
             :key="emoji.name"
             unelevated
             round
@@ -460,7 +457,7 @@
       round
       disable
       size="12px"
-      @click="$emit('switchMode', modes.mediaShapes)"
+      @click="$emit('switchMode', MODES_OPTIONS.mediaShapes)"
     >
       <q-menu
         anchor="bottom left"
@@ -473,7 +470,7 @@
       >
         <div class="row q-gutter-sm">
           <q-btn
-            v-for="shape in shapes"
+            v-for="shape in SHAPES"
             :key="shape.name"
             unelevated
             round
@@ -540,8 +537,8 @@
 </template>
 
 <script setup>
-import { emojis } from "src/constants/assets/emojis";
-import { shapes } from "src/constants/assets/shapes";
+import { EMOJIS } from "src/constants/assets/emojis";
+import { SHAPES } from "src/constants/assets/shapes";
 import SelectMedia from "components/media/SelectMedia.vue";
 import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
@@ -549,11 +546,11 @@ import { useCanvasDrawingStore } from "stores/canvas/drawing";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { useCanvasStore } from "stores/canvas";
 import {
-  brushSizeOptions,
-  brushTypes,
-  fontOptions,
-  fontSizeOptions,
-  alignment,
+  BRUSH_SIZE_OPTIONS,
+  BRUSH_TYPES,
+  FONT_OPTIONS,
+  FONT_SIZE_OPTIONS,
+  ALIGNMENT,
 } from "src/constants/canvas/canvasVariables";
 
 /*
@@ -565,9 +562,8 @@ const drawingState = storeToRefs(drawingStore);
 const textStore = useCanvasTextStore();
 const textState = storeToRefs(textStore);
 
-const { mode, modes, selectedElement, selectedElementIndex } = storeToRefs(
-  useCanvasStore()
-);
+const { mode, MODES_OPTIONS, selectedElement, selectedElementIndex } =
+  storeToRefs(useCanvasStore());
 
 /*
  * emits
@@ -597,11 +593,11 @@ watch(
   () => {
     if (selectedElementIndex.value !== -1) {
       switch (selectedElementIndex.value.mode) {
-        case modes.value.text:
+        case MODES_OPTIONS.value.text:
           textStore.loadSelectedElementCustomization();
           break;
 
-        case modes.value.drawing:
+        case MODES_OPTIONS.value.drawing:
           drawingStore.loadSelectedElementCustomization();
           break;
       }

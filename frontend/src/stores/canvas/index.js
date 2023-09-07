@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { alignment } from "src/constants/canvas/canvasVariables";
+import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 
 export const useCanvasStore = defineStore("canvas", {
   state: () => ({
@@ -20,10 +20,10 @@ export const useCanvasStore = defineStore("canvas", {
     sensitivity: 0.05,
 
     /*
-     * elements & modes
+     * modes
      */
     mode: "text",
-    modes: {
+    MODES_OPTIONS: {
       drawing: "drawing",
       text: "text",
       textEditing: "text-editing",
@@ -31,6 +31,10 @@ export const useCanvasStore = defineStore("canvas", {
       mediaEmojis: "media-emojis",
       shapes: "media-shapes",
     },
+
+    /*
+     * elements
+     */
     elements: [],
 
     /*
@@ -72,7 +76,7 @@ export const useCanvasStore = defineStore("canvas", {
       clientX: null,
       clientY: null,
     },
-    resizeHandles: {
+    RESIZE_HANDLES_OPTIONS: {
       topLeft: "top-left",
       topRight: "top-right",
       bottomLeft: "bottom-left",
@@ -150,7 +154,7 @@ export const useCanvasStore = defineStore("canvas", {
           /*
            * drawing
            */
-          case this.modes.drawing:
+          case this.MODES_OPTIONS.drawing:
             const minX = Math.min(...element.points.map((point) => point.x));
             const maxX = Math.max(...element.points.map((point) => point.x));
             const minY = Math.min(...element.points.map((point) => point.y));
@@ -167,7 +171,7 @@ export const useCanvasStore = defineStore("canvas", {
             }
             break;
 
-          // case this.modes.drawing:
+          // case this.MODES_OPTIONS.drawing:
           //   angle = (element.rotationAngle * Math.PI) / 180;
           //   centerX = element.x + element.width / 2;
           //   centerY = element.y + element.height / 2;
@@ -201,7 +205,7 @@ export const useCanvasStore = defineStore("canvas", {
           /*
            * text
            */
-          case this.modes.text:
+          case this.MODES_OPTIONS.text:
             if (
               Math.round(this.mouse.x) >= Math.round(element.x) &&
               Math.round(this.mouse.x) <=
@@ -217,7 +221,7 @@ export const useCanvasStore = defineStore("canvas", {
             }
             break;
 
-          // case this.modes.text:
+          // case this.MODES_OPTIONS.text:
           // const angle = (element.rotationAngle * Math.PI) / 180;
           // const centerX =
           //   element.x + this.computeAdjustedSize(element.width) / 2;
@@ -252,7 +256,7 @@ export const useCanvasStore = defineStore("canvas", {
           /*
            * media
            */
-          case this.modes.media:
+          case this.MODES_OPTIONS.media:
             angle = (element.rotationAngle * Math.PI) / 180;
             centerX = element.x + element.width / 2;
             centerY = element.y + element.height / 2;
@@ -326,8 +330,8 @@ export const useCanvasStore = defineStore("canvas", {
 
         if (previousSelectedElementIndex === this.selectedElementIndex)
           switch (this.mode) {
-            case this.modes.text:
-              this.switchMode(this.modes.textEditing);
+            case this.MODES_OPTIONS.text:
+              this.switchMode(this.MODES_OPTIONS.textEditing);
               break;
           }
       }
@@ -357,418 +361,6 @@ export const useCanvasStore = defineStore("canvas", {
     },
 
     /*
-     * dragging
-     */
-    startDragging() {
-      this.isDragging = true;
-      this.dragStart.x = this.mouse.x;
-      this.dragStart.y = this.mouse.y;
-    },
-
-    stopDragging() {
-      this.isDragging = false;
-    },
-
-    dragElement() {
-      this.moveElement(this.mouse.x, this.mouse.y);
-    },
-
-    moveElement(newX, newY) {
-      let deltaX, deltaY;
-
-      switch (this.selectedElement.mode) {
-        case this.modes.drawing:
-          deltaX = newX - this.dragStart.x;
-          deltaY = newY - this.dragStart.y;
-          this.selectedElement.points.forEach((point) => {
-            point.x += deltaX;
-            point.y += deltaY;
-          });
-          break;
-
-        default:
-          this.selectedElement.x += newX - this.dragStart.x;
-          this.selectedElement.y += newY - this.dragStart.y;
-          break;
-      }
-
-      this.dragStart.x = newX;
-      this.dragStart.y = newY;
-
-      this.updateSelectedElement();
-      this.redrawCanvas();
-    },
-
-    /*
-     * resizing
-     */
-    getResizeHandle() {
-      if (
-        [this.modes.drawing, this.modes.text].includes(
-          this.selectedElement.mode
-        )
-      )
-        return null;
-
-      /*
-       * compute props
-       */
-      const borderWidth = this.computeAdjustedSize(
-        this.selectedElementBorder.borderWidth
-      );
-      const handleSize = borderWidth * 3;
-      const padding = this.computeAdjustedSize(
-        this.selectedElementBorder.padding
-      );
-
-      let width, height;
-      switch (this.selectedElement.mode) {
-        case this.modes.media:
-        case this.modes.mediaEmojis:
-          width = this.selectedElement.width;
-          height = this.selectedElement.height;
-          break;
-
-        default:
-          width = this.computeAdjustedSize(this.selectedElement.width);
-          height = this.computeAdjustedSize(this.selectedElement.height);
-          break;
-      }
-
-      /*
-       * find active handle
-       */
-      let activeHandle = null;
-
-      const centerX = this.selectedElement.x + width / 2;
-      const centerY = this.selectedElement.y + height / 2;
-      const angle = (this.selectedElement.rotationAngle * Math.PI) / 180;
-
-      Object.values(this.resizeHandles).forEach((handle) => {
-        const { minX, minY, maxX, maxY } = this.computeResizeHandlePosition(
-          handle,
-          this.selectedElement.x,
-          this.selectedElement.y,
-          width,
-          height,
-          handleSize,
-          padding
-        );
-
-        const rotatedMinX =
-          centerX +
-          Math.cos(angle) * (minX - centerX) -
-          Math.sin(angle) * (minY - centerY);
-        const rotatedMinY =
-          centerY +
-          Math.sin(angle) * (minX - centerX) +
-          Math.cos(angle) * (minY - centerY);
-        const rotatedMaxX =
-          centerX +
-          Math.cos(angle) * (maxX - centerX) -
-          Math.sin(angle) * (maxY - centerY);
-        const rotatedMaxY =
-          centerY +
-          Math.sin(angle) * (maxX - centerX) +
-          Math.cos(angle) * (maxY - centerY);
-
-        if (
-          this.mouse.x >= rotatedMinX - padding &&
-          this.mouse.x <= rotatedMaxX + padding &&
-          this.mouse.y >= rotatedMinY - padding &&
-          this.mouse.y <= rotatedMaxY + padding
-        ) {
-          activeHandle = handle;
-        }
-      });
-
-      return activeHandle;
-    },
-
-    startResizing() {
-      this.isResizing = true;
-      this.resizeStart = {
-        x: this.selectedElement.x,
-        y: this.selectedElement.y,
-        width: this.selectedElement.width,
-        height: this.selectedElement.height,
-        clientX: this.mouse.x,
-        clientY: this.mouse.y,
-      };
-    },
-
-    stopResizing() {
-      this.isResizing = false;
-      this.resizeHandle = null;
-    },
-
-    resizeElement() {
-      if (!this.isResizing) return;
-
-      const deltaX = this.mouse.x - this.resizeStart.clientX;
-      const deltaY = this.mouse.y - this.resizeStart.clientY;
-
-      const aspectRatio =
-        this.selectedElement.width / this.selectedElement.height;
-
-      const minWidth = this.computeAdjustedSize(50);
-      const minHeight = minWidth / aspectRatio;
-
-      switch (this.resizeHandle) {
-        /*
-         * top left
-         */
-        case this.resizeHandles.topLeft:
-          const newTopLeftWidth = Math.max(
-            minWidth,
-            this.resizeStart.width - deltaX
-          );
-          const newTopLeftHeight = Math.max(
-            minHeight,
-            newTopLeftWidth / aspectRatio
-          );
-
-          this.selectedElement.width = newTopLeftWidth;
-          this.selectedElement.height = newTopLeftHeight;
-
-          this.selectedElement.x =
-            this.resizeStart.x + (this.resizeStart.width - newTopLeftWidth);
-          this.selectedElement.y =
-            this.resizeStart.y + (this.resizeStart.height - newTopLeftHeight);
-
-          break;
-
-        /*
-         * top right
-         */
-        case this.resizeHandles.topRight:
-          const newTopRightWidth = Math.max(
-            minWidth,
-            this.resizeStart.width + deltaX
-          );
-          const newTopRightHeight = Math.max(
-            minHeight,
-            newTopRightWidth / aspectRatio
-          );
-
-          this.selectedElement.width = newTopRightWidth;
-          this.selectedElement.height = newTopRightHeight;
-
-          this.selectedElement.y =
-            this.resizeStart.y + (this.resizeStart.height - newTopRightHeight);
-
-          break;
-
-        /*
-         * bottom left
-         */
-        case this.resizeHandles.bottomLeft:
-          const newBottomLeftWidth = Math.max(
-            minWidth,
-            this.resizeStart.width - deltaX
-          );
-          const newBottomLeftHeight = Math.max(
-            minHeight,
-            newBottomLeftWidth / aspectRatio
-          );
-
-          this.selectedElement.width = newBottomLeftWidth;
-          this.selectedElement.height = newBottomLeftHeight;
-
-          this.selectedElement.x =
-            this.resizeStart.x + (this.resizeStart.width - newBottomLeftWidth);
-
-          break;
-
-        /*
-         * bottom right
-         */
-        case this.resizeHandles.bottomRight:
-          const newBottomRightWidth = Math.max(
-            minWidth,
-            this.resizeStart.width + deltaX
-          );
-          const newBottomRightHeight = Math.max(
-            minHeight,
-            newBottomRightWidth / aspectRatio
-          );
-
-          this.selectedElement.width = newBottomRightWidth;
-          this.selectedElement.height = newBottomRightHeight;
-
-          break;
-
-        /*
-         * center top
-         */
-        case this.resizeHandles.centerTop:
-          const newCenterTopHeight = Math.max(
-            minHeight,
-            this.resizeStart.height - deltaY
-          );
-          this.selectedElement.height = newCenterTopHeight;
-          this.selectedElement.y =
-            this.resizeStart.y + (this.resizeStart.height - newCenterTopHeight);
-
-          break;
-
-        /*
-         * center bottom
-         */
-        case this.resizeHandles.centerBottom:
-          const newCenterBottomHeight = Math.max(
-            minHeight,
-            this.resizeStart.height + deltaY
-          );
-          this.selectedElement.height = newCenterBottomHeight;
-
-          break;
-
-        /*
-         * center left
-         */
-        case this.resizeHandles.centerLeft:
-          const newCenterLeftWidth = Math.max(
-            minWidth,
-            this.resizeStart.width - deltaX
-          );
-
-          this.selectedElement.width = newCenterLeftWidth;
-          this.selectedElement.x =
-            this.resizeStart.x + (this.resizeStart.width - newCenterLeftWidth);
-
-          break;
-
-        /*
-         * center right
-         */
-        case this.resizeHandles.centerRight:
-          this.selectedElement.width = Math.max(
-            minWidth,
-            this.resizeStart.width + deltaX
-          );
-
-          break;
-      }
-
-      this.updateSelectedElement();
-      this.redrawCanvas();
-    },
-
-    /*
-     * rotating
-     */
-    getRotationHandle() {
-      /*
-       * compute props
-       */
-      const borderWidth = this.computeAdjustedSize(
-        this.selectedElementBorder.borderWidth
-      );
-      const padding = this.computeAdjustedSize(
-        this.selectedElementBorder.padding
-      );
-
-      let width, height;
-      switch (this.selectedElement.mode) {
-        case this.modes.media:
-        case this.modes.mediaEmojis:
-          width = this.selectedElement.width;
-          height = this.selectedElement.height;
-          break;
-
-        case this.modes.drawing:
-          const minX = Math.min(
-            ...this.selectedElement.points.map((point) => point.x)
-          );
-          const maxX = Math.max(
-            ...this.selectedElement.points.map((point) => point.x)
-          );
-          const minY = Math.min(
-            ...this.selectedElement.points.map((point) => point.y)
-          );
-          const maxY = Math.max(
-            ...this.selectedElement.points.map((point) => point.y)
-          );
-
-          width = maxX - minX;
-          height = maxY - minY;
-
-          this.selectedElement.x = minX;
-          this.selectedElement.y = minY;
-          break;
-
-        default:
-          width = this.computeAdjustedSize(this.selectedElement.width);
-          height = this.computeAdjustedSize(this.selectedElement.height);
-          break;
-      }
-
-      const rotationHandleWidth = borderWidth / 2;
-
-      /*
-       * compute position with rotation angle
-       */
-      const centerX = this.selectedElement.x + width / 2;
-      const centerY = this.selectedElement.y + height / 2;
-      const angle = (this.selectedElement.rotationAngle * Math.PI) / 180;
-
-      const handleOffsetX = -rotationHandleWidth / 2;
-      const handleOffsetY =
-        -height / 2 - this.selectedElementRotationHandle.height - padding;
-
-      const handleX =
-        centerX +
-        Math.cos(angle) * handleOffsetX -
-        Math.sin(angle) * handleOffsetY;
-      const handleY =
-        centerY +
-        Math.sin(angle) * handleOffsetX +
-        Math.cos(angle) * handleOffsetY;
-
-      /*
-       * check if hovered
-       */
-      return (
-        this.mouse.x >= handleX - padding &&
-        this.mouse.x <= handleX + rotationHandleWidth + padding &&
-        this.mouse.y >= handleY - padding &&
-        this.mouse.y <=
-          handleY + this.selectedElementRotationHandle.height + padding
-      );
-    },
-
-    startRotating() {
-      this.isRotating = true;
-    },
-
-    stopRotating() {
-      this.isRotating = false;
-      this.rotationHandle = null;
-    },
-
-    rotateElement() {
-      if (!this.isRotating || !this.selectedElement) return;
-
-      const centerX = this.selectedElement.x + this.selectedElement.width / 2;
-      const centerY = this.selectedElement.y + this.selectedElement.height / 2;
-      const deltaX = this.mouse.x - centerX;
-      const deltaY = this.mouse.y - centerY;
-
-      let newRotationAngle = 90 + (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
-
-      newRotationAngle = (newRotationAngle + 360) % 360;
-
-      const rotationChange =
-        newRotationAngle - this.selectedElement.rotationAngle;
-
-      this.selectedElement.rotationAngle += rotationChange;
-
-      this.updateSelectedElement();
-      this.redrawCanvas();
-    },
-
-    /*
      * canvas render
      */
     clearCanvas() {
@@ -795,7 +387,7 @@ export const useCanvasStore = defineStore("canvas", {
           /*
            * drawing
            */
-          case this.modes.drawing:
+          case this.MODES_OPTIONS.drawing:
             this.ctx.strokeStyle = element.color;
             this.ctx.lineWidth = element.brushSize;
 
@@ -826,7 +418,7 @@ export const useCanvasStore = defineStore("canvas", {
           /*
            * text
            */
-          case this.modes.text:
+          case this.MODES_OPTIONS.text:
             /*
              * compute props
              */
@@ -899,7 +491,7 @@ export const useCanvasStore = defineStore("canvas", {
               this.computeAdjustedSize(element.width);
 
               switch (element.textAlign) {
-                case alignment.horizontal.right:
+                case ALIGNMENT.horizontal.right:
                   x =
                     element.x +
                     width -
@@ -907,7 +499,7 @@ export const useCanvasStore = defineStore("canvas", {
                     this.computeAdjustedSize(padding / 2);
                   break;
 
-                case alignment.horizontal.center:
+                case ALIGNMENT.horizontal.center:
                   x = element.x + width / 2 - lineWidth / 2;
                   break;
               }
@@ -921,14 +513,14 @@ export const useCanvasStore = defineStore("canvas", {
                 index * adjustedFontSize * element.lineHeight;
 
               switch (element.verticalAlign) {
-                case alignment.vertical.bottom:
+                case ALIGNMENT.vertical.bottom:
                   y +=
                     height -
                     adjustedFontSize * element.lineHeight -
                     this.computeAdjustedSize(padding - 1) * 3;
                   break;
 
-                case alignment.vertical.middle:
+                case ALIGNMENT.vertical.middle:
                   y +=
                     height / 2 -
                     adjustedFontSize * element.lineHeight +
@@ -983,8 +575,8 @@ export const useCanvasStore = defineStore("canvas", {
           /*
            * media
            */
-          case this.modes.media:
-          case this.modes.mediaEmojis:
+          case this.MODES_OPTIONS.media:
+          case this.MODES_OPTIONS.mediaEmojis:
             this.ctx.save();
             this.ctx.translate(
               element.x + element.width / 2,
@@ -1024,7 +616,7 @@ export const useCanvasStore = defineStore("canvas", {
           /*
            * drawing
            */
-          case this.modes.drawing:
+          case this.MODES_OPTIONS.drawing:
             const minX = Math.min(
               ...this.selectedElement.points.map((point) => point.x)
             );
@@ -1044,7 +636,7 @@ export const useCanvasStore = defineStore("canvas", {
           /*
            * text
            */
-          case this.modes.text:
+          case this.MODES_OPTIONS.text:
             this.drawBorder(
               this.selectedElement.x,
               this.selectedElement.y,
@@ -1058,8 +650,8 @@ export const useCanvasStore = defineStore("canvas", {
           /*
            * media
            */
-          case this.modes.media:
-          case this.modes.mediaEmojis:
+          case this.MODES_OPTIONS.media:
+          case this.MODES_OPTIONS.mediaEmojis:
             this.drawBorder(
               this.selectedElement.x,
               this.selectedElement.y,
@@ -1082,11 +674,11 @@ export const useCanvasStore = defineStore("canvas", {
       y,
       width,
       height,
-      resizeHandles = Object.values(this.resizeHandles),
+      RESIZE_HANDLES_OPTIONS = Object.values(this.RESIZE_HANDLES_OPTIONS),
       drawRotationHandle = true
     ) {
       const padding =
-        this.selectedElement.mode === this.modes.text
+        this.selectedElement.mode === this.MODES_OPTIONS.text
           ? this.computeAdjustedSize(this.selectedElementBorder.padding)
           : 0;
 
@@ -1105,10 +697,10 @@ export const useCanvasStore = defineStore("canvas", {
        * resize handles
        */
       this.ctx.fillStyle = this.selectedElementBorder.borderColor;
-      if (resizeHandles.length) {
+      if (RESIZE_HANDLES_OPTIONS.length) {
         const handleSize = borderWidth * 3;
 
-        resizeHandles.forEach((handle) => {
+        RESIZE_HANDLES_OPTIONS.forEach((handle) => {
           const { minX, minY, maxX, maxY } = this.computeResizeHandlePosition(
             handle,
             x,
@@ -1167,7 +759,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * top left
          */
-        case this.resizeHandles.topLeft:
+        case this.RESIZE_HANDLES_OPTIONS.topLeft:
           minX = x - padding - handleSize / 2;
           minY = y - handleSize / 2;
           break;
@@ -1175,7 +767,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * top right
          */
-        case this.resizeHandles.topRight:
+        case this.RESIZE_HANDLES_OPTIONS.topRight:
           minX = x + width - handleSize / 2;
           minY = y - handleSize / 2;
           break;
@@ -1183,7 +775,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * bottom left
          */
-        case this.resizeHandles.bottomLeft:
+        case this.RESIZE_HANDLES_OPTIONS.bottomLeft:
           minX = x - padding - handleSize / 2;
           minY = y + height - handleSize / 2;
           break;
@@ -1191,7 +783,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * bottom right
          */
-        case this.resizeHandles.bottomRight:
+        case this.RESIZE_HANDLES_OPTIONS.bottomRight:
           minX = x + width - handleSize / 2;
           minY = y + height - handleSize / 2;
           break;
@@ -1199,7 +791,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * center top
          */
-        case this.resizeHandles.centerTop:
+        case this.RESIZE_HANDLES_OPTIONS.centerTop:
           minX = x + width / 2 - handleSize / 2 - handleSize / 3;
           minY = y - handleSize / 2;
           break;
@@ -1207,7 +799,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * center bottom
          */
-        case this.resizeHandles.centerBottom:
+        case this.RESIZE_HANDLES_OPTIONS.centerBottom:
           minX = x + width / 2 - handleSize / 2 - handleSize / 3;
           minY = y + height - handleSize / 2;
           break;
@@ -1215,7 +807,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * center left
          */
-        case this.resizeHandles.centerLeft:
+        case this.RESIZE_HANDLES_OPTIONS.centerLeft:
           minX = x - padding - handleSize / 2;
           minY = y + height / 2 - handleSize / 2;
           break;
@@ -1223,7 +815,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * center right
          */
-        case this.resizeHandles.centerRight:
+        case this.RESIZE_HANDLES_OPTIONS.centerRight:
           minX = x + width - handleSize / 2;
           minY = y + height / 2 - handleSize / 2;
           break;

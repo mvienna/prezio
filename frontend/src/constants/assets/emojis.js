@@ -1,4 +1,4 @@
-export const emojis = [
+export const EMOJIS = [
   { name: "Winking", src: "/assets/icons/emojis/Winking.png" },
   { name: "Partying", src: "/assets/icons/emojis/Partying.png" },
   { name: "Emotional", src: "/assets/icons/emojis/Emotional.png" },

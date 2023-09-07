@@ -1,4 +1,4 @@
-export const brushSizeOptions = [
+export const BRUSH_SIZE_OPTIONS = [
   { value: 1, label: "1px" },
   { value: 2, label: "2px" },
   { value: 3, label: "3px" },
@@ -9,15 +9,15 @@ export const brushSizeOptions = [
   { value: 24, label: "24px" },
 ];
 
-export const brushTypes = [
-  { label: "presentationEditor.drawing.brushTypes.pen", value: "pen" },
+export const BRUSH_TYPES = [
+  { label: "presentationEditor.drawing.BRUSH_TYPES.pen", value: "pen" },
   {
-    label: "presentationEditor.drawing.brushTypes.pencil",
+    label: "presentationEditor.drawing.BRUSH_TYPES.pencil",
     value: "pencil",
   },
 ];
 
-export const fontOptions = [
+export const FONT_OPTIONS = [
   "Arial",
   "Helvetica",
   "Times New Roman",
@@ -35,7 +35,7 @@ export const fontOptions = [
   "Roboto",
 ];
 
-export const fontSizeOptions = [
+export const FONT_SIZE_OPTIONS = [
   "8px",
   "10px",
   "11px",
@@ -53,7 +53,7 @@ export const fontSizeOptions = [
   "48px",
 ];
 
-export const alignment = {
+export const ALIGNMENT = {
   horizontal: {
     left: "left",
     center: "center",

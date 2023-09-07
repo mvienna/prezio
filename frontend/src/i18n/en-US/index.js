@@ -216,7 +216,7 @@ export default {
         brushSize: "Brush Size",
         brushType: "Brush Type",
       },
-      brushTypes: {
+      BRUSH_TYPES: {
         pen: "Pen",
         pencil: "Pencil",
       },

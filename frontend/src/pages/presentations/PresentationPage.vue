@@ -2,9 +2,11 @@
   <q-page style="">
     <!-- toolbar -->
     <PresentationToolbarTop
-      :is-drawing-mode="mode === modes.drawing"
-      :is-text-mode="mode === modes.text"
-      :is-media-mode="[modes.media, modes.mediaEmojis].includes(mode)"
+      :is-drawing-mode="mode === MODES_OPTIONS.drawing"
+      :is-text-mode="mode === MODES_OPTIONS.text"
+      :is-media-mode="
+        [MODES_OPTIONS.media, MODES_OPTIONS.mediaEmojis].includes(mode)
+      "
       @switch-mode="canvasStore.switchMode($event)"
       @deselect="selectedElement ? canvasStore.deselectElement() : ''"
       @delete="selectedElement ? canvasStore.deleteElement() : ''"
@@ -44,6 +46,23 @@ import { useCanvasTextStore } from "stores/canvas/text";
 import { useCanvasMediaStore } from "stores/canvas/media";
 import PresentationToolbarTop from "components/presentation/PresentationToolbarTop.vue";
 import PresentationToolbarBottom from "components/presentation/PresentationToolbarBottom.vue";
+import {
+  dragElement,
+  startDragging,
+  stopDragging,
+} from "src/stores/canvas/helpers/dragging";
+import {
+  getResizeHandle,
+  resizeElement,
+  startResizing,
+  stopResizing,
+} from "src/stores/canvas/helpers/resizing";
+import {
+  getRotationHandle,
+  rotateElement,
+  startRotating,
+  stopRotating,
+} from "src/stores/canvas/helpers/rotating";
 
 /*
  * variables
@@ -63,7 +82,7 @@ const {
 
   // mode
   mode,
-  modes,
+  MODES_OPTIONS,
 
   // select
   selectedElement,
@@ -74,7 +93,7 @@ const {
   // resize
   isResizing,
   resizeHandle,
-  resizeHandles,
+  RESIZE_HANDLES_OPTIONS,
 
   // rotation
   isRotating,
@@ -127,13 +146,13 @@ const handleKeyDownEvent = (event) => {
     }
 
     switch (selectedElement.value?.mode) {
-      case modes.value.text:
+      case MODES_OPTIONS.value.text:
         textStore.shortcuts(event);
     }
   }
 
   switch (mode.value) {
-    case modes.value.text:
+    case MODES_OPTIONS.value.text:
       // turn off adding new text
       if (event.key === "Escape") {
         event.preventDefault();
@@ -184,24 +203,24 @@ const isElementHovered = ref(false);
 const canvasCursorClass = computed(() => {
   let resizeCursor;
   switch (resizeHandle.value) {
-    case resizeHandles.value.topLeft:
+    case RESIZE_HANDLES_OPTIONS.value.topLeft:
       resizeCursor = "cursor-nw-resize";
       break;
-    case resizeHandles.value.topRight:
+    case RESIZE_HANDLES_OPTIONS.value.topRight:
       resizeCursor = "cursor-ne-resize";
       break;
-    case resizeHandles.value.bottomLeft:
+    case RESIZE_HANDLES_OPTIONS.value.bottomLeft:
       resizeCursor = "cursor-sw-resize";
       break;
-    case resizeHandles.value.bottomRight:
+    case RESIZE_HANDLES_OPTIONS.value.bottomRight:
       resizeCursor = "cursor-se-resize";
       break;
-    case resizeHandles.value.centerTop:
-    case resizeHandles.value.centerBottom:
+    case RESIZE_HANDLES_OPTIONS.value.centerTop:
+    case RESIZE_HANDLES_OPTIONS.value.centerBottom:
       resizeCursor = "cursor-row-resize";
       break;
-    case resizeHandles.value.centerLeft:
-    case resizeHandles.value.centerRight:
+    case RESIZE_HANDLES_OPTIONS.value.centerLeft:
+    case RESIZE_HANDLES_OPTIONS.value.centerRight:
       resizeCursor = "cursor-col-resize";
       break;
   }
@@ -231,19 +250,19 @@ const handleCanvasMouseDown = () => {
   if (selectedElement.value) {
     // start resizing
     if (resizeHandle.value) {
-      canvasStore.startResizing();
+      startResizing();
       return;
     }
 
     // start rotating
     if (rotationHandle.value) {
-      canvasStore.startRotating();
+      startRotating();
       return;
     }
 
     // start dragging
     if (isElementHovered.value) {
-      canvasStore.startDragging();
+      startDragging();
       return;
     }
   }
@@ -252,7 +271,7 @@ const handleCanvasMouseDown = () => {
    * start drawing
    */
   switch (mode.value) {
-    case modes.value.drawing:
+    case MODES_OPTIONS.value.drawing:
       if (!isElementHovered.value) {
         drawingStore.startDrawing();
       }
@@ -280,23 +299,23 @@ const handleCanvasMouseMove = (event) => {
   if (selectedElement.value) {
     // resizing
     if (isResizing.value) {
-      canvasStore.resizeElement();
+      resizeElement();
       return;
     } else {
-      resizeHandle.value = canvasStore.getResizeHandle();
+      resizeHandle.value = getResizeHandle();
     }
 
     // rotation
     if (isRotating.value) {
-      canvasStore.rotateElement();
+      rotateElement();
       return;
     } else {
-      rotationHandle.value = canvasStore.getRotationHandle();
+      rotationHandle.value = getRotationHandle();
     }
 
     // dragging
     if (isDragging.value) {
-      canvasStore.dragElement();
+      dragElement();
       isJustDragged.value = true;
       return;
     }
@@ -306,7 +325,7 @@ const handleCanvasMouseMove = (event) => {
    * drawing
    */
   switch (mode.value) {
-    case modes.value.drawing:
+    case MODES_OPTIONS.value.drawing:
       if (drawingState.isDrawing.value) {
         drawingStore.draw();
       }
@@ -323,19 +342,19 @@ const handleCanvasMouseUp = () => {
   if (selectedElement.value) {
     // stop resizing
     if (isResizing.value) {
-      canvasStore.stopResizing();
+      stopResizing();
       return;
     }
 
     // stop rotating
     if (isRotating.value) {
-      canvasStore.stopRotating();
+      stopRotating();
       return;
     }
 
     // stop dragging
     if (isDragging.value) {
-      canvasStore.stopDragging();
+      stopDragging();
       return;
     }
   }
@@ -344,7 +363,7 @@ const handleCanvasMouseUp = () => {
    * stop drawing
    */
   switch (mode.value) {
-    case modes.value.drawing:
+    case MODES_OPTIONS.value.drawing:
       if (drawingState.isDrawing.value) {
         drawingStore.stopDrawing();
         return;
@@ -358,7 +377,7 @@ const handleCanvasClick = (event) => {
     /*
      * text
      */
-    case modes.value.text:
+    case MODES_OPTIONS.value.text:
       if (!selectedElement.value && textState.isNewText.value) {
         textStore.addNewText(event);
         return;
@@ -369,7 +388,7 @@ const handleCanvasClick = (event) => {
       if (selectedElement.value) {
         if (!isJustDragged.value) {
           canvasStore.doubleSelectElement();
-          if (mode.value === modes.value.textEditing) {
+          if (mode.value === MODES_OPTIONS.value.textEditing) {
             textStore.editText();
             return;
           }
