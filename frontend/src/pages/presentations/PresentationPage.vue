@@ -50,19 +50,26 @@ import {
   dragElement,
   startDragging,
   stopDragging,
-} from "src/stores/canvas/helpers/dragging";
+} from "stores/canvas/helpers/drag";
 import {
   getResizeHandle,
   resizeElement,
   startResizing,
   stopResizing,
-} from "src/stores/canvas/helpers/resizing";
+} from "stores/canvas/helpers/resize";
 import {
   getRotationHandle,
   rotateElement,
   startRotating,
   stopRotating,
-} from "src/stores/canvas/helpers/rotating";
+} from "stores/canvas/helpers/rotate";
+import {
+  deleteElement,
+  deselectElement,
+  doubleSelectElement,
+  getHoveredElement,
+  selectElement,
+} from "stores/canvas/helpers/select";
 
 /*
  * variables
@@ -136,13 +143,13 @@ const handleKeyDownEvent = (event) => {
     // delete selected element
     if (event.key === "Delete" || event.key === "Backspace") {
       event.preventDefault();
-      canvasStore.deleteElement();
+      deleteElement();
     }
 
     // deselect
     if (event.key === "Escape" || event.key === "Enter") {
       event.preventDefault();
-      canvasStore.deselectElement();
+      deselectElement();
     }
 
     switch (selectedElement.value?.mode) {
@@ -288,7 +295,7 @@ const handleCanvasMouseMove = (event) => {
   /*
    * on hover on an element, display ability to select it
    */
-  const { hoveredElement } = canvasStore.getHoveredElement();
+  const { hoveredElement } = getHoveredElement();
   isElementHovered.value = !!hoveredElement;
 
   /*
@@ -391,14 +398,14 @@ const handleCanvasClick = (event) => {
       // skip if just dragged
       if (selectedElement.value) {
         if (!isJustDragged.value) {
-          canvasStore.doubleSelectElement();
+          doubleSelectElement();
           if (mode.value === MODES_OPTIONS.value.textEditing) {
             textStore.editText();
             return;
           }
         }
       } else {
-        canvasStore.selectElement();
+        selectElement();
       }
       break;
 
@@ -406,7 +413,7 @@ const handleCanvasClick = (event) => {
      * other elements
      */
     default:
-      canvasStore.selectElement();
+      selectElement();
   }
 };
 

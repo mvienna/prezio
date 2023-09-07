@@ -29,10 +29,7 @@
           />
 
           <!-- layer name -->
-          <span
-            class="text-semibold q-pl-md"
-            @click="canvasStore.selectElement(element)"
-          >
+          <span class="text-semibold q-pl-md" @click="selectElement(element)">
             {{
               $t(`presentationLayout.rightDrawer.layers.names.${element.mode}`)
             }}
@@ -47,7 +44,7 @@
             round
             color="red"
             size="10px"
-            @click="canvasStore.deleteElement(element)"
+            @click="deleteElement(element)"
           />
         </q-card-section>
       </q-card>
@@ -61,6 +58,7 @@ import { useCanvasStore } from "stores/canvas";
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import draggable from "vuedraggable/src/vuedraggable";
+import { deleteElement, selectElement } from "stores/canvas/helpers/select";
 
 /*
  * variables
@@ -97,7 +95,7 @@ const handleLayersReorder = async () => {
   handleEndDragging();
 
   // re-select element after updating elements (otherwise index might be lost)
-  canvasStore.selectElement(selectedElement.value);
+  selectElement(selectedElement.value);
 
   // redraw canvas with updated layers
   canvasStore.redrawCanvas();

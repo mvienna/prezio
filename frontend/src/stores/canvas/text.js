@@ -2,6 +2,7 @@ import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
+import { updateSelectedElement } from "stores/canvas/helpers/select";
 
 const { MODES_OPTIONS, mouse, elements, canvas, selectedElement } = storeToRefs(
   useCanvasStore()
@@ -125,7 +126,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
        * remove text from canvas
        */
       selectedElement.value.isVisible = false;
-      canvasStore.updateSelectedElement();
+      updateSelectedElement();
       this.redrawCanvas();
 
       /*
@@ -343,7 +344,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         selectedElement.value.verticalAlign =
           this.customization.formatting.alignment.vertical;
 
-        canvasStore.updateSelectedElement();
+        updateSelectedElement();
         this.redrawCanvas();
       }
     },

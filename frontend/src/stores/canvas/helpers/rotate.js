@@ -1,5 +1,6 @@
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
+import { updateSelectedElement } from "stores/canvas/helpers/select";
 
 const canvasStore = useCanvasStore();
 const {
@@ -125,6 +126,6 @@ export const rotateElement = () => {
 
   selectedElement.value.rotationAngle += rotationChange;
 
-  canvasStore.updateSelectedElement();
+  updateSelectedElement();
   canvasStore.redrawCanvas();
 };

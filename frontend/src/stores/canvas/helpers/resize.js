@@ -1,5 +1,6 @@
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
+import { updateSelectedElement } from "stores/canvas/helpers/select";
 
 const canvasStore = useCanvasStore();
 const {
@@ -274,6 +275,6 @@ export const resizeElement = () => {
       break;
   }
 
-  canvasStore.updateSelectedElement();
+  updateSelectedElement();
   canvasStore.redrawCanvas();
 };

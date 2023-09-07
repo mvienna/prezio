@@ -1,5 +1,6 @@
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
+import { updateSelectedElement } from "stores/canvas/helpers/select";
 
 const canvasStore = useCanvasStore();
 const { isDragging, dragStart, mouse, selectedElement, MODES_OPTIONS } =
@@ -41,6 +42,6 @@ export const moveElement = (newX, newY) => {
   dragStart.value.x = newX;
   dragStart.value.y = newY;
 
-  canvasStore.updateSelectedElement();
+  updateSelectedElement();
   canvasStore.redrawCanvas();
 };

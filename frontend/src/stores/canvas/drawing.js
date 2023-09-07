@@ -1,6 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
+import { updateSelectedElement } from "stores/canvas/helpers/select";
 
 const { ctx, elements, mouse, MODES_OPTIONS, selectedElement } = storeToRefs(
   useCanvasStore()
@@ -165,7 +166,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
         selectedElement.value.brushSize = this.customization.brushSize;
         selectedElement.value.brushType = this.customization.selectedBrushType;
 
-        canvasStore.updateSelectedElement();
+        updateSelectedElement();
         this.redrawCanvas();
       }
     },
