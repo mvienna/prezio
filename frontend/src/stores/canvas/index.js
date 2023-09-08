@@ -157,7 +157,9 @@ export const useCanvasStore = defineStore("canvas", {
     redrawCanvas() {
       this.clearCanvas();
 
-      this.elements.forEach((element) => {
+      const reversedElements = [...this.elements].reverse();
+
+      reversedElements.forEach((element) => {
         if (element.isVisible === false) return;
 
         this.ctx.save();

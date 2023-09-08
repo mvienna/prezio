@@ -99,7 +99,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
           rotationAngle: 0,
         };
 
-        elements.value.push(this.currentLine);
+        elements.value.unshift(this.currentLine);
       }
 
       this.currentLine.points.push({ x, y });

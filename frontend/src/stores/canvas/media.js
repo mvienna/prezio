@@ -32,7 +32,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           rotationAngle: 0,
         };
 
-        elements.value.push(imageData);
+        elements.value.unshift(imageData);
         ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);
       };
 

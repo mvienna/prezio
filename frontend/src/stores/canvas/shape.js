@@ -49,7 +49,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         lineWidth: this.customization.lineWidth,
       };
 
-      elements.value.push(shape);
+      elements.value.unshift(shape);
       canvasStore.redrawCanvas();
     },
 

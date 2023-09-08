@@ -97,7 +97,9 @@ export const useCanvasTextStore = defineStore("canvasText", {
       const clickedY = mouse.value.y;
 
       const addTextToCanvas = () => {
-        elements.value.push(this.computeTextElementProps(clickedX, clickedY));
+        elements.value.unshift(
+          this.computeTextElementProps(clickedX, clickedY)
+        );
 
         this.isNewText = false;
 
