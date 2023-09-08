@@ -734,6 +734,8 @@ export const useCanvasStore = defineStore("canvas", {
         );
         this.ctx.fill();
       }
+
+      this.ctx.beginPath();
     },
 
     computeResizeHandlePosition(
