@@ -18,9 +18,17 @@
         size="12px"
         unelevated
         @click="$emit('zoomOut')"
-      />
+      >
+        <q-tooltip>
+          {{ $t("presentationEditor.toolbar.zoom.in") }}
+        </q-tooltip>
+      </q-btn>
 
       <q-btn :label="`${Math.round(scale * 100)}%`" unelevated>
+        <q-tooltip>
+          {{ $t("presentationEditor.toolbar.zoom.select") }}
+        </q-tooltip>
+
         <q-menu
           anchor="top middle"
           self="bottom middle"
@@ -47,7 +55,11 @@
         size="12px"
         unelevated
         @click="$emit('zoomIn')"
-      />
+      >
+        <q-tooltip>
+          {{ $t("presentationEditor.toolbar.zoom.out") }}
+        </q-tooltip>
+      </q-btn>
     </div>
   </div>
 </template>

@@ -12,6 +12,10 @@
       :class="isDrawingMode ? 'bg-grey-2' : ''"
       @click="$emit('switchMode', MODES_OPTIONS.drawing)"
     >
+      <q-tooltip>
+        {{ $t("presentationEditor.toolbar.drawing.title") }}
+      </q-tooltip>
+
       <q-menu
         anchor="bottom left"
         self="top left"
@@ -117,6 +121,10 @@
       :class="isTextMode ? 'bg-grey-2' : ''"
       @click="$emit('switchMode', MODES_OPTIONS.text)"
     >
+      <q-tooltip>
+        {{ $t("presentationEditor.toolbar.text.title") }}
+      </q-tooltip>
+
       <q-menu
         anchor="bottom left"
         self="top left"
@@ -149,7 +157,11 @@
                 !textState.customization.value.formatting.isBold;
               $emit('applyFormatting');
             "
-          />
+          >
+            <q-tooltip class="text-bold">
+              {{ $t("presentationEditor.toolbar.text.formatting.bold") }}
+            </q-tooltip>
+          </q-btn>
 
           <!-- underline -->
           <q-btn
@@ -172,7 +184,11 @@
                 !textState.customization.value.formatting.isUnderline;
               $emit('applyFormatting');
             "
-          />
+          >
+            <q-tooltip style="text-decoration: underline">
+              {{ $t("presentationEditor.toolbar.text.formatting.underline") }}
+            </q-tooltip>
+          </q-btn>
 
           <!-- strike-through -->
           <q-btn
@@ -195,7 +211,13 @@
                 !textState.customization.value.formatting.isLineThrough;
               $emit('applyFormatting');
             "
-          />
+          >
+            <q-tooltip style="text-decoration: line-through">
+              {{
+                $t("presentationEditor.toolbar.text.formatting.strikeThrough")
+              }}
+            </q-tooltip>
+          </q-btn>
 
           <!-- italic -->
           <q-btn
@@ -218,7 +240,11 @@
                 !textState.customization.value.formatting.isItalic;
               $emit('applyFormatting');
             "
-          />
+          >
+            <q-tooltip class="text-italic">
+              {{ $t("presentationEditor.toolbar.text.formatting.italic") }}
+            </q-tooltip>
+          </q-btn>
 
           <!-- alignment -->
           <q-btn
@@ -239,6 +265,10 @@
                 : ''
             "
           >
+            <q-tooltip>
+              {{ $t("presentationEditor.toolbar.text.formatting.alignment") }}
+            </q-tooltip>
+
             <q-menu
               anchor="bottom right"
               self="top right"
@@ -394,7 +424,11 @@
             class="full-width"
             v-close-popup
             @click="textState.isNewText.value = !textState.isNewText.value"
-          />
+          >
+            <q-tooltip>
+              {{ $t("presentationEditor.toolbar.text.newText") }}
+            </q-tooltip>
+          </q-btn>
         </q-item>
       </q-menu>
     </q-btn>
@@ -410,7 +444,11 @@
         $emit('switchMode', MODES_OPTIONS.media);
         showSelectMediaDialog = true;
       "
-    />
+    >
+      <q-tooltip>
+        {{ $t("presentationEditor.toolbar.media.title") }}
+      </q-tooltip>
+    </q-btn>
 
     <!-- emoji -->
     <q-btn
@@ -421,6 +459,10 @@
       size="12px"
       @click="$emit('switchMode', MODES_OPTIONS.mediaEmoji)"
     >
+      <q-tooltip>
+        {{ $t("presentationEditor.toolbar.emoji.title") }}
+      </q-tooltip>
+
       <q-menu
         anchor="bottom left"
         self="top left"
@@ -458,6 +500,10 @@
       size="12px"
       @click="$emit('switchMode', MODES_OPTIONS.shape)"
     >
+      <q-tooltip>
+        {{ $t("presentationEditor.toolbar.shape.title") }}
+      </q-tooltip>
+
       <q-menu
         anchor="bottom left"
         self="top left"

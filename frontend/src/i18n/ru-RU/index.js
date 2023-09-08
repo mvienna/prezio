@@ -206,6 +206,15 @@ export default {
       layers: {
         layer: {
           title: "Слой",
+          visibility: {
+            on: "Скрыть",
+            off: "Показать",
+          },
+          lock: {
+            on: "Заблокировать",
+            off: "Разблокировать",
+          },
+          delete: "Удалить",
         },
         names: {
           drawing: "Линия",
@@ -246,6 +255,37 @@ export default {
         color: "Цвет",
         fill: "Заливка",
         lineWidth: "Размер",
+      },
+    },
+
+    toolbar: {
+      drawing: {
+        title: "Рисование",
+      },
+      text: {
+        title: "Текст",
+        formatting: {
+          bold: "Жирный шрифт",
+          italic: "Курсив",
+          underline: "Подчеркивание",
+          strikeThrough: "Зачеркивание",
+          alignment: "Выравнивание",
+        },
+        newText: "Добавьте новый текст на слайд",
+      },
+      media: {
+        title: "Фотографии",
+      },
+      emoji: {
+        title: "Эмодзи",
+      },
+      shape: {
+        title: "Формы",
+      },
+      zoom: {
+        in: "Увеличить",
+        out: "Уменьшить",
+        select: "Выбрать масштабирование",
       },
     },
   },

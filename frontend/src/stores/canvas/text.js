@@ -349,7 +349,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       this.customization.lineHeight = selectedElement.value.lineHeight;
 
       this.customization.formatting.isBold =
-        selectedElement.value.fontWeight === "bald";
+        selectedElement.value.fontWeight === "bold";
       this.customization.formatting.isUnderline =
         selectedElement.value.textDecoration.includes("underline");
       this.customization.formatting.isLineThrough =

@@ -206,6 +206,15 @@ export default {
       layers: {
         layer: {
           title: "Layer",
+          visibility: {
+            on: "Hide",
+            off: "Show",
+          },
+          lock: {
+            on: "Lock",
+            off: "Unlock",
+          },
+          delete: "Remove",
         },
         names: {
           drawing: "Line",
@@ -246,6 +255,37 @@ export default {
         color: "Color",
         fill: "Fill",
         lineWidth: "Line Width",
+      },
+    },
+
+    toolbar: {
+      drawing: {
+        title: "Drawing",
+      },
+      text: {
+        title: "Text",
+        formatting: {
+          bold: "Bold",
+          italic: "Italic",
+          underline: "Underline",
+          strikeThrough: "Strike-Through",
+          alignment: "Alignment",
+        },
+        newText: "Add new text on a slide",
+      },
+      media: {
+        title: "Фотографии",
+      },
+      emoji: {
+        title: "Эмодзи",
+      },
+      shape: {
+        title: "Формы",
+      },
+      zoom: {
+        in: "Zoom In",
+        out: "Zoom Out",
+        select: "Select Zoom",
       },
     },
   },

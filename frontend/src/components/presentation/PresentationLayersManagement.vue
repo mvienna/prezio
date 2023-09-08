@@ -55,7 +55,17 @@
                 element.isVisible = !element.isVisible;
                 canvasStore.redrawCanvas();
               "
-            />
+            >
+              <q-tooltip>
+                {{
+                  $t(
+                    `presentationLayout.rightDrawer.layers.layer.visibility.${
+                      element.isVisible ? "on" : "off"
+                    }`
+                  )
+                }}
+              </q-tooltip>
+            </q-btn>
 
             <!-- lock button -->
             <q-btn
@@ -65,7 +75,17 @@
               color="grey"
               size="10px"
               @click="element.isLocked = !element.isLocked"
-            />
+            >
+              <q-tooltip>
+                {{
+                  $t(
+                    `presentationLayout.rightDrawer.layers.layer.lock.${
+                      element.isLocked ? "off" : "on"
+                    }`
+                  )
+                }}
+              </q-tooltip>
+            </q-btn>
 
             <!-- delete button -->
             <q-btn
@@ -75,7 +95,11 @@
               color="red"
               size="10px"
               @click="deleteElement(element)"
-            />
+            >
+              <q-tooltip>
+                {{ $t("presentationLayout.rightDrawer.layers.layer.delete") }}
+              </q-tooltip>
+            </q-btn>
           </q-card-section>
         </q-card>
       </template>
