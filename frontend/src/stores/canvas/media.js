@@ -24,6 +24,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           id: generateUniqueId(undefined, elements.value),
           mode: MODES_OPTIONS.value.media,
           isVisible: true,
+          isLocked: false,
           image,
           x,
           y,

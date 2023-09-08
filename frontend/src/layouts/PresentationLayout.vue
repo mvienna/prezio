@@ -171,7 +171,7 @@
       show-if-above
       side="right"
       class="bg-white"
-      :width="300"
+      :width="320"
     >
       <q-tabs
         v-model="rightDrawerTab"

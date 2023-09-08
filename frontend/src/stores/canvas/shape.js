@@ -38,6 +38,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         id: generateUniqueId(undefined, elements.value),
         mode: MODES_OPTIONS.value.shape,
         isVisible: true,
+        isLocked: false,
         type: type,
         x,
         y,

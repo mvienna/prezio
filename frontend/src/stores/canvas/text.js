@@ -218,6 +218,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         id: generateUniqueId(undefined, elements.value),
         mode: MODES_OPTIONS.value.text,
         isVisible: true,
+        isLocked: false,
         text: this.input.innerHTML,
         x: x,
         y: y,

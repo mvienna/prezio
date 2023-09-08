@@ -92,6 +92,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
           id: generateUniqueId(undefined, elements.value),
           mode: MODES_OPTIONS.value.drawing,
           isVisible: true,
+          isLocked: false,
           color: this.eraserMode ? "white" : this.customization.color,
           brushSize: this.customization.brushSize,
           brushType: this.customization.selectedBrushType,

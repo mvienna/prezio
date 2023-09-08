@@ -17,144 +17,147 @@ export const getHoveredElement = () => {
 
   let angle, centerX, centerY, rotatedMouseX, rotatedMouseY;
 
-  elements.value.map((element, index) => {
-    switch (element.mode) {
-      /*
-       * drawing
-       */
-      case MODES_OPTIONS.value.drawing:
-        const minX = Math.min(...element.points.map((point) => point.x));
-        const maxX = Math.max(...element.points.map((point) => point.x));
-        const minY = Math.min(...element.points.map((point) => point.y));
-        const maxY = Math.max(...element.points.map((point) => point.y));
+  elements.value
+    .filter((element) => !element.isLocked)
+    .map((element, index) => {
+      switch (element.mode) {
+        /*
+         * drawing
+         */
+        case MODES_OPTIONS.value.drawing:
+          const minX = Math.min(...element.points.map((point) => point.x));
+          const maxX = Math.max(...element.points.map((point) => point.x));
+          const minY = Math.min(...element.points.map((point) => point.y));
+          const maxY = Math.max(...element.points.map((point) => point.y));
 
-        if (
-          mouse.value.x >= minX &&
-          mouse.value.x <= maxX &&
-          mouse.value.y >= minY &&
-          mouse.value.y <= maxY
-        ) {
-          hoveredElement = element;
-          hoveredElementIndex = index;
-        }
-        break;
+          if (
+            mouse.value.x >= minX &&
+            mouse.value.x <= maxX &&
+            mouse.value.y >= minY &&
+            mouse.value.y <= maxY
+          ) {
+            hoveredElement = element;
+            hoveredElementIndex = index;
+          }
+          break;
 
-      // case MODES_OPTIONS.value.drawing:
-      //   angle = (element.rotationAngle * Math.PI) / 180;
-      //   centerX = element.x + element.width / 2;
-      //   centerY = element.y + element.height / 2;
-      //
-      //   // Rotate the mouse coordinates around the element's center
-      //   rotatedMouseX =
-      //       centerX +
-      //       Math.cos(angle) * (mouse.value.x - centerX) -
-      //       Math.sin(angle) * (mouse.value.y - centerY);
-      //   rotatedMouseY =
-      //       centerY +
-      //       Math.sin(angle) * (mouse.value.x - centerX) +
-      //       Math.cos(angle) * (mouse.value.y - centerY);
-      //
-      //   const minX = Math.min(...element.points.map((point) => point.x));
-      //   const maxX = Math.max(...element.points.map((point) => point.x));
-      //   const minY = Math.min(...element.points.map((point) => point.y));
-      //   const maxY = Math.max(...element.points.map((point) => point.y));
-      //
-      //   if (
-      //       rotatedMouseX >= minX &&
-      //       rotatedMouseX <= maxX &&
-      //       rotatedMouseY >= minY &&
-      //       rotatedMouseY <= maxY
-      //   ) {
-      //     hoveredElement = element;
-      //     hoveredElementIndex = index;
-      //   }
-      //   break;
+        // case MODES_OPTIONS.value.drawing:
+        //   angle = (element.rotationAngle * Math.PI) / 180;
+        //   centerX = element.x + element.width / 2;
+        //   centerY = element.y + element.height / 2;
+        //
+        //   // Rotate the mouse coordinates around the element's center
+        //   rotatedMouseX =
+        //       centerX +
+        //       Math.cos(angle) * (mouse.value.x - centerX) -
+        //       Math.sin(angle) * (mouse.value.y - centerY);
+        //   rotatedMouseY =
+        //       centerY +
+        //       Math.sin(angle) * (mouse.value.x - centerX) +
+        //       Math.cos(angle) * (mouse.value.y - centerY);
+        //
+        //   const minX = Math.min(...element.points.map((point) => point.x));
+        //   const maxX = Math.max(...element.points.map((point) => point.x));
+        //   const minY = Math.min(...element.points.map((point) => point.y));
+        //   const maxY = Math.max(...element.points.map((point) => point.y));
+        //
+        //   if (
+        //       rotatedMouseX >= minX &&
+        //       rotatedMouseX <= maxX &&
+        //       rotatedMouseY >= minY &&
+        //       rotatedMouseY <= maxY
+        //   ) {
+        //     hoveredElement = element;
+        //     hoveredElementIndex = index;
+        //   }
+        //   break;
 
-      /*
-       * text
-       */
-      case MODES_OPTIONS.value.text:
-        if (
-          Math.round(mouse.value.x) >= Math.round(element.x) &&
-          Math.round(mouse.value.x) <=
-            Math.round(
-              element.x + canvasStore.computeAdjustedSize(element.width)
-            ) &&
-          Math.round(mouse.value.y) >= Math.round(element.y) &&
-          Math.round(mouse.value.y) <=
-            Math.round(
-              element.y + canvasStore.computeAdjustedSize(element.height)
-            )
-        ) {
-          hoveredElement = element;
-          hoveredElementIndex = index;
-        }
-        break;
+        /*
+         * text
+         */
+        case MODES_OPTIONS.value.text:
+          if (
+            Math.round(mouse.value.x) >= Math.round(element.x) &&
+            Math.round(mouse.value.x) <=
+              Math.round(
+                element.x + canvasStore.computeAdjustedSize(element.width)
+              ) &&
+            Math.round(mouse.value.y) >= Math.round(element.y) &&
+            Math.round(mouse.value.y) <=
+              Math.round(
+                element.y + canvasStore.computeAdjustedSize(element.height)
+              )
+          ) {
+            hoveredElement = element;
+            hoveredElementIndex = index;
+          }
+          break;
 
-      // case MODES_OPTIONS.value.text:
-      // const angle = (element.rotationAngle * Math.PI) / 180;
-      // const centerX =
-      //   element.x + canvasStore.computeAdjustedSize(element.width) / 2;
-      // const centerY =
-      //   element.y + canvasStore.computeAdjustedSize(element.height) / 2;
-      //
-      // // Rotate the mouse coordinates around the element's center
-      // const rotatedMouseX =
-      //   centerX +
-      //   Math.cos(angle) * (mouse.value.x - centerX) -
-      //   Math.sin(angle) * (mouse.value.y - centerY);
-      // const rotatedMouseY =
-      //   centerY +
-      //   Math.sin(angle) * (mouse.value.x - centerX) +
-      //   Math.cos(angle) * (mouse.value.y - centerY);
-      //
-      // if (
-      //   Math.round(rotatedMouseX) >= Math.round(element.x) &&
-      //   Math.round(rotatedMouseX) <=
-      //     Math.round(
-      //       element.x + canvasStore.computeAdjustedSize(element.width)
-      //     ) &&
-      //   Math.round(rotatedMouseY) >= Math.round(element.y) &&
-      //   Math.round(rotatedMouseY) <=
-      //     Math.round(element.y + canvasStore.computeAdjustedSize(element.height))
-      // ) {
-      //   hoveredElement = element;
-      //   hoveredElementIndex = index;
-      // }
-      // break;
+        // case MODES_OPTIONS.value.text:
+        // const angle = (element.rotationAngle * Math.PI) / 180;
+        // const centerX =
+        //   element.x + canvasStore.computeAdjustedSize(element.width) / 2;
+        // const centerY =
+        //   element.y + canvasStore.computeAdjustedSize(element.height) / 2;
+        //
+        // // Rotate the mouse coordinates around the element's center
+        // const rotatedMouseX =
+        //   centerX +
+        //   Math.cos(angle) * (mouse.value.x - centerX) -
+        //   Math.sin(angle) * (mouse.value.y - centerY);
+        // const rotatedMouseY =
+        //   centerY +
+        //   Math.sin(angle) * (mouse.value.x - centerX) +
+        //   Math.cos(angle) * (mouse.value.y - centerY);
+        //
+        // if (
+        //   Math.round(rotatedMouseX) >= Math.round(element.x) &&
+        //   Math.round(rotatedMouseX) <=
+        //     Math.round(
+        //       element.x + canvasStore.computeAdjustedSize(element.width)
+        //     ) &&
+        //   Math.round(rotatedMouseY) >= Math.round(element.y) &&
+        //   Math.round(rotatedMouseY) <=
+        //     Math.round(element.y + canvasStore.computeAdjustedSize(element.height))
+        // ) {
+        //   hoveredElement = element;
+        //   hoveredElementIndex = index;
+        // }
+        // break;
 
-      /*
-       * media
-       */
-      case MODES_OPTIONS.value.media:
-      case MODES_OPTIONS.value.mediaEmoji:
-      case MODES_OPTIONS.value.shape:
-        angle = (element.rotationAngle * Math.PI) / 180;
-        centerX = element.x + element.width / 2;
-        centerY = element.y + element.height / 2;
+        /*
+         * media
+         */
+        case MODES_OPTIONS.value.media:
+        case MODES_OPTIONS.value.mediaEmoji:
+        case MODES_OPTIONS.value.shape:
+          angle = (element.rotationAngle * Math.PI) / 180;
+          centerX = element.x + element.width / 2;
+          centerY = element.y + element.height / 2;
 
-        // Rotate the mouse coordinates around the element's center
-        rotatedMouseX =
-          centerX +
-          Math.cos(angle) * (mouse.value.x - centerX) -
-          Math.sin(angle) * (mouse.value.y - centerY);
-        rotatedMouseY =
-          centerY +
-          Math.sin(angle) * (mouse.value.x - centerX) +
-          Math.cos(angle) * (mouse.value.y - centerY);
+          // Rotate the mouse coordinates around the element's center
+          rotatedMouseX =
+            centerX +
+            Math.cos(angle) * (mouse.value.x - centerX) -
+            Math.sin(angle) * (mouse.value.y - centerY);
+          rotatedMouseY =
+            centerY +
+            Math.sin(angle) * (mouse.value.x - centerX) +
+            Math.cos(angle) * (mouse.value.y - centerY);
 
-        if (
-          Math.round(rotatedMouseX) >= Math.round(element.x) &&
-          Math.round(rotatedMouseX) <= Math.round(element.x + element.width) &&
-          Math.round(rotatedMouseY) >= Math.round(element.y) &&
-          Math.round(rotatedMouseY) <= Math.round(element.y + element.height)
-        ) {
-          hoveredElement = element;
-          hoveredElementIndex = index;
-        }
-        break;
-    }
-  });
+          if (
+            Math.round(rotatedMouseX) >= Math.round(element.x) &&
+            Math.round(rotatedMouseX) <=
+              Math.round(element.x + element.width) &&
+            Math.round(rotatedMouseY) >= Math.round(element.y) &&
+            Math.round(rotatedMouseY) <= Math.round(element.y + element.height)
+          ) {
+            hoveredElement = element;
+            hoveredElementIndex = index;
+          }
+          break;
+      }
+    });
 
   return { hoveredElement, hoveredElementIndex };
 };

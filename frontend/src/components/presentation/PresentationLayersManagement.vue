@@ -31,7 +31,10 @@
             />
 
             <!-- layer name -->
-            <span class="text-semibold q-pl-md" @click="selectElement(element)">
+            <span
+              class="text-semibold q-pl-md"
+              @click="!element.isLocked ? selectElement(element) : ''"
+            >
               {{
                 $t(
                   `presentationLayout.rightDrawer.layers.names.${element.mode}`
@@ -40,6 +43,29 @@
             </span>
 
             <q-space />
+
+            <!-- visibility button -->
+            <q-btn
+              :icon="element.isVisible ? 'o_visibility' : 'o_visibility_off'"
+              flat
+              round
+              color="grey"
+              size="10px"
+              @click="
+                element.isVisible = !element.isVisible;
+                canvasStore.redrawCanvas();
+              "
+            />
+
+            <!-- lock button -->
+            <q-btn
+              :icon="element.isLocked ? 'o_lock' : 'lock_open'"
+              flat
+              round
+              color="grey"
+              size="10px"
+              @click="element.isLocked = !element.isLocked"
+            />
 
             <!-- delete button -->
             <q-btn
@@ -71,6 +97,12 @@
         </span>
 
         <q-space />
+
+        <!-- visibility button -->
+        <q-btn icon="o_visibility" flat round color="grey" size="10px" />
+
+        <!-- disable button -->
+        <q-btn icon="lock_open" flat round color="grey" size="10px" />
 
         <!-- delete button -->
         <q-btn icon="delete" flat round color="red" size="10px" />
