@@ -1,5 +1,5 @@
 <template>
-  <q-page style="">
+  <q-page>
     <!-- toolbar -->
     <PresentationToolbarTop
       :is-drawing-mode="mode === MODES_OPTIONS.drawing"
@@ -38,7 +38,14 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
@@ -72,20 +79,33 @@ import {
   selectElement,
 } from "stores/canvas/helpers/select";
 import { useCanvasShapeStore } from "stores/canvas/shape";
+import { useRouter } from "vue-router";
+import { QSpinnerIos, useQuasar } from "quasar";
+import { ROUTE_PATHS } from "src/constants/routes";
+import { usePresentationStore } from "stores/presentation";
 
 /*
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
 
+const $q = useQuasar();
+
+const router = useRouter();
+
 /*
  * stores
  */
+const presentationStore = usePresentationStore();
+const { presentation } = storeToRefs(presentationStore);
+
 const canvasStore = useCanvasStore();
 const {
   // canvas
   canvas,
+
   ctx,
+  elements,
   mouse,
   scale,
 
@@ -130,7 +150,7 @@ const resizeCanvas = () => {
 
   ctx.value.scale(scale.value, scale.value);
 
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(true);
 };
 
 const handleWheelEvent = (event) => {
@@ -169,24 +189,44 @@ const handleKeyDownEvent = (event) => {
         event.preventDefault();
         textState.isNewText.value = false;
       }
-
-      if (event.key === "t") {
-        event.preventDefault();
-        textState.isNewText.value = !textState.isNewText.value;
-      }
       break;
   }
 };
 
-onMounted(() => {
+onBeforeMount(() => {
+  $q.loading.show({
+    spinner: QSpinnerIos,
+    message: t("loading.fetchingData"),
+  });
+});
+
+onMounted(async () => {
   canvas.value = canvasRef.value;
   ctx.value = canvas.value.getContext("2d");
   ctx.value.imageSmoothingEnabled = true;
 
   /*
+   * fetch presentation data
+   */
+  await presentationStore
+    .fetchPresentationData(router.currentRoute.value.params.presentation_id)
+    .then(() => {
+      canvasStore.setElementsFromSlide();
+    })
+    .catch((error) => {
+      $q.notify({
+        message: error,
+        color: "red",
+        icon: "r_crisis_alert",
+      });
+
+      router.push(ROUTE_PATHS.DASHBOARD);
+    });
+
+  /*
    * resize canvas
    */
-  resizeCanvas();
+  await resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
 
   /*
@@ -198,6 +238,8 @@ onMounted(() => {
    * shortcuts
    */
   document.addEventListener("keydown", handleKeyDownEvent);
+
+  $q.loading.hide();
 });
 
 onUnmounted(() => {

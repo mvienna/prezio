@@ -94,7 +94,7 @@ class AuthController extends Controller
         /*
          * auth
          */
-        $user = Auth()->user();
+        $user = auth()->user();
 
         /*
          * check old password

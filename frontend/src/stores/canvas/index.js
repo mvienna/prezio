@@ -1,11 +1,19 @@
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import {
   ALIGNMENT,
   SHAPES_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
+import { usePresentationStore } from "stores/presentation";
+import { date } from "quasar";
+
+const presentationStore = usePresentationStore();
+const { slide, lastSavedAt } = storeToRefs(presentationStore);
 
 export const useCanvasStore = defineStore("canvas", {
   state: () => ({
+    /*
+     * canvas
+     */
     canvas: null,
     ctx: null,
 
@@ -148,16 +156,41 @@ export const useCanvasStore = defineStore("canvas", {
     },
 
     /*
+     * slide
+     */
+    setElementsFromSlide() {
+      this.elements = slide.value?.canvas_data
+        ? JSON.parse(slide.value.canvas_data)
+        : [];
+    },
+
+    /*
      * render canvas
      */
     clearCanvas() {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
 
-    redrawCanvas() {
+    redrawCanvas(isOnLoad = false, elements) {
+      if (!isOnLoad) {
+        const now = new Date();
+        const secondsDifference = date.getDateDiff(
+          now,
+          lastSavedAt.value,
+          "seconds"
+        );
+
+        if (secondsDifference >= 10) {
+          presentationStore.saveSlide(undefined, this.elements);
+        }
+      }
+
       this.clearCanvas();
 
-      const reversedElements = [...this.elements].reverse();
+      if (!elements) {
+        elements = this.elements || [];
+      }
+      const reversedElements = [...elements].reverse();
 
       reversedElements.forEach((element) => {
         if (element.isVisible === false) return;
@@ -212,6 +245,13 @@ export const useCanvasStore = defineStore("canvas", {
        */
       if (this.selectedElement && this.selectedElement.isVisible) {
         this.renderBorderForSelectedElement();
+      }
+
+      /*
+       * compute preview
+       */
+      if (!process.env.DEV) {
+        slide.value.preview = this.canvas.toDataURL("image/png");
       }
     },
 
@@ -417,13 +457,32 @@ export const useCanvasStore = defineStore("canvas", {
         element.y + element.height / 2
       );
       this.ctx.rotate((element.rotation * Math.PI) / 180);
-      this.ctx.drawImage(
-        element.image,
-        -element.width / 2,
-        -element.height / 2,
-        element.width,
-        element.height
-      );
+
+      if (!element?.image?.nodeType) {
+        const image = new Image();
+        image.src = element.imageSrc;
+
+        image.onload = () => {
+          element.image = image;
+
+          this.ctx.drawImage(
+            element.image,
+            element.x,
+            element.y,
+            element.width,
+            element.height
+          );
+        };
+      } else {
+        this.ctx.drawImage(
+          element.image,
+          -element.width / 2,
+          -element.height / 2,
+          element.width,
+          element.height
+        );
+      }
+
       this.ctx.restore();
     },
 

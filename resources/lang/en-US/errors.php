@@ -16,5 +16,8 @@ return [
     ],
     'media' => [
         'fileNotFound' => 'File not found',
-    ]
+    ],
+    'presentation' => [
+        'accessDenied' => 'Access denied'
+    ],
 ];

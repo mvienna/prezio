@@ -230,7 +230,7 @@ export default {
   /*
    * presentation editor
    */
-  presentationEditor: {
+  presentation: {
     drawing: {
       options: {
         color: "Color",

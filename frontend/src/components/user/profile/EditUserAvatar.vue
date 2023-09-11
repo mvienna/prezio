@@ -11,7 +11,7 @@
       />
 
       <!-- default avatar -->
-      <q-icon v-else name="person" size="160px" class="avatar__default" />
+      <q-icon v-else name="r_person" size="160px" class="avatar__default" />
     </div>
 
     <!-- action buttons -->
@@ -27,7 +27,7 @@
               @change="uploadFile"
             />
             <label :for="fileInputId">
-              <q-icon name="attach_file" size="sm" class="q-pr-sm" />
+              <q-icon name="r_upload" size="sm" class="q-pr-sm" />
               {{ $t("user.profile.form.avatar.upload") }}
             </label>
           </form>
@@ -37,7 +37,7 @@
       <!-- delete -->
       <q-btn
         v-if="user.avatar"
-        icon="delete"
+        icon="r_delete"
         color="red"
         flat
         class="q-px-md"
@@ -98,7 +98,7 @@ const uploadFile = async (event) => {
 
       $q.notify({
         message: t("user.profile.form.avatar.success.upload"),
-        icon: "done",
+        icon: "r_done",
       });
     })
     .finally(() => {
@@ -117,7 +117,7 @@ const deleteFile = () => {
 
       $q.notify({
         message: t("user.profile.form.avatar.success.delete"),
-        icon: "done",
+        icon: "r_done",
       });
     })
     .finally(() => {

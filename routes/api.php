@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\PresentationController;
+use App\Http\Controllers\PresentationSlideController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,4 +36,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/media', [MediaController::class, 'store']);
     Route::get('/media', [MediaController::class, 'get']);
     Route::delete('/media/{file_id}', [MediaController::class, 'deletePermanently']);
+
+    /*
+     * presentation(s)
+     * slide(s)
+     */
+    Route::resource('/presentation', PresentationController::class)->only(['store', 'update', 'destroy', 'show']);
+    Route::get('/presentations', [PresentationController::class, 'get']);
+
+    Route::resource('/presentation/{presentation}/slide', PresentationSlideController::class)->only(['store', 'update', 'destroy']);
+    Route::patch('/presentation/{presentation}/slides', [PresentationSlideController::class, 'updateSlides']);
 });

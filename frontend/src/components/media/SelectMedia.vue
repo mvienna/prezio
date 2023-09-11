@@ -2,7 +2,7 @@
   <q-card flat>
     <!-- toolbar -->
     <q-card-section class="q-card__toolbar_section q-pa-lg">
-      <q-toolbar class="justify-between">
+      <q-toolbar class="justify-between q-px-none">
         <!-- title -->
         <div class="text-h6 text-bold">{{ $t("media.select.title") }}</div>
 
@@ -10,7 +10,7 @@
         <q-btn
           text-color="grey-5"
           unelevated
-          icon="close"
+          icon="r_close"
           round
           @click="$emit('close')"
         />
@@ -54,7 +54,7 @@
               <q-btn
                 color="grey-5"
                 unelevated
-                icon="delete"
+                icon="r_delete"
                 round
                 style="height: 24px"
                 class="q-mr-sm"
@@ -66,7 +66,7 @@
               <q-btn
                 color="grey-5"
                 unelevated
-                icon="close"
+                icon="r_close"
                 round
                 style="height: 24px"
                 size="10px"
@@ -104,7 +104,7 @@
                   @change="uploadFile"
                 />
                 <label :for="fileInputId" class="full-width">
-                  <q-icon name="attach_file" size="sm" class="q-pr-sm" />
+                  <q-icon name="r_upload" size="sm" class="q-pr-sm" />
                   {{ $t("user.profile.form.avatar.upload") }}
                 </label>
               </form>
@@ -157,7 +157,7 @@
                   clickable
                   @click="deleteFile(file)"
                 >
-                  <q-icon name="delete" class="q-mr-sm" size="xs" />
+                  <q-icon name="r_delete" class="q-mr-sm" size="xs" />
                   <div>
                     {{ $t("media.actions.delete.title") }}
                   </div>
@@ -168,10 +168,10 @@
         </q-tab-panel>
 
         <!-- stock -->
-        <q-tab-panel name="stock"> </q-tab-panel>
+        <q-tab-panel name="r_stock"> </q-tab-panel>
 
         <!-- gifs and stickers-->
-        <q-tab-panel name="gifs_and_stickers"> </q-tab-panel>
+        <q-tab-panel name="r_gifs_and_stickers"> </q-tab-panel>
       </q-tab-panels>
     </q-card-section>
 
@@ -185,14 +185,14 @@
         class="q-card__submit_button_section q-px-lg q-pb-lg q-pt-none"
       >
         <q-btn
+          :label="$t('media.select.submit')"
+          icon="r_done"
           round
           no-caps
           class="full-width q-py-md"
           color="primary"
           unelevated
-          :label="$t('media.select.submit')"
           @click="$emit('select', selectedFile)"
-          icon="done"
         />
       </q-card-section>
     </transition>

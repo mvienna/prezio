@@ -228,9 +228,12 @@ export default {
   },
 
   /*
-   * presentation editor
+   * presentation
    */
-  presentationEditor: {
+  presentation: {
+    /*
+     * modes
+     */
     drawing: {
       options: {
         color: "Цвет",
@@ -258,6 +261,9 @@ export default {
       },
     },
 
+    /*
+     * toolbar
+     */
     toolbar: {
       drawing: {
         title: "Рисование",
@@ -287,6 +293,54 @@ export default {
         out: "Уменьшить",
         select: "Выбрать масштабирование",
       },
+    },
+
+    /*
+     * new
+     */
+    new: {
+      title: "Новая презентация",
+      name: "Название презентации",
+      description: "Описание презентации",
+      create: "Создать",
+      errors: {
+        name: {
+          required: "Требуется ввести название презентации",
+        },
+      },
+    },
+  },
+
+  /*
+   * presentations
+   */
+  presentations: {
+    myPresentationsTitle: "Мои презентации",
+
+    /*
+     * columns
+     */
+    columns: {
+      name: "Название презентации",
+      accessKey: "Код доступа",
+      updated: "Изменено",
+      created: "Создано",
+    },
+
+    /*
+     * slide
+     */
+    slide: {
+      actions: {
+        delete: "Удалить",
+      },
+    },
+
+    /*
+     * errors
+     */
+    errors: {
+      somethingWentWrong: "Что-то пошло не так",
     },
   },
 
@@ -326,5 +380,34 @@ export default {
    */
   tooltips: {
     in_development: "В процессе разработки",
+  },
+
+  /*
+   * loading
+   */
+  loading: {
+    fetchingData: "Загружаем данные",
+  },
+
+  /*
+   * dashboard
+   */
+  dashboard: {
+    noPresentations: {
+      title: "Вы еще не создали ни одной презентации",
+      description: "Выберите шаблон или создайте свой стиль. Это очень просто!",
+      import: "Загрузить PowerPoint",
+      create: "Новая презентация",
+    },
+    presentation: {
+      actions: {
+        rename: "Переименовать",
+        duplicate: "Дублировать",
+        stats: "Статистика",
+        resetResults: "Сбросить<br/>результаты",
+        share: "Поделиться",
+        delete: "Удалить",
+      },
+    },
   },
 };

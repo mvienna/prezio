@@ -1,11 +1,11 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh Lpr lff">
     <!-- header -->
     <q-header class="bg-white q-pa-sm" elevated>
       <q-toolbar>
         <!-- back -->
         <q-btn
-          icon="arrow_back"
+          icon="r_arrow_back"
           unelevated
           round
           :to="ROUTE_PATHS.DASHBOARD"
@@ -24,7 +24,7 @@
           no-wrap
           round
           size="12px"
-          icon="o_notifications"
+          icon="r_notifications"
           class="q-mr-md q-btn--bordered"
         />
 
@@ -35,31 +35,13 @@
           unelevated
           no-caps
           no-wrap
-          icon="o_workspace_premium"
+          icon="r_workspace_premium"
           :label="$t('mainLayout.header.goPro')"
           class="q-mr-md text-semibold q-px-lg"
         />
 
         <!-- user -->
-        <q-btn
-          unelevated
-          no-caps
-          no-wrap
-          text-color="black"
-          class="text-semibold q-pa-xs q-pl-md"
-        >
-          <template #default>
-            <div class="q-mr-md">
-              {{ user.name }}
-            </div>
-            <UserAvatar
-              :user="user"
-              size="27px"
-              color="primary"
-              style="border-radius: 50%"
-            />
-          </template>
-        </q-btn>
+        <UserMenu />
       </q-toolbar>
     </q-header>
 
@@ -87,6 +69,7 @@
               item.link !== router.currentRoute.value.path ? 'text-grey-5' : ''
             "
             size="20px"
+            style="transition: 0.2s"
           />
           <div
             :class="
@@ -94,6 +77,7 @@
                 ? 'text-black text-semibold'
                 : 'text-dark'
             "
+            style="transition: 0.2s"
           >
             {{ item.label }}
           </div>
@@ -107,7 +91,7 @@
           class="items-center justify-start q-px-lg q-py-sm text-red"
           style="border-radius: 8px"
         >
-          <q-icon name="logout" class="q-mr-sm" size="20px" />
+          <q-icon name="r_logout" class="q-mr-sm" size="20px" />
           <div>
             {{ $t("userLayout.drawer.links.logout") }}
           </div>
@@ -125,10 +109,10 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "stores/auth";
-import UserAvatar from "components/user/UserAvatar.vue";
 import { useI18n } from "vue-i18n";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { useRouter } from "vue-router";
+import UserMenu from "components/user/UserMenu.vue";
 
 /*
  * variables
@@ -155,19 +139,19 @@ const links = ref([
   {
     name: "settings",
     label: t("userLayout.drawer.links.settings"),
-    icon: "o_settings",
+    icon: "r_settings",
     link: ROUTE_PATHS.USER.PROFILE,
   },
   {
     name: "my_plan",
     label: t("userLayout.drawer.links.myPlan"),
-    icon: "track_changes",
+    icon: "r_track_changes",
     link: ROUTE_PATHS.USER.MY_PLAN,
   },
   {
     name: "payments",
     label: t("userLayout.drawer.links.payments"),
-    icon: "o_wallet",
+    icon: "r_wallet",
     link: ROUTE_PATHS.USER.PAYMENTS,
   },
 ]);

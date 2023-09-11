@@ -53,7 +53,7 @@
               lazy-rules
             >
               <template #prepend>
-                <q-icon name="o_account_circle" class="grey-2" />
+                <q-icon name="r_account_circle" class="grey-2" />
               </template>
             </q-input>
 
@@ -68,7 +68,7 @@
               lazy-rules
             >
               <template #prepend>
-                <q-icon name="o_mail" class="grey-2" />
+                <q-icon name="r_mail" class="grey-2" />
               </template>
             </q-input>
 
@@ -83,13 +83,13 @@
               :error="!!errors.password"
             >
               <template #prepend>
-                <q-icon name="o_lock_open" class="grey-2" />
+                <q-icon name="r_lock_open" class="grey-2" />
               </template>
 
               <template #append>
                 <q-icon
                   :name="
-                    isPasswordVisible ? 'o_visibility_off' : 'o_visibility'
+                    isPasswordVisible ? 'r_visibility_off' : 'r_visibility'
                   "
                   class="grey-2 cursor-pointer"
                   @click="isPasswordVisible = !isPasswordVisible"
@@ -109,7 +109,7 @@
               lazy-rules
             >
               <template #prepend>
-                <q-icon name="o_lock" class="grey-2" />
+                <q-icon name="r_lock" class="grey-2" />
               </template>
             </q-input>
           </template>
@@ -121,6 +121,7 @@
           unelevated
           no-caps
           type="submit"
+          icon-right="r_done"
           :disable="!isVerificationCodeSent ? isNoChanges : false"
           :loading="isLoading"
           class="q-py-md q-mt-lg text-bold full-width"
@@ -388,7 +389,7 @@ const handleUpdatingUserData = () => {
        */
       $q.notify({
         message: t("user.profile.form.success"),
-        icon: "done",
+        icon: "r_done",
       });
     })
     .catch((error) => {

@@ -2,7 +2,8 @@ import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
 
-const { ctx, canvas, elements, MODES_OPTIONS } = storeToRefs(useCanvasStore());
+const canvasStore = useCanvasStore();
+const { ctx, canvas, elements, MODES_OPTIONS } = storeToRefs(canvasStore);
 
 export const useCanvasMediaStore = defineStore("canvasMedia", {
   actions: {
@@ -11,6 +12,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
      */
     addImage(url) {
       const image = new Image();
+      image.src = url;
 
       image.onload = () => {
         const newImageHeight = canvas.value.height * 0.5;
@@ -26,6 +28,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           isVisible: true,
           isLocked: false,
           image,
+          imageSrc: url,
           x,
           y,
           width: newImageWidth,
@@ -37,7 +40,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);
       };
 
-      image.src = url;
+      canvasStore.redrawCanvas();
     },
   },
 });

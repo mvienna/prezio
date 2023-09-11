@@ -60,7 +60,7 @@ const routes = [
 
   {
     path: "/",
-    component: () => import("layouts/PresentationLayout.vue"),
+    component: () => import("layouts/Presentation/PresentationLayout.vue"),
     children: [
       {
         path: ROUTE_PATHS.PRESENTATIONS.PRESENTATION,

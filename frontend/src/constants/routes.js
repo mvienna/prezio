@@ -22,7 +22,7 @@ export const ROUTE_PATHS = {
 
   PRESENTATIONS: {
     INDEX: "/presentations",
-    PRESENTATION: "/presentation",
+    PRESENTATION: "/presentation/:presentation_id",
     TEMPLATES: "/presentations/templates",
     SHARED_WITH_ME: "/presentations/shared-with-me",
   },

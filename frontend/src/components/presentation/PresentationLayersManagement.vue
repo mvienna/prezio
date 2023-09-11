@@ -24,7 +24,7 @@
           <q-card-section class="row no-wrap items-center">
             <!-- drag handle -->
             <q-icon
-              name="drag_indicator"
+              name="r_drag_indicator"
               color="grey"
               size="sm"
               class="layer_handle"
@@ -46,7 +46,7 @@
 
             <!-- visibility button -->
             <q-btn
-              :icon="element.isVisible ? 'o_visibility' : 'o_visibility_off'"
+              :icon="element.isVisible ? 'r_visibility' : 'r_visibility_off'"
               flat
               round
               color="grey"
@@ -69,7 +69,7 @@
 
             <!-- lock button -->
             <q-btn
-              :icon="element.isLocked ? 'o_lock' : 'lock_open'"
+              :icon="element.isLocked ? 'r_lock' : 'r_lock_open'"
               flat
               round
               color="grey"
@@ -89,7 +89,7 @@
 
             <!-- delete button -->
             <q-btn
-              icon="delete"
+              icon="r_delete"
               flat
               round
               color="red"
@@ -109,7 +109,7 @@
       <q-card-section class="row no-wrap items-center">
         <!-- drag handle -->
         <q-icon
-          name="drag_indicator"
+          name="r_drag_indicator"
           color="grey"
           size="sm"
           class="layer_handle"
@@ -123,13 +123,13 @@
         <q-space />
 
         <!-- visibility button -->
-        <q-btn icon="o_visibility" flat round color="grey" size="10px" />
+        <q-btn icon="r_visibility" flat round color="grey" size="10px" />
 
         <!-- disable button -->
-        <q-btn icon="lock_open" flat round color="grey" size="10px" />
+        <q-btn icon="r_lock_open" flat round color="grey" size="10px" />
 
         <!-- delete button -->
-        <q-btn icon="delete" flat round color="red" size="10px" />
+        <q-btn icon="r_delete" flat round color="red" size="10px" />
       </q-card-section>
     </q-card>
   </div>
@@ -207,5 +207,9 @@ const handleLayersReorder = async () => {
   outline: 3px solid $blue-2;
 
   color: $primary;
+}
+
+.layer_handle {
+  cursor: grab;
 }
 </style>

@@ -4,7 +4,7 @@
   >
     <!-- drawing -->
     <q-btn
-      icon="gesture"
+      icon="r_gesture"
       unelevated
       text-color="dark"
       round
@@ -13,7 +13,7 @@
       @click="$emit('switchMode', MODES_OPTIONS.drawing)"
     >
       <q-tooltip>
-        {{ $t("presentationEditor.toolbar.drawing.title") }}
+        {{ $t("presentation.toolbar.drawing.title") }}
       </q-tooltip>
 
       <q-menu
@@ -30,9 +30,9 @@
           dense
           class="items-center text-semibold justify-start rounded-borders q-mt-sm"
         >
-          <q-icon name="o_palette" class="q-mr-md text-semibold" size="20px" />
+          <q-icon name="r_palette" class="q-mr-md text-semibold" size="20px" />
           <div class="q-mr-lg">
-            {{ $t("presentationEditor.drawing.options.color") }}
+            {{ $t("presentation.drawing.options.color") }}
           </div>
 
           <q-space />
@@ -52,7 +52,7 @@
         >
           <q-checkbox v-model="drawingState.eraserMode.value" class="q-mr-xs" />
           <div class="text-no-wrap">
-            {{ $t("presentationEditor.drawing.options.erase") }}
+            {{ $t("presentation.drawing.options.erase") }}
           </div>
         </q-item>
 
@@ -67,14 +67,14 @@
             map-options
             emit-value
             borderless
-            :label="$t('presentationEditor.drawing.options.brushSize')"
+            :label="$t('presentation.drawing.options.brushSize')"
             class="full-width"
             color="dark"
             @update:model-value="drawingStore.applyStyles()"
           >
             <template #prepend>
               <q-icon
-                name="line_weight"
+                name="r_line_weight"
                 class="q-mr-xs text-semibold text-dark"
                 size="20px"
               />
@@ -96,12 +96,12 @@
             borderless
             class="full-width"
             color="dark"
-            :label="$t('presentationEditor.drawing.options.brushType')"
+            :label="$t('presentation.drawing.options.brushType')"
             @update:model-value="drawingStore.applyStyles()"
           >
             <template #prepend>
               <q-icon
-                name="brush"
+                name="r_brush"
                 class="q-mr-xs text-semibold text-dark"
                 size="20px"
               />
@@ -113,7 +113,7 @@
 
     <!-- text -->
     <q-btn
-      icon="text_fields"
+      icon="r_text_fields"
       unelevated
       text-color="dark"
       round
@@ -122,7 +122,7 @@
       @click="$emit('switchMode', MODES_OPTIONS.text)"
     >
       <q-tooltip>
-        {{ $t("presentationEditor.toolbar.text.title") }}
+        {{ $t("presentation.toolbar.text.title") }}
       </q-tooltip>
 
       <q-menu
@@ -141,7 +141,7 @@
             outline
             size="10px"
             round
-            icon="format_bold"
+            icon="r_format_bold"
             :text-color="
               textState.customization.value.formatting.isBold
                 ? 'white'
@@ -159,7 +159,7 @@
             "
           >
             <q-tooltip class="text-bold">
-              {{ $t("presentationEditor.toolbar.text.formatting.bold") }}
+              {{ $t("presentation.toolbar.text.formatting.bold") }}
             </q-tooltip>
           </q-btn>
 
@@ -168,7 +168,7 @@
             outline
             size="10px"
             round
-            icon="format_underlined"
+            icon="r_format_underlined"
             :text-color="
               textState.customization.value.formatting.isUnderline
                 ? 'white'
@@ -186,7 +186,7 @@
             "
           >
             <q-tooltip style="text-decoration: underline">
-              {{ $t("presentationEditor.toolbar.text.formatting.underline") }}
+              {{ $t("presentation.toolbar.text.formatting.underline") }}
             </q-tooltip>
           </q-btn>
 
@@ -195,7 +195,7 @@
             outline
             size="10px"
             round
-            icon="strikethrough_s"
+            icon="r_strikethrough_s"
             :text-color="
               textState.customization.value.formatting.isLineThrough
                 ? 'white'
@@ -213,9 +213,7 @@
             "
           >
             <q-tooltip style="text-decoration: line-through">
-              {{
-                $t("presentationEditor.toolbar.text.formatting.strikeThrough")
-              }}
+              {{ $t("presentation.toolbar.text.formatting.strikeThrough") }}
             </q-tooltip>
           </q-btn>
 
@@ -224,7 +222,7 @@
             outline
             size="10px"
             round
-            icon="format_italic"
+            icon="r_format_italic"
             :text-color="
               textState.customization.value.formatting.isItalic
                 ? 'white'
@@ -242,7 +240,7 @@
             "
           >
             <q-tooltip class="text-italic">
-              {{ $t("presentationEditor.toolbar.text.formatting.italic") }}
+              {{ $t("presentation.toolbar.text.formatting.italic") }}
             </q-tooltip>
           </q-btn>
 
@@ -255,18 +253,18 @@
             :icon="
               textState.customization.value.formatting.alignment.horizontal ===
               ALIGNMENT.horizontal.left
-                ? 'format_align_left'
+                ? 'r_format_align_left'
                 : textState.customization.value.formatting.alignment
                     .horizontal === ALIGNMENT.horizontal.right
-                ? 'format_align_right'
+                ? 'r_format_align_right'
                 : textState.customization.value.formatting.alignment
                     .horizontal === ALIGNMENT.horizontal.center
-                ? 'format_align_center'
+                ? 'r_format_align_center'
                 : ''
             "
           >
             <q-tooltip>
-              {{ $t("presentationEditor.toolbar.text.formatting.alignment") }}
+              {{ $t("presentation.toolbar.text.formatting.alignment") }}
             </q-tooltip>
 
             <q-menu
@@ -294,11 +292,11 @@
                     "
                     :icon="
                       item === ALIGNMENT.horizontal.left
-                        ? 'format_align_left'
+                        ? 'r_format_align_left'
                         : item === ALIGNMENT.horizontal.right
-                        ? 'format_align_right'
+                        ? 'r_format_align_right'
                         : item === ALIGNMENT.horizontal.center
-                        ? 'format_align_center'
+                        ? 'r_format_align_center'
                         : ''
                     "
                     @click="
@@ -325,11 +323,11 @@
                     "
                     :icon="
                       item === ALIGNMENT.vertical.top
-                        ? 'vertical_align_top'
+                        ? 'r_vertical_align_top'
                         : item === ALIGNMENT.vertical.bottom
-                        ? 'vertical_align_bottom'
+                        ? 'r_vertical_align_bottom'
                         : item === ALIGNMENT.vertical.middle
-                        ? 'align_vertical_center'
+                        ? 'r_align_vertical_center'
                         : ''
                     "
                     @click="
@@ -349,9 +347,9 @@
           dense
           class="items-center text-semibold justify-start rounded-borders q-mt-md"
         >
-          <q-icon name="o_palette" class="q-mr-md text-semibold" size="20px" />
+          <q-icon name="r_palette" class="q-mr-md text-semibold" size="20px" />
           <div class="q-mr-lg">
-            {{ $t("presentationEditor.drawing.options.color") }}
+            {{ $t("presentation.drawing.options.color") }}
           </div>
 
           <q-space />
@@ -374,14 +372,14 @@
             :options="FONT_OPTIONS"
             emit-value
             borderless
-            :label="$t('presentationEditor.text.options.font')"
+            :label="$t('presentation.text.options.font')"
             class="full-width"
             color="dark"
             @update:model-value="$emit('applyFormatting')"
           >
             <template #prepend>
               <q-icon
-                name="text_fields"
+                name="r_text_fields"
                 class="q-mr-xs text-semibold text-dark"
                 size="20px"
               />
@@ -399,14 +397,14 @@
             :options="FONT_SIZE_OPTIONS"
             emit-value
             borderless
-            :label="$t('presentationEditor.text.options.fontSize')"
+            :label="$t('presentation.text.options.fontSize')"
             class="full-width"
             color="dark"
             @update:model-value="$emit('applyFormatting')"
           >
             <template #prepend>
               <q-icon
-                name="sort_by_alpha"
+                name="r_sort_by_alpha"
                 class="q-mr-xs text-semibold text-dark"
                 size="20px"
               />
@@ -416,8 +414,8 @@
 
         <q-item class="q-px-sm">
           <q-btn
-            icon="fiber_new"
-            :label="$t('presentationEditor.text.options.newText')"
+            icon="r_fiber_new"
+            :label="$t('presentation.text.options.newText')"
             :color="!textState.isNewText.value ? 'primary' : 'grey'"
             unelevated
             no-caps
@@ -426,7 +424,7 @@
             @click="textState.isNewText.value = !textState.isNewText.value"
           >
             <q-tooltip>
-              {{ $t("presentationEditor.toolbar.text.newText") }}
+              {{ $t("presentation.toolbar.text.newText") }}
             </q-tooltip>
           </q-btn>
         </q-item>
@@ -435,7 +433,7 @@
 
     <!-- image -->
     <q-btn
-      icon="o_image"
+      icon="r_image"
       unelevated
       text-color="dark"
       round
@@ -446,13 +444,13 @@
       "
     >
       <q-tooltip>
-        {{ $t("presentationEditor.toolbar.media.title") }}
+        {{ $t("presentation.toolbar.media.title") }}
       </q-tooltip>
     </q-btn>
 
     <!-- emoji -->
     <q-btn
-      icon="mood"
+      icon="r_add_reaction"
       unelevated
       text-color="dark"
       round
@@ -460,7 +458,7 @@
       @click="$emit('switchMode', MODES_OPTIONS.mediaEmoji)"
     >
       <q-tooltip>
-        {{ $t("presentationEditor.toolbar.emoji.title") }}
+        {{ $t("presentation.toolbar.emoji.title") }}
       </q-tooltip>
 
       <q-menu
@@ -493,7 +491,7 @@
 
     <!-- shapes -->
     <q-btn
-      icon="o_shape_line"
+      icon="r_shape_line"
       unelevated
       text-color="dark"
       round
@@ -501,7 +499,7 @@
       @click="$emit('switchMode', MODES_OPTIONS.shape)"
     >
       <q-tooltip>
-        {{ $t("presentationEditor.toolbar.shape.title") }}
+        {{ $t("presentation.toolbar.shape.title") }}
       </q-tooltip>
 
       <q-menu
@@ -537,9 +535,9 @@
           dense
           class="items-center text-semibold justify-start rounded-borders q-mt-sm q-pl-sm q-pr-none"
         >
-          <q-icon name="o_palette" class="q-mr-md text-semibold" size="20px" />
+          <q-icon name="r_palette" class="q-mr-md text-semibold" size="20px" />
           <div class="q-mr-lg">
-            {{ $t("presentationEditor.shapes.options.color") }}
+            {{ $t("presentation.shapes.options.color") }}
           </div>
 
           <q-space />
@@ -566,8 +564,8 @@
                 SHAPES_OPTIONS.star,
               ].includes(selectedElement?.type) &&
               shapeState.customization.value.fill
-                ? 'done'
-                : 'close'
+                ? 'r_done'
+                : 'r_close'
             "
             class="q-mr-md text-semibold"
             size="20px"
@@ -578,7 +576,7 @@
           />
 
           <div class="q-mr-lg">
-            {{ $t("presentationEditor.shapes.options.fill") }}
+            {{ $t("presentation.shapes.options.fill") }}
           </div>
 
           <q-space />
@@ -602,7 +600,7 @@
             map-options
             emit-value
             borderless
-            :label="$t('presentationEditor.shapes.options.lineWidth')"
+            :label="$t('presentation.shapes.options.lineWidth')"
             class="full-width"
             color="dark"
             @update:model-value="shapeStore.applyStyles()"
@@ -621,20 +619,11 @@
 
     <q-space />
 
-    <!-- undo / redo -->
-    <template v-if="isDrawingMode">
-      <!-- undo button -->
-      <q-btn icon="undo" unelevated text-color="dark" size="12px" round />
-
-      <!-- redo button -->
-      <q-btn icon="redo" unelevated text-color="dark" size="12px" round />
-    </template>
-
     <!-- selected item actions -->
     <template v-if="selectedElement">
       <!-- deselect line button -->
       <q-btn
-        icon="done"
+        icon="r_done"
         unelevated
         text-color="dark"
         size="12px"
@@ -644,7 +633,7 @@
 
       <!-- delete line button -->
       <q-btn
-        icon="o_backspace"
+        icon="r_backspace"
         unelevated
         text-color="dark"
         size="12px"

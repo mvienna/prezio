@@ -47,7 +47,7 @@
             :error="!!invalidCredentialsError"
           >
             <template #prepend>
-              <q-icon name="o_mail" class="grey-2" />
+              <q-icon name="r_mail" class="grey-2" />
             </template>
           </q-input>
 
@@ -65,13 +65,13 @@
               :error="!!invalidCredentialsError"
             >
               <template #prepend>
-                <q-icon name="o_lock" class="grey-2" />
+                <q-icon name="r_lock" class="grey-2" />
               </template>
 
               <template #append>
                 <q-icon
                   :name="
-                    isPasswordVisible ? 'o_visibility_off' : 'o_visibility'
+                    isPasswordVisible ? 'r_visibility_off' : 'r_visibility'
                   "
                   class="grey-2 cursor-pointer"
                   @click="isPasswordVisible = !isPasswordVisible"
@@ -121,7 +121,6 @@ import { ROUTE_PATHS } from "src/constants/routes";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "stores/auth";
 import { useRouter } from "vue-router";
-import { api } from "boot/axios";
 
 /*
  * variables
