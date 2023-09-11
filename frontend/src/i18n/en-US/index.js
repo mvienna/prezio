@@ -214,12 +214,12 @@ export default {
             on: "Lock",
             off: "Unlock",
           },
-          delete: "Remove",
+          delete: "Delete",
         },
         names: {
           drawing: "Line",
           text: "Text",
-          media: "Image",
+          media: "Photo",
           mediaEmoji: "Emoji",
           shape: "Shape",
         },
@@ -228,15 +228,18 @@ export default {
   },
 
   /*
-   * presentation editor
+   * presentation
    */
   presentation: {
+    /*
+     * modes
+     */
     drawing: {
       options: {
         color: "Color",
-        erase: "Eraser Mode",
-        brushSize: "Brush Size",
-        brushType: "Brush Type",
+        erase: "Erase mode",
+        brushSize: "Brush size",
+        brushType: "Brush type",
       },
       BRUSH_TYPES: {
         pen: "Pen",
@@ -246,18 +249,21 @@ export default {
     text: {
       options: {
         font: "Font",
-        fontSize: "Font Size",
-        newText: "New Field",
+        fontSize: "Font size",
+        newText: "New text field",
       },
     },
     shapes: {
       options: {
         color: "Color",
         fill: "Fill",
-        lineWidth: "Line Width",
+        lineWidth: "Line width",
       },
     },
 
+    /*
+     * toolbar
+     */
     toolbar: {
       drawing: {
         title: "Drawing",
@@ -268,25 +274,73 @@ export default {
           bold: "Bold",
           italic: "Italic",
           underline: "Underline",
-          strikeThrough: "Strike-Through",
+          strikeThrough: "Strike through",
           alignment: "Alignment",
         },
-        newText: "Add new text on a slide",
+        newText: "Add new text to slide",
       },
       media: {
-        title: "Фотографии",
+        title: "Photos",
       },
       emoji: {
-        title: "Эмодзи",
+        title: "Emojis",
       },
       shape: {
-        title: "Формы",
+        title: "Shapes",
       },
       zoom: {
         in: "Zoom In",
         out: "Zoom Out",
-        select: "Select Zoom",
+        select: "Select zoom level",
       },
+    },
+
+    /*
+     * new
+     */
+    new: {
+      title: "New Presentation",
+      name: "Presentation name",
+      description: "Presentation description",
+      create: "Create",
+      errors: {
+        name: {
+          required: "Presentation name is required",
+        },
+      },
+    },
+  },
+
+  /*
+   * presentations
+   */
+  presentations: {
+    myPresentationsTitle: "My Presentations",
+
+    /*
+     * columns
+     */
+    columns: {
+      name: "Presentation name",
+      accessKey: "Access code",
+      updated: "Updated",
+      created: "Created",
+    },
+
+    /*
+     * slide
+     */
+    slide: {
+      actions: {
+        delete: "Delete",
+      },
+    },
+
+    /*
+     * errors
+     */
+    errors: {
+      somethingWentWrong: "Something went wrong",
     },
   },
 
@@ -325,6 +379,34 @@ export default {
    * tooltips
    */
   tooltips: {
-    in_development: "In Development",
+    in_development: "In development",
+  },
+
+  /*
+   * loading
+   */
+  loading: {
+    fetchingData: "Fetching data",
+  },
+
+  /*
+   * dashboard
+   */
+  dashboard: {
+    noPresentations: {
+      title: "You haven't created any presentations yet",
+      description: "Choose a template or create your own style. It's easy!",
+      import: "Import PowerPoint",
+      create: "New Presentation",
+    },
+    presentation: {
+      actions: {
+        duplicate: "Duplicate",
+        stats: "Statistics",
+        resetResults: "Reset Results",
+        share: "Share",
+        delete: "Delete",
+      },
+    },
   },
 };
