@@ -3,6 +3,7 @@ import { api } from "boot/axios";
 
 export const usePresentationStore = defineStore("presentation", {
   state: () => ({
+    presentations: [],
     presentation: null,
     slide: null,
 
@@ -27,14 +28,27 @@ export const usePresentationStore = defineStore("presentation", {
         });
     },
 
-    updatePresentation() {
+    updatePresentation(presentation = this.presentation) {
       api
-        .patch(`/presentation/${this.presentation.id}`, {
-          name: this.presentation.name,
-          description: this.presentation.description,
-          preview_id: this.presentation.preview_id,
-          is_private: this.presentation.is_private,
-          lang: this.presentation.lang,
+        .patch(`/presentation/${presentation.id}`, {
+          name: presentation.name,
+          description: presentation.description,
+          preview_id: presentation.preview_id,
+          is_private: presentation.is_private,
+          lang: presentation.lang,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    deletePresentation(presentation = this.presentation) {
+      api
+        .delete(`/presentation/${presentation.id}`)
+        .then(() => {
+          this.presentations = this.presentations.filter(
+            (item) => item.id !== presentation.id
+          );
         })
         .catch((error) => {
           console.log(error);

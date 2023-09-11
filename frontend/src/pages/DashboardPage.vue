@@ -122,26 +122,6 @@
                   class="q-pa-sm"
                 >
                   <q-list class="full-height column q-gutter-sm text-semibold">
-                    <!-- rename -->
-                    <q-item
-                      class="items-center justify-start q-px-md q-py-sm"
-                      style="border-radius: 8px"
-                      clickable
-                      dense
-                      v-close-popup
-                    >
-                      <q-icon
-                        name="r_edit"
-                        color="primary"
-                        size="16px"
-                        class="q-mr-sm"
-                      />
-
-                      <div>
-                        {{ $t("dashboard.presentation.actions.rename") }}
-                      </div>
-                    </q-item>
-
                     <!-- duplicate -->
                     <q-item
                       class="items-center justify-start q-px-md q-py-sm"
@@ -235,6 +215,7 @@
                       clickable
                       dense
                       v-close-popup
+                      @click="presentationStore.deletePresentation(props.value)"
                     >
                       <q-icon
                         name="r_delete"
@@ -316,6 +297,8 @@ import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
 import { useI18n } from "vue-i18n";
 import { formatDateTime } from "src/helpers/formatDateTime";
 import { date } from "quasar";
+import { usePresentationStore } from "stores/presentation";
+import { storeToRefs } from "pinia";
 
 /*
  * variables
@@ -330,10 +313,14 @@ const { t } = useI18n({ useScope: "global" });
 const router = useRouter();
 
 /*
- * presentations
+ * presentations store
  */
-const presentations = ref([]);
+const presentationStore = usePresentationStore();
+const { presentations } = storeToRefs(presentationStore);
 
+/*
+ * fetch presentations
+ */
 onBeforeMount(() => {
   isLoading.value.fetchingPresentations = true;
 
@@ -350,6 +337,9 @@ onBeforeMount(() => {
     });
 });
 
+/*
+ * presentations table
+ */
 const presentationColumnsNames = {
   name: "name",
   accessKey: "accessKey",
@@ -391,11 +381,15 @@ const presentationsColumns = [
   {
     name: presentationColumnsNames.actions,
     align: "center",
+    field: (row) => row,
   },
 ];
 
 const selectedPresentations = ref([]);
 
+/*
+ * open presentation
+ */
 const handlePresentationClick = (event, item) => {
   if (event.target.nodeName === "TD") {
     router.push(
@@ -404,22 +398,15 @@ const handlePresentationClick = (event, item) => {
   }
 };
 
+/*
+ * update presentation
+ */
 const handleRowUpdate = (event, id) => {
   const presentation = presentations.value.find(
     (presentation) => presentation.id === id
   );
 
-  api
-    .patch(`/presentation/${id}`, {
-      name: presentation.name,
-      description: presentation.description,
-      preview_id: presentation.preview_id,
-      is_private: presentation.is_private,
-      lang: presentation.lang,
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  presentationStore.updatePresentation(presentation);
 };
 
 /*

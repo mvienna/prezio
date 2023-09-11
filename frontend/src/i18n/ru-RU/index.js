@@ -401,7 +401,6 @@ export default {
     },
     presentation: {
       actions: {
-        rename: "Переименовать",
         duplicate: "Дублировать",
         stats: "Статистика",
         resetResults: "Сбросить<br/>результаты",

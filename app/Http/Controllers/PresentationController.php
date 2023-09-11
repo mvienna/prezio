@@ -41,7 +41,9 @@ class PresentationController extends Controller
 
     public function destroy(Presentation $presentation): JsonResponse
     {
+        PresentationSlide::where('presentation_id', $presentation->id)->delete();
         $presentation->delete();
+
         return $this->successResponse();
     }
 
