@@ -22,7 +22,6 @@
           color="primary"
           class="bg-grey-2 q-mt-lg"
           v-model:selected="selectedPresentations"
-          :loading="isLoading.updatingPresentation"
           @row-click="handlePresentationClick"
         >
           <template v-slot:top>
@@ -324,7 +323,6 @@ import { date } from "quasar";
 const isLoading = ref({
   fetchingPresentations: false,
   newPresentation: false,
-  updatingPresentation: false,
 });
 
 const { t } = useI18n({ useScope: "global" });
@@ -411,19 +409,16 @@ const handleRowUpdate = (event, id) => {
     (presentation) => presentation.id === id
   );
 
-  isLoading.value.updatingPresentation = true;
-
   api
     .patch(`/presentation/${id}`, {
       name: presentation.name,
       description: presentation.description,
       preview_id: presentation.preview_id,
+      is_private: presentation.is_private,
+      lang: presentation.lang,
     })
     .catch((error) => {
       console.log(error);
-    })
-    .finally(() => {
-      isLoading.value.updatingPresentation = false;
     });
 };
 
