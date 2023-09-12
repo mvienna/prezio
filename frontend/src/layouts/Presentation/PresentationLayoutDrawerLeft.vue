@@ -79,7 +79,13 @@
 
               <!-- actions -->
               <div class="absolute-right q-pt-sm q-pr-sm">
-                <q-btn icon="more_vert" round flat size="10px">
+                <q-btn
+                  v-if="presentation.slides.length !== 1"
+                  icon="more_vert"
+                  round
+                  flat
+                  size="10px"
+                >
                   <q-menu
                     anchor="bottom right"
                     self="top right"
@@ -93,7 +99,6 @@
                     >
                       <!-- delete -->
                       <q-item
-                        v-if="presentation.slides.length !== 1"
                         class="items-center justify-start q-px-md q-py-sm text-red"
                         style="border-radius: 8px"
                         clickable
