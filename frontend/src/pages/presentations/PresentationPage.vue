@@ -220,7 +220,7 @@ onMounted(async () => {
   /*
    * resize canvas
    */
-  await resizeCanvas();
+  resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
 
   /*

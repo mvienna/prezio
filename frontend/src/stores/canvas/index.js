@@ -203,6 +203,10 @@ export const useCanvasStore = defineStore("canvas", {
           this.ctx.translate(centerX, centerY);
           this.ctx.rotate((element.rotationAngle * Math.PI) / 180);
           this.ctx.translate(-centerX, -centerY);
+          this.ctx.translate(
+            element.x + element.width / 2,
+            element.y + element.height / 2
+          );
         }
 
         switch (element.mode) {
@@ -451,13 +455,6 @@ export const useCanvasStore = defineStore("canvas", {
      * render image
      */
     renderImage(element) {
-      this.ctx.save();
-      this.ctx.translate(
-        element.x + element.width / 2,
-        element.y + element.height / 2
-      );
-      this.ctx.rotate((element.rotation * Math.PI) / 180);
-
       if (!element?.image?.nodeType) {
         const image = new Image();
         image.src = element.imageSrc;
@@ -482,8 +479,6 @@ export const useCanvasStore = defineStore("canvas", {
           element.height
         );
       }
-
-      this.ctx.restore();
     },
 
     /*
