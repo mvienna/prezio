@@ -18,6 +18,7 @@ export const usePresentationStore = defineStore("presentation", {
     /*
      * save
      */
+    lastChangedAt: null,
     lastSavedAt: null,
     isSaving: false,
     isSavingError: false,
@@ -116,10 +117,10 @@ export const usePresentationStore = defineStore("presentation", {
       this.lastSavedAt = new Date();
     },
 
-    deleteSlide(slide) {
+    async deleteSlide(slide) {
       if (this.presentation.slides.length === 1) return;
 
-      api
+      return await api
         .delete(`/presentation/${this.presentation.id}/slide/${slide.id}`)
         .then((response) => {
           this.presentation = response.data;
@@ -130,8 +131,8 @@ export const usePresentationStore = defineStore("presentation", {
         });
     },
 
-    updateSlidesOrder() {
-      api
+    async updateSlidesOrder() {
+      return await api
         .patch(`/presentation/${this.presentation.id}/slides`, {
           slides: this.presentation.slides,
         })

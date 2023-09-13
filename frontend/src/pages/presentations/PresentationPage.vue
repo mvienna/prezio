@@ -91,7 +91,8 @@ const router = useRouter();
  * stores
  */
 const presentationStore = usePresentationStore();
-const { presentation } = storeToRefs(presentationStore);
+const { presentation, slide, lastSavedAt, lastChangedAt } =
+  storeToRefs(presentationStore);
 
 const canvasStore = useCanvasStore();
 const {
@@ -134,9 +135,63 @@ const mediaStore = useCanvasMediaStore();
 const shapeStore = useCanvasShapeStore();
 
 /*
- * canvas init, setup
+ * canvas setup
  */
 const canvasRef = ref();
+
+onBeforeMount(() => {
+  $q.loading.show({
+    spinner: QSpinnerIos,
+    message: t("loading.fetchingData"),
+  });
+});
+
+onMounted(async () => {
+  canvas.value = canvasRef.value;
+  ctx.value = canvas.value.getContext("2d");
+  ctx.value.imageSmoothingEnabled = true;
+
+  /*
+   * fetch presentation data
+   */
+  await presentationStore
+    .fetchPresentationData(router.currentRoute.value.params.presentation_id)
+    .then(() => {
+      canvasStore.setElementsFromSlide();
+    })
+    .catch((error) => {
+      $q.notify({
+        message: error,
+        color: "red",
+        icon: "r_crisis_alert",
+      });
+
+      router.push(ROUTE_PATHS.DASHBOARD);
+    });
+
+  /*
+   * resize canvas
+   */
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  /*
+   * canvas zoom
+   */
+  canvas.value.addEventListener("wheel", handleWheelEvent);
+
+  /*
+   * shortcuts
+   */
+  document.addEventListener("keydown", handleKeyDownEvent);
+
+  /*
+   *
+   */
+  window.addEventListener("beforeunload", handleUnload);
+
+  $q.loading.hide();
+});
 
 const resizeCanvas = () => {
   canvas.value.width = 1920;
@@ -187,58 +242,20 @@ const handleKeyDownEvent = (event) => {
   }
 };
 
-onBeforeMount(() => {
-  $q.loading.show({
-    spinner: QSpinnerIos,
-    message: t("loading.fetchingData"),
-  });
-});
+const handleUnload = (event) => {
+  if (lastSavedAt.value < lastChangedAt.value) {
+    event.preventDefault();
+    event.returnValue =
+      "You have unsaved changes. Are you sure you want to leave?";
 
-onMounted(async () => {
-  canvas.value = canvasRef.value;
-  ctx.value = canvas.value.getContext("2d");
-  ctx.value.imageSmoothingEnabled = true;
-
-  /*
-   * fetch presentation data
-   */
-  await presentationStore
-    .fetchPresentationData(router.currentRoute.value.params.presentation_id)
-    .then(() => {
-      canvasStore.setElementsFromSlide();
-    })
-    .catch((error) => {
-      $q.notify({
-        message: error,
-        color: "red",
-        icon: "r_crisis_alert",
-      });
-
-      router.push(ROUTE_PATHS.DASHBOARD);
-    });
-
-  /*
-   * resize canvas
-   */
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
-
-  /*
-   * canvas zoom
-   */
-  canvas.value.addEventListener("wheel", handleWheelEvent);
-
-  /*
-   * shortcuts
-   */
-  document.addEventListener("keydown", handleKeyDownEvent);
-
-  $q.loading.hide();
-});
+    presentationStore.saveSlide();
+  }
+};
 
 onUnmounted(() => {
   document.removeEventListener("resize", resizeCanvas);
   document.removeEventListener("keydown", handleKeyDownEvent);
+  document.removeEventListener("beforeunload", handleUnload);
   canvas.value.removeEventListener("wheel", handleWheelEvent);
 });
 

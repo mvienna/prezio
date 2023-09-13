@@ -57,29 +57,89 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
     draw() {
       if (!this.isDrawing) return;
 
+      const currentX = mouse.value.x;
+      const currentY = mouse.value.y;
+
       if (this.last.x !== null && this.last.y !== null) {
-        const deltaX = mouse.value.x - this.last.x;
-        const deltaY = mouse.value.y - this.last.y;
+        const deltaX = currentX - this.last.x;
+        const deltaY = currentY - this.last.y;
         const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         const step = 1.5;
 
         if (distance > step) {
-          const steps = Math.floor(distance / step);
-          const stepX = deltaX / steps;
-          const stepY = deltaY / steps;
-
-          for (let i = 0; i < steps; i++) {
-            const currentX = this.last.x + stepX * i;
-            const currentY = this.last.y + stepY * i;
-            this.drawPoint(currentX, currentY);
+          const simplifiedPoints = this.simplifyPath(
+            this.last.x,
+            this.last.y,
+            currentX,
+            currentY,
+            step
+          );
+          for (const point of simplifiedPoints) {
+            this.drawPoint(point.x, point.y);
           }
         }
       } else {
-        this.drawPoint(mouse.value.x, mouse.value.y);
+        this.drawPoint(currentX, currentY);
       }
 
-      this.last.x = mouse.value.x;
-      this.last.y = mouse.value.y;
+      this.last.x = currentX;
+      this.last.y = currentY;
+    },
+
+    simplifyPath(startX, startY, endX, endY, step) {
+      const points = [
+        { x: startX, y: startY },
+        { x: endX, y: endY },
+      ];
+      return this.ramerDouglasPeucker(points, step);
+    },
+
+    ramerDouglasPeucker(points, epsilon) {
+      if (points.length < 3) {
+        return points;
+      }
+
+      const dMax = 0;
+      let index = 0;
+
+      for (let i = 1; i < points.length - 1; i++) {
+        const d = this.perpendicularDistance(
+          points[i],
+          points[0],
+          points[points.length - 1]
+        );
+        if (d > dMax) {
+          index = i;
+          dMax = d;
+        }
+      }
+
+      if (dMax > epsilon) {
+        const firstPart = this.ramerDouglasPeucker(
+          points.slice(0, index + 1),
+          epsilon
+        );
+        const secondPart = this.ramerDouglasPeucker(
+          points.slice(index),
+          epsilon
+        );
+        return firstPart.slice(0, -1).concat(secondPart);
+      } else {
+        return [points[0], points[points.length - 1]];
+      }
+    },
+
+    perpendicularDistance(point, start, end) {
+      const { x: pX, y: pY } = point;
+      const { x: startX, y: startY } = start;
+      const { x: endX, y: endY } = end;
+
+      const n = Math.abs(
+        (endX - startX) * (startY - pY) - (startX - pX) * (endY - startY)
+      );
+      const d = Math.sqrt((endX - startX) ** 2 + (endY - startY) ** 2);
+
+      return n / d;
     },
 
     drawPoint(x, y) {

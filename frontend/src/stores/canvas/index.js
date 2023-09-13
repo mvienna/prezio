@@ -7,7 +7,7 @@ import { usePresentationStore } from "stores/presentation";
 import { date } from "quasar";
 
 const presentationStore = usePresentationStore();
-const { slide, lastSavedAt } = storeToRefs(presentationStore);
+const { slide, lastSavedAt, lastChangedAt } = storeToRefs(presentationStore);
 
 export const useCanvasStore = defineStore("canvas", {
   state: () => ({
@@ -172,6 +172,8 @@ export const useCanvasStore = defineStore("canvas", {
     },
 
     redrawCanvas(isOnLoad = false, elements) {
+      lastChangedAt.value = new Date();
+
       if (!isOnLoad) {
         const now = new Date();
         const secondsDifference = date.getDateDiff(
@@ -285,16 +287,9 @@ export const useCanvasStore = defineStore("canvas", {
         } else {
           this.ctx.lineTo(point.x, point.y);
         }
-
-        if (
-          i === element.points.length - 1 ||
-          Math.abs(point.x - element.points[i + 1].x) > element.brushSize ||
-          Math.abs(point.y - element.points[i + 1].y) > element.brushSize
-        ) {
-          this.ctx.stroke();
-          this.ctx.beginPath();
-        }
       }
+
+      this.ctx.stroke();
 
       this.ctx.globalAlpha = 1;
     },

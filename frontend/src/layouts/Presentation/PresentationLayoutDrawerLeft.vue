@@ -105,7 +105,7 @@
                         clickable
                         dense
                         v-close-popup
-                        @click="presentationStore.deleteSlide(element)"
+                        @click="handleSlideDeletion(element)"
                       >
                         <q-icon
                           name="r_delete"
@@ -182,9 +182,14 @@ const handleKeyDownEvent = (event) => {
     );
 
     if (slideIndex) {
-      presentationStore.deleteSlide(presentation.value.slides[slideIndex]);
+      handleSlideDeletion(presentation.value.slides[slideIndex]);
     }
   }
+};
+
+const handleSlideDeletion = async (element) => {
+  await presentationStore.deleteSlide(element);
+  canvasStore.redrawCanvas();
 };
 
 onBeforeMount(() => {
@@ -222,7 +227,8 @@ const handleSlidesReorder = async () => {
     item.order = index;
     return item;
   });
-  presentationStore.updateSlidesOrder();
+  await presentationStore.updateSlidesOrder();
+  canvasStore.redrawCanvas();
 };
 
 /*

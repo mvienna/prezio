@@ -91,7 +91,14 @@
         </q-icon>
 
         <!-- presentation is saved -->
-        <q-icon v-else name="r_save" color="grey-4" size="24px">
+        <q-icon
+          v-else
+          name="r_save"
+          color="grey-4"
+          size="24px"
+          class="cursor-pointer"
+          @click="presentationStore.saveSlide()"
+        >
           <q-tooltip>
             {{
               date.formatDate(
