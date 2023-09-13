@@ -72,6 +72,9 @@
               @mouseover="hoveredSlideIndex = index"
               @mouseleave="hoveredSlideIndex = null"
               @click="handleSlideSelection(element)"
+              @contextmenu.prevent="
+                showSlideContextMenu[index] = !showSlideContextMenu[index]
+              "
             >
               <q-img :src="element.preview" style="width: 100%; height: 100%" />
 
@@ -85,12 +88,12 @@
                   size="10px"
                 >
                   <q-menu
+                    v-model="showSlideContextMenu[index]"
                     anchor="bottom right"
                     self="top right"
                     transition-show="jump-down"
                     transition-hide="jump-up"
                     :offset="[0, 8]"
-                    class="q-pa-sm"
                   >
                     <q-list
                       class="full-height column q-gutter-sm text-semibold"
@@ -157,6 +160,8 @@ import { useCanvasStore } from "stores/canvas";
  * variables
  */
 const leftDrawerOpen = ref(true);
+
+const showSlideContextMenu = ref([]);
 
 /*
  * stores
