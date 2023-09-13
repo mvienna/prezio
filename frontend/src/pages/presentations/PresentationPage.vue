@@ -305,6 +305,7 @@ const isJustDragged = ref(false);
 
 const handleCanvasMouseDown = () => {
   isJustDragged.value = false;
+  selectElement();
 
   /*
    * start resizing
@@ -461,16 +462,8 @@ const handleCanvasClick = (event) => {
             return;
           }
         }
-      } else {
-        selectElement();
       }
       break;
-
-    /*
-     * other elements
-     */
-    default:
-      selectElement();
   }
 };
 
