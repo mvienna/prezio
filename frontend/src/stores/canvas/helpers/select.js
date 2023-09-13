@@ -39,7 +39,7 @@ export const getHoveredElement = () => {
             mouse.value.y <= maxY
           ) {
             hoveredElement = element;
-            hoveredElementIndex = elements.value - 1 - index;
+            hoveredElementIndex = elements.value.length - 1 - index;
           }
           break;
 
@@ -70,7 +70,7 @@ export const getHoveredElement = () => {
         //       rotatedMouseY <= maxY
         //   ) {
         //     hoveredElement = element;
-        //     hoveredElementIndex = elements.value - 1 - index;
+        //     hoveredElementIndex = elements.value.length - 1 - index;
         //   }
         //   break;
 
@@ -91,7 +91,7 @@ export const getHoveredElement = () => {
               )
           ) {
             hoveredElement = element;
-            hoveredElementIndex = elements.value - 1 - index;
+            hoveredElementIndex = elements.value.length - 1 - index;
           }
           break;
 
@@ -123,7 +123,7 @@ export const getHoveredElement = () => {
         //     Math.round(element.y + canvasStore.computeAdjustedSize(element.height))
         // ) {
         //   hoveredElement = element;
-        //   hoveredElementIndex = elements.value - 1 - index;
+        //   hoveredElementIndex = elements.value.length - 1 - index;
         // }
         // break;
 
@@ -155,7 +155,7 @@ export const getHoveredElement = () => {
             Math.round(rotatedMouseY) <= Math.round(element.y + element.height)
           ) {
             hoveredElement = element;
-            hoveredElementIndex = elements.value - 1 - index;
+            hoveredElementIndex = elements.value.length - 1 - index;
           }
           break;
       }
