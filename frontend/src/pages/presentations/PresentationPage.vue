@@ -484,7 +484,6 @@ watch(
 
 .q-page {
   height: calc(100vh - 66px);
-  overflow-y: scroll;
 }
 
 .canvas__wrapper {
