@@ -91,7 +91,7 @@ const router = useRouter();
  * stores
  */
 const presentationStore = usePresentationStore();
-const { presentation, slide, lastSavedAt, lastChangedAt } =
+const { presentation, lastSavedAt, lastChangedAt } =
   storeToRefs(presentationStore);
 
 const canvasStore = useCanvasStore();
@@ -317,10 +317,12 @@ const handleCanvasMouseDown = () => {
   isJustDragged.value = false;
 
   if (mode.value !== MODES_OPTIONS.value.textEditing) {
-    selectElement();
+    if (!resizeHandle.value && !rotationHandle.value) {
+      selectElement();
 
-    if (selectedElement.value) {
-      timesSelected.value++;
+      if (selectedElement.value) {
+        timesSelected.value++;
+      }
     }
   }
 
