@@ -150,7 +150,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onBeforeMount, onUnmounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationStore } from "stores/presentation";
 import draggable from "vuedraggable/src/vuedraggable";
@@ -161,8 +161,6 @@ import { useCanvasStore } from "stores/canvas";
  */
 const leftDrawerOpen = ref(true);
 
-const showSlideContextMenu = ref([]);
-
 /*
  * stores
  */
@@ -171,6 +169,31 @@ const { presentation, slide } = storeToRefs(presentationStore);
 
 const canvasStore = useCanvasStore();
 const { elements } = storeToRefs(canvasStore);
+
+/*
+ * slide context menu
+ */
+const showSlideContextMenu = ref([]);
+
+const handleKeyDownEvent = (event) => {
+  if (event.key === "Delete" || event.key === "Backspace") {
+    const slideIndex = showSlideContextMenu.value.findIndex(
+      (value) => value === true
+    );
+
+    if (slideIndex) {
+      presentationStore.deleteSlide(presentation.value.slides[slideIndex]);
+    }
+  }
+};
+
+onBeforeMount(() => {
+  document.addEventListener("keydown", handleKeyDownEvent);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleKeyDownEvent);
+});
 
 /*
  * slides drag
