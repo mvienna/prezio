@@ -155,6 +155,7 @@ import { storeToRefs } from "pinia";
 import { usePresentationStore } from "stores/presentation";
 import draggable from "vuedraggable/src/vuedraggable";
 import { useCanvasStore } from "stores/canvas";
+import { deselectElement } from "stores/canvas/helpers/select";
 
 /*
  * variables
@@ -239,6 +240,7 @@ const hoveredSlideIndex = ref(null);
 const handleSlideSelection = async (slide) => {
   await presentationStore.setSlide(slide, elements.value);
   canvasStore.setElementsFromSlide();
+  deselectElement();
   canvasStore.redrawCanvas();
 };
 
