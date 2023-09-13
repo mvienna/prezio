@@ -51,7 +51,7 @@
             <div class="column no-wrap justify-between q-pr-md">
               <!-- index -->
               <div
-                class="text-center text-h7"
+                class="text-center"
                 :class="element.id === slide.id ? 'text-semibold' : ''"
               >
                 {{ index + 1 }}
