@@ -248,7 +248,7 @@ const handleUnload = (event) => {
     event.returnValue =
       "You have unsaved changes. Are you sure you want to leave?";
 
-    presentationStore.saveSlide();
+    presentationStore.saveSlide(undefined, elements.value);
   }
 };
 
