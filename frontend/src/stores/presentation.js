@@ -3,10 +3,21 @@ import { api } from "boot/axios";
 
 export const usePresentationStore = defineStore("presentation", {
   state: () => ({
+    /*
+     * presentations
+     */
     presentations: [],
+    search: "",
+
+    /*
+     * presentation
+     */
     presentation: null,
     slide: null,
 
+    /*
+     * save
+     */
     lastSavedAt: null,
     isSaving: false,
     isSavingError: false,

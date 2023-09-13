@@ -14,14 +14,15 @@
         <q-table
           :rows="presentations"
           :columns="presentationsColumns"
-          hide-bottom
-          flat
-          row-key="id"
+          :filter="search"
           selection="multiple"
+          v-model:selected="selectedPresentations"
+          row-key="id"
+          flat
+          hide-bottom
           separator="none"
           color="primary"
           class="bg-grey-2 q-mt-lg"
-          v-model:selected="selectedPresentations"
           @row-click="handlePresentationClick"
         >
           <template v-slot:top>
@@ -316,7 +317,7 @@ const router = useRouter();
  * presentations store
  */
 const presentationStore = usePresentationStore();
-const { presentations } = storeToRefs(presentationStore);
+const { presentations, search } = storeToRefs(presentationStore);
 
 /*
  * fetch presentations

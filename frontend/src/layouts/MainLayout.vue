@@ -4,6 +4,7 @@
       <q-toolbar>
         <!-- search -->
         <q-input
+          v-model="search"
           :placeholder="$t('mainLayout.header.search')"
           dense
           borderless
@@ -100,6 +101,8 @@ import { useI18n } from "vue-i18n";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { useRouter } from "vue-router";
 import UserMenu from "components/user/UserMenu.vue";
+import { usePresentationStore } from "stores/presentation";
+import { storeToRefs } from "pinia";
 
 /*
  * variables
@@ -107,6 +110,12 @@ import UserMenu from "components/user/UserMenu.vue";
 const { t } = useI18n({ useScope: "global" });
 
 const router = useRouter();
+
+/*
+ * presentation store
+ */
+const presentationStore = usePresentationStore();
+const { search } = storeToRefs(presentationStore);
 
 /*
  * left drawer
