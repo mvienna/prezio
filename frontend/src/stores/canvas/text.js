@@ -309,7 +309,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
        */
       if (
         selectedElement.value &&
-        selectedElement.value.mode === MODES_OPTIONS.value.text
+        (selectedElement.value.mode === MODES_OPTIONS.value.text ||
+          selectedElement.value.mode === MODES_OPTIONS.value.textEditing)
       ) {
         selectedElement.value.color = this.customization.color;
 

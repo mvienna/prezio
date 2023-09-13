@@ -302,10 +302,14 @@ const canvasCursorClass = computed(() => {
  * canvas events
  */
 const isJustDragged = ref(false);
+const timesSelected = ref(0);
 
 const handleCanvasMouseDown = () => {
   isJustDragged.value = false;
   selectElement();
+  if (selectedElement.value) {
+    timesSelected.value++;
+  }
 
   /*
    * start resizing
@@ -454,13 +458,17 @@ const handleCanvasClick = (event) => {
 
       // edit text on second selection
       // skip if just dragged
-      if (selectedElement.value) {
-        if (!isJustDragged.value) {
-          doubleSelectElement();
-          if (mode.value === MODES_OPTIONS.value.textEditing) {
-            textStore.editText();
-            return;
-          }
+      if (
+        selectedElement.value &&
+        !isJustDragged.value &&
+        timesSelected.value > 1
+      ) {
+        doubleSelectElement();
+        timesSelected.value = 0;
+
+        if (mode.value === MODES_OPTIONS.value.textEditing) {
+          textStore.editText();
+          return;
         }
       }
       break;

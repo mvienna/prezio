@@ -119,7 +119,12 @@
       <!-- drawing customization -->
       <template v-if="mode === MODES_OPTIONS.drawing">
         <!-- color picker -->
-        <q-btn icon="r_colorize" flat round size="12px">
+        <q-btn flat round size="12px">
+          <q-icon
+            name="r_colorize"
+            :style="`color: ${drawingState.customization.value.color}`"
+          />
+
           <q-menu
             anchor="bottom left"
             self="top left"
@@ -131,7 +136,7 @@
               format-model="hex"
               no-header-tabs
               v-model="drawingState.customization.value.color"
-              @input="drawingStore.applyStyles()"
+              @update:model-value="drawingStore.applyStyles()"
             />
           </q-menu>
 
@@ -209,7 +214,9 @@
       </template>
 
       <!-- text customization -->
-      <template v-if="mode === MODES_OPTIONS.text">
+      <template
+        v-if="mode === MODES_OPTIONS.text || mode === MODES_OPTIONS.textEditing"
+      >
         <!-- formatting - bold -->
         <q-btn
           outline
@@ -417,7 +424,12 @@
         <q-separator vertical class="q-ml-md q-mr-sm" />
 
         <!-- color picker -->
-        <q-btn icon="r_colorize" flat round size="12px">
+        <q-btn flat round size="12px">
+          <q-icon
+            name="r_colorize"
+            :style="`color: ${textState.customization.value.color}`"
+          />
+
           <q-menu
             anchor="bottom left"
             self="top left"
@@ -429,7 +441,7 @@
               format-model="hex"
               no-header-tabs
               v-model="textState.customization.value.color"
-              @input="textStore.applyStyles()"
+              @update:model-value="textStore.applyStyles()"
             />
           </q-menu>
 
@@ -546,7 +558,12 @@
         </q-btn>
 
         <!-- color picker -->
-        <q-btn icon="r_colorize" flat round size="12px">
+        <q-btn flat round size="12px">
+          <q-icon
+            name="r_colorize"
+            :style="`color: ${shapeState.customization.value.strokeColor}`"
+          />
+
           <q-menu
             anchor="bottom left"
             self="top left"
@@ -558,7 +575,7 @@
               format-model="hex"
               no-header-tabs
               v-model="shapeState.customization.value.strokeColor"
-              @input="shapeStore.applyStyles()"
+              @update:model-value="shapeStore.applyStyles()"
             />
 
             <div class="q-pa-sm">
@@ -583,7 +600,12 @@
         </q-btn>
 
         <!-- fill color picker -->
-        <q-btn icon="r_format_color_fill" flat round size="12px">
+        <q-btn flat round size="12px">
+          <q-icon
+            name="r_format_color_fill"
+            :style="`color: ${shapeState.customization.value.fillColor}`"
+          />
+
           <q-menu
             anchor="bottom left"
             self="top left"
@@ -595,7 +617,7 @@
               format-model="hex"
               no-header-tabs
               v-model="shapeState.customization.value.fillColor"
-              @input="shapeStore.applyStyles()"
+              @update:model-value="shapeStore.applyStyles()"
             />
 
             <div class="q-pa-sm">
@@ -703,7 +725,6 @@ import {
   FONT_SIZE_OPTIONS,
   ALIGNMENT,
   SHAPE_LINE_WIDTH_OPTIONS,
-  SHAPES_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 
@@ -734,13 +755,17 @@ watch(
   () => selectedElementIndex.value,
   () => {
     if (selectedElementIndex.value !== -1) {
-      switch (selectedElementIndex.value.mode) {
+      switch (selectedElement.value.mode) {
         case MODES_OPTIONS.value.text:
           textStore.loadSelectedElementCustomization();
           break;
 
         case MODES_OPTIONS.value.drawing:
           drawingStore.loadSelectedElementCustomization();
+          break;
+
+        case MODES_OPTIONS.value.shape:
+          shapeStore.loadSelectedElementCustomization();
           break;
       }
     }
@@ -758,6 +783,7 @@ const showCustomizationMenu = computed(() => {
     [
       MODES_OPTIONS.value.drawing,
       MODES_OPTIONS.value.text,
+      MODES_OPTIONS.value.textEditing,
       MODES_OPTIONS.value.shape,
     ].includes(mode.value)
   );
