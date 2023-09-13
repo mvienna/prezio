@@ -202,3 +202,19 @@ a, .link {
 .q-icon{
   font-weight: 100;
 }
+
+/*
+ * color picker
+ */
+.q-color-picker {
+  box-shadow: none;
+}
+
+.q-color-picker__footer .q-tab--inactive {
+  color: $grey;
+  background: transparent;
+}
+
+.q-color-picker .q-tab--active {
+  box-shadow: none;
+}

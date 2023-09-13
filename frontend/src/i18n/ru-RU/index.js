@@ -257,6 +257,7 @@ export default {
       options: {
         color: "Цвет",
         fill: "Заливка",
+        removeFill: "Убрать заливку",
         lineWidth: "Размер",
       },
     },

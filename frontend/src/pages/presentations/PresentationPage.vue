@@ -2,16 +2,10 @@
   <q-page>
     <!-- toolbar -->
     <PresentationToolbarTop
-      :is-drawing-mode="mode === MODES_OPTIONS.drawing"
-      :is-text-mode="mode === MODES_OPTIONS.text"
-      :is-media-mode="
-        [MODES_OPTIONS.media, MODES_OPTIONS.mediaEmoji].includes(mode)
-      "
       @switch-mode="canvasStore.switchMode($event)"
       @deselect="selectedElement ? deselectElement() : ''"
       @delete="selectedElement ? deleteElement() : ''"
       @add-image="mediaStore.addImage($event)"
-      @apply-formatting="textStore.applyStyles()"
       @add-shape="shapeStore.addShape($event)"
     />
 

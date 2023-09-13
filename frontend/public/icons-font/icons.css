@@ -1,7 +1,7 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.woff?9da0b4b2710c0734df1f3ab5429c91ba") format("woff"),
-url("./icons.woff2?9da0b4b2710c0734df1f3ab5429c91ba") format("woff2");
+    src: url("./icons.woff?d4c3121e99da1bca00055684846a2c90") format("woff"),
+url("./icons.woff2?d4c3121e99da1bca00055684846a2c90") format("woff2");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -15,6 +15,9 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-eraser:before {
+.icon-eraser_off:before {
     content: "\f101";
+}
+.icon-eraser:before {
+    content: "\f102";
 }

@@ -257,6 +257,7 @@ export default {
       options: {
         color: "Color",
         fill: "Fill",
+        removeFill: "Reset Fill",
         lineWidth: "Line width",
       },
     },
