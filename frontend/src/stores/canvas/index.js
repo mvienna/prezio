@@ -288,6 +288,7 @@ export const useCanvasStore = defineStore("canvas", {
       this.ctx.stroke();
 
       this.ctx.globalAlpha = 1;
+      this.ctx.beginPath();
     },
 
     /*
