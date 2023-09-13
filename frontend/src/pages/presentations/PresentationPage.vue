@@ -315,9 +315,13 @@ const timesSelected = ref(0);
 
 const handleCanvasMouseDown = () => {
   isJustDragged.value = false;
-  selectElement();
-  if (selectedElement.value) {
-    timesSelected.value++;
+
+  if (mode.value !== MODES_OPTIONS.value.textEditing) {
+    selectElement();
+
+    if (selectedElement.value) {
+      timesSelected.value++;
+    }
   }
 
   /*
