@@ -17,7 +17,9 @@ export const getHoveredElement = () => {
 
   let angle, centerX, centerY, rotatedMouseX, rotatedMouseY;
 
-  elements.value
+  const reversedElements = [...elements.value].reverse();
+
+  reversedElements
     .filter((element) => !element.isLocked)
     .map((element, index) => {
       switch (element.mode) {
@@ -37,7 +39,7 @@ export const getHoveredElement = () => {
             mouse.value.y <= maxY
           ) {
             hoveredElement = element;
-            hoveredElementIndex = index;
+            hoveredElementIndex = elements.value - 1 - index;
           }
           break;
 
@@ -68,7 +70,7 @@ export const getHoveredElement = () => {
         //       rotatedMouseY <= maxY
         //   ) {
         //     hoveredElement = element;
-        //     hoveredElementIndex = index;
+        //     hoveredElementIndex = elements.value - 1 - index;
         //   }
         //   break;
 
@@ -89,7 +91,7 @@ export const getHoveredElement = () => {
               )
           ) {
             hoveredElement = element;
-            hoveredElementIndex = index;
+            hoveredElementIndex = elements.value - 1 - index;
           }
           break;
 
@@ -121,7 +123,7 @@ export const getHoveredElement = () => {
         //     Math.round(element.y + canvasStore.computeAdjustedSize(element.height))
         // ) {
         //   hoveredElement = element;
-        //   hoveredElementIndex = index;
+        //   hoveredElementIndex = elements.value - 1 - index;
         // }
         // break;
 
@@ -153,7 +155,7 @@ export const getHoveredElement = () => {
             Math.round(rotatedMouseY) <= Math.round(element.y + element.height)
           ) {
             hoveredElement = element;
-            hoveredElementIndex = index;
+            hoveredElementIndex = elements.value - 1 - index;
           }
           break;
       }
