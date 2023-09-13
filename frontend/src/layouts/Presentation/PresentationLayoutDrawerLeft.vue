@@ -190,6 +190,7 @@ const handleKeyDownEvent = (event) => {
 
 const handleSlideDeletion = async (element) => {
   await presentationStore.deleteSlide(element);
+  canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas();
 };
 
