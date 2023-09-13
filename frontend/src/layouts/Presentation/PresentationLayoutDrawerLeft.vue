@@ -48,7 +48,7 @@
       >
         <template #item="{ element, index }">
           <div class="row no-wrap">
-            <div class="column no-wrap justify-between q-px-sm">
+            <div class="column no-wrap justify-between q-pr-md">
               <!-- index -->
               <div
                 class="text-center text-h7"
@@ -56,23 +56,21 @@
               >
                 {{ index + 1 }}
               </div>
-
-              <!-- drag handle -->
-              <q-icon
-                name="r_drag_indicator"
-                color="grey"
-                size="sm"
-                class="slide_handle q-mb-sm"
-              />
             </div>
 
             <!-- preview -->
             <q-card
               flat
               v-ripple
-              class="relative-position q-py-xl cursor-pointer q-hoverable slide"
-              :class="element.id === slide.id ? 'slide--active' : ''"
+              class="slide slide_handle relative-position q-py-xl cursor-pointer q-hoverable"
+              :class="`${element.id === slide.id ? 'slide--active' : ''} ${
+                !isSlideDragging && hoveredSlideIndex === index
+                  ? 'slide--hovered'
+                  : ''
+              }`"
               style="width: 100%"
+              @mouseover="hoveredSlideIndex = index"
+              @mouseleave="hoveredSlideIndex = null"
               @click="handleSlideSelection(element)"
             >
               <q-img :src="element.preview" style="width: 100%; height: 100%" />
@@ -133,7 +131,7 @@
           v-ripple
           color="primary"
           class="bg-blue-1 relative-position q-py-xl q-mt-md cursor-pointer q-hoverable slide"
-          style="width: 228px"
+          style="width: 244px"
           @click="handleAddingNewSlide()"
         >
           <q-icon
@@ -202,6 +200,8 @@ const handleSlidesReorder = async () => {
 /*
  * slides selection
  */
+const hoveredSlideIndex = ref(null);
+
 const handleSlideSelection = async (slide) => {
   await presentationStore.setSlide(slide, elements.value);
   canvasStore.setElementsFromSlide();
@@ -222,7 +222,7 @@ const handleAddingNewSlide = async () => {
   border: 1.5px solid $grey-2;
   aspect-ratio: 16/9;
 
-  &:hover {
+  &.slide--hovered {
     outline: 3px solid $blue-3;
   }
 
