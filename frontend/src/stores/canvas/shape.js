@@ -13,7 +13,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
      * customization
      */
     customization: {
-      strokeColor: null,
+      strokeColor: "#4971FF",
       fillColor: "#4971FF",
       lineWidth: "4px",
     },
