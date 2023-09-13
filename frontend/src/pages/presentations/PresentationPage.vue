@@ -186,7 +186,7 @@ onMounted(async () => {
   document.addEventListener("keydown", handleKeyDownEvent);
 
   /*
-   *
+   * unsaved changes warning
    */
   window.addEventListener("beforeunload", handleUnload);
 
@@ -212,6 +212,14 @@ const handleWheelEvent = (event) => {
 };
 
 const handleKeyDownEvent = (event) => {
+  if (event.ctrlKey || event.metaKey) {
+    // save slide
+    if (event.key === "s") {
+      event.preventDefault();
+      presentationStore.saveSlide();
+    }
+  }
+
   if (selectedElement.value) {
     // delete selected element
     if (event.key === "Delete" || event.key === "Backspace") {
@@ -225,6 +233,7 @@ const handleKeyDownEvent = (event) => {
       deselectElement();
     }
 
+    // text shortcuts (formatting)
     switch (selectedElement.value?.mode) {
       case MODES_OPTIONS.value.text:
         textStore.shortcuts(event);
