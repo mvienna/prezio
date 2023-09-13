@@ -255,10 +255,11 @@ export default {
     },
     shapes: {
       options: {
-        color: "Color",
-        fill: "Fill",
-        removeFill: "Reset Fill",
-        lineWidth: "Line width",
+        strokeColor: "Stroke Color",
+        removeStrokeColor: "Remove Stroke",
+        fillColor: "Fill Color",
+        removeFillColor: "Remove Fill",
+        lineWidth: "Line Width",
       },
     },
 

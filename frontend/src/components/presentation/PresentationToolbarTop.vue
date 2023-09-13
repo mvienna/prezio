@@ -557,13 +557,28 @@
             <q-color
               format-model="hex"
               no-header-tabs
-              v-model="shapeState.customization.value.color"
+              v-model="shapeState.customization.value.strokeColor"
               @input="shapeStore.applyStyles()"
             />
+
+            <div class="q-pa-sm">
+              <q-btn
+                icon="r_format_color_reset"
+                class="full-width"
+                color="red"
+                flat
+                no-caps
+                :label="$t('presentation.shapes.options.removeStrokeColor')"
+                @click="
+                  shapeState.customization.value.strokeColor = null;
+                  shapeStore.applyStyles();
+                "
+              />
+            </div>
           </q-menu>
 
           <q-tooltip :offset="[0, 4]">
-            {{ $t("presentation.shapes.options.color") }}
+            {{ $t("presentation.shapes.options.strokeColor") }}
           </q-tooltip>
         </q-btn>
 
@@ -579,7 +594,7 @@
             <q-color
               format-model="hex"
               no-header-tabs
-              v-model="shapeState.customization.value.fill"
+              v-model="shapeState.customization.value.fillColor"
               @input="shapeStore.applyStyles()"
             />
 
@@ -590,9 +605,9 @@
                 color="red"
                 flat
                 no-caps
-                :label="$t('presentation.shapes.options.removeFill')"
+                :label="$t('presentation.shapes.options.removeFillColor')"
                 @click="
-                  shapeState.customization.value.fill = null;
+                  shapeState.customization.value.fillColor = null;
                   shapeStore.applyStyles();
                 "
               />
@@ -601,7 +616,7 @@
 
           <q-tooltip :offset="[0, 4]">
             <div>
-              {{ $t("presentation.shapes.options.fill") }}
+              {{ $t("presentation.shapes.options.fillColor") }}
             </div>
           </q-tooltip>
         </q-btn>

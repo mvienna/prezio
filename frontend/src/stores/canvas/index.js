@@ -482,7 +482,7 @@ export const useCanvasStore = defineStore("canvas", {
      * render shape
      */
     renderShape(element) {
-      this.ctx.strokeStyle = element.color;
+      this.ctx.strokeStyle = element.strokeColor || "rgba(255, 0, 0, 0)";
       this.ctx.lineWidth = element.lineWidth;
       this.ctx.beginPath();
 
@@ -499,8 +499,8 @@ export const useCanvasStore = defineStore("canvas", {
             2 * Math.PI
           );
 
-          if (element.fill) {
-            this.ctx.fillStyle = element.fill;
+          if (element.fillColor) {
+            this.ctx.fillStyle = element.fillColor;
             this.ctx.fill();
           }
 
@@ -512,8 +512,8 @@ export const useCanvasStore = defineStore("canvas", {
         case SHAPES_OPTIONS.square:
           this.ctx.rect(element.x, element.y, element.width, element.width);
 
-          if (element.fill) {
-            this.ctx.fillStyle = element.fill;
+          if (element.fillColor) {
+            this.ctx.fillStyle = element.fillColor;
             this.ctx.fill();
           }
 
@@ -536,8 +536,8 @@ export const useCanvasStore = defineStore("canvas", {
           this.ctx.lineTo(triangleX3, triangleY3);
           this.ctx.lineTo(triangleX1, triangleY1);
 
-          if (element.fill) {
-            this.ctx.fillStyle = element.fill;
+          if (element.fillColor) {
+            this.ctx.fillStyle = element.fillColor;
             this.ctx.fill();
           }
 
@@ -568,8 +568,8 @@ export const useCanvasStore = defineStore("canvas", {
 
           this.ctx.lineTo(cx, cy - outerRadius);
 
-          if (element.fill) {
-            this.ctx.fillStyle = element.fill;
+          if (element.fillColor) {
+            this.ctx.fillStyle = element.fillColor;
             this.ctx.fill();
           }
 

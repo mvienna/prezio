@@ -255,9 +255,10 @@ export default {
     },
     shapes: {
       options: {
-        color: "Цвет",
-        fill: "Заливка",
-        removeFill: "Убрать заливку",
+        strokeColor: "Цвет обводки",
+        removeStrokeColor: "Убрать обводку",
+        fillColor: "Цвет заливки",
+        removeFillColor: "Убрать заливку",
         lineWidth: "Размер",
       },
     },

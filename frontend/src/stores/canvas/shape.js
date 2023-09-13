@@ -13,8 +13,8 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
      * customization
      */
     customization: {
-      color: "#000000",
-      fill: null,
+      strokeColor: null,
+      fillColor: "#4971FF",
       lineWidth: "4px",
     },
   }),
@@ -45,8 +45,8 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         width: newImageWidth,
         height: newImageHeight,
         rotationAngle: 0,
-        color: this.customization.color,
-        fill: this.customization.fill,
+        strokeColor: this.customization.strokeColor,
+        fillColor: this.customization.fillColor,
         lineWidth: this.customization.lineWidth,
       };
 
@@ -62,8 +62,8 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         selectedElement.value &&
         selectedElement.value.mode === MODES_OPTIONS.value.shape
       ) {
-        selectedElement.value.color = this.customization.color;
-        selectedElement.value.fill = this.customization.fill;
+        selectedElement.value.strokeColor = this.customization.strokeColor;
+        selectedElement.value.fillColor = this.customization.fillColor;
         selectedElement.value.lineWidth = this.customization.lineWidth;
 
         updateSelectedElement();
@@ -72,8 +72,8 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
     },
 
     loadSelectedElementCustomization() {
-      this.customization.color = selectedElement.value.color;
-      this.customization.fill = selectedElement.value.fill;
+      this.customization.strokeColor = selectedElement.value.strokeColor;
+      this.customization.fillColor = selectedElement.value.fillColor;
       this.customization.lineWidth = selectedElement.value.lineWidth;
     },
   },
