@@ -16,8 +16,6 @@
         id="canvas"
         :class="[canvasCursorClass, canvasHighlightClass]"
         @mousedown="handleCanvasMouseDown"
-        @mousemove="handleCanvasMouseMove"
-        @mouseup="handleCanvasMouseUp"
         @mouseleave="handleCanvasMouseLeave"
         @click="handleCanvasClick"
       ></canvas>
@@ -182,6 +180,12 @@ onMounted(async () => {
   canvas.value.addEventListener("wheel", handleWheelEvent);
 
   /*
+   * mouse events
+   */
+  document.addEventListener("mousemove", handleCanvasMouseMove);
+  document.addEventListener("mouseup", handleCanvasMouseUp);
+
+  /*
    * shortcuts
    */
   document.addEventListener("keydown", handleKeyDownEvent);
@@ -196,6 +200,8 @@ onMounted(async () => {
 
 onUnmounted(() => {
   document.removeEventListener("resize", resizeCanvas);
+  document.removeEventListener("mousemove", handleCanvasMouseMove);
+  document.removeEventListener("mouseup", handleCanvasMouseUp);
   document.removeEventListener("keydown", handleKeyDownEvent);
   document.removeEventListener("beforeunload", handleUnload);
   canvas.value.removeEventListener("wheel", handleWheelEvent);
