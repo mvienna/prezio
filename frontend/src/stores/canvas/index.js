@@ -268,7 +268,7 @@ export const useCanvasStore = defineStore("canvas", {
       /*
        * compute preview
        */
-      slide.value.preview = this.canvas.toDataURL("image/png");
+      // slide.value.preview = this.canvas.toDataURL("image/png");
     },
 
     /*
