@@ -12,6 +12,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
      */
     addImage(url) {
       const image = new Image();
+      image.crossOrigin = "anonymous";
       image.src = url;
 
       image.onload = () => {

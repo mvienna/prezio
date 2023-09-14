@@ -77,7 +77,6 @@ import { useRouter } from "vue-router";
 import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationStore } from "stores/presentation";
-import { Canvas2Image } from "src/helpers/canvas2image";
 
 /*
  * variables
@@ -218,10 +217,6 @@ const handleKeyDownEvent = (event) => {
     if (event.key === "s") {
       event.preventDefault();
       presentationStore.saveSlide();
-    }
-
-    if (event.key === "i") {
-      Canvas2Image.saveAsPNG(canvas.value, 1920, 1080);
     }
   }
 
