@@ -1,13 +1,14 @@
 <template>
   <div class="presentation_toolbar__top bg-white q-pa-md row no-wrap">
-    <div v-if="!showCustomizationMenu" class="row no-wrap q-gutter-md">
+    <div class="row no-wrap q-gutter-sm">
       <!-- drawing -->
       <q-btn
         icon="r_gesture"
         unelevated
-        text-color="dark"
+        text-color="primary"
         round
         size="12px"
+        :class="mode === MODES_OPTIONS.drawing ? 'bg-blue-1' : ''"
         @click="$emit('switchMode', MODES_OPTIONS.drawing)"
       >
         <q-tooltip>
@@ -19,9 +20,10 @@
       <q-btn
         icon="r_text_fields"
         unelevated
-        text-color="dark"
+        text-color="primary"
         round
         size="12px"
+        :class="mode === MODES_OPTIONS.text ? 'bg-blue-1' : ''"
         @click="$emit('switchMode', MODES_OPTIONS.text)"
       >
         <q-tooltip>
@@ -33,7 +35,7 @@
       <q-btn
         icon="r_image"
         unelevated
-        text-color="dark"
+        text-color="primary"
         round
         size="12px"
         @click="
@@ -50,7 +52,7 @@
       <q-btn
         icon="r_add_reaction"
         unelevated
-        text-color="dark"
+        text-color="primary"
         round
         size="12px"
         @click="$emit('switchMode', MODES_OPTIONS.mediaEmoji)"
@@ -88,7 +90,14 @@
       </q-btn>
 
       <!-- shapes -->
-      <q-btn icon="r_shape_line" unelevated text-color="dark" round size="12px">
+      <q-btn
+        icon="r_shape_line"
+        :class="mode === MODES_OPTIONS.shape ? 'bg-blue-1' : ''"
+        unelevated
+        text-color="primary"
+        round
+        size="12px"
+      >
         <q-menu
           anchor="bottom left"
           self="top left"
@@ -125,20 +134,12 @@
       </q-btn>
     </div>
 
+    <q-separator vertical class="q-ml-md q-mr-sm" />
+
     <div
       v-if="showCustomizationMenu"
       class="row no-wrap items-center q-gutter-sm full-width"
     >
-      <q-icon
-        name="r_arrow_back_ios_new"
-        size="20px"
-        class="cursor-pointer"
-        color="grey-5"
-        @click="mode = null"
-      />
-
-      <q-separator vertical class="q-ml-md q-mr-sm" />
-
       <!-- drawing customization -->
       <template v-if="mode === MODES_OPTIONS.drawing">
         <!-- color picker -->

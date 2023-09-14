@@ -256,6 +256,7 @@ export const deleteElement = (element = selectedElement.value) => {
     selectedElement.value = null;
     selectedElementIndex.value = -1;
 
+    deselectElement();
     canvasStore.redrawCanvas();
   }
 };
