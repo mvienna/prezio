@@ -9,6 +9,7 @@ const {
   MODES_OPTIONS,
   selectedElement,
   selectedElementIndex,
+  magnet,
 } = storeToRefs(canvasStore);
 
 export const getHoveredElement = () => {
@@ -186,6 +187,7 @@ export const selectElement = (element = null) => {
     canvasStore.switchMode(selectedElement.value.mode);
   }
 
+  magnet.value.axis = null;
   canvasStore.redrawCanvas();
 };
 
@@ -209,6 +211,8 @@ export const doubleSelectElement = () => {
           break;
       }
   }
+
+  magnet.value.axis = null;
 };
 
 export const deselectElement = () => {
@@ -217,6 +221,8 @@ export const deselectElement = () => {
     selectedElementIndex.value = -1;
     canvasStore.redrawCanvas();
   }
+
+  magnet.value.axis = null;
 };
 
 export const deleteElement = (element = selectedElement.value) => {
