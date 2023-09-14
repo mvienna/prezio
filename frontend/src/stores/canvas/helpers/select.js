@@ -180,6 +180,8 @@ export const selectElement = (element = null) => {
     if (hoveredElement) {
       selectedElement.value = hoveredElement;
       selectedElementIndex.value = hoveredElementIndex;
+    } else {
+      mode.value = null;
     }
   }
 
@@ -223,6 +225,7 @@ export const deselectElement = () => {
   }
 
   magnet.value.axis = null;
+  mode.value = null;
 };
 
 export const deleteElement = (element = selectedElement.value) => {
