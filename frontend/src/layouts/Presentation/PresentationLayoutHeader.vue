@@ -97,7 +97,7 @@
           color="grey-4"
           size="24px"
           class="cursor-pointer"
-          @click="presentationStore.saveSlide()"
+          @click="presentationStore.saveSlide(undefined, elements)"
         >
           <q-tooltip>
             {{
@@ -184,11 +184,15 @@ import UserMenu from "components/user/UserMenu.vue";
 import { usePresentationStore } from "stores/presentation";
 import { storeToRefs } from "pinia";
 import { date } from "quasar";
+import { useCanvasStore } from "stores/canvas";
 
 /*
- * presentation store
+ * stores
  */
 const presentationStore = usePresentationStore();
 const { presentation, isSaving, isSavingError, lastSavedAt } =
   storeToRefs(presentationStore);
+
+const canvasStore = useCanvasStore();
+const { elements } = storeToRefs(canvasStore);
 </script>
