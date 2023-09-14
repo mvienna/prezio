@@ -1,7 +1,10 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
-import { updateSelectedElement } from "stores/canvas/helpers/select";
+import {
+  selectElement,
+  updateSelectedElement,
+} from "stores/canvas/helpers/select";
 
 const canvasStore = useCanvasStore();
 const { canvas, MODES_OPTIONS, elements, selectedElement } =
@@ -51,6 +54,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       };
 
       elements.value.unshift(shape);
+      selectElement(shape);
       canvasStore.redrawCanvas();
     },
 

@@ -88,14 +88,37 @@
       </q-btn>
 
       <!-- shapes -->
-      <q-btn
-        icon="r_shape_line"
-        unelevated
-        text-color="dark"
-        round
-        size="12px"
-        @click="$emit('switchMode', MODES_OPTIONS.shape)"
-      >
+      <q-btn icon="r_shape_line" unelevated text-color="dark" round size="12px">
+        <q-menu
+          anchor="bottom left"
+          self="top left"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :offset="[0, 8]"
+          class="q-pa-sm"
+          style="width: 184px"
+        >
+          <div class="row q-gutter-sm">
+            <q-btn
+              v-for="shape in SHAPES"
+              :key="shape.name"
+              unelevated
+              round
+              size="12px"
+              class="q-pa-sm"
+              v-close-popup
+              @click="
+                $emit('switchMode', MODES_OPTIONS.shape);
+                $emit('addShape', shape.name);
+              "
+            >
+              <template #default>
+                <q-img :src="shape.src" />
+              </template>
+            </q-btn>
+          </div>
+        </q-menu>
+
         <q-tooltip>
           {{ $t("presentation.toolbar.shape.title") }}
         </q-tooltip>
@@ -521,42 +544,6 @@
 
       <!-- shape customization -->
       <template v-if="mode === MODES_OPTIONS.shape">
-        <q-btn
-          v-if="!selectedElement"
-          icon="r_shape_line"
-          unelevated
-          text-color="dark"
-          round
-          size="12px"
-        >
-          <q-menu
-            anchor="bottom left"
-            self="top left"
-            transition-show="jump-down"
-            transition-hide="jump-up"
-            :offset="[0, 8]"
-            class="q-pa-sm"
-            style="width: 184px"
-          >
-            <div class="row q-gutter-sm">
-              <q-btn
-                v-for="shape in SHAPES"
-                :key="shape.name"
-                unelevated
-                round
-                size="12px"
-                class="q-pa-sm"
-                v-close-popup
-                @click="$emit('addShape', shape.name)"
-              >
-                <template #default>
-                  <q-img :src="shape.src" />
-                </template>
-              </q-btn>
-            </div>
-          </q-menu>
-        </q-btn>
-
         <!-- color picker -->
         <q-btn flat round size="12px">
           <q-icon
