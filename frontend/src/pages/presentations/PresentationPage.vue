@@ -77,6 +77,7 @@ import { useRouter } from "vue-router";
 import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationStore } from "stores/presentation";
+import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
 
 /*
  * variables
@@ -193,6 +194,13 @@ onMounted(async () => {
   $q.loading.hide();
 });
 
+onUnmounted(() => {
+  document.removeEventListener("resize", resizeCanvas);
+  document.removeEventListener("keydown", handleKeyDownEvent);
+  document.removeEventListener("beforeunload", handleUnload);
+  canvas.value.removeEventListener("wheel", handleWheelEvent);
+});
+
 const resizeCanvas = () => {
   canvas.value.width = 1920;
   canvas.value.height = 1080;
@@ -252,6 +260,14 @@ const handleKeyDownEvent = (event) => {
 };
 
 const handleUnload = (event) => {
+  if (
+    !router.currentRoute.value.path.includes(
+      clearRoutePathFromProps(ROUTE_PATHS.PRESENTATIONS.PRESENTATION)
+    )
+  ) {
+    return;
+  }
+
   if (lastSavedAt.value < lastChangedAt.value) {
     event.preventDefault();
     event.returnValue =
@@ -260,13 +276,6 @@ const handleUnload = (event) => {
     presentationStore.saveSlide(undefined, elements.value);
   }
 };
-
-onUnmounted(() => {
-  document.removeEventListener("resize", resizeCanvas);
-  document.removeEventListener("keydown", handleKeyDownEvent);
-  document.removeEventListener("beforeunload", handleUnload);
-  canvas.value.removeEventListener("wheel", handleWheelEvent);
-});
 
 /*
  * canvas cursor
