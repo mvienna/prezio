@@ -1,5 +1,6 @@
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
+import { useCanvasTextStore } from "stores/canvas/text";
 
 const canvasStore = useCanvasStore();
 const {
@@ -11,6 +12,8 @@ const {
   selectedElementIndex,
   magnet,
 } = storeToRefs(canvasStore);
+
+const textStore = useCanvasTextStore();
 
 export const getHoveredElement = () => {
   let hoveredElement = null;
@@ -166,6 +169,15 @@ export const getHoveredElement = () => {
 };
 
 export const selectElement = (element = null) => {
+  if (selectedElement.value) {
+    switch (selectedElement.value.mode) {
+      case MODES_OPTIONS.value.text:
+      case MODES_OPTIONS.value.textEditing:
+        textStore.resetCustomization();
+        break;
+    }
+  }
+
   if (element) {
     selectedElement.value = element;
     selectedElementIndex.value = elements.value.findIndex(
@@ -181,7 +193,9 @@ export const selectElement = (element = null) => {
       selectedElement.value = hoveredElement;
       selectedElementIndex.value = hoveredElementIndex;
     } else {
-      mode.value = null;
+      if (mode.value !== MODES_OPTIONS.value.text) {
+        mode.value = null;
+      }
     }
   }
 
@@ -219,6 +233,13 @@ export const doubleSelectElement = () => {
 
 export const deselectElement = () => {
   if (selectedElement.value) {
+    switch (selectedElement.value.mode) {
+      case MODES_OPTIONS.value.text:
+      case MODES_OPTIONS.value.textEditing:
+        textStore.resetCustomization();
+        break;
+    }
+
     selectedElement.value = null;
     selectedElementIndex.value = -1;
     canvasStore.redrawCanvas();

@@ -205,6 +205,21 @@ export const useCanvasTextStore = defineStore("canvasText", {
     /*
      * customization
      */
+    resetCustomization() {
+      this.customization.color = "#000000";
+      this.customization.fontSize = "16px";
+      this.customization.font = "Arial";
+      this.customization.lineHeight = 1.2;
+      this.customization.formatting.isBold = false;
+      this.customization.formatting.isUnderline = false;
+      this.customization.formatting.isLineThrough = false;
+      this.customization.formatting.isItalic = false;
+      this.customization.formatting.alignment = {
+        horizontal: ALIGNMENT.horizontal.left,
+        vertical: ALIGNMENT.vertical.top,
+      };
+    },
+
     computeTextElementProps(
       x = selectedElement.value?.x,
       y = selectedElement.value?.y
