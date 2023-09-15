@@ -526,6 +526,20 @@
 
         <q-space />
 
+        <!-- clear formatting -->
+        <q-btn
+          icon="restart_alt"
+          flat
+          round
+          size="12px"
+          color="grey"
+          @click="textStore.clearFormatting()"
+        >
+          <q-tooltip :offset="[0, 4]">
+            {{ $t("presentation.text.options.clearFormatting") }}
+          </q-tooltip>
+        </q-btn>
+
         <!-- new text -->
         <q-btn
           icon="r_fiber_new"

@@ -205,7 +205,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
     /*
      * customization
      */
-    resetCustomization() {
+    clearFormatting() {
       this.customization.color = "#000000";
       this.customization.fontSize = "16px";
       this.customization.font = "Arial";
@@ -218,6 +218,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
         horizontal: ALIGNMENT.horizontal.left,
         vertical: ALIGNMENT.vertical.top,
       };
+
+      this.applyStyles();
     },
 
     computeTextElementProps(

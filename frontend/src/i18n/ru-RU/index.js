@@ -251,6 +251,7 @@ export default {
         font: "Шрифт",
         fontSize: "Размер шрифта",
         newText: "Новое поле",
+        clearFormatting: "Очистить форматирование",
       },
     },
     shapes: {

@@ -169,15 +169,6 @@ export const getHoveredElement = () => {
 };
 
 export const selectElement = (element = null) => {
-  if (selectedElement.value) {
-    switch (selectedElement.value.mode) {
-      case MODES_OPTIONS.value.text:
-      case MODES_OPTIONS.value.textEditing:
-        textStore.resetCustomization();
-        break;
-    }
-  }
-
   if (element) {
     selectedElement.value = element;
     selectedElementIndex.value = elements.value.findIndex(
@@ -235,13 +226,6 @@ export const doubleSelectElement = () => {
 
 export const deselectElement = () => {
   if (selectedElement.value) {
-    switch (selectedElement.value.mode) {
-      case MODES_OPTIONS.value.text:
-      case MODES_OPTIONS.value.textEditing:
-        textStore.resetCustomization();
-        break;
-    }
-
     selectedElement.value = null;
     selectedElementIndex.value = -1;
   }

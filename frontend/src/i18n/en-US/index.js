@@ -251,6 +251,7 @@ export default {
         font: "Font",
         fontSize: "Font size",
         newText: "New text field",
+        clearFormatting: "Clear formatting",
       },
     },
     shapes: {
