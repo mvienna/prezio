@@ -13,8 +13,15 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
      */
     async addImage(url) {
       const image = new Image();
-      const response = await api.get(`/image?url=${url}`);
-      image.src = `data:image/png;base64, ${response.data.base64}`;
+
+      let base64;
+      if (url.includes("http")) {
+        const response = await api.get(`/image?url=${url}`);
+        base64 = response.data.base64;
+        image.src = `data:image/png;base64, ${base64}`;
+      } else {
+        image.src = url;
+      }
 
       image.onload = () => {
         const newImageHeight = canvas.value.height * 0.5;
@@ -31,7 +38,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           isLocked: false,
           image,
           imageSrc: url,
-          imageBase64: response.data.base64,
+          imageBase64: base64,
           x,
           y,
           width: newImageWidth,

@@ -474,8 +474,11 @@ export const useCanvasStore = defineStore("canvas", {
 
       if (!element?.image?.nodeType) {
         const image = new Image();
-        // image.src = element.imageSrc;
-        image.src = `data:image/png;base64, ${element.imageBase64}`;
+        if (element.imageBase64) {
+          image.src = `data:image/png;base64, ${element.imageBase64}`;
+        } else {
+          image.src = element.imageSrc;
+        }
 
         image.onload = () => {
           element.image = image;
