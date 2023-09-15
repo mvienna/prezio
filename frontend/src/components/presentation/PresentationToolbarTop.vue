@@ -5,10 +5,10 @@
       <q-btn
         icon="r_gesture"
         unelevated
-        text-color="primary"
+        text-color="dark"
         round
         size="12px"
-        :class="mode === MODES_OPTIONS.drawing ? 'bg-blue-1' : ''"
+        :class="mode === MODES_OPTIONS.drawing ? 'bg-grey-1' : ''"
         @click="$emit('switchMode', MODES_OPTIONS.drawing)"
       >
         <q-tooltip>
@@ -20,10 +20,10 @@
       <q-btn
         icon="r_text_fields"
         unelevated
-        text-color="primary"
+        text-color="dark"
         round
         size="12px"
-        :class="mode === MODES_OPTIONS.text ? 'bg-blue-1' : ''"
+        :class="mode === MODES_OPTIONS.text ? 'bg-grey-1' : ''"
         @click="$emit('switchMode', MODES_OPTIONS.text)"
       >
         <q-tooltip>
@@ -35,7 +35,7 @@
       <q-btn
         icon="r_image"
         unelevated
-        text-color="primary"
+        text-color="dark"
         round
         size="12px"
         @click="
@@ -52,7 +52,7 @@
       <q-btn
         icon="r_add_reaction"
         unelevated
-        text-color="primary"
+        text-color="dark"
         round
         size="12px"
         @click="$emit('switchMode', MODES_OPTIONS.mediaEmoji)"
@@ -92,9 +92,9 @@
       <!-- shapes -->
       <q-btn
         icon="r_shape_line"
-        :class="mode === MODES_OPTIONS.shape ? 'bg-blue-1' : ''"
+        :class="mode === MODES_OPTIONS.shape ? 'bg-grey-1' : ''"
         unelevated
-        text-color="primary"
+        text-color="dark"
         round
         size="12px"
       >
