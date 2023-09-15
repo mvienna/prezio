@@ -56,11 +56,17 @@ export const moveElement = (newX, newY) => {
                 selectedElement.value.x + selectedElement.value.width
               ),
               left: Math.round(selectedElement.value.x),
+              centerVertical: Math.round(
+                selectedElement.value.x + selectedElement.value.width / 2
+              ),
 
               // horizontal
               top: Math.round(selectedElement.value.y),
               bottom: Math.round(
                 selectedElement.value.y + selectedElement.value.height
+              ),
+              centerHorizontal: Math.round(
+                selectedElement.value.y + selectedElement.value.height / 2
               ),
             },
             connectionLine: {
@@ -83,10 +89,12 @@ export const moveElement = (newX, newY) => {
               // vertical
               right: Math.round(element.x + element.width),
               left: Math.round(element.x),
+              centerVertical: Math.round(element.x + element.width / 2),
 
               // horizontal
               top: Math.round(element.y),
               bottom: Math.round(element.y + element.height),
+              centerHorizontal: Math.round(element.y + element.height / 2),
             },
             connectionLine: {
               // vertical
@@ -104,7 +112,7 @@ export const moveElement = (newX, newY) => {
           };
 
           /*
-           * magnet vertically
+           * VERTICAL MAGNET
            * draggable element - magnet element
            */
           // right side - left side
@@ -200,8 +208,132 @@ export const moveElement = (newX, newY) => {
             };
           }
 
+          // right side - center
+          if (
+            Math.abs(
+              draggableElement.sides.right - magnetElement.sides.centerVertical
+            ) <= magnetThreshold
+          ) {
+            magnet.value = {
+              axis: MAGNET_AXIS_OPTIONS.value.vertical,
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: selectedElement.value.x + selectedElement.value.width,
+                    y: draggableElement.connectionLine.y,
+                  },
+                  to: {
+                    x: element.x + element.width / 2,
+                    y: magnetElement.connectionLine.y,
+                  },
+                },
+              ],
+            };
+          }
+
+          // left side - center
+          if (
+            Math.abs(
+              draggableElement.sides.left - magnetElement.sides.centerVertical
+            ) <= magnetThreshold
+          ) {
+            magnet.value = {
+              axis: MAGNET_AXIS_OPTIONS.value.vertical,
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: selectedElement.value.x,
+                    y: draggableElement.connectionLine.y,
+                  },
+                  to: {
+                    x: element.x + element.width / 2,
+                    y: magnetElement.connectionLine.y,
+                  },
+                },
+              ],
+            };
+          }
+
+          // center - right side
+          if (
+            Math.abs(
+              draggableElement.sides.centerVertical - magnetElement.sides.right
+            ) <= magnetThreshold
+          ) {
+            magnet.value = {
+              axis: MAGNET_AXIS_OPTIONS.value.vertical,
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x:
+                      selectedElement.value.x + selectedElement.value.width / 2,
+                    y: draggableElement.connectionLine.y,
+                  },
+                  to: {
+                    x: element.x + element.width,
+                    y: magnetElement.connectionLine.y,
+                  },
+                },
+              ],
+            };
+          }
+
+          // center - left side
+          if (
+            Math.abs(
+              draggableElement.sides.centerVertical - magnetElement.sides.left
+            ) <= magnetThreshold
+          ) {
+            magnet.value = {
+              axis: MAGNET_AXIS_OPTIONS.value.vertical,
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x:
+                      selectedElement.value.x + selectedElement.value.width / 2,
+                    y: draggableElement.connectionLine.y,
+                  },
+                  to: {
+                    x: element.x,
+                    y: magnetElement.connectionLine.y,
+                  },
+                },
+              ],
+            };
+          }
+
+          // center - center
+          if (
+            Math.abs(
+              draggableElement.sides.centerVertical -
+                magnetElement.sides.centerVertical
+            ) <= magnetThreshold
+          ) {
+            magnet.value = {
+              axis: MAGNET_AXIS_OPTIONS.value.vertical,
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x:
+                      selectedElement.value.x + selectedElement.value.width / 2,
+                    y: draggableElement.connectionLine.y,
+                  },
+                  to: {
+                    x: element.x + element.width / 2,
+                    y: magnetElement.connectionLine.y,
+                  },
+                },
+              ],
+            };
+          }
+
           /*
-           * magnet horizontally
+           * HORIZONTAL MAGNET
            */
           // top side - bottom side
           if (
@@ -296,6 +428,135 @@ export const moveElement = (newX, newY) => {
             };
           }
 
+          // top - center
+          if (
+            Math.abs(
+              draggableElement.sides.top - magnetElement.sides.centerHorizontal
+            ) <= magnetThreshold
+          ) {
+            magnet.value = {
+              axis: MAGNET_AXIS_OPTIONS.value.horizontal,
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: draggableElement.connectionLine.x,
+                    y: selectedElement.value.y,
+                  },
+                  to: {
+                    x: magnetElement.connectionLine.x,
+                    y: element.y + element.height / 2,
+                  },
+                },
+              ],
+            };
+          }
+
+          // bottom - center
+          if (
+            Math.abs(
+              draggableElement.sides.bottom -
+                magnetElement.sides.centerHorizontal
+            ) <= magnetThreshold
+          ) {
+            magnet.value = {
+              axis: MAGNET_AXIS_OPTIONS.value.horizontal,
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: draggableElement.connectionLine.x,
+                    y: selectedElement.value.y + selectedElement.value.height,
+                  },
+                  to: {
+                    x: magnetElement.connectionLine.x,
+                    y: element.y + element.height / 2,
+                  },
+                },
+              ],
+            };
+          }
+
+          // center - bottom
+          if (
+            Math.abs(
+              draggableElement.sides.centerHorizontal -
+                magnetElement.sides.bottom
+            ) <= magnetThreshold
+          ) {
+            magnet.value = {
+              axis: MAGNET_AXIS_OPTIONS.value.horizontal,
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: draggableElement.connectionLine.x,
+                    y:
+                      selectedElement.value.y +
+                      selectedElement.value.height / 2,
+                  },
+                  to: {
+                    x: magnetElement.connectionLine.x,
+                    y: element.y + element.height,
+                  },
+                },
+              ],
+            };
+          }
+
+          // center - top
+          if (
+            Math.abs(
+              draggableElement.sides.centerHorizontal - magnetElement.sides.top
+            ) <= magnetThreshold
+          ) {
+            magnet.value = {
+              axis: MAGNET_AXIS_OPTIONS.value.horizontal,
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: draggableElement.connectionLine.x,
+                    y:
+                      selectedElement.value.y +
+                      selectedElement.value.height / 2,
+                  },
+                  to: {
+                    x: magnetElement.connectionLine.x,
+                    y: element.y,
+                  },
+                },
+              ],
+            };
+          }
+
+          // center - center
+          if (
+            Math.abs(
+              draggableElement.sides.centerHorizontal -
+                magnetElement.sides.centerHorizontal
+            ) <= magnetThreshold
+          ) {
+            magnet.value = {
+              axis: MAGNET_AXIS_OPTIONS.value.horizontal,
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: draggableElement.connectionLine.x,
+                    y:
+                      selectedElement.value.y +
+                      selectedElement.value.height / 2,
+                  },
+                  to: {
+                    x: magnetElement.connectionLine.x,
+                    y: element.y + element.height / 2,
+                  },
+                },
+              ],
+            };
+          }
+
           /*
            * unstuck (de-magnet) on mouse move away from magnet axis
            */
@@ -304,9 +565,9 @@ export const moveElement = (newX, newY) => {
 
           if (
             (magnet.value.axis === MAGNET_AXIS_OPTIONS.value.vertical &&
-              distanceY >= 3) ||
+              distanceY >= 2) ||
             (magnet.value.axis === MAGNET_AXIS_OPTIONS.value.horizontal &&
-              distanceX >= 3)
+              distanceX >= 2)
           ) {
             magnet.value.axis = null;
           }
