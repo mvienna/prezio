@@ -108,7 +108,10 @@ export const moveElement = (newX, newY) => {
                 axis: MAGNET_AXIS_OPTIONS.value.vertical,
                 from: {
                   x: selectedElement.value.x + selectedElement.value.width,
-                  y: selectedElement.value.y,
+                  y:
+                    selectedElement.value.y < element.y
+                      ? selectedElement.value.y + selectedElement.value.height
+                      : selectedElement.value.y,
                 },
                 to: {
                   x: element.x,
@@ -129,7 +132,10 @@ export const moveElement = (newX, newY) => {
                 axis: MAGNET_AXIS_OPTIONS.value.vertical,
                 from: {
                   x: selectedElement.value.x + selectedElement.value.width,
-                  y: selectedElement.value.y,
+                  y:
+                    selectedElement.value.y < element.y
+                      ? selectedElement.value.y + selectedElement.value.height
+                      : selectedElement.value.y,
                 },
                 to: {
                   x: element.x + element.width,
@@ -150,7 +156,10 @@ export const moveElement = (newX, newY) => {
                 axis: MAGNET_AXIS_OPTIONS.value.vertical,
                 from: {
                   x: selectedElement.value.x,
-                  y: selectedElement.value.y,
+                  y:
+                    selectedElement.value.y < element.y
+                      ? selectedElement.value.y + selectedElement.value.height
+                      : selectedElement.value.y,
                 },
                 to: {
                   x: element.x,
@@ -171,7 +180,10 @@ export const moveElement = (newX, newY) => {
                 axis: MAGNET_AXIS_OPTIONS.value.vertical,
                 from: {
                   x: selectedElement.value.x,
-                  y: selectedElement.value.y,
+                  y:
+                    selectedElement.value.y < element.y
+                      ? selectedElement.value.y + selectedElement.value.height
+                      : selectedElement.value.y,
                 },
                 to: {
                   x: element.x + element.width,
@@ -206,7 +218,10 @@ export const moveElement = (newX, newY) => {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.horizontal,
                 from: {
-                  x: selectedElement.value.x + selectedElement.value.width,
+                  x:
+                    selectedElement.value.x < element.x
+                      ? selectedElement.value.x + selectedElement.value.width
+                      : selectedElement.value.x,
                   y: selectedElement.value.y,
                 },
                 to: {
@@ -227,7 +242,10 @@ export const moveElement = (newX, newY) => {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.horizontal,
                 from: {
-                  x: selectedElement.value.x + selectedElement.value.width,
+                  x:
+                    selectedElement.value.x < element.x
+                      ? selectedElement.value.x + selectedElement.value.width
+                      : selectedElement.value.x,
                   y: selectedElement.value.y,
                 },
                 to: {
@@ -248,7 +266,10 @@ export const moveElement = (newX, newY) => {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.horizontal,
                 from: {
-                  x: selectedElement.value.x + selectedElement.value.width,
+                  x:
+                    selectedElement.value.x < element.x
+                      ? selectedElement.value.x + selectedElement.value.width
+                      : selectedElement.value.x,
                   y: selectedElement.value.y + selectedElement.value.height,
                 },
                 to: {
@@ -269,7 +290,10 @@ export const moveElement = (newX, newY) => {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.horizontal,
                 from: {
-                  x: selectedElement.value.x + selectedElement.value.width,
+                  x:
+                    selectedElement.value.x < element.x
+                      ? selectedElement.value.x + selectedElement.value.width
+                      : selectedElement.value.x,
                   y: selectedElement.value.y + selectedElement.value.height,
                 },
                 to: {
