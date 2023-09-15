@@ -82,6 +82,8 @@ export const moveElement = (newX, newY) => {
           });
 
           if (isAnyCornerWithinRange) {
+            const magnetRange = 2;
+
             /*
              * magnet vertically
              */
@@ -99,7 +101,8 @@ export const moveElement = (newX, newY) => {
 
             // right side - left side
             if (
-              Math.abs(draggableElementRightSideX - magnetElementLeftSide) <= 1
+              Math.abs(draggableElementRightSideX - magnetElementLeftSide) <=
+              magnetRange
             ) {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.vertical,
@@ -119,7 +122,8 @@ export const moveElement = (newX, newY) => {
 
             // right side - right side
             if (
-              Math.abs(draggableElementRightSideX - magnetElementRightSide) <= 1
+              Math.abs(draggableElementRightSideX - magnetElementRightSide) <=
+              magnetRange
             ) {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.vertical,
@@ -139,7 +143,8 @@ export const moveElement = (newX, newY) => {
 
             // left side - left side
             if (
-              Math.abs(draggableElementLeftSideX - magnetElementLeftSide) <= 1
+              Math.abs(draggableElementLeftSideX - magnetElementLeftSide) <=
+              magnetRange
             ) {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.vertical,
@@ -159,7 +164,8 @@ export const moveElement = (newX, newY) => {
 
             // left side - right side
             if (
-              Math.abs(draggableElementLeftSideX - magnetElementRightSide) <= 1
+              Math.abs(draggableElementLeftSideX - magnetElementRightSide) <=
+              magnetRange
             ) {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.vertical,
@@ -194,7 +200,8 @@ export const moveElement = (newX, newY) => {
 
             // top side - bottom side
             if (
-              Math.abs(draggableElementTopSideX - magnetElementBottomSide) <= 1
+              Math.abs(draggableElementTopSideX - magnetElementBottomSide) <=
+              magnetRange
             ) {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.horizontal,
@@ -214,7 +221,8 @@ export const moveElement = (newX, newY) => {
 
             // top side - top side
             if (
-              Math.abs(draggableElementTopSideX - magnetElementTopSide) <= 1
+              Math.abs(draggableElementTopSideX - magnetElementTopSide) <=
+              magnetRange
             ) {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.horizontal,
@@ -255,7 +263,8 @@ export const moveElement = (newX, newY) => {
 
             // bottom side - top side
             if (
-              Math.abs(draggableElementBottomSideX - magnetElementTopSide) <= 1
+              Math.abs(draggableElementBottomSideX - magnetElementTopSide) <=
+              magnetRange
             ) {
               magnet.value = {
                 axis: MAGNET_AXIS_OPTIONS.value.horizontal,
