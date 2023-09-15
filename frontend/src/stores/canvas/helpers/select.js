@@ -184,6 +184,8 @@ export const selectElement = (element = null) => {
       (item) => item.id === element.id
     );
   } else {
+    const isSelectedElementExisted = !!selectedElement.value;
+
     selectedElement.value = null;
     selectedElementIndex.value = -1;
 
@@ -193,7 +195,7 @@ export const selectElement = (element = null) => {
       selectedElement.value = hoveredElement;
       selectedElementIndex.value = hoveredElementIndex;
     } else {
-      if (mode.value !== MODES_OPTIONS.value.text) {
+      if (isSelectedElementExisted) {
         mode.value = null;
       }
     }
