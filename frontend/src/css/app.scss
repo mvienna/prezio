@@ -15,6 +15,15 @@ html, body {
 }
 
 /*
+ * hover animation (fix)
+ */
+.q-focus-helper {
+  &:before, &:after {
+    transition: none !important;
+  }
+}
+
+/*
  * container
  */
 .container {
