@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
+import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
+import { ROUTE_PATHS } from "src/constants/routes";
 
 export const usePresentationStore = defineStore("presentation", {
   state: () => ({
@@ -8,6 +10,9 @@ export const usePresentationStore = defineStore("presentation", {
      */
     presentations: [],
     search: "",
+
+    isLoading: false,
+    isCreatingPresentation: false,
 
     /*
      * presentation
@@ -64,6 +69,22 @@ export const usePresentationStore = defineStore("presentation", {
         })
         .catch((error) => {
           console.log(error);
+        });
+    },
+
+    async createNewPresentation(data) {
+      this.isCreatingPresentation = true;
+
+      return await api
+        .post("/presentation", {
+          name: data.name,
+          description: data.description,
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.isCreatingPresentation = false;
         });
     },
 

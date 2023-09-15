@@ -1,7 +1,7 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.woff?d4c3121e99da1bca00055684846a2c90") format("woff"),
-url("./icons.woff2?d4c3121e99da1bca00055684846a2c90") format("woff2");
+    src: url("./icons.woff?4b0ee5fda6b2698fff5b9875732d2d96") format("woff"),
+url("./icons.woff2?4b0ee5fda6b2698fff5b9875732d2d96") format("woff2");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -20,4 +20,7 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
 }
 .icon-eraser:before {
     content: "\f102";
+}
+.icon-unsplash:before {
+    content: "\f103";
 }

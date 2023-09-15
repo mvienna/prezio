@@ -528,7 +528,7 @@
 
         <!-- clear formatting -->
         <q-btn
-          icon="restart_alt"
+          icon="r_restart_alt"
           flat
           round
           size="12px"
@@ -703,7 +703,7 @@
       <SelectMedia
         @close="showSelectMediaDialog = false"
         @select="
-          $emit('addImage', $event.original_url);
+          $emit('addImage', $event?.original_url || $event?.urls?.regular);
           showSelectMediaDialog = false;
         "
       />

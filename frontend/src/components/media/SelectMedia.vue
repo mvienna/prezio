@@ -25,11 +25,12 @@
         inline-label
       >
         <q-tab
-          v-for="tab in tabs"
+          v-for="tab in Object.values(tabs)"
           :key="tab.name"
           :name="tab.name"
           :label="tab.label"
           :disable="tab.disabled"
+          :icon="tab.icon"
           no-caps
         />
       </q-tabs>
@@ -45,8 +46,8 @@
             <q-img
               class="uploaded__file"
               fit="cover"
-              :src="selectedFile.original_url"
-              :alt="selectedFile.filename"
+              :src="selectedFile?.original_url || selectedFile?.urls?.regular"
+              :alt="selectedFile?.filename || selectedFile?.alt_description"
             />
 
             <div class="absolute-right q-mr-lg q-mt-lg row no-wrap">
@@ -93,7 +94,7 @@
             flat
             no-caps
             class="full-width q-mt-lg"
-            :loading="isLoading"
+            :loading="isProcessing"
           >
             <template #default>
               <form ref="form" class="full-width">
@@ -168,7 +169,102 @@
         </q-tab-panel>
 
         <!-- stock -->
-        <q-tab-panel name="r_stock"> </q-tab-panel>
+        <q-tab-panel name="stock" class="q-pa-none">
+          <!-- search unsplash-->
+          <div class="q-px-md q-pt-md">
+            <q-input
+              v-model="search"
+              outlined
+              clearable
+              clear-icon="r_block"
+              debounce="300"
+              color="primary"
+              :placeholder="$t('media.select.tabs.stock.search')"
+              class="q-mb-lg"
+              @keydown="
+                (event) => (event.key === 'Enter' ? handleSearch() : '')
+              "
+            >
+              <template #append>
+                <q-icon
+                  flat
+                  round
+                  name="r_search"
+                  class="q-ml-md q-mr-sm cursor-pointer"
+                  @click="handleSearch()"
+                />
+              </template>
+            </q-input>
+          </div>
+
+          <!-- results unsplash -->
+          <div style="max-height: calc(100vh - 24px * 2 - 124px - 24px - 72px)">
+            <q-infinite-scroll
+              @load="stockImagesStore.fetchStockImages"
+              :offset="500"
+              class="masonry q-pa-md"
+            >
+              <q-card
+                v-for="item in stockImages"
+                :key="item.id"
+                flat
+                bordered
+                class="masonry__item"
+                :class="
+                  selectedFile?.id === item.id ? 'masonry__item--selected' : ''
+                "
+                @click="
+                  selectedFile = selectedFile?.id === item.id ? null : item
+                "
+              >
+                <!-- image -->
+                <q-img :src="item.urls.regular" :alt="item.alt_description" />
+
+                <!-- author -->
+                <q-tooltip
+                  anchor="bottom start"
+                  self="top start"
+                  class="row no-wrap items-center q-py-sm bg-white"
+                  style="border-radius: 20px; border: 1px solid #f2f2f2"
+                >
+                  <q-avatar size="24px" class="q-mr-sm">
+                    <q-img :src="item.user.profile_image.small" />
+                  </q-avatar>
+
+                  <div class="text-grey">
+                    {{ item.user.name }}
+                  </div>
+                </q-tooltip>
+
+                <!-- context menu -->
+                <q-menu
+                  touch-position
+                  context-menu
+                  transition-show="jump-down"
+                  transition-hide="jump-up"
+                >
+                  <!-- delete file -->
+                  <q-item
+                    class="items-center"
+                    :href="item.links.html"
+                    target="_blank"
+                  >
+                    <q-icon name="r_link" class="q-mr-sm" size="xs" />
+                    <div>
+                      {{ $t("media.actions.open.title") }}
+                    </div>
+                  </q-item>
+                </q-menu>
+              </q-card>
+
+              <template v-slot:loading>
+                <div class="row justify-center q-my-md">
+                  <q-spinner-ios size="40px" />
+                </div>
+              </template>
+            </q-infinite-scroll>
+          </div>
+        </q-tab-panel>
 
         <!-- gifs and stickers-->
         <q-tab-panel name="r_gifs_and_stickers"> </q-tab-panel>
@@ -205,6 +301,7 @@ import { useI18n } from "vue-i18n";
 import { api } from "boot/axios";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "stores/auth";
+import { useStockImagesStore } from "stores/stock-images";
 
 /*
  * variables
@@ -215,39 +312,43 @@ const { user } = storeToRefs(useAuthStore());
 
 defineEmits(["close", "select"]);
 
-const isLoading = ref(false);
-
-const media = ref([]);
-const selectedFile = ref();
+/*
+ * stores
+ */
+const stockImagesStore = useStockImagesStore();
+const { stockImages, search } = storeToRefs(stockImagesStore);
 
 /*
  * tabs
  */
-const tabs = [
-  {
+const tabs = {
+  upload: {
     name: "upload",
     label: t("media.select.tabs.upload.title"),
   },
-  {
+  mine: {
     name: "mine",
     label: t("media.select.tabs.mine.title"),
   },
-  {
+  stock: {
     name: "stock",
     label: t("media.select.tabs.stock.title"),
-    disabled: true,
+    icon: "icon-unsplash",
   },
-  {
+  gifsAndStickers: {
     name: "gifs_and_stickers",
     label: t("media.select.tabs.gifsAndStickers.title"),
     disabled: true,
   },
-];
+};
 const tab = ref("upload");
 
 /*
  * fetch users media
  */
+
+const media = ref([]);
+
 onBeforeMount(() => {
   api
     .get("/media")
@@ -262,11 +363,15 @@ onBeforeMount(() => {
 /*
  * upload
  */
+const selectedFile = ref();
+
 const form = ref();
 const fileInputId = `fileInput-${Math.random().toString(36).substring(2, 9)}`;
 
+const isProcessing = ref(false);
+
 const uploadFile = async (event) => {
-  isLoading.value = true;
+  isProcessing.value = true;
 
   const file = event.target.files[0];
 
@@ -288,12 +393,12 @@ const uploadFile = async (event) => {
       media.value.push(response.data);
     })
     .finally(() => {
-      isLoading.value = false;
+      isProcessing.value = false;
     });
 };
 
 const deleteFile = (file) => {
-  isLoading.value = true;
+  isProcessing.value = true;
 
   api
     .delete(`/media/${file.id}`)
@@ -302,8 +407,13 @@ const deleteFile = (file) => {
       selectedFile.value = null;
     })
     .finally(() => {
-      isLoading.value = false;
+      isProcessing.value = false;
     });
+};
+
+const handleSearch = () => {
+  stockImages.value = [];
+  stockImagesStore.fetchStockImages();
 };
 </script>
 

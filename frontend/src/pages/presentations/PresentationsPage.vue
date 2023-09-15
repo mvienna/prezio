@@ -1,10 +1,7 @@
 <template>
   <q-page>
     <!-- loading -->
-    <div
-      v-if="isLoading.fetchingPresentations"
-      class="row justify-center q-mt-lg"
-    >
+    <div v-if="isLoading" class="row justify-center q-mt-lg">
       <q-spinner-ios color="primary" size="2em" />
     </div>
 
@@ -280,9 +277,9 @@
     <!-- new presentation form -->
     <q-dialog v-model="showNewPresentationDialog">
       <NewPresentation
-        :is-loading="isLoading.newPresentation"
+        :is-loading="isCreatingPresentation"
         @close="showNewPresentationDialog = false"
-        @submit="createNewPresentation($event)"
+        @submit="handleCreatingNewPresentation($event)"
       />
     </q-dialog>
   </q-page>
@@ -304,11 +301,6 @@ import { storeToRefs } from "pinia";
 /*
  * variables
  */
-const isLoading = ref({
-  fetchingPresentations: false,
-  newPresentation: false,
-});
-
 const { t } = useI18n({ useScope: "global" });
 
 const router = useRouter();
@@ -317,13 +309,14 @@ const router = useRouter();
  * presentations store
  */
 const presentationStore = usePresentationStore();
-const { presentations, search } = storeToRefs(presentationStore);
+const { presentations, search, isLoading, isCreatingPresentation } =
+  storeToRefs(presentationStore);
 
 /*
  * fetch presentations
  */
 onBeforeMount(() => {
-  isLoading.value.fetchingPresentations = true;
+  isLoading.value = true;
 
   api
     .get("/presentations")
@@ -334,7 +327,7 @@ onBeforeMount(() => {
       console.log(error);
     })
     .finally(() => {
-      isLoading.value.fetchingPresentations = false;
+      isLoading.value = false;
     });
 });
 
@@ -415,26 +408,13 @@ const handleRowUpdate = (event, id) => {
  */
 const showNewPresentationDialog = ref(false);
 
-const createNewPresentation = (data) => {
-  isLoading.value.newPresentation = true;
-
-  api
-    .post("/presentation", {
-      name: data.name,
-      description: data.description,
-    })
-    .then((response) => {
-      router.push(
-        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATIONS.PRESENTATION) +
-          response.data.id
-      );
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    .finally(() => {
-      isLoading.value.newPresentation = false;
-    });
+const handleCreatingNewPresentation = (data) => {
+  presentationStore.createNewPresentation(data).then((response) => {
+    router.push(
+      clearRoutePathFromProps(ROUTE_PATHS.PRESENTATIONS.PRESENTATION) +
+        response.data.id
+    );
+  });
 };
 </script>
 

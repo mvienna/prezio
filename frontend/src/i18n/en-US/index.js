@@ -364,6 +364,7 @@ export default {
         },
         stock: {
           title: "Stock",
+          search: "Search...",
         },
         gifsAndStickers: {
           title: "GIFs and Stickers",
@@ -374,6 +375,9 @@ export default {
     actions: {
       delete: {
         title: "Delete",
+      },
+      open: {
+        title: "Open",
       },
     },
   },

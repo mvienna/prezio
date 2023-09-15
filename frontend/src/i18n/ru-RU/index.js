@@ -364,6 +364,7 @@ export default {
         },
         stock: {
           title: "Стоковые",
+          search: "Поиск...",
         },
         gifsAndStickers: {
           title: "GIF и стикеры",
@@ -374,6 +375,9 @@ export default {
     actions: {
       delete: {
         title: "Удалить",
+      },
+      open: {
+        title: "Открыть",
       },
     },
   },

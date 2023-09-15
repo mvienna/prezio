@@ -174,7 +174,7 @@ onMounted(async () => {
   resizeCanvas();
   setTimeout(() => {
     canvasStore.redrawCanvas(true);
-  });
+  }, 100);
   window.addEventListener("resize", resizeCanvas);
 
   /*
