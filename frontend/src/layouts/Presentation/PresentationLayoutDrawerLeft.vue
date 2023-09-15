@@ -179,10 +179,10 @@ const showSlideContextMenu = ref([]);
 const handleKeyDownEvent = (event) => {
   if (event.key === "Delete" || event.key === "Backspace") {
     const slideIndex = showSlideContextMenu.value.findIndex(
-      (value) => value === true
+      (bool) => bool === true
     );
 
-    if (slideIndex) {
+    if (slideIndex !== -1) {
       handleSlideDeletion(presentation.value.slides[slideIndex]);
     }
   }
