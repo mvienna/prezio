@@ -5,7 +5,7 @@
       <q-btn
         unelevated
         round
-        :to="ROUTE_PATHS.DASHBOARD"
+        :to="ROUTE_PATHS.PRESENTATIONS.INDEX"
         text-color="grey-5"
         size="10px"
       >

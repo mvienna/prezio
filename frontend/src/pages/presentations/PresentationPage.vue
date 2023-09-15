@@ -165,7 +165,7 @@ onMounted(async () => {
         icon: "r_crisis_alert",
       });
 
-      router.push(ROUTE_PATHS.DASHBOARD);
+      router.push(ROUTE_PATHS.PRESENTATIONS.INDEX);
     });
 
   /*

@@ -11,7 +11,11 @@ const routes = [
       },
       {
         path: ROUTE_PATHS.DASHBOARD,
-        component: () => import("pages/DashboardPage.vue"),
+        redirect: ROUTE_PATHS.PRESENTATIONS.INDEX,
+      },
+      {
+        path: ROUTE_PATHS.PRESENTATIONS.INDEX,
+        component: () => import("pages/presentations/PresentationsPage.vue"),
       },
     ],
   },
