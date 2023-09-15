@@ -114,14 +114,19 @@ export const moveElement = (newX, newY) => {
           ) {
             magnet.value = {
               axis: MAGNET_AXIS_OPTIONS.value.vertical,
-              from: {
-                x: selectedElement.value.x + selectedElement.value.width,
-                y: draggableElement.connectionLine.y,
-              },
-              to: {
-                x: element.x,
-                y: magnetElement.connectionLine.y,
-              },
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: selectedElement.value.x + selectedElement.value.width,
+                    y: draggableElement.connectionLine.y,
+                  },
+                  to: {
+                    x: element.x,
+                    y: magnetElement.connectionLine.y,
+                  },
+                },
+              ],
             };
           }
 
@@ -133,14 +138,19 @@ export const moveElement = (newX, newY) => {
           ) {
             magnet.value = {
               axis: MAGNET_AXIS_OPTIONS.value.vertical,
-              from: {
-                x: selectedElement.value.x + selectedElement.value.width,
-                y: draggableElement.connectionLine.y,
-              },
-              to: {
-                x: element.x + element.width,
-                y: magnetElement.connectionLine.y,
-              },
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: selectedElement.value.x + selectedElement.value.width,
+                    y: draggableElement.connectionLine.y,
+                  },
+                  to: {
+                    x: element.x + element.width,
+                    y: magnetElement.connectionLine.y,
+                  },
+                },
+              ],
             };
           }
 
@@ -151,14 +161,19 @@ export const moveElement = (newX, newY) => {
           ) {
             magnet.value = {
               axis: MAGNET_AXIS_OPTIONS.value.vertical,
-              from: {
-                x: selectedElement.value.x,
-                y: draggableElement.connectionLine.y,
-              },
-              to: {
-                x: element.x,
-                y: magnetElement.connectionLine.y,
-              },
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: selectedElement.value.x,
+                    y: draggableElement.connectionLine.y,
+                  },
+                  to: {
+                    x: element.x,
+                    y: magnetElement.connectionLine.y,
+                  },
+                },
+              ],
             };
           }
 
@@ -169,14 +184,19 @@ export const moveElement = (newX, newY) => {
           ) {
             magnet.value = {
               axis: MAGNET_AXIS_OPTIONS.value.vertical,
-              from: {
-                x: selectedElement.value.x,
-                y: draggableElement.connectionLine.y,
-              },
-              to: {
-                x: element.x + element.width,
-                y: magnetElement.connectionLine.y,
-              },
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: selectedElement.value.x,
+                    y: draggableElement.connectionLine.y,
+                  },
+                  to: {
+                    x: element.x + element.width,
+                    y: magnetElement.connectionLine.y,
+                  },
+                },
+              ],
             };
           }
 
@@ -190,14 +210,19 @@ export const moveElement = (newX, newY) => {
           ) {
             magnet.value = {
               axis: MAGNET_AXIS_OPTIONS.value.horizontal,
-              from: {
-                x: draggableElement.connectionLine.x,
-                y: selectedElement.value.y,
-              },
-              to: {
-                x: magnetElement.connectionLine.x,
-                y: element.y + element.height,
-              },
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: draggableElement.connectionLine.x,
+                    y: selectedElement.value.y,
+                  },
+                  to: {
+                    x: magnetElement.connectionLine.x,
+                    y: element.y + element.height,
+                  },
+                },
+              ],
             };
           }
 
@@ -208,14 +233,19 @@ export const moveElement = (newX, newY) => {
           ) {
             magnet.value = {
               axis: MAGNET_AXIS_OPTIONS.value.horizontal,
-              from: {
-                x: draggableElement.connectionLine.x,
-                y: selectedElement.value.y,
-              },
-              to: {
-                x: magnetElement.connectionLine.x,
-                y: element.y,
-              },
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: draggableElement.connectionLine.x,
+                    y: selectedElement.value.y,
+                  },
+                  to: {
+                    x: magnetElement.connectionLine.x,
+                    y: element.y,
+                  },
+                },
+              ],
             };
           }
 
@@ -227,14 +257,19 @@ export const moveElement = (newX, newY) => {
           ) {
             magnet.value = {
               axis: MAGNET_AXIS_OPTIONS.value.horizontal,
-              from: {
-                x: draggableElement.connectionLine.x,
-                y: selectedElement.value.y + selectedElement.value.height,
-              },
-              to: {
-                x: magnetElement.connectionLine.x,
-                y: element.y + element.height,
-              },
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: draggableElement.connectionLine.x,
+                    y: selectedElement.value.y + selectedElement.value.height,
+                  },
+                  to: {
+                    x: magnetElement.connectionLine.x,
+                    y: element.y + element.height,
+                  },
+                },
+              ],
             };
           }
 
@@ -245,14 +280,19 @@ export const moveElement = (newX, newY) => {
           ) {
             magnet.value = {
               axis: MAGNET_AXIS_OPTIONS.value.horizontal,
-              from: {
-                x: draggableElement.connectionLine.x,
-                y: selectedElement.value.y + selectedElement.value.height,
-              },
-              to: {
-                x: magnetElement.connectionLine.x,
-                y: element.y,
-              },
+              connectionLines: [
+                ...magnet.value.connectionLines,
+                {
+                  from: {
+                    x: draggableElement.connectionLine.x,
+                    y: selectedElement.value.y + selectedElement.value.height,
+                  },
+                  to: {
+                    x: magnetElement.connectionLine.x,
+                    y: element.y,
+                  },
+                },
+              ],
             };
           }
 
@@ -290,7 +330,10 @@ export const moveElement = (newX, newY) => {
           selectedElement.value.x += newX - dragStart.value.x;
           selectedElement.value.y += newY - dragStart.value.y;
 
-          magnet.value.axis = null;
+          magnet.value = {
+            axis: null,
+            connectionLines: [],
+          };
       }
 
       break;

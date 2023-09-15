@@ -79,8 +79,7 @@ export const useCanvasStore = defineStore("canvas", {
     },
     magnet: {
       axis: null,
-      from: { x: null, y: null },
-      to: { x: null, y: null },
+      connectionLines: [],
     },
 
     /*
@@ -647,38 +646,37 @@ export const useCanvasStore = defineStore("canvas", {
     renderMagnetLine() {
       this.ctx.save();
 
-      this.ctx.strokeStyle = "#4971FF";
-      this.ctx.lineWidth = this.computeAdjustedSize(2);
+      this.magnet.connectionLines.forEach((connectionLine) => {
+        this.ctx.strokeStyle = "#4971FF";
+        this.ctx.lineWidth = this.computeAdjustedSize(2);
 
-      const fromX = this.magnet.from.x;
-      const fromY = this.magnet.from.y;
-      const toX = this.magnet.to.x;
-      const toY = this.magnet.to.y;
+        const fromX = connectionLine.from.x;
+        const fromY = connectionLine.from.y;
+        const toX = connectionLine.to.x;
+        const toY = connectionLine.to.y;
 
-      // Calculate the length of the line segment
-      const length = Math.sqrt((toX - fromX) ** 2 + (toY - fromY) ** 2);
+        const length = Math.sqrt((toX - fromX) ** 2 + (toY - fromY) ** 2);
 
-      // Define the minimum and maximum dash lengths
-      const minDashLength = 5; // Adjust this value as needed
-      const maxDashLength = 20; // Adjust this value as needed
+        const minDashLength = 10;
+        const maxDashLength = 10;
 
-      // Calculate the dash length based on the line length
-      let dashLength = length * 0.1;
+        let dashLength = length * 0.1;
 
-      // Ensure the dash length is within the specified range
-      dashLength = Math.min(Math.max(dashLength, minDashLength), maxDashLength);
+        dashLength = Math.min(
+          Math.max(dashLength, minDashLength),
+          maxDashLength
+        );
 
-      // Set the dash pattern (dashLength units of solid, dashLength units of space)
-      this.ctx.setLineDash([dashLength, dashLength]);
+        this.ctx.setLineDash([dashLength, dashLength]);
 
-      this.ctx.beginPath();
-      this.ctx.moveTo(fromX, fromY);
-      this.ctx.lineTo(toX, toY);
-      this.ctx.stroke();
-      this.ctx.closePath();
+        this.ctx.beginPath();
+        this.ctx.moveTo(fromX, fromY);
+        this.ctx.lineTo(toX, toY);
+        this.ctx.stroke();
+        this.ctx.closePath();
 
-      // Reset the line dash to default (solid)
-      this.ctx.setLineDash([]);
+        this.ctx.setLineDash([]);
+      });
 
       this.ctx.restore();
     },
