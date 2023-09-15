@@ -31,12 +31,22 @@ class MediaController extends Controller
     /*
      * get
      */
-    public function get (): jsonResponse
+    public function get(): jsonResponse
     {
         $user = auth()->user();
         $media = $user->getMedia()->toArray();
 
         return $this->jsonResponse($media);
+    }
+
+    public function getImageByUrlQuery(Request $request): JsonResponse
+    {
+        $url = $request->query('url');
+
+        $image = file_get_contents($url);
+        $base64 = base64_encode($image);
+
+        return $this->jsonResponse(['base64' => $base64]);
     }
 
     /*
@@ -67,7 +77,7 @@ class MediaController extends Controller
 
     }
 
-    public function restoreFromTrash (Request $request): JsonResponse
+    public function restoreFromTrash(Request $request): JsonResponse
     {
         $media = Media::find($request->file_id);
 

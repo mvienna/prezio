@@ -24,6 +24,7 @@ class PresentationSlideController extends Controller
     {
         $slide->update([
             'canvas_data' => $request->canvas_data,
+            'preview' => $request->preview,
             'order' => $request->order,
             'notes' => $request->notes,
             'animation' => $request->animation,

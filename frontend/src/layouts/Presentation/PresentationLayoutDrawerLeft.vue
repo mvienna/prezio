@@ -62,7 +62,7 @@
             <q-card
               flat
               v-ripple
-              class="slide slide_handle relative-position q-py-xl cursor-pointer q-hoverable"
+              class="slide slide_handle relative-position cursor-pointer q-hoverable"
               :class="`${element.id === slide.id ? 'slide--active' : ''} ${
                 !isSlideDragging && hoveredSlideIndex === index
                   ? 'slide--hovered'
@@ -76,7 +76,10 @@
                 showSlideContextMenu[index] = !showSlideContextMenu[index]
               "
             >
-              <q-img :src="element.preview" style="width: 100%; height: 100%" />
+              <q-img
+                :src="element.preview"
+                style="width: 100%; aspect-ratio: 16/9"
+              />
 
               <!-- actions -->
               <div class="absolute-right q-pt-sm q-pr-sm">
@@ -238,8 +241,10 @@ const handleSlidesReorder = async () => {
  */
 const hoveredSlideIndex = ref(null);
 
-const handleSlideSelection = async (slide) => {
-  await presentationStore.setSlide(slide, elements.value);
+const handleSlideSelection = async (newSlide) => {
+  if (slide.value.id === newSlide.id) return;
+
+  await presentationStore.setSlide(newSlide, elements.value);
   canvasStore.setElementsFromSlide();
   deselectElement();
   canvasStore.redrawCanvas();
@@ -258,6 +263,7 @@ const handleAddingNewSlide = async () => {
   outline: 3px solid transparent;
   transition: 0.2s;
   border: 1.5px solid $grey-2;
+  width: 245px;
   aspect-ratio: 16/9;
 
   &.slide--hovered {

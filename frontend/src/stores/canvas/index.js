@@ -182,19 +182,6 @@ export const useCanvasStore = defineStore("canvas", {
     redrawCanvas(isOnLoad = false, elements) {
       lastChangedAt.value = new Date();
 
-      if (!isOnLoad) {
-        const now = new Date();
-        const secondsDifference = date.getDateDiff(
-          now,
-          lastSavedAt.value,
-          "seconds"
-        );
-
-        if (secondsDifference >= 10) {
-          presentationStore.saveSlide(undefined, this.elements);
-        }
-      }
-
       this.clearCanvas();
 
       if (!elements) {
@@ -251,6 +238,24 @@ export const useCanvasStore = defineStore("canvas", {
       });
 
       /*
+       * save slide if last save was > 10s ago
+       * compute preview (before drawing borders and magnet lines)
+       */
+      if (!isOnLoad) {
+        const now = new Date();
+        const secondsDifference = date.getDateDiff(
+          now,
+          lastSavedAt.value,
+          "seconds"
+        );
+
+        if (secondsDifference >= 10) {
+          this.renderSlidePreview();
+          presentationStore.saveSlide(undefined, this.elements);
+        }
+      }
+
+      /*
        * border
        */
       if (this.selectedElement && this.selectedElement.isVisible) {
@@ -263,11 +268,13 @@ export const useCanvasStore = defineStore("canvas", {
       if (this.magnet.axis) {
         this.renderMagnetLine();
       }
+    },
 
-      /*
-       * compute preview
-       */
-      // slide.value.preview = this.canvas.toDataURL("image/png");
+    /*
+     * render slide preview
+     */
+    renderSlidePreview() {
+      slide.value.preview = this.canvas.toDataURL("image/png");
     },
 
     /*
@@ -467,7 +474,8 @@ export const useCanvasStore = defineStore("canvas", {
 
       if (!element?.image?.nodeType) {
         const image = new Image();
-        image.src = element.imageSrc;
+        // image.src = element.imageSrc;
+        image.src = `data:image/png;base64, ${element.imageBase64}`;
 
         image.onload = () => {
           element.image = image;
@@ -638,6 +646,7 @@ export const useCanvasStore = defineStore("canvas", {
 
       this.ctx.stroke();
       this.ctx.closePath();
+      this.ctx.beginPath();
     },
 
     /*

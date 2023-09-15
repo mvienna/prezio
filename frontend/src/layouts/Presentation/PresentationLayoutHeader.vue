@@ -97,7 +97,10 @@
           color="grey-4"
           size="24px"
           class="cursor-pointer"
-          @click="presentationStore.saveSlide(undefined, elements)"
+          @click="
+            canvasStore.renderSlidePreview();
+            presentationStore.saveSlide(undefined, elements);
+          "
         >
           <q-tooltip>
             {{

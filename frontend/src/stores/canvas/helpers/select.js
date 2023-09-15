@@ -244,11 +244,12 @@ export const deselectElement = () => {
 
     selectedElement.value = null;
     selectedElementIndex.value = -1;
-    canvasStore.redrawCanvas();
   }
 
   magnet.value.axis = null;
   mode.value = null;
+
+  canvasStore.redrawCanvas();
 };
 
 export const deleteElement = (element = selectedElement.value) => {

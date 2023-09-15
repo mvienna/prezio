@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/media', [MediaController::class, 'store']);
     Route::get('/media', [MediaController::class, 'get']);
     Route::delete('/media/{file_id}', [MediaController::class, 'deletePermanently']);
+    Route::get('/image', [MediaController::class, 'getImageByUrlQuery']); // ?url=
 
     /*
      * presentation(s)

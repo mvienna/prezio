@@ -1,6 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
+import { api } from "boot/axios";
 
 const canvasStore = useCanvasStore();
 const { ctx, canvas, elements, MODES_OPTIONS } = storeToRefs(canvasStore);
@@ -10,10 +11,10 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
     /*
      * add image
      */
-    addImage(url) {
+    async addImage(url) {
       const image = new Image();
-      // image.crossOrigin = "anonymous";
-      image.src = url;
+      const response = await api.get(`/image?url=${url}`);
+      image.src = `data:image/png;base64, ${response.data.base64}`;
 
       image.onload = () => {
         const newImageHeight = canvas.value.height * 0.5;
@@ -30,6 +31,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           isLocked: false,
           image,
           imageSrc: url,
+          imageBase64: response.data.base64,
           x,
           y,
           width: newImageWidth,

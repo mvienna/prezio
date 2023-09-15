@@ -71,7 +71,7 @@ export const usePresentationStore = defineStore("presentation", {
      * slides
      */
     async addNewSlide() {
-      await api
+      return await api
         .post(`/presentation/${this.presentation.id}/slide`)
         .then((response) => {
           this.presentation.slides.push(response.data);
@@ -89,6 +89,7 @@ export const usePresentationStore = defineStore("presentation", {
       api
         .patch(`/presentation/${this.presentation.id}/slide/${slide.id}`, {
           canvas_data: elements,
+          preview: slide.preview,
           order: slide.order,
           notes: slide.notes,
           animation: slide.animation,
@@ -106,11 +107,11 @@ export const usePresentationStore = defineStore("presentation", {
         });
     },
 
-    setSlide(slide, elements = null) {
+    async setSlide(slide, elements = null) {
       if (this.slide?.id === slide.id) return;
 
       if (this.slide && elements) {
-        this.saveSlide(undefined, elements);
+        await this.saveSlide(undefined, elements);
       }
 
       this.slide = slide;
