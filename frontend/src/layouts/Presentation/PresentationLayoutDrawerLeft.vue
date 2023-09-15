@@ -248,6 +248,7 @@ const handleSlideSelection = async (slide) => {
 const handleAddingNewSlide = async () => {
   await presentationStore.addNewSlide();
   canvasStore.setElementsFromSlide();
+  deselectElement();
   canvasStore.redrawCanvas();
 };
 </script>
