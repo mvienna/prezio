@@ -106,6 +106,7 @@ export const startRotating = () => {
 export const stopRotating = () => {
   isRotating.value = false;
   rotationHandle.value = null;
+  canvasStore.redrawCanvas();
 };
 
 /*
@@ -128,5 +129,5 @@ export const rotateElement = () => {
   selectedElement.value.rotationAngle += rotationChange;
 
   updateSelectedElement();
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };

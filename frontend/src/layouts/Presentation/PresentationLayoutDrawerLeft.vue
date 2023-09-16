@@ -233,7 +233,7 @@ const handleSlidesReorder = async () => {
     return item;
   });
   await presentationStore.updateSlidesOrder();
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };
 
 /*
@@ -247,14 +247,14 @@ const handleSlideSelection = async (newSlide) => {
   await presentationStore.setSlide(newSlide, elements.value);
   canvasStore.setElementsFromSlide();
   deselectElement();
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };
 
 const handleAddingNewSlide = async () => {
   await presentationStore.addNewSlide();
   canvasStore.setElementsFromSlide();
   deselectElement();
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };
 </script>
 

@@ -173,7 +173,7 @@ onMounted(async () => {
    */
   resizeCanvas();
   setTimeout(() => {
-    canvasStore.redrawCanvas(true);
+    canvasStore.redrawCanvas(false);
   }, 100);
   window.addEventListener("resize", resizeCanvas);
 
@@ -216,7 +216,7 @@ const resizeCanvas = () => {
 
   ctx.value.scale(scale.value, scale.value);
 
-  canvasStore.redrawCanvas(true);
+  canvasStore.redrawCanvas(false);
 };
 
 const handleWheelEvent = (event) => {

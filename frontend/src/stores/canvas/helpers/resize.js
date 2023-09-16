@@ -146,6 +146,7 @@ export const startResizing = () => {
 export const stopResizing = () => {
   isResizing.value = false;
   resizeHandle.value = null;
+  canvasStore.redrawCanvas();
 };
 
 /*
@@ -301,5 +302,5 @@ export const resizeElement = () => {
   }
 
   updateSelectedElement();
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };

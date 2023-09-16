@@ -22,6 +22,7 @@ export const startDragging = () => {
 
 export const stopDragging = () => {
   isDragging.value = false;
+  canvasStore.redrawCanvas();
 };
 
 export const dragElement = () => {
@@ -604,5 +605,5 @@ export const moveElement = (newX, newY) => {
   dragStart.value.y = newY;
 
   updateSelectedElement();
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };

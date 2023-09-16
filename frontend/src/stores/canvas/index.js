@@ -179,7 +179,7 @@ export const useCanvasStore = defineStore("canvas", {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
 
-    redrawCanvas(isOnLoad = false, elements) {
+    redrawCanvas(forceSlideSave = true, elements) {
       lastChangedAt.value = new Date();
 
       this.clearCanvas();
@@ -241,7 +241,7 @@ export const useCanvasStore = defineStore("canvas", {
        * save slide if last save was > 10s ago
        * compute preview (before drawing borders and magnet lines)
        */
-      if (!isOnLoad) {
+      if (forceSlideSave) {
         const now = new Date();
         const secondsDifference = date.getDateDiff(
           now,

@@ -197,7 +197,7 @@ export const selectElement = (element = null) => {
   }
 
   magnet.value.axis = null;
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };
 
 export const doubleSelectElement = () => {
@@ -233,7 +233,7 @@ export const deselectElement = () => {
   magnet.value.axis = null;
   mode.value = null;
 
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };
 
 export const deleteElement = (element = selectedElement.value) => {

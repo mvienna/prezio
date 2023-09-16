@@ -44,8 +44,6 @@ export const useStockImagesStore = defineStore("stockImages", {
           this.stockImages = this.stockImages.concat(
             isSearching ? response.results : response
           );
-
-          console.log(this.stockImages[0]);
         })
         .catch((error) => {
           console.log(error);
