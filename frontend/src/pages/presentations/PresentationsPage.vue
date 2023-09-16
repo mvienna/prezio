@@ -11,12 +11,12 @@
         <q-table
           :rows="presentations"
           :columns="presentationsColumns"
+          :pagination="pagination"
           :filter="search"
           selection="multiple"
           v-model:selected="selectedPresentations"
           row-key="id"
           flat
-          hide-bottom
           separator="none"
           color="primary"
           class="bg-grey-2 q-mt-lg"
@@ -286,7 +286,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { api } from "boot/axios";
 import NewPresentation from "components/presentation/NewPresentation.vue";
 import { useRouter } from "vue-router";
@@ -379,6 +379,13 @@ const presentationsColumns = [
   },
 ];
 
+const pagination = ref({
+  sortBy: "desc",
+  descending: false,
+  page: 1,
+  rowsPerPage: 10,
+});
+
 const selectedPresentations = ref([]);
 
 /*
@@ -448,5 +455,11 @@ const handleCreatingNewPresentation = (data) => {
       }
     }
   }
+}
+
+::v-deep(.q-table__container) {
+  height: calc(100vh - 66px);
+  padding-top: 24px;
+  margin-top: 0;
 }
 </style>
