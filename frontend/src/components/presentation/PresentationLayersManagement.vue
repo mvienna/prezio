@@ -21,7 +21,7 @@
           class="layer bg-grey-2 cursor-pointer"
           :class="element.id === selectedElement?.id ? 'layer--active' : ''"
         >
-          <q-card-section class="row no-wrap items-center">
+          <q-card-section class="row no-wrap items-center q-py-none">
             <!-- drag handle -->
             <q-icon
               name="r_drag_indicator"
@@ -32,7 +32,7 @@
 
             <!-- layer name -->
             <span
-              class="text-semibold q-pl-md"
+              class="text-semibold q-pl-md q-py-sm"
               @click="!element.isLocked ? selectElement(element) : ''"
             >
               {{
