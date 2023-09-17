@@ -5,7 +5,7 @@ export const useStockImagesStore = defineStore("stockImages", {
     stockImages: [],
     pagination: {
       page: 1,
-      per_page: 25,
+      per_page: 50,
       order_by: "popular", // latest, oldest, popular
     },
 
