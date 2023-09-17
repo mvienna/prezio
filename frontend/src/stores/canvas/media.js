@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
-import { api } from "boot/axios";
+import { fetchAndConvertToBase64Image } from "src/helpers/fetchAndConvertToBase64Image";
 
 const canvasStore = useCanvasStore();
 const { ctx, canvas, elements, MODES_OPTIONS } = storeToRefs(canvasStore);
@@ -16,9 +16,8 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
 
       let base64;
       if (url.includes("http")) {
-        const response = await api.get(`/image?url=${url}`);
-        base64 = response.data.base64;
-        image.src = `data:image/png;base64, ${base64}`;
+        base64 = await fetchAndConvertToBase64Image(url);
+        image.src = base64;
       } else {
         image.src = url;
       }
