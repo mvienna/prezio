@@ -32,7 +32,7 @@
 
             <!-- layer name -->
             <span
-              class="text-semibold q-pl-md q-py-sm"
+              class="text-semibold q-pl-md q-py-sm q-my-xs"
               @click="!element.isLocked ? selectElement(element) : ''"
             >
               {{
