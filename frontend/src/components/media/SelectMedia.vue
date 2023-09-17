@@ -1,5 +1,5 @@
 <template>
-  <q-card flat>
+  <q-card flat class="relative-position">
     <!-- toolbar -->
     <q-card-section class="q-card__toolbar_section q-pa-lg">
       <q-toolbar class="justify-between q-px-none">
@@ -37,15 +37,15 @@
     </q-card-section>
 
     <!-- content -->
-    <q-card-section class="q-pa-lg">
-      <q-tab-panels v-model="tab" animated>
+    <q-card-section class="q-pa-lg" style="height: calc(100% - 124px)">
+      <q-tab-panels v-model="tab" animated class="full-height">
         <!-- upload -->
-        <q-tab-panel name="upload" class="q-pa-none">
+        <q-tab-panel name="upload" class="q-pa-none column no-wrap full-height">
           <template v-if="selectedFile">
             <!-- uploaded file -->
             <q-img
               class="uploaded__file"
-              fit="cover"
+              fit="fill"
               :src="selectedFile?.original_url || selectedFile?.urls?.regular"
               :alt="selectedFile?.filename || selectedFile?.alt_description"
             />
@@ -78,6 +78,8 @@
 
           <!-- illustration -->
           <template v-else>
+            <q-space />
+
             <div class="row justify-center">
               <q-img src="/assets/images/upload.svg" width="300px" />
             </div>
@@ -86,6 +88,8 @@
               {{ $t("media.select.tabs.upload.description") }}
             </div>
           </template>
+
+          <q-space />
 
           <!-- upload -->
           <q-btn
@@ -198,7 +202,11 @@
           </div>
 
           <!-- results unsplash -->
-          <div style="max-height: calc(100vh - 24px * 2 - 124px - 24px - 72px)">
+          <div
+            style="
+              max-height: calc(100vh - 24px * 2 - 124px - 24px - 72px - 200px);
+            "
+          >
             <q-infinite-scroll
               @load="stockImagesStore.fetchStockImages"
               :offset="500"
@@ -270,6 +278,8 @@
         <q-tab-panel name="r_gifs_and_stickers"> </q-tab-panel>
       </q-tab-panels>
     </q-card-section>
+
+    <q-space />
 
     <transition
       appear
@@ -420,7 +430,10 @@ const handleSearch = () => {
 <style scoped lang="scss">
 .q-card {
   width: 100%;
-  max-width: 650px;
+  max-width: 800px;
+  height: 100%;
+  max-height: 700px;
+  overflow-y: hidden;
 }
 
 .q-card__toolbar_section {
@@ -489,7 +502,7 @@ const handleSearch = () => {
  * uploaded
  */
 .uploaded__file {
-  width: 100%;
+  height: calc(100% - 56px - 24px);
   border-radius: 6px;
 }
 
@@ -497,15 +510,13 @@ const handleSearch = () => {
  * masorny grid
  */
 .masonry {
-  columns: 2 200px;
+  columns: 3 200px;
   column-gap: 16px;
-  margin-bottom: -16px;
 
   .masonry__item {
     margin-bottom: 16px;
-    display: inline-block;
+    //display: inline-block;
     border-radius: 8px;
-    width: 100%;
     cursor: pointer;
     transition: 0.2s;
     border-width: 1.5px;
