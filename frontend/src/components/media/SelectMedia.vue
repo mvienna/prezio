@@ -76,7 +76,7 @@
             </div>
           </template>
 
-          <!-- illustration -->
+          <!-- upload illustration -->
           <template v-else>
             <q-space />
 
@@ -143,8 +143,16 @@
               "
               @click="selectedFile = selectedFile?.id === file.id ? null : file"
             >
+              <!-- added from unsplash -->
               <q-img
-                v-if="file?.mime_type?.includes('image')"
+                v-if="file?.origin === selectedStockImageOriginOptions.unsplash"
+                :src="file?.urls?.regular"
+                :alt="file?.alt_description"
+              />
+
+              <!-- uploaded from the computer -->
+              <q-img
+                v-else-if="file?.mime_type?.includes('image')"
                 :src="file?.original_url"
                 :alt="file?.original_url"
               />
@@ -222,7 +230,10 @@
                   selectedFile?.id === item.id ? 'masonry__item--selected' : ''
                 "
                 @click="
-                  selectedFile = selectedFile?.id === item.id ? null : item
+                  selectedFile =
+                    selectedFile?.id === item.id
+                      ? null
+                      : { ...item, origin: 'unsplash' }
                 "
               >
                 <!-- image -->
@@ -281,6 +292,7 @@
 
     <q-space />
 
+    <!-- select -->
     <transition
       appear
       enter-active-class="animated fadeInUp"
@@ -298,7 +310,7 @@
           class="full-width q-py-md"
           color="primary"
           unelevated
-          @click="$emit('select', selectedFile)"
+          @click="handleFileSelection()"
         />
       </q-card-section>
     </transition>
@@ -320,7 +332,7 @@ const { t } = useI18n({ useScope: "global" });
 
 const { user } = storeToRefs(useAuthStore());
 
-defineEmits(["close", "select"]);
+const emit = defineEmits(["close", "select"]);
 
 /*
  * stores
@@ -356,7 +368,6 @@ const tab = ref("upload");
 /*
  * fetch users media
  */
-
 const media = ref([]);
 
 onBeforeMount(() => {
@@ -371,14 +382,25 @@ onBeforeMount(() => {
 });
 
 /*
- * upload
+ * select file
  */
 const selectedFile = ref();
+const selectedStockImageOriginOptions = { unsplash: "unsplash" };
+const isProcessing = ref(false);
 
+const handleFileSelection = async () => {
+  if (selectedFile.value.origin === selectedStockImageOriginOptions.unsplash) {
+    await saveStockImage(selectedFile.value);
+  }
+
+  emit("select", selectedFile.value);
+};
+
+/*
+ * upload from the computer
+ */
 const form = ref();
 const fileInputId = `fileInput-${Math.random().toString(36).substring(2, 9)}`;
-
-const isProcessing = ref(false);
 
 const uploadFile = async (event) => {
   isProcessing.value = true;
@@ -391,7 +413,7 @@ const uploadFile = async (event) => {
   formData.append("model_id", user.value.id);
   formData.append("collection", "default");
 
-  api
+  return await api
     .post("/media", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -415,6 +437,27 @@ const deleteFile = (file) => {
     .then(() => {
       media.value = media.value.filter((item) => item.id !== file.id);
       selectedFile.value = null;
+    })
+    .finally(() => {
+      isProcessing.value = false;
+    });
+};
+
+/*
+ * unsplash
+ */
+const saveStockImage = async (data) => {
+  isProcessing.value = true;
+
+  return await api
+    .post("/media", {
+      unsplash_image_data: data,
+      model_type: "App\\Models\\User",
+      model_id: user.value.id,
+      collection: "default",
+    })
+    .then((response) => {
+      media.value.push(response.data);
     })
     .finally(() => {
       isProcessing.value = false;

@@ -17,13 +17,26 @@ class MediaController extends Controller
         $modelId = $request->input('model_id');
         $collection = $request->input('collection');
 
-        $model = $modelType::findOrFail($modelId);
+        $unsplash_image_data = $request->input('unsplash_image_data');
 
-        $media = $model
-            ->addMediaFromRequest('file')
-            ->usingName($request->file('file')->getClientOriginalName())
-            ->usingFileName(uniqid() . '.' . $request->file('file')->getClientOriginalExtension())
-            ->toMediaCollection($collection);
+        $model = $modelType::findOrFail($modelId);
+        $media = $model;
+
+        // add from unsplash
+        if ($unsplash_image_data) {
+            $media = $media
+                ->addMediaFromUrl($unsplash_image_data['urls']['regular'])
+                ->usingName($unsplash_image_data['slug']);
+
+        // upload from the computer
+        } else {
+            $media = $media
+                ->addMediaFromRequest('file')
+                ->usingName($request->file('file')->getClientOriginalName())
+                ->usingFileName(uniqid() . '.' . $request->file('file')->getClientOriginalExtension());
+        }
+
+        $media = $media->toMediaCollection($collection);
 
         return $this->jsonResponse($media->toArray());
     }
