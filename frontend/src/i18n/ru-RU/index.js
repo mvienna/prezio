@@ -299,23 +299,61 @@ export default {
     },
 
     /*
-     * new
+     * slide
      */
-    new: {
-      title: "Новая презентация",
-      name: "Название презентации",
-      description: "Описание презентации",
-      create: "Создать",
-      errors: {
-        name: {
-          required: "Требуется ввести название презентации",
-        },
+    slide: {
+      actions: {
+        delete: "Удалить",
+      },
+    },
+
+    /*
+     * element's context menu
+     */
+    elementsContextMenu: {
+      copy: {
+        title: "Копировать",
+        shortcut: "^ или ⌘ и C",
+      },
+      cut: {
+        title: "Вырезать",
+        shortcut: "^ или ⌘ и X",
+      },
+      paste: {
+        title: "Вставить",
+        shortcut: "^ или ⌘ и V",
+      },
+      duplicate: {
+        title: "Дублировать",
+        shortcut: "^ или ⌘ и D",
+      },
+      delete: {
+        title: "Удалить",
+        shortcut: "⌫",
+      },
+
+      moveUp: {
+        title: "Переместить выше",
+        shortcut: "^ или ⌘ и ↑",
+      },
+      moveToTheTop: {
+        title: "Переместить вверх",
+        shortcut: "^ или ⌘ + ⇧ и ↑",
+      },
+
+      moveDown: {
+        title: "Переместить ниже",
+        shortcut: "^ или ⌘ и ↓",
+      },
+      moveToTheBottom: {
+        title: "Переместить вниз",
+        shortcut: "^ или ⌘ + ⇧ и ↓",
       },
     },
   },
 
   /*
-   * presentations
+   * my presentations, table
    */
   presentations: {
     myPresentationsTitle: "Мои презентации",
@@ -331,11 +369,17 @@ export default {
     },
 
     /*
-     * slide
+     * new
      */
-    slide: {
-      actions: {
-        delete: "Удалить",
+    new: {
+      title: "Новая презентация",
+      name: "Название презентации",
+      description: "Описание презентации",
+      create: "Создать",
+      errors: {
+        name: {
+          required: "Требуется ввести название презентации",
+        },
       },
     },
 

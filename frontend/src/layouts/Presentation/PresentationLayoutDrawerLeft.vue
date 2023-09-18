@@ -125,7 +125,7 @@
                         />
 
                         <div>
-                          {{ $t("presentations.slide.actions.delete") }}
+                          {{ $t("presentation.slide.actions.delete") }}
                         </div>
                       </q-item>
                     </q-list>

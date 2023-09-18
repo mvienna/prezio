@@ -50,6 +50,11 @@ export const useCanvasStore = defineStore("canvas", {
     elements: [],
 
     /*
+     * copy
+     */
+    copiedElement: null,
+
+    /*
      * selection
      */
     selectedElement: null,

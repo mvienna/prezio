@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <!-- toolbar -->
+    <!-- top toolbar -->
     <PresentationToolbarTop
       @switch-mode="canvasStore.switchMode($event)"
       @deselect="selectedElement ? deselectElement() : ''"
@@ -21,6 +21,20 @@
       ></canvas>
     </div>
 
+    <!-- context menu -->
+    <transition
+      appear
+      enter-active-class="animated zoomIn"
+      leave-active-class="animated zoomOut"
+    >
+      <ElementsContextMenu
+        v-if="showElementsContextMenu"
+        :x="elementsContextMenuPosition.x"
+        :y="elementsContextMenuPosition.y"
+      />
+    </transition>
+
+    <!-- bottom toolbar -->
     <PresentationToolbarBottom
       @zoom="canvasStore.handleZoom(null, mouse.x, mouse.y, $event)"
       @zoomIn="canvasStore.handleZoom(null, mouse.x, mouse.y, scale + 0.25)"
@@ -76,6 +90,16 @@ import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationStore } from "stores/presentation";
 import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
+import ElementsContextMenu from "components/presentation/ElementsContextMenu.vue";
+import {
+  copy,
+  cut,
+  duplicate,
+  moveLayer,
+  moveLayerToTheBottom,
+  moveLayerToTheTop,
+  paste,
+} from "stores/canvas/helpers/elementsContextMenuActions";
 
 /*
  * variables
@@ -109,6 +133,7 @@ const {
 
   // select
   selectedElement,
+  selectedElementIndex,
 
   // drag
   isDragging,
@@ -235,6 +260,60 @@ const handleKeyDownEvent = (event) => {
       event.preventDefault();
       canvasStore.saveSlidePreview();
       presentationStore.saveSlide();
+    }
+
+    // paste element
+    if (event.key === "v") {
+      if (mode.value !== MODES_OPTIONS.value.textEditing) {
+        event.preventDefault();
+        paste();
+      }
+    }
+
+    if (selectedElement.value) {
+      // copy element
+      if (event.key === "c") {
+        event.preventDefault();
+        copy();
+      }
+
+      // cut element
+      if (event.key === "x") {
+        event.preventDefault();
+        cut();
+      }
+
+      // cut element
+      if (event.key === "d") {
+        event.preventDefault();
+        duplicate();
+      }
+
+      // move up
+      if (event.keyCode === 38) {
+        if (selectedElementIndex !== 0) {
+          moveLayer(undefined, 1);
+        }
+      }
+
+      // move down
+      if (event.keyCode === 40) {
+        if (selectedElementIndex !== elements.length - 1) {
+          moveLayer(undefined, -1);
+        }
+      }
+
+      if (event.shiftKey) {
+        // move to the top
+        if (event.keyCode === 38) {
+          moveLayerToTheTop();
+        }
+
+        // move to the bottom
+        if (event.keyCode === 40) {
+          moveLayerToTheBottom();
+        }
+      }
     }
   }
 
@@ -528,6 +607,58 @@ watch(
         canvasHighlightClass.value = "";
       }, 2000);
     }
+  }
+);
+
+/*
+ * element's context menu
+ */
+const showElementsContextMenu = ref(false);
+const elementsContextMenuPosition = computed(() => {
+  const canvasRect = canvasStore.canvasRect();
+
+  return selectedElement.value
+    ? {
+        x:
+          canvasRect.x +
+          (selectedElement.value.x / canvas.value.width) * canvasRect.width,
+        y:
+          canvasRect.y +
+          (selectedElement.value.y / canvas.value.height) * canvasRect.height -
+          40,
+      }
+    : null;
+});
+
+watch(
+  () => selectedElement.value,
+  () => {
+    showElementsContextMenu.value = false;
+
+    setTimeout(() => {
+      showElementsContextMenu.value = !!selectedElement.value;
+    });
+  }
+);
+
+watch(
+  () => isDragging.value,
+  () => {
+    showElementsContextMenu.value = !isDragging.value;
+  }
+);
+
+watch(
+  () => isResizing.value,
+  () => {
+    showElementsContextMenu.value = !isResizing.value;
+  }
+);
+
+watch(
+  () => isRotating.value,
+  () => {
+    showElementsContextMenu.value = !isRotating.value;
   }
 );
 </script>

@@ -299,23 +299,61 @@ export default {
     },
 
     /*
-     * new
+     * slide
      */
-    new: {
-      title: "New Presentation",
-      name: "Presentation name",
-      description: "Presentation description",
-      create: "Create",
-      errors: {
-        name: {
-          required: "Presentation name is required",
-        },
+    slide: {
+      actions: {
+        delete: "Delete",
+      },
+    },
+
+    /*
+     * element's context menu
+     */
+    elementsContextMenu: {
+      copy: {
+        title: "Copy",
+        shortcut: "^ or ⌘ and C",
+      },
+      cut: {
+        title: "Cut",
+        shortcut: "^ or ⌘ and X",
+      },
+      paste: {
+        title: "Paste",
+        shortcut: "^ or ⌘ and V",
+      },
+      duplicate: {
+        title: "Duplicate",
+        shortcut: "^ or ⌘ and D",
+      },
+      delete: {
+        title: "Delete",
+        shortcut: "⌫",
+      },
+
+      moveUp: {
+        title: "Move up",
+        shortcut: "^ or ⌘ and ↑",
+      },
+      moveToTheTop: {
+        title: "Move to the top",
+        shortcut: "^ or ⌘ and ⇧ and ↑",
+      },
+
+      moveDown: {
+        title: "Move down",
+        shortcut: "^ or ⌘ and ↓",
+      },
+      moveToTheBottom: {
+        title: "Move to the bottom",
+        shortcut: "^ or ⌘ and ⇧ and ↓",
       },
     },
   },
 
   /*
-   * presentations
+   * my presentations, table
    */
   presentations: {
     myPresentationsTitle: "My Presentations",
@@ -331,11 +369,17 @@ export default {
     },
 
     /*
-     * slide
+     * new
      */
-    slide: {
-      actions: {
-        delete: "Delete",
+    new: {
+      title: "New Presentation",
+      name: "Presentation name",
+      description: "Presentation description",
+      create: "Create",
+      errors: {
+        name: {
+          required: "Presentation name is required",
+        },
       },
     },
 

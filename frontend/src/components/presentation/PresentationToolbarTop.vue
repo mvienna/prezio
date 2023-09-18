@@ -676,26 +676,20 @@
     <q-space />
 
     <!-- selected item actions -->
-    <template v-if="selectedElement">
+    <template v-if="copiedElement">
       <!-- deselect line button -->
       <q-btn
-        icon="r_done"
+        icon="r_paste"
         unelevated
         text-color="dark"
         size="12px"
         round
-        @click="$emit('deselect')"
-      />
-
-      <!-- delete line button -->
-      <q-btn
-        icon="r_backspace"
-        unelevated
-        text-color="dark"
-        size="12px"
-        round
-        @click="$emit('delete')"
-      />
+        @click="paste()"
+      >
+        <q-tooltip>
+          {{ $t("presentation.elementsContextMenu.paste.shortcut") }}
+        </q-tooltip>
+      </q-btn>
     </template>
 
     <!-- select media -->
@@ -729,6 +723,7 @@ import {
   SHAPE_LINE_WIDTH_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import { useCanvasShapeStore } from "stores/canvas/shape";
+import { paste } from "stores/canvas/helpers/elementsContextMenuActions";
 
 /*
  * stores
@@ -742,13 +737,18 @@ const textState = storeToRefs(textStore);
 const shapeStore = useCanvasShapeStore();
 const shapeState = storeToRefs(shapeStore);
 
-const { mode, MODES_OPTIONS, selectedElement, selectedElementIndex } =
-  storeToRefs(useCanvasStore());
+const {
+  mode,
+  MODES_OPTIONS,
+  selectedElement,
+  selectedElementIndex,
+  copiedElement,
+} = storeToRefs(useCanvasStore());
 
 /*
  * emits
  */
-defineEmits(["switchMode", "deselect", "delete", "addImage", "addShape"]);
+defineEmits(["switchMode", "addImage", "addShape"]);
 
 /*
  * handle element selection - apply customization styles

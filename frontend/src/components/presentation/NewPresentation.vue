@@ -3,7 +3,7 @@
     <q-card-section class="q-pa-lg">
       <q-toolbar class="justify-between q-px-none">
         <!-- title -->
-        <div class="text-h6 text-bold">{{ $t("presentation.new.title") }}</div>
+        <div class="text-h6 text-bold">{{ $t("presentations.new.title") }}</div>
 
         <!-- close -->
         <q-btn
@@ -19,7 +19,7 @@
         <!-- name -->
         <q-input
           v-model="form.name"
-          :label="$t('presentation.new.name')"
+          :label="$t('presentations.new.name')"
           outlined
           autofocus
           color="primary"
@@ -31,7 +31,7 @@
         <!-- description -->
         <q-input
           v-model="form.description"
-          :label="$t('presentation.new.description')"
+          :label="$t('presentations.new.description')"
           outlined
           autogrow
           color="grey"
@@ -46,7 +46,7 @@
           color="primary"
           unelevated
           :loading="isLoading"
-          :label="$t('presentation.new.create')"
+          :label="$t('presentations.new.create')"
           type="submit"
           icon="r_done"
         />
@@ -81,7 +81,7 @@ const form = ref({
 // name validation
 const nameRule = (value) => {
   if (!value) {
-    return t("presentation.new.errors.name.required");
+    return t("presentations.new.errors.name.required");
   }
   return true;
 };
