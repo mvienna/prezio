@@ -242,6 +242,10 @@ export const useCanvasStore = defineStore("canvas", {
        * compute preview (before drawing borders and magnet lines)
        */
       if (forceSlideSave) {
+        // render preview
+        this.renderSlidePreview();
+
+        // save slide
         const now = new Date();
         const secondsDifference = date.getDateDiff(
           now,
@@ -250,7 +254,6 @@ export const useCanvasStore = defineStore("canvas", {
         );
 
         if (secondsDifference >= 10) {
-          this.renderSlidePreview();
           presentationStore.saveSlide(undefined, this.elements);
         }
       }
