@@ -19,7 +19,7 @@
           flat
           separator="none"
           color="primary"
-          class="bg-grey-2 q-mt-lg"
+          class="bg-grey-2 q-mt-lg hide-scrollbar"
           @row-click="handlePresentationClick"
         >
           <template v-slot:top>
@@ -380,8 +380,8 @@ const presentationsColumns = [
 ];
 
 const pagination = ref({
-  sortBy: "desc",
-  descending: false,
+  sortBy: "updated_at",
+  descending: true,
   page: 1,
   rowsPerPage: 10,
 });
