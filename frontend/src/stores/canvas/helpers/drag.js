@@ -5,6 +5,7 @@ import { updateSelectedElement } from "stores/canvas/helpers/select";
 const canvasStore = useCanvasStore();
 const {
   elements,
+  canvas,
   isDragging,
   dragStart,
   mouse,
@@ -45,7 +46,20 @@ export const moveElement = (newX, newY) => {
     default:
       const magnetThreshold = 2;
 
-      elements.value.forEach((element) => {
+      const magneticElements = [
+        ...elements.value,
+
+        // for canvas magnet (to the slide)
+        {
+          id: "canvas",
+          x: 0,
+          y: 0,
+          width: canvas.value.width,
+          height: canvas.value.height,
+        },
+      ];
+
+      magneticElements.forEach((element) => {
         if (element.id !== selectedElement.value.id) {
           /*
            * compute help variables for draggable & magnet elements
@@ -73,13 +87,17 @@ export const moveElement = (newX, newY) => {
             connectionLine: {
               // vertical
               y:
-                selectedElement.value.y < element.y
+                element.id === "canvas"
+                  ? element.y
+                  : selectedElement.value.y < element.y
                   ? selectedElement.value.y + selectedElement.value.height
                   : selectedElement.value.y,
 
               // horizontal
               x:
-                selectedElement.value.x < element.x
+                element.id === "canvas"
+                  ? element.x
+                  : selectedElement.value.x < element.x
                   ? selectedElement.value.x + selectedElement.value.width
                   : selectedElement.value.x,
             },
