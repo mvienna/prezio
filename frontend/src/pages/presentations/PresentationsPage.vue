@@ -19,7 +19,7 @@
           flat
           separator="none"
           color="primary"
-          class="bg-grey-2 q-mt-lg hide-scrollbar"
+          class="bg-grey-2 q-mt-lg"
           @row-click="handlePresentationClick"
         >
           <template v-slot:top>
@@ -461,5 +461,14 @@ const handleCreatingNewPresentation = (data) => {
   height: calc(100vh - 66px);
   padding-top: 24px;
   margin-top: 0;
+}
+
+::v-deep(q-table__middle) {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>
