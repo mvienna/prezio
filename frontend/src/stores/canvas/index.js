@@ -269,7 +269,7 @@ export const useCanvasStore = defineStore("canvas", {
        * magnet line
        */
       if (this.magnet.axis) {
-        this.renderMagnetLine();
+        this.renderMagnetLines();
       }
     },
 
@@ -658,41 +658,26 @@ export const useCanvasStore = defineStore("canvas", {
     /*
      * render magnet line
      */
-    renderMagnetLine() {
+    renderMagnetLines() {
       this.ctx.save();
 
       this.magnet.connectionLines.forEach((connectionLine) => {
         this.ctx.strokeStyle = "#4971FF";
-        this.ctx.lineWidth = this.computeAdjustedSize(2);
+        this.ctx.lineWidth = this.computeAdjustedSize(1);
 
         const fromX = connectionLine.from.x;
         const fromY = connectionLine.from.y;
         const toX = connectionLine.to.x;
         const toY = connectionLine.to.y;
 
-        const length = Math.sqrt((toX - fromX) ** 2 + (toY - fromY) ** 2);
-
-        const minDashLength = 10;
-        const maxDashLength = 10;
-
-        let dashLength = length * 0.1;
-
-        dashLength = Math.min(
-          Math.max(dashLength, minDashLength),
-          maxDashLength
-        );
-
-        this.ctx.setLineDash([dashLength, dashLength]);
-
         this.ctx.beginPath();
         this.ctx.moveTo(fromX, fromY);
         this.ctx.lineTo(toX, toY);
         this.ctx.stroke();
         this.ctx.closePath();
-
-        this.ctx.setLineDash([]);
       });
 
+      this.ctx.beginPath();
       this.ctx.restore();
     },
 

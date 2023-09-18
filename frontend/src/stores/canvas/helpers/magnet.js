@@ -17,7 +17,7 @@ export const useMagnet = (
   newX = selectedElement.value.x,
   newY = selectedElement.value.y
 ) => {
-  const magnetThreshold = 2;
+  const magnetThreshold = 1;
 
   const magneticElements = [
     ...elements.value,
@@ -553,9 +553,9 @@ export const useMagnet = (
 
       if (
         (magnet.value.axis === MAGNET_AXIS_OPTIONS.value.vertical &&
-          distanceY >= 2) ||
+          distanceY >= 1) ||
         (magnet.value.axis === MAGNET_AXIS_OPTIONS.value.horizontal &&
-          distanceX >= 2)
+          distanceX >= 1)
       ) {
         magnet.value.axis = null;
       }
