@@ -7,7 +7,8 @@ import { usePresentationStore } from "stores/presentation";
 import { date } from "quasar";
 
 const presentationStore = usePresentationStore();
-const { slide, lastSavedAt, lastChangedAt } = storeToRefs(presentationStore);
+const { presentation, slide, lastSavedAt, lastChangedAt } =
+  storeToRefs(presentationStore);
 
 export const useCanvasStore = defineStore("canvas", {
   state: () => ({
@@ -172,6 +173,36 @@ export const useCanvasStore = defineStore("canvas", {
         : [];
     },
 
+    saveSlidePreview() {
+      this.redrawCanvas(false, undefined, undefined, false);
+      slide.value.preview = this.canvas.toDataURL("image/png");
+      presentationStore.updateLocalSlide();
+    },
+
+    renderSlidePreview() {
+      // canvas
+      const slideIndex = presentation.value.slides.findIndex(
+        (item) => item.id === slide.value.id
+      );
+      const slide_preview_canvas = document.getElementById(
+        `canvas_slide_preview_${slideIndex}`
+      );
+      slide_preview_canvas.width = 1920;
+      slide_preview_canvas.height = 1080;
+
+      // ctx
+      const slide_preview_ctx = slide_preview_canvas.getContext("2d");
+      slide_preview_ctx.clearRect(
+        0,
+        0,
+        slide_preview_canvas.width,
+        slide_preview_canvas.height
+      );
+      slide_preview_ctx.drawImage(this.canvas, 0, 0);
+
+      slide.value.isLivePreview = true;
+    },
+
     /*
      * render canvas
      */
@@ -179,14 +210,16 @@ export const useCanvasStore = defineStore("canvas", {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
 
-    redrawCanvas(forceSlideSave = true, elements) {
+    redrawCanvas(
+      saveSlide = true,
+      forceSlideSave = false,
+      elements = this.elements,
+      showHelpers = true
+    ) {
       lastChangedAt.value = new Date();
 
       this.clearCanvas();
 
-      if (!elements) {
-        elements = this.elements || [];
-      }
       const reversedElements = [...elements].reverse();
 
       reversedElements.forEach((element) => {
@@ -239,13 +272,8 @@ export const useCanvasStore = defineStore("canvas", {
 
       /*
        * save slide if last save was > 10s ago
-       * compute preview (before drawing borders and magnet lines)
        */
-      if (forceSlideSave) {
-        // render preview
-        this.renderSlidePreview();
-
-        // save slide
+      if (saveSlide) {
         const now = new Date();
         const secondsDifference = date.getDateDiff(
           now,
@@ -253,10 +281,18 @@ export const useCanvasStore = defineStore("canvas", {
           "seconds"
         );
 
-        if (secondsDifference >= 10) {
+        if (secondsDifference >= 10 || forceSlideSave) {
+          this.saveSlidePreview();
           presentationStore.saveSlide(undefined, this.elements);
         }
       }
+
+      if (!showHelpers) return;
+
+      /*
+       * render live slide preview
+       */
+      this.renderSlidePreview();
 
       /*
        * border
@@ -271,13 +307,6 @@ export const useCanvasStore = defineStore("canvas", {
       if (this.magnet.axis) {
         this.renderMagnetLines();
       }
-    },
-
-    /*
-     * render slide preview
-     */
-    renderSlidePreview() {
-      slide.value.preview = this.canvas.toDataURL("image/png");
     },
 
     /*

@@ -103,7 +103,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
         this.isNewText = false;
 
-        canvasStore.redrawCanvas();
+        canvasStore.redrawCanvas(true, true);
         this.removeTextInput();
       };
 
@@ -172,7 +172,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         canvasStore.switchMode(MODES_OPTIONS.value.text);
         updateSelectedElement();
 
-        canvasStore.redrawCanvas();
+        canvasStore.redrawCanvas(true, true);
         this.removeTextInput();
       };
 

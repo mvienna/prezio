@@ -52,6 +52,8 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
 
       ctx.value.beginPath();
       this.currentLine = null;
+
+      canvasStore.redrawCanvas(true, true);
     },
 
     draw() {
@@ -208,7 +210,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
         }
       });
 
-      canvasStore.redrawCanvas();
+      canvasStore.redrawCanvas(false);
     },
 
     /*

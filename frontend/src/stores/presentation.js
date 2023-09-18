@@ -115,8 +115,7 @@ export const usePresentationStore = defineStore("presentation", {
           notes: slide.notes,
           animation: slide.animation,
         })
-        .then((response) => {
-          this.presentation = response.data;
+        .then(() => {
           this.lastSavedAt = new Date();
         })
         .catch((error) => {
@@ -137,6 +136,13 @@ export const usePresentationStore = defineStore("presentation", {
 
       this.slide = slide;
       this.lastSavedAt = new Date();
+    },
+
+    updateLocalSlide() {
+      const slideIndex = this.presentation.slides.findIndex(
+        (item) => item.id === this.slide.id
+      );
+      this.presentation.slides[slideIndex] = this.slide;
     },
 
     async deleteSlide(slide) {

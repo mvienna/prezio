@@ -47,9 +47,9 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
 
         elements.value.unshift(imageData);
         ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);
-      };
 
-      canvasStore.redrawCanvas();
+        canvasStore.redrawCanvas(true, true);
+      };
     },
   },
 });

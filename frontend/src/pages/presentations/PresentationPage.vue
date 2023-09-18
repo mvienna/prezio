@@ -233,6 +233,7 @@ const handleKeyDownEvent = (event) => {
     // save slide
     if (event.key === "s") {
       event.preventDefault();
+      canvasStore.saveSlidePreview();
       presentationStore.saveSlide();
     }
   }
@@ -282,6 +283,7 @@ const handleUnload = (event) => {
     event.returnValue =
       "You have unsaved changes. Are you sure you want to leave?";
 
+    canvasStore.saveSlidePreview();
     presentationStore.saveSlide(undefined, elements.value);
   }
 };

@@ -98,7 +98,7 @@
           size="24px"
           class="cursor-pointer"
           @click="
-            canvasStore.renderSlidePreview();
+            canvasStore.saveSlidePreview();
             presentationStore.saveSlide(undefined, elements);
           "
         >

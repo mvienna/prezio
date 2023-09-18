@@ -76,9 +76,16 @@
                 showSlideContextMenu[index] = !showSlideContextMenu[index]
               "
             >
+              <canvas
+                v-show="element.isLivePreview"
+                :id="`canvas_slide_preview_${index}`"
+                style="width: 100%; height: 145px"
+              />
+
               <q-img
+                v-show="!element.isLivePreview"
                 :src="element.preview"
-                style="width: 100%; aspect-ratio: 16/9"
+                style="width: 100%; height: 145px"
               />
 
               <!-- actions -->
@@ -194,7 +201,7 @@ const handleKeyDownEvent = (event) => {
 const handleSlideDeletion = async (element) => {
   await presentationStore.deleteSlide(element);
   canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };
 
 onBeforeMount(() => {
@@ -244,16 +251,23 @@ const hoveredSlideIndex = ref(null);
 const handleSlideSelection = async (newSlide) => {
   if (slide.value.id === newSlide.id) return;
 
-  await presentationStore.setSlide(newSlide, elements.value);
-  canvasStore.setElementsFromSlide();
+  canvasStore.saveSlidePreview();
   deselectElement();
-  canvasStore.redrawCanvas(false);
+
+  await presentationStore.setSlide(newSlide, elements.value);
+
+  canvasStore.setElementsFromSlide();
+
+  canvasStore.redrawCanvas(false, false, undefined, false);
 };
 
 const handleAddingNewSlide = async () => {
-  await presentationStore.addNewSlide();
-  canvasStore.setElementsFromSlide();
+  canvasStore.saveSlidePreview();
   deselectElement();
+
+  await presentationStore.addNewSlide();
+
+  canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false);
 };
 </script>
@@ -264,7 +278,7 @@ const handleAddingNewSlide = async () => {
   transition: 0.2s;
   border: 1.5px solid $grey-2;
   width: 245px;
-  aspect-ratio: 16/9;
+  height: 145px;
 
   &.slide--hovered {
     outline: 3px solid $blue-3;

@@ -53,7 +53,7 @@
               size="10px"
               @click="
                 element.isVisible = !element.isVisible;
-                canvasStore.redrawCanvas();
+                canvasStore.redrawCanvas(true, true);
               "
             >
               <q-tooltip>
@@ -181,7 +181,7 @@ const handleLayersReorder = async () => {
   selectElement(selectedElement.value);
 
   // redraw canvas with updated layers
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(true, true);
 };
 </script>
 
