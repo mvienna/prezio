@@ -1,6 +1,7 @@
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { updateSelectedElement } from "stores/canvas/helpers/select";
+import { removeMagnet, useMagnet } from "stores/canvas/helpers/magnet";
 
 const canvasStore = useCanvasStore();
 const {
@@ -146,6 +147,7 @@ export const startResizing = () => {
 export const stopResizing = () => {
   isResizing.value = false;
   resizeHandle.value = null;
+  removeMagnet();
   canvasStore.redrawCanvas();
 };
 
@@ -300,6 +302,18 @@ export const resizeElement = () => {
 
       break;
   }
+
+  removeMagnet();
+  useMagnet();
+
+  resizeStart.value = {
+    x: selectedElement.value.x,
+    y: selectedElement.value.y,
+    width: selectedElement.value.width,
+    height: selectedElement.value.height,
+    clientX: mouse.value.x,
+    clientY: mouse.value.y,
+  };
 
   updateSelectedElement();
   canvasStore.redrawCanvas(false);
