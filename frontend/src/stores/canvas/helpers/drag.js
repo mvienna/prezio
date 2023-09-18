@@ -23,6 +23,10 @@ export const startDragging = () => {
 
 export const stopDragging = () => {
   isDragging.value = false;
+  magnet.value = {
+    axis: null,
+    connectionLines: [],
+  };
   canvasStore.redrawCanvas();
 };
 
