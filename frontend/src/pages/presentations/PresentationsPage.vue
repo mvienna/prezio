@@ -463,7 +463,7 @@ const handleCreatingNewPresentation = (data) => {
   margin-top: 0;
 }
 
-::v-deep(q-table__middle) {
+::v-deep(.q-table__middle) {
   -ms-overflow-style: none;
   scrollbar-width: none;
 
