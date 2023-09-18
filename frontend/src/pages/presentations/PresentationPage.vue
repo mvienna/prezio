@@ -259,7 +259,7 @@ const handleKeyDownEvent = (event) => {
     if (event.key === "s") {
       event.preventDefault();
       canvasStore.saveSlidePreview();
-      presentationStore.saveSlide();
+      presentationStore.saveSlide(undefined, elements.value);
     }
 
     // paste element
