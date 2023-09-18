@@ -553,9 +553,9 @@ export const useMagnet = (
 
       if (
         (magnet.value.axis === MAGNET_AXIS_OPTIONS.value.vertical &&
-          distanceY >= 1) ||
+          distanceY > 0) ||
         (magnet.value.axis === MAGNET_AXIS_OPTIONS.value.horizontal &&
-          distanceX >= 1)
+          distanceX > 0)
       ) {
         magnet.value.axis = null;
       }
