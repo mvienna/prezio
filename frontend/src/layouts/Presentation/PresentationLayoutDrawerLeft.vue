@@ -142,7 +142,7 @@
                         class="shortcut row no-wrap q-gutter-xs"
                       >
                         <div v-if="isMac">⌘</div>
-                        <div v-else>^</div>
+                        <div v-else>Ctrl</div>
                         <div>D</div>
                       </div>
                     </q-item>
