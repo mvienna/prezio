@@ -328,6 +328,10 @@ const handleAddingNewSlide = async () => {
   canvasStore.saveSlidePreview();
   deselectElement();
 
+  slide.value.canvas_data = JSON.stringify(elements.value);
+  presentationStore.updateLocalSlide();
+  await presentationStore.saveSlide(undefined, elements.value);
+
   await presentationStore.addNewSlide();
 
   canvasStore.setElementsFromSlide();
