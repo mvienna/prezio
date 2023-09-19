@@ -48,13 +48,15 @@
         >
           <q-icon name="r_copy" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.copy.title") }}
+            {{ $t("presentation.elementsContextMenu.copy") }}
           </div>
 
           <q-space />
 
-          <div class="text-grey text-caption">
-            {{ $t("presentation.elementsContextMenu.copy.shortcut") }}
+          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+            <div v-if="isMac">⌘</div>
+            <div v-else>^</div>
+            <div>C</div>
           </div>
         </q-item>
 
@@ -68,13 +70,15 @@
         >
           <q-icon name="r_cut" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.cut.title") }}
+            {{ $t("presentation.elementsContextMenu.cut") }}
           </div>
 
           <q-space />
 
-          <div class="text-grey text-caption">
-            {{ $t("presentation.elementsContextMenu.cut.shortcut") }}
+          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+            <div v-if="isMac">⌘</div>
+            <div v-else>^</div>
+            <div>X</div>
           </div>
         </q-item>
 
@@ -88,13 +92,15 @@
         >
           <q-icon name="r_dynamic_feed" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.duplicate.title") }}
+            {{ $t("presentation.elementsContextMenu.duplicate") }}
           </div>
 
           <q-space />
 
-          <div class="text-grey text-caption">
-            {{ $t("presentation.elementsContextMenu.duplicate.shortcut") }}
+          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+            <div v-if="isMac">⌘</div>
+            <div v-else>^</div>
+            <div>D</div>
           </div>
         </q-item>
 
@@ -111,13 +117,15 @@
         >
           <q-icon name="r_north" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.moveUp.title") }}
+            {{ $t("presentation.elementsContextMenu.moveUp") }}
           </div>
 
           <q-space />
 
-          <div class="text-grey text-caption">
-            {{ $t("presentation.elementsContextMenu.moveUp.shortcut") }}
+          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+            <div v-if="isMac">⌘</div>
+            <div v-else>^</div>
+            <div>↑</div>
           </div>
         </q-item>
 
@@ -132,13 +140,16 @@
         >
           <q-icon name="r_vertical_align_top" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.moveToTheTop.title") }}
+            {{ $t("presentation.elementsContextMenu.moveToTheTop") }}
           </div>
 
           <q-space />
 
-          <div class="text-grey text-caption">
-            {{ $t("presentation.elementsContextMenu.moveToTheTop.shortcut") }}
+          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+            <div v-if="isMac">⌘</div>
+            <div v-else>^</div>
+            <div>⇧</div>
+            <div>↑</div>
           </div>
         </q-item>
 
@@ -153,13 +164,15 @@
         >
           <q-icon name="r_south" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.moveDown.title") }}
+            {{ $t("presentation.elementsContextMenu.moveDown") }}
           </div>
 
           <q-space />
 
-          <div class="text-grey text-caption">
-            {{ $t("presentation.elementsContextMenu.moveDown.shortcut") }}
+          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+            <div v-if="isMac">⌘</div>
+            <div v-else>^</div>
+            <div>↓</div>
           </div>
         </q-item>
 
@@ -174,15 +187,16 @@
         >
           <q-icon name="r_vertical_align_bottom" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.moveToTheBottom.title") }}
+            {{ $t("presentation.elementsContextMenu.moveToTheBottom") }}
           </div>
 
           <q-space />
 
-          <div class="text-grey text-caption">
-            {{
-              $t("presentation.elementsContextMenu.moveToTheBottom.shortcut")
-            }}
+          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+            <div v-if="isMac">⌘</div>
+            <div v-else>^</div>
+            <div>⇧</div>
+            <div>↓</div>
           </div>
         </q-item>
 
@@ -198,13 +212,13 @@
         >
           <q-icon name="r_delete" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.delete.title") }}
+            {{ $t("presentation.elementsContextMenu.delete") }}
           </div>
 
           <q-space />
 
-          <div class="text-grey text-caption">
-            {{ $t("presentation.elementsContextMenu.delete.shortcut") }}
+          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+            <div>⌫</div>
           </div>
         </q-item>
       </q-menu>
@@ -224,6 +238,13 @@ import {
 } from "stores/canvas/helpers/elementsContextMenuActions";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
+import { useQuasar } from "quasar";
+import { computed } from "vue";
+
+/*
+ * variables
+ */
+const $q = useQuasar();
 
 /*
  * context menu position
@@ -238,6 +259,17 @@ defineProps({
  */
 const canvasStore = useCanvasStore();
 const { elements, selectedElementIndex } = storeToRefs(canvasStore);
+
+/*
+ * shortcuts
+ */
+const showShortcuts = computed(() => {
+  return $q.platform.is.desktop;
+});
+
+const isMac = computed(() => {
+  return $q.platform.is.platform === "mac";
+});
 </script>
 
 <style scoped lang="scss">
@@ -247,5 +279,15 @@ const { elements, selectedElementIndex } = storeToRefs(canvasStore);
 
 .q-btn {
   border-radius: 0;
+}
+
+.shortcut {
+  div {
+    background: $grey-2;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 12px;
+    color: $black;
+  }
 }
 </style>
