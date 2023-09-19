@@ -303,6 +303,8 @@ export default {
      */
     slide: {
       actions: {
+        newSlide: "New Slide",
+        duplicate: "Duplicate",
         delete: "Delete",
       },
     },
@@ -311,44 +313,17 @@ export default {
      * element's context menu
      */
     elementsContextMenu: {
-      copy: {
-        title: "Copy",
-        shortcut: "^ or ⌘ and C",
-      },
-      cut: {
-        title: "Cut",
-        shortcut: "^ or ⌘ and X",
-      },
-      paste: {
-        title: "Paste",
-        shortcut: "^ or ⌘ and V",
-      },
-      duplicate: {
-        title: "Duplicate",
-        shortcut: "^ or ⌘ and D",
-      },
-      delete: {
-        title: "Delete",
-        shortcut: "⌫",
-      },
+      copy: "Copy",
+      cut: "Cut",
+      paste: "Paste",
+      duplicate: "Duplicate",
+      delete: "Delete",
 
-      moveUp: {
-        title: "Move up",
-        shortcut: "^ or ⌘ and ↑",
-      },
-      moveToTheTop: {
-        title: "Move to the top",
-        shortcut: "^ or ⌘ and ⇧ and ↑",
-      },
+      moveUp: "Move up",
+      moveToTheTop: "Move to the top",
 
-      moveDown: {
-        title: "Move down",
-        shortcut: "^ or ⌘ and ↓",
-      },
-      moveToTheBottom: {
-        title: "Move to the bottom",
-        shortcut: "^ or ⌘ and ⇧ and ↓",
-      },
+      moveDown: "Move down",
+      moveToTheBottom: "Move to the bottom",
     },
   },
 

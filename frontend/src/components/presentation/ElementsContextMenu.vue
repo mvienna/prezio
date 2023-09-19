@@ -55,7 +55,7 @@
 
           <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
             <div v-if="isMac">⌘</div>
-            <div v-else>^</div>
+            <div v-else>Ctrl</div>
             <div>C</div>
           </div>
         </q-item>
@@ -77,7 +77,7 @@
 
           <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
             <div v-if="isMac">⌘</div>
-            <div v-else>^</div>
+            <div v-else>Ctrl</div>
             <div>X</div>
           </div>
         </q-item>
@@ -99,7 +99,7 @@
 
           <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
             <div v-if="isMac">⌘</div>
-            <div v-else>^</div>
+            <div v-else>Ctrl</div>
             <div>D</div>
           </div>
         </q-item>
@@ -109,7 +109,7 @@
         <!-- move up-->
         <q-item
           v-if="selectedElementIndex !== 0"
-          class="items-center q-py-sm text-grey"
+          class="items-center q-py-sm"
           clickable
           dense
           v-close-popup
@@ -124,7 +124,7 @@
 
           <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
             <div v-if="isMac">⌘</div>
-            <div v-else>^</div>
+            <div v-else>Ctrl</div>
             <div>↑</div>
           </div>
         </q-item>
@@ -147,7 +147,7 @@
 
           <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
             <div v-if="isMac">⌘</div>
-            <div v-else>^</div>
+            <div v-else>Ctrl</div>
             <div>⇧</div>
             <div>↑</div>
           </div>
@@ -156,7 +156,7 @@
         <!-- move down -->
         <q-item
           v-if="selectedElementIndex !== elements.length - 1"
-          class="items-center q-py-sm text-grey"
+          class="items-center q-py-sm"
           clickable
           dense
           v-close-popup
@@ -171,7 +171,7 @@
 
           <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
             <div v-if="isMac">⌘</div>
-            <div v-else>^</div>
+            <div v-else>Ctrl</div>
             <div>↓</div>
           </div>
         </q-item>
@@ -194,7 +194,7 @@
 
           <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
             <div v-if="isMac">⌘</div>
-            <div v-else>^</div>
+            <div v-else>Ctrl</div>
             <div>⇧</div>
             <div>↓</div>
           </div>
@@ -279,15 +279,5 @@ const isMac = computed(() => {
 
 .q-btn {
   border-radius: 0;
-}
-
-.shortcut {
-  div {
-    background: $grey-2;
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 12px;
-    color: $black;
-  }
 }
 </style>

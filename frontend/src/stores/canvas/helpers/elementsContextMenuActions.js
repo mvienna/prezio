@@ -36,7 +36,7 @@ export const duplicate = (element = selectedElement.value) => {
   elements.value.unshift(element);
   selectElement(element);
 
-  canvasStore.redrawCanvas(true, true);
+  canvasStore.redrawCanvas();
 };
 
 /*
@@ -49,7 +49,7 @@ export const paste = () => {
   });
   copiedElement.value = null;
 
-  canvasStore.redrawCanvas(true, true);
+  canvasStore.redrawCanvas();
 };
 
 /*
@@ -72,7 +72,7 @@ export const moveLayer = (element = selectedElement.value, shift) => {
 
     // redraw canvas with updated layers
     selectElement(element);
-    canvasStore.redrawCanvas(true, true);
+    canvasStore.redrawCanvas();
   }
 };
 
@@ -87,7 +87,7 @@ export const moveLayerToTheTop = (element = selectedElement.value) => {
 
     // redraw canvas with updated layers
     selectElement(element);
-    canvasStore.redrawCanvas(true, true);
+    canvasStore.redrawCanvas();
   }
 };
 
@@ -102,6 +102,6 @@ export const moveLayerToTheBottom = (element = selectedElement.value) => {
 
     // redraw canvas with updated layers
     selectElement(element);
-    canvasStore.redrawCanvas(true, true);
+    canvasStore.redrawCanvas();
   }
 };

@@ -85,18 +85,13 @@
               <q-img
                 v-show="!element.isLivePreview"
                 :src="element.preview"
+                fit="fill"
                 style="width: 100%; height: 145px"
               />
 
               <!-- actions -->
               <div class="absolute-right q-pt-sm q-pr-sm">
-                <q-btn
-                  v-if="presentation.slides.length !== 1"
-                  icon="more_vert"
-                  round
-                  flat
-                  size="10px"
-                >
+                <q-btn icon="more_vert" round flat size="10px">
                   <q-menu
                     v-model="showSlideContextMenu[index]"
                     anchor="bottom right"
@@ -104,31 +99,85 @@
                     transition-show="jump-down"
                     transition-hide="jump-up"
                     :offset="[0, 8]"
+                    class="q-pa-sm"
+                    style="width: 250px"
                   >
-                    <q-list
-                      class="full-height column q-gutter-sm text-semibold"
+                    <!-- new slide -->
+                    <q-item
+                      class="items-center justify-start q-px-md q-py-sm"
+                      clickable
+                      dense
+                      v-close-popup
+                      @click="handleAddingNewSlide()"
                     >
-                      <!-- delete -->
-                      <q-item
-                        class="items-center justify-start q-px-md q-py-sm text-red"
-                        style="border-radius: 8px"
-                        clickable
-                        dense
-                        v-close-popup
-                        @click="handleSlideDeletion(element)"
-                      >
-                        <q-icon
-                          name="r_delete"
-                          color="red"
-                          size="16px"
-                          class="q-mr-sm"
-                        />
+                      <q-icon name="r_add" size="16px" class="q-mr-sm" />
 
-                        <div>
-                          {{ $t("presentation.slide.actions.delete") }}
-                        </div>
-                      </q-item>
-                    </q-list>
+                      <div>
+                        {{ $t("presentation.slide.actions.newSlide") }}
+                      </div>
+                    </q-item>
+
+                    <!-- duplicate -->
+                    <q-item
+                      class="items-center justify-start q-px-md q-py-sm"
+                      clickable
+                      dense
+                      v-close-popup
+                      @click="handleDuplicatingSlide(element)"
+                    >
+                      <q-icon
+                        name="r_dynamic_feed"
+                        size="16px"
+                        class="q-mr-sm"
+                      />
+
+                      <div>
+                        {{ $t("presentation.slide.actions.duplicate") }}
+                      </div>
+
+                      <q-space />
+
+                      <div
+                        v-if="showShortcuts"
+                        class="shortcut row no-wrap q-gutter-xs"
+                      >
+                        <div v-if="isMac">⌘</div>
+                        <div v-else>^</div>
+                        <div>D</div>
+                      </div>
+                    </q-item>
+
+                    <q-separator class="q-my-sm" />
+
+                    <!-- delete -->
+                    <q-item
+                      class="items-center justify-start q-px-md q-py-sm text-red"
+                      clickable
+                      dense
+                      v-close-popup
+                      :disable="presentation.slides.length === 1"
+                      @click="handleSlideDeletion(element)"
+                    >
+                      <q-icon
+                        name="r_delete"
+                        color="red"
+                        size="16px"
+                        class="q-mr-sm"
+                      />
+
+                      <div>
+                        {{ $t("presentation.slide.actions.delete") }}
+                      </div>
+
+                      <q-space />
+
+                      <div
+                        v-if="showShortcuts"
+                        class="shortcut row no-wrap q-gutter-xs"
+                      >
+                        <div>⌫</div>
+                      </div>
+                    </q-item>
                   </q-menu>
                 </q-btn>
               </div>
@@ -160,17 +209,20 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onUnmounted, ref } from "vue";
+import { computed, onBeforeMount, onUnmounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationStore } from "stores/presentation";
 import draggable from "vuedraggable/src/vuedraggable";
 import { useCanvasStore } from "stores/canvas";
 import { deselectElement } from "stores/canvas/helpers/select";
+import { useQuasar } from "quasar";
 
 /*
  * variables
  */
 const leftDrawerOpen = ref(true);
+
+const $q = useQuasar();
 
 /*
  * stores
@@ -187,13 +239,25 @@ const { elements } = storeToRefs(canvasStore);
 const showSlideContextMenu = ref([]);
 
 const handleKeyDownEvent = (event) => {
-  if (event.key === "Delete" || event.key === "Backspace") {
-    const slideIndex = showSlideContextMenu.value.findIndex(
-      (bool) => bool === true
-    );
+  const slideIndex = showSlideContextMenu.value.findIndex(
+    (bool) => bool === true
+  );
 
+  if (event.key === "Delete" || event.key === "Backspace") {
+    // delete
     if (slideIndex !== -1) {
       handleSlideDeletion(presentation.value.slides[slideIndex]);
+    }
+  }
+
+  if (event.ctrlKey || event.metaKey) {
+    if (slideIndex !== -1) {
+      // duplicate
+      if (event.key === "d") {
+        event.preventDefault();
+        handleDuplicatingSlide(presentation.value.slides[slideIndex]);
+        showSlideContextMenu.value[slideIndex] = false;
+      }
     }
   }
 };
@@ -202,6 +266,7 @@ const handleSlideDeletion = async (element) => {
   await presentationStore.deleteSlide(element);
   canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false);
+  slide.value.isLivePreview = false;
 };
 
 onBeforeMount(() => {
@@ -240,7 +305,6 @@ const handleSlidesReorder = async () => {
     return item;
   });
   await presentationStore.updateSlidesOrder();
-  canvasStore.redrawCanvas(false);
 };
 
 /*
@@ -257,7 +321,6 @@ const handleSlideSelection = async (newSlide) => {
   await presentationStore.setSlide(newSlide, elements.value);
 
   canvasStore.setElementsFromSlide();
-
   canvasStore.redrawCanvas(false, false, undefined, false);
 };
 
@@ -270,6 +333,21 @@ const handleAddingNewSlide = async () => {
   canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false);
 };
+
+const handleDuplicatingSlide = async (slide) => {
+  await presentationStore.duplicateSlide(slide, elements.value);
+};
+
+/*
+ * shortcuts
+ */
+const showShortcuts = computed(() => {
+  return $q.platform.is.desktop;
+});
+
+const isMac = computed(() => {
+  return $q.platform.is.platform === "mac";
+});
 </script>
 
 <style scoped lang="scss">
@@ -296,5 +374,9 @@ const handleAddingNewSlide = async () => {
 
 .slide_handle {
   cursor: grab;
+}
+
+.q-item {
+  border-radius: 6px;
 }
 </style>

@@ -31,7 +31,7 @@ class PresentationSlideController extends Controller
         ]);
         $presentation->load('slides');
 
-        return $this->jsonResponse($presentation->toArray());
+        return $this->successResponse();
     }
 
     public function updateSlides (Presentation $presentation, Request $request): JsonResponse
@@ -52,6 +52,6 @@ class PresentationSlideController extends Controller
         $slide->delete();
         $presentation->load('slides');
 
-        return $this->jsonResponse($presentation->toArray());
+        return $this->successResponse();
     }
 }

@@ -303,6 +303,8 @@ export default {
      */
     slide: {
       actions: {
+        newSlide: "Добавить слайд",
+        duplicate: "Дублировать",
         delete: "Удалить",
       },
     },
@@ -311,44 +313,17 @@ export default {
      * element's context menu
      */
     elementsContextMenu: {
-      copy: {
-        title: "Копировать",
-        shortcut: "^ или ⌘ и C",
-      },
-      cut: {
-        title: "Вырезать",
-        shortcut: "^ или ⌘ и X",
-      },
-      paste: {
-        title: "Вставить",
-        shortcut: "^ или ⌘ и V",
-      },
-      duplicate: {
-        title: "Дублировать",
-        shortcut: "^ или ⌘ и D",
-      },
-      delete: {
-        title: "Удалить",
-        shortcut: "⌫",
-      },
+      copy: "Копировать",
+      cut: "Вырезать",
+      paste: "Вставить",
+      duplicate: "Дублировать",
+      delete: "Удалить",
 
-      moveUp: {
-        title: "Переместить выше",
-        shortcut: "^ или ⌘ и ↑",
-      },
-      moveToTheTop: {
-        title: "Переместить вверх",
-        shortcut: "^ или ⌘ + ⇧ и ↑",
-      },
+      moveUp: "Переместить выше",
+      moveToTheTop: "Переместить вверх",
 
-      moveDown: {
-        title: "Переместить ниже",
-        shortcut: "^ или ⌘ и ↓",
-      },
-      moveToTheBottom: {
-        title: "Переместить вниз",
-        shortcut: "^ или ⌘ + ⇧ и ↓",
-      },
+      moveDown: "Переместить ниже",
+      moveToTheBottom: "Переместить вниз",
     },
   },
 
