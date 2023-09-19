@@ -67,7 +67,6 @@ export const paste = () => {
 
   elements.value.unshift(copiedElement.value);
   selectElement(copiedElement.value);
-  copiedElement.value = null;
   canvasStore.redrawCanvas();
 };
 
