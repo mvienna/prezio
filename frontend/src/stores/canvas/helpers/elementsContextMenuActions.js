@@ -2,16 +2,23 @@ import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { deleteElement, selectElement } from "stores/canvas/helpers/select";
 import { generateUniqueId } from "src/helpers/generateUniqueId";
+import { usePresentationStore } from "stores/presentation";
 
 const canvasStore = useCanvasStore();
-const { elements, selectedElement, selectedElementIndex, copiedElement } =
+const { elements, selectedElement, copiedElement, slideIdElementCopiedFrom } =
   storeToRefs(canvasStore);
+
+const presentationStore = usePresentationStore();
+const { presentation, slide } = storeToRefs(presentationStore);
 
 /*
  * copy
  */
 export const copy = (element = selectedElement.value) => {
   copiedElement.value = element;
+  slideIdElementCopiedFrom.value = presentation.value.slides.find(
+    (item) => item.id === slide.value.id
+  )?.id;
 };
 
 /*
@@ -45,12 +52,22 @@ export const duplicate = (element = selectedElement.value) => {
 export const paste = () => {
   if (!copiedElement.value) return;
 
-  elements.value.unshift({
+  copiedElement.value = {
     ...copiedElement.value,
     id: generateUniqueId(undefined, elements.value),
-  });
-  copiedElement.value = null;
+    x:
+      slideIdElementCopiedFrom.value === slide.value.id
+        ? copiedElement.value.x + canvasStore.computeAdjustedSize(20)
+        : copiedElement.value.x,
+    y:
+      slideIdElementCopiedFrom.value === slide.value.id
+        ? copiedElement.value.y + canvasStore.computeAdjustedSize(20)
+        : copiedElement.value.y,
+  };
 
+  elements.value.unshift(copiedElement.value);
+  selectElement(copiedElement.value);
+  copiedElement.value = null;
   canvasStore.redrawCanvas();
 };
 

@@ -53,6 +53,7 @@ export const useCanvasStore = defineStore("canvas", {
      * copy
      */
     copiedElement: null,
+    slideIdElementCopiedFrom: -1,
 
     /*
      * selection
