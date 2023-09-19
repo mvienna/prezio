@@ -43,6 +43,8 @@ export const duplicate = (element = selectedElement.value) => {
  * paste
  */
 export const paste = () => {
+  if (!copiedElement.value) return;
+
   elements.value.unshift({
     ...copiedElement.value,
     id: generateUniqueId(undefined, elements.value),
