@@ -474,6 +474,8 @@ export default {
       description: "Choose a template or create your own style. It's easy!",
       import: "Import PowerPoint",
       create: "New Presentation",
+      delete: "Delete",
+      moveTo: "Move to",
     },
     presentation: {
       actions: {

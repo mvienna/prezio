@@ -472,6 +472,8 @@ export default {
       description: "Выберите шаблон или создайте свой стиль. Это очень просто!",
       import: "Загрузить PowerPoint",
       create: "Новая презентация",
+      delete: "Удалить",
+      moveTo: "Переместить в",
     },
     presentation: {
       actions: {

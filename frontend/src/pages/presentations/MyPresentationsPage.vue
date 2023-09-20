@@ -17,8 +17,8 @@
               :class="selectedFolder?.id === folder.id ? 'folder--active' : ''"
               @click="selectedFolder = folder"
             >
-              <!-- folder icon -->
               <div class="row no-wrap justify-center relative-position">
+                <!-- folder icon -->
                 <q-img
                   :src="`/assets/icons/${getFolderIconName(folder.id)}.png`"
                   fit="contain"
@@ -207,6 +207,7 @@
 
               <!-- create new presentation -->
               <q-btn
+                v-if="!selectedPresentations.length"
                 icon-right="r_add"
                 :label="$t('dashboard.noPresentations.create')"
                 unelevated
@@ -214,6 +215,84 @@
                 no-caps
                 @click="showNewPresentationDialog = true"
               />
+
+              <template v-else>
+                <!-- move to folder selected presentations -->
+                <q-btn
+                  icon-right="r_folder"
+                  :label="$t('dashboard.noPresentations.moveTo')"
+                  outline
+                  color="primary"
+                  no-caps
+                >
+                  <!-- folders options -->
+                  <q-menu
+                    anchor="bottom right"
+                    self="top right"
+                    transition-show="jump-down"
+                    transition-hide="jump-up"
+                    :offset="[0, 8]"
+                    class="q-pa-sm"
+                    style="max-height: 304px"
+                  >
+                    <q-item
+                      v-for="folder in folders"
+                      :key="folder.id"
+                      clickable
+                      dense
+                      v-close-popup
+                      @click="
+                        handleMovingToFolderPresentations(
+                          selectedPresentations,
+                          folder
+                        )
+                      "
+                    >
+                      <div class="row no-wrap items-center">
+                        <div
+                          class="row no-wrap justify-center relative-position"
+                        >
+                          <q-img
+                            :src="`/assets/icons/${getFolderIconName(
+                              folder.id
+                            )}.png`"
+                            style="width: 24px"
+                          />
+
+                          <!-- folder privacy -->
+                          <q-icon
+                            :name="
+                              folder.is_private
+                                ? 'r_visibility_off'
+                                : 'r_visibility'
+                            "
+                            color="grey-5"
+                            size="10px"
+                            class="absolute-center"
+                            style="margin-top: 1px"
+                          />
+                        </div>
+
+                        <div class="ellipsis q-ml-sm text-no-wrap">
+                          {{ folder.name }}
+                        </div>
+                      </div>
+                    </q-item>
+                  </q-menu>
+                </q-btn>
+
+                <!-- delete selected presentations -->
+                <q-btn
+                  icon-right="r_delete"
+                  :label="$t('dashboard.noPresentations.delete')"
+                  unelevated
+                  color="red"
+                  no-caps
+                  @click="
+                    handleDeletingMultiplePresentations(selectedPresentations)
+                  "
+                />
+              </template>
             </div>
           </template>
 
@@ -354,13 +433,10 @@
                           dense
                           :active="folder.id === props.row.folder_id"
                           @click="
-                            presentationStore.updatePresentation({
-                              ...props.row,
-                              folder_id:
-                                props.row.folder_id === folder.id
-                                  ? null
-                                  : folder.id,
-                            })
+                            handleMovingToFolderPresentations(
+                              [props.row],
+                              folder
+                            )
                           "
                         >
                           <div class="row no-wrap items-center">
@@ -506,7 +582,7 @@
       </div>
 
       <!-- no presentations -->
-      <div v-else class="column no-wrap justify-center full-height">
+      <div v-else class="column no-wrap justify-center q-mt-lg">
         <!-- winking emoji -->
         <div class="row justify-center">
           <q-img src="/assets/icons/emojis/Winking.png" style="width: 64px" />
@@ -772,6 +848,25 @@ const handleFolderDeletion = (folder) => {
       return presentation;
     });
   });
+};
+
+const handleMovingToFolderPresentations = (presentations, folder) => {
+  presentations.forEach((presentation) => {
+    presentationStore.updatePresentation({
+      ...presentation,
+      folder_id: presentation.folder_id === folder.id ? null : folder.id,
+    });
+  });
+
+  selectedPresentations.value = [];
+};
+
+const handleDeletingMultiplePresentations = (presentations) => {
+  presentations.forEach((presentation) => {
+    presentationStore.deletePresentation(presentation);
+  });
+
+  selectedPresentations.value = [];
 };
 
 const getFolderIconName = (id) => {

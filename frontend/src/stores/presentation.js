@@ -83,6 +83,7 @@ export const usePresentationStore = defineStore("presentation", {
       api
         .patch(`/presentation/${presentation.id}`, {
           name: presentation.name,
+          folder_id: presentation.folder_id,
           description: presentation.description,
           preview_id: presentation.preview_id,
           is_private: presentation.is_private,
