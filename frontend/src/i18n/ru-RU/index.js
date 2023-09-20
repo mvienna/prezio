@@ -325,6 +325,16 @@ export default {
       moveDown: "Переместить ниже",
       moveToTheBottom: "Переместить вниз",
     },
+
+    /*
+     * settings
+     */
+    settings: {
+      visibility: {
+        private: "Приватная",
+        public: "Публичная",
+      },
+    },
   },
 
   /*
@@ -344,16 +354,54 @@ export default {
     },
 
     /*
-     * new
+     * new presentation
      */
-    new: {
+    newPresentation: {
       title: "Новая презентация",
       name: "Название презентации",
       description: "Описание презентации",
-      create: "Создать",
+      folder: "Папка",
+      privacy: {
+        public: {
+          title: "Публичная",
+          description:
+            "Презентация будет видна и доступна другим пользователям",
+        },
+        private: {
+          title: "Приватная",
+          description: "Презентация будет видна и доступна только Вам",
+        },
+      },
+      create: "Создать новую презентацию",
       errors: {
         name: {
           required: "Требуется ввести название презентации",
+        },
+      },
+    },
+
+    /*
+     * new folder
+     */
+    newFolder: {
+      title: "Новая папка",
+      name: "Название папки",
+      description: "Описание папки",
+      addPresentations: "Добавьте презентации",
+      privacy: {
+        public: {
+          title: "Публичная",
+          description: "Папка будет видна и доступна другим пользователям",
+        },
+        private: {
+          title: "Приватная",
+          description: "Папка будет видна и доступна только Вам",
+        },
+      },
+      create: "Создать новую папку",
+      errors: {
+        name: {
+          required: "Требуется ввести название папки",
         },
       },
     },
@@ -427,6 +475,14 @@ export default {
     },
     presentation: {
       actions: {
+        folder: {
+          addToFolder: "Добавить в папку",
+          privacy: {
+            public: "Публичная",
+            private: "Приватная",
+          },
+          delete: "Удалить",
+        },
         duplicate: "Дублировать",
         stats: "Статистика",
         resetResults: "Сбросить<br/>результаты",

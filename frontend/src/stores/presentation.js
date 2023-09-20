@@ -8,6 +8,7 @@ export const usePresentationStore = defineStore("presentation", {
     /*
      * presentations
      */
+    folders: [],
     presentations: [],
     search: "",
 
@@ -31,6 +32,39 @@ export const usePresentationStore = defineStore("presentation", {
 
   actions: {
     /*
+     * presentations
+     */
+    async fetchPresentations() {
+      this.isLoading = true;
+      await api
+        .get("/presentations")
+        .then((response) => {
+          this.presentations = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
+    },
+
+    async fetchFolders() {
+      this.isLoading = true;
+      await api
+        .get("/folders")
+        .then((response) => {
+          this.folders = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
+    },
+
+    /*
      * presentation
      */
     async fetchPresentationData(id) {
@@ -53,6 +87,12 @@ export const usePresentationStore = defineStore("presentation", {
           preview_id: presentation.preview_id,
           is_private: presentation.is_private,
           lang: presentation.lang,
+        })
+        .then(() => {
+          const presentationIndex = this.presentations.findIndex(
+            (item) => item.id === presentation.id
+          );
+          this.presentations[presentationIndex] = presentation;
         })
         .catch((error) => {
           console.log(error);
@@ -79,6 +119,8 @@ export const usePresentationStore = defineStore("presentation", {
         .post("/presentation", {
           name: data.name,
           description: data.description,
+          folder_id: data.folder_id,
+          is_private: data.is_private,
         })
         .catch((error) => {
           console.log(error);

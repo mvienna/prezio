@@ -367,7 +367,7 @@ const isMac = computed(() => {
   }
 
   &:active {
-    transform: scale(0.98);
+    transform: scale(0.975);
   }
 
   &.slide--active {
@@ -378,9 +378,5 @@ const isMac = computed(() => {
 
 .slide_handle {
   cursor: grab;
-}
-
-.q-item {
-  border-radius: 6px;
 }
 </style>

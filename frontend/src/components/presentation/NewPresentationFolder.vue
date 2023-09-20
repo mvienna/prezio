@@ -4,7 +4,7 @@
       <q-toolbar class="justify-between q-px-none">
         <!-- title -->
         <div class="text-h6 text-bold">
-          {{ $t("presentations.newPresentation.title") }}
+          {{ $t("presentations.newFolder.title") }}
         </div>
 
         <!-- close -->
@@ -21,7 +21,7 @@
         <!-- name -->
         <q-input
           v-model="form.name"
-          :label="$t('presentations.newPresentation.name')"
+          :label="$t('presentations.newFolder.name')"
           outlined
           autofocus
           color="primary"
@@ -34,35 +34,39 @@
         <!-- description -->
         <q-input
           v-model="form.description"
-          :label="$t('presentations.newPresentation.description')"
+          :label="$t('presentations.newFolder.description')"
           outlined
           autogrow
           class="q-mt-lg"
         />
 
-        <!-- folder -->
-        <q-select
-          v-model="form.folder_id"
-          :options="folders"
-          emit-value
-          map-options
-          option-label="name"
-          option-value="id"
-          outlined
-          color="primary"
-          hide-dropdown-icon
-          clearable
-          :label="$t('presentations.newPresentation.folder')"
-          class="q-mt-lg"
-        >
-          <template #prepend>
-            <q-icon
-              name="r_folder"
-              class="text-semibold text-primary"
-              size="24px"
-            />
-          </template>
-        </q-select>
+        <!-- presentations -->
+        <div class="q-mt-lg text-h7 text-semibold q-mb-sm">
+          {{ $t("presentations.newFolder.addPresentations") }}
+        </div>
+
+        <div class="row no-wrap q-gutter-md scroll-x scroll--hidden">
+          <q-card
+            v-for="presentation in presentations"
+            :key="presentation.id"
+            flat
+            class="presentation_card"
+            :class="
+              form.presentationsIds.includes(presentation.id)
+                ? 'presentation_card--active'
+                : ''
+            "
+            @click="handlePresentationCardToggle(presentation)"
+          >
+            <!-- presentation preview -->
+            <q-img :src="presentation.slides[0].preview" fit="contain" />
+
+            <!-- presentation name -->
+            <div class="text-center ellipsis q-mt-sm text-grey">
+              {{ presentation.name }}
+            </div>
+          </q-card>
+        </div>
 
         <div class="row no-wrap items-center q-mt-lg">
           <!-- submit -->
@@ -73,7 +77,7 @@
             color="primary"
             unelevated
             :loading="isLoading"
-            :label="$t('presentations.newPresentation.create')"
+            :label="$t('presentations.newFolder.create')"
             type="submit"
             icon="r_done"
           />
@@ -115,7 +119,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 /*
@@ -127,8 +131,8 @@ defineEmits(["close", "submit"]);
 
 const props = defineProps({
   isLoading: { type: Boolean },
-  folders: { type: Array, default: null },
-  selectedFolder: { type: Object, default: null },
+  presentations: { type: Array, default: null },
+  selectedPresentations: { type: Array, default: null },
 });
 
 /*
@@ -138,15 +142,30 @@ const form = ref({
   name: "",
   description: "",
   is_private: true,
-  folder_id: props.selectedFolder?.id,
+  presentationsIds: props.selectedPresentations.map(
+    (presentation) => presentation.id
+  ),
 });
 
 // name validation
 const nameRule = (value) => {
   if (!value) {
-    return t("presentations.newPresentation.errors.name.required");
+    return t("presentations.newFolder.errors.name.required");
   }
   return true;
+};
+
+/*
+ * select presentations
+ */
+const handlePresentationCardToggle = (presentation) => {
+  if (form.value.presentationsIds.includes(presentation.id)) {
+    form.value.presentationsIds = form.value.presentationsIds.filter(
+      (id) => id !== presentation.id
+    );
+  } else {
+    form.value.presentationsIds.push(presentation.id);
+  }
 };
 </script>
 
@@ -154,5 +173,26 @@ const nameRule = (value) => {
 .q-card {
   width: 100%;
   max-width: 500px;
+}
+
+.presentation_card {
+  width: 164px;
+  min-width: 164px;
+  aspect-ratio: 16/9;
+  cursor: pointer;
+
+  .q-img {
+    border: 1.5px solid $grey-2;
+    outline: 3px solid transparent;
+    transition: 0.2s;
+    border-radius: 8px;
+  }
+
+  &.presentation_card--active {
+    .q-img {
+      border: 1.5px solid $primary;
+      outline: 3px solid $blue-2;
+    }
+  }
 }
 </style>

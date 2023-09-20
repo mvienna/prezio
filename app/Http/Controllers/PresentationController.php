@@ -14,9 +14,11 @@ class PresentationController extends Controller
         $user = auth()->user();
 
         $presentation = Presentation::create([
+            'folder_id' => $request->folder_id,
             'name' => $request->name,
             'description' => $request->description,
             'user_id' => $user->id,
+            'is_private' => $request->is_private,
         ]);
 
         PresentationSlide::create([
@@ -29,18 +31,30 @@ class PresentationController extends Controller
 
     public function update(Presentation $presentation, Request $request): JsonResponse
     {
+        $user = auth()->user();
+        if ($presentation->user_id !== $user->id) {
+            throw new \Exception(trans('errors.presentation.accessDenied'));
+        }
+
         $presentation->update([
+            'folder_id' => $request->folder_id,
             'name' => $request->name,
             'description' => $request->description,
             'preview_id' => $request->preview_id,
             'is_private' => $request->is_private,
             'lang' => $request->lang,
         ]);
+
         return $this->jsonResponse($presentation->toArray());
     }
 
     public function destroy(Presentation $presentation): JsonResponse
     {
+        $user = auth()->user();
+        if ($presentation->user_id !== $user->id) {
+            throw new \Exception(trans('errors.presentation.accessDenied'));
+        }
+
         PresentationSlide::where('presentation_id', $presentation->id)->delete();
         $presentation->delete();
 
@@ -63,7 +77,12 @@ class PresentationController extends Controller
 
     public function get(): JsonResponse
     {
-        $presentations = Presentation::forUser()->get();
+        $presentations = Presentation::forUser()
+            ->with(['slides' => function ($query) {
+                $query->select('presentation_id', 'preview');
+            }])
+            ->get();
+
         return $this->jsonResponse($presentations->toArray());
     }
 }

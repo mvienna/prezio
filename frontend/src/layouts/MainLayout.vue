@@ -66,7 +66,6 @@
           :to="item.link"
           dense
           class="items-center justify-start text-grey-2 q-py-md"
-          style="border-radius: 8px"
         >
           <q-icon
             :name="item.icon"

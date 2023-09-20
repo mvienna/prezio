@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PresentationController;
+use App\Http\Controllers\PresentationFolderController;
 use App\Http\Controllers\PresentationSlideController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
@@ -39,9 +40,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/image', [MediaController::class, 'getImageByUrlQuery']); // ?url=
 
     /*
+     * folder(s)
      * presentation(s)
      * slide(s)
      */
+    Route::resource('/folder', PresentationFolderController::class)->only(['store', 'update', 'destroy', 'show']);
+    Route::get('/folders', [PresentationFolderController::class, 'get']);
+
     Route::resource('/presentation', PresentationController::class)->only(['store', 'update', 'destroy', 'show']);
     Route::get('/presentations', [PresentationController::class, 'get']);
 

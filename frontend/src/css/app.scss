@@ -51,6 +51,13 @@ a, .link {
 }
 
 /*
+ * q-item
+ */
+.q-item {
+  border-radius: 6px;
+}
+
+/*
  * button
  */
 .q-btn {
@@ -240,4 +247,15 @@ a, .link {
     font-size: 12px;
     color: $black;
   }
+}
+
+/*
+ * hidden scrollbar
+ */
+.scroll--hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scroll--hidden::-webkit-scrollbar {
+  display: none;
 }

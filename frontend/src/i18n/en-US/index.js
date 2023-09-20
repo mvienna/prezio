@@ -325,6 +325,16 @@ export default {
       moveDown: "Move down",
       moveToTheBottom: "Move to the bottom",
     },
+
+    /*
+     * settings
+     */
+    settings: {
+      visibility: {
+        private: "Private",
+        public: "Public",
+      },
+    },
   },
 
   /*
@@ -344,16 +354,56 @@ export default {
     },
 
     /*
-     * new
+     * new presentation
      */
-    new: {
+    newPresentation: {
       title: "New Presentation",
       name: "Presentation name",
       description: "Presentation description",
-      create: "Create",
+      folder: "Folder",
+      privacy: {
+        public: {
+          title: "Public",
+          description:
+            "The presentation will be visible and accessible to other users",
+        },
+        private: {
+          title: "Private",
+          description:
+            "The presentation will be visible and accessible only to you",
+        },
+      },
+      create: "Create new presentation",
       errors: {
         name: {
           required: "Presentation name is required",
+        },
+      },
+    },
+
+    /*
+     * new folder
+     */
+    newFolder: {
+      title: "New Folder",
+      name: "Folder name",
+      description: "Folder description",
+      addPresentations: "Add presentations",
+      privacy: {
+        public: {
+          title: "Public",
+          description:
+            "The folder will be visible and accessible to other users",
+        },
+        private: {
+          title: "Private",
+          description: "The folder will be visible and accessible only to you",
+        },
+      },
+      create: "Create new folder",
+      errors: {
+        name: {
+          required: "Folder name is required",
         },
       },
     },
@@ -427,6 +477,14 @@ export default {
     },
     presentation: {
       actions: {
+        folder: {
+          folder: "Add to folder",
+          privacy: {
+            public: "Public",
+            private: "Private",
+          },
+          delete: "Delete",
+        },
         duplicate: "Duplicate",
         stats: "Statistics",
         resetResults: "Reset Results",

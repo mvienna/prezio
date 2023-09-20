@@ -60,7 +60,6 @@
           :key="item.name"
           :to="item.link"
           class="items-center justify-start q-px-lg q-py-sm"
-          style="border-radius: 8px"
         >
           <q-icon
             :name="item.icon"
@@ -89,7 +88,6 @@
         <q-item
           :to="ROUTE_PATHS.AUTH.LOGOUT"
           class="items-center justify-start q-px-lg q-py-sm text-red"
-          style="border-radius: 8px"
         >
           <q-icon name="r_logout" class="q-mr-sm" size="20px" />
           <div>

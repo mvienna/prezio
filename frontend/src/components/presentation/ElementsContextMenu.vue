@@ -273,10 +273,6 @@ const isMac = computed(() => {
 </script>
 
 <style scoped lang="scss">
-.q-item {
-  border-radius: 6px !important;
-}
-
 .q-btn {
   border-radius: 0;
 }

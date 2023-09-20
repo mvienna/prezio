@@ -20,4 +20,7 @@ return [
     'presentation' => [
         'accessDenied' => 'Доступ запрещен'
     ],
+    'folder' => [
+        'accessDenied' => 'Доступ запрещен'
+    ],
 ];
