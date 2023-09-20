@@ -45,7 +45,7 @@
           {{ $t("presentations.newFolder.addPresentations") }}
         </div>
 
-        <div class="row no-wrap q-gutter-md scroll-x scroll--hidden">
+        <div class="row no-wrap q-gutter-md scroll-x">
           <q-card
             v-for="presentation in presentations"
             :key="presentation.id"
