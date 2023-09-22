@@ -334,6 +334,38 @@ export default {
         private: "Приватная",
         public: "Публичная",
       },
+
+      title: "Настройки",
+
+      generalInformation: {
+        title: "Основная информация",
+        description: {
+          title: "Описание",
+          placeholder: "Напишите о презентации...",
+        },
+        preview: {
+          title: "Обложка",
+          upload: "Загрузить",
+        },
+      },
+      audienceAuthentication: {
+        title: "Аутентификация аудитории",
+      },
+      questionsAndAnswersFromAudience: {
+        title: "Вопросы и ответы вашей аудитории",
+      },
+      quizSetup: {
+        title: "Настройка викторины/опроса",
+      },
+      language: {
+        title: "Язык",
+      },
+      leader: {
+        title: "Кто берет на себя инициативу",
+      },
+      other: {
+        title: "Другие настройки",
+      },
     },
   },
 

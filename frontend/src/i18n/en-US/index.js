@@ -334,6 +334,38 @@ export default {
         private: "Private",
         public: "Public",
       },
+
+      title: "Settings",
+
+      generalInformation: {
+        title: "General Info",
+        description: {
+          title: "Description",
+          placeholder: "Tell about the presentation...",
+        },
+        preview: {
+          title: "Preview",
+          upload: "Upload",
+        },
+      },
+      audienceAuthentication: {
+        title: "Audience Auth",
+      },
+      questionsAndAnswersFromAudience: {
+        title: "Q&A from Audience",
+      },
+      quizSetup: {
+        title: "Quiz setup",
+      },
+      language: {
+        title: "Language",
+      },
+      leader: {
+        title: "Who takes the initiative",
+      },
+      other: {
+        title: "Other settings",
+      },
     },
   },
 

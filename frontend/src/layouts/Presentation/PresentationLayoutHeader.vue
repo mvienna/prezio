@@ -132,10 +132,10 @@
           no-caps
           no-wrap
           round
-          disable
           size="12px"
           icon="r_settings"
           class="q-btn--bordered"
+          @click="showSettingsDialog = true"
         />
 
         <!-- download -->
@@ -178,6 +178,10 @@
         <UserMenu is-avatar-only />
       </div>
     </q-toolbar>
+
+    <q-dialog v-model="showSettingsDialog" position="right">
+      <PresentationSettings @close="showSettingsDialog = false" />
+    </q-dialog>
   </q-header>
 </template>
 
@@ -188,6 +192,8 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { date } from "quasar";
 import { useCanvasStore } from "stores/canvas";
+import { ref } from "vue";
+import PresentationSettings from "components/presentation/PresentationSettings.vue";
 
 /*
  * stores
@@ -198,4 +204,15 @@ const { presentation, isSaving, isSavingError, lastSavedAt } =
 
 const canvasStore = useCanvasStore();
 const { elements } = storeToRefs(canvasStore);
+
+/*
+ * dialogs
+ */
+const showSettingsDialog = ref(false);
 </script>
+
+<style lang="scss">
+.q-dialog__inner {
+  padding: calc(66px + 24px) 24px 24px 24px !important;
+}
+</style>
