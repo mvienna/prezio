@@ -193,7 +193,7 @@ import { storeToRefs } from "pinia";
 import { date } from "quasar";
 import { useCanvasStore } from "stores/canvas";
 import { ref } from "vue";
-import PresentationSettings from "components/presentation/PresentationSettings.vue";
+import PresentationSettings from "components/presentation/settings/PresentationSettings.vue";
 
 /*
  * stores
