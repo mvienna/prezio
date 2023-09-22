@@ -334,6 +334,10 @@ const { user } = storeToRefs(useAuthStore());
 
 const emit = defineEmits(["close", "select"]);
 
+const props = defineProps({
+  collection: { type: String, default: "default" },
+});
+
 /*
  * stores
  */
@@ -411,7 +415,7 @@ const uploadFile = async (event) => {
   formData.append("file", file);
   formData.append("model_type", "App\\Models\\User");
   formData.append("model_id", user.value.id);
-  formData.append("collection", "default");
+  formData.append("collection", props.collection);
 
   return await api
     .post("/media", formData, {
@@ -454,10 +458,11 @@ const saveStockImage = async (data) => {
       unsplash_image_data: data,
       model_type: "App\\Models\\User",
       model_id: user.value.id,
-      collection: "default",
+      collection: props.collection,
     })
     .then((response) => {
       media.value.push(response.data);
+      selectedFile.value = response.data;
     })
     .finally(() => {
       isProcessing.value = false;

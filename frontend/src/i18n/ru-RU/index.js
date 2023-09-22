@@ -345,7 +345,7 @@ export default {
         },
         preview: {
           title: "Обложка",
-          upload: "Загрузить",
+          select: "Выбрать",
         },
       },
       audienceAuthentication: {

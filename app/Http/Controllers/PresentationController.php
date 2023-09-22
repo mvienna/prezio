@@ -71,7 +71,7 @@ class PresentationController extends Controller
             throw new \Exception(trans('errors.presentation.accessDenied'));
         }
 
-        $presentation->load('slides');
+        $presentation->load('slides', 'preview');
         return $this->jsonResponse($presentation->toArray());
     }
 
@@ -81,6 +81,7 @@ class PresentationController extends Controller
             ->with(['slides' => function ($query) {
                 $query->select('presentation_id', 'preview');
             }])
+            ->with('preview')
             ->get();
 
         return $this->jsonResponse($presentations->toArray());

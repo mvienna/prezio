@@ -315,7 +315,10 @@
             <div class="row no-wrap items-center">
               <!-- preview -->
               <q-img
-                :src="props.row.slides[0].preview"
+                :src="
+                  props.row?.preview?.original_url ||
+                  props.row.slides[0].preview
+                "
                 class="presentation__preview"
                 fit="contain"
               />

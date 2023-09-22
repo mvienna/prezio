@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="scroll--hidden">
+  <q-card flat class="scroll--hidden" style="height: 100%; width: 400px">
     <q-card-section>
       <q-toolbar
         class="items-center justify-between q-mb-md bg-white"
@@ -74,21 +74,59 @@
                   $t("presentation.settings.generalInformation.preview.title")
                 }}
               </div>
+
               <q-img
-                :src="presentation.slides[0].preview"
+                :src="
+                  presentation?.preview?.original_url ||
+                  presentation.slides[0].preview
+                "
                 class="presentation_preview relative-position"
               />
-              <q-btn
-                :label="
-                  $t('presentation.settings.generalInformation.preview.upload')
-                "
-                icon-right="r_upload"
-                unelevated
-                disable
-                text-color="primary"
-                no-caps
-                class="q-py-sm q-mt-md full-width bg-blue-1 presentation_preview__upload_btn"
-              />
+
+              <div class="row no-wrap q-pt-md">
+                <!-- open preview selection -->
+                <q-btn
+                  :label="
+                    $t(
+                      'presentation.settings.generalInformation.preview.select'
+                    )
+                  "
+                  icon-right="r_upload"
+                  unelevated
+                  text-color="primary"
+                  no-caps
+                  class="q-py-sm full-width bg-blue-1 presentation_preview__upload_btn"
+                  @click="showSelectPreviewDialog = true"
+                />
+
+                <!-- delete preview -->
+                <q-btn
+                  v-if="presentation.preview"
+                  icon="r_delete"
+                  flat
+                  round
+                  color="red"
+                  class="q-py-sm q-ml-md bg-red-1"
+                  @click="
+                    presentation.preview = null;
+                    presentation.preview_id = null;
+                    presentationsStore.updatePresentation();
+                  "
+                />
+              </div>
+
+              <!-- select preview -->
+              <q-dialog v-model="showSelectPreviewDialog">
+                <SelectMedia
+                  @close="showSelectPreviewDialog = false"
+                  @select="
+                    presentation.preview = $event;
+                    presentation.preview_id = $event.id;
+                    presentationsStore.updatePresentation();
+                    showSelectPreviewDialog = false;
+                  "
+                />
+              </q-dialog>
             </template>
           </div>
         </q-expansion-item>
@@ -102,6 +140,7 @@ import { useI18n } from "vue-i18n";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
+import SelectMedia from "components/media/SelectMedia.vue";
 
 /*
  * variables
@@ -166,23 +205,17 @@ const tabs = [
 const isExpandedTabs = ref([]);
 
 /*
- *
+ * form
  */
 const form = ref({
   description: presentation.value.description,
 });
+
+const showSelectPreviewDialog = ref(false);
 </script>
 
 <style scoped lang="scss">
-.q-card {
-  height: 100%;
-  width: 400px;
-}
-
 ::v-deep(.q-expansion-item) {
-  .q-focus-helper {
-    display: none;
-  }
   .q-item__label {
     font-weight: 600;
   }
@@ -193,6 +226,10 @@ const form = ref({
 
     &:hover {
       background: $grey-1;
+    }
+
+    .q-focus-helper {
+      display: none;
     }
   }
 }
@@ -218,6 +255,7 @@ const form = ref({
   width: 100%;
   aspect-ratio: 16/9;
   border-radius: 8px;
+  border: 1.5px solid $grey-2;
 }
 
 .presentation_preview__upload_btn {

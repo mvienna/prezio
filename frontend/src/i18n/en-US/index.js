@@ -345,7 +345,7 @@ export default {
         },
         preview: {
           title: "Preview",
-          upload: "Upload",
+          select: "Select",
         },
       },
       audienceAuthentication: {

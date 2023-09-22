@@ -59,7 +59,13 @@
             @click="handlePresentationCardToggle(presentation)"
           >
             <!-- presentation preview -->
-            <q-img :src="presentation.slides[0].preview" fit="contain" />
+            <q-img
+              :src="
+                presentation?.preview?.original_url ||
+                presentation.slides[0].preview
+              "
+              fit="contain"
+            />
 
             <!-- presentation name -->
             <div class="text-center ellipsis q-mt-sm text-grey">
