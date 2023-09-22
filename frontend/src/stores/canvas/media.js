@@ -11,7 +11,20 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
     /*
      * add image
      */
-    async addImage(url) {
+    async addImage(
+      url,
+      x = null,
+      y = null,
+      width = null,
+      height = null,
+      layer = "top",
+      mode = MODES_OPTIONS.value.media,
+      isLocked = false,
+      opacity = 1,
+      blur = 0,
+      contrast = 100,
+      brightness = 100
+    ) {
       const image = new Image();
 
       let base64;
@@ -27,27 +40,46 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         const aspectRatio = image.width / image.height;
         const newImageWidth = newImageHeight * aspectRatio;
 
-        const x = (canvas.value.width - newImageWidth) / 2;
-        const y = (canvas.value.height - newImageHeight) / 2;
-
         const imageData = {
           id: generateUniqueId(undefined, elements.value),
-          mode: MODES_OPTIONS.value.media,
+          mode: mode,
           isVisible: true,
-          isLocked: false,
+          isLocked: isLocked,
           image,
           imageSrc: url,
           imageBase64: base64,
-          x,
-          y,
-          width: newImageWidth,
-          height: newImageHeight,
+          x:
+            typeof x === "number"
+              ? x
+              : (canvas.value.width - newImageWidth) / 2,
+          y:
+            typeof y === "number"
+              ? y
+              : (canvas.value.height - newImageHeight) / 2,
+          width: typeof width === "number" ? width : newImageWidth,
+          height: typeof height === "number" ? height : newImageHeight,
           rotationAngle: 0,
+          opacity,
+          blur,
+          contrast,
+          brightness,
         };
 
-        elements.value.unshift(imageData);
-        ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);
+        if (layer === "top") {
+          elements.value.unshift(imageData);
+        } else {
+          const isBaseFillElementExists = elements.value.find(
+            (element) => element.mode === MODES_OPTIONS.value.baseFill
+          );
 
+          elements.value.splice(
+            elements.value.length - (isBaseFillElementExists ? 1 : 0),
+            0,
+            imageData
+          );
+        }
+
+        ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);
         canvasStore.redrawCanvas(true, true);
       };
     },

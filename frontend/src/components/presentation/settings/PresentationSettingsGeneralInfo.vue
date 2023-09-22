@@ -51,7 +51,7 @@
         unelevated
         text-color="primary"
         no-caps
-        class="q-py-sm full-width bg-blue-1 presentation_preview__upload_btn"
+        class="q-py-sm full-width presentation_preview__upload_btn"
         @click="showSelectPreviewDialog = true"
       />
 
@@ -62,7 +62,7 @@
         flat
         round
         color="red"
-        class="q-py-sm q-ml-md bg-red-1"
+        class="q-py-sm q-ml-md"
         @click="
           presentation.preview = null;
           presentation.preview_id = null;
@@ -129,6 +129,5 @@ const showSelectPreviewDialog = ref(false);
 
 .presentation_preview__upload_btn {
   border: 1.5px dashed $primary;
-  background: $blue-1;
 }
 </style>

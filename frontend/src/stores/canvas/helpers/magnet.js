@@ -33,6 +33,10 @@ export const useMagnet = (
   ];
 
   magneticElements.forEach((element) => {
+    if (!element.isVisible) {
+      return;
+    }
+
     if (element.id !== selectedElement.value.id) {
       /*
        * compute help variables for draggable & magnet elements

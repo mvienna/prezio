@@ -244,7 +244,7 @@
                   anchor="bottom start"
                   self="top start"
                   class="row no-wrap items-center q-py-sm bg-white"
-                  style="border-radius: 20px; border: 1px solid #f2f2f2"
+                  style="border-radius: 20px; border: 1.5px solid #f2f2f2"
                 >
                   <q-avatar size="24px" class="q-mr-sm">
                     <q-img :src="item.user.profile_image.small" />

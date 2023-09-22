@@ -360,7 +360,12 @@ const isMac = computed(() => {
   transition: 0.2s;
   border: 1.5px solid $grey-2;
   width: 245px;
-  height: 145px;
+  height: 148px;
+  border-radius: 8px;
+
+  canvas {
+    border-radius: 8px;
+  }
 
   &.slide--hovered {
     outline: 3px solid $blue-3;

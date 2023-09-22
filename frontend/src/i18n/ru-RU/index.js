@@ -198,30 +198,84 @@ export default {
     },
     rightDrawer: {
       tabs: {
-        layers: "Слои",
-        design: "Дизайн",
-        template: "Шаблон",
-        audio: "Аудио",
-      },
-      layers: {
-        layer: {
-          title: "Слой",
-          visibility: {
-            on: "Скрыть",
-            off: "Показать",
+        /*
+         * layers
+         */
+        layers: {
+          title: "Слои",
+          layer: {
+            title: "Слой",
+            visibility: {
+              on: "Скрыть",
+              off: "Показать",
+            },
+            lock: {
+              on: "Заблокировать",
+              off: "Разблокировать",
+            },
+            delete: "Удалить",
           },
-          lock: {
-            on: "Заблокировать",
-            off: "Разблокировать",
+          names: {
+            drawing: "Линия",
+            text: "Текст",
+            media: "Фотография",
+            mediaEmoji: "Эмоджи",
+            shape: "Форма",
+            background: "Фон",
+            baseFill: "Базовая заливка",
           },
-          delete: "Удалить",
         },
-        names: {
-          drawing: "Линия",
-          text: "Текст",
-          media: "Фотография",
-          mediaEmoji: "Эмоджи",
-          shape: "Форма",
+
+        /*
+         * design
+         */
+        design: {
+          title: "Дизайн",
+
+          slideBackground: {
+            title: "Фон слайда",
+
+            categories: {
+              prezio: "Prezio",
+              gradients: "Градиенты",
+              minimalism: "Минимализм",
+              office: "Оффис",
+              architecture: "Архитектура",
+              futuristic: "Футуристичные",
+            },
+
+            select: {
+              title: "Выбранный фон слайда",
+              open: "Выбрать фон",
+            },
+
+            filters: {
+              title: "Фильтры",
+
+              opacity: "Прозрачность",
+              blur: "Размытие",
+              contrast: "Контраст",
+              brightness: "Яркость",
+            },
+          },
+
+          slideBaseFill: {
+            title: "Базовая заливка",
+          },
+        },
+
+        /*
+         * template
+         */
+        template: {
+          title: "Шаблон",
+        },
+
+        /*
+         * audio
+         */
+        audio: {
+          title: "Аудио",
         },
       },
     },

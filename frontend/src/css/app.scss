@@ -65,7 +65,7 @@ a, .link {
 }
 
 .q-btn--bordered {
-  border: 1px solid currentColor;
+  border: 1.5px solid currentColor;
 }
 
 /*
@@ -258,4 +258,11 @@ a, .link {
 }
 .scroll--hidden::-webkit-scrollbar {
   display: none;
+}
+
+/*
+ * q-chip
+ */
+.q-chip--clickable:focus {
+  box-shadow: none !important;
 }

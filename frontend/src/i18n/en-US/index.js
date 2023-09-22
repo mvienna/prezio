@@ -198,30 +198,54 @@ export default {
     },
     rightDrawer: {
       tabs: {
-        layers: "Layers",
-        design: "Design",
-        template: "Template",
-        audio: "Audio",
-      },
-      layers: {
-        layer: {
-          title: "Layer",
-          visibility: {
-            on: "Hide",
-            off: "Show",
+        /*
+         * layers
+         */
+        layers: {
+          title: "Layers",
+
+          layer: {
+            title: "Layer",
+            visibility: {
+              on: "Hide",
+              off: "Show",
+            },
+            lock: {
+              on: "Lock",
+              off: "Unlock",
+            },
+            delete: "Delete",
           },
-          lock: {
-            on: "Lock",
-            off: "Unlock",
+          names: {
+            drawing: "Line",
+            text: "Text",
+            media: "Photo",
+            mediaEmoji: "Emoji",
+            shape: "Shape",
+            background: "Background",
+            baseFill: "Base Fill",
           },
-          delete: "Delete",
         },
-        names: {
-          drawing: "Line",
-          text: "Text",
-          media: "Photo",
-          mediaEmoji: "Emoji",
-          shape: "Shape",
+
+        /*
+         * design
+         */
+        design: {
+          title: "Design",
+        },
+
+        /*
+         * template
+         */
+        template: {
+          title: "Template",
+        },
+
+        /*
+         * audio
+         */
+        audio: {
+          title: "Audio",
         },
       },
     },

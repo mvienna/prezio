@@ -58,8 +58,8 @@ import { useCanvasDrawingStore } from "stores/canvas/drawing";
 import { useCanvasStore } from "stores/canvas";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { useCanvasMediaStore } from "stores/canvas/media";
-import PresentationStudioToolbarTop from "components/presentation/studio/PresentationStudioToolbarTop.vue";
-import PresentationStudioToolbarBottom from "components/presentation/studio/PresentationStudioToolbarBottom.vue";
+import PresentationStudioToolbarTop from "components/presentation/studio/toolbar/PresentationStudioToolbarTop.vue";
+import PresentationStudioToolbarBottom from "components/presentation/studio/toolbar/PresentationStudioToolbarBottom.vue";
 import {
   dragElement,
   startDragging,

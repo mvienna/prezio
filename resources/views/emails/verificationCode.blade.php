@@ -23,7 +23,7 @@
                 padding: 48px;
                 background-color: #FFFFFF;
                 border-radius: 8px;
-                border: 1px solid rgba(19, 18, 58, 0.3);
+                border: 1.5px solid rgba(19, 18, 58, 0.3);
             }
             @media screen and (max-width: 500px) {
                 body {

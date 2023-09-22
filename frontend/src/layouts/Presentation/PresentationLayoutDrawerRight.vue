@@ -4,7 +4,7 @@
     show-if-above
     side="right"
     class="bg-white"
-    :width="320"
+    :width="400"
   >
     <q-tabs
       v-model="rightDrawerTab"
@@ -17,11 +17,14 @@
         v-for="tab in rightDrawerTabs"
         :key="tab.name"
         :name="tab.name"
-        :icon="tab.icon"
         :disable="tab.disable"
         no-caps
+        style="height: 68px"
       >
-        <q-tooltip :offset="[0, 4]"> {{ tab.label }}</q-tooltip>
+        <div>
+          <q-icon :name="tab.icon" size="22px" />
+          <div class="text-caption q-mt-xs">{{ tab.label }}</div>
+        </div>
       </q-tab>
     </q-tabs>
 
@@ -29,30 +32,45 @@
       <!-- layers -->
       <q-tab-panel name="layers">
         <div class="text-h6 q-pb-md">
-          {{ $t("presentationLayout.rightDrawer.tabs.layers") }}.
+          {{ $t("presentationLayout.rightDrawer.tabs.layers.title") }}
         </div>
 
-        <PresentationStudioLayersManagement />
+        <PresentationStudioTabsLayersManagementTab />
       </q-tab-panel>
 
       <!-- design -->
-      <q-tab-panel name="design"> design </q-tab-panel>
+      <q-tab-panel name="design">
+        <div class="text-h6 q-pb-md">
+          {{ $t("presentationLayout.rightDrawer.tabs.design.title") }}
+        </div>
+
+        <PresentationStudioTabsDesignTab />
+      </q-tab-panel>
 
       <!-- template -->
-      <q-tab-panel name="template"> template </q-tab-panel>
+      <q-tab-panel name="template">
+        <div class="text-h6 q-pb-md">
+          {{ $t("presentationLayout.rightDrawer.tabs.template.title") }}
+        </div>
+      </q-tab-panel>
 
       <!-- audio -->
-      <q-tab-panel name="audio"> audio </q-tab-panel>
+      <q-tab-panel name="audio">
+        <div class="text-h6 q-pb-md">
+          {{ $t("presentationLayout.rightDrawer.tabs.audio.title") }}
+        </div>
+      </q-tab-panel>
     </q-tab-panels>
   </q-drawer>
 </template>
 
 <script setup>
-import PresentationStudioLayersManagement from "components/presentation/studio/PresentationStudioLayersManagement.vue";
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
+import PresentationStudioTabsLayersManagementTab from "components/presentation/studio/tabs/PresentationStudioTabsLayersManagementTab.vue";
+import PresentationStudioTabsDesignTab from "components/presentation/studio/tabs/PresentationStudioTabsDesignTab.vue";
 
 /*
  * variables
@@ -74,24 +92,23 @@ const rightDrawerTabs = [
   {
     name: "layers",
     icon: "r_layers",
-    label: t("presentationLayout.rightDrawer.tabs.layers"),
+    label: t("presentationLayout.rightDrawer.tabs.layers.title"),
   },
   {
     name: "design",
     icon: "r_format_paint",
-    label: t("presentationLayout.rightDrawer.tabs.design"),
-    disable: true,
+    label: t("presentationLayout.rightDrawer.tabs.design.title"),
   },
   {
     name: "template",
     icon: "r_grid_view",
-    label: t("presentationLayout.rightDrawer.tabs.template"),
+    label: t("presentationLayout.rightDrawer.tabs.template.title"),
     disable: true,
   },
   {
     name: "audio",
     icon: "r_graphic_eq",
-    label: t("presentationLayout.rightDrawer.tabs.audio"),
+    label: t("presentationLayout.rightDrawer.tabs.audio.title"),
     disable: true,
   },
 ];

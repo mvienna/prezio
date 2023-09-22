@@ -38,10 +38,12 @@ export const useCanvasStore = defineStore("canvas", {
     MODES_OPTIONS: {
       drawing: "drawing",
       text: "text",
-      textEditing: "text-editing",
+      textEditing: "textEditing",
       media: "media",
-      mediaEmoji: "media-emojis",
+      mediaEmoji: "mediaEmojis",
       shape: "shape",
+      background: "background",
+      baseFill: "baseFill",
     },
 
     /*
@@ -228,6 +230,27 @@ export const useCanvasStore = defineStore("canvas", {
 
       const reversedElements = [...elements].reverse();
 
+      // prevent moving element under background
+      const backgroundElementIndex = elements.findIndex(
+        (element) => element.mode === this.MODES_OPTIONS.background
+      );
+      if (backgroundElementIndex !== -1) {
+        const backgroundElement = elements[backgroundElementIndex];
+        elements.splice(backgroundElementIndex, 1);
+        elements.push(backgroundElement);
+      }
+
+      // prevent moving element under base fill
+      const baseFillElementIndex = elements.findIndex(
+        (element) => element.mode === this.MODES_OPTIONS.baseFill
+      );
+      if (baseFillElementIndex !== -1) {
+        const backgroundElement = this.elements[baseFillElementIndex];
+        elements.splice(baseFillElementIndex, 1);
+        elements.push(backgroundElement);
+      }
+
+      // draw elements one-by-one
       reversedElements.forEach((element) => {
         if (element.isVisible === false) return;
 
@@ -262,6 +285,7 @@ export const useCanvasStore = defineStore("canvas", {
            */
           case this.MODES_OPTIONS.media:
           case this.MODES_OPTIONS.mediaEmoji:
+          case this.MODES_OPTIONS.background:
             this.renderImage(element);
             break;
 
@@ -269,6 +293,7 @@ export const useCanvasStore = defineStore("canvas", {
            * shape
            */
           case this.MODES_OPTIONS.shape:
+          case this.MODES_OPTIONS.baseFill:
             this.renderShape(element);
             break;
         }
@@ -510,6 +535,14 @@ export const useCanvasStore = defineStore("canvas", {
         element.y + element.height / 2
       );
 
+      this.ctx.filter = `blur(${element.blur || 0}px) contrast(${
+        element.contrast || 100
+      }%) brightness(${element.brightness || 100}%)`;
+
+      if (typeof element?.opacity === "number") {
+        this.ctx.globalAlpha = element.opacity;
+      }
+
       if (!element?.image?.nodeType) {
         const image = new Image();
         if (element.imageBase64) {
@@ -528,6 +561,8 @@ export const useCanvasStore = defineStore("canvas", {
             element.width,
             element.height
           );
+
+          this.ctx.globalAlpha = 1;
         };
       } else {
         this.ctx.drawImage(
@@ -537,6 +572,8 @@ export const useCanvasStore = defineStore("canvas", {
           element.width,
           element.height
         );
+
+        this.ctx.globalAlpha = 1;
       }
     },
 

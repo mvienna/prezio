@@ -314,7 +314,7 @@ const handleUpdatingPassword = async () => {
 
   form {
     padding: 48px;
-    border: 1px solid $grey-5;
+    border: 1.5px solid $grey-5;
     background: $white;
     border-radius: 8px;
 

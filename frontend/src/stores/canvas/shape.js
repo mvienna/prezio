@@ -26,35 +26,52 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
     /*
      * add shape
      */
-    addShape(type) {
-      const width = 100;
-      const height = 100;
+    addShape(
+      type,
+      x = null,
+      y = null,
+      width = null,
+      height = null,
+      layer = "top",
+      mode = MODES_OPTIONS.value.shape,
+      isLocked = false,
+      strokeColor = this.customization.strokeColor,
+      fillColor = this.customization.fillColor,
+      lineWidth = this.customization.lineWidth,
+      isForceSelectCreatedElement = true
+    ) {
+      width = typeof width === "number" ? width : 100;
+      height = typeof height === "number" ? height : 100;
 
-      const newImageHeight = canvas.value.height * 0.5;
-      const aspectRatio = width / height;
-      const newImageWidth = newImageHeight * aspectRatio;
-
-      const x = (canvas.value.width - newImageWidth) / 2;
-      const y = (canvas.value.height - newImageHeight) / 2;
+      x = typeof x === "number" ? x : (canvas.value.width - width) / 2;
+      y = typeof y === "number" ? y : (canvas.value.height - height) / 2;
 
       let shape = {
         id: generateUniqueId(undefined, elements.value),
-        mode: MODES_OPTIONS.value.shape,
+        mode: mode,
         isVisible: true,
-        isLocked: false,
+        isLocked: isLocked,
         type: type,
         x,
         y,
-        width: newImageWidth,
-        height: newImageHeight,
+        width: width,
+        height: height,
         rotationAngle: 0,
-        strokeColor: this.customization.strokeColor,
-        fillColor: this.customization.fillColor,
-        lineWidth: this.customization.lineWidth,
+        strokeColor: strokeColor,
+        fillColor: fillColor,
+        lineWidth: lineWidth,
       };
 
-      elements.value.unshift(shape);
-      selectElement(shape);
+      if (layer === "top") {
+        elements.value.unshift(shape);
+      } else {
+        elements.value.push(shape);
+      }
+
+      if (isForceSelectCreatedElement) {
+        selectElement(shape);
+      }
+
       canvasStore.redrawCanvas(true, true);
     },
 

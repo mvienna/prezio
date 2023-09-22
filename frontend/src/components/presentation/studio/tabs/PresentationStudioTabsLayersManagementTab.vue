@@ -18,12 +18,49 @@
       <template #item="{ element }">
         <q-card
           flat
-          class="layer bg-grey-2 cursor-pointer"
-          :class="element.id === selectedElement?.id ? 'layer--active' : ''"
+          class="layer cursor-pointer"
+          :class="`${
+            element.id === selectedElement?.id ? 'layer--active' : ''
+          } ${
+            [MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
+              element.mode
+            )
+              ? 'layer--background'
+              : ''
+          }`"
         >
-          <q-card-section class="row no-wrap items-center q-py-none">
+          <q-card-section
+            class="row no-wrap items-center q-py-none"
+            :style="
+              element.mode === MODES_OPTIONS.background
+                ? `background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${
+                    elements.find(
+                      (item) => item.mode === MODES_OPTIONS.background
+                    ).imageSrc
+                  });`
+                : element.mode === MODES_OPTIONS.baseFill
+                ? `background: ${
+                    elements.find(
+                      (item) => item.mode === MODES_OPTIONS.baseFill
+                    ).fillColor
+                  };`
+                : ''
+            "
+          >
             <!-- drag handle -->
             <q-icon
+              v-if="
+                [MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
+                  element.mode
+                )
+              "
+              name="r_drag_indicator"
+              color="grey"
+              size="sm"
+              class="layer_handle--disabled"
+            />
+            <q-icon
+              v-else
               name="r_drag_indicator"
               color="grey"
               size="sm"
@@ -37,7 +74,7 @@
             >
               {{
                 $t(
-                  `presentationLayout.rightDrawer.layers.names.${element.mode}`
+                  `presentationLayout.rightDrawer.tabs.layers.names.${element.mode}`
                 )
               }}
             </span>
@@ -51,6 +88,7 @@
               round
               color="grey"
               size="10px"
+              class="q-ml-sm"
               @click="
                 element.isVisible = !element.isVisible;
                 canvasStore.redrawCanvas();
@@ -59,7 +97,7 @@
               <q-tooltip>
                 {{
                   $t(
-                    `presentationLayout.rightDrawer.layers.layer.visibility.${
+                    `presentationLayout.rightDrawer.tabs.layers.layer.visibility.${
                       element.isVisible ? "on" : "off"
                     }`
                   )
@@ -72,14 +110,20 @@
               :icon="element.isLocked ? 'r_lock' : 'r_lock_open'"
               flat
               round
+              :disable="
+                [MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
+                  element.mode
+                )
+              "
               color="grey"
               size="10px"
+              class="q-ml-sm"
               @click="element.isLocked = !element.isLocked"
             >
               <q-tooltip>
                 {{
                   $t(
-                    `presentationLayout.rightDrawer.layers.layer.lock.${
+                    `presentationLayout.rightDrawer.tabs.layers.layer.lock.${
                       element.isLocked ? "off" : "on"
                     }`
                   )
@@ -94,10 +138,13 @@
               round
               color="red"
               size="10px"
+              class="q-ml-sm"
               @click="deleteElement(element)"
             >
               <q-tooltip>
-                {{ $t("presentationLayout.rightDrawer.layers.layer.delete") }}
+                {{
+                  $t("presentationLayout.rightDrawer.tabs.layers.layer.delete")
+                }}
               </q-tooltip>
             </q-btn>
           </q-card-section>
@@ -106,7 +153,7 @@
     </draggable>
 
     <q-card v-else flat class="layer layer--disabled bg-grey-2">
-      <q-card-section class="row no-wrap items-center">
+      <q-card-section class="row no-wrap items-center q-py-none">
         <!-- drag handle -->
         <q-icon
           name="r_drag_indicator"
@@ -116,20 +163,41 @@
         />
 
         <!-- layer name -->
-        <span class="text-semibold q-pl-md">
-          {{ $t("presentationLayout.rightDrawer.layers.layer.title") }}
+        <span class="text-semibold q-pl-md q-py-sm q-my-xs">
+          {{ $t("presentationLayout.rightDrawer.tabs.layers.layer.title") }}
         </span>
 
         <q-space />
 
         <!-- visibility button -->
-        <q-btn icon="r_visibility" flat round color="grey" size="10px" />
+        <q-btn
+          icon="r_visibility"
+          class="q-ml-sm"
+          flat
+          round
+          color="grey"
+          size="10px"
+        />
 
         <!-- disable button -->
-        <q-btn icon="r_lock_open" flat round color="grey" size="10px" />
+        <q-btn
+          icon="r_lock_open"
+          class="q-ml-sm"
+          flat
+          round
+          color="grey"
+          size="10px"
+        />
 
         <!-- delete button -->
-        <q-btn icon="r_delete" flat round color="red" size="10px" />
+        <q-btn
+          icon="r_delete"
+          class="q-ml-sm"
+          flat
+          round
+          color="red"
+          size="10px"
+        />
       </q-card-section>
     </q-card>
   </div>
@@ -152,7 +220,7 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const canvasStore = useCanvasStore();
-const { elements, selectedElement } = storeToRefs(canvasStore);
+const { elements, selectedElement, MODES_OPTIONS } = storeToRefs(canvasStore);
 
 /*
  * drag
@@ -187,7 +255,8 @@ const handleLayersReorder = async () => {
 
 <style scoped lang="scss">
 .layer {
-  border: 1px solid transparent;
+  background: $grey-2;
+  border: 1.5px solid transparent;
   outline: 3px solid transparent;
   transition: 0.2s;
 
@@ -195,21 +264,34 @@ const handleLayersReorder = async () => {
     width: 100%;
     line-height: 30px;
   }
-}
 
-.layer--disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
+  .layer_handle {
+    cursor: grab;
+  }
 
-.layer--active {
-  border: 1px solid $primary;
-  outline: 3px solid $blue-2;
+  &.layer--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 
-  color: $primary;
-}
+  &.layer--active {
+    border: 1.5px solid $primary;
+    outline: 3px solid $blue-2;
 
-.layer_handle {
-  cursor: grab;
+    color: $primary;
+  }
+
+  &.layer--background {
+    cursor: default !important;
+    color: $white;
+
+    .layer_handle--disabled {
+    }
+
+    .q-card__section {
+      background-size: cover !important;
+      background-repeat: no-repeat !important;
+    }
+  }
 }
 </style>
