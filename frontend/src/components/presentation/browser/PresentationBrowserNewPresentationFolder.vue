@@ -192,6 +192,8 @@ const handlePresentationCardToggle = (presentation) => {
     outline: 3px solid transparent;
     transition: 0.2s;
     border-radius: 8px;
+    width: 100%;
+    height: 100%;
   }
 
   &.presentation_card--active {
