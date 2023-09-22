@@ -32,7 +32,7 @@
           {{ $t("presentationLayout.rightDrawer.tabs.layers") }}.
         </div>
 
-        <PresentationLayersManagement />
+        <PresentationStudioLayersManagement />
       </q-tab-panel>
 
       <!-- design -->
@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import PresentationLayersManagement from "components/presentation/PresentationLayersManagement.vue";
+import PresentationStudioLayersManagement from "components/presentation/studio/PresentationStudioLayersManagement.vue";
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";

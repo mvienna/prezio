@@ -15,7 +15,8 @@ const routes = [
       },
       {
         path: ROUTE_PATHS.PRESENTATIONS.INDEX,
-        component: () => import("pages/presentations/MyPresentationsPage.vue"),
+        component: () =>
+          import("pages/presentations/PresentationsBrowserPage.vue"),
       },
     ],
   },
@@ -68,7 +69,8 @@ const routes = [
     children: [
       {
         path: ROUTE_PATHS.PRESENTATIONS.PRESENTATION,
-        component: () => import("pages/presentations/PresentationPage.vue"),
+        component: () =>
+          import("pages/presentations/PresentationStudioPage.vue"),
       },
     ],
   },

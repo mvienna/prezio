@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <!-- top toolbar -->
-    <PresentationToolbarTop
+    <PresentationStudioToolbarTop
       @switch-mode="canvasStore.switchMode($event)"
       @deselect="selectedElement ? deselectElement() : ''"
       @delete="selectedElement ? deleteElement() : ''"
@@ -27,7 +27,7 @@
       enter-active-class="animated zoomIn"
       leave-active-class="animated zoomOut"
     >
-      <ElementsContextMenu
+      <PresentationStudioElementsContextMenu
         v-if="showElementsContextMenu"
         :x="elementsContextMenuPosition.x"
         :y="elementsContextMenuPosition.y"
@@ -35,7 +35,7 @@
     </transition>
 
     <!-- bottom toolbar -->
-    <PresentationToolbarBottom
+    <PresentationStudioToolbarBottom
       @zoom="canvasStore.handleZoom(null, mouse.x, mouse.y, $event)"
       @zoomIn="canvasStore.handleZoom(null, mouse.x, mouse.y, scale + 0.25)"
       @zoomOut="canvasStore.handleZoom(null, mouse.x, mouse.y, scale - 0.25)"
@@ -58,8 +58,8 @@ import { useCanvasDrawingStore } from "stores/canvas/drawing";
 import { useCanvasStore } from "stores/canvas";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { useCanvasMediaStore } from "stores/canvas/media";
-import PresentationToolbarTop from "components/presentation/PresentationToolbarTop.vue";
-import PresentationToolbarBottom from "components/presentation/PresentationToolbarBottom.vue";
+import PresentationStudioToolbarTop from "components/presentation/studio/PresentationStudioToolbarTop.vue";
+import PresentationStudioToolbarBottom from "components/presentation/studio/PresentationStudioToolbarBottom.vue";
 import {
   dragElement,
   startDragging,
@@ -90,7 +90,6 @@ import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
-import ElementsContextMenu from "components/presentation/ElementsContextMenu.vue";
 import {
   copy,
   cut,
@@ -100,6 +99,7 @@ import {
   moveLayerToTheTop,
   paste,
 } from "stores/canvas/helpers/elementsContextMenuActions";
+import PresentationStudioElementsContextMenu from "components/presentation/studio/PresentationStudioElementsContextMenu.vue";
 
 /*
  * variables

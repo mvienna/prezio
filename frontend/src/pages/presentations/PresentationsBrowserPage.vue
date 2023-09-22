@@ -631,7 +631,7 @@
 
     <!-- new presentation form -->
     <q-dialog v-model="showNewPresentationDialog">
-      <NewPresentation
+      <PresentationBrowserNewPresentation
         :folders="folders"
         :selected-folder="selectedFolder"
         :is-loading="isLoading.creatingPresentation"
@@ -642,7 +642,7 @@
 
     <!-- new folder form -->
     <q-dialog v-model="showNewFolderDialog">
-      <NewPresentationFolder
+      <PresentationBrowserNewPresentationFolder
         :presentations="
           presentations.filter((presentation) => !presentation.folder_id)
         "
@@ -662,7 +662,6 @@
 
 <script setup>
 import { computed, onBeforeMount, ref } from "vue";
-import NewPresentation from "components/presentation/NewPresentation.vue";
 import { useRouter } from "vue-router";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
@@ -671,7 +670,8 @@ import { formatDateTime } from "src/helpers/formatDateTime";
 import { date } from "quasar";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import NewPresentationFolder from "components/presentation/NewPresentationFolder.vue";
+import PresentationBrowserNewPresentationFolder from "components/presentation/browser/PresentationBrowserNewPresentationFolder.vue";
+import PresentationBrowserNewPresentation from "components/presentation/browser/PresentationBrowserNewPresentation.vue";
 
 /*
  * variables
