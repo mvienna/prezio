@@ -203,7 +203,6 @@ export default {
          */
         layers: {
           title: "Layers",
-
           layer: {
             title: "Layer",
             visibility: {
@@ -232,6 +231,37 @@ export default {
          */
         design: {
           title: "Design",
+
+          slideBackground: {
+            title: "Slide Background",
+
+            categories: {
+              prezio: "Prezio",
+              gradients: "Gradients",
+              minimalism: "Minimalism",
+              office: "Office",
+              architecture: "Architecture",
+              futuristic: "Futuristic",
+            },
+
+            select: {
+              title: "Selected Slide Background",
+              open: "Select Background",
+            },
+
+            filters: {
+              title: "Filters",
+
+              opacity: "Opacity",
+              blur: "Blur",
+              contrast: "Contrast",
+              brightness: "Brightness",
+            },
+          },
+
+          slideBaseFill: {
+            title: "Base Fill",
+          },
         },
 
         /*
