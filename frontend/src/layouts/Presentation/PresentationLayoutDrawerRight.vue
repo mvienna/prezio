@@ -3,7 +3,7 @@
     v-model="rightDrawerOpen"
     show-if-above
     side="right"
-    class="bg-white"
+    class="bg-white scroll--hidden"
     :width="400"
   >
     <q-tabs
