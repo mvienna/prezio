@@ -51,7 +51,7 @@
 import PresentationLayersManagement from "components/presentation/PresentationLayersManagement.vue";
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
-import { usePresentationStore } from "stores/presentation";
+import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
 
 /*
@@ -64,7 +64,7 @@ const { t } = useI18n({ useScope: "global" });
 /*
  * presentation store
  */
-const presentationStore = usePresentationStore();
+const presentationStore = usePresentationsStore();
 const { presentation } = storeToRefs(presentationStore);
 
 /*

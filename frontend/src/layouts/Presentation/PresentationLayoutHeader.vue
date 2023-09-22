@@ -184,7 +184,7 @@
 <script setup>
 import { ROUTE_PATHS } from "src/constants/routes";
 import UserMenu from "components/user/UserMenu.vue";
-import { usePresentationStore } from "stores/presentation";
+import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { date } from "quasar";
 import { useCanvasStore } from "stores/canvas";
@@ -192,7 +192,7 @@ import { useCanvasStore } from "stores/canvas";
 /*
  * stores
  */
-const presentationStore = usePresentationStore();
+const presentationStore = usePresentationsStore();
 const { presentation, isSaving, isSavingError, lastSavedAt } =
   storeToRefs(presentationStore);
 

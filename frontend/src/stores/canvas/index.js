@@ -3,10 +3,10 @@ import {
   ALIGNMENT,
   SHAPES_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
-import { usePresentationStore } from "stores/presentation";
+import { usePresentationsStore } from "stores/presentations";
 import { date } from "quasar";
 
-const presentationStore = usePresentationStore();
+const presentationStore = usePresentationsStore();
 const { presentation, slide, lastSavedAt, lastChangedAt } =
   storeToRefs(presentationStore);
 

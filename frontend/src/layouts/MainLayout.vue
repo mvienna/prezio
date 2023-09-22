@@ -100,7 +100,7 @@ import { useI18n } from "vue-i18n";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { useRouter } from "vue-router";
 import UserMenu from "components/user/UserMenu.vue";
-import { usePresentationStore } from "stores/presentation";
+import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 
 /*
@@ -113,7 +113,7 @@ const router = useRouter();
 /*
  * presentation store
  */
-const presentationStore = usePresentationStore();
+const presentationStore = usePresentationsStore();
 const { search } = storeToRefs(presentationStore);
 
 /*

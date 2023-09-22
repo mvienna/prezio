@@ -3,17 +3,20 @@ import { api } from "boot/axios";
 import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
 import { ROUTE_PATHS } from "src/constants/routes";
 
-export const usePresentationStore = defineStore("presentation", {
+export const usePresentationsStore = defineStore("presentations", {
   state: () => ({
+    /*
+     * folders
+     */
+    folders: [],
+    selectedFolder: null,
+
     /*
      * presentations
      */
-    folders: [],
     presentations: [],
+    selectedPresentations: [],
     search: "",
-
-    isLoading: false,
-    isCreatingPresentation: false,
 
     /*
      * presentation
@@ -28,15 +31,91 @@ export const usePresentationStore = defineStore("presentation", {
     lastSavedAt: null,
     isSaving: false,
     isSavingError: false,
+
+    /*
+     * state
+     */
+    isLoading: {
+      fetchingPresentations: false,
+      fetchingFolders: false,
+
+      creatingPresentation: false,
+      creatingFolder: false,
+    },
   }),
 
   actions: {
     /*
+     * folders
+     */
+    async createNewFolder(data) {
+      this.isLoading.creatingFolder = true;
+
+      return await api
+        .post("/folder", {
+          name: data.name,
+          description: data.description,
+          is_private: data.is_private,
+          presentations_ids: data.presentationsIds,
+        })
+        .then((response) => {
+          this.folders.push(response.data);
+          this.selectedFolder = response.data;
+
+          if (data.presentationsIds.length) {
+            data.presentationsIds.forEach((id) => {
+              const presentationIndex = this.presentations.findIndex(
+                (item) => item.id === id
+              );
+              this.presentations[presentationIndex].folder_id =
+                this.selectedFolder.id;
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.isLoading.creatingFolder = false;
+        });
+    },
+
+    async updateFolder(folder) {
+      return await api
+        .patch(`/folder/${folder.id}`, {
+          name: folder.name,
+          description: folder.description,
+          is_private: folder.is_private,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    async deleteFolder(folder) {
+      return await api.delete(`/folder/${folder.id}`).then(() => {
+        this.folders = this.folders.filter((item) => item.id !== folder.id);
+
+        if (this.selectedFolder?.id === folder.id) {
+          this.selectedFolder = null;
+        }
+
+        this.presentations.map((presentation) => {
+          if (presentation.folder_id === folder.id) {
+            presentation.folder_id = null;
+          }
+
+          return presentation;
+        });
+      });
+    },
+
+    /*
      * presentations
      */
-    async fetchPresentations() {
-      this.isLoading = true;
-      await api
+    fetchPresentations() {
+      this.isLoading.fetchingPresentations = true;
+      api
         .get("/presentations")
         .then((response) => {
           this.presentations = response.data;
@@ -45,13 +124,13 @@ export const usePresentationStore = defineStore("presentation", {
           console.log(error);
         })
         .finally(() => {
-          this.isLoading = false;
+          this.isLoading.fetchingPresentations = false;
         });
     },
 
-    async fetchFolders() {
-      this.isLoading = true;
-      await api
+    fetchFolders() {
+      this.isLoading.fetchingFolders = true;
+      api
         .get("/folders")
         .then((response) => {
           this.folders = response.data;
@@ -60,7 +139,7 @@ export const usePresentationStore = defineStore("presentation", {
           console.log(error);
         })
         .finally(() => {
-          this.isLoading = false;
+          this.isLoading.fetchingFolders = false;
         });
     },
 
@@ -114,7 +193,7 @@ export const usePresentationStore = defineStore("presentation", {
     },
 
     async createNewPresentation(data) {
-      this.isCreatingPresentation = true;
+      this.isLoading.creatingPresentation = true;
 
       return await api
         .post("/presentation", {
@@ -127,7 +206,7 @@ export const usePresentationStore = defineStore("presentation", {
           console.log(error);
         })
         .finally(() => {
-          this.isCreatingPresentation = false;
+          this.isLoading.creatingPresentation = false;
         });
     },
 

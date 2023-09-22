@@ -211,7 +211,7 @@
 <script setup>
 import { computed, onBeforeMount, onUnmounted, ref } from "vue";
 import { storeToRefs } from "pinia";
-import { usePresentationStore } from "stores/presentation";
+import { usePresentationsStore } from "stores/presentations";
 import draggable from "vuedraggable/src/vuedraggable";
 import { useCanvasStore } from "stores/canvas";
 import { deselectElement } from "stores/canvas/helpers/select";
@@ -227,7 +227,7 @@ const $q = useQuasar();
 /*
  * stores
  */
-const presentationStore = usePresentationStore();
+const presentationStore = usePresentationsStore();
 const { presentation, slide } = storeToRefs(presentationStore);
 
 const canvasStore = useCanvasStore();

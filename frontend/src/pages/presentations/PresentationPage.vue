@@ -88,7 +88,7 @@ import { useCanvasShapeStore } from "stores/canvas/shape";
 import { useRouter } from "vue-router";
 import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
-import { usePresentationStore } from "stores/presentation";
+import { usePresentationsStore } from "stores/presentations";
 import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
 import ElementsContextMenu from "components/presentation/ElementsContextMenu.vue";
 import {
@@ -113,7 +113,7 @@ const router = useRouter();
 /*
  * stores
  */
-const presentationStore = usePresentationStore();
+const presentationStore = usePresentationsStore();
 const { presentation, lastSavedAt, lastChangedAt } =
   storeToRefs(presentationStore);
 
