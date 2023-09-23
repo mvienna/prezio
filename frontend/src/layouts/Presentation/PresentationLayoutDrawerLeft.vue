@@ -79,7 +79,7 @@
               <canvas
                 v-show="element.isLivePreview"
                 :id="`canvas_slide_preview_${index}`"
-                style="width: 100%; height: 145px"
+                style="width: 100%; height: 100%"
               />
 
               <q-img
@@ -360,7 +360,7 @@ const isMac = computed(() => {
   transition: 0.2s;
   border: 1.5px solid $grey-2;
   width: 245px;
-  height: 148px;
+  height: calc(245px * 9 / 16);
   border-radius: 8px;
 
   canvas {
