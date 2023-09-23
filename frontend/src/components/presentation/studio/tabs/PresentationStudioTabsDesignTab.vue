@@ -607,7 +607,7 @@ const handleBaseFillChange = () => {
   );
 };
 
-const selectedBaseFillColor = ref();
+const selectedBaseFillColor = ref("#FFFFFF");
 </script>
 
 <style scoped lang="scss">
