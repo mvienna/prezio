@@ -121,6 +121,7 @@
     <div v-if="backgroundElement?.imageSrc" class="relative-position">
       <q-img :src="backgroundElement?.imageSrc" class="selected_background" />
 
+      <!-- background filters -->
       <div class="absolute-right q-mt-sm q-mr-sm">
         <q-btn
           icon="r_tune"
@@ -146,20 +147,18 @@
             <div
               class="text-semibold row no-wrap justify-between q-mb-sm q-pb-xs"
             >
-              <div>
-                {{
-                  $t(
-                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.title"
-                  )
-                }}
+              <div class="row no-wrap items-center">
+                <div>
+                  {{
+                    $t(
+                      "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.title"
+                    )
+                  }}
+                </div>
 
-                <q-btn
-                  icon="r_restart_alt"
-                  flat
-                  round
-                  size="10px"
-                  color="primary"
-                  class="q-ml-sm"
+                <q-icon
+                  name="r_restart_alt"
+                  class="q-ml-sm cursor-pointer"
                   @click="
                     backgroundFilters = { ...defaultBackgroundFilters };
                     changeBackgroundFilters();
@@ -172,7 +171,7 @@
                       )
                     }}
                   </q-tooltip>
-                </q-btn>
+                </q-icon>
               </div>
 
               <q-btn
@@ -321,6 +320,25 @@
           </q-menu>
         </q-btn>
       </div>
+
+      <!-- background opacity -->
+      <div class="text-caption text-grey q-mt-md">
+        {{
+          $t(
+            "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.opacity"
+          )
+        }}
+      </div>
+
+      <q-slider
+        v-model="backgroundFilters.opacity"
+        :min="0"
+        :max="100"
+        label
+        class="q-pr-xs"
+        :label-value="backgroundFilters.opacity + '%'"
+        @change="changeBackgroundFilters()"
+      />
     </div>
 
     <div class="row no-wrap q-pt-md">
