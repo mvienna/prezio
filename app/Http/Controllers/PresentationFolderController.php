@@ -56,7 +56,7 @@ class PresentationFolderController extends Controller
 
     public function get(): JsonResponse
     {
-        $folders = PresentationFolder::forUser()->with('presentations')->orderBy('created_at', 'desc')->get();
+        $folders = PresentationFolder::forUser()->orderBy('created_at', 'desc')->get();
         return $this->jsonResponse($folders->toArray());
     }
 

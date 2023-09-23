@@ -79,11 +79,23 @@ class PresentationController extends Controller
     {
         $presentations = Presentation::forUser()
             ->with(['slides' => function ($query) {
-                $query->select('presentation_id', 'preview', 'updated_at');
+                $query->select('id', 'presentation_id', 'updated_at');
             }])
             ->with('preview')
-            ->get();
+            ->get()
+            ->toArray();
 
-        return $this->jsonResponse($presentations->toArray());
+        foreach ($presentations as &$presentation) {
+            if (!isset($presentation['preview'])) {
+                $slide_id = $presentation['slides'][0]['id'];
+                $slide = PresentationSlide::select('preview')->find($slide_id);
+
+                if ($slide) {
+                    $presentation['preview'] = $slide->preview;
+                }
+            }
+        }
+
+        return $this->jsonResponse($presentations);
     }
 }

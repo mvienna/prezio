@@ -60,11 +60,7 @@
           >
             <!-- presentation preview -->
             <q-img
-              :src="
-                presentation?.preview?.original_url ||
-                presentation.slides[0].preview
-              "
-              fit="contain"
+              :src="presentation.preview?.original_url || presentation.preview"
             />
 
             <!-- presentation name -->
