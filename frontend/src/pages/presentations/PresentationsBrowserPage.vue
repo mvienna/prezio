@@ -739,7 +739,17 @@ const presentationsColumns = [
     name: presentationColumnsNames.updatedAt,
     label: t("presentations.columns.updated"),
     align: "center",
-    field: (row) => row.updated_at,
+    field: (row) => {
+      const latestUpdatedSlide = row.slides.reduce((prev, current) =>
+        new Date(current.updated_at) > new Date(prev.updated_at)
+          ? current
+          : prev
+      );
+
+      return row.updated_at > latestUpdatedSlide.updated_at
+        ? row.updated_at
+        : latestUpdatedSlide.updated_at;
+    },
     sortable: true,
   },
   {

@@ -79,7 +79,7 @@ class PresentationController extends Controller
     {
         $presentations = Presentation::forUser()
             ->with(['slides' => function ($query) {
-                $query->select('presentation_id', 'preview');
+                $query->select('presentation_id', 'preview', 'updated_at');
             }])
             ->with('preview')
             ->get();
