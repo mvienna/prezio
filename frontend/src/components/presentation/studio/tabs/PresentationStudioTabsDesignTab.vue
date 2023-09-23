@@ -247,6 +247,50 @@
                 @change="changeBackgroundFilters()"
               />
             </div>
+
+            <!-- background invert -->
+            <div class="row no-wrap items-center justify-between q-mt-sm">
+              <div class="text-caption text-grey q-mb-sm">
+                {{
+                  $t(
+                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.invert"
+                  )
+                }}
+              </div>
+
+              <q-slider
+                v-model="backgroundFilters.invert"
+                :min="0"
+                :max="100"
+                label
+                style="width: 150px"
+                thumb-size="14px"
+                :label-value="backgroundFilters.invert + '%'"
+                @change="changeBackgroundFilters()"
+              />
+            </div>
+
+            <!-- background grayscale -->
+            <div class="row no-wrap items-center justify-between q-mt-sm">
+              <div class="text-caption text-grey q-mb-sm">
+                {{
+                  $t(
+                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.grayscale"
+                  )
+                }}
+              </div>
+
+              <q-slider
+                v-model="backgroundFilters.grayscale"
+                :min="0"
+                :max="100"
+                label
+                style="width: 150px"
+                thumb-size="14px"
+                :label-value="backgroundFilters.grayscale + '%'"
+                @change="changeBackgroundFilters()"
+              />
+            </div>
           </q-menu>
         </q-btn>
       </div>
@@ -423,7 +467,9 @@ const handleBackgroundChange = (background) => {
       backgroundFilters.value.opacity / 100,
       backgroundFilters.value.blur,
       backgroundFilters.value.contrast,
-      backgroundFilters.value.brightness
+      backgroundFilters.value.brightness,
+      backgroundFilters.value.invert,
+      backgroundFilters.value.grayscale
     );
   };
 };
@@ -441,6 +487,8 @@ const backgroundFilters = ref({
   blur: 0,
   contrast: 100,
   brightness: 100,
+  invert: 0,
+  grayscale: 100,
 });
 
 const changeBackgroundFilters = () => {
@@ -454,6 +502,8 @@ const changeBackgroundFilters = () => {
     blur: backgroundFilters.value.blur,
     contrast: backgroundFilters.value.contrast,
     brightness: backgroundFilters.value.brightness,
+    invert: backgroundFilters.value.invert,
+    grayscale: backgroundFilters.value.grayscale,
   };
 
   canvasStore.redrawCanvas();

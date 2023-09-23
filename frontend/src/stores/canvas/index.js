@@ -537,7 +537,9 @@ export const useCanvasStore = defineStore("canvas", {
 
       this.ctx.filter = `blur(${element.blur || 0}px) contrast(${
         element.contrast || 100
-      }%) brightness(${element.brightness || 100}%)`;
+      }%) brightness(${element.brightness || 100}%) invert(${
+        element.invert || 0
+      }%) grayscale(${element.grayscale || 0}%)`;
 
       if (typeof element?.opacity === "number") {
         this.ctx.globalAlpha = element.opacity;

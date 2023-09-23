@@ -256,6 +256,8 @@ export default {
               blur: "Размытие",
               contrast: "Контраст",
               brightness: "Яркость",
+              invert: "Инверсивность",
+              grayscale: "Оттенки серого",
             },
           },
 

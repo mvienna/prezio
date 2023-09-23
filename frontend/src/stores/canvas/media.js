@@ -23,7 +23,9 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
       opacity = 1,
       blur = 0,
       contrast = 100,
-      brightness = 100
+      brightness = 100,
+      invert = 0,
+      grayscale = 0
     ) {
       const image = new Image();
 

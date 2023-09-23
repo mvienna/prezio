@@ -256,6 +256,8 @@ export default {
               blur: "Blur",
               contrast: "Contrast",
               brightness: "Brightness",
+              invert: "Invert",
+              grayscale: "Grayscale",
             },
           },
 
