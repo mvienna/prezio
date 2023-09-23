@@ -118,7 +118,18 @@
       <q-img :src="backgroundElement?.imageSrc" class="selected_background" />
 
       <div class="absolute-right q-mt-sm q-mr-sm">
-        <q-btn icon="r_tune" round color="white" flat size="12px">
+        <q-btn
+          icon="r_tune"
+          round
+          text-color="black"
+          style="
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+          "
+          class="pulse"
+          flat
+          size="10px"
+        >
           <q-menu
             anchor="top left"
             self="top right"

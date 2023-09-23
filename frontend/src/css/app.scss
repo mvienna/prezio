@@ -266,3 +266,26 @@ a, .link {
 .q-chip--clickable:focus {
   box-shadow: none !important;
 }
+
+/*
+ * pulse
+ */
+@keyframes pulse {
+  0%,
+  50% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+  }
+
+  90% {
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.pulse {
+  animation: pulse 4s infinite;
+  transition: 0.2s;
+}
