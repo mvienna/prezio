@@ -264,6 +264,7 @@ export default {
 
           slideBaseFill: {
             title: "Base Fill",
+            set: "Set",
           },
         },
 

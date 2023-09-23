@@ -264,6 +264,7 @@ export default {
 
           slideBaseFill: {
             title: "Базовая заливка",
+            set: "Задать",
           },
         },
 

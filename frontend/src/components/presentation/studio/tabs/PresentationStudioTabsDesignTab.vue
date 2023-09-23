@@ -54,7 +54,7 @@
       {{ $t("presentationLayout.rightDrawer.tabs.design.slideBaseFill.title") }}
     </div>
 
-    <div class="row no-wrap justify-between">
+    <div class="row no-wrap items-center justify-between">
       <div
         v-for="color in baseFillColors"
         :key="color"
@@ -70,6 +70,10 @@
       ></div>
 
       <q-separator vertical />
+
+      <div class="text-caption text-grey">
+        {{ $t("presentationLayout.rightDrawer.tabs.design.slideBaseFill.set") }}
+      </div>
 
       <div
         class="base_fill_color_box relative-position"
@@ -556,9 +560,6 @@ const baseFillColors = [
   "#DB4437",
   "#F4B400",
   "#0F9D58",
-  "#DFFF00",
-  "#CCCCFF",
-  "#6495ED",
 ];
 
 const currentBaseFillElement = computed(() => {
