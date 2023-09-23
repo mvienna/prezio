@@ -70,6 +70,13 @@
             <!-- layer name -->
             <span
               class="text-semibold q-pl-md q-py-sm q-my-xs"
+              :style="
+                element.mode === MODES_OPTIONS.baseFill
+                  ? `color: ${textColorOnAColoredBackground(
+                      element.fillColor
+                    )};`
+                  : ''
+              "
               @click="!element.isLocked ? selectElement(element) : ''"
             >
               {{
@@ -210,6 +217,7 @@ import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import draggable from "vuedraggable/src/vuedraggable";
 import { deleteElement, selectElement } from "stores/canvas/helpers/select";
+import { textColorOnAColoredBackground } from "src/helpers/colorUtils";
 
 /*
  * variables

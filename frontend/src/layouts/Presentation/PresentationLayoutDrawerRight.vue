@@ -31,19 +31,11 @@
     <q-tab-panels v-model="rightDrawerTab" animated>
       <!-- layers -->
       <q-tab-panel name="layers">
-        <!--        <div class="text-h6 q-pb-md">-->
-        <!--          {{ $t("presentationLayout.rightDrawer.tabs.layers.title") }}-->
-        <!--        </div>-->
-
         <PresentationStudioTabsLayersManagementTab />
       </q-tab-panel>
 
       <!-- design -->
       <q-tab-panel name="design">
-        <!--        <div class="text-h6 q-pb-md">-->
-        <!--          {{ $t("presentationLayout.rightDrawer.tabs.design.title") }}-->
-        <!--        </div>-->
-
         <PresentationStudioTabsDesignTab />
       </q-tab-panel>
 

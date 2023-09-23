@@ -80,7 +80,13 @@
             : ''
         "
       >
-        <q-icon name="r_colorize" class="absolute-center" color="white" />
+        <q-icon
+          name="r_colorize"
+          class="absolute-center"
+          :style="`color: ${textColorOnAColoredBackground(
+            selectedBaseFillColor
+          )};`"
+        />
 
         <q-menu
           anchor="bottom left"
@@ -286,6 +292,7 @@ import { deleteElement } from "stores/canvas/helpers/select";
 import { useCanvasMediaStore } from "stores/canvas/media";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
+import { textColorOnAColoredBackground } from "src/helpers/colorUtils";
 
 /*
  * variables
