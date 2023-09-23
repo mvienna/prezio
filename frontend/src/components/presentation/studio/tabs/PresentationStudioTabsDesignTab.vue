@@ -137,23 +137,46 @@
             transition-hide="jump-up"
             :offset="[8, 0]"
             class="q-pa-md"
-            style="width: 290px"
+            style="width: 290px; border-radius: 12px"
           >
             <div
               class="text-semibold row no-wrap justify-between q-mb-sm q-pb-xs"
             >
-              {{
-                $t(
-                  "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.title"
-                )
-              }}
+              <div>
+                {{
+                  $t(
+                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.title"
+                  )
+                }}
+
+                <q-btn
+                  icon="r_restart_alt"
+                  flat
+                  round
+                  size="10px"
+                  color="primary"
+                  class="q-ml-sm"
+                  @click="
+                    backgroundFilters = { ...defaultBackgroundFilters };
+                    changeBackgroundFilters();
+                  "
+                >
+                  <q-tooltip>
+                    {{
+                      $t(
+                        "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.reset"
+                      )
+                    }}
+                  </q-tooltip>
+                </q-btn>
+              </div>
 
               <q-btn
                 icon="r_close"
                 v-close-popup
                 flat
                 round
-                size="8px"
+                size="10px"
                 color="grey"
               />
             </div>
@@ -373,6 +396,8 @@ onBeforeMount(() => {
       blur: backgroundElement.value.blur,
       contrast: backgroundElement.value.contrast,
       brightness: backgroundElement.value.brightness,
+      invert: backgroundElement.value.invert,
+      grayscale: backgroundElement.value.grayscale,
     };
   }
 
@@ -480,16 +505,17 @@ const handleBackgroundChange = (background) => {
 const showSelectBackgroundDialog = ref(false);
 
 /*
- * background opacity
+ * background filters
  */
-const backgroundFilters = ref({
+const defaultBackgroundFilters = {
   opacity: 100,
   blur: 0,
   contrast: 100,
   brightness: 100,
   invert: 0,
-  grayscale: 100,
-});
+  grayscale: 0,
+};
+const backgroundFilters = ref({ ...defaultBackgroundFilters });
 
 const changeBackgroundFilters = () => {
   const backgroundElementIndex = elements.value.findIndex(

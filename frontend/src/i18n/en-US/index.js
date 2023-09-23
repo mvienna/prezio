@@ -251,6 +251,7 @@ export default {
 
             filters: {
               title: "Filters",
+              reset: "Reset filters",
 
               opacity: "Opacity",
               blur: "Blur",
