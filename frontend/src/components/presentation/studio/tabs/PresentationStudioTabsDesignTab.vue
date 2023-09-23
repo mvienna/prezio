@@ -16,8 +16,8 @@
         :outline="selectedBackgroundsCategory !== category.name"
         :unelevated="selectedBackgroundsCategory === category.name"
         no-caps
-        size="10px"
-        style="padding: 0 8px"
+        size="12px"
+        style="padding: 0 8px; min-height: 28px"
         :disable="category.disable"
         @click="selectedBackgroundsCategory = category.name"
       >
@@ -26,8 +26,8 @@
     </div>
 
     <!-- backgrounds -->
-    <div class="q-pa-xs scroll-y scroll--hidden" style="max-height: 400px">
-      <div class="row justify-between q-gutter-md">
+    <div class="q-pa-xs scroll-y scroll--hidden" style="max-height: 410px">
+      <div class="background_options_grid">
         <div
           v-for="(background, backgroundIndex) in filteredBackgrounds"
           :key="backgroundIndex"
@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <q-separator class="q-my-lg" />
+    <q-separator class="q-mb-lg" />
 
     <!-- base fill -->
     <div class="text-grey q-mb-sm">
@@ -624,13 +624,22 @@ const selectedBaseFillColor = ref();
 /*
  * background options
  */
+.background_options_grid {
+  columns: 3;
+  gap: 16px;
+
+  .item:nth-last-child(-n + 3) {
+    margin-bottom: 0;
+  }
+}
+
 .background_option {
   cursor: pointer;
   color: $grey;
   transition: 0.2s;
+  margin-bottom: 16px;
 
   .q-img {
-    width: 170px;
     aspect-ratio: 16/9;
     border-radius: 8px;
     border: 1.5px solid $grey-2;
