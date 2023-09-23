@@ -392,12 +392,22 @@ const shapeStore = useCanvasShapeStore();
 onBeforeMount(() => {
   if (backgroundElement.value) {
     backgroundFilters.value = {
-      opacity: backgroundElement.value.opacity * 100,
-      blur: backgroundElement.value.blur,
-      contrast: backgroundElement.value.contrast,
-      brightness: backgroundElement.value.brightness,
-      invert: backgroundElement.value.invert,
-      grayscale: backgroundElement.value.grayscale,
+      opacity: backgroundElement.value.opacity
+        ? backgroundElement.value.opacity * 100
+        : 100,
+      blur: backgroundElement.value.blur ? backgroundElement.value.blur : 0,
+      contrast: backgroundElement.value.contrast
+        ? backgroundElement.value.contrast
+        : 100,
+      brightness: backgroundElement.value.brightness
+        ? backgroundElement.value.brightness
+        : 100,
+      invert: backgroundElement.value.invert
+        ? backgroundElement.value.invert
+        : 0,
+      grayscale: backgroundElement.value.grayscale
+        ? backgroundElement.value.grayscale
+        : 0,
     };
   }
 
