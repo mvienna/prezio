@@ -8,41 +8,41 @@
     </div>
 
     <!-- categories -->
-    <div class="q-gutter-xs q-mt-sm q-mb-md">
-      <q-chip
+    <div class="q-gutter-sm q-mt-xs q-mb-md">
+      <q-btn
         v-for="category in categories"
         :key="category.name"
-        class="cursor-pointer"
-        :class="
-          selectedBackgroundsCategory === category.name
-            ? 'bg-grey text-white'
-            : 'bg-white text-grey'
-        "
-        outline
-        ripple
+        color="primary"
+        :outline="selectedBackgroundsCategory !== category.name"
+        :unelevated="selectedBackgroundsCategory === category.name"
+        no-caps
+        size="10px"
+        style="padding: 0 8px"
         :disable="category.disable"
         @click="selectedBackgroundsCategory = category.name"
       >
         {{ category.label }}
-      </q-chip>
+      </q-btn>
     </div>
 
     <!-- backgrounds -->
-    <div class="row justify-between q-gutter-md">
-      <div
-        v-for="background in filteredBackgrounds"
-        :key="background.name"
-        class="background_option"
-        :class="
-          backgroundElement?.imageSrc === background.src
-            ? 'background_option--active'
-            : ''
-        "
-        @click="handleBackgroundChange(background)"
-      >
-        <q-img :src="background.src" />
-        <div class="text-center q-mt-xs text-semibold">
-          {{ background.name }}
+    <div class="q-pa-xs scroll-y scroll--hidden" style="max-height: 400px">
+      <div class="row justify-between q-gutter-md">
+        <div
+          v-for="(background, backgroundIndex) in filteredBackgrounds"
+          :key="backgroundIndex"
+          class="background_option"
+          :class="
+            backgroundElement?.imageSrc === background.src
+              ? 'background_option--active'
+              : ''
+          "
+          @click="handleBackgroundChange(background)"
+        >
+          <q-img :src="background.src" />
+          <div class="text-center q-mt-xs text-semibold">
+            {{ background.name || backgroundIndex + 1 }}
+          </div>
         </div>
       </div>
     </div>
@@ -421,7 +421,6 @@ const categories = {
     label: t(
       "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.gradients"
     ),
-    disable: true,
   },
   minimalism: {
     name: "minimalism",
@@ -455,7 +454,9 @@ const categories = {
 const selectedBackgroundsCategory = ref(categories.prezio.name);
 
 const filteredBackgrounds = computed(() => {
-  return backgrounds;
+  return backgrounds.filter(
+    (background) => background.group === selectedBackgroundsCategory.value
+  );
 });
 
 /*
