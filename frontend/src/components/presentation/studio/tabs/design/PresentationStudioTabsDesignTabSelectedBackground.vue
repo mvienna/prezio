@@ -215,7 +215,7 @@
         </q-btn>
       </div>
 
-      <!-- background opacity -->
+      <!-- background opacity (duplicate) -->
       <div class="text-caption text-grey q-mt-md">
         {{
           $t(
@@ -309,7 +309,10 @@ const backgroundFilters = ref({ ...props.defaultBackgroundFilters });
 onBeforeMount(() => {
   if (props.backgroundElement) {
     backgroundFilters.value = {
-      opacity: props.backgroundElement.opacity * 100,
+      opacity:
+        props.backgroundElement.opacity > 100
+          ? props.defaultBackgroundFilters.opacity
+          : props.backgroundElement.opacity * 100,
       blur: props.backgroundElement.blur,
       contrast: props.backgroundElement.contrast,
       brightness: props.backgroundElement.brightness,
