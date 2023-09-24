@@ -346,7 +346,6 @@ onBeforeMount(() => {
   width: 100%;
   aspect-ratio: 16/9;
   border-radius: 8px;
-  border: 1.5px solid $grey-2;
 }
 
 .select_background__upload_btn {
