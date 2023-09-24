@@ -89,25 +89,33 @@ export const usePresentationsStore = defineStore("presentations", {
         })
         .catch((error) => {
           console.log(error);
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
         });
     },
 
     async deleteFolder(folder) {
-      return await api.delete(`/folder/${folder.id}`).then(() => {
-        this.folders = this.folders.filter((item) => item.id !== folder.id);
+      return await api
+        .delete(`/folder/${folder.id}`)
+        .then(() => {
+          this.folders = this.folders.filter((item) => item.id !== folder.id);
 
-        if (this.selectedFolder?.id === folder.id) {
-          this.selectedFolder = null;
-        }
-
-        this.presentations.map((presentation) => {
-          if (presentation.folder_id === folder.id) {
-            presentation.folder_id = null;
+          if (this.selectedFolder?.id === folder.id) {
+            this.selectedFolder = null;
           }
 
-          return presentation;
+          this.presentations.map((presentation) => {
+            if (presentation.folder_id === folder.id) {
+              presentation.folder_id = null;
+            }
+
+            return presentation;
+          });
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
         });
-      });
     },
 
     /*
@@ -175,7 +183,7 @@ export const usePresentationsStore = defineStore("presentations", {
           this.presentations[presentationIndex] = presentation;
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error.response.data.message);
         });
     },
 
@@ -188,7 +196,7 @@ export const usePresentationsStore = defineStore("presentations", {
           );
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error.response.data.message);
         });
     },
 
