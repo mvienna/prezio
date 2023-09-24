@@ -12,7 +12,17 @@
       <q-img
         :src="backgroundElement?.imageSrc"
         class="selected_background"
-        :style="`filter: opacity(${backgroundFilters.opacity}%) blur(${backgroundFilters.blur}px) contrast(${backgroundFilters.contrast}%) brightness(${backgroundFilters.brightness}%) invert(${backgroundFilters.invert}%) grayscale(${backgroundFilters.grayscale}%);`"
+        :style="`filter: opacity(${
+          backgroundFilters.opacity || defaultBackgroundFilters.opacity
+        }%) blur(${
+          backgroundFilters.blur || defaultBackgroundFilters.blur
+        }px) contrast(${
+          backgroundFilters.contrast || defaultBackgroundFilters.contrast
+        }%) brightness(${
+          backgroundFilters.brightness || defaultBackgroundFilters.brightness
+        }%) invert(${backgroundFilters.invert}%) grayscale(${
+          backgroundFilters.grayscale || defaultBackgroundFilters.grayscale
+        }%);`"
       />
 
       <!-- background filters -->
