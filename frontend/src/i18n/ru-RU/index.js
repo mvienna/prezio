@@ -222,6 +222,7 @@ export default {
             mediaEmoji: "Эмоджи",
             shape: "Форма",
             background: "Фон",
+            backgroundPreview: "Фон (предпросмотр)",
             baseFill: "Базовая заливка",
           },
         },

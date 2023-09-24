@@ -37,6 +37,8 @@
               ? 'background_option--active'
               : ''
           "
+          @mouseover="handleBackgroundMouseOver(background)"
+          @mouseleave="handleBackgroundMouseLeave()"
           @click="$emit('changeBackground', background)"
         >
           <q-img :src="background.src" />
@@ -53,11 +55,21 @@
 import { computed, ref } from "vue";
 import { backgrounds } from "src/constants/assets/backgrounds";
 import { useI18n } from "vue-i18n";
+import { useCanvasStore } from "stores/canvas";
+import { storeToRefs } from "pinia";
+import { useCanvasMediaStore } from "stores/canvas/media";
+import { useCanvasShapeStore } from "stores/canvas/shape";
 
 /*
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
+
+/*
+ * stores
+ */
+const canvasStore = useCanvasStore();
+const { elements, MODES_OPTIONS, canvas } = storeToRefs(canvasStore);
 
 /*
  * props
@@ -69,7 +81,7 @@ defineProps({
 /*
  * emits
  */
-defineEmits(["changeBackground"]);
+const emit = defineEmits(["changeBackground", "previewBackground"]);
 
 /*
  * categories
@@ -126,6 +138,21 @@ const filteredBackgrounds = computed(() => {
     (background) => background.group === selectedBackgroundsCategory.value
   );
 });
+
+/*
+ * preview background on hover
+ */
+const handleBackgroundMouseOver = (background) => {
+  emit("previewBackground", background);
+};
+
+const handleBackgroundMouseLeave = () => {
+  elements.value = elements.value.filter(
+    (element) => element.mode !== MODES_OPTIONS.value.backgroundPreview
+  );
+
+  canvasStore.redrawCanvas();
+};
 </script>
 
 <style scoped lang="scss">

@@ -65,6 +65,8 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           blur,
           contrast,
           brightness,
+          invert,
+          grayscale,
         };
 
         if (layer === "top") {
@@ -82,7 +84,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         }
 
         ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);
-        canvasStore.redrawCanvas(true, true);
+        canvasStore.redrawCanvas();
       };
     },
   },

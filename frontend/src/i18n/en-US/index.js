@@ -222,6 +222,7 @@ export default {
             mediaEmoji: "Emoji",
             shape: "Shape",
             background: "Background",
+            backgroundPreview: "Background (preview)",
             baseFill: "Base Fill",
           },
         },

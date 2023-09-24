@@ -4,6 +4,7 @@
     <PresentationStudioTabsDesignTabBackgrounds
       :background-element="backgroundElement"
       @change-background="handleBackgroundChange($event)"
+      @preview-background="handleBackgroundChange($event, undefined, true)"
     />
 
     <q-separator class="q-mb-lg" />
@@ -101,22 +102,24 @@ const backgroundElement = computed(() => {
 
 const handleBackgroundChange = (
   background,
-  backgroundFilters = { ...defaultBackgroundFilters }
+  backgroundFilters = backgroundElement.value
+    ? {
+        opacity: backgroundElement.value.opacity,
+        blur: backgroundElement.value.blur,
+        contrast: backgroundElement.value.contrast,
+        brightness: backgroundElement.value.brightness,
+        invert: backgroundElement.value.invert,
+        grayscale: backgroundElement.value.grayscale,
+      }
+    : { ...defaultBackgroundFilters },
+  isPreview = false
 ) => {
-  if (backgroundElement.value) {
-    backgroundFilters = {
-      opacity: backgroundElement.value.opacity,
-      blur: backgroundElement.value.blur,
-      contrast: backgroundElement.value.contrast,
-      brightness: backgroundElement.value.brightness,
-      invert: backgroundElement.value.invert,
-      grayscale: backgroundElement.value.grayscale,
-    };
+  // remove previous background
+  if (!isPreview) {
+    elements.value = elements.value.filter(
+      (element) => element.mode !== MODES_OPTIONS.value.background
+    );
   }
-
-  elements.value = elements.value.filter(
-    (element) => element.mode !== MODES_OPTIONS.value.background
-  );
 
   const src = background?.src || background?.original_url;
 
@@ -133,7 +136,9 @@ const handleBackgroundChange = (
       canvas.value.width,
       height,
       "bottom",
-      MODES_OPTIONS.value.background,
+      isPreview
+        ? MODES_OPTIONS.value.backgroundPreview
+        : MODES_OPTIONS.value.background,
       true,
       backgroundFilters.opacity,
       backgroundFilters.blur,

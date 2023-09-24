@@ -43,6 +43,7 @@ export const useCanvasStore = defineStore("canvas", {
       mediaEmoji: "mediaEmojis",
       shape: "shape",
       background: "background",
+      backgroundPreview: "backgroundPreview",
       baseFill: "baseFill",
     },
 
@@ -230,7 +231,18 @@ export const useCanvasStore = defineStore("canvas", {
 
       const reversedElements = [...elements].reverse();
 
-      // prevent moving element under background
+      // background preview to the bottom of layers list
+      const backgroundPreviewElementIndex = elements.findIndex(
+        (element) => element.mode === this.MODES_OPTIONS.backgroundPreview
+      );
+      if (backgroundPreviewElementIndex !== -1) {
+        const backgroundPreviewElement =
+          elements[backgroundPreviewElementIndex];
+        elements.splice(backgroundPreviewElementIndex, 1);
+        elements.push(backgroundPreviewElement);
+      }
+
+      // background to the bottom of layers list
       const backgroundElementIndex = elements.findIndex(
         (element) => element.mode === this.MODES_OPTIONS.background
       );
@@ -240,7 +252,7 @@ export const useCanvasStore = defineStore("canvas", {
         elements.push(backgroundElement);
       }
 
-      // prevent moving element under base fill
+      // base fill to the bottom of layers list
       const baseFillElementIndex = elements.findIndex(
         (element) => element.mode === this.MODES_OPTIONS.baseFill
       );
@@ -286,6 +298,7 @@ export const useCanvasStore = defineStore("canvas", {
           case this.MODES_OPTIONS.media:
           case this.MODES_OPTIONS.mediaEmoji:
           case this.MODES_OPTIONS.background:
+          case this.MODES_OPTIONS.backgroundPreview:
             this.renderImage(element);
             break;
 
