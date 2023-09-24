@@ -31,6 +31,11 @@
 
     <q-separator class="q-my-lg" />
 
+    <!-- text -->
+    <PresentationStudioTabsDesignTabText />
+
+    <q-separator class="q-my-lg" />
+
     <!-- apply design to all slides -->
     <q-btn
       unelevated
@@ -117,6 +122,7 @@ import PresentationStudioTabsDesignTabBackgrounds from "components/presentation/
 import PresentationStudioTabsDesignTabBaseFill from "components/presentation/studio/tabs/design/PresentationStudioTabsDesignTabBaseFill.vue";
 import PresentationStudioTabsDesignTabSelectedBackground from "components/presentation/studio/tabs/design/PresentationStudioTabsDesignTabSelectedBackground.vue";
 import { usePresentationsStore } from "stores/presentations";
+import PresentationStudioTabsDesignTabText from "components/presentation/studio/tabs/design/PresentationStudioTabsDesignTabText.vue";
 
 /*
  * variables

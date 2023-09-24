@@ -91,13 +91,38 @@
                   target="_blank"
                   clickable
                   dense
-                  @click="presentationStore.deleteFolder(folder)"
+                  @click="showFolderDeletionConfirmationDialog = true"
                 >
                   <q-icon name="r_delete" class="q-mr-sm" size="xs" />
                   <div>
-                    {{ $t("dashboard.presentation.actions.folder.delete") }}
+                    {{
+                      $t("dashboard.presentation.actions.folder.delete.title")
+                    }}
                   </div>
                 </q-item>
+
+                <q-dialog v-model="showFolderDeletionConfirmationDialog">
+                  <ConfirmationDialog
+                    icon="r_delete"
+                    icon-color="red"
+                    :title="
+                      $t(
+                        'dashboard.presentation.actions.folder.delete.confirmation.title'
+                      )
+                    "
+                    :message="
+                      $t(
+                        'dashboard.presentation.actions.folder.delete.confirmation.message'
+                      )
+                    "
+                    confirm-btn-color="red"
+                    @cancel="showFolderDeletionConfirmationDialog = false"
+                    @confirm="
+                      presentationStore.deleteFolder(folder);
+                      showFolderDeletionConfirmationDialog = false;
+                    "
+                  />
+                </q-dialog>
               </q-menu>
             </div>
 
@@ -235,7 +260,7 @@
               <!-- move to folder selected presentations -->
               <q-btn
                 icon-right="r_folder"
-                :label="$t('dashboard.noPresentations.moveTo')"
+                :label="$t('presentations.actions.moveToFolder')"
                 outline
                 color="primary"
                 no-caps
@@ -297,14 +322,35 @@
               <!-- delete selected presentations -->
               <q-btn
                 icon-right="r_delete"
-                :label="$t('dashboard.noPresentations.delete')"
+                :label="$t('presentations.actions.delete.title')"
                 unelevated
                 color="red"
                 no-caps
                 @click="
-                  handleDeletingMultiplePresentations(selectedPresentations)
+                  showMultiplePresentationsDeletionConfirmationDialog = true
                 "
               />
+
+              <q-dialog
+                v-model="showMultiplePresentationsDeletionConfirmationDialog"
+              >
+                <ConfirmationDialog
+                  icon="r_delete"
+                  icon-color="red"
+                  :title="$t('presentations.actions.delete.confirmation.title')"
+                  :message="
+                    $t('presentations.actions.delete.confirmation.message')
+                  "
+                  confirm-btn-color="red"
+                  @cancel="
+                    showMultiplePresentationsDeletionConfirmationDialog = false
+                  "
+                  @confirm="
+                    handleDeletingMultiplePresentations(selectedPresentations);
+                    showMultiplePresentationsDeletionConfirmationDialog = false;
+                  "
+                />
+              </q-dialog>
             </template>
           </div>
         </template>
@@ -405,6 +451,7 @@
                 transition-hide="jump-up"
                 :offset="[0, 8]"
                 class="q-pa-sm"
+                style="border-radius: 12px"
               >
                 <q-list class="full-height column q-gutter-sm text-semibold">
                   <!-- add to folder -->
@@ -418,7 +465,7 @@
                       name="r_folder"
                       color="primary"
                       size="16px"
-                      class="q-mr-sm"
+                      class="q-mr-md"
                     />
 
                     <div>
@@ -492,7 +539,7 @@
                       name="r_control_point_duplicate"
                       color="primary"
                       size="16px"
-                      class="q-mr-sm"
+                      class="q-mr-md"
                     />
 
                     <div>
@@ -512,7 +559,7 @@
                       name="r_query_stats"
                       color="primary"
                       size="16px"
-                      class="q-mr-sm"
+                      class="q-mr-md"
                     />
 
                     <div>
@@ -532,7 +579,7 @@
                       name="r_restart_alt"
                       color="primary"
                       size="16px"
-                      class="q-mr-sm"
+                      class="q-mr-md"
                     />
 
                     <div
@@ -552,7 +599,7 @@
                       name="r_ios_share"
                       color="primary"
                       size="16px"
-                      class="q-mr-sm"
+                      class="q-mr-md"
                     />
 
                     <div>
@@ -565,20 +612,46 @@
                     class="items-center justify-start q-px-md q-py-sm text-red"
                     clickable
                     dense
-                    v-close-popup
-                    @click="presentationStore.deletePresentation(props.value)"
+                    @click="showPresentationDeletionConfirmationDialog = true"
                   >
                     <q-icon
                       name="r_delete"
                       color="red"
                       size="16px"
-                      class="q-mr-sm"
+                      class="q-mr-md"
                     />
 
                     <div>
-                      {{ $t("dashboard.presentation.actions.delete") }}
+                      {{ $t("dashboard.presentation.actions.delete.title") }}
                     </div>
                   </q-item>
+
+                  <q-dialog
+                    v-model="showPresentationDeletionConfirmationDialog"
+                  >
+                    <ConfirmationDialog
+                      icon="r_delete"
+                      icon-color="red"
+                      :title="
+                        $t(
+                          'dashboard.presentation.actions.delete.confirmation.title'
+                        )
+                      "
+                      :message="
+                        $t(
+                          'dashboard.presentation.actions.delete.confirmation.message'
+                        )
+                      "
+                      confirm-btn-color="red"
+                      @cancel="
+                        showPresentationDeletionConfirmationDialog = false
+                      "
+                      @confirm="
+                        presentationStore.deletePresentation(props.value);
+                        showPresentationDeletionConfirmationDialog = false;
+                      "
+                    />
+                  </q-dialog>
                 </q-list>
               </q-menu>
             </q-btn>
@@ -669,6 +742,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import PresentationBrowserNewPresentationFolder from "components/presentation/browser/PresentationBrowserNewPresentationFolder.vue";
 import PresentationBrowserNewPresentation from "components/presentation/browser/PresentationBrowserNewPresentation.vue";
+import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 
 /*
  * variables
@@ -796,9 +870,10 @@ const handleCreatingNewPresentation = (data) => {
 };
 
 /*
- * new folder
+ * folders
  */
 const showNewFolderDialog = ref(false);
+const showFolderDeletionConfirmationDialog = ref(false);
 
 /*
  * move presentations to folder
@@ -817,6 +892,9 @@ const handleMovingToFolderPresentations = (presentations, folder) => {
 /*
  * delete presentations
  */
+const showMultiplePresentationsDeletionConfirmationDialog = ref(false);
+const showPresentationDeletionConfirmationDialog = ref(false);
+
 const handleDeletingMultiplePresentations = (presentations) => {
   presentations.forEach((presentation) => {
     presentationStore.deletePresentation(presentation);

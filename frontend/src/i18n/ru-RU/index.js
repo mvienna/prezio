@@ -452,6 +452,21 @@ export default {
     myPresentationsTitle: "Мои презентации",
 
     /*
+     * actions
+     */
+    actions: {
+      delete: {
+        title: "Удалить",
+
+        confirmation: {
+          title: "Удаление презентаций",
+          message: "Вы уверены, что хотите удалить выбранные презентации?",
+        },
+      },
+      moveToFolder: "Переместить в",
+    },
+
+    /*
      * columns
      */
     columns: {
@@ -590,8 +605,6 @@ export default {
       description: "Выберите шаблон или создайте свой стиль. Это очень просто!",
       import: "Загрузить PowerPoint",
       create: "Новая презентация",
-      delete: "Удалить",
-      moveTo: "Переместить в",
     },
     presentation: {
       actions: {
@@ -601,13 +614,27 @@ export default {
             public: "Публичная",
             private: "Приватная",
           },
-          delete: "Удалить",
+          delete: {
+            title: "Удалить",
+
+            confirmation: {
+              title: "Удаление папки",
+              message: "Вы уверены, что хотите удалить выбранную папку?",
+            },
+          },
         },
         duplicate: "Дублировать",
         stats: "Статистика",
         resetResults: "Сбросить<br/>результаты",
         share: "Поделиться",
-        delete: "Удалить",
+        delete: {
+          title: "Удалить",
+
+          confirmation: {
+            title: "Удаление презентации",
+            message: "Вы уверены, что хотите удалить выбранную презентацию?",
+          },
+        },
       },
     },
   },
