@@ -29,15 +29,27 @@
               : ''
           }`"
         >
-          <q-card-section
-            class="row no-wrap items-center q-py-none"
-            :style="
+          <!-- slide background / base fill -->
+          <div
+            v-if="
+              [MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
+                element.mode
+              )
+            "
+            class="layer__background"
+            :style="`${
               element.mode === MODES_OPTIONS.background
-                ? `background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${
+                ? `background: url(${
                     elements.find(
                       (item) => item.mode === MODES_OPTIONS.background
                     ).imageSrc
-                  });`
+                  }); filter: opacity(${element.opacity}%) blur(${
+                    element.blur
+                  }px) contrast(${element.contrast}%) brightness(${
+                    element.brightness
+                  }%) invert(${element.invert}%) grayscale(${
+                    element.grayscale
+                  }%);`
                 : element.mode === MODES_OPTIONS.baseFill
                 ? `background: ${
                     elements.find(
@@ -45,7 +57,11 @@
                     ).fillColor
                   };`
                 : ''
-            "
+            }`"
+          ></div>
+
+          <q-card-section
+            class="row no-wrap items-center q-py-none relative-position"
           >
             <!-- drag handle -->
             <q-icon
@@ -301,5 +317,13 @@ const handleLayersReorder = async () => {
       background-repeat: no-repeat !important;
     }
   }
+}
+
+.layer__background {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 8px !important;
+  background-size: cover !important;
 }
 </style>
