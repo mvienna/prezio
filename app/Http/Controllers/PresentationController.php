@@ -32,7 +32,7 @@ class PresentationController extends Controller
     public function update(Presentation $presentation, Request $request): JsonResponse
     {
         $user = auth()->user();
-        if ($presentation->user_id !== $user->id) {
+        if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.presentation.accessDenied'));
         }
 
@@ -51,7 +51,7 @@ class PresentationController extends Controller
     public function destroy(Presentation $presentation): JsonResponse
     {
         $user = auth()->user();
-        if ($presentation->user_id !== $user->id) {
+        if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.presentation.accessDenied'));
         }
 
@@ -67,7 +67,7 @@ class PresentationController extends Controller
     public function show(Presentation $presentation): JsonResponse
     {
         $user = auth()->user();
-        if ($presentation->user_id !== $user->id) {
+        if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.presentation.accessDenied'));
         }
 

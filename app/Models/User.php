@@ -39,4 +39,8 @@ class User extends Authenticatable implements HasMedia
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function isAdmin() {
+        return $this->email === env('ADMIN_EMAIL');
+    }
 }

@@ -8,7 +8,7 @@ trait UserScoped
     {
         $user = auth()->user();
 
-        if ($user->email === 'inagamov.ar@yandex.com') {
+        if ($user->isAdmin()) {
             return $query;
         }
 

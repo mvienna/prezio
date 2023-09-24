@@ -28,7 +28,7 @@ class PresentationFolderController extends Controller
     public function update(PresentationFolder $folder, Request $request)
     {
         $user = auth()->user();
-        if ($folder->user_id !== $user->id) {
+        if ($folder->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.folder.accessDenied'));
         }
 
@@ -44,7 +44,7 @@ class PresentationFolderController extends Controller
     public function destroy(PresentationFolder $folder): JsonResponse
     {
         $user = auth()->user();
-        if ($folder->user_id !== $user->id) {
+        if ($folder->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.folder.accessDenied'));
         }
 
@@ -63,7 +63,7 @@ class PresentationFolderController extends Controller
     public function show(PresentationFolder $folder): JsonResponse
     {
         $user = auth()->user();
-        if ($folder->user_id !== $user->id) {
+        if ($folder->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.folder.accessDenied'));
         }
 
