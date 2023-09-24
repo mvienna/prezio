@@ -232,11 +232,21 @@ export default {
          */
         design: {
           title: "Design",
+
           reset: {
             title: "Reset slide design",
             confirmation: {
               title: "Reset slide design",
               message: "Are you sure that you want to reset slide design?",
+            },
+          },
+
+          applyToAllSlides: {
+            title: "Apply to all slides",
+            confirmation: {
+              title: "Apply to all slides",
+              message:
+                "Are you sure that you want to apply the same base fill and background to all slides in this presentation?",
             },
           },
 

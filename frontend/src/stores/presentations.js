@@ -232,11 +232,11 @@ export const usePresentationsStore = defineStore("presentations", {
       return await this.setSlide(response.data, elements);
     },
 
-    async saveSlide(slide = this.slide, elements) {
+    saveSlide(slide = this.slide, elements) {
       this.isSavingError = false;
       this.isSaving = true;
 
-      return await api
+      api
         .patch(`/presentation/${this.presentation.id}/slide/${slide.id}`, {
           canvas_data: elements,
           preview: slide.preview,
@@ -270,8 +270,8 @@ export const usePresentationsStore = defineStore("presentations", {
       };
       this.updateLocalSlide();
 
-      // update new slide
-      await this.saveSlide(undefined, elements);
+      // save new slide
+      this.saveSlide(undefined, elements);
     },
 
     async deleteSlide(slide) {
@@ -300,7 +300,7 @@ export const usePresentationsStore = defineStore("presentations", {
       if (this.slide && elements) {
         this.slide.canvas_data = JSON.stringify(elements);
         this.updateLocalSlide();
-        await this.saveSlide(undefined, elements);
+        this.saveSlide(undefined, elements);
       }
 
       this.slide = newSlide;

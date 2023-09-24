@@ -219,18 +219,7 @@ export const useCanvasStore = defineStore("canvas", {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
 
-    redrawCanvas(
-      saveSlide = true,
-      forceSlideSave = false,
-      elements = this.elements,
-      showHelpers = true
-    ) {
-      lastChangedAt.value = new Date();
-
-      this.clearCanvas();
-
-      const reversedElements = [...elements].reverse();
-
+    reorderDesignLayers(elements) {
       // background preview to the bottom of layers list
       const backgroundPreviewElementIndex = elements.findIndex(
         (element) => element.mode === this.MODES_OPTIONS.backgroundPreview
@@ -262,6 +251,23 @@ export const useCanvasStore = defineStore("canvas", {
         elements.push(backgroundElement);
       }
 
+      return elements;
+    },
+
+    redrawCanvas(
+      saveSlide = true,
+      forceSlideSave = false,
+      elements = this.elements,
+      showHelpers = true
+    ) {
+      lastChangedAt.value = new Date();
+
+      this.clearCanvas();
+
+      // console.log(elements);
+      elements = this.reorderDesignLayers(elements);
+      const reversedElements = [...elements].reverse();
+
       // draw elements one-by-one
       reversedElements.forEach((element) => {
         if (element.isVisible === false) return;
@@ -289,7 +295,6 @@ export const useCanvasStore = defineStore("canvas", {
            */
           case this.MODES_OPTIONS.text:
             this.renderText(element);
-
             break;
 
           /*
@@ -548,16 +553,6 @@ export const useCanvasStore = defineStore("canvas", {
         element.y + element.height / 2
       );
 
-      this.ctx.filter = `blur(${element.blur || 0}px) contrast(${
-        element.contrast || 100
-      }%) brightness(${element.brightness || 100}%) invert(${
-        element.invert || 0
-      }%) grayscale(${element.grayscale || 0}%)`;
-
-      if (typeof element?.opacity === "number") {
-        this.ctx.globalAlpha = element.opacity;
-      }
-
       if (!element?.image?.nodeType) {
         const image = new Image();
         if (element.imageBase64) {
@@ -567,6 +562,8 @@ export const useCanvasStore = defineStore("canvas", {
         }
 
         image.onload = () => {
+          this.applyImageFilters(element);
+
           element.image = image;
 
           this.ctx.drawImage(
@@ -576,10 +573,10 @@ export const useCanvasStore = defineStore("canvas", {
             element.width,
             element.height
           );
-
-          this.ctx.globalAlpha = 1;
         };
       } else {
+        this.applyImageFilters(element);
+
         this.ctx.drawImage(
           element.image,
           -element.width / 2,
@@ -587,8 +584,18 @@ export const useCanvasStore = defineStore("canvas", {
           element.width,
           element.height
         );
+      }
+    },
 
-        this.ctx.globalAlpha = 1;
+    applyImageFilters(element) {
+      this.ctx.filter = `blur(${element.blur || 0}px) contrast(${
+        element.contrast || 100
+      }%) brightness(${element.brightness || 100}%) invert(${
+        element.invert || 0
+      }%) grayscale(${element.grayscale || 0}%)`;
+
+      if (typeof element?.opacity === "number") {
+        this.ctx.globalAlpha = element.opacity;
       }
     },
 

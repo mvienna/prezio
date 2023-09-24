@@ -118,9 +118,11 @@
         </q-tab-panel>
 
         <!-- mine -->
-        <q-tab-panel name="mine">
+        <q-tab-panel name="mine" class="column no-wrap full-height">
           <!-- none -->
           <template v-if="!media.length">
+            <q-space />
+
             <div class="row justify-center">
               <q-img src="/assets/images/upload.svg" width="300px" />
             </div>
@@ -128,6 +130,8 @@
             <div class="text-grey-5 text-center q-mt-md">
               {{ $t("media.select.tabs.upload.description") }}
             </div>
+
+            <q-space />
           </template>
 
           <!-- users files -->

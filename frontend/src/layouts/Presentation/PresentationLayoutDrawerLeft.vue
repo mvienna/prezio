@@ -79,14 +79,12 @@
               <canvas
                 v-show="element.isLivePreview"
                 :id="`canvas_slide_preview_${index}`"
-                style="width: 100%; height: 100%"
               />
 
               <q-img
                 v-show="!element.isLivePreview"
                 :src="element.preview"
                 fit="fill"
-                style="width: 100%; height: 145px"
               />
 
               <!-- actions -->
@@ -330,7 +328,7 @@ const handleAddingNewSlide = async () => {
 
   slide.value.canvas_data = JSON.stringify(elements.value);
   presentationStore.updateLocalSlide();
-  await presentationStore.saveSlide(undefined, elements.value);
+  presentationStore.saveSlide(undefined, elements.value);
 
   await presentationStore.addNewSlide();
 
@@ -363,7 +361,10 @@ const isMac = computed(() => {
   height: calc(245px * 9 / 16);
   border-radius: 8px;
 
-  canvas {
+  canvas,
+  .q-img {
+    width: 100%;
+    height: 100%;
     border-radius: 8px;
   }
 
