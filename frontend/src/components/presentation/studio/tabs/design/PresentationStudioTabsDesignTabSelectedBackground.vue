@@ -319,10 +319,7 @@ const backgroundFilters = ref({ ...props.defaultBackgroundFilters });
 onBeforeMount(() => {
   if (props.backgroundElement) {
     backgroundFilters.value = {
-      opacity:
-        props.backgroundElement.opacity > 100
-          ? props.defaultBackgroundFilters.opacity
-          : props.backgroundElement.opacity * 100,
+      opacity: props.backgroundElement.opacity,
       blur: props.backgroundElement.blur,
       contrast: props.backgroundElement.contrast,
       brightness: props.backgroundElement.brightness,

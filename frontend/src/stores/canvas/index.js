@@ -594,8 +594,12 @@ export const useCanvasStore = defineStore("canvas", {
         element.invert || 0
       }%) grayscale(${element.grayscale || 0}%)`;
 
-      if (typeof element?.opacity === "number") {
-        this.ctx.globalAlpha = element.opacity;
+      if (
+        element.opacity !== null &&
+        typeof element.opacity === "number" &&
+        !isNaN(element.opacity)
+      ) {
+        this.ctx.globalAlpha = element.opacity / 100;
       }
     },
 

@@ -4,7 +4,11 @@
     <PresentationStudioTabsDesignTabBackgrounds
       :background-element="backgroundElement"
       @change-background="handleBackgroundChange($event)"
-      @preview-background="handleBackgroundChange($event, undefined, true)"
+      @preview-background="
+        backgroundElement?.imageSrc !== $event?.src
+          ? handleBackgroundChange($event, undefined, true)
+          : ''
+      "
     />
 
     <q-separator class="q-mb-lg" />
@@ -154,11 +158,25 @@ const handleBackgroundChange = (
     : { ...defaultBackgroundFilters },
   isPreview = false
 ) => {
-  // remove previous background
+  // remove previous backgrounds
   if (!isPreview) {
     elements.value = elements.value.filter(
-      (element) => element.mode !== MODES_OPTIONS.value.background
+      (element) =>
+        ![
+          MODES_OPTIONS.value.background,
+          MODES_OPTIONS.value.backgroundPreview,
+        ].includes(element.mode)
     );
+  }
+
+  // hide active background (for preview)
+  if (isPreview) {
+    const backgroundElementIndex = elements.value.findIndex(
+      (element) => element.mode === MODES_OPTIONS.value.background
+    );
+    if (backgroundElementIndex !== -1) {
+      elements.value[backgroundElementIndex].isVisible = false;
+    }
   }
 
   const src = background?.src || background?.original_url;
@@ -209,7 +227,7 @@ const changeBackgroundFilters = (backgroundFilters) => {
 
   elements.value[backgroundElementIndex] = {
     ...elements.value[backgroundElementIndex],
-    opacity: backgroundFilters.opacity / 100,
+    opacity: backgroundFilters.opacity,
     blur: backgroundFilters.blur,
     contrast: backgroundFilters.contrast,
     brightness: backgroundFilters.brightness,

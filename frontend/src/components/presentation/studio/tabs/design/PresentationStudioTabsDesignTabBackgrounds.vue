@@ -37,11 +37,13 @@
               ? 'background_option--active'
               : ''
           "
-          @mouseover="handleBackgroundMouseOver(background)"
-          @mouseleave="handleBackgroundMouseLeave()"
           @click="$emit('changeBackground', background)"
         >
-          <q-img :src="background.src" />
+          <q-img
+            :src="background.src"
+            @mouseover="handleBackgroundMouseOver(background)"
+            @mouseleave="handleBackgroundMouseLeave()"
+          />
           <div class="text-center q-mt-xs text-semibold">
             {{ background.name || backgroundIndex + 1 }}
           </div>
@@ -147,10 +149,20 @@ const handleBackgroundMouseOver = (background) => {
 };
 
 const handleBackgroundMouseLeave = () => {
+  // remove preview background
   elements.value = elements.value.filter(
     (element) => element.mode !== MODES_OPTIONS.value.backgroundPreview
   );
 
+  // un-hide active background
+  const backgroundElementIndex = elements.value.findIndex(
+    (element) => element.mode === MODES_OPTIONS.value.background
+  );
+  if (backgroundElementIndex !== -1) {
+    elements.value[backgroundElementIndex].isVisible = true;
+  }
+
+  // redraw canvas
   canvasStore.redrawCanvas();
 };
 </script>
