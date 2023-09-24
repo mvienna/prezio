@@ -1,0 +1,121 @@
+<template>
+  <!-- color picker -->
+  <q-btn flat round size="12px">
+    <q-icon
+      name="r_colorize"
+      :style="`color: ${shapeState.customization.value.strokeColor}`"
+    />
+
+    <q-menu
+      anchor="bottom left"
+      self="top left"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      :offset="[0, 8]"
+    >
+      <q-color
+        format-model="hex"
+        no-header-tabs
+        v-model="shapeState.customization.value.strokeColor"
+        @update:model-value="shapeStore.applyStyles()"
+      />
+
+      <div class="q-pa-sm">
+        <q-btn
+          icon="r_format_color_reset"
+          class="full-width"
+          color="red"
+          flat
+          no-caps
+          :label="$t('presentation.shapes.options.removeStrokeColor')"
+          @click="
+            shapeState.customization.value.strokeColor = null;
+            shapeStore.applyStyles();
+          "
+        />
+      </div>
+    </q-menu>
+
+    <q-tooltip :offset="[0, 4]">
+      {{ $t("presentation.shapes.options.strokeColor") }}
+    </q-tooltip>
+  </q-btn>
+
+  <!-- fill color picker -->
+  <q-btn flat round size="12px">
+    <q-icon
+      name="r_format_color_fill"
+      :style="`color: ${shapeState.customization.value.fillColor}`"
+    />
+
+    <q-menu
+      anchor="bottom left"
+      self="top left"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      :offset="[0, 8]"
+    >
+      <q-color
+        format-model="hex"
+        no-header-tabs
+        v-model="shapeState.customization.value.fillColor"
+        @update:model-value="shapeStore.applyStyles()"
+      />
+
+      <div class="q-pa-sm">
+        <q-btn
+          icon="r_format_color_reset"
+          class="full-width"
+          color="red"
+          flat
+          no-caps
+          :label="$t('presentation.shapes.options.removeFillColor')"
+          @click="
+            shapeState.customization.value.fillColor = null;
+            shapeStore.applyStyles();
+          "
+        />
+      </div>
+    </q-menu>
+
+    <q-tooltip :offset="[0, 4]">
+      <div>
+        {{ $t("presentation.shapes.options.fillColor") }}
+      </div>
+    </q-tooltip>
+  </q-btn>
+
+  <!-- line width -->
+  <q-select
+    v-model="shapeState.customization.value.lineWidth"
+    :options="SHAPE_LINE_WIDTH_OPTIONS"
+    map-options
+    emit-value
+    borderless
+    color="dark"
+    dense
+    hide-dropdown-icon
+    class="q-pl-sm"
+    @update:model-value="shapeStore.applyStyles()"
+  >
+    <template #prepend>
+      <q-icon name="line_weight" class="text-semibold text-dark" size="20px" />
+    </template>
+
+    <q-tooltip :offset="[0, 4]">
+      {{ $t("presentation.shapes.options.lineWidth") }}
+    </q-tooltip>
+  </q-select>
+</template>
+
+<script setup>
+import { SHAPE_LINE_WIDTH_OPTIONS } from "src/constants/canvas/canvasVariables";
+import { useCanvasShapeStore } from "stores/canvas/shape";
+import { storeToRefs } from "pinia";
+
+/*
+ * stores
+ */
+const shapeStore = useCanvasShapeStore();
+const shapeState = storeToRefs(shapeStore);
+</script>
