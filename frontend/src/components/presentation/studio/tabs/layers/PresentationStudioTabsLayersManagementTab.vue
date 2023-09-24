@@ -114,14 +114,14 @@
 
             <!-- lock button -->
             <q-btn
-              :icon="element.isLocked ? 'r_lock' : 'r_lock_open'"
-              flat
-              round
-              :disable="
-                [MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
+              v-if="
+                ![MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
                   element.mode
                 )
               "
+              :icon="element.isLocked ? 'r_lock' : 'r_lock_open'"
+              flat
+              round
               color="grey"
               size="10px"
               class="q-ml-sm"
