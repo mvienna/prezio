@@ -589,16 +589,14 @@ export const useCanvasStore = defineStore("canvas", {
 
     applyImageFilters(element) {
       this.ctx.filter = `blur(${element.blur || 0}px) contrast(${
-        element.contrast || 100
-      }%) brightness(${element.brightness || 100}%) invert(${
-        element.invert || 0
-      }%) grayscale(${element.grayscale || 0}%)`;
+        element.contrast >= 0 ? element.contrast : 100
+      }%) brightness(${
+        element.brightness >= 0 ? element.brightness : 100
+      }%) invert(${element.invert || 0}%) grayscale(${
+        element.grayscale || 0
+      }%)`;
 
-      if (
-        element.opacity !== null &&
-        typeof element.opacity === "number" &&
-        !isNaN(element.opacity)
-      ) {
+      if (element.opacity >= 0) {
         this.ctx.globalAlpha = element.opacity / 100;
       }
     },

@@ -13,14 +13,22 @@
         :src="backgroundElement?.imageSrc"
         class="selected_background"
         :style="`filter: opacity(${
-          backgroundFilters.opacity || defaultBackgroundFilters.opacity
+          backgroundFilters.opacity >= 0
+            ? backgroundFilters.opacity
+            : defaultBackgroundFilters.opacity
         }%) blur(${
           backgroundFilters.blur || defaultBackgroundFilters.blur
         }px) contrast(${
-          backgroundFilters.contrast || defaultBackgroundFilters.contrast
+          backgroundFilters.contrast >= 0
+            ? backgroundFilters.contrast
+            : defaultBackgroundFilters.contrast
         }%) brightness(${
-          backgroundFilters.brightness || defaultBackgroundFilters.brightness
-        }%) invert(${backgroundFilters.invert}%) grayscale(${
+          backgroundFilters.brightness >= 0
+            ? backgroundFilters.brightness
+            : defaultBackgroundFilters.brightness
+        }%) invert(${
+          backgroundFilters.invert || defaultBackgroundFilters.invert
+        }%) grayscale(${
           backgroundFilters.grayscale || defaultBackgroundFilters.grayscale
         }%);`"
       />
