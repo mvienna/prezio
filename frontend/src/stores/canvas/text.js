@@ -30,7 +30,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
      * customization
      */
     customization: {
-      color: "#000000",
+      color: "#313232",
       fontSize: "16px",
       font: "Arial",
       lineHeight: 1.2,

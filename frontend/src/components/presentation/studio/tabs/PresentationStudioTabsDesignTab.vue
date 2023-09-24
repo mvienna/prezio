@@ -122,7 +122,7 @@
       <q-img :src="backgroundElement?.imageSrc" class="selected_background" />
 
       <!-- background filters -->
-      <div class="absolute-right q-mt-sm q-mr-sm">
+      <div class="absolute-right q-mt-md q-mr-md">
         <q-btn
           icon="r_tune"
           round
@@ -142,7 +142,7 @@
             transition-hide="jump-up"
             :offset="[8, 0]"
             class="q-pa-md"
-            style="width: 290px; border-radius: 12px"
+            style="width: 300px; border-radius: 12px; overflow-x: hidden"
           >
             <div
               class="text-semibold row no-wrap justify-between q-mb-sm q-pb-xs"
@@ -335,7 +335,7 @@
         :min="0"
         :max="100"
         label
-        class="q-pr-xs"
+        class="q-pr-sm"
         :label-value="backgroundFilters.opacity + '%'"
         @change="changeBackgroundFilters()"
       />
@@ -357,24 +357,59 @@
         @click="showSelectBackgroundDialog = true"
       />
 
+      <q-dialog v-model="showSelectBackgroundDialog">
+        <SelectMedia
+          @close="showSelectBackgroundDialog = false"
+          @select="
+            handleBackgroundChange($event);
+            showSelectBackgroundDialog = false;
+          "
+        />
+      </q-dialog>
+
       <!-- delete preview -->
       <q-btn
+        v-if="backgroundElement"
         icon="r_delete"
         flat
         round
-        :disable="!backgroundElement"
         color="red"
         class="q-py-sm q-ml-md"
         @click="deleteElement(backgroundElement)"
       />
     </div>
 
-    <q-dialog v-model="showSelectBackgroundDialog">
-      <SelectMedia
-        @close="showSelectBackgroundDialog = false"
-        @select="
-          handleBackgroundChange($event);
-          showSelectBackgroundDialog = false;
+    <q-separator class="q-my-lg" />
+
+    <q-btn
+      unelevated
+      no-caps
+      color="primary"
+      icon-right="r_restart_alt"
+      class="full-width q-py-sm q-mb-sm"
+      :label="$t('presentationLayout.rightDrawer.tabs.design.reset.title')"
+      @click="showResetDesignDialog = true"
+    />
+
+    <q-dialog v-model="showResetDesignDialog">
+      <ConfirmationDialog
+        icon="r_restart_alt"
+        icon-color="primary"
+        :title="
+          $t(
+            'presentationLayout.rightDrawer.tabs.design.reset.confirmation.title'
+          )
+        "
+        :message="
+          $t(
+            'presentationLayout.rightDrawer.tabs.design.reset.confirmation.message'
+          )
+        "
+        confirm-btn-color="primary"
+        @cancel="showResetDesignDialog = false"
+        @confirm="
+          resetSlideDesign();
+          showResetDesignDialog = false;
         "
       />
     </q-dialog>
@@ -393,6 +428,7 @@ import { useCanvasMediaStore } from "stores/canvas/media";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
 import { textColorOnAColoredBackground } from "src/helpers/colorUtils";
+import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 
 /*
  * variables
@@ -433,8 +469,8 @@ onBeforeMount(() => {
     };
   }
 
-  if (currentBaseFillElement.value) {
-    selectedBaseFillColor.value = currentBaseFillElement.value?.fillColor;
+  if (baseFillElement.value) {
+    selectedBaseFillColor.value = baseFillElement.value?.fillColor;
   }
 });
 
@@ -580,7 +616,7 @@ const baseFillColors = [
   "#0F9D58",
 ];
 
-const currentBaseFillElement = computed(() => {
+const baseFillElement = computed(() => {
   return elements.value.find(
     (element) => element.mode === MODES_OPTIONS.value.baseFill
   );
@@ -608,6 +644,23 @@ const handleBaseFillChange = () => {
 };
 
 const selectedBaseFillColor = ref("#FFFFFF");
+
+/*
+ * reset design
+ */
+const showResetDesignDialog = ref(false);
+
+const resetSlideDesign = () => {
+  backgroundFilters.value = { ...defaultBackgroundFilters };
+  if (backgroundElement.value) {
+    deleteElement(backgroundElement.value);
+  }
+
+  selectedBaseFillColor.value = "#FFFFFF";
+  if (baseFillElement.value) {
+    deleteElement(baseFillElement.value);
+  }
+};
 </script>
 
 <style scoped lang="scss">

@@ -231,6 +231,14 @@ export default {
          */
         design: {
           title: "Дизайн",
+          reset: {
+            title: "Сбросить дизайн слайда",
+            confirmation: {
+              title: "Сброс дизайна слайда",
+              message: "Вы уверены, что хотите сбросить дизайн слайда?",
+              confirm: "Сбросить",
+            },
+          },
 
           slideBackground: {
             title: "Фон слайда",
@@ -551,6 +559,16 @@ export default {
    */
   loading: {
     fetchingData: "Загружаем данные",
+  },
+
+  /*
+   * dialogs
+   */
+  dialogs: {
+    confirmation: {
+      cancel: "Отмена",
+      confirm: "Подтвердить",
+    },
   },
 
   /*

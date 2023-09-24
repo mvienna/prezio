@@ -231,6 +231,13 @@ export default {
          */
         design: {
           title: "Design",
+          reset: {
+            title: "Reset slide design",
+            confirmation: {
+              title: "Reset slide design",
+              message: "Are you sure that you want to reset slide design?",
+            },
+          },
 
           slideBackground: {
             title: "Slide Background",
