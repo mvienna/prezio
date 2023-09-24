@@ -176,10 +176,52 @@ export const useCanvasStore = defineStore("canvas", {
     /*
      * slide
      */
-    setElementsFromSlide() {
+    async setElementsFromSlide() {
       this.elements = slide.value?.canvas_data
         ? JSON.parse(slide.value.canvas_data)
         : [];
+
+      const loadImage = (element) => {
+        return new Promise(async (resolve, reject) => {
+          switch (element.mode) {
+            case this.MODES_OPTIONS.media:
+            case this.MODES_OPTIONS.mediaEmoji:
+            case this.MODES_OPTIONS.background:
+            case this.MODES_OPTIONS.backgroundPreview:
+              if (!element?.image?.nodeType) {
+                const image = new Image();
+                if (element.imageBase64) {
+                  image.src = element.imageBase64;
+                } else {
+                  image.src = element.imageSrc;
+                }
+
+                image.onload = () => {
+                  element.image = image;
+                  resolve(element);
+                };
+
+                image.onerror = (error) => {
+                  reject(error);
+                };
+              } else {
+                resolve(element);
+              }
+              break;
+
+            default:
+              resolve(element);
+          }
+        });
+      };
+
+      const imageLoadingPromises = this.elements.map(loadImage);
+
+      try {
+        this.elements = await Promise.all(imageLoadingPromises);
+      } catch (error) {
+        console.error("Error loading images:", error);
+      }
     },
 
     saveSlidePreview() {
@@ -264,7 +306,6 @@ export const useCanvasStore = defineStore("canvas", {
 
       this.clearCanvas();
 
-      // console.log(elements);
       elements = this.reorderDesignLayers(elements);
       const reversedElements = [...elements].reverse();
 
@@ -553,6 +594,8 @@ export const useCanvasStore = defineStore("canvas", {
         element.y + element.height / 2
       );
 
+      this.applyImageFilters(element);
+
       if (!element?.image?.nodeType) {
         const image = new Image();
         if (element.imageBase64) {
@@ -562,8 +605,6 @@ export const useCanvasStore = defineStore("canvas", {
         }
 
         image.onload = () => {
-          this.applyImageFilters(element);
-
           element.image = image;
 
           this.ctx.drawImage(
@@ -575,8 +616,6 @@ export const useCanvasStore = defineStore("canvas", {
           );
         };
       } else {
-        this.applyImageFilters(element);
-
         this.ctx.drawImage(
           element.image,
           -element.width / 2,

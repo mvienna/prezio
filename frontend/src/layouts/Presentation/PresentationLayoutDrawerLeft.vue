@@ -262,7 +262,7 @@ const handleKeyDownEvent = (event) => {
 
 const handleSlideDeletion = async (element) => {
   await presentationStore.deleteSlide(element);
-  canvasStore.setElementsFromSlide();
+  await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false);
   slide.value.isLivePreview = false;
 };
@@ -318,7 +318,7 @@ const handleSlideSelection = async (newSlide) => {
 
   await presentationStore.setSlide(newSlide, elements.value);
 
-  canvasStore.setElementsFromSlide();
+  await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false, false, undefined, false);
 };
 
@@ -332,7 +332,7 @@ const handleAddingNewSlide = async () => {
 
   await presentationStore.addNewSlide();
 
-  canvasStore.setElementsFromSlide();
+  await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false);
 };
 
