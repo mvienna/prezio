@@ -61,8 +61,8 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
-import PresentationStudioTabsLayersManagementTab from "components/presentation/studio/tabs/PresentationStudioTabsLayersManagementTab.vue";
-import PresentationStudioTabsDesignTab from "components/presentation/studio/tabs/PresentationStudioTabsDesignTab.vue";
+import PresentationStudioTabsLayersManagementTab from "components/presentation/studio/tabs/layers/PresentationStudioTabsLayersManagementTab.vue";
+import PresentationStudioTabsDesignTab from "components/presentation/studio/tabs/design/PresentationStudioTabsDesignTab.vue";
 
 /*
  * variables
