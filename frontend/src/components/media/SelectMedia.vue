@@ -45,7 +45,7 @@
             <!-- uploaded file -->
             <q-img
               class="uploaded__file"
-              fit="fill"
+              fill="contain"
               :src="selectedFile?.original_url || selectedFile?.urls?.regular"
               :alt="selectedFile?.filename || selectedFile?.alt_description"
             />
