@@ -320,6 +320,8 @@ const handleKeyDownEvent = (event) => {
   if (selectedElement.value) {
     // delete selected element
     if (event.key === "Delete" || event.key === "Backspace") {
+      if (mode.value === MODES_OPTIONS.value.textEditing) return;
+
       event.preventDefault();
       deleteElement();
     }
