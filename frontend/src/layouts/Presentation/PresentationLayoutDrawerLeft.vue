@@ -58,6 +58,8 @@
               </div>
             </div>
 
+            <q-space />
+
             <!-- preview -->
             <q-card
               flat
@@ -68,7 +70,6 @@
                   ? 'slide--hovered'
                   : ''
               }`"
-              style="width: 100%"
               @mouseover="hoveredSlideIndex = index"
               @mouseleave="hoveredSlideIndex = null"
               @click="handleSlideSelection(element)"
@@ -84,7 +85,7 @@
               <q-img
                 v-show="!element.isLivePreview"
                 :src="element.preview"
-                fit="fill"
+                fit="cover"
               />
 
               <!-- actions -->
@@ -190,8 +191,8 @@
           flat
           v-ripple
           color="primary"
-          class="bg-blue-1 relative-position q-py-xl q-mt-md cursor-pointer q-hoverable slide"
-          style="width: 244px"
+          class="bg-blue-1 relative-position q-py-xl q-mt-md cursor-pointer q-hoverable slide slide--hoverable"
+          style="border: none"
           @click="handleAddingNewSlide()"
         >
           <q-icon
@@ -357,8 +358,8 @@ const isMac = computed(() => {
   outline: 3px solid transparent;
   transition: 0.2s;
   border: 1.5px solid $grey-2;
-  width: 245px;
-  height: calc(245px * 9 / 16);
+  width: 240px;
+  height: calc(240px * 9 / 16);
   border-radius: 8px;
 
   canvas,
@@ -366,9 +367,11 @@ const isMac = computed(() => {
     width: 100%;
     height: 100%;
     border-radius: 8px;
+    background: $white;
   }
 
-  &.slide--hovered {
+  &.slide--hovered,
+  &.slide--hoverable:hover {
     outline: 3px solid $blue-3;
   }
 

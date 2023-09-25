@@ -18,7 +18,7 @@
       <template #item="{ element }">
         <q-card
           flat
-          class="layer cursor-pointer"
+          class="layer cursor-pointer no-scroll"
           :class="`${
             element.id === selectedElement?.id ? 'layer--active' : ''
           } ${
@@ -39,7 +39,7 @@
             class="layer__background"
             :style="`${
               element.mode === MODES_OPTIONS.background
-                ? `background: url(${
+                ? `background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(${
                     elements.find(
                       (item) => item.mode === MODES_OPTIONS.background
                     ).imageSrc

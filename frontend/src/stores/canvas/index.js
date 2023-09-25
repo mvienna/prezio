@@ -226,7 +226,15 @@ export const useCanvasStore = defineStore("canvas", {
 
     saveSlidePreview() {
       this.redrawCanvas(false, undefined, undefined, false);
-      slide.value.preview = this.canvas.toDataURL("image/jpeg", 0.1);
+
+      const tempCanvas = document.createElement("canvas");
+      const tempCtx = tempCanvas.getContext("2d");
+      tempCanvas.width = 256;
+      tempCanvas.height = 144;
+      tempCtx.drawImage(this.canvas, 0, 0, tempCanvas.width, tempCanvas.height);
+      slide.value.preview = tempCanvas.toDataURL("image/png");
+      tempCanvas.remove();
+
       presentationStore.updateLocalSlide();
     },
 

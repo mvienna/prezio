@@ -178,7 +178,6 @@
             <q-img
               :src="props.row.preview?.original_url || props.row.preview"
               class="presentation__preview"
-              fit="contain"
             />
 
             <div class="q-ml-sm column no-wrap q-gutter-sm">
@@ -701,7 +700,7 @@ const handleDeletingMultiplePresentations = (presentations) => {
 };
 </script>
 
-<style scoled lang="scss">
+<style scoped lang="scss">
 ::v-deep(.q-table) {
   border-spacing: 0 8px;
 

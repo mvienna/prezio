@@ -132,6 +132,9 @@ const rightDrawerTab = ref(rightDrawerTabs[0].name);
   }
 }
 
+/*
+ * header
+ */
 .drawer_header {
   position: sticky;
   top: 0;
