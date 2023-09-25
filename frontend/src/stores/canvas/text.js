@@ -44,6 +44,23 @@ export const useCanvasTextStore = defineStore("canvasText", {
           vertical: ALIGNMENT.vertical.top,
         },
       },
+
+      default: {
+        color: "#313232",
+        fontSize: "16px",
+        font: "Arial",
+        lineHeight: 1.2,
+        formatting: {
+          isBold: false,
+          isUnderline: false,
+          isLineThrough: false,
+          isItalic: false,
+          alignment: {
+            horizontal: ALIGNMENT.horizontal.left,
+            vertical: ALIGNMENT.vertical.top,
+          },
+        },
+      },
     },
   }),
 
@@ -174,6 +191,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
         canvasStore.redrawCanvas(true, true);
         this.removeTextInput();
+        this.clearFormatting();
       };
 
       /*
@@ -206,18 +224,22 @@ export const useCanvasTextStore = defineStore("canvasText", {
      * customization
      */
     clearFormatting() {
-      this.customization.color = "#000000";
-      this.customization.fontSize = "16px";
-      this.customization.font = "Arial";
-      this.customization.lineHeight = 1.2;
-      this.customization.formatting.isBold = false;
-      this.customization.formatting.isUnderline = false;
-      this.customization.formatting.isLineThrough = false;
-      this.customization.formatting.isItalic = false;
-      this.customization.formatting.alignment = {
-        horizontal: ALIGNMENT.horizontal.left,
-        vertical: ALIGNMENT.vertical.top,
-      };
+      this.customization.color = this.customization.default.color;
+      this.customization.fontSize = this.customization.default.fontSize;
+      this.customization.font = this.customization.default.font;
+      this.customization.lineHeight = this.customization.default.lineHeight;
+
+      this.customization.formatting.isBold =
+        this.customization.default.formatting;
+      this.customization.formatting.isUnderline =
+        this.customization.default.formatting;
+      this.customization.formatting.isLineThrough =
+        this.customization.default.formatting;
+      this.customization.formatting.isItalic =
+        this.customization.default.formatting;
+
+      this.customization.formatting.alignment =
+        this.customization.default.formatting.alignment;
 
       this.applyStyles();
     },
