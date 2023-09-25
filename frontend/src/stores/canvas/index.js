@@ -226,7 +226,7 @@ export const useCanvasStore = defineStore("canvas", {
 
     saveSlidePreview() {
       this.redrawCanvas(false, undefined, undefined, false);
-      slide.value.preview = this.canvas.toDataURL("image/png");
+      slide.value.preview = this.canvas.toDataURL("image/jpeg", 0.1);
       presentationStore.updateLocalSlide();
     },
 
