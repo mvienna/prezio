@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-//use Spatie\Image\Image;
+use Spatie\Image\Image;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class MediaController extends Controller
@@ -39,12 +40,13 @@ class MediaController extends Controller
 
         $media = $media->toMediaCollection($collection);
 
-//        // compress & optimize
-//        $imagePath = $media->getPath();
-//        Image::load($imagePath)
-//            ->width(1920)
-//            ->optimize()
-//            ->save($imagePath);
+        // compress & optimize
+        $imagePath = $media->getPath();
+
+        Image::load($imagePath)
+            ->width(1920)
+            ->optimize()
+            ->save($imagePath);
 
         return $this->jsonResponse($media->toArray());
     }
