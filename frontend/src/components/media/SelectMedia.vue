@@ -118,9 +118,9 @@
         </q-tab-panel>
 
         <!-- mine -->
-        <q-tab-panel name="mine" class="column no-wrap full-height">
+        <q-tab-panel name="mine">
           <!-- none -->
-          <template v-if="!media.length">
+          <div v-if="!media.length" class="column no-wrap full-height">
             <q-space />
 
             <div class="row justify-center">
@@ -132,7 +132,7 @@
             </div>
 
             <q-space />
-          </template>
+          </div>
 
           <!-- users files -->
           <div v-else class="masonry">
