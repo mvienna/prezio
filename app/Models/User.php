@@ -53,7 +53,7 @@ class User extends Authenticatable implements HasMedia
     {
         $this->addMediaConversion('preview')
             ->optimize()
-//            ->nonQueued()
+            ->nonQueued()
             ->width(1920)
             ->height(1080);
     }
