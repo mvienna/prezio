@@ -32,9 +32,7 @@
           <!-- title -->
           <div class="text-h6 text-semibold">
             {{
-              selectedFolder
-                ? selectedFolder.name
-                : $t("presentations.myPresentationsTitle")
+              selectedFolder ? selectedFolder.name : $t("myPresentations.title")
             }}
           </div>
         </div>
@@ -66,7 +64,7 @@
           <q-btn
             v-if="!selectedPresentations.length"
             icon-right="r_add"
-            :label="$t('dashboard.noPresentations.create')"
+            :label="$t('myPresentations.noPresentations.create')"
             unelevated
             color="primary"
             no-caps
@@ -77,7 +75,7 @@
             <!-- move to folder selected presentations -->
             <q-btn
               icon-right="r_folder"
-              :label="$t('presentations.actions.moveToFolder')"
+              :label="$t('myPresentations.actions.moveToFolder')"
               outline
               color="primary"
               no-caps
@@ -139,7 +137,7 @@
             <!-- delete selected presentations -->
             <q-btn
               icon-right="r_delete"
-              :label="$t('presentations.actions.delete.title')"
+              :label="$t('myPresentations.actions.delete.title')"
               unelevated
               color="red"
               no-caps
@@ -154,9 +152,9 @@
               <ConfirmationDialog
                 icon="r_delete"
                 icon-color="red"
-                :title="$t('presentations.actions.delete.confirmation.title')"
+                :title="$t('myPresentations.actions.delete.confirmation.title')"
                 :message="
-                  $t('presentations.actions.delete.confirmation.message')
+                  $t('myPresentations.actions.delete.confirmation.message')
                 "
                 confirm-btn-color="red"
                 @cancel="
@@ -215,7 +213,7 @@
                   />
                   {{
                     $t(
-                      `presentation.settings.visibility.${
+                      `presentationStudio.settings.visibility.${
                         props.row.is_private ? "private" : "public"
                       }`
                     )
@@ -285,7 +283,9 @@
 
                   <div>
                     {{
-                      $t("dashboard.presentation.actions.folder.addToFolder")
+                      $t(
+                        "myPresentations.presentationRow.actions.folder.addToFolder"
+                      )
                     }}
                   </div>
 
@@ -358,7 +358,9 @@
                   />
 
                   <div>
-                    {{ $t("dashboard.presentation.actions.duplicate") }}
+                    {{
+                      $t("myPresentations.presentationRow.actions.duplicate")
+                    }}
                   </div>
                 </q-item>
 
@@ -378,7 +380,7 @@
                   />
 
                   <div>
-                    {{ $t("dashboard.presentation.actions.stats") }}
+                    {{ $t("myPresentations.presentationRow.actions.stats") }}
                   </div>
                 </q-item>
 
@@ -398,7 +400,9 @@
                   />
 
                   <div
-                    v-html="$t('dashboard.presentation.actions.resetResults')"
+                    v-html="
+                      $t('myPresentations.presentationRow.actions.resetResults')
+                    "
                   ></div>
                 </q-item>
 
@@ -418,7 +422,7 @@
                   />
 
                   <div>
-                    {{ $t("dashboard.presentation.actions.share") }}
+                    {{ $t("myPresentations.presentationRow.actions.share") }}
                   </div>
                 </q-item>
 
@@ -437,7 +441,9 @@
                   />
 
                   <div>
-                    {{ $t("dashboard.presentation.actions.delete.title") }}
+                    {{
+                      $t("myPresentations.presentationRow.actions.delete.title")
+                    }}
                   </div>
                 </q-item>
 
@@ -447,12 +453,12 @@
                     icon-color="red"
                     :title="
                       $t(
-                        'dashboard.presentation.actions.delete.confirmation.title'
+                        'myPresentations.presentationRow.actions.delete.confirmation.title'
                       )
                     "
                     :message="
                       $t(
-                        'dashboard.presentation.actions.delete.confirmation.message'
+                        'myPresentations.presentationRow.actions.delete.confirmation.message'
                       )
                     "
                     confirm-btn-color="red"
@@ -480,17 +486,17 @@
       <div class="text-center q-pb-lg q-pt-md">
         <!-- title -->
         <div class="text-h6 text-semibold">
-          {{ $t("dashboard.noPresentations.title") }}
+          {{ $t("myPresentations.noPresentations.title") }}
         </div>
 
         <!-- description -->
-        <div>{{ $t("dashboard.noPresentations.description") }}</div>
+        <div>{{ $t("myPresentations.noPresentations.description") }}</div>
       </div>
 
       <div class="row justify-center q-gutter-md">
         <!-- import -->
         <q-btn
-          :label="$t('dashboard.noPresentations.import')"
+          :label="$t('myPresentations.noPresentations.import')"
           outline
           color="primary"
           no-caps
@@ -500,7 +506,7 @@
         <!-- create -->
         <q-btn
           icon-right="add"
-          :label="$t('dashboard.noPresentations.create')"
+          :label="$t('myPresentations.noPresentations.create')"
           unelevated
           color="primary"
           no-caps
@@ -586,21 +592,21 @@ const presentationColumnsNames = {
 const presentationsColumns = [
   {
     name: presentationColumnsNames.name,
-    label: t("presentations.columns.name"),
+    label: t("myPresentations.columns.name"),
     align: "left",
     field: (row) => row.name,
     sortable: true,
   },
   {
     name: presentationColumnsNames.accessKey,
-    label: t("presentations.columns.accessKey"),
+    label: t("myPresentations.columns.accessKey"),
     align: "center",
     field: (row) => row.accessKey,
     sortable: true,
   },
   {
     name: presentationColumnsNames.updatedAt,
-    label: t("presentations.columns.updated"),
+    label: t("myPresentations.columns.updated"),
     align: "center",
     field: (row) => {
       const latestUpdatedSlide = row.slides.reduce((prev, current) =>
@@ -617,7 +623,7 @@ const presentationsColumns = [
   },
   {
     name: presentationColumnsNames.createdAt,
-    label: t("presentations.columns.created"),
+    label: t("myPresentations.columns.created"),
     align: "center",
     field: (row) => row.created_at,
     sortable: true,

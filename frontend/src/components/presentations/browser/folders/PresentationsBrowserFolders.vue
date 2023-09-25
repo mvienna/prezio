@@ -14,7 +14,7 @@
       </div>
 
       <div style="height: 21px; opacity: 0.5" class="text-center text-semibold">
-        {{ $t("presentations.newFolder.title") }}
+        {{ $t("myPresentations.newFolder.title") }}
       </div>
     </q-skeleton>
 
@@ -70,7 +70,7 @@
               <div>
                 {{
                   $t(
-                    `dashboard.presentation.actions.folder.privacy.${
+                    `myPresentations.presentationRow.actions.folder.privacy.${
                       folder.is_private ? "private" : "public"
                     }`
                   )
@@ -88,7 +88,11 @@
             >
               <q-icon name="r_delete" class="q-mr-sm" size="xs" />
               <div>
-                {{ $t("dashboard.presentation.actions.folder.delete.title") }}
+                {{
+                  $t(
+                    "myPresentations.presentationRow.actions.folder.delete.title"
+                  )
+                }}
               </div>
             </q-item>
 
@@ -98,12 +102,12 @@
                 icon-color="red"
                 :title="
                   $t(
-                    'dashboard.presentation.actions.folder.delete.confirmation.title'
+                    'myPresentations.presentationRow.actions.folder.delete.confirmation.title'
                   )
                 "
                 :message="
                   $t(
-                    'dashboard.presentation.actions.folder.delete.confirmation.message'
+                    'myPresentations.presentationRow.actions.folder.delete.confirmation.message'
                   )
                 "
                 confirm-btn-color="red"
@@ -167,7 +171,7 @@
       <div
         class="text-semibold text-center q-mt-sm text-no-wrap ellipsis q-px-xs"
       >
-        {{ $t("presentations.newFolder.title") }}
+        {{ $t("myPresentations.newFolder.title") }}
       </div>
     </div>
 

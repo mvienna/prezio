@@ -11,7 +11,7 @@
       @click="$emit('switchMode', MODES_OPTIONS.drawing)"
     >
       <q-tooltip>
-        {{ $t("presentation.toolbar.drawing.title") }}
+        {{ $t("presentationStudio.toolbar.drawing.title") }}
       </q-tooltip>
     </q-btn>
 
@@ -26,7 +26,7 @@
       @click="$emit('switchMode', MODES_OPTIONS.text)"
     >
       <q-tooltip>
-        {{ $t("presentation.toolbar.text.title") }}
+        {{ $t("presentationStudio.toolbar.text.title") }}
       </q-tooltip>
     </q-btn>
 
@@ -43,7 +43,7 @@
       "
     >
       <q-tooltip>
-        {{ $t("presentation.toolbar.media.title") }}
+        {{ $t("presentationStudio.toolbar.media.title") }}
       </q-tooltip>
     </q-btn>
 
@@ -68,7 +68,7 @@
       @click="$emit('switchMode', MODES_OPTIONS.mediaEmoji)"
     >
       <q-tooltip>
-        {{ $t("presentation.toolbar.emoji.title") }}
+        {{ $t("presentationStudio.toolbar.emoji.title") }}
       </q-tooltip>
 
       <q-menu
@@ -139,7 +139,7 @@
       </q-menu>
 
       <q-tooltip>
-        {{ $t("presentation.toolbar.shape.title") }}
+        {{ $t("presentationStudio.toolbar.shape.title") }}
       </q-tooltip>
     </q-btn>
   </div>

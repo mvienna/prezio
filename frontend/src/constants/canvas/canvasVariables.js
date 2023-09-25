@@ -10,9 +10,9 @@ export const BRUSH_SIZE_OPTIONS = [
 ];
 
 export const BRUSH_TYPES = [
-  { label: "presentation.drawing.BRUSH_TYPES.pen", value: "pen" },
+  { label: "presentationStudio.toolbar.drawing.BRUSH_TYPES.pen", value: "pen" },
   {
-    label: "presentation.drawing.BRUSH_TYPES.pencil",
+    label: "presentationStudio.toolbar.drawing.BRUSH_TYPES.pencil",
     value: "pencil",
   },
 ];

@@ -27,7 +27,9 @@
           color="red"
           flat
           no-caps
-          :label="$t('presentation.shapes.options.removeStrokeColor')"
+          :label="
+            $t('presentationStudio.toolbar.shape.options.removeStrokeColor')
+          "
           @click="
             shapeState.customization.value.strokeColor = null;
             shapeStore.applyStyles();
@@ -37,7 +39,7 @@
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentation.shapes.options.strokeColor") }}
+      {{ $t("presentationStudio.toolbar.shape.options.strokeColor") }}
     </q-tooltip>
   </q-btn>
 
@@ -69,7 +71,9 @@
           color="red"
           flat
           no-caps
-          :label="$t('presentation.shapes.options.removeFillColor')"
+          :label="
+            $t('presentationStudio.toolbar.shape.options.removeFillColor')
+          "
           @click="
             shapeState.customization.value.fillColor = null;
             shapeStore.applyStyles();
@@ -80,7 +84,7 @@
 
     <q-tooltip :offset="[0, 4]">
       <div>
-        {{ $t("presentation.shapes.options.fillColor") }}
+        {{ $t("presentationStudio.toolbar.shape.options.fillColor") }}
       </div>
     </q-tooltip>
   </q-btn>
@@ -103,7 +107,7 @@
     </template>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentation.shapes.options.lineWidth") }}
+      {{ $t("presentationStudio.toolbar.shape.options.lineWidth") }}
     </q-tooltip>
   </q-select>
 </template>

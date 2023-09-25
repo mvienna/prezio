@@ -22,7 +22,7 @@
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentation.drawing.options.color") }}
+      {{ $t("presentationStudio.toolbar.drawing.options.color") }}
     </q-tooltip>
   </q-btn>
 
@@ -48,7 +48,7 @@
     </template>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentation.drawing.options.brushSize") }}
+      {{ $t("presentationStudio.toolbar.drawing.options.brushSize") }}
     </q-tooltip>
   </q-select>
 
@@ -70,7 +70,7 @@
     </template>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentation.drawing.options.brushType") }}
+      {{ $t("presentationStudio.toolbar.drawing.options.brushType") }}
     </q-tooltip>
   </q-select>
 
@@ -85,7 +85,7 @@
     indeterminate-icon="help"
   >
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentation.drawing.options.erase") }}
+      {{ $t("presentationStudio.toolbar.drawing.options.erase") }}
     </q-tooltip>
   </q-checkbox>
 </template>

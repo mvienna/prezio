@@ -48,7 +48,7 @@
         >
           <q-icon name="r_copy" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.copy") }}
+            {{ $t("presentationStudio.elementsContextMenu.copy") }}
           </div>
 
           <q-space />
@@ -70,7 +70,7 @@
         >
           <q-icon name="r_cut" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.cut") }}
+            {{ $t("presentationStudio.elementsContextMenu.cut") }}
           </div>
 
           <q-space />
@@ -92,7 +92,7 @@
         >
           <q-icon name="r_dynamic_feed" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.duplicate") }}
+            {{ $t("presentationStudio.elementsContextMenu.duplicate") }}
           </div>
 
           <q-space />
@@ -117,7 +117,7 @@
         >
           <q-icon name="r_north" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.moveUp") }}
+            {{ $t("presentationStudio.elementsContextMenu.moveUp") }}
           </div>
 
           <q-space />
@@ -140,7 +140,7 @@
         >
           <q-icon name="r_vertical_align_top" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.moveToTheTop") }}
+            {{ $t("presentationStudio.elementsContextMenu.moveToTheTop") }}
           </div>
 
           <q-space />
@@ -164,7 +164,7 @@
         >
           <q-icon name="r_south" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.moveDown") }}
+            {{ $t("presentationStudio.elementsContextMenu.moveDown") }}
           </div>
 
           <q-space />
@@ -187,7 +187,7 @@
         >
           <q-icon name="r_vertical_align_bottom" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.moveToTheBottom") }}
+            {{ $t("presentationStudio.elementsContextMenu.moveToTheBottom") }}
           </div>
 
           <q-space />
@@ -212,7 +212,7 @@
         >
           <q-icon name="r_delete" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentation.elementsContextMenu.delete") }}
+            {{ $t("presentationStudio.elementsContextMenu.delete") }}
           </div>
 
           <q-space />

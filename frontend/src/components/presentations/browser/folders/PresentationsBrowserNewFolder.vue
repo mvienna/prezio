@@ -4,7 +4,7 @@
       <q-toolbar class="justify-between q-px-none">
         <!-- title -->
         <div class="text-h6 text-bold">
-          {{ $t("presentations.newFolder.title") }}
+          {{ $t("myPresentations.newFolder.title") }}
         </div>
 
         <!-- close -->
@@ -21,7 +21,7 @@
         <!-- name -->
         <q-input
           v-model="form.name"
-          :label="$t('presentations.newFolder.name')"
+          :label="$t('myPresentations.newFolder.name')"
           outlined
           autofocus
           color="primary"
@@ -34,7 +34,7 @@
         <!-- description -->
         <q-input
           v-model="form.description"
-          :label="$t('presentations.newFolder.description')"
+          :label="$t('myPresentations.newFolder.description')"
           outlined
           autogrow
           class="q-mt-lg"
@@ -42,7 +42,7 @@
 
         <!-- presentations -->
         <div class="q-mt-lg text-h7 text-semibold q-mb-sm">
-          {{ $t("presentations.newFolder.addPresentations") }}
+          {{ $t("myPresentations.newFolder.addPresentations") }}
         </div>
 
         <div class="row no-wrap q-gutter-md scroll-x">
@@ -79,7 +79,7 @@
             color="primary"
             unelevated
             :loading="isLoading"
-            :label="$t('presentations.newFolder.create')"
+            :label="$t('myPresentations.newFolder.create')"
             type="submit"
             icon="r_done"
           />
@@ -96,7 +96,7 @@
               <div class="q-mb-sm text-semibold" style="font-size: 14px">
                 {{
                   $t(
-                    `presentations.newFolder.privacy.${
+                    `myPresentations.newFolder.privacy.${
                       form.is_private ? "private" : "public"
                     }.title`
                   )
@@ -106,7 +106,7 @@
               <div>
                 {{
                   $t(
-                    `presentations.newFolder.privacy.${
+                    `myPresentations.newFolder.privacy.${
                       form.is_private ? "private" : "public"
                     }.description`
                   )
@@ -155,7 +155,7 @@ const form = ref({
 // name validation
 const nameRule = (value) => {
   if (!value) {
-    return t("presentations.newFolder.errors.name.required");
+    return t("myPresentations.newFolder.errors.name.required");
   }
   return true;
 };

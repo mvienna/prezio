@@ -2,13 +2,17 @@
   <div>
     <!-- description -->
     <div class="text-caption text-grey q-mb-xs">
-      {{ $t("presentation.settings.generalInformation.description.title") }}
+      {{
+        $t("presentationStudio.settings.generalInformation.description.title")
+      }}
     </div>
 
     <q-input
       v-model="description"
       :placeholder="
-        $t('presentation.settings.generalInformation.description.placeholder')
+        $t(
+          'presentationStudio.settings.generalInformation.description.placeholder'
+        )
       "
       outlined
       autogrow
@@ -33,7 +37,7 @@
 
     <!-- preview -->
     <div class="text-caption text-grey q-mb-xs q-mt-md">
-      {{ $t("presentation.settings.generalInformation.preview.title") }}
+      {{ $t("presentationStudio.settings.generalInformation.preview.title") }}
     </div>
 
     <q-img
@@ -46,7 +50,9 @@
     <div class="row no-wrap q-pt-md">
       <!-- open preview selection -->
       <q-btn
-        :label="$t('presentation.settings.generalInformation.preview.select')"
+        :label="
+          $t('presentationStudio.settings.generalInformation.preview.select')
+        "
         icon-right="r_upload"
         unelevated
         text-color="primary"

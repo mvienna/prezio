@@ -44,7 +44,7 @@
         @click="paste()"
       >
         <q-tooltip>
-          {{ $t("presentation.elementsContextMenu.paste.shortcut") }}
+          {{ $t("presentationStudio.elementsContextMenu.paste.shortcut") }}
         </q-tooltip>
       </q-btn>
     </template>

@@ -86,7 +86,7 @@
           size="24px"
         >
           <q-tooltip class="text-red bg-red-1 text-center">
-            {{ $t("presentations.errors.somethingWentWrong") }}
+            {{ $t("presentationLayout.errors.somethingWentWrong") }}
           </q-tooltip>
         </q-icon>
 

@@ -20,13 +20,13 @@
         @click="$emit('zoomOut')"
       >
         <q-tooltip>
-          {{ $t("presentation.toolbar.zoom.in") }}
+          {{ $t("presentationStudio.toolbar.zoom.in") }}
         </q-tooltip>
       </q-btn>
 
       <q-btn :label="`${Math.round(scale * 100)}%`" unelevated>
         <q-tooltip>
-          {{ $t("presentation.toolbar.zoom.select") }}
+          {{ $t("presentationStudio.toolbar.zoom.select") }}
         </q-tooltip>
 
         <q-menu
@@ -57,7 +57,7 @@
         @click="$emit('zoomIn')"
       >
         <q-tooltip>
-          {{ $t("presentation.toolbar.zoom.out") }}
+          {{ $t("presentationStudio.toolbar.zoom.out") }}
         </q-tooltip>
       </q-btn>
     </div>

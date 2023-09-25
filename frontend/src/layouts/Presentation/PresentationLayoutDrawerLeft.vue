@@ -111,7 +111,7 @@
                       <q-icon name="r_add" size="16px" class="q-mr-sm" />
 
                       <div>
-                        {{ $t("presentation.slide.actions.newSlide") }}
+                        {{ $t("presentationStudio.slide.actions.newSlide") }}
                       </div>
                     </q-item>
 
@@ -130,7 +130,7 @@
                       />
 
                       <div>
-                        {{ $t("presentation.slide.actions.duplicate") }}
+                        {{ $t("presentationStudio.slide.actions.duplicate") }}
                       </div>
 
                       <q-space />
@@ -164,7 +164,7 @@
                       />
 
                       <div>
-                        {{ $t("presentation.slide.actions.delete") }}
+                        {{ $t("presentationStudio.slide.actions.delete") }}
                       </div>
 
                       <q-space />

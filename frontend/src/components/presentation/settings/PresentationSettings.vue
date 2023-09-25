@@ -6,7 +6,7 @@
         style="position: sticky; top: 0; z-index: 1"
       >
         <div class="text-h7 text-semibold">
-          {{ $t("presentation.settings.title") }}
+          {{ $t("presentationStudio.settings.title") }}
         </div>
 
         <q-btn
@@ -67,42 +67,44 @@ const tabs = [
   {
     name: "generalInformation",
     icon: "r_settings",
-    label: t("presentation.settings.generalInformation.title"),
+    label: t("presentationStudio.settings.generalInformation.title"),
   },
   {
     name: "audienceAuthentication",
     icon: "r_security",
     disable: true,
-    label: t("presentation.settings.audienceAuthentication.title"),
+    label: t("presentationStudio.settings.audienceAuthentication.title"),
   },
   {
     name: "questionsAndAnswersFromAudience",
     icon: "r_flaky",
     disable: true,
-    label: t("presentation.settings.questionsAndAnswersFromAudience.title"),
+    label: t(
+      "presentationStudio.settings.questionsAndAnswersFromAudience.title"
+    ),
   },
   {
     name: "quizSetup",
     icon: "r_quiz",
     disable: true,
-    label: t("presentation.settings.quizSetup.title"),
+    label: t("presentationStudio.settings.quizSetup.title"),
   },
   {
     name: "language",
     icon: "r_translate",
-    label: t("presentation.settings.language.title"),
+    label: t("presentationStudio.settings.language.title"),
   },
   {
     name: "leader",
     icon: "r_settings_accessibility",
     disable: true,
-    label: t("presentation.settings.leader.title"),
+    label: t("presentationStudio.settings.leader.title"),
   },
   {
     name: "other",
     icon: "r_more_horiz",
     disable: true,
-    label: t("presentation.settings.other.title"),
+    label: t("presentationStudio.settings.other.title"),
   },
 ];
 

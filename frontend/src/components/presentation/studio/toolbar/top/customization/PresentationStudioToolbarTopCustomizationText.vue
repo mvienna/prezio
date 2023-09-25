@@ -20,7 +20,7 @@
     "
   >
     <q-tooltip class="text-bold">
-      {{ $t("presentation.toolbar.text.formatting.bold") }}
+      {{ $t("presentationStudio.toolbar.text.options.formatting.bold") }}
     </q-tooltip>
   </q-btn>
 
@@ -45,7 +45,7 @@
     "
   >
     <q-tooltip style="text-decoration: underline">
-      {{ $t("presentation.toolbar.text.formatting.underline") }}
+      {{ $t("presentationStudio.toolbar.text.options.formatting.underline") }}
     </q-tooltip>
   </q-btn>
 
@@ -70,7 +70,9 @@
     "
   >
     <q-tooltip style="text-decoration: line-through">
-      {{ $t("presentation.toolbar.text.formatting.strikeThrough") }}
+      {{
+        $t("presentationStudio.toolbar.text.options.formatting.strikeThrough")
+      }}
     </q-tooltip>
   </q-btn>
 
@@ -95,7 +97,7 @@
     "
   >
     <q-tooltip class="text-italic">
-      {{ $t("presentation.toolbar.text.formatting.italic") }}
+      {{ $t("presentationStudio.toolbar.text.options.formatting.italic") }}
     </q-tooltip>
   </q-btn>
 
@@ -121,7 +123,7 @@
     "
   >
     <q-tooltip>
-      {{ $t("presentation.toolbar.text.formatting.alignment") }}
+      {{ $t("presentationStudio.toolbar.text.options.formatting.alignment") }}
     </q-tooltip>
 
     <q-menu
@@ -221,7 +223,7 @@
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentation.drawing.options.color") }}
+      {{ $t("presentationStudio.toolbar.drawing.options.color") }}
     </q-tooltip>
   </q-btn>
 
@@ -246,7 +248,7 @@
     </template>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentation.text.options.font") }}
+      {{ $t("presentationStudio.toolbar.text.options.font") }}
     </q-tooltip>
   </q-select>
 
@@ -271,7 +273,7 @@
     </template>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentation.text.options.fontSize") }}
+      {{ $t("presentationStudio.toolbar.text.options.fontSize") }}
     </q-tooltip>
   </q-select>
 
@@ -287,14 +289,16 @@
     @click="textStore.clearFormatting()"
   >
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentation.text.options.clearFormatting") }}
+      {{
+        $t("presentationStudio.toolbar.text.options.formatting.clearFormatting")
+      }}
     </q-tooltip>
   </q-btn>
 
   <!-- new text -->
   <q-btn
     icon="r_fiber_new"
-    :label="$t('presentation.text.options.newText')"
+    :label="$t('presentationStudio.toolbar.text.options.newText')"
     :color="!textState.isNewText.value ? 'primary' : 'grey'"
     unelevated
     no-caps
@@ -303,7 +307,7 @@
     @click="textState.isNewText.value = !textState.isNewText.value"
   >
     <q-tooltip>
-      {{ $t("presentation.toolbar.text.newText") }}
+      {{ $t("presentationStudio.toolbar.text.newText") }}
     </q-tooltip>
   </q-btn>
 </template>
