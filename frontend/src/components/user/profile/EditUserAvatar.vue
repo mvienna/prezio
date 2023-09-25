@@ -39,9 +39,8 @@
       </div>
 
       <!-- delete -->
-      <div>
+      <div v-if="user.avatar">
         <q-btn
-          v-if="user.avatar"
           icon="r_delete"
           color="red"
           flat
