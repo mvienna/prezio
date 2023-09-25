@@ -52,7 +52,7 @@
             flat
             class="presentation_card"
             :class="
-              form.presentationsIds.includes(presentation.id)
+              form.presentationsIds?.includes(presentation.id)
                 ? 'presentation_card--active'
                 : ''
             "
@@ -121,15 +121,18 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+
+/*
+ * emits
+ */
+const emit = defineEmits(["close", "submit"]);
 
 /*
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
-
-defineEmits(["close", "submit"]);
 
 const props = defineProps({
   isLoading: { type: Boolean },
@@ -161,7 +164,7 @@ const nameRule = (value) => {
  * select presentations
  */
 const handlePresentationCardToggle = (presentation) => {
-  if (form.value.presentationsIds.includes(presentation.id)) {
+  if (form.value.presentationsIds?.includes(presentation.id)) {
     form.value.presentationsIds = form.value.presentationsIds.filter(
       (id) => id !== presentation.id
     );

@@ -23,3 +23,18 @@ export const generateUniqueId = (length = 7, array = null) => {
 
   return uniqueId;
 };
+
+/*
+ * folder icon
+ */
+export const getFolderIconName = (id) => {
+  if (id % 4 === 1) {
+    return "folder";
+  } else if (id % 4 === 2) {
+    return "folder_red";
+  } else if (id % 4 === 3) {
+    return "folder_green";
+  } else if (id % 4 === 0) {
+    return "folder_pink";
+  }
+};
