@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
-import { generateUniqueId } from "src/helpers/generateUniqueId";
-import { fetchAndConvertToBase64Image } from "src/helpers/fetchAndConvertToBase64Image";
+import { generateUniqueId } from "src/helpers/generationUtils";
+import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
 
 const canvasStore = useCanvasStore();
 const { ctx, canvas, elements, MODES_OPTIONS } = storeToRefs(canvasStore);

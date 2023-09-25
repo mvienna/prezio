@@ -1,7 +1,7 @@
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { deleteElement, selectElement } from "stores/canvas/helpers/select";
-import { generateUniqueId } from "src/helpers/generateUniqueId";
+import { generateUniqueId } from "src/helpers/generationUtils";
 import { usePresentationsStore } from "stores/presentations";
 
 const canvasStore = useCanvasStore();

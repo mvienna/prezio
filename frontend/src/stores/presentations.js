@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
-import { ROUTE_PATHS } from "src/constants/routes";
 
 export const usePresentationsStore = defineStore("presentations", {
   state: () => ({

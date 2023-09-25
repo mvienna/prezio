@@ -89,7 +89,7 @@ import { useRouter } from "vue-router";
 import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
-import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
+import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import {
   copy,
   cut,

@@ -1,6 +1,6 @@
 import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
-import { generateUniqueId } from "src/helpers/generateUniqueId";
+import { generateUniqueId } from "src/helpers/generationUtils";
 import { updateSelectedElement } from "stores/canvas/helpers/select";
 
 const { ctx, elements, mouse, MODES_OPTIONS, selectedElement } = storeToRefs(

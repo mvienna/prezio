@@ -523,18 +523,18 @@
 </template>
 
 <script setup>
-import { formatDateTime } from "src/helpers/formatDateTime";
+import { formatDateTime } from "src/helpers/dateUtils";
 import { date } from "quasar";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import PresentationBrowserNewPresentation from "components/presentations/browser/presentations/PresentationsBrowserNewPresentation.vue";
 import { computed, onBeforeMount, ref } from "vue";
 import { ROUTE_PATHS } from "src/constants/routes";
-import { clearRoutePathFromProps } from "src/helpers/clearRoutePathFromProps";
+import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { getFolderIconName } from "src/helpers/generateUniqueId";
+import { getFolderIconName } from "src/helpers/generationUtils";
 
 /*
  * variables

@@ -195,7 +195,7 @@ import PresentationBrowserNewFolder from "components/presentations/browser/folde
 import { ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { getFolderIconName } from "src/helpers/generateUniqueId";
+import { getFolderIconName } from "src/helpers/generationUtils";
 
 /*
  * stores
