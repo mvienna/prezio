@@ -5,7 +5,7 @@
       v-if="user.avatar"
       :src="user.avatar.original_url"
       :alt="user.name"
-      fit="cover"
+      style="width: 100%; height: 100%"
     />
 
     <!-- default avatar -->

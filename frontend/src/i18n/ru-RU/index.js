@@ -577,6 +577,7 @@ export default {
    */
   tooltips: {
     in_development: "В процессе разработки",
+    maxUploadFileSize: "Макс. 10мб",
   },
 
   /*

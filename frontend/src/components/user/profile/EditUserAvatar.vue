@@ -17,8 +17,8 @@
     <!-- action buttons -->
     <div class="row q-gutter-md justify-center q-mt-sm">
       <!-- upload -->
-      <q-btn round flat no-caps>
-        <template #default>
+      <div>
+        <q-btn round flat no-caps>
           <form ref="form">
             <input
               :id="fileInputId"
@@ -31,19 +31,24 @@
               {{ $t("user.profile.form.avatar.upload") }}
             </label>
           </form>
-        </template>
-      </q-btn>
+        </q-btn>
+
+        <div class="text-center text-caption text-grey q-mt-xs">
+          {{ $t("tooltips.maxUploadFileSize") }}
+        </div>
+      </div>
 
       <!-- delete -->
-      <q-btn
-        v-if="user.avatar"
-        icon="r_delete"
-        color="red"
-        flat
-        class="q-px-md"
-        round
-        @click="deleteFile()"
-      />
+      <div>
+        <q-btn
+          v-if="user.avatar"
+          icon="r_delete"
+          color="red"
+          flat
+          class="q-py-sm"
+          @click="deleteFile()"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -101,6 +106,13 @@ const uploadFile = async (event) => {
         icon: "r_done",
       });
     })
+    .catch((error) => {
+      $q.notify({
+        message: error.response.data.message,
+        color: "red",
+        icon: "r_crisis_alert",
+      });
+    })
     .finally(() => {
       isLoading.value = false;
     });
@@ -135,9 +147,8 @@ const deleteFile = () => {
 
 [type="file"] + label {
   border-radius: 8px;
-  padding: 12px 24px;
+  padding: 8px 24px;
   text-align: center;
-  min-height: 40px;
   font-weight: 600;
   background: $primary;
   color: $white;
@@ -146,10 +157,10 @@ const deleteFile = () => {
   position: relative;
   transition: all 0.2s;
   vertical-align: middle;
-  outline: 6px solid $white;
+  outline: 4px solid $white;
 
   &:hover {
-    outline: 6px solid $blue-3;
+    outline: 4px solid $blue-3;
   }
 }
 
