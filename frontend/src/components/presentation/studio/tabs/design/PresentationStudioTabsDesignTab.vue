@@ -32,9 +32,9 @@
     <q-separator class="q-my-lg" />
 
     <!-- text -->
-    <PresentationStudioTabsDesignTabText />
+    <!--    <PresentationStudioTabsDesignTabText />-->
 
-    <q-separator class="q-my-lg" />
+    <!--    <q-separator class="q-my-lg" />-->
 
     <!-- apply design to all slides -->
     <q-btn
