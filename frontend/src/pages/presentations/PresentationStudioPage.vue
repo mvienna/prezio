@@ -328,6 +328,8 @@ const handleKeyDownEvent = (event) => {
 
     // deselect
     if (event.key === "Escape" || event.key === "Enter") {
+      if (mode.value === MODES_OPTIONS.value.textEditing) return;
+
       event.preventDefault();
       deselectElement();
     }
