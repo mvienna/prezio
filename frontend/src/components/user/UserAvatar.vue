@@ -3,7 +3,7 @@
     <!-- uploaded avatar -->
     <q-img
       v-if="user.avatar"
-      :src="user.avatar.original_url"
+      :src="user.avatar.preview_url || user.avatar.original_url"
       :alt="user.name"
       style="width: 100%; height: 100%"
     />

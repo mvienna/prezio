@@ -185,7 +185,8 @@ const handleBackgroundChange = (
     }
   }
 
-  const src = background?.src || background?.original_url;
+  const src =
+    background?.src || background?.preview_url || background?.original_url;
 
   const image = new Image();
   image.src = src;

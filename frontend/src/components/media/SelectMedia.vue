@@ -46,7 +46,11 @@
             <q-img
               class="uploaded__file"
               fill="contain"
-              :src="selectedFile?.original_url || selectedFile?.urls?.regular"
+              :src="
+                selectedFile?.preview_url ||
+                selectedFile?.original_url ||
+                selectedFile?.urls?.regular
+              "
               :alt="selectedFile?.filename || selectedFile?.alt_description"
             />
 
@@ -157,8 +161,8 @@
               <!-- uploaded from the computer -->
               <q-img
                 v-else-if="file?.mime_type?.includes('image')"
-                :src="file?.original_url"
-                :alt="file?.original_url"
+                :src="file?.preview_url || file?.original_url"
+                :alt="file?.preview_url || file?.original_url"
               />
 
               <!-- context menu -->

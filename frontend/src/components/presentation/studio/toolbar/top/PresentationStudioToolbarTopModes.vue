@@ -52,7 +52,10 @@
       <SelectMedia
         @close="showSelectMediaDialog = false"
         @select="
-          $emit('addImage', $event?.original_url || $event?.urls?.regular);
+          $emit(
+            'addImage',
+            $event?.preview_url || $event?.original_url || $event?.urls?.regular
+          );
           showSelectMediaDialog = false;
         "
       />

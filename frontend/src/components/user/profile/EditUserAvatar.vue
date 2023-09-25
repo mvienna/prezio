@@ -6,7 +6,7 @@
       <q-img
         v-if="user.avatar"
         class="avatar__file"
-        :src="user.avatar.original_url"
+        :src="user.avatar.preview_url || user.avatar.original_url"
         :alt="user.name"
       />
 

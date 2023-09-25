@@ -176,7 +176,11 @@
           <div class="row no-wrap items-center">
             <!-- preview -->
             <q-img
-              :src="props.row.preview?.original_url || props.row.preview"
+              :src="
+                props.row.preview?.preview_url ||
+                props.row.preview?.original_url ||
+                props.row.preview
+              "
               class="presentation__preview"
             />
 

@@ -42,7 +42,9 @@
 
     <q-img
       :src="
-        presentation?.preview?.original_url || presentation.slides[0].preview
+        presentation?.preview?.preview_url ||
+        presentation?.preview?.original_url ||
+        presentation.slides[0].preview
       "
       class="presentation_preview relative-position"
     />
