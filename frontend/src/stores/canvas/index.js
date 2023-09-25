@@ -6,9 +6,9 @@ import {
 import { usePresentationsStore } from "stores/presentations";
 import { date } from "quasar";
 
-const presentationStore = usePresentationsStore();
+const presentationsStore = usePresentationsStore();
 const { presentation, slide, lastSavedAt, lastChangedAt } =
-  storeToRefs(presentationStore);
+  storeToRefs(presentationsStore);
 
 export const useCanvasStore = defineStore("canvas", {
   state: () => ({
@@ -235,7 +235,7 @@ export const useCanvasStore = defineStore("canvas", {
       slide.value.preview = tempCanvas.toDataURL("image/png");
       tempCanvas.remove();
 
-      presentationStore.updateLocalSlide();
+      presentationsStore.updateLocalSlide();
     },
 
     renderSlidePreview() {
@@ -381,7 +381,7 @@ export const useCanvasStore = defineStore("canvas", {
 
         if (secondsDifference >= 10 || forceSlideSave) {
           this.saveSlidePreview();
-          presentationStore.saveSlide(undefined, this.elements);
+          presentationsStore.saveSlide(undefined, this.elements);
         }
       }
 

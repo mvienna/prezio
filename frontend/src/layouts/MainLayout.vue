@@ -113,8 +113,8 @@ const router = useRouter();
 /*
  * presentation store
  */
-const presentationStore = usePresentationsStore();
-const { search } = storeToRefs(presentationStore);
+const presentationsStore = usePresentationsStore();
+const { search } = storeToRefs(presentationsStore);
 
 /*
  * left drawer

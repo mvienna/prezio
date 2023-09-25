@@ -5,7 +5,7 @@
       <q-btn
         unelevated
         round
-        :to="ROUTE_PATHS.PRESENTATIONS.INDEX"
+        :href="ROUTE_PATHS.PRESENTATIONS.INDEX"
         text-color="grey-5"
         size="10px"
       >
@@ -47,7 +47,7 @@
             v-slot="scope"
             @update:model-value="
               presentation.name = $event;
-              presentationStore.updatePresentation();
+              presentationsStore.updatePresentation();
             "
           >
             <q-input
@@ -66,7 +66,7 @@
           class="q-ml-sm cursor-pointer"
           @click="
             presentation.is_private = !presentation.is_private;
-            presentationStore.updatePresentation();
+            presentationsStore.updatePresentation();
           "
         >
         </q-icon>
@@ -99,7 +99,7 @@
           class="cursor-pointer"
           @click="
             canvasStore.saveSlidePreview();
-            presentationStore.saveSlide(undefined, elements);
+            presentationsStore.saveSlide(undefined, elements);
           "
         >
           <q-tooltip>
@@ -198,9 +198,9 @@ import PresentationSettings from "components/presentation/settings/PresentationS
 /*
  * stores
  */
-const presentationStore = usePresentationsStore();
+const presentationsStore = usePresentationsStore();
 const { presentation, isSaving, isSavingError, lastSavedAt } =
-  storeToRefs(presentationStore);
+  storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { elements } = storeToRefs(canvasStore);

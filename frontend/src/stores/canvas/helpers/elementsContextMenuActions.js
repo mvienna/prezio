@@ -8,8 +8,8 @@ const canvasStore = useCanvasStore();
 const { elements, selectedElement, copiedElement, slideIdElementCopiedFrom } =
   storeToRefs(canvasStore);
 
-const presentationStore = usePresentationsStore();
-const { presentation, slide } = storeToRefs(presentationStore);
+const presentationsStore = usePresentationsStore();
+const { presentation, slide } = storeToRefs(presentationsStore);
 
 /*
  * copy

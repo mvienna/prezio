@@ -189,7 +189,7 @@
                   v-model="props.row.name"
                   v-slot="scope"
                   @update:model-value="
-                    presentationStore.updatePresentation(props.row)
+                    presentationsStore.updatePresentation(props.row)
                   "
                 >
                   <q-input
@@ -463,7 +463,7 @@
                     confirm-btn-color="red"
                     @cancel="showPresentationDeletionConfirmationDialog = false"
                     @confirm="
-                      presentationStore.deletePresentation(props.value);
+                      presentationsStore.deletePresentation(props.value);
                       showPresentationDeletionConfirmationDialog = false;
                     "
                   />
@@ -524,6 +524,22 @@
         @submit="handleCreatingNewPresentation($event)"
       />
     </q-dialog>
+
+    <!-- new folder form -->
+    <q-dialog v-model="showNewFolderDialog">
+      <PresentationBrowserNewFolder
+        :presentations="
+          presentations.filter((presentation) => !presentation.folder_id)
+        "
+        :selected-presentations="selectedPresentations"
+        :is-loading="isLoading.creatingFolder"
+        @close="showNewFolderDialog = false"
+        @submit="
+          presentationsStore.createNewFolder($event);
+          showNewFolderDialog = false;
+        "
+      />
+    </q-dialog>
   </div>
 </template>
 
@@ -540,6 +556,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { getFolderIconName } from "src/helpers/generationUtils";
+import PresentationBrowserNewFolder from "components/presentations/browser/folders/PresentationsBrowserNewFolder.vue";
 
 /*
  * variables
@@ -551,7 +568,7 @@ const router = useRouter();
 /*
  * presentations store
  */
-const presentationStore = usePresentationsStore();
+const presentationsStore = usePresentationsStore();
 const {
   folders,
   selectedFolder,
@@ -559,7 +576,7 @@ const {
   selectedPresentations,
   search,
   isLoading,
-} = storeToRefs(presentationStore);
+} = storeToRefs(presentationsStore);
 
 const filteredPresentations = computed(() => {
   return presentations.value.filter((presentation) =>
@@ -573,8 +590,8 @@ const filteredPresentations = computed(() => {
  * fetch presentations
  */
 onBeforeMount(() => {
-  presentationStore.fetchPresentations();
-  presentationStore.fetchFolders();
+  presentationsStore.fetchPresentations();
+  presentationsStore.fetchFolders();
 });
 
 /*
@@ -658,7 +675,7 @@ const handlePresentationClick = (event, item) => {
 const showNewPresentationDialog = ref(false);
 
 const handleCreatingNewPresentation = (data) => {
-  presentationStore.createNewPresentation(data).then((response) => {
+  presentationsStore.createNewPresentation(data).then((response) => {
     router.push(
       clearRoutePathFromProps(ROUTE_PATHS.PRESENTATIONS.PRESENTATION) +
         response.data.id
@@ -676,7 +693,7 @@ const showNewFolderDialog = ref(false);
  */
 const handleMovingToFolderPresentations = (presentations, folder) => {
   presentations.forEach((presentation) => {
-    presentationStore.updatePresentation({
+    presentationsStore.updatePresentation({
       ...presentation,
       folder_id: presentation.folder_id === folder.id ? null : folder.id,
     });
@@ -693,7 +710,7 @@ const showPresentationDeletionConfirmationDialog = ref(false);
 
 const handleDeletingMultiplePresentations = (presentations) => {
   presentations.forEach((presentation) => {
-    presentationStore.deletePresentation(presentation);
+    presentationsStore.deletePresentation(presentation);
   });
 
   selectedPresentations.value = [];

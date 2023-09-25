@@ -113,9 +113,9 @@ const router = useRouter();
 /*
  * stores
  */
-const presentationStore = usePresentationsStore();
+const presentationsStore = usePresentationsStore();
 const { presentation, lastSavedAt, lastChangedAt } =
-  storeToRefs(presentationStore);
+  storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const {
@@ -178,7 +178,7 @@ onMounted(async () => {
   /*
    * fetch presentation data
    */
-  await presentationStore
+  await presentationsStore
     .fetchPresentationData(router.currentRoute.value.params.presentation_id)
     .then(() => {
       canvasStore.setElementsFromSlide();
@@ -259,7 +259,7 @@ const handleKeyDownEvent = (event) => {
     if (event.key === "s") {
       event.preventDefault();
       canvasStore.saveSlidePreview();
-      presentationStore.saveSlide(undefined, elements.value);
+      presentationsStore.saveSlide(undefined, elements.value);
     }
 
     // paste element
@@ -363,7 +363,7 @@ const handleUnload = (event) => {
       "You have unsaved changes. Are you sure you want to leave?";
 
     canvasStore.saveSlidePreview();
-    presentationStore.saveSlide(undefined, elements.value);
+    presentationsStore.saveSlide(undefined, elements.value);
   }
 };
 

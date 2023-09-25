@@ -226,8 +226,8 @@ const $q = useQuasar();
 /*
  * stores
  */
-const presentationStore = usePresentationsStore();
-const { presentation, slide } = storeToRefs(presentationStore);
+const presentationsStore = usePresentationsStore();
+const { presentation, slide } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { elements } = storeToRefs(canvasStore);
@@ -262,7 +262,7 @@ const handleKeyDownEvent = (event) => {
 };
 
 const handleSlideDeletion = async (element) => {
-  await presentationStore.deleteSlide(element);
+  await presentationsStore.deleteSlide(element);
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false);
   slide.value.isLivePreview = false;
@@ -303,7 +303,7 @@ const handleSlidesReorder = async () => {
     item.order = index;
     return item;
   });
-  await presentationStore.updateSlidesOrder();
+  await presentationsStore.updateSlidesOrder();
 };
 
 /*
@@ -317,7 +317,7 @@ const handleSlideSelection = async (newSlide) => {
   canvasStore.saveSlidePreview();
   deselectElement();
 
-  await presentationStore.setSlide(newSlide, elements.value);
+  await presentationsStore.setSlide(newSlide, elements.value);
 
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false, false, undefined, false);
@@ -328,17 +328,17 @@ const handleAddingNewSlide = async () => {
   deselectElement();
 
   slide.value.canvas_data = JSON.stringify(elements.value);
-  presentationStore.updateLocalSlide();
-  presentationStore.saveSlide(undefined, elements.value);
+  presentationsStore.updateLocalSlide();
+  presentationsStore.saveSlide(undefined, elements.value);
 
-  await presentationStore.addNewSlide();
+  await presentationsStore.addNewSlide();
 
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false);
 };
 
 const handleDuplicatingSlide = async (slide) => {
-  await presentationStore.duplicateSlide(slide, elements.value);
+  await presentationsStore.duplicateSlide(slide, elements.value);
 };
 
 /*

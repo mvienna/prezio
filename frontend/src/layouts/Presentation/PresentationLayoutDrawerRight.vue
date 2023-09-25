@@ -74,8 +74,8 @@ const { t } = useI18n({ useScope: "global" });
 /*
  * presentation store
  */
-const presentationStore = usePresentationsStore();
-const { presentation } = storeToRefs(presentationStore);
+const presentationsStore = usePresentationsStore();
+const { presentation } = storeToRefs(presentationsStore);
 
 /*
  * tabs
