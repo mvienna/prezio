@@ -43,7 +43,7 @@ class MediaController extends Controller
         // compress & optimize
         $imagePath = $media->getPath();
         Image::load($imagePath)
-            ->width(960)
+            ->width(1920)
             ->optimize()
             ->save($imagePath);
 
