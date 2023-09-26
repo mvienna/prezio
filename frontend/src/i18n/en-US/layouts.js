@@ -105,6 +105,9 @@ export default {
             },
           },
 
+          /*
+           * slide background
+           */
           slideBackground: {
             title: "Slide Background",
 
@@ -135,9 +138,19 @@ export default {
             },
           },
 
+          /*
+           * slide base fill
+           */
           slideBaseFill: {
             title: "Base Fill",
             set: "Set",
+          },
+
+          /*
+           * slide text default customization
+           */
+          defaultTextCustomization: {
+            title: "Default text params",
           },
         },
 

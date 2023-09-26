@@ -1,16 +1,23 @@
 <template>
-  <div class="row no-wrap items-center q-gutter-md">
+  <div class="text-grey">
+    {{
+      $t(
+        "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.title"
+      )
+    }}
+  </div>
+
+  <div class="row no-wrap items-center q-gutter-md q-pt-sm">
     <!-- font -->
     <q-select
       v-model="customization.default.font"
       :options="FONT_OPTIONS"
       emit-value
-      borderless
-      color="dark"
-      hide-dropdown-icon
+      outlined
+      color="primary"
       dense
       style="width: 100%"
-      class="q-pl-sm text-no-wrap"
+      class="text-no-wrap"
       @update:model-value="customization.font = customization.default.font"
     >
       <template #prepend>

@@ -105,6 +105,9 @@ export default {
             },
           },
 
+          /*
+           * slide background
+           */
           slideBackground: {
             title: "Фон слайда",
 
@@ -135,9 +138,19 @@ export default {
             },
           },
 
+          /*
+           * slide base fill
+           */
           slideBaseFill: {
             title: "Базовая заливка",
             set: "Задать",
+          },
+
+          /*
+           * slide text default customization
+           */
+          defaultTextCustomization: {
+            title: "Стандартные параметры текста",
           },
         },
 
