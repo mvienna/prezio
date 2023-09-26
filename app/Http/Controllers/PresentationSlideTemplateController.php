@@ -22,6 +22,8 @@ class PresentationSlideTemplateController extends Controller
             'is_private' => $request->is_private,
         ]);
 
+        $template->load(['slide', 'user']);
+
         return $this->jsonResponse($template->toArray());
     }
 

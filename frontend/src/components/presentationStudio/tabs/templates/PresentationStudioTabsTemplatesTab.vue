@@ -354,15 +354,9 @@ const handleCreatingNewTemplate = (data) => {
       slide_id: slide.value.id,
     })
     .then((response) => {
-      const template = {
-        ...response.data,
-        slide: slide.value,
-        user: user.value,
-      };
+      templates.value.push(response.data);
 
-      templates.value.push(template);
-
-      slide.value.template = template;
+      slide.value.template = response.data;
       presentationsStore.updateLocalSlide();
     })
     .catch((error) => {
