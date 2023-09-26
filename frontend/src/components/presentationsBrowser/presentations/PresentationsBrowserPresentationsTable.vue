@@ -551,7 +551,7 @@
 import { formatDateTime } from "src/helpers/dateUtils";
 import { date } from "quasar";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
-import PresentationBrowserNewPresentation from "components/presentations/browser/presentations/PresentationsBrowserNewPresentation.vue";
+import PresentationBrowserNewPresentation from "components/presentationsBrowser/presentations/PresentationsBrowserNewPresentation.vue";
 import { computed, onBeforeMount, ref } from "vue";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
@@ -560,7 +560,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { getFolderIconName } from "src/helpers/generationUtils";
-import PresentationBrowserNewFolder from "components/presentations/browser/folders/PresentationsBrowserNewFolder.vue";
+import PresentationBrowserNewFolder from "components/presentationsBrowser/folders/PresentationsBrowserNewFolder.vue";
 
 /*
  * variables

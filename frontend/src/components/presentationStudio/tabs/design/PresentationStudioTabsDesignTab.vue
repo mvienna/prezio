@@ -118,11 +118,11 @@ import { useCanvasMediaStore } from "stores/canvas/media";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
-import PresentationStudioTabsDesignTabBackgrounds from "components/presentation/studio/tabs/design/PresentationStudioTabsDesignTabBackgrounds.vue";
-import PresentationStudioTabsDesignTabBaseFill from "components/presentation/studio/tabs/design/PresentationStudioTabsDesignTabBaseFill.vue";
-import PresentationStudioTabsDesignTabSelectedBackground from "components/presentation/studio/tabs/design/PresentationStudioTabsDesignTabSelectedBackground.vue";
+import PresentationStudioTabsDesignTabBackgrounds from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabBackgrounds.vue";
+import PresentationStudioTabsDesignTabBaseFill from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabBaseFill.vue";
+import PresentationStudioTabsDesignTabSelectedBackground from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabSelectedBackground.vue";
 import { usePresentationsStore } from "stores/presentations";
-import PresentationStudioTabsDesignTabText from "components/presentation/studio/tabs/design/PresentationStudioTabsDesignTabText.vue";
+import PresentationStudioTabsDesignTabText from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabText.vue";
 
 /*
  * variables

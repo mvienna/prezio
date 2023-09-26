@@ -59,10 +59,10 @@ import { useCanvasTextStore } from "stores/canvas/text";
 import { useCanvasStore } from "stores/canvas";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 import { paste } from "stores/canvas/helpers/elementsContextMenuActions";
-import PresentationStudioToolbarTopCustomizationDrawing from "components/presentation/studio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationDrawing.vue";
-import PresentationStudioToolbarTopCustomizationText from "components/presentation/studio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationText.vue";
-import PresentationStudioToolbarTopCustomizationShape from "components/presentation/studio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationShape.vue";
-import PresentationStudioToolbarTopModes from "components/presentation/studio/toolbar/top/PresentationStudioToolbarTopModes.vue";
+import PresentationStudioToolbarTopCustomizationDrawing from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationDrawing.vue";
+import PresentationStudioToolbarTopCustomizationText from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationText.vue";
+import PresentationStudioToolbarTopCustomizationShape from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationShape.vue";
+import PresentationStudioToolbarTopModes from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopModes.vue";
 
 /*
  * stores

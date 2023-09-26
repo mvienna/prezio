@@ -195,7 +195,7 @@
 
 <script setup>
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
-import PresentationBrowserNewFolder from "components/presentations/browser/folders/PresentationsBrowserNewFolder.vue";
+import PresentationBrowserNewFolder from "components/presentationsBrowser/folders/PresentationsBrowserNewFolder.vue";
 import { ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";

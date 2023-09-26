@@ -50,8 +50,8 @@
 <script setup>
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
-import PresentationSettingsGeneralInfo from "components/presentation/settings/PresentationSettingsGeneralInfo.vue";
-import PresentationSettingsLanguage from "components/presentation/settings/PresentationSettingsLanguage.vue";
+import PresentationSettingsGeneralInfo from "components/presentationStudio/settings/PresentationSettingsGeneralInfo.vue";
+import PresentationSettingsLanguage from "components/presentationStudio/settings/PresentationSettingsLanguage.vue";
 
 /*
  * variables
