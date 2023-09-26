@@ -155,10 +155,61 @@ export default {
         },
 
         /*
-         * template
+         * templates
          */
-        template: {
-          title: "Шаблон",
+        templates: {
+          title: "Шаблоны",
+
+          categories: {
+            title: "Категория шаблонов",
+
+            work: "Работа",
+            school: "Школа",
+            fun: "Веселые",
+            holidays: "Праздничные",
+            other: "Другие",
+          },
+
+          search: {
+            placeholder: "Поиск шаблона...",
+            noResults: {
+              title: "Ничего не найдено",
+              template: "Шаблон",
+            },
+          },
+
+          createOrEdit: {
+            create: "Сохранить как шаблон",
+            edit: "Редактировать шаблон",
+
+            cancel: "Закрыть",
+            submit: "Сохранить",
+
+            fields: {
+              name: "Название шаблона",
+              description: "Описание шаблона",
+              privacy: {
+                public: {
+                  title: "Публичный",
+                  description: "Шаблон будет видна и доступна только Вам",
+                },
+                private: {
+                  title: "Приватный",
+                  description:
+                    "Шаблон будет виден и доступен другим пользователям",
+                },
+              },
+              category: "Категория шаблона",
+
+              errors: {
+                name: {
+                  required: "Необходимо ввести имя шаблона",
+                },
+              },
+            },
+          },
+
+          applied: "Шаблон успешно применен",
         },
 
         /*

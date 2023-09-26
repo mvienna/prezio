@@ -33,7 +33,7 @@ class PresentationController extends Controller
     {
         $user = auth()->user();
         if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.presentation.accessDenied'));
+            throw new \Exception(trans('errors.accessDenied'));
         }
 
         $presentation->update([
@@ -52,7 +52,7 @@ class PresentationController extends Controller
     {
         $user = auth()->user();
         if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.presentation.accessDenied'));
+            throw new \Exception(trans('errors.accessDenied'));
         }
 
         PresentationSlide::where('presentation_id', $presentation->id)->delete();
@@ -68,16 +68,16 @@ class PresentationController extends Controller
     {
         $user = auth()->user();
         if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.presentation.accessDenied'));
+            throw new \Exception(trans('errors.accessDenied'));
         }
 
-        $presentation->load('slides', 'preview');
+        $presentation->load('slides', 'slides.template', 'preview');
         return $this->jsonResponse($presentation->toArray());
     }
 
     public function get(): JsonResponse
     {
-        $presentations = Presentation::forUser()
+        $presentations = Presentation::byUser()
             ->with(['slides' => function ($query) {
                 $query->select('id', 'presentation_id', 'updated_at');
             }])

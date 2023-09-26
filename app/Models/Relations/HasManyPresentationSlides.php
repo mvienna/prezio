@@ -5,7 +5,7 @@ namespace App\Models\Relations;
 use App\Models\PresentationSlide;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-trait HasManySlides
+trait HasManyPresentationSlides
 {
     /**
      * @return HasMany

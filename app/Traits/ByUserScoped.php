@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
-trait UserScoped
+trait ByUserScoped
 {
-    public function scopeForUser($query)
+    public function scopeByUser($query)
     {
         $user = auth()->user();
 

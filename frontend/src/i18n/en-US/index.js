@@ -23,4 +23,9 @@ export default {
       confirm: "Confirm",
     },
   },
+
+  /*
+   * user
+   */
+  you: "(you)",
 };

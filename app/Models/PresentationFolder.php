@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use App\Models\Relations\HasManyPresentations;
-use App\Traits\UserScoped;
+use App\Traits\ByUserScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PresentationFolder extends BaseModel
 {
-    use HasFactory, UserScoped, HasManyPresentations, SoftDeletes;
+    use HasFactory, ByUserScoped, HasManyPresentations, SoftDeletes;
 }

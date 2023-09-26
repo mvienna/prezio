@@ -12,29 +12,28 @@
       <q-btn
         v-for="category in categories"
         :key="category.name"
+        :label="category.label"
+        :disable="category.disable"
         color="primary"
         :outline="selectedBackgroundsCategory !== category.name"
         :unelevated="selectedBackgroundsCategory === category.name"
         no-caps
         size="12px"
         style="padding: 0 8px; min-height: 28px"
-        :disable="category.disable"
         @click="selectedBackgroundsCategory = category.name"
-      >
-        {{ category.label }}
-      </q-btn>
+      />
     </div>
 
     <!-- backgrounds -->
     <div class="q-pa-xs scroll-y scroll--hidden" style="max-height: 410px">
-      <div class="background_options_grid">
+      <div class="backgrounds_grid">
         <div
           v-for="(background, backgroundIndex) in filteredBackgrounds"
           :key="backgroundIndex"
-          class="background_option"
+          class="background"
           :class="
             backgroundElement?.imageSrc === background.src
-              ? 'background_option--active'
+              ? 'background--active'
               : ''
           "
           @click="$emit('changeBackground', background)"
@@ -169,19 +168,9 @@ const handleBackgroundMouseLeave = () => {
 
 <style scoped lang="scss">
 /*
- * categories
- */
-::v-deep(.q-chip) {
-  border-radius: 8px;
-}
-::v-deep(.q-chip__icon) {
-  display: none;
-}
-
-/*
  * background options
  */
-.background_options_grid {
+.backgrounds_grid {
   columns: 3;
   gap: 16px;
 
@@ -190,7 +179,9 @@ const handleBackgroundMouseLeave = () => {
   }
 }
 
-.background_option {
+.background {
+  width: 100%;
+  display: inline-block;
   cursor: pointer;
   color: $grey;
   transition: 0.2s;
@@ -210,7 +201,7 @@ const handleBackgroundMouseLeave = () => {
     }
   }
 
-  &.background_option--active {
+  &.background--active {
     color: $black;
 
     .q-img {

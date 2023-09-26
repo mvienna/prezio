@@ -17,10 +17,5 @@ return [
     'media' => [
         'fileNotFound' => 'File not found',
     ],
-    'presentation' => [
-        'accessDenied' => 'Access denied'
-    ],
-    'folder' => [
-        'accessDenied' => 'Access denied'
-    ],
+    'accessDenied' => 'Access denied'
 ];

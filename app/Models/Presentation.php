@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\Relations\HasManySlides;
+use App\Models\Relations\HasManyPresentationSlides;
 use App\Models\Relations\HasOnePreview;
-use App\Traits\UserScoped;
+use App\Traits\ByUserScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Presentation extends BaseModel
 {
-    use HasFactory, UserScoped, HasManySlides, HasOnePreview;
+    use HasFactory, ByUserScoped, HasManyPresentationSlides, HasOnePreview;
 }

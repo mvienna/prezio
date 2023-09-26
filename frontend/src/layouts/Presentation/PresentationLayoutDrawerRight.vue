@@ -41,9 +41,7 @@
 
       <!-- template -->
       <q-tab-panel name="template">
-        <div class="text-h6 q-pb-md">
-          {{ $t("presentationLayout.rightDrawer.tabs.template.title") }}
-        </div>
+        <PresentationStudioTabsTemplatesTab />
       </q-tab-panel>
 
       <!-- audio -->
@@ -63,6 +61,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
 import PresentationStudioTabsLayersManagementTab from "components/presentationStudio/tabs/layers/PresentationStudioTabsLayersManagementTab.vue";
 import PresentationStudioTabsDesignTab from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTab.vue";
+import PresentationStudioTabsTemplatesTab from "components/presentationStudio/tabs/templates/PresentationStudioTabsTemplatesTab.vue";
 
 /*
  * variables
@@ -94,8 +93,8 @@ const rightDrawerTabs = [
   {
     name: "template",
     icon: "r_grid_view",
-    label: t("presentationLayout.rightDrawer.tabs.template.title"),
-    disable: true,
+    label: t("presentationLayout.rightDrawer.tabs.templates.title"),
+    disable: false, // TODO: disable if slide type is not content
   },
   {
     name: "audio",

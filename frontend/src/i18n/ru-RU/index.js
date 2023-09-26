@@ -23,4 +23,9 @@ export default {
       confirm: "Подтвердить",
     },
   },
+
+  /*
+   * user
+   */
+  you: "(вы)",
 };

@@ -155,10 +155,62 @@ export default {
         },
 
         /*
-         * template
+         * templates
          */
-        template: {
-          title: "Template",
+        templates: {
+          title: "Templates",
+
+          categories: {
+            title: "Template Categories",
+
+            work: "Work",
+            school: "School",
+            fun: "Fun",
+            holidays: "Holidays",
+            other: "Other",
+          },
+
+          search: {
+            placeholder: "Search for a template...",
+            noResults: {
+              title: "Nothing Found",
+              template: "Template",
+            },
+          },
+
+          createOrEdit: {
+            create: "Save as Template",
+            edit: "Edit Template",
+
+            cancel: "Close",
+            submit: "Save",
+
+            fields: {
+              name: "Template Name",
+              description: "Template Description",
+              privacy: {
+                public: {
+                  title: "Public",
+                  description:
+                    "The template will be visible and accessible only to you",
+                },
+                private: {
+                  title: "Private",
+                  description:
+                    "The template will be visible and accessible to other users",
+                },
+              },
+              category: "Template Category",
+
+              errors: {
+                name: {
+                  required: "Please enter the template name",
+                },
+              },
+            },
+          },
+
+          applied: "Template applied successfully",
         },
 
         /*

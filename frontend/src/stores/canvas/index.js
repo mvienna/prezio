@@ -385,12 +385,15 @@ export const useCanvasStore = defineStore("canvas", {
         }
       }
 
-      if (!showHelpers) return;
-
       /*
        * render live slide preview
        */
       this.renderSlidePreview();
+
+      /*
+       * stop if helpers render disabled
+       */
+      if (!showHelpers) return;
 
       /*
        * border

@@ -5,6 +5,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\PresentationFolderController;
 use App\Http\Controllers\PresentationSlideController;
+use App\Http\Controllers\PresentationSlideTemplateController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
      * folder(s)
      * presentation(s)
      * slide(s)
+     * slide template(s)
      */
     Route::resource('/folder', PresentationFolderController::class)->only(['store', 'update', 'destroy', 'show']);
     Route::get('/folders', [PresentationFolderController::class, 'get']);
@@ -52,4 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::resource('/presentation/{presentation}/slide', PresentationSlideController::class)->only(['store', 'update', 'destroy']);
     Route::patch('/presentation/{presentation}/slides', [PresentationSlideController::class, 'updateSlides']);
+
+    Route::resource('/slide-template', PresentationSlideTemplateController::class)->only(['store', 'update', 'destroy']);
+    Route::get('/slide-templates', [PresentationSlideTemplateController::class, 'get']);
 });

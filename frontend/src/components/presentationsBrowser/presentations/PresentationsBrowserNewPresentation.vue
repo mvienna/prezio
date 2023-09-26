@@ -1,13 +1,18 @@
 <template>
   <q-card flat>
     <q-card-section class="q-pa-lg">
-      <q-toolbar class="justify-between q-px-none">
-        <!-- title -->
-        <div class="text-h6 text-bold">
-          {{ $t("myPresentations.newPresentation.title") }}
-        </div>
+      <!-- icon -->
+      <div class="row justify-center q-mt-md">
+        <q-icon name="r_co_present" color="primary" size="52px" />
+      </div>
 
-        <!-- close -->
+      <!-- title -->
+      <div class="text-h6 text-bold text-center q-mt-sm q-mb-lg text-primary">
+        {{ $t("myPresentations.newPresentation.title") }}
+      </div>
+
+      <!-- close -->
+      <div class="absolute-right q-mt-lg q-mr-lg">
         <q-btn
           text-color="grey-5"
           unelevated
@@ -15,7 +20,7 @@
           round
           @click="$emit('close')"
         />
-      </q-toolbar>
+      </div>
 
       <q-form @submit.prevent="$emit('submit', form)">
         <!-- name -->
@@ -154,5 +159,6 @@ const nameRule = (value) => {
 .q-card {
   width: 100%;
   max-width: 500px;
+  border-radius: 16px !important;
 }
 </style>
