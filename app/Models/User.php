@@ -52,10 +52,16 @@ class User extends Authenticatable implements HasMedia
      */
     public function registerMediaConversions(Media $media = null): void
     {
-        $this->addMediaConversion('preview')
-            ->optimize()
-            ->nonQueued()
-            ->width(1920)
-            ->height(1080);
+        try {
+            $this->addMediaConversion('preview')
+                ->optimize()
+                ->nonQueued()
+                ->width(1920)
+                ->height(1080);
+        } catch (\Exception $e) {
+            \Log::info('Image optimization error: ' . $e->getMessage());
+            \Log::error('Image optimization error: ' . $e->getMessage());
+        }
     }
+
 }
