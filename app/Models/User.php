@@ -42,7 +42,8 @@ class User extends Authenticatable implements HasMedia
         'password' => 'hashed',
     ];
 
-    public function isAdmin() {
+    public function isAdmin(): bool
+    {
         return $this->email === env('ADMIN_EMAIL');
     }
 
@@ -51,10 +52,10 @@ class User extends Authenticatable implements HasMedia
      */
     public function registerMediaConversions(Media $media = null): void
     {
-//        $this->addMediaConversion('preview')
-//            ->optimize()
-//            ->nonQueued()
-//            ->width(1920)
-//            ->height(1080);
+        $this->addMediaConversion('preview')
+            ->optimize()
+            ->nonQueued()
+            ->width(1920)
+            ->height(1080);
     }
 }
