@@ -50,16 +50,16 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      class="bg-white q-px-sm q-pt-md"
-      :width="250"
+      class="q-px-sm q-pt-sm"
+      :width="260"
     >
-      <q-list class="full-height column q-gutter-sm">
+      <q-list class="full-height column">
         <!-- user links -->
         <q-item
           v-for="item in links"
           :key="item.name"
           :to="item.link"
-          class="items-center justify-start q-px-lg q-py-sm"
+          class="items-center justify-start q-px-lg q-py-md"
         >
           <q-icon
             :name="item.icon"
