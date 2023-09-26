@@ -89,13 +89,12 @@
             {{ template.description }}
           </div>
 
-          <q-separator
-            v-if="template.description && template.user"
-            class="q-my-sm bg-grey"
-          />
-
           <!-- template creator -->
-          <div v-if="template.user" class="text-center">
+          <div
+            v-if="template.user"
+            class="text-center"
+            :class="template.description ? 'q-mt-sm' : ''"
+          >
             {{ template.user.name }}
             <template v-if="template.user.id === user.id">
               {{ $t("you") }}
