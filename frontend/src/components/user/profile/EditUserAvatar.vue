@@ -93,6 +93,13 @@ const uploadFile = async (event) => {
     .post("/media", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "*",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Headers":
+          "X-Requested-With,Content-Type,X-Token-Auth,Authorization",
+        Accept: "application/json",
       },
     })
     .then((response) => {
