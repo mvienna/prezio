@@ -48,13 +48,14 @@
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      class="bg-black"
-      :width="250"
+      bordered
+      :width="260"
+      class="q-px-sm"
     >
       <!-- logo -->
       <div class="drawer__logo q-ma-lg">
         <router-link :to="ROUTE_PATHS.INDEX">
-          <q-img src="/logo_white.png" />
+          <q-img src="/logo_black.png" />
         </router-link>
       </div>
 
@@ -65,7 +66,7 @@
           :key="item.name"
           :to="item.link"
           dense
-          class="items-center justify-start text-grey-2 q-py-md"
+          class="items-center justify-start q-py-md"
         >
           <q-icon
             :name="item.icon"
