@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Image\Exceptions\InvalidManipulation;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -47,14 +46,11 @@ class User extends Authenticatable implements HasMedia
         return $this->email === env('ADMIN_EMAIL');
     }
 
-    /**
-     * @throws InvalidManipulation
-     */
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('preview')
-//            ->optimize()
-//            ->nonQueued()
+            ->optimize()
+            ->nonQueued()
             ->width(1920)
             ->height(1080);
     }
