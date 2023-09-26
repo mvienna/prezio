@@ -73,7 +73,9 @@
         <!-- category -->
         <!-- TODO: change accessibility by admins (user roles) -->
         <q-select
-          v-if="[1, 2].includes(user.id)"
+          v-if="
+            [2].includes(user.id) || user.email === 'inagamov.ar@yandex.com'
+          "
           v-model="form.category"
           :options="categories.filter((category) => category.label)"
           map-options
