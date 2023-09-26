@@ -217,7 +217,7 @@ const submit = async () => {
   width: 100vw;
 
   .container {
-    max-width: 500px;
+    max-width: 600px;
     width: 100%;
   }
 
@@ -228,9 +228,8 @@ const submit = async () => {
 
   form {
     padding: 48px;
-    border: 1.5px solid $grey-5;
     background: $white;
-    border-radius: 8px;
+    border-radius: 16px;
 
     .form__title {
       text-align: center;
