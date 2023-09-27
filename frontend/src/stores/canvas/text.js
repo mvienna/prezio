@@ -230,13 +230,13 @@ export const useCanvasTextStore = defineStore("canvasText", {
       this.customization.lineHeight = this.customization.default.lineHeight;
 
       this.customization.formatting.isBold =
-        this.customization.default.formatting;
+        this.customization.default.formatting.isBold;
       this.customization.formatting.isUnderline =
-        this.customization.default.formatting;
+        this.customization.default.formatting.isUnderline;
       this.customization.formatting.isLineThrough =
-        this.customization.default.formatting;
+        this.customization.default.formatting.isLineThrough;
       this.customization.formatting.isItalic =
-        this.customization.default.formatting;
+        this.customization.default.formatting.isItalic;
 
       this.customization.formatting.alignment =
         this.customization.default.formatting.alignment;
