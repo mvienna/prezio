@@ -183,7 +183,7 @@
         "
         :selected-presentations="selectedPresentations"
         :is-loading="isLoading.creatingFolder"
-        @close="showNewFolderDialog = false"
+        @cancel="showNewFolderDialog = false"
         @submit="
           presentationsStore.createNewFolder($event);
           showNewFolderDialog = false;

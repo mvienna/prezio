@@ -271,7 +271,7 @@
 
       <q-dialog v-model="showSelectBackgroundDialog">
         <SelectMedia
-          @close="showSelectBackgroundDialog = false"
+          @cancel="showSelectBackgroundDialog = false"
           @select="
             $emit('changeBackground', {
               background: $event,

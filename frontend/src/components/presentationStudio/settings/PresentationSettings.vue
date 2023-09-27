@@ -15,7 +15,7 @@
           round
           flat
           color="grey"
-          @click="$emit('close')"
+          @click="$emit('cancel')"
         />
       </q-toolbar>
 
@@ -58,7 +58,7 @@ import PresentationSettingsLanguage from "components/presentationStudio/settings
  */
 const { t } = useI18n({ useScope: "global" });
 
-defineEmits(["close"]);
+defineEmits(["cancel"]);
 
 /*
  * tabs

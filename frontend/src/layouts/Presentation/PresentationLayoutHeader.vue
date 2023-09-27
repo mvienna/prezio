@@ -180,7 +180,7 @@
     </q-toolbar>
 
     <q-dialog v-model="showSettingsDialog" position="right">
-      <PresentationSettings @close="showSettingsDialog = false" />
+      <PresentationSettings @cancel="showSettingsDialog = false" />
     </q-dialog>
   </q-header>
 </template>

@@ -50,7 +50,7 @@
     <!-- select media -->
     <q-dialog v-model="showSelectMediaDialog">
       <SelectMedia
-        @close="showSelectMediaDialog = false"
+        @cancel="showSelectMediaDialog = false"
         @select="
           $emit(
             'addImage',

@@ -12,7 +12,7 @@
           unelevated
           icon="r_close"
           round
-          @click="$emit('close')"
+          @click="$emit('cancel')"
         />
       </q-toolbar>
 
@@ -340,7 +340,7 @@ const { t } = useI18n({ useScope: "global" });
 
 const { user } = storeToRefs(useAuthStore());
 
-const emit = defineEmits(["close", "select"]);
+const emit = defineEmits(["cancel", "select"]);
 
 const props = defineProps({
   collection: { type: String, default: "default" },

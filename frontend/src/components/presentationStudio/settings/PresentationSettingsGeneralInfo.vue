@@ -82,7 +82,7 @@
     <!-- select preview -->
     <q-dialog v-model="showSelectPreviewDialog">
       <SelectMedia
-        @close="showSelectPreviewDialog = false"
+        @cancel="showSelectPreviewDialog = false"
         @select="
           presentation.preview = $event;
           presentation.preview_id = $event.id;

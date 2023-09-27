@@ -524,7 +524,7 @@
         :folders="folders"
         :selected-folder="selectedFolder"
         :is-loading="isLoading.creatingPresentation"
-        @close="showNewPresentationDialog = false"
+        @cancel="showNewPresentationDialog = false"
         @submit="handleCreatingNewPresentation($event)"
       />
     </q-dialog>
@@ -537,7 +537,7 @@
         "
         :selected-presentations="selectedPresentations"
         :is-loading="isLoading.creatingFolder"
-        @close="showNewFolderDialog = false"
+        @cancel="showNewFolderDialog = false"
         @submit="
           presentationsStore.createNewFolder($event);
           showNewFolderDialog = false;
