@@ -298,7 +298,7 @@ const showApplyDesignToAllSlidesDialog = ref(false);
 const applyDesignToAllSlides = () => {
   presentation.value.slides.map((item) => {
     if (slide.id !== slide.value.id) {
-      item.canvas_data = JSON.parse(item.canvas_data);
+      item.canvas_data = item.canvas_data ? JSON.parse(item.canvas_data) : [];
 
       item.canvas_data = item.canvas_data.filter(
         (element) =>
