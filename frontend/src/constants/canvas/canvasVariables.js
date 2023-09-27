@@ -1,12 +1,14 @@
 export const BRUSH_SIZE_OPTIONS = [
   { value: 1, label: "1px" },
   { value: 2, label: "2px" },
-  { value: 3, label: "3px" },
   { value: 4, label: "4px" },
   { value: 8, label: "8px" },
-  { value: 12, label: "12px" },
   { value: 16, label: "16px" },
   { value: 24, label: "24px" },
+  { value: 32, label: "36px" },
+  { value: 48, label: "48px" },
+  { value: 64, label: "64px" },
+  { value: 96, label: "96px" },
 ];
 
 export const BRUSH_TYPES = [
@@ -21,12 +23,12 @@ export const FONT_OPTIONS = [
   "Arial",
   "Helvetica",
   "Times New Roman",
-  "Times",
+  // "Times",
   "Courier New",
   "Courier",
   "Georgia",
   "Palatino",
-  "Palatino Linotype",
+  // "Palatino Linotype",
   "Verdana",
   "Geneva",
   "Tahoma",
@@ -36,21 +38,16 @@ export const FONT_OPTIONS = [
 ];
 
 export const FONT_SIZE_OPTIONS = [
+  "1px",
+  "2px",
+  "4px",
   "8px",
-  "10px",
-  "11px",
-  "12px",
-  "14px",
   "16px",
-  "18px",
-  "20px",
-  "22px",
   "24px",
-  "28px",
-  "32px",
   "36px",
-  "44px",
   "48px",
+  "64px",
+  "96px",
 ];
 
 export const ALIGNMENT = {
@@ -79,16 +76,12 @@ export const SHAPES_OPTIONS = {
 export const SHAPE_LINE_WIDTH_OPTIONS = [
   { value: 1, label: "1px" },
   { value: 2, label: "2px" },
-  { value: 3, label: "3px" },
   { value: 4, label: "4px" },
   { value: 8, label: "8px" },
-  { value: 12, label: "12px" },
   { value: 16, label: "16px" },
   { value: 24, label: "24px" },
-  { value: 28, label: "28px" },
-  { value: 32, label: "32px" },
-  { value: 36, label: "36px" },
-  { value: 40, label: "40px" },
-  { value: 44, label: "44px" },
+  { value: 32, label: "36px" },
   { value: 48, label: "48px" },
+  { value: 64, label: "64px" },
+  { value: 96, label: "96px" },
 ];
