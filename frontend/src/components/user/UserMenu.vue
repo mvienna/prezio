@@ -5,7 +5,7 @@
     no-wrap
     text-color="black"
     class="text-semibold"
-    :class="isAvatarOnly ? 'q-pa-none' : 'q-pa-xs q-pl-md'"
+    :class="isAvatarOnly ? 'q-pa-none' : 'q-pa-xs q-pl-md bg-blue-1'"
     :round="isAvatarOnly"
   >
     <template #default>
@@ -14,7 +14,7 @@
       </div>
       <UserAvatar
         :user="user"
-        :size="isAvatarOnly ? '36px' : '27px'"
+        :size="isAvatarOnly ? '36px' : '30px'"
         color="primary"
         style="border-radius: 8px"
       />
@@ -126,3 +126,9 @@ const userMenuLinks = ref([
  */
 const VERSION = process.env.VERSION?.substring(0, 7)?.replaceAll('"', "");
 </script>
+
+<style scoped lang="scss">
+.q-btn {
+  border-radius: 10px;
+}
+</style>
