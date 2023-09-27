@@ -12,9 +12,17 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * presentations
      */
+    pagination: {
+      sortBy: "updated_at",
+      descending: true,
+      page: 1,
+      rowsPerPage: 10,
+    },
     presentations: [],
     selectedPresentations: [],
     search: "",
+
+    userHasPresentations: true,
 
     /*
      * presentation
@@ -60,15 +68,7 @@ export const usePresentationsStore = defineStore("presentations", {
           this.folders.push(response.data);
           this.selectedFolder = response.data;
 
-          if (data.presentationsIds.length) {
-            data.presentationsIds.forEach((id) => {
-              const presentationIndex = this.presentations.findIndex(
-                (item) => item.id === id
-              );
-              this.presentations[presentationIndex].folder_id =
-                this.selectedFolder.id;
-            });
-          }
+          this.fetchPresentations();
         })
         .catch((error) => {
           console.log(error);
@@ -103,13 +103,7 @@ export const usePresentationsStore = defineStore("presentations", {
             this.selectedFolder = null;
           }
 
-          this.presentations.map((presentation) => {
-            if (presentation.folder_id === folder.id) {
-              presentation.folder_id = null;
-            }
-
-            return presentation;
-          });
+          this.fetchPresentations();
         })
         .catch((error) => {
           console.log(error.response.data.message);
@@ -119,12 +113,34 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * presentations
      */
-    fetchPresentations() {
+    fetchPresentations(props = null) {
+      const { page, rowsPerPage, sortBy, descending } =
+        props?.pagination || this.pagination;
+
+      const params = new URLSearchParams({
+        page: page,
+        limit: rowsPerPage,
+        descending: descending,
+        ...(sortBy || {}),
+
+        ...(this.selectedFolder ? { folder_id: this.selectedFolder.id } : {}),
+      });
+
       this.isLoading.fetchingPresentations = true;
       api
-        .get("/presentations")
+        .get(`/presentations?${params}`)
         .then((response) => {
-          this.presentations = response.data;
+          this.presentations = response.data.rows;
+
+          this.userHasPresentations = response.data.userHasPresentations;
+
+          this.pagination = {
+            rowsNumber: response.data.total,
+            page: page,
+            rowsPerPage: rowsPerPage,
+            sortBy: sortBy,
+            descending: descending,
+          };
         })
         .catch((error) => {
           console.log(error);
@@ -164,8 +180,8 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    updatePresentation(presentation = this.presentation) {
-      api
+    async updatePresentation(presentation = this.presentation) {
+      return await api
         .patch(`/presentation/${presentation.id}`, {
           name: presentation.name,
           folder_id: presentation.folder_id,
@@ -185,14 +201,9 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    deletePresentation(presentation = this.presentation) {
-      api
+    async deletePresentation(presentation = this.presentation) {
+      return await api
         .delete(`/presentation/${presentation.id}`)
-        .then(() => {
-          this.presentations = this.presentations.filter(
-            (item) => item.id !== presentation.id
-          );
-        })
         .catch((error) => {
           console.log(error.response.data.message);
         });

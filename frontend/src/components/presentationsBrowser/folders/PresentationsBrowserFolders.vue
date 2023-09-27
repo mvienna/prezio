@@ -25,7 +25,10 @@
         :key="folder.id"
         class="folder"
         :class="selectedFolder?.id === folder.id ? 'folder--active' : ''"
-        @click="selectedFolder = folder"
+        @click="
+          selectedFolder = folder;
+          presentationsStore.fetchPresentations();
+        "
       >
         <div class="row no-wrap justify-center relative-position">
           <!-- folder icon -->

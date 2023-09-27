@@ -75,18 +75,45 @@ class PresentationController extends Controller
         return $this->jsonResponse($presentation->toArray());
     }
 
-    public function get(): JsonResponse
+    public function get(Request $request): JsonResponse
     {
-        $presentations = Presentation::byUser()
+        /*
+         * pagination & other params
+         */
+        $page = $request->query('page', 1);
+        $limit = $request->query('limit', 10);
+        $sortBy = $request->query('sortBy', 'updated_at');
+        $descending = filter_var($request->query('descending', false), FILTER_VALIDATE_BOOLEAN);
+
+        $folder_id = $request->query('folder_id', null);
+        $offset = ($page - 1) * $limit;
+
+        $userHasPresentations = Presentation::byUser()->count() > 0;
+
+        /*
+         * query
+         */
+        $query = Presentation::byUser()
             ->with(['slides' => function ($query) {
                 $query->select('id', 'presentation_id', 'updated_at');
             }])
-            ->with('preview')
+            ->with('preview');
+
+        $query = $query->where('folder_id', $folder_id);
+        $totalFiltered = $query->count();
+
+        $query = $descending ? $query->orderByDesc($sortBy) : $query->orderBy($sortBy);
+        $presentations = $query
+            ->skip($offset)
+            ->take($limit)
             ->get()
             ->toArray();
 
+        /*
+         * preview
+         */
         foreach ($presentations as &$presentation) {
-            if (!isset($presentation['preview'])) {
+            if (!isset($presentation['preview']) && isset($presentation['slides'][0])) {
                 $slide_id = $presentation['slides'][0]['id'];
                 $slide = PresentationSlide::select('preview')->find($slide_id);
 
@@ -96,6 +123,10 @@ class PresentationController extends Controller
             }
         }
 
-        return $this->jsonResponse($presentations);
+        return $this->jsonResponse([
+            'rows' => $presentations,
+            'total' => $totalFiltered,
+            'userHasPresentations' => $userHasPresentations
+        ]);
     }
 }

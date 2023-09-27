@@ -1,10 +1,9 @@
 <template>
   <div class="full-height">
     <q-table
-      v-if="presentations?.length"
-      :rows="filteredPresentations"
+      :rows="presentations"
       :columns="presentationsColumns"
-      :pagination="pagination"
+      v-model:pagination="pagination"
       :filter="search"
       selection="multiple"
       v-model:selected="selectedPresentations"
@@ -13,7 +12,7 @@
       separator="none"
       color="primary"
       class="bg-grey-2"
-      :loading="isLoading.fetchingPresentations"
+      @request="presentationsStore.fetchPresentations"
       @row-click="handlePresentationClick"
     >
       <template v-slot:top>
@@ -26,7 +25,10 @@
             class="q-mr-sm"
             size="10px"
             :disable="!selectedFolder"
-            @click="selectedFolder = null"
+            @click="
+              selectedFolder = null;
+              presentationsStore.fetchPresentations();
+            "
           />
 
           <!-- title -->
@@ -35,6 +37,11 @@
               selectedFolder ? selectedFolder.name : $t("myPresentations.title")
             }}
           </div>
+
+          <q-spinner-ios
+            v-if="isLoading.fetchingPresentations"
+            class="q-ml-sm"
+          />
         </div>
 
         <q-space />
@@ -96,6 +103,7 @@
                   clickable
                   dense
                   v-close-popup
+                  :active="folder.id === selectedPresentations[0].folder_id"
                   @click="
                     handleMovingToFolderPresentations(
                       selectedPresentations,
@@ -161,7 +169,7 @@
                   showMultiplePresentationsDeletionConfirmationDialog = false
                 "
                 @confirm="
-                  handleDeletingMultiplePresentations(selectedPresentations);
+                  handleDeletingPresentations(selectedPresentations);
                   showMultiplePresentationsDeletionConfirmationDialog = false;
                 "
               />
@@ -186,7 +194,7 @@
 
             <div class="q-ml-sm column no-wrap q-gutter-sm">
               <!-- name -->
-              <div class="text-semibold">
+              <span class="text-semibold">
                 {{ props.row.name }}
 
                 <q-popup-edit
@@ -203,7 +211,7 @@
                     @keyup.enter="scope.set"
                   />
                 </q-popup-edit>
-              </div>
+              </span>
 
               <div class="row no-wrap items-center">
                 <!-- privacy -->
@@ -467,7 +475,7 @@
                     confirm-btn-color="red"
                     @cancel="showPresentationDeletionConfirmationDialog = false"
                     @confirm="
-                      presentationsStore.deletePresentation(props.value);
+                      handleDeletingPresentations([props.value]);
                       showPresentationDeletionConfirmationDialog = false;
                     "
                   />
@@ -480,7 +488,10 @@
     </q-table>
 
     <!-- no presentations -->
-    <div v-else class="column no-wrap justify-center q-mt-lg">
+    <div
+      v-if="!userHasPresentations"
+      class="column no-wrap justify-center q-mt-lg"
+    >
       <!-- winking emoji -->
       <div class="row justify-center">
         <q-img src="/assets/icons/emojis/Winking.png" style="width: 64px" />
@@ -552,7 +563,7 @@ import { formatDateTime } from "src/helpers/dateUtils";
 import { date } from "quasar";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import PresentationBrowserNewPresentation from "components/presentationsBrowser/presentations/PresentationsBrowserNewPresentation.vue";
-import { computed, onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import { storeToRefs } from "pinia";
@@ -580,15 +591,9 @@ const {
   selectedPresentations,
   search,
   isLoading,
+  pagination,
+  userHasPresentations,
 } = storeToRefs(presentationsStore);
-
-const filteredPresentations = computed(() => {
-  return presentations.value.filter((presentation) =>
-    selectedFolder.value
-      ? presentation.folder_id === selectedFolder.value?.id
-      : !presentation.folder_id
-  );
-});
 
 /*
  * fetch presentations
@@ -629,7 +634,7 @@ const presentationsColumns = [
     label: t("myPresentations.columns.updated"),
     align: "center",
     field: (row) => {
-      const latestUpdatedSlide = row.slides.reduce((prev, current) =>
+      const latestUpdatedSlide = row.slides?.reduce((prev, current) =>
         new Date(current.updated_at) > new Date(prev.updated_at)
           ? current
           : prev
@@ -655,18 +660,11 @@ const presentationsColumns = [
   },
 ];
 
-const pagination = ref({
-  sortBy: "updated_at",
-  descending: true,
-  page: 1,
-  rowsPerPage: 10,
-});
-
 /*
  * open presentation
  */
 const handlePresentationClick = (event, item) => {
-  if (event.target.nodeName === "TD") {
+  if (!["I", "SPAN"].includes(event.target.nodeName)) {
     router.push(
       clearRoutePathFromProps(ROUTE_PATHS.PRESENTATIONS.PRESENTATION) + item.id
     );
@@ -695,14 +693,17 @@ const showNewFolderDialog = ref(false);
 /*
  * move presentations to folder
  */
-const handleMovingToFolderPresentations = (presentations, folder) => {
-  presentations.forEach((presentation) => {
-    presentationsStore.updatePresentation({
-      ...presentation,
-      folder_id: presentation.folder_id === folder.id ? null : folder.id,
-    });
-  });
+const handleMovingToFolderPresentations = async (presentations, folder) => {
+  await Promise.all(
+    presentations.map(async (presentation) => {
+      await presentationsStore.updatePresentation({
+        ...presentation,
+        folder_id: presentation.folder_id === folder.id ? null : folder.id,
+      });
+    })
+  );
 
+  presentationsStore.fetchPresentations();
   selectedPresentations.value = [];
 };
 
@@ -712,11 +713,14 @@ const handleMovingToFolderPresentations = (presentations, folder) => {
 const showMultiplePresentationsDeletionConfirmationDialog = ref(false);
 const showPresentationDeletionConfirmationDialog = ref(false);
 
-const handleDeletingMultiplePresentations = (presentations) => {
-  presentations.forEach((presentation) => {
-    presentationsStore.deletePresentation(presentation);
-  });
+const handleDeletingPresentations = async (presentations) => {
+  await Promise.all(
+    presentations.map(async (presentation) => {
+      await presentationsStore.deletePresentation(presentation);
+    })
+  );
 
+  presentationsStore.fetchPresentations();
   selectedPresentations.value = [];
 };
 </script>
