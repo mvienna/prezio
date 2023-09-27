@@ -236,9 +236,20 @@
     color="dark"
     hide-dropdown-icon
     dense
+    options-dense
     class="q-pl-sm text-no-wrap"
     @update:model-value="textStore.applyStyles()"
   >
+    <template #option="scope">
+      <q-item v-bind="scope.itemProps">
+        <q-item-section>
+          <q-item-label :style="`font-family: ${scope.opt}`">{{
+            scope.opt
+          }}</q-item-label>
+        </q-item-section>
+      </q-item>
+    </template>
+
     <template #prepend>
       <q-icon
         name="r_text_fields"
@@ -262,6 +273,7 @@
     hide-dropdown-icon
     dense
     class="q-px-md"
+    options-dense
     @update:model-value="textStore.applyStyles()"
   >
     <template #prepend>

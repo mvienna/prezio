@@ -37,6 +37,7 @@
     hide-dropdown-icon
     dense
     class="q-px-sm"
+    options-dense
     @update:model-value="drawingStore.applyStyles()"
   >
     <template #prepend>
@@ -63,6 +64,7 @@
     color="dark"
     hide-dropdown-icon
     dense
+    options-dense
     @update:model-value="drawingStore.applyStyles()"
   >
     <template #prepend>

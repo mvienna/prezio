@@ -100,6 +100,7 @@
     dense
     hide-dropdown-icon
     class="q-pl-sm"
+    options-dense
     @update:model-value="shapeStore.applyStyles()"
   >
     <template #prepend>
