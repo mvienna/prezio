@@ -1,19 +1,19 @@
 export default {
   /*
-   * my presentations table
+   * My presentations table
    */
   myPresentations: {
     title: "My Presentations",
 
     /*
-     * actions
+     * Actions
      */
     actions: {
       delete: {
         title: "Delete",
 
         confirmation: {
-          title: "Deleting Presentations",
+          title: "Delete Presentations",
           message:
             "Are you sure you want to delete the selected presentations?",
         },
@@ -22,7 +22,7 @@ export default {
     },
 
     /*
-     * columns
+     * Columns
      */
     columns: {
       name: "Presentation Name",
@@ -32,17 +32,18 @@ export default {
     },
 
     /*
-     * no presentations
+     * No presentations
      */
     noPresentations: {
       title: "You haven't created any presentations yet",
-      description: "Choose a template or create your own style. It's easy!",
+      description:
+        "Choose a template or create your own style. It's very easy!",
       import: "Upload PowerPoint",
       create: "New Presentation",
     },
 
     /*
-     * presentation row
+     * Presentation row
      */
     presentationRow: {
       actions: {
@@ -56,7 +57,7 @@ export default {
             title: "Delete",
 
             confirmation: {
-              title: "Deleting Folder",
+              title: "Delete Folder",
               message: "Are you sure you want to delete the selected folder?",
             },
           },
@@ -69,7 +70,7 @@ export default {
           title: "Delete",
 
           confirmation: {
-            title: "Deleting Presentation",
+            title: "Delete Presentation",
             message:
               "Are you sure you want to delete the selected presentation?",
           },
@@ -78,58 +79,71 @@ export default {
     },
 
     /*
-     * new presentation
+     * New presentation
      */
     newPresentation: {
       title: "New Presentation",
-      name: "Presentation Name",
-      description: "Presentation Description",
-      folder: "Folder",
-      privacy: {
-        public: {
-          title: "Public",
-          description:
-            "The presentation will be visible and accessible to other users",
+
+      fields: {
+        name: "Presentation Name",
+        description: "Presentation Description",
+        folder: "Folder",
+        privacy: {
+          public: {
+            title: "Public",
+            description:
+              "The presentation will be visible and accessible to other users",
+          },
+          private: {
+            title: "Private",
+            description:
+              "The presentation will be visible and accessible only to you",
+          },
         },
-        private: {
-          title: "Private",
-          description:
-            "The presentation will be visible and accessible only to you",
+
+        errors: {
+          name: {
+            required: "Presentation name is required",
+          },
         },
       },
-      create: "Create New Presentation",
-      errors: {
-        name: {
-          required: "Presentation name is required",
-        },
-      },
+
+      cancel: "Cancel",
+      create: "Create",
     },
 
     /*
-     * new folder
+     * New folder
      */
     newFolder: {
       title: "New Folder",
-      name: "Folder Name",
-      description: "Folder Description",
-      addPresentations: "Add Presentations",
-      privacy: {
-        public: {
-          title: "Public",
-          description:
-            "The folder will be visible and accessible to other users",
+
+      fields: {
+        name: "Folder Name",
+        description: "Folder Description",
+        addPresentations: "Add Presentations",
+        privacy: {
+          public: {
+            title: "Public",
+            description:
+              "The folder will be visible and accessible to other users",
+          },
+          private: {
+            title: "Private",
+            description:
+              "The folder will be visible and accessible only to you",
+          },
         },
-        private: {
-          title: "Private",
-          description: "The folder will be visible and accessible only to you",
+
+        errors: {
+          name: {
+            required: "Folder name is required",
+          },
         },
       },
-      create: "Create New Folder",
-      errors: {
-        name: {
-          required: "Folder name is required",
-        },
-      },
+
+      cancel: "Cancel",
+      create: "Create",
     },
   },
 };
