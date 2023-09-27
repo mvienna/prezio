@@ -2,6 +2,10 @@ import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generationUtils";
 import { updateSelectedElement } from "stores/canvas/helpers/select";
+import {
+  BRUSH_SIZE_OPTIONS,
+  BRUSH_TYPES,
+} from "src/constants/canvas/canvasVariables";
 
 const { ctx, elements, mouse, MODES_OPTIONS, selectedElement } = storeToRefs(
   useCanvasStore()
@@ -30,9 +34,9 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
      * customization
      */
     customization: {
-      color: "#000000",
-      brushSize: 10,
-      selectedBrushType: "pen",
+      color: "#313232",
+      brushSize: BRUSH_SIZE_OPTIONS[4],
+      selectedBrushType: BRUSH_TYPES[0],
     },
   }),
 
