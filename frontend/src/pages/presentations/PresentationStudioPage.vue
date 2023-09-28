@@ -421,10 +421,14 @@ const handleCanvasMouseDown = () => {
 
   if (mode.value !== MODES_OPTIONS.value.textEditing) {
     if (!resizeHandle.value && !rotationHandle.value) {
+      const selectedElementCopy = selectedElement.value;
+
       selectElement();
 
-      if (selectedElement.value) {
+      if (selectedElement.value?.id === selectedElementCopy?.id) {
         timesSelected.value++;
+      } else if (selectedElement.value) {
+        timesSelected.value = 1;
       }
     }
   }

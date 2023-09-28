@@ -67,7 +67,7 @@ export const useCanvasStore = defineStore("canvas", {
     selectedElementBorder: {
       borderWidth: 2,
       borderColor: "#4971FF",
-      padding: 4,
+      padding: 0,
     },
 
     selectedElementRotationHandle: {
@@ -125,7 +125,7 @@ export const useCanvasStore = defineStore("canvas", {
 
   actions: {
     canvasRect() {
-      return this.canvas.getBoundingClientRect();
+      return this.canvas?.getBoundingClientRect();
     },
 
     switchMode(mode) {
@@ -457,47 +457,37 @@ export const useCanvasStore = defineStore("canvas", {
         this.canvasRect().width;
 
       /*
+       * apply text customization
+       */
+      this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${adjustedFontSize}px ${element.fontFamily}`;
+      this.ctx.fillStyle = element.color;
+
+      /*
        * wrap text
+       * break text into lines
        */
       const wrapText = () => {
-        // change context to element customization
-        this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${element.fontSize} ${element.fontFamily}`;
-
-        let line = "";
-        let wrappedText = "";
-
-        // exception: one-word string is always inline
         const words = element.text.split(" ");
-        if (words.length === 1) {
-          element.width = this.ctx.measureText(element.text).width + padding;
-          return element.text;
-        }
+        const lines = [];
+        let currentLine = words[0];
 
-        for (const word of words) {
-          const testLine = line.length === 0 ? word : line + " " + word;
-          const testWidth = this.ctx.measureText(testLine).width;
+        for (let i = 1; i < words.length; i++) {
+          const testLine = currentLine + " " + words[i];
+          const testLineWidth = this.ctx.measureText(testLine).width;
 
-          if (testWidth <= element.width + padding) {
-            line = testLine;
+          if (testLineWidth < this.computeAdjustedSize(element.width)) {
+            currentLine = testLine;
           } else {
-            wrappedText += line + "<br>";
-            line = word;
+            lines.push(currentLine);
+            currentLine = words[i];
           }
         }
 
-        if (wrappedText.length === 0) {
-          wrappedText = line;
-        } else {
-          wrappedText += line;
-        }
-
-        return wrappedText;
+        lines.push(currentLine);
+        return lines;
       };
 
-      /*
-       * break text into lines
-       */
-      let lines = wrapText().split("<br>");
+      let lines = wrapText().filter((line) => line.length);
 
       /*
        * align
@@ -512,20 +502,15 @@ export const useCanvasStore = defineStore("canvas", {
          * x
          */
         let x = element.x;
-        const lineWidth = this.computeAdjustedSize(
-          this.ctx.measureText(line).width
-        );
-
-        this.computeAdjustedSize(element.width);
+        const lineWidth = this.ctx.measureText(line).width;
 
         switch (element.textAlign) {
           case ALIGNMENT.horizontal.right:
-            x =
-              element.x + width - lineWidth - this.computeAdjustedSize(padding);
+            x = element.x + width - lineWidth - padding * 2;
             break;
 
           case ALIGNMENT.horizontal.center:
-            x = element.x + width / 2 - lineWidth / 2 - padding * 2;
+            x = element.x + width / 2 - lineWidth / 2;
             break;
         }
 
@@ -534,7 +519,7 @@ export const useCanvasStore = defineStore("canvas", {
          */
         let y =
           element.y +
-          adjustedFontSize * element.lineHeight +
+          adjustedFontSize +
           index * adjustedFontSize * element.lineHeight;
 
         switch (element.verticalAlign) {
@@ -546,21 +531,12 @@ export const useCanvasStore = defineStore("canvas", {
             break;
 
           case ALIGNMENT.vertical.middle:
-            y +=
-              height / 2 -
-              adjustedFontSize * element.lineHeight -
-              this.computeAdjustedSize(padding);
+            y += height / 2 - adjustedFontSize + element.lineHeight;
             break;
         }
 
         linesPosition.push({ x: x, y: y });
       });
-
-      /*
-       * apply text customization
-       */
-      this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${adjustedFontSize}px ${element.fontFamily}`;
-      this.ctx.fillStyle = element.color;
 
       /*
        * draw text lines
@@ -576,7 +552,7 @@ export const useCanvasStore = defineStore("canvas", {
             x,
             y + padding,
             this.ctx.measureText(line).width,
-            4
+            this.computeAdjustedSize(4)
           );
         }
 
@@ -587,7 +563,7 @@ export const useCanvasStore = defineStore("canvas", {
             x,
             y - (adjustedFontSize * element.lineHeight) / 3 + padding,
             this.ctx.measureText(line).width,
-            4
+            this.computeAdjustedSize(4)
           );
         }
 

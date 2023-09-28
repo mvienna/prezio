@@ -155,6 +155,56 @@ export default {
         },
 
         /*
+         * types
+         */
+        types: {
+          title: "Типы",
+
+          options: {
+            content: {
+              title: "Контент",
+
+              layouts: {
+                blank: "Пустой",
+                titleSlide: "Титульный слайд",
+                title: "Заголовок",
+                titleAndBody: "Заголовок и обьект",
+                titleAndTwoColumns: "Заголовок и два обьекта",
+                titleOnly: "Только заголовок",
+              },
+            },
+
+            /*
+             * quizzes & games
+             */
+            quizzesAndGames: {
+              title: "Игры & Викторины",
+
+              pickAnswer: "Выбор ответа",
+              pickImage: "Выбор изображения",
+              typeAnswer: "Ввод ответа",
+              spinnerWheel: "Колесо фортуны",
+              matchPairs: "Совпадающие пары",
+              correctOrder: "Правильный порядок",
+            },
+
+            /*
+             * opinion
+             */
+            userAnswer: {
+              title: "Мнение & Вопрос - Ответ",
+
+              poll: "Опрос",
+              openEnded: "Открытый ответ",
+              wordCloud: "Облако слов",
+              scales: "Графики",
+              questionsAndAnswers: "Вопрос - Ответ",
+              brainStorm: "Брейншторм",
+            },
+          },
+        },
+
+        /*
          * templates
          */
         templates: {

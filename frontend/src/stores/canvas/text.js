@@ -2,7 +2,10 @@ import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { generateUniqueId } from "src/helpers/generationUtils";
-import { updateSelectedElement } from "stores/canvas/helpers/select";
+import {
+  deselectElement,
+  updateSelectedElement,
+} from "stores/canvas/helpers/select";
 
 const {
   MODES_OPTIONS,
@@ -157,8 +160,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       const canvasRect = canvasStore.canvasRect();
       this.input.style.left =
         canvasRect.left +
-        (selectedElement.value.x * canvasRect.width) / canvas.value.width -
-        selectedElementBorder.value.borderWidth +
+        (selectedElement.value.x * canvasRect.width) / canvas.value.width +
         "px";
       this.input.style.top =
         canvasRect.top +
@@ -166,8 +168,14 @@ export const useCanvasTextStore = defineStore("canvasText", {
         selectedElementBorder.value.borderWidth +
         "px";
 
-      this.input.style.width = selectedElement.value.width + "px";
-      this.input.style.height = selectedElement.value.height + "px";
+      this.input.style.width =
+        selectedElement.value.width +
+        selectedElementBorder.value.borderWidth +
+        "px";
+      this.input.style.height =
+        selectedElement.value.height +
+        selectedElementBorder.value.borderWidth +
+        "px";
 
       this.input.style.transform = `rotate(${selectedElement.value.rotationAngle}deg)`;
 
@@ -183,14 +191,16 @@ export const useCanvasTextStore = defineStore("canvasText", {
        */
       const x = selectedElement.value.x;
       const y = selectedElement.value.y;
+      const element = selectedElement.value;
 
       const addTextToCanvas = () => {
-        selectedElement.value = this.computeTextElementProps(x, y);
+        selectedElement.value = this.computeTextElementProps(x, y, element);
         canvasStore.switchMode(MODES_OPTIONS.value.text);
         updateSelectedElement();
 
         canvasStore.redrawCanvas(true, true);
         this.removeTextInput();
+        deselectElement();
         this.clearFormatting();
       };
 
@@ -224,29 +234,34 @@ export const useCanvasTextStore = defineStore("canvasText", {
      * customization
      */
     clearFormatting() {
-      this.customization.color = this.customization.default.color;
-      this.customization.fontSize = this.customization.default.fontSize;
-      this.customization.font = this.customization.default.font;
-      this.customization.lineHeight = this.customization.default.lineHeight;
+      this.customization = {
+        default: this.customization.default,
 
-      this.customization.formatting.isBold =
-        this.customization.default.formatting.isBold;
-      this.customization.formatting.isUnderline =
-        this.customization.default.formatting.isUnderline;
-      this.customization.formatting.isLineThrough =
-        this.customization.default.formatting.isLineThrough;
-      this.customization.formatting.isItalic =
-        this.customization.default.formatting.isItalic;
+        color: this.customization.default.color,
+        fontSize: this.customization.default.fontSize,
+        font: this.customization.default.font,
+        lineHeight: this.customization.default.lineHeight,
 
-      this.customization.formatting.alignment =
-        this.customization.default.formatting.alignment;
+        formatting: {
+          isBold: this.customization.default.formatting.isBold,
+          isUnderline: this.customization.default.formatting.isUnderline,
+          isLineThrough: this.customization.default.formatting.isLineThrough,
+          isItalic: this.customization.default.formatting.isItalic,
+
+          alignment: {
+            horizontal: this.customization.default.formatting.horizontal,
+            vertical: this.customization.default.formatting.vertical,
+          },
+        },
+      };
 
       this.applyStyles();
     },
 
     computeTextElementProps(
       x = selectedElement.value?.x,
-      y = selectedElement.value?.y
+      y = selectedElement.value?.y,
+      element = null
     ) {
       if (!x || !y) return;
 
@@ -254,14 +269,14 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.customization.formatting.isLineThrough ? "line-through" : ""
       } ${this.customization.formatting.isUnderline ? "underline" : ""}`;
 
-      this.input.innerHTML = this.input.innerHTML.replace(/&nbsp;/g, "").trim();
+      const text = this.input.innerHTML.replace(/&nbsp;/g, "").trim();
 
       return {
-        id: generateUniqueId(undefined, elements.value),
+        id: element?.id || generateUniqueId(undefined, elements.value),
         mode: MODES_OPTIONS.value.text,
         isVisible: true,
         isLocked: false,
-        text: this.input.innerHTML,
+        text: text,
         x: x,
         y: y,
         width: this.input.offsetWidth,
@@ -290,10 +305,12 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.input.style.resize = "both";
         this.input.style.overflow = "auto";
         this.input.style.minWidth = "1em";
-        this.input.style.borderRadius = "4px";
-        this.input.style.border = "2px solid #4971FF";
-        this.input.style.outline = "3px solid #D7E0FF";
-        this.input.style.zIndex = "2";
+        // this.input.style.borderRadius = "4px";
+        this.input.style.border = "none";
+        this.input.style.outline = "none";
+        // this.input.style.border = "2px solid #4971FF";
+        // this.input.style.outline = "3px solid #D7E0FF";
+        this.input.style.zIndex = "99999999992";
 
         this.input.style.color = this.customization.color;
         this.input.style.lineHeight = this.customization.lineHeight;
@@ -386,24 +403,28 @@ export const useCanvasTextStore = defineStore("canvasText", {
     },
 
     loadSelectedElementCustomization() {
-      this.customization.color = selectedElement.value.color;
-      this.customization.fontSize = selectedElement.value.fontSize;
-      this.customization.font = selectedElement.value.fontFamily;
-      this.customization.lineHeight = selectedElement.value.lineHeight;
+      this.customization = {
+        default: this.customization.default,
 
-      this.customization.formatting.isBold =
-        selectedElement.value.fontWeight === "bold";
-      this.customization.formatting.isUnderline =
-        selectedElement.value.textDecoration.includes("underline");
-      this.customization.formatting.isLineThrough =
-        selectedElement.value.textDecoration.includes("line-through");
-      this.customization.formatting.isItalic =
-        selectedElement.value.fontStyle === "italic";
+        color: selectedElement.value.color,
+        fontSize: selectedElement.value.fontSize,
+        font: selectedElement.value.fontFamily,
+        lineHeight: selectedElement.value.lineHeight,
 
-      this.customization.formatting.alignment.horizontal =
-        selectedElement.value.textAlign;
-      this.customization.formatting.alignment.vertical =
-        selectedElement.value.verticalAlign;
+        formatting: {
+          isBold: selectedElement.value.fontWeight === "bold",
+          isUnderline:
+            selectedElement.value.textDecoration.includes("underline"),
+          isLineThrough:
+            selectedElement.value.textDecoration.includes("line-through"),
+          isItalic: selectedElement.value.fontStyle === "italic",
+
+          alignment: {
+            horizontal: selectedElement.value.textAlign,
+            vertical: selectedElement.value.verticalAlign,
+          },
+        },
+      };
     },
 
     /*

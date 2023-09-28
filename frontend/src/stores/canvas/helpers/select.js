@@ -17,6 +17,10 @@ const textStore = useCanvasTextStore();
 const { isNewText } = storeToRefs(textStore);
 
 export const getHoveredElement = () => {
+  if (isNewText.value || mode.value === MODES_OPTIONS.value.drawing) {
+    return { hoveredElement: null, hoveredElementIndex: -1 };
+  }
+
   let hoveredElement = null;
   let hoveredElementIndex = -1;
 
@@ -171,8 +175,6 @@ export const getHoveredElement = () => {
 };
 
 export const selectElement = (element = null) => {
-  if (isNewText.value) return;
-
   if (element) {
     selectedElement.value = element;
     selectedElementIndex.value = elements.value.findIndex(

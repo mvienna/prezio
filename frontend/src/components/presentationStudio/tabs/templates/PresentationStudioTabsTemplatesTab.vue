@@ -426,7 +426,7 @@ const handleTemplateDeletion = (template) => {
 
 <style scoped lang="scss">
 /*
- * background options
+ * templates
  */
 .templates_grid {
   display: flex;

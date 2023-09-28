@@ -201,8 +201,16 @@ a, .link {
 .q-notification {
   border-radius: 8px;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
   font-weight: 600;
   font-size: 12px;
+}
+
+.q-notification__badge {
+  background: $black;
+  color: $white;
+  box-shadow: none;
 }
 
 /*

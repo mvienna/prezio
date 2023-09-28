@@ -39,6 +39,11 @@
         <PresentationStudioTabsDesignTab />
       </q-tab-panel>
 
+      <!-- type -->
+      <q-tab-panel name="type">
+        <PresentationStudioTabsTypesTab />
+      </q-tab-panel>
+
       <!-- template -->
       <q-tab-panel name="template">
         <PresentationStudioTabsTemplatesTab />
@@ -62,6 +67,7 @@ import { useI18n } from "vue-i18n";
 import PresentationStudioTabsLayersManagementTab from "components/presentationStudio/tabs/layers/PresentationStudioTabsLayersManagementTab.vue";
 import PresentationStudioTabsDesignTab from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTab.vue";
 import PresentationStudioTabsTemplatesTab from "components/presentationStudio/tabs/templates/PresentationStudioTabsTemplatesTab.vue";
+import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
 
 /*
  * variables
@@ -89,6 +95,11 @@ const rightDrawerTabs = [
     name: "design",
     icon: "r_format_paint",
     label: t("presentationLayout.rightDrawer.tabs.design.title"),
+  },
+  {
+    name: "type",
+    icon: "r_extension",
+    label: t("presentationLayout.rightDrawer.tabs.types.title"),
   },
   {
     name: "template",
