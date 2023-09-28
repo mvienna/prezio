@@ -214,6 +214,56 @@ export default {
         },
 
         /*
+         * types
+         */
+        types: {
+          title: "Types",
+
+          options: {
+            content: {
+              title: "Content",
+
+              layouts: {
+                blank: "Blank",
+                titleSlide: "Title Slide",
+                title: "Title",
+                titleAndBody: "Title and Body",
+                titleAndTwoColumns: "Title and Two Columns",
+                titleOnly: "Title Only",
+              },
+            },
+
+            /*
+             * quizzes & games
+             */
+            quizzesAndGames: {
+              title: "Quizzes & Games",
+
+              pickAnswer: "Pick Answer",
+              pickImage: "Pick Image",
+              typeAnswer: "Type Answer",
+              spinnerWheel: "Spinner Wheel",
+              matchPairs: "Match Pairs",
+              correctOrder: "Correct Order",
+            },
+
+            /*
+             * opinion
+             */
+            userAnswer: {
+              title: "Opinion & Question - Answer",
+
+              poll: "Poll",
+              openEnded: "Open Ended",
+              wordCloud: "Word Cloud",
+              scales: "Scales",
+              questionsAndAnswers: "Questions - Answers",
+              brainStorm: "Brainstorm",
+            },
+          },
+        },
+
+        /*
          * audio
          */
         audio: {
