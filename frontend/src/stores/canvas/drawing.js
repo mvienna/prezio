@@ -35,8 +35,8 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
      */
     customization: {
       color: "#313232",
-      brushSize: BRUSH_SIZE_OPTIONS[4],
-      selectedBrushType: BRUSH_TYPES[0],
+      brushSize: BRUSH_SIZE_OPTIONS[4].value,
+      selectedBrushType: BRUSH_TYPES[0].value,
     },
   }),
 
