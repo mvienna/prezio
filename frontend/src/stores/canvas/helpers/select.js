@@ -17,7 +17,7 @@ const textStore = useCanvasTextStore();
 const { isNewText } = storeToRefs(textStore);
 
 export const getHoveredElement = () => {
-  if (isNewText.value || mode.value === MODES_OPTIONS.value.drawing) {
+  if (isNewText.value) {
     return { hoveredElement: null, hoveredElementIndex: -1 };
   }
 

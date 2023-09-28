@@ -419,7 +419,11 @@ const timesSelected = ref(0);
 const handleCanvasMouseDown = () => {
   isJustDragged.value = false;
 
-  if (mode.value !== MODES_OPTIONS.value.textEditing) {
+  if (
+    ![MODES_OPTIONS.value.textEditing, MODES_OPTIONS.value.drawing].includes(
+      mode.value
+    )
+  ) {
     if (!resizeHandle.value && !rotationHandle.value) {
       const selectedElementCopy = selectedElement.value;
 
@@ -593,6 +597,13 @@ const handleCanvasClick = (event) => {
           return;
         }
       }
+      break;
+
+    /*
+     * drawing
+     */
+    case MODES_OPTIONS.value.drawing:
+      selectElement();
       break;
   }
 };
