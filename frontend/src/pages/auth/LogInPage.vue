@@ -210,10 +210,11 @@ const submit = async () => {
     padding: 48px;
     background: $white;
     border-radius: 16px;
+    box-shadow: rgba(73, 112, 255, 0.1) 0 8px 24px;
 
     .form__title {
       text-align: center;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 600;
     }
 
