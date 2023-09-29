@@ -23,9 +23,6 @@ export const getRotationHandle = () => {
   const borderWidth = canvasStore.computeAdjustedSize(
     selectedElementBorder.value.borderWidth
   );
-  const padding = canvasStore.computeAdjustedSize(
-    selectedElementBorder.value.padding
-  );
 
   const rotationHandleWidth = borderWidth / 2;
 
@@ -38,24 +35,28 @@ export const getRotationHandle = () => {
 
   const handleOffsetX = -rotationHandleWidth / 2;
   const handleOffsetY =
-    -selectedElement.value.height / 2 -
-    selectedElementRotationHandle.value.height -
-    padding;
+    selectedElement.value.height / 2 +
+    canvasStore.computeAdjustedSize(selectedElementRotationHandle.value.height);
 
   const handleX =
     centerX + Math.cos(angle) * handleOffsetX - Math.sin(angle) * handleOffsetY;
   const handleY =
     centerY + Math.sin(angle) * handleOffsetX + Math.cos(angle) * handleOffsetY;
 
+  const radius = canvasStore.computeAdjustedSize(
+    selectedElementRotationHandle.value.radius
+  );
+
+  console.log(radius);
+
   /*
    * check if hovered
    */
   return (
-    mouse.value.x >= handleX - padding &&
-    mouse.value.x <= handleX + rotationHandleWidth + padding &&
-    mouse.value.y >= handleY - padding &&
-    mouse.value.y <=
-      handleY + selectedElementRotationHandle.value.height + padding
+    mouse.value.x >= handleX - radius &&
+    mouse.value.x <= handleX + radius &&
+    mouse.value.y >= handleY - radius &&
+    mouse.value.y <= handleY + radius
   );
 };
 
@@ -86,7 +87,7 @@ export const rotateElement = () => {
   const deltaX = mouse.value.x - centerX;
   const deltaY = mouse.value.y - centerY;
 
-  let newRotationAngle = 90 + (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
+  let newRotationAngle = 270 + (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
 
   newRotationAngle = (newRotationAngle + 360) % 360;
 

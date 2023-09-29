@@ -68,12 +68,11 @@ export const useCanvasStore = defineStore("canvas", {
     selectedElementBorder: {
       borderWidth: 2,
       borderColor: "#4971FF",
-      padding: 0,
     },
 
     selectedElementRotationHandle: {
-      height: 50,
-      radius: 16,
+      height: 24,
+      radius: 6,
     },
 
     /*
@@ -898,11 +897,6 @@ export const useCanvasStore = defineStore("canvas", {
       RESIZE_HANDLES_OPTIONS = Object.values(this.RESIZE_HANDLES_OPTIONS),
       drawRotationHandle = true
     ) {
-      const padding =
-        this.selectedElement.mode === this.MODES_OPTIONS.text
-          ? this.computeAdjustedSize(this.selectedElementBorder.padding)
-          : 0;
-
       /*
        * border
        */
@@ -912,7 +906,7 @@ export const useCanvasStore = defineStore("canvas", {
 
       this.ctx.strokeStyle = this.selectedElementBorder.borderColor;
       this.ctx.lineWidth = borderWidth;
-      this.ctx.strokeRect(x - padding, y, width + padding, height);
+      this.ctx.strokeRect(x, y, width, height);
 
       /*
        * resize handles
@@ -928,8 +922,7 @@ export const useCanvasStore = defineStore("canvas", {
             y,
             width,
             height,
-            handleSize,
-            padding
+            handleSize
           );
           this.ctx.fillRect(minX, minY, handleSize, handleSize);
         });
@@ -943,21 +936,22 @@ export const useCanvasStore = defineStore("canvas", {
 
         const rotationHandleX =
           x + width / 2 - borderWidth - rotationHandleWidth / 2;
-        const rotationHandleY = y - this.selectedElementRotationHandle.height;
+        const rotationHandleY = y + height;
 
         this.ctx.lineWidth = borderWidth / 2;
         this.ctx.strokeRect(
           rotationHandleX,
           rotationHandleY,
           rotationHandleWidth,
-          this.selectedElementRotationHandle.height
+          this.computeAdjustedSize(this.selectedElementRotationHandle.height)
         );
 
         this.ctx.beginPath();
         this.ctx.arc(
           rotationHandleX + rotationHandleWidth / 2,
-          rotationHandleY,
-          this.selectedElementRotationHandle.radius,
+          rotationHandleY +
+            this.computeAdjustedSize(this.selectedElementRotationHandle.height),
+          this.computeAdjustedSize(this.selectedElementRotationHandle.radius),
           0,
           2 * Math.PI
         );
@@ -967,15 +961,7 @@ export const useCanvasStore = defineStore("canvas", {
       this.ctx.beginPath();
     },
 
-    computeResizeHandlePosition(
-      handle,
-      x,
-      y,
-      width,
-      height,
-      handleSize,
-      padding
-    ) {
+    computeResizeHandlePosition(handle, x, y, width, height, handleSize) {
       let minX, minY, maxX, maxY;
 
       switch (handle) {
@@ -983,7 +969,7 @@ export const useCanvasStore = defineStore("canvas", {
          * top left
          */
         case this.RESIZE_HANDLES_OPTIONS.topLeft:
-          minX = x - padding - handleSize / 2;
+          minX = x - handleSize / 2;
           minY = y - handleSize / 2;
           break;
 
@@ -999,7 +985,7 @@ export const useCanvasStore = defineStore("canvas", {
          * bottom left
          */
         case this.RESIZE_HANDLES_OPTIONS.bottomLeft:
-          minX = x - padding - handleSize / 2;
+          minX = x - handleSize / 2;
           minY = y + height - handleSize / 2;
           break;
 
@@ -1031,7 +1017,7 @@ export const useCanvasStore = defineStore("canvas", {
          * center left
          */
         case this.RESIZE_HANDLES_OPTIONS.centerLeft:
-          minX = x - padding - handleSize / 2;
+          minX = x - handleSize / 2;
           minY = y + height / 2 - handleSize / 2;
           break;
 

@@ -33,9 +33,6 @@ export const getResizeHandle = () => {
     selectedElementBorder.value.borderWidth
   );
   const handleSize = borderWidth * 3;
-  const padding = canvasStore.computeAdjustedSize(
-    selectedElementBorder.value.padding
-  );
 
   /*
    * find active handle
@@ -77,8 +74,7 @@ export const getResizeHandle = () => {
       selectedElement.value.y,
       selectedElement.value.width,
       selectedElement.value.height,
-      handleSize,
-      padding
+      handleSize
     );
 
     const rotatedMinX =
@@ -99,10 +95,10 @@ export const getResizeHandle = () => {
       Math.cos(angle) * (maxY - centerY);
 
     if (
-      mouse.value.x >= rotatedMinX - padding &&
-      mouse.value.x <= rotatedMaxX + padding &&
-      mouse.value.y >= rotatedMinY - padding &&
-      mouse.value.y <= rotatedMaxY + padding
+      mouse.value.x >= rotatedMinX &&
+      mouse.value.x <= rotatedMaxX &&
+      mouse.value.y >= rotatedMinY &&
+      mouse.value.y <= rotatedMaxY
     ) {
       activeHandle = handle;
     }
