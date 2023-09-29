@@ -10,7 +10,7 @@
     />
 
     <!-- canvas -->
-    <div class="canvas__wrapper q-pa-lg">
+    <div class="canvas__wrapper q-pa-lg" @click="handleClickOutsideOfCanvas">
       <canvas
         ref="canvasRef"
         id="canvas"
@@ -612,6 +612,12 @@ const handleCanvasClick = (event) => {
 
 const handleCanvasMouseLeave = () => {
   isDragging.value = false;
+};
+
+const handleClickOutsideOfCanvas = (event) => {
+  if (event.target?.id !== "canvas") {
+    deselectElement();
+  }
 };
 
 /*
