@@ -164,10 +164,14 @@ export default {
             content: {
               title: "Контент",
 
+              free: "Свободный",
+              qr: "QR код",
+              video: "Видео",
+
               layouts: {
-                blank: "Пустой",
+                blank: "Пустой<br/>слайд",
                 titleSlide: "Титульный слайд",
-                title: "Заголовок",
+                title: "Заголовок<br/>сверху",
                 titleAndBody: "Заголовок и обьект",
                 titleAndTwoColumns: "Заголовок и два обьекта",
                 titleOnly: "Только заголовок",

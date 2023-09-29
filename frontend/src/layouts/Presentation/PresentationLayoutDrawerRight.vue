@@ -29,6 +29,11 @@
     </q-tabs>
 
     <q-tab-panels v-model="rightDrawerTab" animated>
+      <!-- type -->
+      <q-tab-panel name="type">
+        <PresentationStudioTabsTypesTab />
+      </q-tab-panel>
+
       <!-- layers -->
       <q-tab-panel name="layers">
         <PresentationStudioTabsLayersManagementTab />
@@ -37,11 +42,6 @@
       <!-- design -->
       <q-tab-panel name="design">
         <PresentationStudioTabsDesignTab />
-      </q-tab-panel>
-
-      <!-- type -->
-      <q-tab-panel name="type">
-        <PresentationStudioTabsTypesTab />
       </q-tab-panel>
 
       <!-- template -->
@@ -116,7 +116,7 @@ const rightDrawerTabs = [
     disable: true,
   },
 ];
-const rightDrawerTab = ref(rightDrawerTabs[0].name);
+const rightDrawerTab = ref(rightDrawerTabs[1].name);
 </script>
 
 <style scoped lang="scss">

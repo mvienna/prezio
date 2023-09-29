@@ -223,13 +223,17 @@ export default {
             content: {
               title: "Content",
 
+              free: "Free",
+              qr: "QR code",
+              video: "Video",
+
               layouts: {
-                blank: "Blank",
-                titleSlide: "Title Slide",
-                title: "Title",
+                blank: "Blank Slide",
+                titleSlide: "Title slide",
+                title: "Title on the top",
                 titleAndBody: "Title and Body",
-                titleAndTwoColumns: "Title and Two Columns",
-                titleOnly: "Title Only",
+                titleAndTwoColumns: "Title and Two Objects",
+                titleOnly: "Title only",
               },
             },
 

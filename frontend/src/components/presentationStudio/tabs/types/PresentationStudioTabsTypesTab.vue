@@ -1,112 +1,81 @@
 <template>
   <div>
-    <!-- quizzes & games -->
-    <div class="text-grey">
-      {{
-        $t(
-          "presentationLayout.rightDrawer.tabs.types.options.quizzesAndGames.title"
-        )
-      }}
-    </div>
+    <div
+      v-for="(typesGroup, index) in Object.values(types)"
+      :key="index"
+      class="q-mb-lg"
+    >
+      <div class="text-grey">
+        {{
+          $t(
+            `presentationLayout.rightDrawer.tabs.types.options.${
+              Object.keys(types)[index]
+            }.title`
+          )
+        }}
+      </div>
 
-    <div class="types_grid q-mt-md">
-      <q-item
-        v-for="type in types.quizzesAndGames"
-        :key="type.name"
-        class="type q-pa-sm"
-        :disable="type.disable"
-      >
-        <div class="row justify-center">
-          <q-img :src="`/assets/icons/temp/slideTypes/${type.name}.svg`" />
-        </div>
-
-        <div class="text-center text-caption q-mt-sm">{{ type.label }}</div>
-      </q-item>
-    </div>
-
-    <!-- user answer -->
-    <div class="text-grey q-mt-xl">
-      {{
-        $t("presentationLayout.rightDrawer.tabs.types.options.userAnswer.title")
-      }}
-    </div>
-
-    <div class="types_grid q-mt-md">
-      <q-item
-        v-for="type in types.userAnswers"
-        :key="type.name"
-        class="type q-pa-sm"
-        :disable="type.disable"
-      >
-        <div class="row justify-center">
-          <q-img :src="`/assets/icons/temp/slideTypes/${type.name}.svg`" />
-        </div>
-
-        <div class="text-center text-caption q-mt-sm">{{ type.label }}</div>
-      </q-item>
-    </div>
-
-    <!-- content -->
-    <div class="text-grey q-mt-xl">
-      {{
-        $t("presentationLayout.rightDrawer.tabs.types.options.content.title")
-      }}
-    </div>
-
-    <div class="types_grid q-mt-md">
-      <q-item class="type q-pa-sm">
-        <div class="row justify-center">
-          <q-img
-            :src="`/assets/icons/temp/slideTypes/${types.content.name}.svg`"
-          />
-        </div>
-
-        <div class="text-center text-caption q-mt-sm">
-          {{ types.content.label }}
-        </div>
-
-        <q-menu
-          anchor="top left"
-          self="bottom left"
-          transition-show="jump-up"
-          transition-hide="jump-down"
-          :offset="[0, 16]"
-          class="q-pa-sm"
-          style="
-            width: 368px;
-            backdrop-filter: blur(8px);
-            background: rgba(255, 255, 255, 0.5);
-          "
+      <div class="types_grid q-mt-sm">
+        <q-item
+          v-for="type in typesGroup"
+          :key="type.name"
+          class="type q-pa-sm"
+          :disable="type.disable"
         >
-          <div class="layouts_grid q-pt-sm">
-            <div
-              v-for="layout in types.content.layouts"
-              :key="layout.name"
-              class="layout q-px-sm"
-              :class="
-                layout.name !== 'blank' &&
-                layout.elements.every((item1) => {
-                  return elements.some((item2) => item1.id === item2.id);
-                })
-                  ? 'layout--active'
-                  : ''
-              "
-              v-close-popup
-              @click="handleLayoutSelection(layout)"
-            >
-              <div class="row justify-center">
-                <q-img
-                  :src="`/assets/icons/temp/slideLayouts/${layout.name}.svg`"
-                />
-              </div>
+          <div class="row justify-center">
+            <q-img :src="`/assets/icons/temp/slideTypes/${type.name}.svg`" />
+          </div>
 
-              <div class="text-center text-caption q-mt-sm">
-                {{ layout.label }}
+          <div class="text-center text-caption q-mt-sm ellipsis">
+            {{ type.label }}
+          </div>
+
+          <!-- layouts -->
+          <q-menu
+            v-if="type.name === 'free'"
+            anchor="top left"
+            self="bottom left"
+            transition-show="jump-up"
+            transition-hide="jump-down"
+            :offset="[0, 16]"
+            class="q-pa-sm"
+            style="
+              width: 368px;
+              backdrop-filter: blur(8px);
+              background: rgba(255, 255, 255, 0.5);
+            "
+          >
+            <div class="layouts_grid q-pt-sm">
+              <div
+                v-for="layout in type.layouts"
+                :key="layout.name"
+                class="layout q-px-sm"
+                :class="
+                  layout.name !== 'blank' &&
+                  layout.elements.every((item1) => {
+                    return elements.some((item2) => item1.id === item2.id);
+                  })
+                    ? 'layout--active'
+                    : ''
+                "
+                v-close-popup
+                @click="handleLayoutSelection(layout)"
+              >
+                <div class="row justify-center">
+                  <q-img
+                    :src="`/assets/icons/temp/slideLayouts/${layout.name}.svg`"
+                  />
+                </div>
+
+                <div
+                  class="text-center text-caption q-mt-sm"
+                  v-html="layout.label"
+                ></div>
               </div>
             </div>
-          </div>
-        </q-menu>
-      </q-item>
+          </q-menu>
+        </q-item>
+      </div>
     </div>
   </div>
 </template>
@@ -349,6 +318,95 @@ const layoutElements = {
  */
 const types = {
   /*
+   * content
+   */
+  content: [
+    {
+      name: "free",
+      label: t(
+        "presentationLayout.rightDrawer.tabs.types.options.content.free"
+      ),
+      layouts: [
+        {
+          name: "blank",
+          label: t(
+            "presentationLayout.rightDrawer.tabs.types.options.content.layouts.blank"
+          ),
+          elements: [],
+        },
+        {
+          name: "titleSlide",
+          label: t(
+            "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleSlide"
+          ),
+          elements: [
+            layoutElements.titleCenterAbove,
+            layoutElements.subtitleCenterBelow,
+          ],
+        },
+        {
+          name: "title",
+          label: t(
+            "presentationLayout.rightDrawer.tabs.types.options.content.layouts.title"
+          ),
+          elements: [
+            {
+              ...layoutElements.titleTop,
+              id: layoutElements.titleTop.id + "-title",
+            },
+          ],
+        },
+        {
+          name: "titleAndBody",
+          label: t(
+            "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleAndBody"
+          ),
+          elements: [
+            {
+              ...layoutElements.titleTop,
+              id: layoutElements.titleTop.id + "-titleAndBody",
+            },
+            layoutElements.body,
+          ],
+        },
+        {
+          name: "titleAndTwoColumns",
+          label: t(
+            "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleAndTwoColumns"
+          ),
+          elements: [
+            {
+              ...layoutElements.titleTop,
+              id: layoutElements.titleTop.id + "-titleAndTwoColumns",
+            },
+            layoutElements.bodyLeft,
+            layoutElements.bodyRight,
+          ],
+        },
+        {
+          name: "titleOnly",
+          label: t(
+            "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleOnly"
+          ),
+          elements: [layoutElements.titleCenter],
+        },
+      ],
+    },
+    {
+      name: "qr",
+      label: t("presentationLayout.rightDrawer.tabs.types.options.content.qr"),
+      disable: true,
+    },
+    {
+      name: "video",
+      label: t(
+        "presentationLayout.rightDrawer.tabs.types.options.content.video"
+      ),
+      disable: true,
+    },
+  ],
+
+  /*
    * quizzes & games
    */
   quizzesAndGames: [
@@ -399,7 +457,7 @@ const types = {
   /*
    * user answers
    */
-  userAnswers: [
+  userAnswer: [
     {
       name: "poll",
       label: t(
@@ -443,79 +501,6 @@ const types = {
       disable: true,
     },
   ],
-
-  /*
-   * content
-   */
-  content: {
-    name: "content",
-    label: t("presentationLayout.rightDrawer.tabs.types.options.content.title"),
-    layouts: [
-      {
-        name: "blank",
-        label: t(
-          "presentationLayout.rightDrawer.tabs.types.options.content.layouts.blank"
-        ),
-        elements: [],
-      },
-      {
-        name: "titleSlide",
-        label: t(
-          "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleSlide"
-        ),
-        elements: [
-          layoutElements.titleCenterAbove,
-          layoutElements.subtitleCenterBelow,
-        ],
-      },
-      {
-        name: "title",
-        label: t(
-          "presentationLayout.rightDrawer.tabs.types.options.content.layouts.title"
-        ),
-        elements: [
-          {
-            ...layoutElements.titleTop,
-            id: layoutElements.titleTop.id + "-title",
-          },
-        ],
-      },
-      {
-        name: "titleAndBody",
-        label: t(
-          "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleAndBody"
-        ),
-        elements: [
-          {
-            ...layoutElements.titleTop,
-            id: layoutElements.titleTop.id + "-titleAndBody",
-          },
-          layoutElements.body,
-        ],
-      },
-      {
-        name: "titleAndTwoColumns",
-        label: t(
-          "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleAndTwoColumns"
-        ),
-        elements: [
-          {
-            ...layoutElements.titleTop,
-            id: layoutElements.titleTop.id + "-titleAndTwoColumns",
-          },
-          layoutElements.bodyLeft,
-          layoutElements.bodyRight,
-        ],
-      },
-      {
-        name: "titleOnly",
-        label: t(
-          "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleOnly"
-        ),
-        elements: [layoutElements.titleCenter],
-      },
-    ],
-  },
 };
 
 /*
@@ -534,12 +519,11 @@ const handleLayoutSelection = (layout) => {
 </script>
 
 <style scoped lang="scss">
-.types_grid,
-.layouts_grid {
+.types_grid {
   display: flex;
   flex-wrap: wrap;
-  columns: 2;
-  gap: 16px;
+  columns: 3;
+  gap: 8px;
 
   .item:nth-last-child(-n + 2) {
     margin-bottom: 0;
@@ -547,7 +531,7 @@ const handleLayoutSelection = (layout) => {
 }
 
 .type {
-  max-width: 176px;
+  max-width: 117px;
   width: 100%;
   display: inline-block;
   cursor: pointer;
@@ -575,13 +559,27 @@ const handleLayoutSelection = (layout) => {
   }
 }
 
+/*
+ * layouts
+ */
+.layouts_grid {
+  display: flex;
+  flex-wrap: wrap;
+  columns: 3;
+  gap: 8px;
+
+  .item:nth-last-child(-n + 2) {
+    margin-bottom: 0;
+  }
+}
+
 .layout {
-  max-width: 168px;
-  min-height: 133.75px;
+  max-width: 112px;
+  min-height: 104.68px;
   width: 100%;
   display: inline-block;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 16px;
   transition: 0.2s;
 
   .q-img {
