@@ -407,7 +407,9 @@ const canvasCursorClass = computed(() => {
     ? "cursor-alias"
     : isElementHovered.value
     ? "cursor-move"
-    : "cursor-crosshair";
+    : mode.value === MODES_OPTIONS.value.drawing
+    ? "cursor-crosshair"
+    : "default";
 });
 
 /*
