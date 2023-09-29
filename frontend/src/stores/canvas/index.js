@@ -835,35 +835,6 @@ export const useCanvasStore = defineStore("canvas", {
             this.selectedElement.width,
             this.selectedElement.height,
             [],
-            false
-          );
-          break;
-
-        /*
-         * text
-         */
-        case this.MODES_OPTIONS.text:
-          this.drawBorder(
-            this.selectedElement.x,
-            this.selectedElement.y,
-            this.selectedElement.width,
-            this.selectedElement.height,
-            [],
-            false
-          );
-          break;
-
-        /*
-         * media
-         */
-        case this.MODES_OPTIONS.media:
-        case this.MODES_OPTIONS.mediaEmoji:
-          this.drawBorder(
-            this.selectedElement.x,
-            this.selectedElement.y,
-            this.selectedElement.width,
-            this.selectedElement.height,
-            undefined,
             true
           );
           break;
@@ -878,6 +849,21 @@ export const useCanvasStore = defineStore("canvas", {
             this.selectedElement.width,
             this.selectedElement.height,
             ["top-left", "top-right", "bottom-left", "bottom-right"],
+            true
+          );
+          break;
+
+        /*
+         * text
+         * media
+         */
+        default:
+          this.drawBorder(
+            this.selectedElement.x,
+            this.selectedElement.y,
+            this.selectedElement.width,
+            this.selectedElement.height,
+            undefined,
             true
           );
           break;

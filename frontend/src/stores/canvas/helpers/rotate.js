@@ -47,8 +47,6 @@ export const getRotationHandle = () => {
     selectedElementRotationHandle.value.radius
   );
 
-  console.log(radius);
-
   /*
    * check if hovered
    */

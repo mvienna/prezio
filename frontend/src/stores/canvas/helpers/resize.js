@@ -19,13 +19,6 @@ const {
  * get resize handle
  */
 export const getResizeHandle = () => {
-  if (
-    [MODES_OPTIONS.value.drawing, MODES_OPTIONS.value.text].includes(
-      selectedElement.value.mode
-    )
-  )
-    return null;
-
   /*
    * compute props
    */
@@ -46,6 +39,7 @@ export const getResizeHandle = () => {
   let handles;
 
   switch (selectedElement.value.mode) {
+    case MODES_OPTIONS.value.text:
     case MODES_OPTIONS.value.media:
     case MODES_OPTIONS.value.mediaEmoji:
       handles = Object.values(RESIZE_HANDLES_OPTIONS.value);
