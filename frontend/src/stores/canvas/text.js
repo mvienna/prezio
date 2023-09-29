@@ -212,7 +212,10 @@ export const useCanvasTextStore = defineStore("canvasText", {
       });
 
       this.input.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" && !event.shiftKey) {
+        if (
+          (event.key === "Enter" && !event.shiftKey) ||
+          event.key === "Escape"
+        ) {
           this.input.blur();
         }
       });
