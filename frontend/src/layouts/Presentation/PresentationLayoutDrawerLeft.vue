@@ -14,8 +14,28 @@
         no-caps
         unelevated
         :label="$t('presentationLayout.leftDrawer.newSlide')"
-        @click="handleAddingNewSlide()"
-      />
+      >
+        <q-menu
+          anchor="bottom left"
+          self="top left"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :offset="[0, 16]"
+          class="q-pa-md scroll--hidden"
+          max-height="70vh"
+          style="
+            width: 399px;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.9);
+          "
+        >
+          <PresentationStudioTabsTypesTab
+            disable-layout-selection
+            v-close-popup
+            @select="handleAddingNewSlide()"
+          />
+        </q-menu>
+      </q-btn>
 
       <!-- import -->
       <q-btn
@@ -106,14 +126,36 @@
                       class="items-center justify-start q-px-md q-py-sm"
                       clickable
                       dense
-                      v-close-popup
-                      @click="handleAddingNewSlide()"
                     >
                       <q-icon name="r_add" size="16px" class="q-mr-sm" />
 
                       <div>
                         {{ $t("presentationStudio.slide.actions.newSlide") }}
                       </div>
+
+                      <q-menu
+                        anchor="center right"
+                        self="center left"
+                        transition-show="jump-right"
+                        transition-hide="jump-left"
+                        :offset="[48, 0]"
+                        class="q-pa-md scroll--hidden"
+                        max-height="70vh"
+                        style="
+                          width: 399px;
+                          backdrop-filter: blur(8px);
+                          background: rgba(255, 255, 255, 0.9);
+                        "
+                      >
+                        <PresentationStudioTabsTypesTab
+                          disable-layout-selection
+                          v-close-popup
+                          @select="
+                            handleAddingNewSlide();
+                            showSlideContextMenu[index] = false;
+                          "
+                        />
+                      </q-menu>
                     </q-item>
 
                     <!-- duplicate -->
@@ -193,7 +235,6 @@
           color="primary"
           class="bg-blue-1 relative-position q-py-xl q-mt-md cursor-pointer q-hoverable slide slide--hoverable"
           style="border: none"
-          @click="handleAddingNewSlide()"
         >
           <q-icon
             name="r_add"
@@ -201,6 +242,27 @@
             class="absolute-center"
             size="md"
           />
+
+          <q-menu
+            anchor="center right"
+            self="center left"
+            transition-show="jump-right"
+            transition-hide="jump-left"
+            :offset="[24, 0]"
+            class="q-pa-md scroll--hidden"
+            max-height="70vh"
+            style="
+              width: 399px;
+              backdrop-filter: blur(8px);
+              background: rgba(255, 255, 255, 0.9);
+            "
+          >
+            <PresentationStudioTabsTypesTab
+              disable-layout-selection
+              v-close-popup
+              @select="handleAddingNewSlide()"
+            />
+          </q-menu>
         </q-card>
       </div>
     </div>
@@ -215,6 +277,8 @@ import draggable from "vuedraggable/src/vuedraggable";
 import { useCanvasStore } from "stores/canvas";
 import { deselectElement } from "stores/canvas/helpers/select";
 import { useQuasar } from "quasar";
+import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
+import PresentationStudioTabsTypesTabLayouts from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTabLayouts.vue";
 
 /*
  * variables

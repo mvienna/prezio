@@ -3,7 +3,7 @@
     <div
       v-for="(typesGroup, index) in Object.values(types)"
       :key="index"
-      class="q-mb-lg"
+      :class="index !== 0 ? 'q-mt-lg' : ''"
     >
       <div class="text-grey">
         {{
@@ -21,6 +21,8 @@
           :key="type.name"
           class="type q-pa-sm"
           :disable="type.disable"
+          clickable
+          @click="$emit('select')"
         >
           <div class="row justify-center">
             <q-img :src="`/assets/icons/temp/slideTypes/${type.name}.svg`" />
@@ -32,7 +34,7 @@
 
           <!-- layouts -->
           <q-menu
-            v-if="type.name === 'free'"
+            v-if="type.name === 'free' && !disableLayoutSelection"
             anchor="top left"
             self="bottom left"
             transition-show="jump-up"
@@ -65,6 +67,15 @@ import { useCanvasStore } from "stores/canvas";
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
+
+defineProps({
+  disableLayoutSelection: { type: Boolean },
+});
+
+/*
+ * emits
+ */
+defineEmits(["select"]);
 
 /*
  * stores
@@ -219,7 +230,7 @@ const handleLayoutSelection = (layout) => {
   columns: 3;
   gap: 8px;
 
-  .item:nth-last-child(-n + 2) {
+  .item:nth-last-child(-n + 3) {
     margin-bottom: 0;
   }
 }
