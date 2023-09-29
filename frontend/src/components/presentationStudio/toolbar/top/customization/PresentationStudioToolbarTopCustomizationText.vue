@@ -201,11 +201,16 @@
   <q-separator vertical class="q-ml-md q-mr-sm" />
 
   <!-- color picker -->
-  <q-btn flat round size="12px">
-    <q-icon
-      name="r_colorize"
-      :style="`color: ${textState.customization.value.color}`"
-    />
+  <q-btn flat round size="12px" class="relative-position">
+    <!--    <q-icon name="r_format_color_text" />-->
+    <div>
+      <q-icon name="icon-mdi_format_color_top" class="absolute-center" />
+      <q-icon
+        name="icon-mdi_format_color_bottom"
+        :style="`color: ${textState.customization.value.color}`"
+        class="absolute-center"
+      />
+    </div>
 
     <q-menu
       anchor="bottom left"
