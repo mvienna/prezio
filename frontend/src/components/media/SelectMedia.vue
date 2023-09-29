@@ -490,6 +490,7 @@ const handleSearch = () => {
   height: 100%;
   max-height: 700px;
   overflow-y: hidden;
+  border-radius: 16px !important;
 }
 
 .q-card__toolbar_section {
