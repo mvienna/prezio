@@ -116,7 +116,7 @@ const rightDrawerTabs = [
     disable: true,
   },
 ];
-const rightDrawerTab = ref(rightDrawerTabs[1].name);
+const rightDrawerTab = ref(rightDrawerTabs[0].name);
 </script>
 
 <style scoped lang="scss">
