@@ -37,28 +37,13 @@ export const getResizeHandle = () => {
     selectedElementBorder.value.padding
   );
 
-  let width, height;
-  switch (selectedElement.value.mode) {
-    case MODES_OPTIONS.value.media:
-    case MODES_OPTIONS.value.mediaEmoji:
-    case MODES_OPTIONS.value.shape:
-      width = selectedElement.value.width;
-      height = selectedElement.value.height;
-      break;
-
-    default:
-      width = canvasStore.computeAdjustedSize(selectedElement.value.width);
-      height = canvasStore.computeAdjustedSize(selectedElement.value.height);
-      break;
-  }
-
   /*
    * find active handle
    */
   let activeHandle = null;
 
-  const centerX = selectedElement.value.x + width / 2;
-  const centerY = selectedElement.value.y + height / 2;
+  const centerX = selectedElement.value.x + selectedElement.value.width / 2;
+  const centerY = selectedElement.value.y + selectedElement.value.height / 2;
   const angle = (selectedElement.value.rotationAngle * Math.PI) / 180;
 
   let handles;
@@ -90,8 +75,8 @@ export const getResizeHandle = () => {
       handle,
       selectedElement.value.x,
       selectedElement.value.y,
-      width,
-      height,
+      selectedElement.value.width,
+      selectedElement.value.height,
       handleSize,
       padding
     );

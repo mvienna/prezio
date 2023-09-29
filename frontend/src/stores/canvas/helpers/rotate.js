@@ -27,54 +27,20 @@ export const getRotationHandle = () => {
     selectedElementBorder.value.padding
   );
 
-  let width, height;
-  switch (selectedElement.value.mode) {
-    case MODES_OPTIONS.value.media:
-    case MODES_OPTIONS.value.mediaEmoji:
-    case MODES_OPTIONS.value.shape:
-      width = selectedElement.value.width;
-      height = selectedElement.value.height;
-      break;
-
-    case MODES_OPTIONS.value.drawing:
-      const minX = Math.min(
-        ...selectedElement.value.points.map((point) => point.x)
-      );
-      const maxX = Math.max(
-        ...selectedElement.value.points.map((point) => point.x)
-      );
-      const minY = Math.min(
-        ...selectedElement.value.points.map((point) => point.y)
-      );
-      const maxY = Math.max(
-        ...selectedElement.value.points.map((point) => point.y)
-      );
-
-      width = maxX - minX;
-      height = maxY - minY;
-
-      selectedElement.value.x = minX;
-      selectedElement.value.y = minY;
-      break;
-
-    default:
-      width = canvasStore.computeAdjustedSize(selectedElement.value.width);
-      height = canvasStore.computeAdjustedSize(selectedElement.value.height);
-      break;
-  }
-
   const rotationHandleWidth = borderWidth / 2;
 
   /*
    * compute position with rotation angle
    */
-  const centerX = selectedElement.value.x + width / 2;
-  const centerY = selectedElement.value.y + height / 2;
+  const centerX = selectedElement.value.x + selectedElement.value.width / 2;
+  const centerY = selectedElement.value.y + selectedElement.value.height / 2;
   const angle = (selectedElement.value.rotationAngle * Math.PI) / 180;
 
   const handleOffsetX = -rotationHandleWidth / 2;
   const handleOffsetY =
-    -height / 2 - selectedElementRotationHandle.value.height - padding;
+    -selectedElement.value.height / 2 -
+    selectedElementRotationHandle.value.height -
+    padding;
 
   const handleX =
     centerX + Math.cos(angle) * handleOffsetX - Math.sin(angle) * handleOffsetY;

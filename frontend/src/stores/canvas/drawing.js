@@ -57,6 +57,22 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       ctx.value.beginPath();
       this.currentLine = null;
 
+      let newLine = elements.value[0];
+
+      const minX = Math.min(...newLine.points.map((point) => point.x));
+      const maxX = Math.max(...newLine.points.map((point) => point.x));
+      const minY = Math.min(...newLine.points.map((point) => point.y));
+      const maxY = Math.max(...newLine.points.map((point) => point.y));
+
+      newLine = {
+        ...newLine,
+        x: minX,
+        y: minY,
+        width: maxX - minX,
+        height: maxY - minY,
+      };
+      elements.value[0] = newLine;
+
       canvasStore.redrawCanvas(true, true);
     },
 

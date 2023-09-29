@@ -160,20 +160,20 @@ export const useCanvasTextStore = defineStore("canvasText", {
       const canvasRect = canvasStore.canvasRect();
       this.input.style.left =
         canvasRect.left +
-        (selectedElement.value.x * canvasRect.width) / canvas.value.width +
+        canvasStore.computeRealSize(selectedElement.value.x) +
         "px";
       this.input.style.top =
         canvasRect.top +
-        (selectedElement.value.y * canvasRect.width) / canvas.value.width +
+        canvasStore.computeRealSize(selectedElement.value.y) +
         selectedElementBorder.value.borderWidth +
         "px";
 
       this.input.style.width =
-        selectedElement.value.width +
+        canvasStore.computeRealSize(selectedElement.value.width) +
         selectedElementBorder.value.borderWidth +
         "px";
       this.input.style.height =
-        selectedElement.value.height +
+        canvasStore.computeRealSize(selectedElement.value.height) +
         selectedElementBorder.value.borderWidth +
         "px";
 
@@ -282,8 +282,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
         text: text,
         x: x,
         y: y,
-        width: this.input.offsetWidth,
-        height: this.input.offsetHeight,
+        width: canvasStore.computeAdjustedSize(this.input.offsetWidth),
+        height: canvasStore.computeAdjustedSize(this.input.offsetHeight),
         color: this.customization.color,
         fontFamily: this.customization.font,
         fontSize: this.customization.fontSize,
@@ -308,11 +308,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.input.style.resize = "both";
         this.input.style.overflow = "auto";
         this.input.style.minWidth = "1em";
-        // this.input.style.borderRadius = "4px";
         this.input.style.border = "none";
         this.input.style.outline = "none";
-        // this.input.style.border = "2px solid #4971FF";
-        // this.input.style.outline = "3px solid #D7E0FF";
         this.input.style.zIndex = "99999999992";
 
         this.input.style.color = this.customization.color;

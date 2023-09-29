@@ -1,6 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 import {
   ALIGNMENT,
+  BRUSH_TYPES,
   SHAPES_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import { usePresentationsStore } from "stores/presentations";
@@ -83,6 +84,10 @@ export const useCanvasStore = defineStore("canvas", {
       x: null,
       y: null,
     },
+    dragFrom: {
+      x: null,
+      y: null,
+    },
     MAGNET_AXIS_OPTIONS: {
       vertical: "vertical",
       horizontal: "horizontal",
@@ -146,6 +151,10 @@ export const useCanvasStore = defineStore("canvas", {
 
     computeAdjustedSize(size) {
       return (size * this.canvas.width) / this.canvasRect().width;
+    },
+
+    computeRealSize(size) {
+      return (size * this.canvasRect().width) / this.canvas.width;
     },
 
     /*
@@ -348,6 +357,7 @@ export const useCanvasStore = defineStore("canvas", {
 
           /*
            * media
+           * background
            */
           case this.MODES_OPTIONS.media:
           case this.MODES_OPTIONS.mediaEmoji:
@@ -358,6 +368,7 @@ export const useCanvasStore = defineStore("canvas", {
 
           /*
            * shape
+           * base fill
            */
           case this.MODES_OPTIONS.shape:
           case this.MODES_OPTIONS.baseFill:
@@ -418,10 +429,10 @@ export const useCanvasStore = defineStore("canvas", {
       this.ctx.lineWidth = element.brushSize;
 
       switch (element.brushType) {
-        case "pen":
+        case BRUSH_TYPES[0].value:
           break;
 
-        case "pencil":
+        case BRUSH_TYPES[1].value:
           this.ctx.globalAlpha = 0.1;
           break;
       }
@@ -475,7 +486,7 @@ export const useCanvasStore = defineStore("canvas", {
           const testLine = currentLine + " " + words[i];
           const testLineWidth = this.ctx.measureText(testLine).width;
 
-          if (testLineWidth < this.computeAdjustedSize(element.width)) {
+          if (testLineWidth < element.width) {
             currentLine = testLine;
           } else {
             lines.push(currentLine);
@@ -494,9 +505,6 @@ export const useCanvasStore = defineStore("canvas", {
        */
       let linesPosition = [];
 
-      const width = this.computeAdjustedSize(element.width);
-      const height = this.computeAdjustedSize(element.height);
-
       lines.forEach((line, index) => {
         /*
          * x
@@ -506,11 +514,11 @@ export const useCanvasStore = defineStore("canvas", {
 
         switch (element.textAlign) {
           case ALIGNMENT.horizontal.right:
-            x = element.x + width - lineWidth - padding * 2;
+            x = element.x + element.width - lineWidth - padding * 2;
             break;
 
           case ALIGNMENT.horizontal.center:
-            x = element.x + width / 2 - lineWidth / 2;
+            x = element.x + element.width / 2 - lineWidth / 2;
             break;
         }
 
@@ -525,13 +533,13 @@ export const useCanvasStore = defineStore("canvas", {
         switch (element.verticalAlign) {
           case ALIGNMENT.vertical.bottom:
             y +=
-              height -
+              element.height -
               adjustedFontSize * element.lineHeight * lines.length -
               this.computeAdjustedSize(padding);
             break;
 
           case ALIGNMENT.vertical.middle:
-            y += height / 2 - adjustedFontSize + element.lineHeight;
+            y += element.height / 2 - adjustedFontSize + element.lineHeight;
             break;
         }
 
@@ -822,20 +830,14 @@ export const useCanvasStore = defineStore("canvas", {
          * drawing
          */
         case this.MODES_OPTIONS.drawing:
-          const minX = Math.min(
-            ...this.selectedElement.points.map((point) => point.x)
+          this.drawBorder(
+            this.selectedElement.x,
+            this.selectedElement.y,
+            this.selectedElement.width,
+            this.selectedElement.height,
+            [],
+            false
           );
-          const maxX = Math.max(
-            ...this.selectedElement.points.map((point) => point.x)
-          );
-          const minY = Math.min(
-            ...this.selectedElement.points.map((point) => point.y)
-          );
-          const maxY = Math.max(
-            ...this.selectedElement.points.map((point) => point.y)
-          );
-
-          this.drawBorder(minX, minY, maxX - minX, maxY - minY, [], false);
           break;
 
         /*
@@ -845,8 +847,8 @@ export const useCanvasStore = defineStore("canvas", {
           this.drawBorder(
             this.selectedElement.x,
             this.selectedElement.y,
-            this.computeAdjustedSize(this.selectedElement.width),
-            this.computeAdjustedSize(this.selectedElement.height),
+            this.selectedElement.width,
+            this.selectedElement.height,
             [],
             false
           );

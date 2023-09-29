@@ -40,8 +40,14 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       lineWidth = this.customization.lineWidth,
       isForceSelectCreatedElement = true
     ) {
-      width = typeof width === "number" ? width : 100;
-      height = typeof height === "number" ? height : 100;
+      width =
+        typeof width === "number"
+          ? width
+          : canvasStore.computeAdjustedSize(100);
+      height =
+        typeof height === "number"
+          ? height
+          : canvasStore.computeAdjustedSize(100);
 
       x = typeof x === "number" ? x : (canvas.value.width - width) / 2;
       y = typeof y === "number" ? y : (canvas.value.height - height) / 2;

@@ -16,7 +16,6 @@
         id="canvas"
         :class="[canvasCursorClass, canvasHighlightClass]"
         @mousedown="handleCanvasMouseDown"
-        @mouseleave="handleCanvasMouseLeave"
         @click="handleCanvasClick"
       ></canvas>
     </div>
@@ -608,10 +607,6 @@ const handleCanvasClick = (event) => {
       selectElement();
       break;
   }
-};
-
-const handleCanvasMouseLeave = () => {
-  isDragging.value = false;
 };
 
 const handleClickOutsideOfCanvas = (event) => {
