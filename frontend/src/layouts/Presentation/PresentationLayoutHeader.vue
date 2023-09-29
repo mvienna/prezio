@@ -138,6 +138,14 @@
           @click="showSettingsDialog = true"
         />
 
+        <q-dialog v-model="showSettingsDialog" position="right">
+          <PresentationSettings
+            @cancel="showSettingsDialog = false"
+            class="q-mr-md"
+            style="height: calc(100vh - 24px - 66px - 24px); margin-top: 66px"
+          />
+        </q-dialog>
+
         <!-- download -->
         <q-btn
           text-color="grey-5"
@@ -178,10 +186,6 @@
         <UserMenu is-avatar-only />
       </div>
     </q-toolbar>
-
-    <q-dialog v-model="showSettingsDialog" position="right">
-      <PresentationSettings @cancel="showSettingsDialog = false" />
-    </q-dialog>
   </q-header>
 </template>
 
@@ -210,9 +214,3 @@ const { elements } = storeToRefs(canvasStore);
  */
 const showSettingsDialog = ref(false);
 </script>
-
-<style lang="scss">
-.q-dialog__inner {
-  padding: calc(66px + 24px) 24px 24px 24px !important;
-}
-</style>
