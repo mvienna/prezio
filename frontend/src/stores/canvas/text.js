@@ -12,7 +12,6 @@ const {
   mouse,
   selectedElementBorder,
   elements,
-  canvas,
   selectedElement,
 } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();

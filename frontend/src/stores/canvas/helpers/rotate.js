@@ -5,7 +5,6 @@ import { updateSelectedElement } from "stores/canvas/helpers/select";
 const canvasStore = useCanvasStore();
 const {
   mouse,
-  MODES_OPTIONS,
   selectedElement,
   selectedElementBorder,
   selectedElementRotationHandle,
