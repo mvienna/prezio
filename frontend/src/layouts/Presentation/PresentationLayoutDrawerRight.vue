@@ -87,6 +87,12 @@ const { presentation } = storeToRefs(presentationsStore);
  */
 const rightDrawerTabs = [
   {
+    name: "type",
+    icon: "r_extension",
+    label: t("presentationLayout.rightDrawer.tabs.types.title"),
+  },
+
+  {
     name: "layers",
     icon: "r_layers",
     label: t("presentationLayout.rightDrawer.tabs.layers.title"),
@@ -96,16 +102,12 @@ const rightDrawerTabs = [
     icon: "r_format_paint",
     label: t("presentationLayout.rightDrawer.tabs.design.title"),
   },
-  {
-    name: "type",
-    icon: "r_extension",
-    label: t("presentationLayout.rightDrawer.tabs.types.title"),
-  },
+
+  // TODO: hide if slide type is not content
   {
     name: "template",
     icon: "r_grid_view",
     label: t("presentationLayout.rightDrawer.tabs.templates.title"),
-    disable: false, // TODO: disable if slide type is not content
   },
   {
     name: "audio",
