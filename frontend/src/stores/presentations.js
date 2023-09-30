@@ -232,13 +232,16 @@ export const usePresentationsStore = defineStore("presentations", {
      */
     async addNewSlide(elements = null) {
       const response = await api
-        .post(`/presentation/${this.presentation.id}/slide`)
+        .post(`/presentation/${this.presentation.id}/slide`, {
+          canvas_data: JSON.stringify(elements),
+          order: this.presentation.slides.length,
+        })
         .catch((error) => {
           console.log(error);
         });
 
       this.presentation.slides.push(response.data);
-      return await this.setSlide(response.data, elements);
+      return await this.setSlide(response.data);
     },
 
     saveSlide(slide = this.slide, elements) {
@@ -269,18 +272,18 @@ export const usePresentationsStore = defineStore("presentations", {
       // add new slide
       await this.addNewSlide(elements);
 
-      // copy original slides props into the new one
-      this.slide = {
-        ...this.slide,
-        canvas_data: slide.canvas_data,
-        preview: slide.preview,
-        notes: slide.notes,
-        animation: slide.animation,
-      };
-      this.updateLocalSlide();
-
-      // save new slide
-      this.saveSlide(undefined, elements);
+      // // copy original slides props into the new one
+      // this.slide = {
+      //   ...this.slide,
+      //   canvas_data: slide.canvas_data,
+      //   preview: slide.preview,
+      //   notes: slide.notes,
+      //   animation: slide.animation,
+      // };
+      // this.updateLocalSlide();
+      //
+      // // save new slide
+      // this.saveSlide(undefined, elements);
     },
 
     async deleteSlide(slide) {

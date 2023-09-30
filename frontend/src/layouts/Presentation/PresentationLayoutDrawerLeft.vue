@@ -278,6 +278,8 @@ import { useCanvasStore } from "stores/canvas";
 import { deselectElement } from "stores/canvas/helpers/select";
 import { useQuasar } from "quasar";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
+import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
+import { useCanvasTextStore } from "stores/canvas/text";
 
 /*
  * variables
@@ -293,7 +295,10 @@ const presentationsStore = usePresentationsStore();
 const { presentation, slide } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
-const { elements } = storeToRefs(canvasStore);
+const { elements, MODES_OPTIONS, canvas } = storeToRefs(canvasStore);
+
+const textStore = useCanvasTextStore();
+const { customization } = storeToRefs(textStore);
 
 /*
  * slide context menu
@@ -394,14 +399,95 @@ const handleAddingNewSlide = async () => {
   presentationsStore.updateLocalSlide();
   presentationsStore.saveSlide(undefined, elements.value);
 
-  await presentationsStore.addNewSlide();
+  // TODO: check if slide type is content
+  const layoutDefaultElementProps = {
+    mode: MODES_OPTIONS.value.text,
+    isVisible: true,
+    isLocked: false,
+    fontFamily: customization.value.font,
+    lineHeight: customization.value.lineHeight,
+    fontWeight: "normal",
+    textDecoration: "none",
+    fontStyle: "normal",
+    textAlign: ALIGNMENT.horizontal.center,
+    verticalAlign: ALIGNMENT.vertical.top,
+    rotationAngle: 0,
 
+    /*
+     * editable
+     */
+    id: "layout-",
+    text: "",
+
+    fontSize: "48px",
+    color: customization.value.color,
+
+    x: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 5) / 100
+    ),
+    y: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 5) / 100
+    ),
+
+    width: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 90) / 100
+    ),
+    height: 96,
+  };
+
+  const layoutElements = [
+    {
+      ...layoutDefaultElementProps,
+
+      id: "layout-title-top-titleAndBody",
+      text: "Click to add title",
+
+      color: "#313232",
+      fontSize: "48px",
+      fontWeight: "bold",
+      textAlign: ALIGNMENT.horizontal.left,
+
+      y: canvasStore.computeAdjustedSize(
+        (canvasStore.canvasRect().width * 5) / 100
+      ),
+
+      height: canvasStore.computeAdjustedSize(
+        ((48 / 2 + 48 / 8) * canvas.value.width) /
+          canvasStore.canvasRect().width
+      ),
+    },
+    {
+      ...layoutDefaultElementProps,
+
+      id: "layout-body",
+      text: "Click to add body",
+
+      fontSize: "16px",
+      color: "#808080",
+      textAlign: ALIGNMENT.horizontal.left,
+
+      y: canvasStore.computeAdjustedSize(
+        (canvasStore.canvasRect().width * 5) / 100 + 96
+      ),
+
+      height: canvasStore.computeAdjustedSize(
+        (canvasStore.canvasRect().height * 65) / 100
+      ),
+    },
+  ];
+
+  await presentationsStore.addNewSlide(layoutElements);
   await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(false);
+
+  canvasStore.renderSlidePreview();
+  canvasStore.saveSlidePreview();
 };
 
 const handleDuplicatingSlide = async (slide) => {
   await presentationsStore.duplicateSlide(slide, elements.value);
+
+  canvasStore.renderSlidePreview();
+  canvasStore.saveSlidePreview();
 };
 
 /*

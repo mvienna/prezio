@@ -9,12 +9,12 @@ use Illuminate\Http\Request;
 
 class PresentationSlideController extends Controller
 {
-    public function store (Presentation $presentation): JsonResponse
+    public function store (Presentation $presentation, Request $request): JsonResponse
     {
-        $presentation->load('slides');
         $slide = PresentationSlide::create([
             'presentation_id' => $presentation->id,
-            'order' => count($presentation->slides),
+            'canvas_data' => $request->canvas_data,
+            'order' => $request->order,
         ]);
 
         return $this->jsonResponse($slide->toArray());
