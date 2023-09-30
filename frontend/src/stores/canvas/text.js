@@ -435,19 +435,31 @@ export const useCanvasTextStore = defineStore("canvasText", {
           case "b":
             this.customization.formatting.isBold =
               !this.customization.formatting.isBold;
-            this.applyStyles();
+
+            if (selectedElement.value) {
+              this.applyStyles();
+            }
+
             break;
 
           case "u":
             this.customization.formatting.isUnderline =
               !this.customization.formatting.isUnderline;
-            this.applyStyles();
+
+            if (selectedElement.value) {
+              this.applyStyles();
+            }
+
             break;
 
           case "i":
             this.customization.formatting.isItalic =
               !this.customization.formatting.isItalic;
-            this.applyStyles();
+
+            if (selectedElement.value) {
+              this.applyStyles();
+            }
+
             break;
         }
 
@@ -456,7 +468,11 @@ export const useCanvasTextStore = defineStore("canvasText", {
             case "x":
               this.customization.formatting.isLineThrough =
                 !this.customization.formatting.isLineThrough;
-              this.applyStyles();
+
+              if (selectedElement.value) {
+                this.applyStyles();
+              }
+
               break;
           }
         }

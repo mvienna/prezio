@@ -277,7 +277,7 @@ const handleKeyDownEvent = (event) => {
       }
 
       // cut element
-      if (event.key === "x") {
+      if (event.key === "x" && !event.shiftKey) {
         event.preventDefault();
         cut();
       }
@@ -332,21 +332,21 @@ const handleKeyDownEvent = (event) => {
       event.preventDefault();
       deselectElement();
     }
-
-    // text shortcuts (formatting)
-    switch (selectedElement.value?.mode) {
-      case MODES_OPTIONS.value.text:
-        textStore.shortcuts(event);
-    }
   }
 
   switch (mode.value) {
+    /*
+     * turn off adding new text*text shortcuts (formatting)
+     *
+     */
     case MODES_OPTIONS.value.text:
-      // turn off adding new text
       if (event.key === "Escape") {
         event.preventDefault();
         textState.isNewText.value = false;
       }
+
+      textStore.shortcuts(event);
+
       break;
   }
 };
