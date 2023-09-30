@@ -14,8 +14,19 @@
       textStore.applyStyles();
     "
   >
-    <q-tooltip class="text-bold">
-      {{ $t("presentationStudio.toolbar.text.options.formatting.bold") }}
+    <q-tooltip>
+      <div class="text-bold text-center">
+        {{ $t("presentationStudio.toolbar.text.options.formatting.bold") }}
+      </div>
+
+      <div
+        v-if="showShortcuts"
+        class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+      >
+        <div v-if="isMac">⌘</div>
+        <div v-else>Ctrl</div>
+        <div>B</div>
+      </div>
     </q-tooltip>
   </q-btn>
 
@@ -34,8 +45,19 @@
       textStore.applyStyles();
     "
   >
-    <q-tooltip style="text-decoration: underline">
-      {{ $t("presentationStudio.toolbar.text.options.formatting.underline") }}
+    <q-tooltip>
+      <div style="text-decoration: underline" class="text-center">
+        {{ $t("presentationStudio.toolbar.text.options.formatting.underline") }}
+      </div>
+
+      <div
+        v-if="showShortcuts"
+        class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+      >
+        <div v-if="isMac">⌘</div>
+        <div v-else>Ctrl</div>
+        <div>U</div>
+      </div>
     </q-tooltip>
   </q-btn>
 
@@ -54,10 +76,22 @@
       textStore.applyStyles();
     "
   >
-    <q-tooltip style="text-decoration: line-through">
-      {{
-        $t("presentationStudio.toolbar.text.options.formatting.strikeThrough")
-      }}
+    <q-tooltip>
+      <div style="text-decoration: line-through" class="text-center">
+        {{
+          $t("presentationStudio.toolbar.text.options.formatting.strikeThrough")
+        }}
+      </div>
+
+      <div
+        v-if="showShortcuts"
+        class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+      >
+        <div v-if="isMac">⌘</div>
+        <div v-else>Ctrl</div>
+        <div>⇧</div>
+        <div>X</div>
+      </div>
     </q-tooltip>
   </q-btn>
 
@@ -76,8 +110,19 @@
       textStore.applyStyles();
     "
   >
-    <q-tooltip class="text-italic">
-      {{ $t("presentationStudio.toolbar.text.options.formatting.italic") }}
+    <q-tooltip>
+      <div class="text-italic text-center">
+        {{ $t("presentationStudio.toolbar.text.options.formatting.italic") }}
+      </div>
+
+      <div
+        v-if="showShortcuts"
+        class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+      >
+        <div v-if="isMac">⌘</div>
+        <div v-else>Ctrl</div>
+        <div>I</div>
+      </div>
     </q-tooltip>
   </q-btn>
 
@@ -296,10 +341,28 @@ import {
 } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { storeToRefs } from "pinia";
+import { useQuasar } from "quasar";
+import { computed } from "vue";
+
+/*
+ * variables
+ */
+const $q = useQuasar();
 
 /*
  * stores
  */
 const textStore = useCanvasTextStore();
 const textState = storeToRefs(textStore);
+
+/*
+ * shortcuts
+ */
+const showShortcuts = computed(() => {
+  return $q.platform.is.desktop;
+});
+
+const isMac = computed(() => {
+  return $q.platform.is.platform === "mac";
+});
 </script>
