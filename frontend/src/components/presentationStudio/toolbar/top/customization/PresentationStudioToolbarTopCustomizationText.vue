@@ -282,21 +282,23 @@
   </q-select>
 
   <!-- font size -->
-  <q-select
-    v-model="textState.customization.value.fontSize"
-    :options="FONT_SIZE_OPTIONS"
-    emit-value
-    borderless
-    color="dark"
-    hide-dropdown-icon
+  <q-input
+    v-model="fontSizeNumber"
+    type="number"
+    color="primary"
     dense
-    options-dense
-    @update:model-value="textStore.applyStyles()"
+    style="width: 70px"
+    @update:model-value="
+      textState.customization.value.fontSize = fontSizeNumber + 'px';
+      textStore.applyStyles();
+    "
   >
+    <template #after> <div class="text-caption">px</div> </template>
+
     <q-tooltip :offset="[0, 4]">
       {{ $t("presentationStudio.toolbar.text.options.fontSize") }}
     </q-tooltip>
-  </q-select>
+  </q-input>
 
   <q-space />
 
@@ -334,20 +336,18 @@
 </template>
 
 <script setup>
-import {
-  ALIGNMENT,
-  FONT_OPTIONS,
-  FONT_SIZE_OPTIONS,
-} from "src/constants/canvas/canvasVariables";
+import { ALIGNMENT, FONT_OPTIONS } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 /*
  * variables
  */
 const $q = useQuasar();
+
+const fontSizeNumber = ref(16);
 
 /*
  * stores
@@ -366,3 +366,16 @@ const isMac = computed(() => {
   return $q.platform.is.platform === "mac";
 });
 </script>
+
+<style scoped lang="scss">
+::v-deep(.q-field__control) {
+  height: 36px;
+}
+
+::v-deep(input) {
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    opacity: 1;
+  }
+}
+</style>

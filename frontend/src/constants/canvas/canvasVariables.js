@@ -37,19 +37,6 @@ export const FONT_OPTIONS = [
   "Roboto",
 ];
 
-export const FONT_SIZE_OPTIONS = [
-  "1px",
-  "2px",
-  "4px",
-  "8px",
-  "16px",
-  "24px",
-  "36px",
-  "48px",
-  "64px",
-  "96px",
-];
-
 export const ALIGNMENT = {
   horizontal: {
     left: "left",
