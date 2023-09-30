@@ -68,6 +68,7 @@ export const useCanvasStore = defineStore("canvas", {
     selectedElementBorder: {
       borderWidth: 2,
       borderColor: "#4971FF",
+      outlineColor: "#D7E0FF",
     },
 
     selectedElementRotationHandle: {
@@ -890,6 +891,26 @@ export const useCanvasStore = defineStore("canvas", {
         this.selectedElementBorder.borderWidth
       );
 
+      const padding = 4;
+
+      this.ctx.strokeStyle = this.selectedElementBorder.outlineColor;
+      this.ctx.lineWidth = borderWidth + 2;
+      this.ctx.strokeRect(
+        x - padding,
+        y - padding,
+        width + padding * 2,
+        height + padding * 2
+      );
+
+      this.ctx.strokeStyle = this.selectedElementBorder.outlineColor;
+      this.ctx.lineWidth = borderWidth + 2;
+      this.ctx.strokeRect(
+        x + padding,
+        y + padding,
+        width - padding * 2,
+        height - padding * 2
+      );
+
       this.ctx.strokeStyle = this.selectedElementBorder.borderColor;
       this.ctx.lineWidth = borderWidth;
       this.ctx.strokeRect(x, y, width, height);
@@ -897,9 +918,8 @@ export const useCanvasStore = defineStore("canvas", {
       /*
        * resize handles
        */
-      this.ctx.fillStyle = this.selectedElementBorder.borderColor;
       if (RESIZE_HANDLES_OPTIONS.length) {
-        const handleSize = borderWidth * 3;
+        const handleSize = borderWidth * 4;
 
         RESIZE_HANDLES_OPTIONS.forEach((handle) => {
           const { minX, minY } = this.computeResizeHandlePosition(
@@ -910,6 +930,16 @@ export const useCanvasStore = defineStore("canvas", {
             height,
             handleSize
           );
+
+          this.ctx.fillStyle = this.selectedElementBorder.outlineColor;
+          this.ctx.fillRect(
+            minX - padding,
+            minY - padding,
+            handleSize + padding * 2,
+            handleSize + padding * 2
+          );
+
+          this.ctx.fillStyle = this.selectedElementBorder.borderColor;
           this.ctx.fillRect(minX, minY, handleSize, handleSize);
         });
       }
