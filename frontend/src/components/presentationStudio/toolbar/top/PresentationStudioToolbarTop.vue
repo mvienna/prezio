@@ -78,7 +78,18 @@
         @click="paste()"
       >
         <q-tooltip>
-          {{ $t("presentationStudio.elementsContextMenu.paste.shortcut") }}
+          <div class="text-center">
+            {{ $t("presentationStudio.elementsContextMenu.paste") }}
+          </div>
+
+          <div
+            v-if="showShortcuts"
+            class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+          >
+            <div v-if="isMac">⌘</div>
+            <div v-else>Ctrl</div>
+            <div>V</div>
+          </div>
         </q-tooltip>
       </q-btn>
     </template>
@@ -98,6 +109,12 @@ import PresentationStudioToolbarTopCustomizationText from "components/presentati
 import PresentationStudioToolbarTopCustomizationShape from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationShape.vue";
 import PresentationStudioToolbarTopModes from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopModes.vue";
 import PresentationStudioToolbarTopLayouts from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopLayouts.vue";
+import { useQuasar } from "quasar";
+
+/*
+ * variables
+ */
+const $q = useQuasar();
 
 /*
  * stores
@@ -159,6 +176,17 @@ watch(
     }
   }
 );
+
+/*
+ * shortcuts
+ */
+const showShortcuts = computed(() => {
+  return $q.platform.is.desktop;
+});
+
+const isMac = computed(() => {
+  return $q.platform.is.platform === "mac";
+});
 </script>
 
 <style scoped lang="scss">
