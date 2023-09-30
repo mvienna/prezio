@@ -1,10 +1,14 @@
 <template>
   <!-- color picker -->
-  <q-btn flat round size="12px">
-    <q-icon
-      name="r_colorize"
-      :style="`color: ${drawingState.customization.value.color}`"
-    />
+  <q-btn flat round size="12px" class="relative-position">
+    <div>
+      <q-icon name="icon-mdi_border_color_top" class="absolute-center" />
+      <q-icon
+        name="icon-mdi_border_color_bottom"
+        :style="`color: ${drawingState.customization.value.color}`"
+        class="absolute-center"
+      />
+    </div>
 
     <q-menu
       anchor="bottom left"

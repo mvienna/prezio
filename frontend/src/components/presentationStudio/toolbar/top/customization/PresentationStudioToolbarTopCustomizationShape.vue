@@ -1,10 +1,14 @@
 <template>
   <!-- color picker -->
-  <q-btn flat round size="12px">
-    <q-icon
-      name="r_colorize"
-      :style="`color: ${shapeState.customization.value.strokeColor}`"
-    />
+  <q-btn flat round size="12px" class="relative-position">
+    <div>
+      <q-icon name="icon-mdi_border_color_top" class="absolute-center" />
+      <q-icon
+        name="icon-mdi_border_color_bottom"
+        :style="`color: ${shapeState.customization.value.strokeColor}`"
+        class="absolute-center"
+      />
+    </div>
 
     <q-menu
       anchor="bottom left"
@@ -44,11 +48,15 @@
   </q-btn>
 
   <!-- fill color picker -->
-  <q-btn flat round size="12px">
-    <q-icon
-      name="r_format_color_fill"
-      :style="`color: ${shapeState.customization.value.fillColor}`"
-    />
+  <q-btn flat round size="12px" class="relative-position">
+    <div>
+      <q-icon name="icon-mdi_format_color_fill_top" class="absolute-center" />
+      <q-icon
+        name="icon-mdi_format_color_fill_bottom"
+        :style="`color: ${shapeState.customization.value.fillColor}`"
+        class="absolute-center"
+      />
+    </div>
 
     <q-menu
       anchor="bottom left"
