@@ -1,17 +1,12 @@
 <template>
   <!-- formatting - bold -->
   <q-btn
-    outline
-    size="10px"
+    flat
+    size="12px"
     round
     icon="r_format_bold"
     :text-color="
-      textState.customization.value.formatting.isBold ? 'white' : 'black'
-    "
-    :class="
-      textState.customization.value.formatting.isBold
-        ? 'bg-primary'
-        : 'bg-white'
+      textState.customization.value.formatting.isBold ? 'black' : 'grey'
     "
     @click="
       textState.customization.value.formatting.isBold =
@@ -26,17 +21,12 @@
 
   <!-- formatting - underline -->
   <q-btn
-    outline
-    size="10px"
+    flat
+    size="12px"
     round
     icon="r_format_underlined"
     :text-color="
-      textState.customization.value.formatting.isUnderline ? 'white' : 'black'
-    "
-    :class="
-      textState.customization.value.formatting.isUnderline
-        ? 'bg-primary'
-        : 'bg-white'
+      textState.customization.value.formatting.isUnderline ? 'black' : 'grey'
     "
     @click="
       textState.customization.value.formatting.isUnderline =
@@ -51,17 +41,12 @@
 
   <!-- formatting - strike-through -->
   <q-btn
-    outline
-    size="10px"
+    flat
+    size="12px"
     round
     icon="r_strikethrough_s"
     :text-color="
-      textState.customization.value.formatting.isLineThrough ? 'white' : 'black'
-    "
-    :class="
-      textState.customization.value.formatting.isLineThrough
-        ? 'bg-primary'
-        : 'bg-white'
+      textState.customization.value.formatting.isLineThrough ? 'black' : 'grey'
     "
     @click="
       textState.customization.value.formatting.isLineThrough =
@@ -78,17 +63,12 @@
 
   <!-- formatting - italic -->
   <q-btn
-    outline
-    size="10px"
+    flat
+    size="12px"
     round
     icon="r_format_italic"
     :text-color="
-      textState.customization.value.formatting.isItalic ? 'white' : 'black'
-    "
-    :class="
-      textState.customization.value.formatting.isItalic
-        ? 'bg-primary'
-        : 'bg-white'
+      textState.customization.value.formatting.isItalic ? 'black' : 'grey'
     "
     @click="
       textState.customization.value.formatting.isItalic =
@@ -101,12 +81,10 @@
     </q-tooltip>
   </q-btn>
 
-  <q-separator vertical class="q-ml-md q-mr-sm" />
-
   <!-- formatting - alignment -->
   <q-btn
-    unelevated
-    size="10px"
+    flat
+    size="12px"
     round
     color="black"
     :icon="
@@ -140,7 +118,7 @@
             v-for="item in Object.keys(ALIGNMENT.horizontal)"
             :key="item"
             flat
-            size="10px"
+            size="12px"
             round
             :class="
               item ===
@@ -170,7 +148,7 @@
             v-for="item in Object.keys(ALIGNMENT.vertical)"
             :key="item"
             flat
-            size="10px"
+            size="12px"
             round
             :class="
               item ===
@@ -198,11 +176,10 @@
     </q-menu>
   </q-btn>
 
-  <q-separator vertical class="q-ml-md q-mr-sm" />
+  <q-separator vertical />
 
   <!-- color picker -->
   <q-btn flat round size="12px" class="relative-position">
-    <!--    <q-icon name="r_format_color_text" />-->
     <div>
       <q-icon name="icon-mdi_format_color_top" class="absolute-center" />
       <q-icon
@@ -239,10 +216,9 @@
     emit-value
     borderless
     color="dark"
-    hide-dropdown-icon
     dense
     options-dense
-    class="q-pl-sm text-no-wrap"
+    class="text-no-wrap"
     @update:model-value="textStore.applyStyles()"
   >
     <template #option="scope">
@@ -253,14 +229,6 @@
           }}</q-item-label>
         </q-item-section>
       </q-item>
-    </template>
-
-    <template #prepend>
-      <q-icon
-        name="r_text_fields"
-        class="text-semibold text-dark"
-        size="20px"
-      />
     </template>
 
     <q-tooltip :offset="[0, 4]">
@@ -277,18 +245,9 @@
     color="dark"
     hide-dropdown-icon
     dense
-    class="q-px-md"
     options-dense
     @update:model-value="textStore.applyStyles()"
   >
-    <template #prepend>
-      <q-icon
-        name="r_sort_by_alpha"
-        class="text-semibold text-dark"
-        size="20px"
-      />
-    </template>
-
     <q-tooltip :offset="[0, 4]">
       {{ $t("presentationStudio.toolbar.text.options.fontSize") }}
     </q-tooltip>
