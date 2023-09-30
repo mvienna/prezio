@@ -360,7 +360,10 @@ const handleUnload = (event) => {
     return;
   }
 
-  if (lastSavedAt.value < lastChangedAt.value) {
+  if (
+    lastSavedAt.value < lastChangedAt.value &&
+    process.env.APP_ENV === "production"
+  ) {
     event.preventDefault();
     event.returnValue =
       "You have unsaved changes. Are you sure you want to leave?";
