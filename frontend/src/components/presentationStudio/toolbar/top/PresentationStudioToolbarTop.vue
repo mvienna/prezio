@@ -1,5 +1,39 @@
 <template>
   <div class="presentation_toolbar__top bg-white q-pa-md row no-wrap">
+    <q-btn
+      icon="r_space_dashboard"
+      unelevated
+      text-color="dark"
+      :class="showLayoutsMenu ? 'bg-grey-2' : ''"
+      round
+      size="12px"
+    >
+      <q-tooltip>
+        {{ $t("presentationStudio.toolbar.layouts.title") }}
+      </q-tooltip>
+
+      <!-- layouts -->
+      <q-menu
+        v-model="showLayoutsMenu"
+        anchor="top left"
+        self="bottom left"
+        transition-show="jump-down"
+        transition-hide="jump-up"
+        :offset="[0, 16]"
+        class="q-pa-md"
+        max-height="70vh"
+        style="
+          width: 424px;
+          backdrop-filter: blur(8px);
+          background: rgba(255, 255, 255, 0.5);
+        "
+      >
+        <PresentationStudioToolbarTopLayouts v-close-popup />
+      </q-menu>
+    </q-btn>
+
+    <q-separator vertical class="q-mx-sm" />
+
     <!-- modes -->
     <PresentationStudioToolbarTopModes
       @switch-mode="$emit('switchMode', $event)"
@@ -7,11 +41,11 @@
       @add-shape="$emit('addShape', $event)"
     />
 
-    <q-separator vertical class="q-ml-md q-mr-sm" />
+    <q-separator vertical class="q-mx-sm" />
 
     <div
       v-if="showCustomizationMenu"
-      class="row no-wrap items-center q-gutter-sm scroll--hidden q-pl-sm"
+      class="row no-wrap items-center q-gutter-sm scroll--hidden"
       style="width: 100%; overflow-x: scroll"
     >
       <!-- drawing customization -->
@@ -52,7 +86,7 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
 import { useCanvasTextStore } from "stores/canvas/text";
@@ -63,6 +97,7 @@ import PresentationStudioToolbarTopCustomizationDrawing from "components/present
 import PresentationStudioToolbarTopCustomizationText from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationText.vue";
 import PresentationStudioToolbarTopCustomizationShape from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationShape.vue";
 import PresentationStudioToolbarTopModes from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopModes.vue";
+import PresentationStudioToolbarTopLayouts from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopLayouts.vue";
 
 /*
  * stores
@@ -87,6 +122,7 @@ defineEmits(["switchMode", "addImage", "addShape"]);
 /*
  * variables
  */
+const showLayoutsMenu = ref(false);
 
 const showCustomizationMenu = computed(() => {
   return (

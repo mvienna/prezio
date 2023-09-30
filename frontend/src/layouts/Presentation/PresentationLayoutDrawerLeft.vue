@@ -278,7 +278,6 @@ import { useCanvasStore } from "stores/canvas";
 import { deselectElement } from "stores/canvas/helpers/select";
 import { useQuasar } from "quasar";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
-import PresentationStudioTabsTypesTabLayouts from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTabLayouts.vue";
 
 /*
  * variables

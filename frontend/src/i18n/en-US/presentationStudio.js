@@ -4,6 +4,7 @@ export default {
      * toolbar
      */
     toolbar: {
+      // drawing
       drawing: {
         title: "Drawing",
 
@@ -19,6 +20,8 @@ export default {
           pencil: "Pencil",
         },
       },
+
+      // text
       text: {
         title: "Text",
 
@@ -40,12 +43,18 @@ export default {
 
         newText: "Add new text to slide",
       },
+
+      // media
       media: {
         title: "Photos",
       },
+
+      // emoji
       emoji: {
         title: "Emoji",
       },
+
+      // shape
       shape: {
         title: "Shapes",
 
@@ -57,10 +66,26 @@ export default {
           lineWidth: "Line Width",
         },
       },
+
+      // zoom
       zoom: {
         in: "Zoom In",
         out: "Zoom Out",
         select: "Select Zoom",
+      },
+
+      // layouts
+      layouts: {
+        title: "Layout",
+
+        options: {
+          blank: "Blank Slide",
+          titleSlide: "Title slide",
+          title: "Title on the top",
+          titleAndBody: "Title and Body",
+          titleAndTwoColumns: "Title and Two Objects",
+          titleOnly: "Title only",
+        },
       },
     },
 

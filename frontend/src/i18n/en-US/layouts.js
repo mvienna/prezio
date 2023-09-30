@@ -226,15 +226,6 @@ export default {
               free: "Free",
               qr: "QR code",
               video: "Video",
-
-              layouts: {
-                blank: "Blank Slide",
-                titleSlide: "Title slide",
-                title: "Title on the top",
-                titleAndBody: "Title and Body",
-                titleAndTwoColumns: "Title and Two Objects",
-                titleOnly: "Title only",
-              },
             },
 
             /*

@@ -4,6 +4,7 @@ export default {
      * toolbar
      */
     toolbar: {
+      // drawing
       drawing: {
         title: "Рисование",
 
@@ -19,6 +20,8 @@ export default {
           pencil: "Карандаш",
         },
       },
+
+      // text
       text: {
         title: "Текст",
 
@@ -40,12 +43,18 @@ export default {
 
         newText: "Добавьте новый текст на слайд",
       },
+
+      // media
       media: {
         title: "Фотографии",
       },
+
+      // emoji
       emoji: {
         title: "Эмодзи",
       },
+
+      // shape
       shape: {
         title: "Формы",
 
@@ -57,10 +66,26 @@ export default {
           lineWidth: "Размер",
         },
       },
+
+      // zoom
       zoom: {
         in: "Увеличить",
         out: "Уменьшить",
         select: "Выбрать масштабирование",
+      },
+
+      // layouts
+      layouts: {
+        title: "Макет",
+
+        options: {
+          blank: "Пустой слайд",
+          titleSlide: "Титульный слайд",
+          title: "Заголовок сверху",
+          titleAndBody: "Заголовок и обьект",
+          titleAndTwoColumns: "Заголовок и два обьекта",
+          titleOnly: "Только заголовок",
+        },
       },
     },
 

@@ -167,15 +167,6 @@ export default {
               free: "Свободный",
               qr: "QR код",
               video: "Видео",
-
-              layouts: {
-                blank: "Пустой<br/>слайд",
-                titleSlide: "Титульный слайд",
-                title: "Заголовок<br/>сверху",
-                titleAndBody: "Заголовок и обьект",
-                titleAndTwoColumns: "Заголовок и два обьекта",
-                titleOnly: "Только заголовок",
-              },
             },
 
             /*

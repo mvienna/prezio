@@ -1,9 +1,9 @@
 <template>
-  <div class="layouts_grid q-pt-sm">
+  <div class="row q-gutter-md">
     <div
       v-for="layout in layouts"
       :key="layout.name"
-      class="layout q-px-sm"
+      class="layout"
       :class="
         layout.name !== 'blank' &&
         layout.elements.every((item1) => {
@@ -13,13 +13,15 @@
           : ''
       "
       v-close-popup
-      @click="$emit('select', layout)"
+      @click="handleLayoutSelection(layout)"
     >
-      <div class="row justify-center">
+      <div class="row no-wrap justify-center">
         <q-img :src="`/assets/icons/temp/slideLayouts/${layout.name}.svg`" />
       </div>
 
-      <div class="text-center text-caption q-mt-sm" v-html="layout.label"></div>
+      <div class="text-center text-caption q-mt-sm ellipsis">
+        {{ layout.label }}
+      </div>
     </div>
   </div>
 </template>
@@ -35,11 +37,6 @@ import { useI18n } from "vue-i18n";
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
-
-/*
- * emits
- */
-defineEmits(["select"]);
 
 /*
  * stores
@@ -271,16 +268,12 @@ const layoutElements = {
 const layouts = [
   {
     name: "blank",
-    label: t(
-      "presentationLayout.rightDrawer.tabs.types.options.content.layouts.blank"
-    ),
+    label: t("presentationStudio.toolbar.layouts.options.blank"),
     elements: [],
   },
   {
     name: "titleSlide",
-    label: t(
-      "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleSlide"
-    ),
+    label: t("presentationStudio.toolbar.layouts.options.titleSlide"),
     elements: [
       layoutElements.titleCenterAbove,
       layoutElements.subtitleCenterBelow,
@@ -288,9 +281,7 @@ const layouts = [
   },
   {
     name: "title",
-    label: t(
-      "presentationLayout.rightDrawer.tabs.types.options.content.layouts.title"
-    ),
+    label: t("presentationStudio.toolbar.layouts.options.title"),
     elements: [
       {
         ...layoutElements.titleTop,
@@ -300,9 +291,7 @@ const layouts = [
   },
   {
     name: "titleAndBody",
-    label: t(
-      "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleAndBody"
-    ),
+    label: t("presentationStudio.toolbar.layouts.options.titleAndBody"),
     elements: [
       {
         ...layoutElements.titleTop,
@@ -313,9 +302,7 @@ const layouts = [
   },
   {
     name: "titleAndTwoColumns",
-    label: t(
-      "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleAndTwoColumns"
-    ),
+    label: t("presentationStudio.toolbar.layouts.options.titleAndTwoColumns"),
     elements: [
       {
         ...layoutElements.titleTop,
@@ -327,31 +314,29 @@ const layouts = [
   },
   {
     name: "titleOnly",
-    label: t(
-      "presentationLayout.rightDrawer.tabs.types.options.content.layouts.titleOnly"
-    ),
+    label: t("presentationStudio.toolbar.layouts.options.titleOnly"),
     elements: [layoutElements.titleCenter],
   },
 ];
+
+/*
+ * apply layout
+ */
+const handleLayoutSelection = (layout) => {
+  elements.value = elements.value.filter(
+    (element) => !element.id.includes("layout-")
+  );
+
+  elements.value = [...elements.value, ...layout.elements];
+
+  canvasStore.redrawCanvas();
+  canvasStore.saveSlidePreview();
+};
 </script>
 
 <style scoped lang="scss">
-.layouts_grid {
-  display: flex;
-  flex-wrap: wrap;
-  columns: 3;
-  gap: 8px;
-
-  .item:nth-last-child(-n + 2) {
-    margin-bottom: 0;
-  }
-}
-
 .layout {
-  max-width: 112px;
-  min-height: 104.68px;
-  width: 100%;
-  display: inline-block;
+  width: 120px;
   cursor: pointer;
   border-radius: 16px;
   transition: 0.2s;

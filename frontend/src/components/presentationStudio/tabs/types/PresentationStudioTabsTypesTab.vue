@@ -16,12 +16,14 @@
       </div>
 
       <div class="types_grid q-mt-sm">
+        <!-- TODO: use slide type to detect active type - :active="type.name === 'free'" -->
         <q-item
           v-for="type in typesGroup"
           :key="type.name"
           class="type q-pa-sm"
           :disable="type.disable"
           clickable
+          :active="type.name === 'free'"
           @click="$emit('select')"
         >
           <div class="row justify-center">
@@ -31,26 +33,6 @@
           <div class="text-center text-caption q-mt-sm ellipsis">
             {{ type.label }}
           </div>
-
-          <!-- layouts -->
-          <q-menu
-            v-if="type.name === 'free' && !disableLayoutSelection"
-            anchor="top left"
-            self="bottom left"
-            transition-show="jump-up"
-            transition-hide="jump-down"
-            :offset="[0, 16]"
-            class="q-pa-sm"
-            style="
-              width: 368px;
-              backdrop-filter: blur(8px);
-              background: rgba(255, 255, 255, 0.5);
-            "
-          >
-            <PresentationStudioTabsTypesTabLayouts
-              @select="handleLayoutSelection($event)"
-            />
-          </q-menu>
         </q-item>
       </div>
     </div>
@@ -59,9 +41,6 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
-import PresentationStudioTabsTypesTabLayouts from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTabLayouts.vue";
-import { storeToRefs } from "pinia";
-import { useCanvasStore } from "stores/canvas";
 
 /*
  * variables
@@ -76,12 +55,6 @@ defineProps({
  * emits
  */
 defineEmits(["select"]);
-
-/*
- * stores
- */
-const canvasStore = useCanvasStore();
-const { elements } = storeToRefs(canvasStore);
 
 /*
  * types
@@ -206,20 +179,6 @@ const types = {
       disable: true,
     },
   ],
-};
-
-/*
- * apply layout
- */
-const handleLayoutSelection = (layout) => {
-  elements.value = elements.value.filter(
-    (element) => !element.id.includes("layout-")
-  );
-
-  elements.value = [...elements.value, ...layout.elements];
-
-  canvasStore.redrawCanvas();
-  canvasStore.saveSlidePreview();
 };
 </script>
 
