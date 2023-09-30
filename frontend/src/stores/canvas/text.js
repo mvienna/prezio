@@ -124,6 +124,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
         canvasStore.redrawCanvas(true, true);
         this.removeTextInput();
+        this.clearFormatting();
       };
 
       /*

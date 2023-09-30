@@ -287,7 +287,7 @@
     type="number"
     color="primary"
     dense
-    style="width: 70px"
+    style="width: 70px; min-width: 70px; max-width: 70px"
     @update:model-value="
       textState.customization.value.fontSize = fontSizeNumber + 'px';
       textStore.applyStyles();
@@ -340,20 +340,30 @@ import { ALIGNMENT, FONT_OPTIONS } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 /*
  * variables
  */
 const $q = useQuasar();
 
-const fontSizeNumber = ref(16);
-
 /*
  * stores
  */
 const textStore = useCanvasTextStore();
 const textState = storeToRefs(textStore);
+
+/*
+ * font size
+ */
+const fontSizeNumber = ref(16);
+
+watch(
+  () => textState.customization.value.fontSize,
+  () => {
+    fontSizeNumber.value = parseFloat(textState.customization.value.fontSize);
+  }
+);
 
 /*
  * shortcuts
