@@ -79,7 +79,9 @@ const layoutDefaultElementProps = {
     (canvasStore.canvasRect().width * 5) / 100
   ),
 
-  width: (canvasStore.canvasRect().width * 90) / 100,
+  width: canvasStore.computeAdjustedSize(
+    (canvasStore.canvasRect().width * 90) / 100
+  ),
   height: 96,
 };
 
@@ -105,8 +107,9 @@ const layoutElements = {
       (canvasStore.canvasRect().width * 5) / 100
     ),
 
-    height:
-      ((48 / 2 + 48 / 8) * canvas.value.width) / canvasStore.canvasRect().width,
+    height: canvasStore.computeAdjustedSize(
+      ((48 / 2 + 48 / 8) * canvas.value.width) / canvasStore.canvasRect().width
+    ),
   },
 
   /*
@@ -129,8 +132,9 @@ const layoutElements = {
       ) -
       ((48 / 2 + 48 / 8) * canvas.value.width) / canvasStore.canvasRect().width,
 
-    height:
-      ((48 / 2 + 48 / 8) * canvas.value.width) / canvasStore.canvasRect().width,
+    height: canvasStore.computeAdjustedSize(
+      ((48 / 2 + 48 / 8) * canvas.value.width) / canvasStore.canvasRect().width
+    ),
   },
 
   /*
@@ -154,7 +158,9 @@ const layoutElements = {
       ) -
       ((48 * 2 * canvas.value.width) / canvasStore.canvasRect().width) * 2,
 
-    height: (48 * 2 * canvas.value.width) / canvasStore.canvasRect().width,
+    height: canvasStore.computeAdjustedSize(
+      (48 * 2 * canvas.value.width) / canvasStore.canvasRect().width
+    ),
   },
 
   /*
@@ -176,7 +182,9 @@ const layoutElements = {
       ) +
       (48 * canvas.value.width) / canvasStore.canvasRect().width / 2,
 
-    height: (48 * canvas.value.width) / canvasStore.canvasRect().width,
+    height: canvasStore.computeAdjustedSize(
+      (48 * canvas.value.width) / canvasStore.canvasRect().width
+    ),
   },
 
   /*
@@ -201,7 +209,7 @@ const layoutElements = {
         (canvasStore.canvasRect().width * 5) / 100
       ) +
       canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 25) / 100
+        (canvasStore.canvasRect().height * 65) / 100
       ),
   },
 
@@ -226,9 +234,11 @@ const layoutElements = {
         (canvasStore.canvasRect().width * 5) / 100
       ) +
       canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 25) / 100
+        (canvasStore.canvasRect().height * 55) / 100
       ),
-    width: (canvasStore.canvasRect().width * 45) / 100,
+    width: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 45) / 100
+    ),
   },
 
   /*
@@ -256,9 +266,11 @@ const layoutElements = {
         (canvasStore.canvasRect().width * 5) / 100
       ) +
       canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 25) / 100
+        (canvasStore.canvasRect().height * 55) / 100
       ),
-    width: (canvasStore.canvasRect().width * 40) / 100,
+    width: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 40) / 100
+    ),
   },
 };
 
