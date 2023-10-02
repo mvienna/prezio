@@ -658,7 +658,7 @@ export const useCanvasStore = defineStore("canvas", {
         case SHAPES_OPTIONS.circle:
           this.ctx.arc(
             element.x + element.width / 2,
-            element.y + element.width / 2,
+            element.y + element.height / 2,
             element.width / 2,
             0,
             2 * Math.PI
@@ -675,7 +675,7 @@ export const useCanvasStore = defineStore("canvas", {
          * square
          */
         case SHAPES_OPTIONS.square:
-          this.ctx.rect(element.x, element.y, element.width, element.width);
+          this.ctx.rect(element.x, element.y, element.width, element.height);
 
           if (element.fillColor) {
             this.ctx.fillStyle = element.fillColor;
@@ -689,11 +689,12 @@ export const useCanvasStore = defineStore("canvas", {
          */
         case SHAPES_OPTIONS.triangle:
           const triangleX1 = element.x + element.width / 2;
-          const triangleY1 = element.y;
           const triangleX2 = element.x;
-          const triangleY2 = element.y + element.width;
           const triangleX3 = element.x + element.width;
-          const triangleY3 = element.y + element.width;
+
+          const triangleY1 = element.y;
+          const triangleY2 = element.y + element.height;
+          const triangleY3 = element.y + element.height;
 
           this.ctx.moveTo(triangleX1, triangleY1);
 
@@ -871,14 +872,17 @@ export const useCanvasStore = defineStore("canvas", {
             this.selectedElement.y,
             this.selectedElement.width,
             this.selectedElement.height,
-            ["top-left", "top-right", "bottom-left", "bottom-right"],
+            [SHAPES_OPTIONS.circle, SHAPES_OPTIONS.star].includes(
+              this.selectedElement.type
+            )
+              ? ["top-left", "top-right", "bottom-right", "bottom-left"]
+              : undefined,
             true
           );
           break;
 
         /*
-         * text
-         * media
+         * others
          */
         default:
           this.drawBorder(
