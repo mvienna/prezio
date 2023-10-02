@@ -5,13 +5,12 @@
     size="12px"
     round
     icon="r_format_bold"
-    :text-color="
-      textState.customization.value.formatting.isBold ? 'black' : 'grey'
-    "
+    :text-color="customization.formatting.isBold ? 'black' : 'grey'"
     @click="
-      textState.customization.value.formatting.isBold =
-        !textState.customization.value.formatting.isBold;
-      textStore.applyStyles();
+      () => {
+        customization.formatting.isBold = !customization.formatting.isBold;
+        textStore.applyStyles();
+      }
     "
   >
     <q-tooltip>
@@ -36,13 +35,13 @@
     size="12px"
     round
     icon="r_format_underlined"
-    :text-color="
-      textState.customization.value.formatting.isUnderline ? 'black' : 'grey'
-    "
+    :text-color="customization.formatting.isUnderline ? 'black' : 'grey'"
     @click="
-      textState.customization.value.formatting.isUnderline =
-        !textState.customization.value.formatting.isUnderline;
-      textStore.applyStyles();
+      () => {
+        customization.formatting.isUnderline =
+          !customization.formatting.isUnderline;
+        textStore.applyStyles();
+      }
     "
   >
     <q-tooltip>
@@ -67,13 +66,13 @@
     size="12px"
     round
     icon="r_strikethrough_s"
-    :text-color="
-      textState.customization.value.formatting.isLineThrough ? 'black' : 'grey'
-    "
+    :text-color="customization.formatting.isLineThrough ? 'black' : 'grey'"
     @click="
-      textState.customization.value.formatting.isLineThrough =
-        !textState.customization.value.formatting.isLineThrough;
-      textStore.applyStyles();
+      () => {
+        customization.formatting.isLineThrough =
+          !customization.formatting.isLineThrough;
+        textStore.applyStyles();
+      }
     "
   >
     <q-tooltip>
@@ -101,13 +100,12 @@
     size="12px"
     round
     icon="r_format_italic"
-    :text-color="
-      textState.customization.value.formatting.isItalic ? 'black' : 'grey'
-    "
+    :text-color="customization.formatting.isItalic ? 'black' : 'grey'"
     @click="
-      textState.customization.value.formatting.isItalic =
-        !textState.customization.value.formatting.isItalic;
-      textStore.applyStyles();
+      () => {
+        customization.formatting.isItalic = !customization.formatting.isItalic;
+        textStore.applyStyles();
+      }
     "
   >
     <q-tooltip>
@@ -133,13 +131,13 @@
     round
     color="black"
     :icon="
-      textState.customization.value.formatting.alignment.horizontal ===
+      customization.formatting.alignment.horizontal ===
       ALIGNMENT.horizontal.left
         ? 'r_format_align_left'
-        : textState.customization.value.formatting.alignment.horizontal ===
+        : customization.formatting.alignment.horizontal ===
           ALIGNMENT.horizontal.right
         ? 'r_format_align_right'
-        : textState.customization.value.formatting.alignment.horizontal ===
+        : customization.formatting.alignment.horizontal ===
           ALIGNMENT.horizontal.center
         ? 'r_format_align_center'
         : ''
@@ -166,8 +164,7 @@
             size="12px"
             round
             :class="
-              item ===
-              textState.customization.value.formatting.alignment.horizontal
+              item === customization.formatting.alignment.horizontal
                 ? 'text-black'
                 : 'text-grey'
             "
@@ -181,9 +178,10 @@
                 : ''
             "
             @click="
-              textState.customization.value.formatting.alignment.horizontal =
-                item;
-              textStore.applyStyles();
+              () => {
+                customization.formatting.alignment.horizontal = item;
+                textStore.applyStyles();
+              }
             "
           />
         </div>
@@ -197,7 +195,7 @@
         <!--            round-->
         <!--            :class="-->
         <!--              item ===-->
-        <!--              textState.customization.value.formatting.alignment.vertical-->
+        <!--              customization.formatting.alignment.vertical-->
         <!--                ? 'text-black'-->
         <!--                : 'text-grey'-->
         <!--            "-->
@@ -211,7 +209,7 @@
         <!--                : ''-->
         <!--            "-->
         <!--            @click="-->
-        <!--              textState.customization.value.formatting.alignment.vertical =-->
+        <!--              customization.formatting.alignment.vertical =-->
         <!--                item;-->
         <!--              textStore.applyStyles();-->
         <!--            "-->
@@ -229,7 +227,7 @@
       <q-icon name="icon-mdi_format_color_top" class="absolute-center" />
       <q-icon
         name="icon-mdi_format_color_bottom"
-        :style="`color: ${textState.customization.value.color}`"
+        :style="`color: ${customization.color}`"
         class="absolute-center"
       />
     </div>
@@ -245,7 +243,7 @@
         format-model="hex"
         no-header-tabs
         default-view="palette"
-        v-model="textState.customization.value.color"
+        v-model="customization.color"
         @update:model-value="textStore.applyStyles()"
       />
     </q-menu>
@@ -257,7 +255,7 @@
 
   <!-- font -->
   <q-select
-    v-model="textState.customization.value.font"
+    v-model="customization.font"
     :options="FONT_OPTIONS"
     emit-value
     borderless
@@ -290,8 +288,10 @@
     dense
     style="width: 70px; min-width: 70px; max-width: 70px"
     @update:model-value="
-      textState.customization.value.fontSize = fontSizeNumber + 'px';
-      textStore.applyStyles();
+      () => {
+        customization.fontSize = fontSizeNumber + 'px';
+        textStore.applyStyles();
+      }
     "
   >
     <template #after> <div class="text-caption">px</div> </template>
@@ -336,19 +336,7 @@ const $q = useQuasar();
  * stores
  */
 const textStore = useCanvasTextStore();
-const textState = storeToRefs(textStore);
-
-/*
- * font size
- */
-const fontSizeNumber = ref(16);
-
-watch(
-  () => textState.customization.value.fontSize,
-  () => {
-    fontSizeNumber.value = parseFloat(textState.customization.value.fontSize);
-  }
-);
+const { customization, fontSizeNumber } = storeToRefs(textStore);
 
 /*
  * shortcuts

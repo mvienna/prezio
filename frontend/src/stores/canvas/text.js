@@ -60,6 +60,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
         },
       },
     },
+
+    fontSizeNumber: 14,
   }),
 
   actions: {
@@ -264,7 +266,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         },
       };
 
-      console.log(this.customization);
+      this.fontSizeNumber = parseFloat(this.customization.fontSize);
 
       this.applyStyles();
     },
@@ -435,6 +437,10 @@ export const useCanvasTextStore = defineStore("canvasText", {
           },
         },
       };
+
+      this.fontSizeNumber = parseFloat(this.customization.fontSize);
+
+      this.applyStyles();
     },
 
     /*
