@@ -857,14 +857,7 @@ export const useCanvasStore = defineStore("canvas", {
             this.selectedElement.y,
             this.selectedElement.width,
             this.selectedElement.height,
-            [
-              "top-left",
-              "top-right",
-              "bottom-left",
-              "bottom-right",
-              "center-left",
-              "center-right",
-            ],
+            ["center-left", "center-right"],
             true
           );
           break;

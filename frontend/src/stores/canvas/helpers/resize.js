@@ -36,30 +36,34 @@ export const getResizeHandle = () => {
   const centerY = selectedElement.value.y + selectedElement.value.height / 2;
   const angle = (selectedElement.value.rotationAngle * Math.PI) / 180;
 
-  let handles;
+  let allowedHandles = [];
 
   switch (selectedElement.value.mode) {
     case MODES_OPTIONS.value.text:
+      allowedHandles = [
+        RESIZE_HANDLES_OPTIONS.value.centerLeft,
+        RESIZE_HANDLES_OPTIONS.value.centerRight,
+      ];
+      break;
+
     case MODES_OPTIONS.value.media:
     case MODES_OPTIONS.value.mediaEmoji:
-      handles = Object.values(RESIZE_HANDLES_OPTIONS.value);
+      allowedHandles = Object.values(RESIZE_HANDLES_OPTIONS.value);
       break;
 
     case MODES_OPTIONS.value.shape:
-      const allowedHandles = [
+      allowedHandles = [
         RESIZE_HANDLES_OPTIONS.value.topLeft,
         RESIZE_HANDLES_OPTIONS.value.topRight,
         RESIZE_HANDLES_OPTIONS.value.bottomLeft,
         RESIZE_HANDLES_OPTIONS.value.bottomRight,
       ];
-      handles = Object.values(RESIZE_HANDLES_OPTIONS.value).filter((handle) =>
-        allowedHandles.includes(handle)
-      );
       break;
-
-    default:
-      handles = [];
   }
+
+  const handles = Object.values(RESIZE_HANDLES_OPTIONS.value).filter((handle) =>
+    allowedHandles.includes(handle)
+  );
 
   handles.forEach((handle) => {
     const { minX, minY, maxX, maxY } = canvasStore.computeResizeHandlePosition(
