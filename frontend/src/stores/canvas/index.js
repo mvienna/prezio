@@ -327,7 +327,7 @@ export const useCanvasStore = defineStore("canvas", {
       const reversedElements = [...elements].reverse();
 
       // draw elements one-by-one
-      reversedElements.forEach((element) => {
+      reversedElements.forEach((element, index) => {
         if (element.isVisible === false) return;
 
         this.ctx.save();
@@ -352,7 +352,7 @@ export const useCanvasStore = defineStore("canvas", {
            * text
            */
           case this.MODES_OPTIONS.text:
-            this.renderText(element);
+            this.renderText(element, index);
             break;
 
           /*
@@ -458,7 +458,7 @@ export const useCanvasStore = defineStore("canvas", {
     /*
      * render text
      */
-    renderText(element) {
+    renderText(element, index) {
       /*
        * compute props
        */
@@ -545,6 +545,9 @@ export const useCanvasStore = defineStore("canvas", {
 
         linesPosition.push({ x: x, y: y });
       });
+
+      this.elements[index].height =
+        adjustedFontSize * element.lineHeight * lines.length;
 
       /*
        * draw text lines
@@ -836,6 +839,27 @@ export const useCanvasStore = defineStore("canvas", {
             this.selectedElement.width,
             this.selectedElement.height,
             [],
+            true
+          );
+          break;
+
+        /*
+         * text
+         */
+        case this.MODES_OPTIONS.text:
+          this.drawBorder(
+            this.selectedElement.x,
+            this.selectedElement.y,
+            this.selectedElement.width,
+            this.selectedElement.height,
+            [
+              "top-left",
+              "top-right",
+              "bottom-left",
+              "bottom-right",
+              "center-left",
+              "center-right",
+            ],
             true
           );
           break;
