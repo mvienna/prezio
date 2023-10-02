@@ -1,44 +1,58 @@
 <template>
   <div class="presentation_toolbar__top bg-white q-pa-md row no-wrap">
-    <q-btn
-      icon="r_space_dashboard"
-      unelevated
-      text-color="dark"
-      :class="showLayoutsMenu ? 'bg-grey-2' : ''"
-      round
-      size="12px"
-    >
-      <q-tooltip>
-        {{ $t("presentationStudio.toolbar.layouts.title") }}
-      </q-tooltip>
+    <template v-if="mode">
+      <q-btn
+        icon="r_close"
+        unelevated
+        text-color="dark"
+        round
+        size="12px"
+        @click="$emit('switchMode', null)"
+      />
 
-      <!-- layouts -->
-      <q-menu
-        v-model="showLayoutsMenu"
-        anchor="top left"
-        self="bottom left"
-        transition-show="jump-down"
-        transition-hide="jump-up"
-        :offset="[0, 16]"
-        class="q-pa-md bg-white"
-        max-height="70vh"
-        style="width: 424px"
+      <q-separator vertical class="q-mx-sm" />
+    </template>
+
+    <template v-else>
+      <q-btn
+        icon="r_space_dashboard"
+        unelevated
+        text-color="dark"
+        :class="showLayoutsMenu ? 'bg-grey-2' : ''"
+        round
+        size="12px"
       >
-        <PresentationStudioToolbarTopLayouts v-close-popup />
-      </q-menu>
-    </q-btn>
+        <q-tooltip>
+          {{ $t("presentationStudio.toolbar.layouts.title") }}
+        </q-tooltip>
 
-    <q-separator vertical class="q-mx-sm" />
+        <!-- layouts -->
+        <q-menu
+          v-model="showLayoutsMenu"
+          anchor="top left"
+          self="bottom left"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :offset="[0, 16]"
+          class="q-pa-md bg-white"
+          max-height="70vh"
+          style="width: 424px"
+        >
+          <PresentationStudioToolbarTopLayouts v-close-popup />
+        </q-menu>
+      </q-btn>
 
-    <!-- modes -->
-    <PresentationStudioToolbarTopModes
-      @switch-mode="$emit('switchMode', $event)"
-      @add-image="$emit('addImage', $event)"
-      @add-shape="$emit('addShape', $event)"
-    />
+      <q-separator vertical class="q-mx-sm" />
 
-    <q-separator vertical class="q-mx-sm" />
+      <!-- modes -->
+      <PresentationStudioToolbarTopModes
+        @switch-mode="$emit('switchMode', $event)"
+        @add-image="$emit('addImage', $event)"
+        @add-shape="$emit('addShape', $event)"
+      />
+    </template>
 
+    <!-- modes cutomization -->
     <div
       v-if="showCustomizationMenu"
       class="row no-wrap items-center q-gutter-sm scroll--hidden"
