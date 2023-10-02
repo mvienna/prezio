@@ -327,7 +327,7 @@ export const useCanvasStore = defineStore("canvas", {
       const reversedElements = [...elements].reverse();
 
       // draw elements one-by-one
-      reversedElements.forEach((element, index) => {
+      reversedElements.forEach((element) => {
         if (element.isVisible === false) return;
 
         this.ctx.save();
@@ -352,7 +352,7 @@ export const useCanvasStore = defineStore("canvas", {
            * text
            */
           case this.MODES_OPTIONS.text:
-            this.renderText(element, index);
+            this.renderText(element);
             break;
 
           /*
@@ -458,7 +458,7 @@ export const useCanvasStore = defineStore("canvas", {
     /*
      * render text
      */
-    renderText(element, index) {
+    renderText(element) {
       /*
        * compute props
        */
@@ -546,7 +546,10 @@ export const useCanvasStore = defineStore("canvas", {
         linesPosition.push({ x: x, y: y });
       });
 
-      this.elements[index].height =
+      const elementIndex = this.elements.findIndex(
+        (item) => item.id === element.id
+      );
+      this.elements[elementIndex].height =
         adjustedFontSize * element.lineHeight * lines.length;
 
       /*
