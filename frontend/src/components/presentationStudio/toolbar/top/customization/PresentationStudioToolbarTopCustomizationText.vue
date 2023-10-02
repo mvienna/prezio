@@ -188,35 +188,35 @@
           />
         </div>
 
-        <div class="row no-wrap q-mt-sm">
-          <q-btn
-            v-for="item in Object.keys(ALIGNMENT.vertical)"
-            :key="item"
-            flat
-            size="12px"
-            round
-            :class="
-              item ===
-              textState.customization.value.formatting.alignment.vertical
-                ? 'text-black'
-                : 'text-grey'
-            "
-            :icon="
-              item === ALIGNMENT.vertical.top
-                ? 'r_vertical_align_top'
-                : item === ALIGNMENT.vertical.bottom
-                ? 'r_vertical_align_bottom'
-                : item === ALIGNMENT.vertical.middle
-                ? 'r_align_vertical_center'
-                : ''
-            "
-            @click="
-              textState.customization.value.formatting.alignment.vertical =
-                item;
-              textStore.applyStyles();
-            "
-          />
-        </div>
+        <!--        <div class="row no-wrap q-mt-sm">-->
+        <!--          <q-btn-->
+        <!--            v-for="item in Object.keys(ALIGNMENT.vertical)"-->
+        <!--            :key="item"-->
+        <!--            flat-->
+        <!--            size="12px"-->
+        <!--            round-->
+        <!--            :class="-->
+        <!--              item ===-->
+        <!--              textState.customization.value.formatting.alignment.vertical-->
+        <!--                ? 'text-black'-->
+        <!--                : 'text-grey'-->
+        <!--            "-->
+        <!--            :icon="-->
+        <!--              item === ALIGNMENT.vertical.top-->
+        <!--                ? 'r_vertical_align_top'-->
+        <!--                : item === ALIGNMENT.vertical.bottom-->
+        <!--                ? 'r_vertical_align_bottom'-->
+        <!--                : item === ALIGNMENT.vertical.middle-->
+        <!--                ? 'r_align_vertical_center'-->
+        <!--                : ''-->
+        <!--            "-->
+        <!--            @click="-->
+        <!--              textState.customization.value.formatting.alignment.vertical =-->
+        <!--                item;-->
+        <!--              textStore.applyStyles();-->
+        <!--            "-->
+        <!--          />-->
+        <!--        </div>-->
       </div>
     </q-menu>
   </q-btn>
