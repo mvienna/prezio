@@ -129,7 +129,7 @@ export const stopResizing = () => {
 /*
  * resize element
  */
-export const resizeElement = () => {
+export const resizeElement = (event) => {
   if (!isResizing.value) return;
 
   const deltaX = mouse.value.x - resizeStart.value.clientX;
@@ -141,141 +141,247 @@ export const resizeElement = () => {
   const minWidth = canvasStore.computeAdjustedSize(50);
   const minHeight = minWidth / aspectRatio;
 
-  switch (resizeHandle.value) {
+  // resize proportionally
+  if (event.shiftKey) {
+    switch (resizeHandle.value) {
+      /*
+       * top left
+       */
+      case RESIZE_HANDLES_OPTIONS.value.topLeft:
+        const newTopLeftWidth = Math.max(
+          minWidth,
+          resizeStart.value.width - deltaX
+        );
+        const newTopLeftHeight = Math.max(
+          minHeight,
+          newTopLeftWidth / aspectRatio
+        );
+
+        selectedElement.value.width = newTopLeftWidth;
+        selectedElement.value.height = newTopLeftHeight;
+
+        selectedElement.value.x =
+          resizeStart.value.x + (resizeStart.value.width - newTopLeftWidth);
+        selectedElement.value.y =
+          resizeStart.value.y + (resizeStart.value.height - newTopLeftHeight);
+
+        break;
+
+      /*
+       * top right
+       */
+      case RESIZE_HANDLES_OPTIONS.value.topRight:
+        const newTopRightWidth = Math.max(
+          minWidth,
+          resizeStart.value.width + deltaX
+        );
+        const newTopRightHeight = Math.max(
+          minHeight,
+          newTopRightWidth / aspectRatio
+        );
+
+        selectedElement.value.width = newTopRightWidth;
+        selectedElement.value.height = newTopRightHeight;
+
+        selectedElement.value.y =
+          resizeStart.value.y + (resizeStart.value.height - newTopRightHeight);
+
+        break;
+
+      /*
+       * bottom left
+       */
+      case RESIZE_HANDLES_OPTIONS.value.bottomLeft:
+        const newBottomLeftWidth = Math.max(
+          minWidth,
+          resizeStart.value.width - deltaX
+        );
+        const newBottomLeftHeight = Math.max(
+          minHeight,
+          newBottomLeftWidth / aspectRatio
+        );
+
+        selectedElement.value.width = newBottomLeftWidth;
+        selectedElement.value.height = newBottomLeftHeight;
+
+        selectedElement.value.x =
+          resizeStart.value.x + (resizeStart.value.width - newBottomLeftWidth);
+
+        break;
+
+      /*
+       * bottom right
+       */
+      case RESIZE_HANDLES_OPTIONS.value.bottomRight:
+        const newBottomRightWidth = Math.max(
+          minWidth,
+          resizeStart.value.width + deltaX
+        );
+        const newBottomRightHeight = Math.max(
+          minHeight,
+          newBottomRightWidth / aspectRatio
+        );
+
+        selectedElement.value.width = newBottomRightWidth;
+        selectedElement.value.height = newBottomRightHeight;
+
+        break;
+
+      /*
+       * center top
+       */
+      case RESIZE_HANDLES_OPTIONS.value.centerTop:
+        const newCenterTopHeight = Math.max(
+          minHeight,
+          resizeStart.value.height - deltaY
+        );
+        const newCenterTopWidth = newCenterTopHeight * aspectRatio;
+        selectedElement.value.height = newCenterTopHeight;
+        selectedElement.value.width = newCenterTopWidth;
+        selectedElement.value.y =
+          resizeStart.value.y + (resizeStart.value.height - newCenterTopHeight);
+        selectedElement.value.x =
+          resizeStart.value.x + (resizeStart.value.width - newCenterTopWidth);
+        break;
+
+      /*
+       * center bottom
+       */
+      case RESIZE_HANDLES_OPTIONS.value.centerBottom:
+        const newCenterBottomHeight = Math.max(
+          minHeight,
+          resizeStart.value.height + deltaY
+        );
+        const newCenterBottomWidth = newCenterBottomHeight * aspectRatio;
+        selectedElement.value.height = newCenterBottomHeight;
+        selectedElement.value.width = newCenterBottomWidth;
+        break;
+
+      /*
+       * center left
+       */
+      case RESIZE_HANDLES_OPTIONS.value.centerLeft:
+        const newCenterLeftWidth = Math.max(
+          minWidth,
+          resizeStart.value.width - deltaX
+        );
+        const newCenterLeftHeight = newCenterLeftWidth / aspectRatio;
+        selectedElement.value.width = newCenterLeftWidth;
+        selectedElement.value.height = newCenterLeftHeight;
+        selectedElement.value.x =
+          resizeStart.value.x + (resizeStart.value.width - newCenterLeftWidth);
+        selectedElement.value.y =
+          resizeStart.value.y +
+          (resizeStart.value.height - newCenterLeftHeight);
+        break;
+
+      /*
+       * center right
+       */
+      case RESIZE_HANDLES_OPTIONS.value.centerRight:
+        const newCenterRightWidth = Math.max(
+          minWidth,
+          resizeStart.value.width + deltaX
+        );
+        const newCenterRightHeight = newCenterRightWidth / aspectRatio;
+        selectedElement.value.width = newCenterRightWidth;
+        selectedElement.value.height = newCenterRightHeight;
+        break;
+    }
+
     /*
-     * top left
+     * resize not proportionally
      */
-    case RESIZE_HANDLES_OPTIONS.value.topLeft:
-      const newTopLeftWidth = Math.max(
-        minWidth,
-        resizeStart.value.width - deltaX
-      );
-      const newTopLeftHeight = Math.max(
-        minHeight,
-        newTopLeftWidth / aspectRatio
-      );
+  } else {
+    switch (resizeHandle.value) {
+      /*
+       * top left
+       */
+      case RESIZE_HANDLES_OPTIONS.value.topLeft:
+        selectedElement.value.width -= deltaX;
+        selectedElement.value.height -= deltaY;
+        selectedElement.value.x += deltaX;
+        selectedElement.value.y += deltaY;
+        break;
 
-      selectedElement.value.width = newTopLeftWidth;
-      selectedElement.value.height = newTopLeftHeight;
+      /*
+       * top right
+       */
+      case RESIZE_HANDLES_OPTIONS.value.topRight:
+        selectedElement.value.width += deltaX;
+        selectedElement.value.height -= deltaY;
+        selectedElement.value.y += deltaY;
+        break;
 
-      selectedElement.value.x =
-        resizeStart.value.x + (resizeStart.value.width - newTopLeftWidth);
-      selectedElement.value.y =
-        resizeStart.value.y + (resizeStart.value.height - newTopLeftHeight);
+      /*
+       * bottom left
+       */
+      case RESIZE_HANDLES_OPTIONS.value.bottomLeft:
+        selectedElement.value.width -= deltaX;
+        selectedElement.value.height += deltaY;
+        selectedElement.value.x += deltaX;
+        break;
 
-      break;
+      /*
+       * bottom right
+       */
+      case RESIZE_HANDLES_OPTIONS.value.bottomRight:
+        selectedElement.value.width += deltaX;
+        selectedElement.value.height += deltaY;
+        break;
 
-    /*
-     * top right
-     */
-    case RESIZE_HANDLES_OPTIONS.value.topRight:
-      const newTopRightWidth = Math.max(
-        minWidth,
-        resizeStart.value.width + deltaX
-      );
-      const newTopRightHeight = Math.max(
-        minHeight,
-        newTopRightWidth / aspectRatio
-      );
+      /*
+       * center top
+       */
+      case RESIZE_HANDLES_OPTIONS.value.centerTop:
+        const newCenterTopHeight = Math.max(
+          minHeight,
+          resizeStart.value.height - deltaY
+        );
+        selectedElement.value.height = newCenterTopHeight;
+        selectedElement.value.y =
+          resizeStart.value.y + (resizeStart.value.height - newCenterTopHeight);
 
-      selectedElement.value.width = newTopRightWidth;
-      selectedElement.value.height = newTopRightHeight;
+        break;
 
-      selectedElement.value.y =
-        resizeStart.value.y + (resizeStart.value.height - newTopRightHeight);
+      /*
+       * center bottom
+       */
+      case RESIZE_HANDLES_OPTIONS.value.centerBottom:
+        const newCenterBottomHeight = Math.max(
+          minHeight,
+          resizeStart.value.height + deltaY
+        );
+        selectedElement.value.height = newCenterBottomHeight;
 
-      break;
+        break;
 
-    /*
-     * bottom left
-     */
-    case RESIZE_HANDLES_OPTIONS.value.bottomLeft:
-      const newBottomLeftWidth = Math.max(
-        minWidth,
-        resizeStart.value.width - deltaX
-      );
-      const newBottomLeftHeight = Math.max(
-        minHeight,
-        newBottomLeftWidth / aspectRatio
-      );
+      /*
+       * center left
+       */
+      case RESIZE_HANDLES_OPTIONS.value.centerLeft:
+        const newCenterLeftWidth = Math.max(
+          minWidth,
+          resizeStart.value.width - deltaX
+        );
 
-      selectedElement.value.width = newBottomLeftWidth;
-      selectedElement.value.height = newBottomLeftHeight;
+        selectedElement.value.width = newCenterLeftWidth;
+        selectedElement.value.x =
+          resizeStart.value.x + (resizeStart.value.width - newCenterLeftWidth);
 
-      selectedElement.value.x =
-        resizeStart.value.x + (resizeStart.value.width - newBottomLeftWidth);
+        break;
 
-      break;
+      /*
+       * center right
+       */
+      case RESIZE_HANDLES_OPTIONS.value.centerRight:
+        selectedElement.value.width = Math.max(
+          minWidth,
+          resizeStart.value.width + deltaX
+        );
 
-    /*
-     * bottom right
-     */
-    case RESIZE_HANDLES_OPTIONS.value.bottomRight:
-      const newBottomRightWidth = Math.max(
-        minWidth,
-        resizeStart.value.width + deltaX
-      );
-      const newBottomRightHeight = Math.max(
-        minHeight,
-        newBottomRightWidth / aspectRatio
-      );
-
-      selectedElement.value.width = newBottomRightWidth;
-      selectedElement.value.height = newBottomRightHeight;
-
-      break;
-
-    /*
-     * center top
-     */
-    case RESIZE_HANDLES_OPTIONS.value.centerTop:
-      const newCenterTopHeight = Math.max(
-        minHeight,
-        resizeStart.value.height - deltaY
-      );
-      selectedElement.value.height = newCenterTopHeight;
-      selectedElement.value.y =
-        resizeStart.value.y + (resizeStart.value.height - newCenterTopHeight);
-
-      break;
-
-    /*
-     * center bottom
-     */
-    case RESIZE_HANDLES_OPTIONS.value.centerBottom:
-      const newCenterBottomHeight = Math.max(
-        minHeight,
-        resizeStart.value.height + deltaY
-      );
-      selectedElement.value.height = newCenterBottomHeight;
-
-      break;
-
-    /*
-     * center left
-     */
-    case RESIZE_HANDLES_OPTIONS.value.centerLeft:
-      const newCenterLeftWidth = Math.max(
-        minWidth,
-        resizeStart.value.width - deltaX
-      );
-
-      selectedElement.value.width = newCenterLeftWidth;
-      selectedElement.value.x =
-        resizeStart.value.x + (resizeStart.value.width - newCenterLeftWidth);
-
-      break;
-
-    /*
-     * center right
-     */
-    case RESIZE_HANDLES_OPTIONS.value.centerRight:
-      selectedElement.value.width = Math.max(
-        minWidth,
-        resizeStart.value.width + deltaX
-      );
-
-      break;
+        break;
+    }
   }
 
   removeMagnet();

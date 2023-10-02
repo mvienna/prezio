@@ -492,7 +492,7 @@ const handleCanvasMouseMove = (event) => {
   if (selectedElement.value) {
     // resizing
     if (isResizing.value) {
-      resizeElement();
+      resizeElement(event);
       return;
     } else {
       resizeHandle.value = getResizeHandle();
