@@ -894,7 +894,7 @@ export const useCanvasStore = defineStore("canvas", {
       const padding = 4;
 
       this.ctx.strokeStyle = this.selectedElementBorder.outlineColor;
-      this.ctx.lineWidth = borderWidth + 2;
+      this.ctx.lineWidth = borderWidth;
       this.ctx.strokeRect(
         x - padding,
         y - padding,
@@ -902,8 +902,6 @@ export const useCanvasStore = defineStore("canvas", {
         height + padding * 2
       );
 
-      this.ctx.strokeStyle = this.selectedElementBorder.outlineColor;
-      this.ctx.lineWidth = borderWidth + 2;
       this.ctx.strokeRect(
         x + padding,
         y + padding,
