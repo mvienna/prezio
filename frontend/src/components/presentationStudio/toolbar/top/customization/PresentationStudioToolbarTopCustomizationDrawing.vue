@@ -20,6 +20,7 @@
       <q-color
         format-model="hex"
         no-header-tabs
+        default-view="palette"
         v-model="drawingState.customization.value.color"
         @update:model-value="drawingStore.applyStyles()"
       />

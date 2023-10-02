@@ -244,6 +244,7 @@
       <q-color
         format-model="hex"
         no-header-tabs
+        default-view="palette"
         v-model="textState.customization.value.color"
         @update:model-value="textStore.applyStyles()"
       />

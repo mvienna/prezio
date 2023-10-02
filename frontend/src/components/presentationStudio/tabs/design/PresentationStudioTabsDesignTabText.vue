@@ -76,6 +76,7 @@
         <q-color
           format-model="hex"
           no-header-tabs
+          default-view="palette"
           v-model="customization.default.color"
           @change="customization.color = customization.default.color"
         />

@@ -52,6 +52,7 @@
           <q-color
             format-model="hex"
             no-header-tabs
+            default-view="palette"
             v-model="selectedBaseFillColor"
             @change="$emit('changeBaseFill', selectedBaseFillColor)"
           />

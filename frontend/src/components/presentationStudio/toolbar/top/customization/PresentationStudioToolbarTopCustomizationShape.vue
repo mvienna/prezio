@@ -20,6 +20,7 @@
       <q-color
         format-model="hex"
         no-header-tabs
+        default-view="palette"
         v-model="shapeState.customization.value.strokeColor"
         @update:model-value="shapeStore.applyStyles()"
       />
@@ -68,6 +69,7 @@
       <q-color
         format-model="hex"
         no-header-tabs
+        default-view="palette"
         v-model="shapeState.customization.value.fillColor"
         @update:model-value="shapeStore.applyStyles()"
       />
