@@ -13,6 +13,8 @@ const {
   magnet,
 } = storeToRefs(canvasStore);
 
+const textStore = useCanvasTextStore();
+
 export const getHoveredElement = () => {
   let hoveredElement = null;
   let hoveredElementIndex = -1;
@@ -223,6 +225,10 @@ export const doubleSelectElement = () => {
 
 export const deselectElement = () => {
   if (selectedElement.value) {
+    if (selectedElement.value.mode === MODES_OPTIONS.value.text) {
+      textStore.clearFormatting();
+    }
+
     selectedElement.value = null;
     selectedElementIndex.value = -1;
   }
