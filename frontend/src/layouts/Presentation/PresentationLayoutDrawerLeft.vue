@@ -21,13 +21,9 @@
           transition-show="jump-down"
           transition-hide="jump-up"
           :offset="[0, 16]"
-          class="q-pa-md scroll--hidden"
+          class="q-pa-md scroll--hidden bg-white"
           max-height="70vh"
-          style="
-            width: 399px;
-            backdrop-filter: blur(8px);
-            background: rgba(255, 255, 255, 0.9);
-          "
+          style="width: 399px"
         >
           <PresentationStudioTabsTypesTab
             disable-layout-selection
@@ -139,13 +135,9 @@
                         transition-show="jump-right"
                         transition-hide="jump-left"
                         :offset="[48, 0]"
-                        class="q-pa-md scroll--hidden"
+                        class="q-pa-md scroll--hidden bg-white"
                         max-height="70vh"
-                        style="
-                          width: 399px;
-                          backdrop-filter: blur(8px);
-                          background: rgba(255, 255, 255, 0.9);
-                        "
+                        style="width: 399px"
                       >
                         <PresentationStudioTabsTypesTab
                           disable-layout-selection
@@ -249,13 +241,9 @@
             transition-show="jump-right"
             transition-hide="jump-left"
             :offset="[24, 0]"
-            class="q-pa-md scroll--hidden"
+            class="q-pa-md scroll--hidden bg-white"
             max-height="70vh"
-            style="
-              width: 399px;
-              backdrop-filter: blur(8px);
-              background: rgba(255, 255, 255, 0.9);
-            "
+            style="width: 399px"
           >
             <PresentationStudioTabsTypesTab
               disable-layout-selection

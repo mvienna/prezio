@@ -20,13 +20,9 @@
         transition-show="jump-down"
         transition-hide="jump-up"
         :offset="[0, 16]"
-        class="q-pa-md"
+        class="q-pa-md bg-white"
         max-height="70vh"
-        style="
-          width: 424px;
-          backdrop-filter: blur(8px);
-          background: rgba(255, 255, 255, 0.5);
-        "
+        style="width: 424px"
       >
         <PresentationStudioToolbarTopLayouts v-close-popup />
       </q-menu>
