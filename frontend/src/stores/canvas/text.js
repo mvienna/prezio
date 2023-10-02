@@ -264,6 +264,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
         },
       };
 
+      console.log(this.customization);
+
       this.applyStyles();
     },
 
