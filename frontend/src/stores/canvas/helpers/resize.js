@@ -25,7 +25,7 @@ export const getResizeHandle = () => {
   const borderWidth = canvasStore.computeAdjustedSize(
     selectedElementBorder.value.borderWidth
   );
-  const handleSize = borderWidth * 3;
+  const handleSize = borderWidth * 4;
 
   /*
    * find active handle
