@@ -1,6 +1,10 @@
 <template>
   <div class="presentation_toolbar__top bg-white q-pa-md row no-wrap">
-    <template v-if="mode">
+    <template
+      v-if="
+        mode && ![MODES_OPTIONS.mediaEmoji, MODES_OPTIONS.media].includes(mode)
+      "
+    >
       <q-btn
         icon="r_close"
         unelevated
@@ -52,7 +56,7 @@
       />
     </template>
 
-    <!-- modes cutomization -->
+    <!-- modes customization -->
     <div
       v-if="showCustomizationMenu"
       class="row no-wrap items-center q-gutter-sm scroll--hidden"
