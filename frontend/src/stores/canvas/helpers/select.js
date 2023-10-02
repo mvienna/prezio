@@ -14,10 +14,9 @@ const {
 } = storeToRefs(canvasStore);
 
 const textStore = useCanvasTextStore();
-const { isNewText } = storeToRefs(textStore);
 
 export const getHoveredElement = () => {
-  if (isNewText.value) {
+  if (mode.value === MODES_OPTIONS.value.text) {
     return { hoveredElement: null, hoveredElementIndex: -1 };
   }
 
@@ -188,7 +187,7 @@ export const selectElement = (element = null) => {
       selectedElementIndex.value = hoveredElementIndex;
     } else {
       if (isSelectedElementExisted) {
-        mode.value = null;
+        canvasStore.switchMode(null);
       }
     }
   }
@@ -232,7 +231,7 @@ export const deselectElement = () => {
   }
 
   magnet.value.axis = null;
-  mode.value = null;
+  canvasStore.switchMode(null);
 
   canvasStore.redrawCanvas(false);
 };

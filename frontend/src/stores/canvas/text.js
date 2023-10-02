@@ -8,6 +8,7 @@ import {
 } from "stores/canvas/helpers/select";
 
 const {
+  mode,
   MODES_OPTIONS,
   mouse,
   selectedElementBorder,
@@ -22,11 +23,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
      * input
      */
     input: null,
-
-    /*
-     * other
-     */
-    isNewText: false,
 
     /*
      * customization
@@ -120,9 +116,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
           this.computeTextElementProps(clickedX, clickedY)
         );
 
-        this.isNewText = false;
-
         canvasStore.redrawCanvas(true, true);
+        canvasStore.switchMode(null);
         this.removeTextInput();
         this.clearFormatting();
       };
@@ -431,6 +426,12 @@ export const useCanvasTextStore = defineStore("canvasText", {
      * shortcuts
      */
     shortcuts(event) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        canvasStore.switchMode(null);
+        return;
+      }
+
       if (event.ctrlKey || event.metaKey) {
         switch (event.key) {
           case "b":

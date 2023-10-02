@@ -318,22 +318,6 @@
       }}
     </q-tooltip>
   </q-btn>
-
-  <!-- new text -->
-  <q-btn
-    icon="r_fiber_new"
-    :label="$t('presentationStudio.toolbar.text.options.newText')"
-    :color="!textState.isNewText.value ? 'primary' : 'grey'"
-    unelevated
-    no-caps
-    no-wrap
-    class="q-mr-sm"
-    @click="textState.isNewText.value = !textState.isNewText.value"
-  >
-    <q-tooltip>
-      {{ $t("presentationStudio.toolbar.text.newText") }}
-    </q-tooltip>
-  </q-btn>
 </template>
 
 <script setup>

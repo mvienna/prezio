@@ -340,13 +340,7 @@ const handleKeyDownEvent = (event) => {
      *
      */
     case MODES_OPTIONS.value.text:
-      if (event.key === "Escape") {
-        event.preventDefault();
-        textState.isNewText.value = false;
-      }
-
       textStore.shortcuts(event);
-
       break;
   }
 };
@@ -403,14 +397,16 @@ const canvasCursorClass = computed(() => {
       break;
   }
 
-  return resizeHandle.value
+  return mode.value === MODES_OPTIONS.value.drawing
+    ? "cursor-crosshair"
+    : mode.value === MODES_OPTIONS.value.text && !selectedElement.value
+    ? "cursor-text"
+    : resizeHandle.value
     ? resizeCursor
     : rotationHandle.value
     ? "cursor-alias"
     : isElementHovered.value
     ? "cursor-move"
-    : mode.value === MODES_OPTIONS.value.drawing
-    ? "cursor-crosshair"
     : "default";
 });
 
@@ -581,7 +577,7 @@ const handleCanvasClick = (event) => {
      * text
      */
     case MODES_OPTIONS.value.text:
-      if (!selectedElement.value && textState.isNewText.value) {
+      if (!selectedElement.value) {
         textStore.addNewText(event);
         return;
       }
@@ -621,19 +617,7 @@ const handleClickOutsideOfCanvas = (event) => {
 /*
  * highlight canvas on
  */
-const canvasHighlightClass = ref("");
-watch(
-  () => textState.isNewText.value,
-  () => {
-    if (textState.isNewText.value) {
-      canvasHighlightClass.value = "canvas--highlighted";
-
-      setTimeout(() => {
-        canvasHighlightClass.value = "";
-      }, 2000);
-    }
-  }
-);
+const canvasHighlightClass = ref(""); // canvas--highlighted
 
 /*
  * element's context menu
@@ -740,6 +724,9 @@ watch(
 }
 .cursor-crosshair {
   cursor: crosshair;
+}
+.cursor-text {
+  cursor: text;
 }
 
 // resize
