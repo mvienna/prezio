@@ -8,12 +8,12 @@ import {
 } from "stores/canvas/helpers/select";
 
 const {
-  mode,
   MODES_OPTIONS,
   mouse,
   selectedElementBorder,
   elements,
   selectedElement,
+  canvas,
 } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
@@ -103,6 +103,17 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
       document.body.appendChild(this.input);
       this.input.focus();
+
+      /*
+       * apply & select default text input
+       */
+      this.input.innerHTML = "Enter text here";
+
+      let selection = window.getSelection();
+      let range = document.createRange();
+      range.selectNodeContents(this.input);
+      selection.removeAllRanges();
+      selection.addRange(range);
 
       /*
        * add text to canvas

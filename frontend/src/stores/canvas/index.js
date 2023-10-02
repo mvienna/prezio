@@ -459,6 +459,8 @@ export const useCanvasStore = defineStore("canvas", {
      * render text
      */
     renderText(element) {
+      if (!element.text) return;
+
       /*
        * compute props
        */
