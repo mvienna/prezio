@@ -467,9 +467,7 @@ const handleCanvasMouseDown = () => {
    */
   switch (mode.value) {
     case MODES_OPTIONS.value.drawing:
-      // if (!isElementHovered.value) {
       drawingStore.startDrawing();
-      // }
       break;
   }
 };
@@ -577,6 +575,7 @@ const handleCanvasClick = (event) => {
      * text
      */
     case MODES_OPTIONS.value.text:
+      // create new text
       if (!selectedElement.value) {
         textStore.addNewText(event);
         return;

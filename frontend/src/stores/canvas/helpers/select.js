@@ -13,13 +13,7 @@ const {
   magnet,
 } = storeToRefs(canvasStore);
 
-const textStore = useCanvasTextStore();
-
 export const getHoveredElement = () => {
-  if (mode.value === MODES_OPTIONS.value.text) {
-    return { hoveredElement: null, hoveredElementIndex: -1 };
-  }
-
   let hoveredElement = null;
   let hoveredElementIndex = -1;
 
@@ -175,6 +169,9 @@ export const selectElement = (element = null) => {
       (item) => item.id === element.id
     );
   } else {
+    if (mode.value === MODES_OPTIONS.value.text && selectedElement.value)
+      return;
+
     const isSelectedElementExisted = !!selectedElement.value;
 
     selectedElement.value = null;
