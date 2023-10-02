@@ -63,12 +63,13 @@ export const useCanvasTextStore = defineStore("canvasText", {
   }),
 
   actions: {
-    sanitize() {
+    sanitize(string) {
       const pattern = /<(?!br\s*\/?)[^>]+>/gi;
-      if (pattern.test(this.input.textContent)) {
-        this.input.innerHTML = this.input.textContent.replace(pattern, "");
-        this.moveInputCursorToTheEnd();
+      if (pattern.test(string)) {
+        return string.replace(pattern, "");
       }
+
+      return string;
     },
 
     /*
@@ -82,7 +83,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
     },
 
     removeTextInput() {
-      this.input.removeEventListener("input", this.sanitize);
       this.input.remove();
       this.input = null;
     },
@@ -278,7 +278,9 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.customization.formatting.isLineThrough ? "line-through" : ""
       } ${this.customization.formatting.isUnderline ? "underline" : ""}`;
 
-      const text = this.input.innerHTML.replace(/&nbsp;/g, "").trim();
+      const text = this.sanitize(this.input.textContent)
+        .replace(/&nbsp;/g, "")
+        .trim();
 
       return {
         id: element?.id || generateUniqueId(undefined, elements.value),
