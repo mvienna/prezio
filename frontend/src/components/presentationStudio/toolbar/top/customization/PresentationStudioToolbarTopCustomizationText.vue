@@ -175,7 +175,7 @@
                 ? 'r_format_align_right'
                 : item === ALIGNMENT.horizontal.center
                 ? 'r_format_align_center'
-                : ''
+                : 'r_format_align_left'
             "
             @click="
               () => {
