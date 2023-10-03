@@ -64,17 +64,14 @@ export const useCanvasTextStore = defineStore("canvasText", {
   }),
 
   actions: {
-    sanitize(string) {
-      const pattern = /<(?!br\s*\/?)[^>]+>/gi;
-      if (pattern.test(string)) {
-        return string.replace(pattern, "");
-      }
+    handleInputPasteEvent(event) {
+      event.stopPropagation();
+      event.preventDefault();
 
-      return string;
-    },
+      const clipboardData = event.clipboardData || window.clipboardData;
+      const pastedData = clipboardData.getData("Text");
 
-    handleInputEvent() {
-      this.input.innerHTML = this.sanitize(this.input.innerHTML);
+      document.execCommand("insertText", false, pastedData);
     },
 
     /*
@@ -83,13 +80,13 @@ export const useCanvasTextStore = defineStore("canvasText", {
     createTextInput() {
       this.input = document.createElement("div");
       this.input.setAttribute("contentEditable", "true");
-      this.input.addEventListener("input", this.handleInputEvent);
+      this.input.addEventListener("paste", this.handleInputPasteEvent);
 
       this.applyStyles();
     },
 
     removeTextInput() {
-      this.input.removeEventListener("input", this.handleInputEvent);
+      this.input.removeEventListener("paste", this.handleInputPasteEvent);
       this.input.remove();
       this.input = null;
     },
