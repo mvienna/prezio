@@ -30,6 +30,8 @@ export const usePresentationsStore = defineStore("presentations", {
     presentation: null,
     slide: null,
 
+    isPresentationPreview: false,
+
     /*
      * save
      */
@@ -305,11 +307,11 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * slide
      */
-    async setSlide(newSlide, elements = null) {
+    async setSlide(newSlide, elements = null, saveSlide = true) {
       if (this.slide?.id === newSlide.id) return;
 
       // save previous slide
-      if (this.slide && elements) {
+      if (this.slide && elements && saveSlide) {
         this.slide.canvas_data = JSON.stringify(elements);
         this.updateLocalSlide();
         this.saveSlide(undefined, elements);

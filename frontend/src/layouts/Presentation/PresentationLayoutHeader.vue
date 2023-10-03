@@ -164,11 +164,17 @@
           color="primary"
           outline
           no-caps
-          disable
           no-wrap
           :label="$t('presentationLayout.header.preview')"
           class="text-semibold"
+          @click="isPresentationPreview = true"
         />
+
+        <q-dialog v-model="isPresentationPreview">
+          <PresentationStudioPreviewPresentation
+            @cancel="isPresentationPreview = false"
+          />
+        </q-dialog>
 
         <!-- run -->
         <q-btn
@@ -198,13 +204,19 @@ import { date } from "quasar";
 import { useCanvasStore } from "stores/canvas";
 import { ref } from "vue";
 import PresentationSettings from "components/presentationStudio/settings/PresentationSettings.vue";
+import PresentationStudioPreviewPresentation from "components/presentationStudio/PresentationStudioPreviewPresentation.vue";
 
 /*
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, isSaving, isSavingError, lastSavedAt } =
-  storeToRefs(presentationsStore);
+const {
+  presentation,
+  isSaving,
+  isSavingError,
+  lastSavedAt,
+  isPresentationPreview,
+} = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { elements } = storeToRefs(canvasStore);

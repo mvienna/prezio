@@ -10,14 +10,23 @@
     />
 
     <!-- canvas -->
-    <div class="canvas__wrapper q-pa-lg" @click="handleClickOutsideOfCanvas">
-      <canvas
-        ref="canvasRef"
-        id="canvas"
-        :class="[canvasCursorClass, canvasHighlightClass]"
-        @mousedown="handleCanvasMouseDown"
-        @click="handleCanvasClick"
-      ></canvas>
+    <div
+      class="canvas__wrapper q-pa-lg"
+      id="canvas__wrapper"
+      @click="handleClickOutsideOfCanvas"
+    >
+      <teleport
+        :disabled="!isPresentationPreview"
+        :to="isPresentationPreview ? '#presentationPreview' : 'body'"
+      >
+        <canvas
+          ref="canvasRef"
+          id="canvas"
+          :class="[canvasCursorClass, canvasHighlightClass]"
+          @mousedown="handleCanvasMouseDown"
+          @click="handleCanvasClick"
+        ></canvas>
+      </teleport>
     </div>
 
     <!-- context menu -->
@@ -113,7 +122,7 @@ const router = useRouter();
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, lastSavedAt, lastChangedAt } =
+const { presentation, lastSavedAt, lastChangedAt, isPresentationPreview } =
   storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
@@ -373,6 +382,8 @@ const handleUnload = (event) => {
 const isElementHovered = ref(false);
 
 const canvasCursorClass = computed(() => {
+  if (isPresentationPreview.value) return "default";
+
   let resizeCursor;
   switch (resizeHandle.value) {
     case RESIZE_HANDLES_OPTIONS.value.topLeft:
@@ -417,6 +428,8 @@ const isJustDragged = ref(false);
 const timesSelected = ref(0);
 
 const handleCanvasMouseDown = () => {
+  if (isPresentationPreview.value) return;
+
   isJustDragged.value = false;
 
   if (
@@ -473,6 +486,8 @@ const handleCanvasMouseDown = () => {
 };
 
 const handleCanvasMouseMove = (event) => {
+  if (isPresentationPreview.value) return;
+
   /*
    * track mouse position
    */
@@ -531,6 +546,8 @@ const handleCanvasMouseMove = (event) => {
 };
 
 const handleCanvasMouseUp = () => {
+  if (isPresentationPreview.value) return;
+
   /*
    * stop resizing
    * stop rotating
@@ -570,6 +587,8 @@ const handleCanvasMouseUp = () => {
 };
 
 const handleCanvasClick = (event) => {
+  if (isPresentationPreview.value) return;
+
   switch (mode.value) {
     /*
      * text

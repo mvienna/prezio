@@ -164,5 +164,16 @@ export default {
         title: "Другие настройки",
       },
     },
+
+    /*
+     * preview
+     */
+    preview: {
+      title: "Предпросмотр",
+      controls: {
+        previous: "Предыдущий",
+        next: "Следующий",
+      },
+    },
   },
 };
