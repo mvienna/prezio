@@ -41,7 +41,7 @@ export default {
           },
         },
 
-        newText: "Добавьте новый текст на слайд",
+        newTextValue: "Начните вводить сюда текст",
       },
 
       // media

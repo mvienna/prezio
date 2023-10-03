@@ -13,7 +13,6 @@ const {
   selectedElementBorder,
   elements,
   selectedElement,
-  canvas,
 } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
@@ -98,7 +97,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
     /*
      * add new text
      */
-    addNewText(event) {
+    addNewText(event, t) {
       /*
        * create text input
        */
@@ -115,7 +114,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       /*
        * apply & select default text input
        */
-      this.input.innerHTML = "Enter text here";
+      this.input.innerHTML = t("presentationStudio.toolbar.text.newTextValue");
 
       let selection = window.getSelection();
       let range = document.createRange();

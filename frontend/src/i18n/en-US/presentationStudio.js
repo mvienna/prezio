@@ -41,7 +41,7 @@ export default {
           },
         },
 
-        newText: "Add new text to slide",
+        newTextValue: "Start entering text here",
       },
 
       // media

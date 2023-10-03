@@ -596,7 +596,7 @@ const handleCanvasClick = (event) => {
     case MODES_OPTIONS.value.text:
       // create new text
       if (!selectedElement.value) {
-        textStore.addNewText(event);
+        textStore.addNewText(event, t);
         return;
       }
 
