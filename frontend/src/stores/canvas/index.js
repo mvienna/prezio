@@ -479,20 +479,41 @@ export const useCanvasStore = defineStore("canvas", {
        * wrap text
        * break text into lines
        */
-      const wrapText = () => {
-        const words = element.text.split(" ");
-        const lines = [];
-        let currentLine = words[0];
+      // const wrapText = () => {
+      //   const words = element.text.split(" ");
+      //   const lines = [];
+      //   let currentLine = words[0];
+      //
+      //   for (let i = 1; i < words.length; i++) {
+      //     const testLine = currentLine + " " + words[i];
+      //     const testLineWidth = this.ctx.measureText(testLine).width;
+      //
+      //     if (testLineWidth < element.width) {
+      //       currentLine = testLine;
+      //     } else {
+      //       lines.push(currentLine);
+      //       currentLine = words[i];
+      //     }
+      //   }
+      //
+      //   lines.push(currentLine);
+      //   return lines;
+      // };
 
-        for (let i = 1; i < words.length; i++) {
-          const testLine = currentLine + " " + words[i];
+      const wrapText = () => {
+        const text = element.text;
+        const lines = [];
+        let currentLine = text[0];
+
+        for (let i = 1; i < text.length; i++) {
+          const testLine = currentLine + text[i];
           const testLineWidth = this.ctx.measureText(testLine).width;
 
           if (testLineWidth < element.width) {
             currentLine = testLine;
           } else {
             lines.push(currentLine);
-            currentLine = words[i];
+            currentLine = text[i];
           }
         }
 
