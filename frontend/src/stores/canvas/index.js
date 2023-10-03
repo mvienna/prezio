@@ -464,7 +464,7 @@ export const useCanvasStore = defineStore("canvas", {
       /*
        * compute props
        */
-      const padding = 4;
+      const padding = this.computeAdjustedSize(10);
       const adjustedFontSize =
         (parseFloat(element.fontSize) * this.canvas.width) /
         this.canvasRect().width;
@@ -479,27 +479,6 @@ export const useCanvasStore = defineStore("canvas", {
        * wrap text
        * break text into lines
        */
-      // const wrapText = () => {
-      //   const words = element.text.split(" ");
-      //   const lines = [];
-      //   let currentLine = words[0];
-      //
-      //   for (let i = 1; i < words.length; i++) {
-      //     const testLine = currentLine + " " + words[i];
-      //     const testLineWidth = this.ctx.measureText(testLine).width;
-      //
-      //     if (testLineWidth < element.width) {
-      //       currentLine = testLine;
-      //     } else {
-      //       lines.push(currentLine);
-      //       currentLine = words[i];
-      //     }
-      //   }
-      //
-      //   lines.push(currentLine);
-      //   return lines;
-      // };
-
       const wrapText = () => {
         const text = element.text;
         const lines = [];
@@ -509,7 +488,7 @@ export const useCanvasStore = defineStore("canvas", {
           const testLine = currentLine + text[i];
           const testLineWidth = this.ctx.measureText(testLine).width;
 
-          if (testLineWidth < element.width) {
+          if (testLineWidth < element.width - padding * 2) {
             currentLine = testLine;
           } else {
             lines.push(currentLine);
@@ -532,12 +511,12 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * x
          */
-        let x = element.x;
-        const lineWidth = this.ctx.measureText(line).width;
+        let x = element.x + padding;
+        const lineWidth = this.ctx.measureText(line).width - padding * 2;
 
         switch (element.textAlign) {
           case ALIGNMENT.horizontal.right:
-            x = element.x + element.width - lineWidth - padding * 2;
+            x = element.x + element.width - lineWidth;
             break;
 
           case ALIGNMENT.horizontal.center:
@@ -550,6 +529,7 @@ export const useCanvasStore = defineStore("canvas", {
          */
         let y =
           element.y +
+          padding +
           adjustedFontSize +
           index * adjustedFontSize * element.lineHeight;
 
@@ -557,8 +537,7 @@ export const useCanvasStore = defineStore("canvas", {
           case ALIGNMENT.vertical.bottom:
             y +=
               element.height -
-              adjustedFontSize * element.lineHeight * lines.length -
-              this.computeAdjustedSize(padding);
+              adjustedFontSize * element.lineHeight * lines.length;
             break;
 
           case ALIGNMENT.vertical.middle:
@@ -573,7 +552,7 @@ export const useCanvasStore = defineStore("canvas", {
         (item) => item.id === element.id
       );
       this.elements[elementIndex].height =
-        adjustedFontSize * element.lineHeight * lines.length;
+        adjustedFontSize * element.lineHeight * lines.length + padding * 2;
 
       /*
        * draw text lines
@@ -587,9 +566,9 @@ export const useCanvasStore = defineStore("canvas", {
           this.ctx.fillStyle = element.color;
           this.ctx.fillRect(
             x,
-            y + padding,
+            y + 4,
             this.ctx.measureText(line).width,
-            this.computeAdjustedSize(4)
+            adjustedFontSize / 16
           );
         }
 
@@ -598,9 +577,9 @@ export const useCanvasStore = defineStore("canvas", {
           this.ctx.fillStyle = element.color;
           this.ctx.fillRect(
             x,
-            y - (adjustedFontSize * element.lineHeight) / 3 + padding,
+            y - (adjustedFontSize * element.lineHeight) / 3 + 4,
             this.ctx.measureText(line).width,
-            this.computeAdjustedSize(4)
+            adjustedFontSize / 16
           );
         }
 

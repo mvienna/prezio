@@ -322,7 +322,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.input.style.minWidth = "1em";
         this.input.style.border = "none";
         this.input.style.outline = "none";
-        this.input.style.zIndex = "99999999992";
+        this.input.style.zIndex = "2";
+        this.input.style.padding = "10px";
 
         this.input.style.color = this.customization.color;
         this.input.style.lineHeight = this.customization.lineHeight;
