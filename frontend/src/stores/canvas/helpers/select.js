@@ -218,6 +218,8 @@ export const doubleSelectElement = () => {
           canvasStore.switchMode(MODES_OPTIONS.value.textEditing);
           break;
       }
+  } else {
+    deselectElement();
   }
 
   magnet.value.axis = null;
