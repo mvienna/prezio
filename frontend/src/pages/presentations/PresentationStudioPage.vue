@@ -160,7 +160,6 @@ const drawingStore = useCanvasDrawingStore();
 const drawingState = storeToRefs(drawingStore);
 
 const textStore = useCanvasTextStore();
-const textState = storeToRefs(textStore);
 
 const mediaStore = useCanvasMediaStore();
 
@@ -349,6 +348,7 @@ const handleKeyDownEvent = (event) => {
      *
      */
     case MODES_OPTIONS.value.text:
+    case MODES_OPTIONS.value.textEditing:
       textStore.shortcuts(event);
       break;
   }
