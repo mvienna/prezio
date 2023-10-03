@@ -74,17 +74,23 @@ export const useCanvasTextStore = defineStore("canvasText", {
       return string;
     },
 
+    handleInputEvent() {
+      this.input.innerHTML = this.sanitize(this.input.innerHTML);
+    },
+
     /*
      * input life-cycle
      */
     createTextInput() {
       this.input = document.createElement("div");
       this.input.setAttribute("contentEditable", "true");
+      this.input.addEventListener("input", this.handleInputEvent);
 
       this.applyStyles();
     },
 
     removeTextInput() {
+      this.input.removeEventListener("input", this.handleInputEvent);
       this.input.remove();
       this.input = null;
     },
@@ -282,9 +288,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.customization.formatting.isLineThrough ? "line-through" : ""
       } ${this.customization.formatting.isUnderline ? "underline" : ""}`;
 
-      const text = this.sanitize(this.input.textContent)
-        .replace(/&nbsp;/g, "")
-        .trim();
+      const text = this.input.textContent.trim();
 
       return {
         id: element?.id || generateUniqueId(undefined, elements.value),
