@@ -164,5 +164,16 @@ export default {
         title: "Other Settings",
       },
     },
+
+    /*
+     * preview
+     */
+    preview: {
+      title: "Presentation preview",
+      controls: {
+        previous: "Back",
+        next: "Next",
+      },
+    },
   },
 };

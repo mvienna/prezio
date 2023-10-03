@@ -204,7 +204,7 @@ import { date } from "quasar";
 import { useCanvasStore } from "stores/canvas";
 import { ref } from "vue";
 import PresentationSettings from "components/presentationStudio/settings/PresentationSettings.vue";
-import PresentationStudioPreviewPresentation from "components/presentationStudio/PresentationStudioPreviewPresentation.vue";
+import PresentationStudioPreviewPresentation from "components/preview/PresentationStudioPreview.vue";
 
 /*
  * stores

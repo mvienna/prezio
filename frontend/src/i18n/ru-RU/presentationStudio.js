@@ -169,7 +169,7 @@ export default {
      * preview
      */
     preview: {
-      title: "Предпросмотр",
+      title: "Предпросмотр презентации",
       controls: {
         previous: "Предыдущий",
         next: "Следующий",

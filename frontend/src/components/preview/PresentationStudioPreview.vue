@@ -2,11 +2,11 @@
   <q-card flat class="relative-position">
     <!-- header -->
     <q-toolbar class="items-center justify-center text-h7" style="height: 74px">
-      <span class="text-grey q-mr-sm">
+      <span class="text-grey">
         {{ $t("presentationStudio.preview.title") }}
       </span>
 
-      <span class="text-semibold"> «{{ presentation.name }}» </span>
+      <span class="text-semibold q-ml-sm"> «{{ presentation.name }}» </span>
     </q-toolbar>
 
     <!-- cancel -->
@@ -15,7 +15,8 @@
     </div>
 
     <!-- content -->
-    <q-card-section class="q-pa-none q-mx-md q-mb-md relative-position">
+    <q-card-section class="q-pa-none q-mx-md relative-position">
+      <!-- slide preview -->
       <div
         id="presentationPreview"
         class="presentation_preview__slide column no-wrap justify-center"
@@ -32,7 +33,7 @@
           size="12px"
           class="q-px-sm q-py-xl"
           style="
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(4px);
           "
           :disable="slideIndex === 0"
@@ -72,7 +73,7 @@
           size="12px"
           class="q-px-sm q-py-xl"
           style="
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(4px);
           "
           :disable="slideIndex === presentation.slides.length - 1"
@@ -101,7 +102,15 @@
         </q-btn>
       </div>
 
-      <!-- progress -->
+      <div class="absolute-bottom justify-center row no-wrap q-mb-md">
+        <div class="presentation_preview__slide__number q-px-sm">
+          {{ slideIndex + 1 }}/{{ presentation.slides.length }}
+        </div>
+      </div>
+    </q-card-section>
+
+    <!-- progress -->
+    <q-card-section>
       <div class="progress">
         <div class="progress__bar">
           <div
@@ -122,7 +131,6 @@
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { computed, onBeforeMount, onUnmounted } from "vue";
-import { deselectElement } from "stores/canvas/helpers/select";
 import { useCanvasStore } from "stores/canvas";
 import { useQuasar } from "quasar";
 
@@ -232,25 +240,21 @@ const isMac = computed(() => {
  * progress
  */
 .progress {
-  width: calc(100% - 32px);
-  position: absolute;
-  bottom: 16px;
-  margin: 0 16px;
+  width: 100%;
 }
 
 .progress__bar {
   position: relative;
-  height: 16px;
-  background: rgba(225, 225, 225, 0.7);
-  backdrop-filter: blur(4px);
-  border-radius: 8px;
+  height: 12px;
+  background: $grey-2;
+  border-radius: 6px;
 }
 
 .progress__bar__active {
   width: 100%;
-  height: 16px;
+  height: 12px;
   z-index: 1;
-  border-radius: 8px;
+  border-radius: 6px;
   transition: 0.275s;
   animation-name: expand;
   position: relative;
@@ -258,12 +262,12 @@ const isMac = computed(() => {
 
 .progress__bar__active__glance {
   width: calc(100% - 16px);
-  height: 4px;
+  height: 3px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.2);
   position: absolute;
   left: 8px;
-  top: 4px;
+  top: 3px;
   animation-name: expand;
 }
 
@@ -274,5 +278,12 @@ const isMac = computed(() => {
   100% {
     width: 100%;
   }
+}
+
+.presentation_preview__slide__number {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(4px);
+  border-radius: 6px;
+  color: $grey-10;
 }
 </style>
