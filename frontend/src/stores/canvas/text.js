@@ -4,6 +4,7 @@ import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { generateUniqueId } from "src/helpers/generationUtils";
 import {
   deselectElement,
+  selectElement,
   updateSelectedElement,
 } from "stores/canvas/helpers/select";
 
@@ -117,6 +118,9 @@ export const useCanvasTextStore = defineStore("canvasText", {
        */
       this.createTextInput();
 
+      /*
+       * compute default center position
+       */
       if (!event) {
         const canvasRect = canvasStore.canvasRect();
 
@@ -132,55 +136,44 @@ export const useCanvasTextStore = defineStore("canvasText", {
         };
       }
 
+      /*
+       * re-position & append input
+       */
       this.input.style.left =
         event.clientX - selectedElementBorder.value.borderWidth + "px";
       this.input.style.top =
         event.clientY + selectedElementBorder.value.borderWidth + "px";
 
       document.body.appendChild(this.input);
-      this.input.focus();
 
       /*
-       * apply & select default text input
+       * set default input text
        */
       this.input.innerHTML = t("presentationStudio.toolbar.text.newTextValue");
 
+      /*
+       * add text to canvas and start editing it
+       */
+      canvasStore.computePosition(event);
+
+      elements.value.unshift(
+        this.computeTextElementProps(mouse.value.x, mouse.value.y)
+      );
+
+      canvasStore.switchMode(MODES_OPTIONS.value.textEditing);
+      this.removeTextInput();
+
+      selectElement(elements.value[0]);
+      this.editText();
+
+      /*
+       * select default text
+       */
       let selection = window.getSelection();
       let range = document.createRange();
       range.selectNodeContents(this.input);
       selection.removeAllRanges();
       selection.addRange(range);
-
-      /*
-       * add text to canvas
-       */
-      canvasStore.computePosition(event);
-      const clickedX = mouse.value.x;
-      const clickedY = mouse.value.y;
-
-      const addTextToCanvas = () => {
-        elements.value.unshift(
-          this.computeTextElementProps(clickedX, clickedY)
-        );
-
-        canvasStore.redrawCanvas(true, true);
-        canvasStore.switchMode(null);
-        this.removeTextInput();
-        this.clearFormatting();
-      };
-
-      /*
-       * input events
-       */
-      this.input.addEventListener("blur", () => {
-        addTextToCanvas();
-      });
-
-      this.input.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" && !event.shiftKey) {
-          this.input.blur();
-        }
-      });
     },
 
     /*
@@ -356,6 +349,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.input.style.border = "none";
         this.input.style.outline = "none";
         this.input.style.zIndex = "2";
+        this.input.style.marginTop = "-1px";
         this.input.style.padding = "10px";
         this.input.style.wordBreak = "break-all";
 
