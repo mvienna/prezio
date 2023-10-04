@@ -49,6 +49,11 @@ class PresentationSlideController extends Controller
 
     public function destroy (Presentation $presentation, PresentationSlide $slide): JsonResponse
     {
+        $slide->load('template');
+        if ($slide->template) {
+            $slide->template->delete();
+        }
+
         $slide->delete();
         $presentation->load('slides');
 

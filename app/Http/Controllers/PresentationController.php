@@ -55,7 +55,11 @@ class PresentationController extends Controller
             throw new \Exception(trans('errors.accessDenied'));
         }
 
-        PresentationSlide::where('presentation_id', $presentation->id)->delete();
+        $presentation->load('slides');
+        foreach ($presentation->slides as $slide) {
+            app(PresentationSlideController::class)->destroy($presentation, $slide);
+        }
+
         $presentation->delete();
 
         return $this->successResponse();
