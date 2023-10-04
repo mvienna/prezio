@@ -500,21 +500,19 @@ const handleCanvasMouseMove = (event) => {
   const { hoveredElement } = getHoveredElement();
   isElementHovered.value = !!hoveredElement;
 
-  if (!selectedElement.value) {
-    if (hoveredElement) {
-      canvasStore.drawBorder(
-        hoveredElement.x,
-        hoveredElement.y,
-        hoveredElement.width,
-        hoveredElement.height,
-        [],
-        false
-      );
+  if (hoveredElement) {
+    canvasStore.drawBorder(
+      hoveredElement.x,
+      hoveredElement.y,
+      hoveredElement.width,
+      hoveredElement.height,
+      [],
+      false
+    );
 
-      lastElementHovered.value = hoveredElement;
-    } else if (lastElementHovered.value) {
-      canvasStore.redrawCanvas(false);
-    }
+    lastElementHovered.value = hoveredElement;
+  } else if (lastElementHovered.value) {
+    canvasStore.redrawCanvas(false);
   }
 
   /*
