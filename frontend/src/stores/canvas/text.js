@@ -15,6 +15,7 @@ const {
   selectedElement,
   resizeHandle,
   rotationHandle,
+  canvas,
 } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
@@ -77,6 +78,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
     },
 
     handleInputTypingEvent() {
+      if (!selectedElement.value) return;
+
       selectedElement.value.text = this.input.textContent;
       updateSelectedElement();
 
@@ -108,11 +111,26 @@ export const useCanvasTextStore = defineStore("canvasText", {
     /*
      * add new text
      */
-    addNewText(event, t) {
+    addNewText(event = null, t) {
       /*
        * create text input
        */
       this.createTextInput();
+
+      if (!event) {
+        const canvasRect = canvasStore.canvasRect();
+
+        const canvasWidth = canvasStore.computeRealSize(canvas.value.width);
+        const canvasHeight = canvasStore.computeRealSize(canvas.value.height);
+
+        const inputWidth = 231;
+        const inputHeight = 21;
+
+        event = {
+          clientX: canvasRect.left + canvasWidth / 2 - inputWidth / 2,
+          clientY: canvasRect.top + canvasHeight / 2 - inputHeight / 2,
+        };
+      }
 
       this.input.style.left =
         event.clientX - selectedElementBorder.value.borderWidth + "px";

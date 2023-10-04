@@ -23,7 +23,10 @@
       round
       size="12px"
       :class="mode === MODES_OPTIONS.text ? 'bg-grey-1' : ''"
-      @click="$emit('switchMode', MODES_OPTIONS.text)"
+      @click="
+        $emit('switchMode', MODES_OPTIONS.text);
+        textStore.addNewText(undefined, t);
+      "
     >
       <q-tooltip>
         {{ $t("presentationStudio.toolbar.text.title") }}
@@ -154,6 +157,13 @@ import SelectMedia from "components/media/SelectMedia.vue";
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
+import { useCanvasTextStore } from "stores/canvas/text";
+import { useI18n } from "vue-i18n";
+
+/*
+ * variables
+ */
+const { t } = useI18n({ useScope: "global" });
 
 /*
  * emits
@@ -164,6 +174,8 @@ defineEmits(["switchMode", "addImage", "addShape"]);
  * stores
  */
 const { mode, MODES_OPTIONS, selectedElement } = storeToRefs(useCanvasStore());
+
+const textStore = useCanvasTextStore();
 
 /*
  * select media

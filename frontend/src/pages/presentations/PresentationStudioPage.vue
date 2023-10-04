@@ -612,11 +612,11 @@ const handleCanvasClick = (event) => {
      * text
      */
     case MODES_OPTIONS.value.text:
-      // create new text
-      if (!selectedElement.value) {
-        textStore.addNewText(event, t);
-        return;
-      }
+      // // create new text
+      // if (!selectedElement.value) {
+      //   textStore.addNewText(event, t);
+      //   return;
+      // }
 
       // edit text on second selection
       // skip if just dragged
