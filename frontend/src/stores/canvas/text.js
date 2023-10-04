@@ -13,6 +13,8 @@ const {
   selectedElementBorder,
   elements,
   selectedElement,
+  resizeHandle,
+  rotationHandle,
 } = storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
@@ -74,6 +76,16 @@ export const useCanvasTextStore = defineStore("canvasText", {
       document.execCommand("insertText", false, pastedData);
     },
 
+    handleInputTypingEvent() {
+      selectedElement.value.text = this.input.textContent;
+      updateSelectedElement();
+
+      canvasStore.redrawCanvas(false);
+
+      this.input.style.height =
+        canvasStore.computeRealSize(selectedElement.value.height) + "px";
+    },
+
     /*
      * input life-cycle
      */
@@ -81,12 +93,14 @@ export const useCanvasTextStore = defineStore("canvasText", {
       this.input = document.createElement("div");
       this.input.setAttribute("contentEditable", "true");
       this.input.addEventListener("paste", this.handleInputPasteEvent);
+      this.input.addEventListener("input", this.handleInputTypingEvent);
 
       this.applyStyles();
     },
 
     removeTextInput() {
       this.input.removeEventListener("paste", this.handleInputPasteEvent);
+      this.input.removeEventListener("input", this.handleInputTypingEvent);
       this.input.remove();
       this.input = null;
     },
@@ -221,7 +235,9 @@ export const useCanvasTextStore = defineStore("canvasText", {
        * input events
        */
       this.input.addEventListener("blur", () => {
-        addTextToCanvas();
+        if (!resizeHandle.value && !rotationHandle.value) {
+          addTextToCanvas();
+        }
       });
 
       this.input.addEventListener("keydown", (event) => {
@@ -317,13 +333,13 @@ export const useCanvasTextStore = defineStore("canvasText", {
        */
       if (this.input) {
         this.input.style.position = "absolute";
-        this.input.style.resize = "both";
-        this.input.style.overflow = "auto";
         this.input.style.minWidth = "1em";
+        this.input.style.minHeight = "1em";
         this.input.style.border = "none";
         this.input.style.outline = "none";
         this.input.style.zIndex = "2";
         this.input.style.padding = "10px";
+        this.input.style.wordBreak = "break-all";
 
         this.input.style.color = this.customization.color;
         this.input.style.lineHeight = this.customization.lineHeight;
@@ -345,35 +361,38 @@ export const useCanvasTextStore = defineStore("canvasText", {
           : "none";
 
         // alignment
-        this.input.style.display = "flex";
+        this.input.style.textAlign =
+          this.customization.formatting.alignment.horizontal;
 
-        switch (this.customization.formatting.alignment.horizontal) {
-          case ALIGNMENT.horizontal.left:
-            this.input.style.justifyContent = "flex-start";
-            break;
+        // this.input.style.display = "flex";
+        //
+        // switch (this.customization.formatting.alignment.horizontal) {
+        //   case ALIGNMENT.horizontal.left:
+        //     this.input.style.justifyContent = "flex-start";
+        //     break;
+        //
+        //   case ALIGNMENT.horizontal.center:
+        //     this.input.style.justifyContent = "center";
+        //     break;
+        //
+        //   case ALIGNMENT.horizontal.right:
+        //     this.input.style.justifyContent = "flex-end";
+        //     break;
+        // }
 
-          case ALIGNMENT.horizontal.center:
-            this.input.style.justifyContent = "center";
-            break;
-
-          case ALIGNMENT.horizontal.right:
-            this.input.style.justifyContent = "flex-end";
-            break;
-        }
-
-        switch (this.customization.formatting.alignment.vertical) {
-          case ALIGNMENT.vertical.top:
-            this.input.style.alignItems = "flex-start";
-            break;
-
-          case ALIGNMENT.vertical.middle:
-            this.input.style.alignItems = "center";
-            break;
-
-          case ALIGNMENT.vertical.bottom:
-            this.input.style.alignItems = "flex-end";
-            break;
-        }
+        // switch (this.customization.formatting.alignment.vertical) {
+        //   case ALIGNMENT.vertical.top:
+        //     this.input.style.alignItems = "flex-start";
+        //     break;
+        //
+        //   case ALIGNMENT.vertical.middle:
+        //     this.input.style.alignItems = "center";
+        //     break;
+        //
+        //   case ALIGNMENT.vertical.bottom:
+        //     this.input.style.alignItems = "flex-end";
+        //     break;
+        // }
       }
 
       /*

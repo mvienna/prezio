@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { updateSelectedElement } from "stores/canvas/helpers/select";
 import { removeMagnet, useMagnet } from "stores/canvas/helpers/magnet";
 import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
+import { useCanvasTextStore } from "stores/canvas/text";
 
 const canvasStore = useCanvasStore();
 const {
@@ -15,6 +16,9 @@ const {
   RESIZE_HANDLES_OPTIONS,
   resizeHandle,
 } = storeToRefs(canvasStore);
+
+const textStore = useCanvasTextStore();
+const { input } = storeToRefs(textStore);
 
 /*
  * get resize handle
@@ -420,6 +424,20 @@ export const resizeElement = (event) => {
     clientY: mouse.value.y,
   };
 
+  if (input.value) {
+    selectedElement.value.text = input.value.textContent;
+  }
+
   updateSelectedElement();
   canvasStore.redrawCanvas(false);
+
+  if (input.value) {
+    input.value.style.width =
+      canvasStore.computeRealSize(selectedElement.value.width) + "px";
+
+    input.value.style.height =
+      canvasStore.computeRealSize(selectedElement.value.height) + "px";
+
+    textStore.moveInputCursorToTheEnd();
+  }
 };

@@ -328,7 +328,11 @@ export const useCanvasStore = defineStore("canvas", {
 
       // draw elements one-by-one
       reversedElements.forEach((element) => {
-        if (element.isVisible === false) return;
+        if (
+          element.isVisible === false &&
+          element.mode !== this.MODES_OPTIONS.text
+        )
+          return;
 
         this.ctx.save();
 
@@ -409,7 +413,11 @@ export const useCanvasStore = defineStore("canvas", {
       /*
        * border
        */
-      if (this.selectedElement && this.selectedElement.isVisible) {
+      if (
+        this.selectedElement &&
+        (this.selectedElement.isVisible ||
+          this.selectedElement.mode === this.MODES_OPTIONS.text)
+      ) {
         this.renderBorderForSelectedElement();
       }
 
@@ -553,6 +561,8 @@ export const useCanvasStore = defineStore("canvas", {
       );
       this.elements[elementIndex].height =
         adjustedFontSize * element.lineHeight * lines.length + padding * 2;
+
+      if (!element.isVisible) return;
 
       /*
        * draw text lines
