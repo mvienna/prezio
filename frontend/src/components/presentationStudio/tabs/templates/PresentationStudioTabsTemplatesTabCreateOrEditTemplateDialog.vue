@@ -83,7 +83,7 @@
           option-value="name"
           :label="
             $t(
-              'presentationLayout.rightDrawer.tabs.templates.createOrEdit.fields.description'
+              'presentationLayout.rightDrawer.tabs.templates.createOrEdit.fields.category'
             )
           "
           outlined
