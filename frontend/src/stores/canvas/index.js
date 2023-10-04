@@ -512,11 +512,11 @@ export const useCanvasStore = defineStore("canvas", {
          * x
          */
         let x = element.x + padding;
-        const lineWidth = this.ctx.measureText(line).width - padding * 2;
+        const lineWidth = this.ctx.measureText(line).width;
 
         switch (element.textAlign) {
           case ALIGNMENT.horizontal.right:
-            x = element.x + element.width - lineWidth;
+            x = element.x + element.width - lineWidth - padding;
             break;
 
           case ALIGNMENT.horizontal.center:
@@ -533,17 +533,17 @@ export const useCanvasStore = defineStore("canvas", {
           adjustedFontSize +
           index * adjustedFontSize * element.lineHeight;
 
-        switch (element.verticalAlign) {
-          case ALIGNMENT.vertical.bottom:
-            y +=
-              element.height -
-              adjustedFontSize * element.lineHeight * lines.length;
-            break;
-
-          case ALIGNMENT.vertical.middle:
-            y += element.height / 2 - adjustedFontSize + element.lineHeight;
-            break;
-        }
+        // switch (element.verticalAlign) {
+        //   case ALIGNMENT.vertical.bottom:
+        //     y +=
+        //       element.height -
+        //       adjustedFontSize * element.lineHeight * lines.length;
+        //     break;
+        //
+        //   case ALIGNMENT.vertical.middle:
+        //     y += element.height / 2 - adjustedFontSize + element.lineHeight;
+        //     break;
+        // }
 
         linesPosition.push({ x: x, y: y });
       });
