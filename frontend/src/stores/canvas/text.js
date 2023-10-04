@@ -28,7 +28,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
      */
     customization: {
       color: "#313232",
-      fontSize: "14px",
+      fontSize: "16px",
       font: "Arial",
       lineHeight: 1.2,
       formatting: {
@@ -44,7 +44,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
       default: {
         color: "#313232",
-        fontSize: "14px",
+        fontSize: "16px",
         font: "Arial",
         lineHeight: 1.2,
         formatting: {
@@ -60,7 +60,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       },
     },
 
-    fontSizeNumber: 14,
+    fontSizeNumber: 16,
   }),
 
   actions: {
