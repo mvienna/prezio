@@ -40,10 +40,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
         isUnderline: false,
         isLineThrough: false,
         isItalic: false,
-        alignment: {
-          horizontal: ALIGNMENT.horizontal.left,
-          vertical: ALIGNMENT.vertical.top,
-        },
+        textAlign: ALIGNMENT.horizontal.left,
+        verticalAlign: ALIGNMENT.vertical.top,
       },
 
       default: {
@@ -56,10 +54,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
           isUnderline: false,
           isLineThrough: false,
           isItalic: false,
-          alignment: {
-            horizontal: ALIGNMENT.horizontal.left,
-            vertical: ALIGNMENT.vertical.top,
-          },
+          textAlign: ALIGNMENT.horizontal.left,
+          verticalAlign: ALIGNMENT.vertical.top,
         },
       },
     },
@@ -291,10 +287,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
           isLineThrough: this.customization.default.formatting.isLineThrough,
           isItalic: this.customization.default.formatting.isItalic,
 
-          alignment: {
-            horizontal: this.customization.default.formatting.horizontal,
-            vertical: this.customization.default.formatting.vertical,
-          },
+          textAlign: this.customization.default.formatting.textAlign,
+          verticalAlign: this.customization.default.formatting.verticalAlign,
         },
       };
 
@@ -322,7 +316,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         x: x,
         y: y,
         width: canvasStore.computeAdjustedSize(this.input.offsetWidth),
-        height: canvasStore.computeAdjustedSize(this.input.offsetHeight),
+        height: canvasStore.computeAdjustedSize(this.input.offsetHeight), // computed automatically
         color: this.customization.color,
         fontFamily: this.customization.font,
         fontSize: this.customization.fontSize,
@@ -332,8 +326,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
           ? newTextDecoration
           : "none",
         fontStyle: this.customization.formatting.isItalic ? "italic" : "normal",
-        textAlign: this.customization.formatting.alignment.horizontal,
-        verticalAlign: this.customization.formatting.alignment.vertical,
+        textAlign: this.customization.formatting.textAlign,
+        verticalAlign: this.customization.formatting.verticalAlign,
         rotationAngle: selectedElement.value?.rotationAngle || 0,
       };
     },
@@ -373,12 +367,11 @@ export const useCanvasTextStore = defineStore("canvasText", {
           : "none";
 
         // alignment
-        this.input.style.textAlign =
-          this.customization.formatting.alignment.horizontal;
+        this.input.style.textAlign = this.customization.formatting.textAlign;
 
         // this.input.style.display = "flex";
         //
-        // switch (this.customization.formatting.alignment.horizontal) {
+        // switch (this.customization.formatting.textAlign) {
         //   case ALIGNMENT.horizontal.left:
         //     this.input.style.justifyContent = "flex-start";
         //     break;
@@ -392,7 +385,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         //     break;
         // }
 
-        // switch (this.customization.formatting.alignment.vertical) {
+        // switch (this.customization.formatting.verticalAlign) {
         //   case ALIGNMENT.vertical.top:
         //     this.input.style.alignItems = "flex-start";
         //     break;
@@ -436,9 +429,9 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
         // alignment
         selectedElement.value.textAlign =
-          this.customization.formatting.alignment.horizontal;
+          this.customization.formatting.textAlign;
         selectedElement.value.verticalAlign =
-          this.customization.formatting.alignment.vertical;
+          this.customization.formatting.verticalAlign;
 
         // update
         updateSelectedElement();
@@ -463,10 +456,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
             selectedElement.value.textDecoration.includes("line-through"),
           isItalic: selectedElement.value.fontStyle === "italic",
 
-          alignment: {
-            horizontal: selectedElement.value.textAlign,
-            vertical: selectedElement.value.verticalAlign,
-          },
+          textAlign: selectedElement.value.textAlign,
+          verticalAlign: selectedElement.value.verticalAlign,
         },
       };
 

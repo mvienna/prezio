@@ -131,14 +131,11 @@
     round
     color="black"
     :icon="
-      customization.formatting.alignment.horizontal ===
-      ALIGNMENT.horizontal.left
+      customization.formatting.textAlign === ALIGNMENT.horizontal.left
         ? 'r_format_align_left'
-        : customization.formatting.alignment.horizontal ===
-          ALIGNMENT.horizontal.right
+        : customization.formatting.textAlign === ALIGNMENT.horizontal.right
         ? 'r_format_align_right'
-        : customization.formatting.alignment.horizontal ===
-          ALIGNMENT.horizontal.center
+        : customization.formatting.textAlign === ALIGNMENT.horizontal.center
         ? 'r_format_align_center'
         : ''
     "
@@ -164,7 +161,7 @@
             size="12px"
             round
             :class="
-              item === customization.formatting.alignment.horizontal
+              item === customization.formatting.textAlign
                 ? 'text-black'
                 : 'text-grey'
             "
@@ -179,7 +176,7 @@
             "
             @click="
               () => {
-                customization.formatting.alignment.horizontal = item;
+                customization.formatting.textAlign = item;
                 textStore.applyStyles();
               }
             "
@@ -195,7 +192,7 @@
         <!--            round-->
         <!--            :class="-->
         <!--              item ===-->
-        <!--              customization.formatting.alignment.vertical-->
+        <!--              customization.formatting.verticalAlign-->
         <!--                ? 'text-black'-->
         <!--                : 'text-grey'-->
         <!--            "-->
@@ -209,7 +206,7 @@
         <!--                : ''-->
         <!--            "-->
         <!--            @click="-->
-        <!--              customization.formatting.alignment.vertical =-->
+        <!--              customization.formatting.verticalAlign =-->
         <!--                item;-->
         <!--              textStore.applyStyles();-->
         <!--            "-->
