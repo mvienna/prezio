@@ -78,7 +78,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
     handleInputTypingEvent() {
       if (!selectedElement.value) return;
 
-      selectedElement.value.text = this.input.textContent;
+      selectedElement.value.text = this.input.innerHTML;
       updateSelectedElement();
 
       canvasStore.redrawCanvas(false);
@@ -307,7 +307,10 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.customization.formatting.isLineThrough ? "line-through" : ""
       } ${this.customization.formatting.isUnderline ? "underline" : ""}`;
 
-      const text = this.input.textContent.trim();
+      console.log(this.input.innerHTML);
+      const text = this.input.innerHTML
+        .replace(/<(?!br\s*\/?)[^>]+>/g, "")
+        .trim();
 
       return {
         id: generateUniqueId(undefined, elements.value),
@@ -347,7 +350,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.input.style.zIndex = "2";
         this.input.style.marginTop = "-1px";
         this.input.style.padding = "10px";
-        this.input.style.wordBreak = "break-all";
+        // this.input.style.wordBreak = "break-all";
 
         this.input.style.color = this.customization.color;
         this.input.style.lineHeight = this.customization.lineHeight;

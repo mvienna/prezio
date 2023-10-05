@@ -425,7 +425,7 @@ export const resizeElement = (event) => {
   };
 
   if (input.value) {
-    selectedElement.value.text = input.value.textContent;
+    selectedElement.value.text = input.value.innerHTML;
   }
 
   updateSelectedElement();
