@@ -7,6 +7,7 @@ import {
   selectElement,
   updateSelectedElement,
 } from "stores/canvas/helpers/select";
+import { localHostList } from "@quasar/app-vite/lib/helpers/net";
 
 const {
   MODES_OPTIONS,
@@ -109,6 +110,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
      * add new text
      */
     addNewText(event = null, t) {
+      this.clearFormatting();
+
       /*
        * create text input
        */
@@ -286,7 +289,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
           isUnderline: this.customization.default.formatting.isUnderline,
           isLineThrough: this.customization.default.formatting.isLineThrough,
           isItalic: this.customization.default.formatting.isItalic,
-
           textAlign: this.customization.default.formatting.textAlign,
           verticalAlign: this.customization.default.formatting.verticalAlign,
         },
