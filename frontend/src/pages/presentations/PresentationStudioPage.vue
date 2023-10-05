@@ -122,8 +122,13 @@ const router = useRouter();
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, lastSavedAt, lastChangedAt, isPresentationPreview } =
-  storeToRefs(presentationsStore);
+const {
+  presentation,
+  lastSavedAt,
+  lastChangedAt,
+  isPresentationPreview,
+  slide,
+} = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const {
@@ -500,7 +505,7 @@ const handleCanvasMouseMove = (event) => {
   const { hoveredElement } = getHoveredElement();
   isElementHovered.value = !!hoveredElement;
 
-  if (hoveredElement) {
+  if (hoveredElement && hoveredElement?.id !== selectedElement.value?.id) {
     canvasStore.drawBorder(
       hoveredElement.x,
       hoveredElement.y,
