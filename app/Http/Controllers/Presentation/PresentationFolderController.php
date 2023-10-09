@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Presentation;
 use App\Http\Controllers\Controller;
 use App\Models\Presentation;
 use App\Models\PresentationFolder;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,7 @@ class PresentationFolderController extends Controller
 {
     public function store(Request $request): JsonResponse
     {
+        /** @var User $user */
         $user = auth()->user();
 
         $folder = PresentationFolder::create([
@@ -28,6 +30,7 @@ class PresentationFolderController extends Controller
 
     public function update(PresentationFolder $folder, Request $request)
     {
+        /** @var User $user */
         $user = auth()->user();
         if ($folder->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.accessDenied'));
@@ -44,6 +47,7 @@ class PresentationFolderController extends Controller
 
     public function destroy(PresentationFolder $folder): JsonResponse
     {
+        /** @var User $user */
         $user = auth()->user();
         if ($folder->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.accessDenied'));
@@ -63,6 +67,7 @@ class PresentationFolderController extends Controller
 
     public function show(PresentationFolder $folder): JsonResponse
     {
+        /** @var User $user */
         $user = auth()->user();
         if ($folder->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.accessDenied'));

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Presentation;
 use App\Http\Controllers\Controller;
 use App\Models\PresentationSlide;
 use App\Models\PresentationSlideAnswer;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,7 @@ class PresentationSlideAnswerController extends Controller
 {
     public function store (PresentationSlide $slide, Request $request): JsonResponse
     {
+        /** @var User $user */
         $user = auth()->user();
 
         $answer = PresentationSlideAnswer::create([

@@ -77,7 +77,7 @@
             [2].includes(user.id) || user.email === 'inagamov.ar@yandex.com'
           "
           v-model="form.category"
-          :options="categories.filter((category) => category.label)"
+          :options="categories.filter((item) => item.label)"
           map-options
           emit-value
           option-value="name"

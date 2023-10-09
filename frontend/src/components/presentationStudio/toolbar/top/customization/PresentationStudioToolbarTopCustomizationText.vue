@@ -322,7 +322,7 @@ import { ALIGNMENT, FONT_OPTIONS } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 
 /*
  * variables

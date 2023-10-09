@@ -92,9 +92,7 @@ class AuthController extends Controller
 
     public function update(Request $request): JsonResponse
     {
-        /*
-         * auth
-         */
+        /** @var User $user */
         $user = auth()->user();
 
         /*

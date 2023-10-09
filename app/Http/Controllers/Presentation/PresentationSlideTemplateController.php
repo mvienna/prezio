@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Presentation;
 use App\Enums\PresentationSlideTemplateCategoryType;
 use App\Http\Controllers\Controller;
 use App\Models\PresentationSlideTemplate;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,7 @@ class PresentationSlideTemplateController extends Controller
 {
     public function store (Request $request): JsonResponse
     {
+        /** @var User $user */
         $user = auth()->user();
 
         $template = PresentationSlideTemplate::create([
@@ -30,6 +32,7 @@ class PresentationSlideTemplateController extends Controller
 
     public function update (PresentationSlideTemplate $slideTemplate, Request $request): JsonResponse
     {
+        /** @var User $user */
         $user = auth()->user();
         if ($slideTemplate->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.accessDenied'));
@@ -47,6 +50,7 @@ class PresentationSlideTemplateController extends Controller
 
     public function destroy (PresentationSlideTemplate $slideTemplate): JsonResponse
     {
+        /** @var User $user */
         $user = auth()->user();
         if ($slideTemplate->user_id !== $user->id && !$user->isAdmin()) {
             throw new \Exception(trans('errors.accessDenied'));

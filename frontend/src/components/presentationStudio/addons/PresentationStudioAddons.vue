@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount } from "vue";
+import { computed } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import PresentationStudioWordsCloud from "components/presentationStudio/addons/PresentationStudioWordsCloud.vue";

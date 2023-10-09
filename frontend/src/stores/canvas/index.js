@@ -488,7 +488,7 @@ export const useCanvasStore = defineStore("canvas", {
        * wrap text
        * break text into lines
        */
-      let text = element.text.split(/<br\s*\/?>|<br\s*\/?>/);
+      let text = element.text.split(/<br\s*\/?>/);
 
       const wrapTextByWords = (text) => {
         const words = text.split(" ");

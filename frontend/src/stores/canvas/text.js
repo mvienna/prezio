@@ -7,7 +7,6 @@ import {
   selectElement,
   updateSelectedElement,
 } from "stores/canvas/helpers/select";
-import { localHostList } from "@quasar/app-vite/lib/helpers/net";
 
 const {
   MODES_OPTIONS,
