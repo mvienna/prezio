@@ -10,21 +10,20 @@
           $t(
             `presentationLayout.rightDrawer.tabs.types.options.${
               Object.keys(types)[index]
-            }.title`
+            }`
           )
         }}
       </div>
 
       <div class="types_grid q-mt-sm">
-        <!-- TODO: use slide type to detect active type - :active="type.name === 'free'" -->
         <q-item
           v-for="type in typesGroup"
           :key="type.name"
           class="type q-pa-sm"
           :disable="type.disable"
           clickable
-          :active="type.name === 'free'"
-          @click="$emit('select')"
+          :active="type.name === slide?.type"
+          @click="$emit('select', type.name)"
         >
           <div class="row justify-center">
             <q-img :src="`/assets/icons/temp/slideTypes/${type.name}.svg`" />
@@ -41,6 +40,9 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import { usePresentationsStore } from "stores/presentations";
+import { storeToRefs } from "pinia";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
 /*
  * variables
@@ -57,6 +59,12 @@ defineProps({
 defineEmits(["select"]);
 
 /*
+ * stores
+ */
+const presentationsStore = usePresentationsStore();
+const { slide } = storeToRefs(presentationsStore);
+
+/*
  * types
  */
 const types = {
@@ -65,20 +73,22 @@ const types = {
    */
   content: [
     {
-      name: "free",
+      name: SLIDE_TYPES.CONTENT,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.content.free"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.CONTENT}`
       ),
     },
     {
-      name: "qr",
-      label: t("presentationLayout.rightDrawer.tabs.types.options.content.qr"),
+      name: SLIDE_TYPES.QR,
+      label: t(
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.QR}`
+      ),
       disable: true,
     },
     {
-      name: "video",
+      name: SLIDE_TYPES.VIDEO,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.content.video"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.VIDEO}`
       ),
       disable: true,
     },
@@ -89,92 +99,91 @@ const types = {
    */
   quizzesAndGames: [
     {
-      name: "pickAnswer",
+      name: SLIDE_TYPES.PICK_ANSWER,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.quizzesAndGames.pickAnswer"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.PICK_ANSWER}`
       ),
       disable: true,
     },
     {
-      name: "pickImage",
+      name: SLIDE_TYPES.PICK_IMAGE,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.quizzesAndGames.pickImage"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.PICK_IMAGE}`
       ),
       disable: true,
     },
     {
-      name: "typeAnswer",
+      name: SLIDE_TYPES.TYPE_ANSWER,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.quizzesAndGames.typeAnswer"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.TYPE_ANSWER}`
       ),
       disable: true,
     },
     {
-      name: "spinnerWheel",
+      name: SLIDE_TYPES.SPINNER_WHEEL,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.quizzesAndGames.spinnerWheel"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.SPINNER_WHEEL}`
       ),
       disable: true,
     },
     {
-      name: "matchPairs",
+      name: SLIDE_TYPES.MATCH_PAIRS,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.quizzesAndGames.matchPairs"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.MATCH_PAIRS}`
       ),
       disable: true,
     },
     {
-      name: "correctOrder",
+      name: SLIDE_TYPES.CORRECT_ORDER,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.quizzesAndGames.correctOrder"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.CORRECT_ORDER}`
       ),
       disable: true,
     },
   ],
 
   /*
-   * user answers
+   * opinion & qna
    */
   userAnswer: [
     {
-      name: "poll",
+      name: SLIDE_TYPES.POLL,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.userAnswer.poll"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.POLL}`
       ),
       disable: true,
     },
     {
-      name: "openEnded",
+      name: SLIDE_TYPES.OPEN_ENDED,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.userAnswer.openEnded"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.OPEN_ENDED}`
       ),
       disable: true,
     },
     {
-      name: "wordCloud",
+      name: SLIDE_TYPES.WORD_CLOUD,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.userAnswer.wordCloud"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.WORD_CLOUD}`
+      ),
+    },
+    {
+      name: SLIDE_TYPES.SCALES,
+      label: t(
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.SCALES}`
       ),
       disable: true,
     },
     {
-      name: "scales",
+      name: SLIDE_TYPES.QNA,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.userAnswer.scales"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.QNA}`
       ),
       disable: true,
     },
     {
-      name: "questionsAndAnswers",
+      name: SLIDE_TYPES.BRAIN_STORM,
       label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.userAnswer.questionsAndAnswers"
-      ),
-      disable: true,
-    },
-    {
-      name: "brainStorm",
-      label: t(
-        "presentationLayout.rightDrawer.tabs.types.options.userAnswer.brainStorm"
+        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.BRAIN_STORM}`
       ),
       disable: true,
     },

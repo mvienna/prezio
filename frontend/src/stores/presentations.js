@@ -232,11 +232,12 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * slides
      */
-    async addNewSlide(elements = null) {
+    async addNewSlide(elements = null, type) {
       const response = await api
         .post(`/presentation/${this.presentation.id}/slide`, {
           canvas_data: JSON.stringify(elements),
           order: this.presentation.slides.length,
+          type: type,
         })
         .catch((error) => {
           console.log(error);
@@ -255,6 +256,7 @@ export const usePresentationsStore = defineStore("presentations", {
           canvas_data: elements,
           preview: slide.preview,
           order: slide.order,
+          type: slide.type,
           notes: slide.notes,
           animation: slide.animation,
         })
@@ -272,7 +274,7 @@ export const usePresentationsStore = defineStore("presentations", {
 
     async duplicateSlide(slide, elements) {
       // add new slide
-      await this.addNewSlide(elements);
+      await this.addNewSlide(elements, slide.type);
 
       // // copy original slides props into the new one
       // this.slide = {

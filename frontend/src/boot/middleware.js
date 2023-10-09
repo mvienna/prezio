@@ -3,8 +3,8 @@ import { storeToRefs } from "pinia";
 import { ROUTE_PATHS } from "src/constants/routes";
 
 export default async ({ app, router }) => {
-  const store = useAuthStore();
-  const state = storeToRefs(useAuthStore());
+  const userStore = useAuthStore();
+  const userState = storeToRefs(userStore);
 
   const allowedUnauthenticatedPaths = [
     ROUTE_PATHS.AUTH.LOGIN,
@@ -22,7 +22,7 @@ export default async ({ app, router }) => {
 
     if (credentials) {
       try {
-        await store.login(credentials.email, credentials.password);
+        await userStore.login(credentials.email, credentials.password);
       } catch (error) {
         console.log(error);
       }
@@ -33,9 +33,9 @@ export default async ({ app, router }) => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        state.user.value = await store.auth();
+        userState.user.value = await userStore.auth();
       } catch (error) {
-        store.clearUserData();
+        userStore.clearUserData();
         window.location = ROUTE_PATHS.AUTH.LOGIN;
       }
     }
@@ -48,7 +48,7 @@ export default async ({ app, router }) => {
     /*
      * not authenticated
      */
-    if (state.user.value === undefined || state.user.value === null) {
+    if (userState.user.value === undefined || userState.user.value === null) {
       if (!allowedUnauthenticatedPaths.includes(to.path)) {
         next(ROUTE_PATHS.AUTH.LOGIN);
         return;
@@ -62,7 +62,7 @@ export default async ({ app, router }) => {
        */
     } else {
       if (to.path === ROUTE_PATHS.AUTH.LOGOUT) {
-        await store.logout();
+        await userStore.logout();
         return;
       }
 

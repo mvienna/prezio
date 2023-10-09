@@ -2,7 +2,7 @@
   <div>
     <q-select
       v-model="lang"
-      :options="Object.values(languages)"
+      :options="Object.values(LANGUAGES)"
       emit-value
       map-options
       outlined
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { languages } from "src/constants/languages";
+import { LANGUAGES } from "src/constants/languages";
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";

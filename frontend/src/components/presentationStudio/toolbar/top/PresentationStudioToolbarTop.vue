@@ -18,38 +18,41 @@
     </template>
 
     <template v-else>
-      <q-btn
-        icon="r_space_dashboard"
-        unelevated
-        text-color="dark"
-        :class="showLayoutsMenu ? 'bg-grey-2' : ''"
-        round
-        size="12px"
-      >
-        <q-tooltip>
-          {{ $t("presentationStudio.toolbar.layouts.title") }}
-        </q-tooltip>
-
-        <!-- layouts -->
-        <q-menu
-          v-model="showLayoutsMenu"
-          anchor="top left"
-          self="bottom left"
-          transition-show="jump-down"
-          transition-hide="jump-up"
-          :offset="[0, 16]"
-          class="q-pa-md bg-white"
-          max-height="70vh"
-          style="width: 424px"
+      <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
+        <q-btn
+          icon="r_space_dashboard"
+          unelevated
+          text-color="dark"
+          :class="showLayoutsMenu ? 'bg-grey-2' : ''"
+          round
+          size="12px"
         >
-          <PresentationStudioToolbarTopLayouts v-close-popup />
-        </q-menu>
-      </q-btn>
+          <q-tooltip>
+            {{ $t("presentationStudio.toolbar.layouts.title") }}
+          </q-tooltip>
 
-      <q-separator vertical class="q-mx-sm" />
+          <!-- layouts -->
+          <q-menu
+            v-model="showLayoutsMenu"
+            anchor="top left"
+            self="bottom left"
+            transition-show="jump-down"
+            transition-hide="jump-up"
+            :offset="[0, 16]"
+            class="q-pa-md bg-white"
+            max-height="70vh"
+            style="width: 424px"
+          >
+            <PresentationStudioToolbarTopLayouts v-close-popup />
+          </q-menu>
+        </q-btn>
+
+        <q-separator vertical class="q-mx-sm" />
+      </template>
 
       <!-- modes -->
       <PresentationStudioToolbarTopModes
+        :disabled="slide?.type !== SLIDE_TYPES.CONTENT"
         @switch-mode="$emit('switchMode', $event)"
         @add-image="$emit('addImage', $event)"
         @add-shape="$emit('addShape', $event)"
@@ -69,7 +72,7 @@
 
       <!-- text customization -->
       <PresentationStudioToolbarTopCustomizationText
-        v-if="mode === MODES_OPTIONS.text || mode === MODES_OPTIONS.textEditing"
+        v-if="[MODES_OPTIONS.text, MODES_OPTIONS.textEditing].includes(mode)"
       />
 
       <!-- shape customization -->
@@ -124,6 +127,8 @@ import PresentationStudioToolbarTopCustomizationShape from "components/presentat
 import PresentationStudioToolbarTopModes from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopModes.vue";
 import PresentationStudioToolbarTopLayouts from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopLayouts.vue";
 import { useQuasar } from "quasar";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { usePresentationsStore } from "stores/presentations";
 
 /*
  * variables
@@ -133,17 +138,21 @@ const $q = useQuasar();
 /*
  * stores
  */
-const drawingStore = useCanvasDrawingStore();
-const textStore = useCanvasTextStore();
-const shapeStore = useCanvasShapeStore();
-
+const canvasStore = useCanvasStore();
 const {
   mode,
   MODES_OPTIONS,
   selectedElement,
   selectedElementIndex,
   copiedElement,
-} = storeToRefs(useCanvasStore());
+} = storeToRefs(canvasStore);
+
+const drawingStore = useCanvasDrawingStore();
+const textStore = useCanvasTextStore();
+const shapeStore = useCanvasShapeStore();
+
+const presentationsStore = usePresentationsStore();
+const { slide } = storeToRefs(presentationsStore);
 
 /*
  * emits

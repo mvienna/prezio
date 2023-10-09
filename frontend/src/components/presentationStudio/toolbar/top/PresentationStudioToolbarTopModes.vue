@@ -7,6 +7,7 @@
       text-color="dark"
       round
       size="12px"
+      :disable="disabled"
       :class="mode === MODES_OPTIONS.drawing ? 'bg-grey-1' : ''"
       @click="$emit('switchMode', MODES_OPTIONS.drawing)"
     >
@@ -22,6 +23,7 @@
       text-color="dark"
       round
       size="12px"
+      :disable="disabled"
       :class="mode === MODES_OPTIONS.text ? 'bg-grey-1' : ''"
       @click="
         $emit('switchMode', MODES_OPTIONS.text);
@@ -40,6 +42,7 @@
       text-color="dark"
       round
       size="12px"
+      :disable="disabled"
       @click="
         $emit('switchMode', MODES_OPTIONS.media);
         showSelectMediaDialog = true;
@@ -70,6 +73,7 @@
       unelevated
       text-color="dark"
       round
+      :disable="disabled"
       size="12px"
       @click="$emit('switchMode', MODES_OPTIONS.mediaEmoji)"
     >
@@ -112,6 +116,7 @@
       unelevated
       text-color="dark"
       round
+      :disable="disabled"
       size="12px"
     >
       <q-menu
@@ -164,6 +169,10 @@ import { useI18n } from "vue-i18n";
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
+
+defineProps({
+  disabled: { type: Boolean },
+});
 
 /*
  * emits

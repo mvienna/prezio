@@ -220,41 +220,33 @@ export default {
           title: "Types",
 
           options: {
-            content: {
-              title: "Content",
-
-              free: "Free",
-              qr: "QR code",
-              video: "Video",
-            },
+            content: "Content",
+            qr: "QR code",
+            video: "Video",
 
             /*
              * quizzes & games
              */
-            quizzesAndGames: {
-              title: "Quizzes & Games",
+            quizzesAndGames: "Quizzes & Games",
 
-              pickAnswer: "Pick Answer",
-              pickImage: "Pick Image",
-              typeAnswer: "Type Answer",
-              spinnerWheel: "Spinner Wheel",
-              matchPairs: "Match Pairs",
-              correctOrder: "Correct Order",
-            },
+            pick_answer: "Pick Answer",
+            pick_image: "Pick Image",
+            type_answer: "Type Answer",
+            spinner_wheel: "Spinner Wheel",
+            match_pairs: "Match Pairs",
+            correct_order: "Correct Order",
 
             /*
              * opinion
              */
-            userAnswer: {
-              title: "Opinion & Question - Answer",
+            userAnswer: "Opinion & Question - Answer",
 
-              poll: "Poll",
-              openEnded: "Open Ended",
-              wordCloud: "Word Cloud",
-              scales: "Scales",
-              questionsAndAnswers: "Questions - Answers",
-              brainStorm: "Brainstorm",
-            },
+            poll: "Poll",
+            open_ended: "Open Ended",
+            word_cloud: "Word Cloud",
+            scales: "Scaled",
+            qna: "Q&A",
+            brain_storm: "Brain Storm",
           },
         },
 

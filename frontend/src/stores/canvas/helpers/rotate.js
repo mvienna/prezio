@@ -1,6 +1,8 @@
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { updateSelectedElement } from "stores/canvas/helpers/select";
+import { usePresentationsStore } from "stores/presentations";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
 const canvasStore = useCanvasStore();
 const {
@@ -12,10 +14,18 @@ const {
   rotationHandle,
 } = storeToRefs(canvasStore);
 
+const presentationsStore = usePresentationsStore();
+const { slide } = storeToRefs(presentationsStore);
+
 /*
  * get rotation handle
  */
 export const getRotationHandle = () => {
+  /*
+   * allow only for content slide
+   */
+  if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
+
   /*
    * compute props
    */

@@ -161,41 +161,33 @@ export default {
           title: "Типы",
 
           options: {
-            content: {
-              title: "Контент",
-
-              free: "Свободный",
-              qr: "QR код",
-              video: "Видео",
-            },
+            content: "Конент",
+            qr: "QR код",
+            video: "Видео",
 
             /*
              * quizzes & games
              */
-            quizzesAndGames: {
-              title: "Игры & Викторины",
+            quizzesAndGames: "Игры & Викторины",
 
-              pickAnswer: "Выбор ответа",
-              pickImage: "Выбор изображения",
-              typeAnswer: "Ввод ответа",
-              spinnerWheel: "Колесо фортуны",
-              matchPairs: "Совпадающие пары",
-              correctOrder: "Правильный порядок",
-            },
+            pick_answer: "Выбор ответа",
+            pick_image: "Выбор изображения",
+            type_answer: "Ввод ответа",
+            spinner_wheel: "Колесо фортуны",
+            match_pairs: "Совпадающие пары",
+            correct_order: "Правильный порядок",
 
             /*
              * opinion
              */
-            userAnswer: {
-              title: "Мнение & Вопрос - Ответ",
+            userAnswer: "Мнение & Вопрос - Ответ",
 
-              poll: "Опрос",
-              openEnded: "Открытый ответ",
-              wordCloud: "Облако слов",
-              scales: "Графики",
-              questionsAndAnswers: "Вопрос - Ответ",
-              brainStorm: "Брейншторм",
-            },
+            poll: "Опрос",
+            open_ended: "Открытый ответ",
+            word_cloud: "Облако слов",
+            scales: "Графики",
+            qna: "Вопрос - Ответ",
+            brain_storm: "Брейншторм",
           },
         },
 

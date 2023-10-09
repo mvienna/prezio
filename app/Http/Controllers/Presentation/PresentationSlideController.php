@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Presentation;
 
+use App\Http\Controllers\Controller;
 use App\Models\Presentation;
 use App\Models\PresentationSlide;
 use Illuminate\Http\JsonResponse;
@@ -15,6 +16,7 @@ class PresentationSlideController extends Controller
             'presentation_id' => $presentation->id,
             'canvas_data' => $request->canvas_data,
             'order' => $request->order,
+            'type' => $request->type,
         ]);
 
         return $this->jsonResponse($slide->toArray());
@@ -26,6 +28,7 @@ class PresentationSlideController extends Controller
             'canvas_data' => $request->canvas_data,
             'preview' => $request->preview,
             'order' => $request->order,
+            'type' => $request->type,
             'notes' => $request->notes,
             'animation' => $request->animation,
         ]);

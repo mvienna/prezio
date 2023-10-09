@@ -104,101 +104,101 @@
           </div>
         </q-item>
 
-        <q-separator class="q-my-sm" />
+        <q-separator v-if="elements.length > 1" class="q-my-sm" />
 
-        <!-- move up-->
-        <q-item
-          v-if="selectedElementIndex !== 0"
-          class="items-center q-py-sm"
-          clickable
-          dense
-          v-close-popup
-          @click="moveLayer(undefined, 1)"
-        >
-          <q-icon name="r_north" class="q-mr-sm" size="xs" />
-          <div>
-            {{ $t("presentationStudio.elementsContextMenu.moveUp") }}
-          </div>
+        <template v-if="selectedElementIndex !== 0">
+          <!-- move up-->
+          <q-item
+            class="items-center q-py-sm"
+            clickable
+            dense
+            v-close-popup
+            @click="moveLayer(undefined, 1)"
+          >
+            <q-icon name="r_north" class="q-mr-sm" size="xs" />
+            <div>
+              {{ $t("presentationStudio.elementsContextMenu.moveUp") }}
+            </div>
 
-          <q-space />
+            <q-space />
 
-          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
-            <div v-if="isMac">⌘</div>
-            <div v-else>Ctrl</div>
-            <div>↑</div>
-          </div>
-        </q-item>
+            <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+              <div v-if="isMac">⌘</div>
+              <div v-else>Ctrl</div>
+              <div>↑</div>
+            </div>
+          </q-item>
 
-        <!-- move to the top-->
-        <q-item
-          v-if="selectedElementIndex !== 0"
-          class="items-center q-py-sm"
-          clickable
-          dense
-          v-close-popup
-          @click="moveLayerToTheTop()"
-        >
-          <q-icon name="r_vertical_align_top" class="q-mr-sm" size="xs" />
-          <div>
-            {{ $t("presentationStudio.elementsContextMenu.moveToTheTop") }}
-          </div>
+          <!-- move to the top-->
+          <q-item
+            class="items-center q-py-sm"
+            clickable
+            dense
+            v-close-popup
+            @click="moveLayerToTheTop()"
+          >
+            <q-icon name="r_vertical_align_top" class="q-mr-sm" size="xs" />
+            <div>
+              {{ $t("presentationStudio.elementsContextMenu.moveToTheTop") }}
+            </div>
 
-          <q-space />
+            <q-space />
 
-          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
-            <div v-if="isMac">⌘</div>
-            <div v-else>Ctrl</div>
-            <div>⇧</div>
-            <div>↑</div>
-          </div>
-        </q-item>
+            <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+              <div v-if="isMac">⌘</div>
+              <div v-else>Ctrl</div>
+              <div>⇧</div>
+              <div>↑</div>
+            </div>
+          </q-item>
+        </template>
 
-        <!-- move down -->
-        <q-item
-          v-if="selectedElementIndex !== elements.length - 1"
-          class="items-center q-py-sm"
-          clickable
-          dense
-          v-close-popup
-          @click="moveLayer(undefined, -1)"
-        >
-          <q-icon name="r_south" class="q-mr-sm" size="xs" />
-          <div>
-            {{ $t("presentationStudio.elementsContextMenu.moveDown") }}
-          </div>
+        <template v-if="selectedElementIndex !== elements.length - 1">
+          <!-- move down -->
+          <q-item
+            class="items-center q-py-sm"
+            clickable
+            dense
+            v-close-popup
+            @click="moveLayer(undefined, -1)"
+          >
+            <q-icon name="r_south" class="q-mr-sm" size="xs" />
+            <div>
+              {{ $t("presentationStudio.elementsContextMenu.moveDown") }}
+            </div>
 
-          <q-space />
+            <q-space />
 
-          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
-            <div v-if="isMac">⌘</div>
-            <div v-else>Ctrl</div>
-            <div>↓</div>
-          </div>
-        </q-item>
+            <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+              <div v-if="isMac">⌘</div>
+              <div v-else>Ctrl</div>
+              <div>↓</div>
+            </div>
+          </q-item>
 
-        <!-- move to the bottom -->
-        <q-item
-          v-if="selectedElementIndex !== elements.length - 1"
-          class="items-center q-py-sm"
-          clickable
-          dense
-          v-close-popup
-          @click="moveLayerToTheBottom()"
-        >
-          <q-icon name="r_vertical_align_bottom" class="q-mr-sm" size="xs" />
-          <div>
-            {{ $t("presentationStudio.elementsContextMenu.moveToTheBottom") }}
-          </div>
+          <!-- move to the bottom -->
+          <q-item
+            class="items-center q-py-sm"
+            clickable
+            dense
+            v-close-popup
+            @click="moveLayerToTheBottom()"
+          >
+            <q-icon name="r_vertical_align_bottom" class="q-mr-sm" size="xs" />
+            <div>
+              {{ $t("presentationStudio.elementsContextMenu.moveToTheBottom") }}
+            </div>
 
-          <q-space />
+            <q-space />
 
-          <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
-            <div v-if="isMac">⌘</div>
-            <div v-else>Ctrl</div>
-            <div>⇧</div>
-            <div>↓</div>
-          </div>
-        </q-item>
+            <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+              <div v-if="isMac">⌘</div>
+              <div v-else>Ctrl</div>
+              <div>⇧</div>
+              <div>↓</div>
+            </div>
+          </q-item>
+        </template>
 
         <q-separator class="q-my-sm" />
 

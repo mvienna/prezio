@@ -28,7 +28,7 @@
           <PresentationStudioTabsTypesTab
             disable-layout-selection
             v-close-popup
-            @select="handleAddingNewSlide()"
+            @select="handleAddingNewSlide($event)"
           />
         </q-menu>
       </q-btn>
@@ -93,16 +93,39 @@
                 showSlideContextMenu[index] = !showSlideContextMenu[index]
               "
             >
+              <!-- live preview -->
               <canvas
                 v-show="element.isLivePreview"
                 :id="`canvas_slide_preview_${index}`"
               />
 
+              <!-- saved preview -->
               <q-img
                 v-show="!element.isLivePreview"
                 :src="element.preview"
                 fit="cover"
               />
+
+              <!-- slide type -->
+              <div
+                v-if="element.type !== SLIDE_TYPES.CONTENT"
+                class="absolute-center"
+              >
+                <div class="row justify-center">
+                  <q-img
+                    :src="`/assets/icons/temp/slideTypes/${element.type}.svg`"
+                    style="width: 48px; height: 48px; background: transparent"
+                  />
+                </div>
+
+                <div class="text-semibold text-primary">
+                  {{
+                    $t(
+                      `presentationLayout.rightDrawer.tabs.types.options.${element.type}`
+                    )
+                  }}
+                </div>
+              </div>
 
               <!-- actions -->
               <div class="absolute-right q-pt-sm q-pr-sm">
@@ -143,7 +166,7 @@
                           disable-layout-selection
                           v-close-popup
                           @select="
-                            handleAddingNewSlide();
+                            handleAddingNewSlide($event);
                             showSlideContextMenu[index] = false;
                           "
                         />
@@ -248,7 +271,7 @@
             <PresentationStudioTabsTypesTab
               disable-layout-selection
               v-close-popup
-              @select="handleAddingNewSlide()"
+              @select="handleAddingNewSlide($event)"
             />
           </q-menu>
         </q-card>
@@ -268,6 +291,7 @@ import { useQuasar } from "quasar";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
 /*
  * variables
@@ -379,7 +403,7 @@ const handleSlideSelection = async (newSlide) => {
   canvasStore.redrawCanvas(false, false, undefined, false);
 };
 
-const handleAddingNewSlide = async () => {
+const handleAddingNewSlide = async (type) => {
   canvasStore.saveSlidePreview();
   deselectElement();
 
@@ -387,44 +411,45 @@ const handleAddingNewSlide = async () => {
   presentationsStore.updateLocalSlide();
   presentationsStore.saveSlide(undefined, elements.value);
 
-  // TODO: check if slide type is content
-  const layoutDefaultElementProps = {
-    mode: MODES_OPTIONS.value.text,
-    isVisible: true,
-    isLocked: false,
-    fontFamily: customization.value.font,
-    lineHeight: customization.value.lineHeight,
-    fontWeight: "normal",
-    textDecoration: "none",
-    fontStyle: "normal",
-    textAlign: ALIGNMENT.horizontal.center,
-    verticalAlign: ALIGNMENT.vertical.top,
-    rotationAngle: 0,
+  let preparedElements = null;
 
-    /*
-     * editable
-     */
-    id: "layout-",
-    text: "",
+  if (type === SLIDE_TYPES.CONTENT) {
+    const layoutDefaultElementProps = {
+      mode: MODES_OPTIONS.value.text,
+      isVisible: true,
+      isLocked: false,
+      fontFamily: customization.value.font,
+      lineHeight: customization.value.lineHeight,
+      fontWeight: "normal",
+      textDecoration: "none",
+      fontStyle: "normal",
+      textAlign: ALIGNMENT.horizontal.left,
+      verticalAlign: ALIGNMENT.vertical.top,
+      rotationAngle: 0,
 
-    fontSize: "48px",
-    color: customization.value.color,
+      /*
+       * editable
+       */
+      id: "layout-",
+      text: "",
 
-    x: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100
-    ),
-    y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100
-    ),
+      fontSize: "48px",
+      color: customization.value.color,
 
-    width: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 90) / 100
-    ),
-    height: 96,
-  };
+      x: canvasStore.computeAdjustedSize(
+        (canvasStore.canvasRect().width * 5) / 100
+      ),
+      y: canvasStore.computeAdjustedSize(
+        (canvasStore.canvasRect().width * 5) / 100
+      ),
 
-  const layoutElements = [
-    {
+      width: canvasStore.computeAdjustedSize(
+        (canvasStore.canvasRect().width * 90) / 100
+      ),
+      height: canvasStore.computeAdjustedSize(30),
+    };
+
+    const titleElement = {
       ...layoutDefaultElementProps,
 
       id: "layout-title-top-titleAndBody",
@@ -433,18 +458,9 @@ const handleAddingNewSlide = async () => {
       color: "#313232",
       fontSize: "48px",
       fontWeight: "bold",
-      textAlign: ALIGNMENT.horizontal.left,
+    };
 
-      y: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100
-      ),
-
-      height: canvasStore.computeAdjustedSize(
-        ((48 / 2 + 48 / 8) * canvas.value.width) /
-          canvasStore.canvasRect().width
-      ),
-    },
-    {
+    const bodyElement = {
       ...layoutDefaultElementProps,
 
       id: "layout-body",
@@ -452,19 +468,18 @@ const handleAddingNewSlide = async () => {
 
       fontSize: "16px",
       color: "#808080",
-      textAlign: ALIGNMENT.horizontal.left,
 
-      y: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100 + 96
-      ),
+      y: titleElement.y + titleElement.height,
 
       height: canvasStore.computeAdjustedSize(
         (canvasStore.canvasRect().height * 65) / 100
       ),
-    },
-  ];
+    };
 
-  await presentationsStore.addNewSlide(layoutElements);
+    preparedElements = [titleElement, bodyElement];
+  }
+
+  await presentationsStore.addNewSlide(preparedElements, type);
   await canvasStore.setElementsFromSlide();
 
   canvasStore.renderSlidePreview();

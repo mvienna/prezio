@@ -133,7 +133,7 @@
               v-if="
                 ![MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
                   element.mode
-                )
+                ) && slide?.type === SLIDE_TYPES.CONTENT
               "
               :icon="element.isLocked ? 'r_lock' : 'r_lock_open'"
               flat
@@ -156,6 +156,7 @@
 
             <!-- delete button -->
             <q-btn
+              v-if="slide?.type === SLIDE_TYPES.CONTENT"
               icon="r_delete"
               flat
               round
@@ -234,6 +235,8 @@ import { ref } from "vue";
 import draggable from "vuedraggable/src/vuedraggable";
 import { deleteElement, selectElement } from "stores/canvas/helpers/select";
 import { textColorOnAColoredBackground } from "src/helpers/colorUtils";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { usePresentationsStore } from "stores/presentations";
 
 /*
  * variables
@@ -245,6 +248,9 @@ const { t } = useI18n({ useScope: "global" });
  */
 const canvasStore = useCanvasStore();
 const { elements, selectedElement, MODES_OPTIONS } = storeToRefs(canvasStore);
+
+const presentationsStore = usePresentationsStore();
+const { slide } = storeToRefs(presentationsStore);
 
 /*
  * drag

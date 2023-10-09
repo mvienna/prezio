@@ -1,9 +1,9 @@
-export const languages = {
-  russian: {
+export const LANGUAGES = {
+  RUSSIAN: {
     label: "Русский",
     value: "ru-RU",
   },
-  english: {
+  ENGLISH: {
     label: "English",
     value: "en-US",
   },

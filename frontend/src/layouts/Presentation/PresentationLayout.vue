@@ -6,9 +6,10 @@
     <!-- left drawer (slides) -->
     <PresentationLayoutDrawerLeft />
 
-    <!-- right drawer (slides) -->
+    <!-- right drawer (tabs) -->
     <PresentationLayoutDrawerRight />
 
+    <!-- router view -->
     <q-page-container>
       <router-view />
     </q-page-container>

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Presentation;
 
+use App\Http\Controllers\Controller;
 use App\Models\Presentation;
 use App\Models\PresentationSlide;
 use Illuminate\Http\JsonResponse;
@@ -75,7 +76,7 @@ class PresentationController extends Controller
             throw new \Exception(trans('errors.accessDenied'));
         }
 
-        $presentation->load('slides', 'slides.template', 'preview');
+        $presentation->load('slides', 'slides.template', 'slides.answers', 'preview');
         return $this->jsonResponse($presentation->toArray());
     }
 

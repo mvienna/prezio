@@ -4,6 +4,8 @@ import { updateSelectedElement } from "stores/canvas/helpers/select";
 import { removeMagnet, useMagnet } from "stores/canvas/helpers/magnet";
 import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { usePresentationsStore } from "stores/presentations";
 
 const canvasStore = useCanvasStore();
 const {
@@ -20,10 +22,18 @@ const {
 const textStore = useCanvasTextStore();
 const { input } = storeToRefs(textStore);
 
+const presentationsStore = usePresentationsStore();
+const { slide } = storeToRefs(presentationsStore);
+
 /*
  * get resize handle
  */
 export const getResizeHandle = () => {
+  /*
+   * allow only for content slide
+   */
+  if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
+
   /*
    * compute props
    */

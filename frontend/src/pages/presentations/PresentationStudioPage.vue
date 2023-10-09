@@ -36,11 +36,14 @@
       leave-active-class="animated zoomOut"
     >
       <PresentationStudioElementsContextMenu
-        v-if="showElementsContextMenu"
+        v-if="showElementsContextMenu && slide?.type === SLIDE_TYPES.CONTENT"
         :x="elementsContextMenuPosition.x"
         :y="elementsContextMenuPosition.y"
       />
     </transition>
+
+    <!-- addons -->
+    <PresentationStudioAddons v-if="isCanvasReady" />
 
     <!-- bottom toolbar -->
     <PresentationStudioToolbarBottom
@@ -108,6 +111,8 @@ import {
   paste,
 } from "stores/canvas/helpers/elementsContextMenuActions";
 import PresentationStudioElementsContextMenu from "components/presentationStudio/PresentationStudioElementsContextMenu.vue";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import PresentationStudioAddons from "components/presentationStudio/addons/PresentationStudioAddons.vue";
 
 /*
  * variables
@@ -174,6 +179,7 @@ const shapeStore = useCanvasShapeStore();
  * canvas setup
  */
 const canvasRef = ref();
+const isCanvasReady = ref(false);
 
 onBeforeMount(() => {
   $q.loading.show({
@@ -236,6 +242,7 @@ onMounted(async () => {
   window.addEventListener("beforeunload", handleUnload);
 
   $q.loading.hide();
+  isCanvasReady.value = true;
 });
 
 onUnmounted(() => {
@@ -276,10 +283,11 @@ const handleKeyDownEvent = (event) => {
 
     // paste element
     if (event.key === "v") {
-      if (mode.value !== MODES_OPTIONS.value.textEditing) {
-        event.preventDefault();
-        paste();
-      }
+      if (mode.value === MODES_OPTIONS.value.textEditing) return;
+      if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
+
+      event.preventDefault();
+      paste();
     }
 
     if (selectedElement.value) {
@@ -291,12 +299,16 @@ const handleKeyDownEvent = (event) => {
 
       // cut element
       if (event.key === "x" && !event.shiftKey) {
+        if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
+
         event.preventDefault();
         cut();
       }
 
       // cut element
       if (event.key === "d") {
+        if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
+
         event.preventDefault();
         duplicate();
       }
@@ -333,6 +345,7 @@ const handleKeyDownEvent = (event) => {
     // delete selected element
     if (event.key === "Delete" || event.key === "Backspace") {
       if (mode.value === MODES_OPTIONS.value.textEditing) return;
+      if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
 
       event.preventDefault();
       deleteElement();
@@ -462,6 +475,11 @@ const handleCanvasMouseDown = () => {
    * start dragging
    */
   if (selectedElement.value) {
+    /*
+     * allow only for content slide
+     */
+    if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
+
     // start resizing
     if (resizeHandle.value) {
       startResizing();
@@ -506,6 +524,7 @@ const handleCanvasMouseMove = (event) => {
   isElementHovered.value = !!hoveredElement;
 
   if (hoveredElement && hoveredElement?.id !== selectedElement.value?.id) {
+    canvasStore.redrawCanvas(false);
     canvasStore.drawBorder(
       hoveredElement.x,
       hoveredElement.y,

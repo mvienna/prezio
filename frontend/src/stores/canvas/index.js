@@ -6,6 +6,7 @@ import {
 } from "src/constants/canvas/canvasVariables";
 import { usePresentationsStore } from "stores/presentations";
 import { date } from "quasar";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
 const presentationsStore = usePresentationsStore();
 const { presentation, slide, lastSavedAt, lastChangedAt } =
@@ -953,6 +954,11 @@ export const useCanvasStore = defineStore("canvas", {
       this.ctx.strokeStyle = this.selectedElementBorder.borderColor;
       this.ctx.lineWidth = borderWidth;
       this.ctx.strokeRect(x, y, width, height);
+
+      /*
+       * resizing & rotation handles only for content slide
+       */
+      if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
 
       /*
        * resize handles

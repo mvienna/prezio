@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Presentation;
 
 use App\Enums\PresentationSlideTemplateCategoryType;
+use App\Http\Controllers\Controller;
 use App\Models\PresentationSlideTemplate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
