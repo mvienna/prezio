@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Presentation;
 
+use App\Models\BaseModel;
 use App\Models\Relations\HasManyPresentationSlides;
 use App\Models\Relations\HasOnePreview;
 use App\Traits\ByUserScoped;

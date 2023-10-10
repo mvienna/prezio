@@ -2,7 +2,7 @@
 
 namespace App\Models\Relations;
 
-use App\Models\Presentation;
+use App\Models\Presentation\Presentation;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait HasManyPresentations

@@ -2,7 +2,7 @@
 
 namespace App\Models\Relations;
 
-use App\Models\PresentationSlideTemplate;
+use App\Models\Presentation\PresentationSlideTemplate;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 trait HasOnePresentationSlideTemplate

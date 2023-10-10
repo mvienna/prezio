@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Presentation;
 
+use App\Models\BaseModel;
 use App\Models\Relations\HasManyPresentationSlideAnswers;
 use App\Models\Relations\HasOnePresentationSlideTemplate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Presentation;
 
 use App\Http\Controllers\Controller;
-use App\Models\PresentationSlide;
-use App\Models\PresentationSlideAnswer;
+use App\Models\Presentation\PresentationSlide;
+use App\Models\Presentation\PresentationSlideAnswer;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

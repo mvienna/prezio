@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Presentation;
 
 use App\Enums\PresentationSlideTemplateCategoryType;
 use App\Http\Controllers\Controller;
-use App\Models\PresentationSlideTemplate;
+use App\Models\Presentation\PresentationSlideTemplate;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

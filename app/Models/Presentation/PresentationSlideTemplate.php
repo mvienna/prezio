@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Presentation;
 
+use App\Models\BaseModel;
 use App\Models\Relations\HasOnePresentationSlide;
 use App\Models\Relations\HasOneUser;
 use App\Traits\ByPrezioScoped;
