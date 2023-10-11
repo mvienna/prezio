@@ -37,7 +37,7 @@
             backdrop-filter: blur(4px);
           "
           :disable="slideIndex === 0"
-          @click="handleChangeSlides('backward')"
+          @click="handleSlideChange('backward')"
         >
           <q-tooltip
             anchor="center right"
@@ -77,7 +77,7 @@
             backdrop-filter: blur(4px);
           "
           :disable="slideIndex === presentation.slides.length - 1"
-          @click="handleChangeSlides('forward')"
+          @click="handleSlideChange('forward')"
         >
           <q-tooltip
             anchor="center left"
@@ -163,7 +163,7 @@ const slideIndex = computed(() => {
 });
 
 /*
- * handle change slides
+ * handle slides change
  */
 onBeforeMount(() => {
   document.addEventListener("keydown", handleKeyDownEvent);
@@ -177,17 +177,17 @@ const handleKeyDownEvent = (event) => {
   if (event.ctrlKey || event.metaKey) {
     if (event.keyCode === 37) {
       event.preventDefault();
-      handleChangeSlides("backward");
+      handleSlideChange("backward");
     }
 
     if (event.keyCode === 39) {
       event.preventDefault();
-      handleChangeSlides("forward");
+      handleSlideChange("forward");
     }
   }
 };
 
-const handleChangeSlides = async (direction) => {
+const handleSlideChange = async (direction) => {
   const newSlide =
     presentation.value.slides?.[
       slideIndex.value + (direction === "forward" ? 1 : -1)

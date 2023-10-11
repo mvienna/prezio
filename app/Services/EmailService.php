@@ -4,6 +4,9 @@ namespace App\Services;
 
 class EmailService
 {
+    /**
+     * @throws \Exception
+     */
     public static function getRecipient($originalRecipient)
     {
         if (config('app.env') !== 'production') {

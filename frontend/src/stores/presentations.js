@@ -4,6 +4,11 @@ import { api } from "boot/axios";
 export const usePresentationsStore = defineStore("presentations", {
   state: () => ({
     /*
+     * room
+     */
+    room: null,
+
+    /*
      * folders
      */
     folders: [],

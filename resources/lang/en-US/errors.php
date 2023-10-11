@@ -17,5 +17,8 @@ return [
     'media' => [
         'fileNotFound' => 'File not found',
     ],
-    'accessDenied' => 'Access denied'
+    'room' => [
+        'notFound' => 'Room not found',
+    ],
+    'accessDenied' => 'Access denied',
 ];

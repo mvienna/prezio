@@ -4,10 +4,11 @@ namespace App\Models\Presentation;
 
 use App\Models\BaseModel;
 use App\Models\Relations\HasManyPresentationSlideAnswers;
+use App\Models\Relations\HasOnePresentation;
 use App\Models\Relations\HasOnePresentationSlideTemplate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PresentationSlide extends BaseModel
 {
-    use HasFactory, HasOnePresentationSlideTemplate, HasManyPresentationSlideAnswers;
+    use HasFactory, HasOnePresentationSlideTemplate, HasManyPresentationSlideAnswers, HasOnePresentation;
 }

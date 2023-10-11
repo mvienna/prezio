@@ -5,7 +5,7 @@
       <q-btn
         unelevated
         round
-        :href="ROUTE_PATHS.PRESENTATIONS.INDEX"
+        :href="ROUTE_PATHS.PRESENTATIONS_BROWSER"
         text-color="grey-5"
         size="10px"
       >
@@ -176,15 +176,31 @@
           />
         </q-dialog>
 
-        <!-- run -->
+        <!-- room -->
         <q-btn
+          v-if="!presentation?.room"
           color="primary"
           unelevated
           no-caps
-          disable
           no-wrap
           icon-right="r_play_arrow"
           :label="$t('presentationLayout.header.run')"
+          class="text-semibold"
+          @click="startPresenting()"
+        />
+
+        <q-btn
+          v-else
+          color="green"
+          unelevated
+          no-caps
+          no-wrap
+          :to="
+            clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
+            presentation.room.token
+          "
+          :label="$t('presentationLayout.header.open')"
+          icon-right="r_wifi_tethering"
           class="text-semibold"
         />
 
@@ -205,6 +221,14 @@ import { useCanvasStore } from "stores/canvas";
 import { ref } from "vue";
 import PresentationSettings from "components/presentationStudio/settings/PresentationSettings.vue";
 import PresentationStudioPreviewPresentation from "components/preview/PresentationStudioPreview.vue";
+import { api } from "boot/axios";
+import { useRouter } from "vue-router";
+import { clearRoutePathFromProps } from "src/helpers/routeUtils";
+
+/*
+ * variables
+ */
+const router = useRouter();
 
 /*
  * stores
@@ -225,4 +249,55 @@ const { elements } = storeToRefs(canvasStore);
  * dialogs
  */
 const showSettingsDialog = ref(false);
+
+/*
+ * room
+ */
+const startPresenting = () => {
+  api
+    .post(`/presentation/${presentation.value.id}/room`)
+    .then((response) => {
+      router.push(
+        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
+          response.data.token
+      );
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 </script>
+
+<style scoped lang="scss">
+.pulsing_circle {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  background-color: $white;
+  border-radius: 50%;
+  animation: pulse 1s infinite alternate;
+}
+
+.pulsing_circle::before,
+.pulsing_circle::after {
+  content: "";
+  position: absolute;
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  animation: inherit;
+}
+
+.pulsing_circle::before {
+  animation-delay: 0.5s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.8);
+  }
+}
+</style>

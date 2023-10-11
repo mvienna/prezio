@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Presentation;
 use App\Http\Controllers\Controller;
 use App\Models\Presentation\Presentation;
 use App\Models\Presentation\PresentationSlide;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -46,20 +47,26 @@ class PresentationSlideController extends Controller
         }
 
         $presentation->load('slides');
-
         return $this->jsonResponse($presentation->toArray());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function destroy (Presentation $presentation, PresentationSlide $slide): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
+            throw new \Exception(trans('errors.accessDenied'));
+        }
+
         $slide->load('template');
         if ($slide->template) {
             $slide->template->delete();
         }
 
         $slide->delete();
-        $presentation->load('slides');
-
         return $this->successResponse();
     }
 }

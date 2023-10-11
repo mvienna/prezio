@@ -1,8 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { ROUTE_PATHS } from "src/constants/routes";
-import Echo from "laravel-echo";
-import Pusher from "pusher-js";
 
 export const useAuthStore = defineStore("auth", {
   state: () => {
@@ -31,17 +29,6 @@ export const useAuthStore = defineStore("auth", {
           localStorage.setItem("token", response.data.token);
 
           this.setUserCredentialsForDev(credentials);
-
-          /*
-           * web sockets
-           */
-          try {
-            this.initEcho(response.data.token).then(() => {
-              console.log("init echo: ", window.Echo);
-            });
-          } catch (e) {
-            console.log("echo error: ", e);
-          }
         })
         .catch((error) => {
           throw error;
@@ -90,35 +77,6 @@ export const useAuthStore = defineStore("auth", {
       });
 
       return response.data;
-    },
-
-    /*
-     *
-     */
-    async initEcho(token) {
-      window.Pusher = Pusher;
-      window.Echo = new Echo({
-        broadcaster: "pusher",
-        key: process.env.PUSHER_APP_KEY,
-        cluster: process.env.PUSHER_APP_CLUSTER,
-        authEndpoint: process.env.PUSHER_APP_ENDPOINT,
-        wsHost: process.env.PUSHER_APP_WS_HOST,
-        encrypted: !process.env.DEV,
-        wsPort: 6001, // 80,
-        wssPort: 6001, // 443,
-        forceTLS: !process.env.DEV,
-        disableStats: true,
-        enabledTransports: ["ws"],
-        disabledTransports: ["sockjs", "xhr_polling", "xhr_streaming"], // can be removed
-        namespace: "",
-        auth: {
-          // withCredentials: true,
-          headers: {
-            Referer: window.location.hostname,
-            Authorization: "Bearer " + token,
-          },
-        },
-      });
     },
 
     /*

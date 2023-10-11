@@ -17,5 +17,8 @@ return [
     'media' => [
         'fileNotFound' => 'Файл не найден',
     ],
+    'room' => [
+        'notFound' => 'Комната не найдена',
+    ],
     'accessDenied' => 'Доступ запрещен'
 ];

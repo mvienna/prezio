@@ -28,7 +28,10 @@ class PresentationFolderController extends Controller
         return $this->jsonResponse($folder->toArray());
     }
 
-    public function update(PresentationFolder $folder, Request $request)
+    /**
+     * @throws \Exception
+     */
+    public function update(PresentationFolder $folder, Request $request): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
@@ -45,6 +48,9 @@ class PresentationFolderController extends Controller
         return $this->jsonResponse($folder->toArray());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function destroy(PresentationFolder $folder): JsonResponse
     {
         /** @var User $user */
@@ -65,6 +71,9 @@ class PresentationFolderController extends Controller
         return $this->jsonResponse($folders->toArray());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function show(PresentationFolder $folder): JsonResponse
     {
         /** @var User $user */

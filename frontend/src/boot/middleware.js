@@ -1,6 +1,9 @@
 import { useAuthStore } from "stores/auth";
 import { storeToRefs } from "pinia";
 import { ROUTE_PATHS } from "src/constants/routes";
+import { clearRoutePathFromProps } from "src/helpers/routeUtils";
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 
 export default async ({ app, router }) => {
   const userStore = useAuthStore();
@@ -42,6 +45,34 @@ export default async ({ app, router }) => {
   }
 
   /*
+   * web sockets
+   */
+  window.Pusher = Pusher;
+  window.Echo = new Echo({
+    broadcaster: "pusher",
+    key: process.env.PUSHER_APP_KEY,
+    cluster: process.env.PUSHER_APP_CLUSTER,
+    wsHost: process.env.PUSHER_HOST,
+    wsPort: process.env.PUSHER_PORT,
+    encrypted: false,
+    forceTLS: !process.env.DEV,
+    disableStats: true,
+
+    // authEndpoint: process.env.pusherAppEndPoint,
+    // wssPort: process.env.DEV ? 6001 : 443,
+    // enabledTransports: ['ws'],
+    // disabledTransports: ['sockjs', 'xhr_polling', 'xhr_streaming'], // Can be removed
+    // namespace: '',
+    // auth: {
+    //   //withCredentials: true,
+    //   headers: {
+    //     Referer: window.location.hostname,
+    //     Authorization: 'Bearer ' + token,
+    //   },
+    // },
+  });
+
+  /*
    * route middleware
    */
   router.beforeEach(async (to, from, next) => {
@@ -49,7 +80,12 @@ export default async ({ app, router }) => {
      * not authenticated
      */
     if (userState.user.value === undefined || userState.user.value === null) {
-      if (!allowedUnauthenticatedPaths.includes(to.path)) {
+      if (
+        !allowedUnauthenticatedPaths.includes(to.path) &&
+        !to.path.includes(
+          clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM)
+        )
+      ) {
         next(ROUTE_PATHS.AUTH.LOGIN);
         return;
       } else {

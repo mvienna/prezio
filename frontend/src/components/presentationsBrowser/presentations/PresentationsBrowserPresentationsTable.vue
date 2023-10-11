@@ -302,8 +302,8 @@
 
                   <!-- folders options -->
                   <q-menu
-                    anchor="top right"
-                    self="top start"
+                    anchor="top left"
+                    self="top end"
                     transition-show="jump-left"
                     transition-hide="jump-right"
                     :offset="[16, 8]"
@@ -666,7 +666,7 @@ const presentationsColumns = [
 const handlePresentationClick = (event, item) => {
   if (!["I", "SPAN"].includes(event.target.nodeName)) {
     router.push(
-      clearRoutePathFromProps(ROUTE_PATHS.PRESENTATIONS.PRESENTATION) + item.id
+      clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) + item.id
     );
   }
 };
@@ -679,7 +679,7 @@ const showNewPresentationDialog = ref(false);
 const handleCreatingNewPresentation = (data) => {
   presentationsStore.createNewPresentation(data).then((response) => {
     router.push(
-      clearRoutePathFromProps(ROUTE_PATHS.PRESENTATIONS.PRESENTATION) +
+      clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
         response.data.id
     );
   });

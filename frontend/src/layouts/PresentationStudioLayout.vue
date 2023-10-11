@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import PresentationLayoutHeader from "layouts/Presentation/PresentationLayoutHeader.vue";
-import PresentationLayoutDrawerRight from "layouts/Presentation/PresentationLayoutDrawerRight.vue";
-import PresentationLayoutDrawerLeft from "layouts/Presentation/PresentationLayoutDrawerLeft.vue";
+import PresentationLayoutHeader from "components/layouts/presentation/studio/PresentationStudioLayoutHeader.vue";
+import PresentationLayoutDrawerRight from "components/layouts/presentation/studio/PresentationStudioLayoutDrawerRight.vue";
+import PresentationLayoutDrawerLeft from "components/layouts/presentation/studio/PresentationStudioLayoutDrawerLeft.vue";
 </script>

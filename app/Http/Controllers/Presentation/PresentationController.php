@@ -32,6 +32,9 @@ class PresentationController extends Controller
         return $this->jsonResponse($presentation->toArray());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function update(Presentation $presentation, Request $request): JsonResponse
     {
         /** @var User $user */
@@ -52,6 +55,9 @@ class PresentationController extends Controller
         return $this->jsonResponse($presentation->toArray());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function destroy(Presentation $presentation): JsonResponse
     {
         /** @var User $user */
@@ -81,7 +87,7 @@ class PresentationController extends Controller
             throw new \Exception(trans('errors.accessDenied'));
         }
 
-        $presentation->load('slides', 'slides.template', 'slides.answers', 'preview');
+        $presentation->load('slides', 'slides.template', 'slides.answers', 'preview', 'room');
         return $this->jsonResponse($presentation->toArray());
     }
 

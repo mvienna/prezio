@@ -8,6 +8,7 @@ import enMedia from "./en-US/media";
 import enLayouts from "./en-US/layouts";
 import enMyPresentations from "./en-US/myPresentations";
 import enPresentationStudio from "./en-US/presentationStudio";
+import enPresentationRoom from "./en-US/presentationRoom";
 
 /*
  * ru-RU
@@ -19,6 +20,7 @@ import ruMedia from "./ru-RU/media";
 import ruLayouts from "./ru-RU/layouts";
 import ruMyPresentations from "./ru-RU/myPresentations";
 import ruPresentationStudio from "./ru-RU/presentationStudio";
+import ruPresentationRoom from "./ru-RU/presentationRoom";
 
 export default {
   "en-US": {
@@ -29,6 +31,7 @@ export default {
     ...enLayouts,
     ...enMyPresentations,
     ...enPresentationStudio,
+    ...enPresentationRoom,
   },
   "ru-RU": {
     ...ruIndex,
@@ -38,5 +41,6 @@ export default {
     ...ruLayouts,
     ...ruMyPresentations,
     ...ruPresentationStudio,
+    ...ruPresentationRoom,
   },
 };

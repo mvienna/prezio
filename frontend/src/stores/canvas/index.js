@@ -318,7 +318,8 @@ export const useCanvasStore = defineStore("canvas", {
       saveSlide = true,
       forceSlideSave = false,
       elements = this.elements,
-      showHelpers = true
+      showHelpers = true,
+      renderSlidePreview = true
     ) {
       lastChangedAt.value = new Date();
 
@@ -404,7 +405,9 @@ export const useCanvasStore = defineStore("canvas", {
       /*
        * render live slide preview
        */
-      this.renderSlidePreview();
+      if (renderSlidePreview) {
+        this.renderSlidePreview();
+      }
 
       /*
        * stop if helpers render disabled

@@ -30,6 +30,9 @@ class PresentationSlideTemplateController extends Controller
         return $this->jsonResponse($template->toArray());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function update (PresentationSlideTemplate $slideTemplate, Request $request): JsonResponse
     {
         /** @var User $user */
@@ -48,6 +51,9 @@ class PresentationSlideTemplateController extends Controller
         return $this->jsonResponse($slideTemplate->toArray());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function destroy (PresentationSlideTemplate $slideTemplate): JsonResponse
     {
         /** @var User $user */

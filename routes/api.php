@@ -3,6 +3,7 @@
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Presentation\PresentationController;
 use App\Http\Controllers\Presentation\PresentationFolderController;
+use App\Http\Controllers\Presentation\PresentationRoomController;
 use App\Http\Controllers\Presentation\PresentationSlideAnswerController;
 use App\Http\Controllers\Presentation\PresentationSlideController;
 use App\Http\Controllers\Presentation\PresentationSlideTemplateController;
@@ -21,6 +22,11 @@ Route::post('/register', [AuthController::class, 'register']);
  */
 Route::post('/email/verification-code/send', [VerificationController::class, 'sendVerificationCode']);
 Route::post('/email/verification-code/check', [VerificationController::class, 'checkVerificationCode']);
+
+/*
+ * room
+ */
+Route::get('/room/{token}', [PresentationRoomController::class, 'show']);
 
 /*
  * authenticated
@@ -47,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
      * slide(s)
      * slide template(s)
      * slide answer
+     * room
      */
     Route::resource('/folder', PresentationFolderController::class)->only(['store', 'update', 'destroy', 'show']);
     Route::get('/folders', [PresentationFolderController::class, 'get']);
@@ -61,4 +68,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/slide-templates', [PresentationSlideTemplateController::class, 'get']);
 
     Route::resource('/presentation/slide/{slide}/answer', PresentationSlideAnswerController::class)->only(['store', 'destroy']);
+
+    Route::resource('/presentation/{presentation}/room', PresentationRoomController::class)->only(['store', 'update', 'destroy']);
 });

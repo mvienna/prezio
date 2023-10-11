@@ -44,6 +44,7 @@ export default {
     header: {
       preview: "Предпросмотр",
       run: "Запустить",
+      open: "Открыть",
     },
 
     leftDrawer: {

@@ -10,11 +10,7 @@
     />
 
     <!-- canvas -->
-    <div
-      class="canvas__wrapper q-pa-lg"
-      id="canvas__wrapper"
-      @click="handleClickOutsideOfCanvas"
-    >
+    <div class="canvas__wrapper q-pa-lg" @click="handleClickOutsideOfCanvas">
       <teleport
         :disabled="!isPresentationPreview"
         :to="isPresentationPreview ? '#presentationPreview' : 'body'"
@@ -208,7 +204,7 @@ onMounted(async () => {
         icon: "r_crisis_alert",
       });
 
-      router.push(ROUTE_PATHS.PRESENTATIONS.INDEX);
+      router.push(ROUTE_PATHS.PRESENTATIONS_BROWSER);
     });
 
   /*
@@ -375,7 +371,7 @@ const handleKeyDownEvent = (event) => {
 const handleUnload = (event) => {
   if (
     !router.currentRoute.value.path.includes(
-      clearRoutePathFromProps(ROUTE_PATHS.PRESENTATIONS.PRESENTATION)
+      clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO)
     )
   ) {
     return;

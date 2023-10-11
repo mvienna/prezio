@@ -20,12 +20,7 @@ export const ROUTE_PATHS = {
     PAYMENTS: "/user/payments",
   },
 
-  PRESENTATIONS: {
-    INDEX: "/presentations",
-    PRESENTATION: "/presentation/:presentation_id",
-    TEMPLATES: "/presentations/templates",
-    SHARED_WITH_ME: "/presentations/shared-with-me",
-  },
-
-  SUBSCRIPTION_PLANS: "/subscriptions-plans",
+  PRESENTATIONS_BROWSER: "/presentations",
+  PRESENTATION_STUDIO: "/presentation/:presentation_id",
+  PRESENTATION_ROOM: "/room/:token",
 };

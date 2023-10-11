@@ -66,7 +66,9 @@
           :key="item.name"
           :to="item.link"
           dense
+          :disable="item.disable"
           class="items-center justify-start q-py-md"
+          style="border-radius: 8px"
         >
           <q-icon
             :name="item.icon"
@@ -134,25 +136,28 @@ const drawerLinks = [
     name: "my_presentations",
     label: t("mainLayout.drawer.links.myPresentations"),
     icon: "r_home",
-    link: ROUTE_PATHS.PRESENTATIONS.INDEX,
+    link: ROUTE_PATHS.PRESENTATIONS_BROWSER,
   },
   {
     name: "templates",
     label: t("mainLayout.drawer.links.templates"),
     icon: "r_grid_view",
-    link: ROUTE_PATHS.PRESENTATIONS.TEMPLATES,
+    disable: true,
+    link: "",
   },
   {
     name: "shared_with_me",
     label: t("mainLayout.drawer.links.sharedWithMe"),
     icon: "r_share",
-    link: ROUTE_PATHS.PRESENTATIONS.SHARED_WITH_ME,
+    disable: true,
+    link: "",
   },
   {
     name: "subscription_plans",
     label: t("mainLayout.drawer.links.subscriptionPlans"),
     icon: "r_bolt",
-    link: ROUTE_PATHS.SUBSCRIPTION_PLANS,
+    disable: true,
+    link: "",
   },
 ];
 </script>

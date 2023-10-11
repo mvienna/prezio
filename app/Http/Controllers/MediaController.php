@@ -11,7 +11,7 @@ class MediaController extends Controller
     /*
      * store
      */
-    public function store (Request $request): jsonResponse
+    public function store(Request $request): jsonResponse
     {
         $modelType = $request->input('model_type');
         $modelId = $request->input('model_id');
@@ -77,7 +77,7 @@ class MediaController extends Controller
         return $this->errorResponse(trans('errors.media.fileNotFound'));
     }
 
-    public function moveToTrash (Request $request): JsonResponse
+    public function moveToTrash(Request $request): JsonResponse
     {
         $media = Media::find($request->file_id);
 

@@ -1,6 +1,11 @@
 import { ROUTE_PATHS } from "src/constants/routes";
 
 const routes = [
+  /*
+   * index
+   * dashboard
+   * presentations browser
+   */
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
@@ -11,16 +16,19 @@ const routes = [
       },
       {
         path: ROUTE_PATHS.DASHBOARD,
-        redirect: ROUTE_PATHS.PRESENTATIONS.INDEX,
+        redirect: ROUTE_PATHS.PRESENTATIONS_BROWSER,
       },
       {
-        path: ROUTE_PATHS.PRESENTATIONS.INDEX,
+        path: ROUTE_PATHS.PRESENTATIONS_BROWSER,
         component: () =>
           import("pages/presentations/PresentationsBrowserPage.vue"),
       },
     ],
   },
 
+  /*
+   * auth
+   */
   {
     path: "/",
     component: () => import("layouts/AuthLayout.vue"),
@@ -44,6 +52,9 @@ const routes = [
     ],
   },
 
+  /*
+   * user
+   */
   {
     path: "/",
     component: () => import("layouts/UserLayout.vue"),
@@ -63,18 +74,38 @@ const routes = [
     ],
   },
 
+  /*
+   * presentation studio
+   */
   {
     path: "/",
-    component: () => import("layouts/Presentation/PresentationLayout.vue"),
+    component: () => import("layouts/PresentationStudioLayout.vue"),
     children: [
       {
-        path: ROUTE_PATHS.PRESENTATIONS.PRESENTATION,
+        path: ROUTE_PATHS.PRESENTATION_STUDIO,
         component: () =>
           import("pages/presentations/PresentationStudioPage.vue"),
       },
     ],
   },
 
+  /*
+   * presentation room
+   */
+  {
+    path: "/",
+    component: () => import("layouts/PresentationRoomLayout.vue"),
+    children: [
+      {
+        path: ROUTE_PATHS.PRESENTATION_ROOM,
+        component: () => import("pages/presentations/PresentationRoomPage.vue"),
+      },
+    ],
+  },
+
+  /*
+   * 404
+   */
   {
     path: "/:catchAll(.*)*",
     component: () => import("pages/ErrorNotFound.vue"),

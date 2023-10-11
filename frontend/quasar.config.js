@@ -58,8 +58,8 @@ module.exports = configure(function (ctx) {
 
         PUSHER_APP_KEY: env.PUSHER_APP_KEY,
         PUSHER_APP_CLUSTER: env.PUSHER_APP_CLUSTER,
-        PUSHER_APP_ENDPOINT: env.PUSHER_APP_ENDPOINT,
-        PUSHER_APP_WS_HOST: env.PUSHER_APP_WS_HOST,
+        PUSHER_HOST: env.PUSHER_HOST,
+        PUSHER_PORT: env.PUSHER_PORT,
 
         baseURL: env.APP_URL,
       },

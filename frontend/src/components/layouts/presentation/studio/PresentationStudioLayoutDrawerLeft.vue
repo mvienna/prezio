@@ -88,7 +88,7 @@
               }`"
               @mouseover="hoveredSlideIndex = index"
               @mouseleave="hoveredSlideIndex = null"
-              @click="handleSlideSelection(element)"
+              @click="handleSlideChange(element)"
               @contextmenu.prevent="
                 showSlideContextMenu[index] = !showSlideContextMenu[index]
               "
@@ -391,7 +391,7 @@ const handleSlidesReorder = async () => {
  */
 const hoveredSlideIndex = ref(null);
 
-const handleSlideSelection = async (newSlide) => {
+const handleSlideChange = async (newSlide) => {
   if (slide.value.id === newSlide.id) return;
 
   canvasStore.saveSlidePreview();
