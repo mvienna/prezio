@@ -179,7 +179,7 @@ onMounted(async () => {
       await canvasStore.setElementsFromSlide();
       canvasStore.redrawCanvas(false, false, undefined, false, false);
     })
-    .listen("PresentationRoomTerminatedEvent", (event) => {
+    .listen("PresentationRoomTerminatedEvent", () => {
       if (isHost.value) {
         window.location =
           clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
@@ -229,15 +229,17 @@ onUnmounted(() => {
 });
 
 const handleKeyDownEvent = (event) => {
-  if (event.ctrlKey || event.metaKey) {
-    if (event.keyCode === 37) {
-      event.preventDefault();
-      handleSlideChange("backward");
-    }
+  if (isHost.value) {
+    if (event.ctrlKey || event.metaKey) {
+      if (event.keyCode === 37) {
+        event.preventDefault();
+        handleSlideChange("backward");
+      }
 
-    if (event.keyCode === 39) {
-      event.preventDefault();
-      handleSlideChange("forward");
+      if (event.keyCode === 39) {
+        event.preventDefault();
+        handleSlideChange("forward");
+      }
     }
   }
 };
