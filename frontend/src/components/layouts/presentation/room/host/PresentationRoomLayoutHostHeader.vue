@@ -47,7 +47,7 @@
         <!-- link -->
         <div
           class="ellipsis text-dark text-semibold room_link"
-          style="max-width: 30%"
+          style="width: 200px"
           @click="copyRoomLinkToClipboard()"
         >
           {{ roomLink }}
@@ -70,7 +70,7 @@
       <q-space />
 
       <!-- logo -->
-      <div style="width: 64px" class="q-mr-md">
+      <div style="min-width: 64px" class="q-mr-md">
         <q-img src="/logo_black.png" style="height: 32px" fit="contain" />
       </div>
 
