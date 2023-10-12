@@ -171,15 +171,22 @@ onMounted(async () => {
   /*
    * listen for updates
    */
-  window.Echo.channel(`public.room.${room.value.id}`)
-    .listen("PresentationRoomUpdatedEvent", async (event) => {
-      if (event.slide.id === slide.value.id) return;
+  if (!isHost.value) {
+    window.Echo.channel(`public.room.${room.value.id}`).listen(
+      "PresentationRoomUpdatedEvent",
+      async (event) => {
+        if (event.slide.id === slide.value.id) return;
 
-      await presentationsStore.setSlide(event.slide);
-      await canvasStore.setElementsFromSlide();
-      canvasStore.redrawCanvas(false, false, undefined, false, false);
-    })
-    .listen("PresentationRoomTerminatedEvent", () => {
+        await presentationsStore.setSlide(event.slide);
+        await canvasStore.setElementsFromSlide();
+        canvasStore.redrawCanvas(false, false, undefined, false, false);
+      }
+    );
+  }
+
+  window.Echo.channel(`public.room.${room.value.id}`).listen(
+    "PresentationRoomTerminatedEvent",
+    () => {
       if (isHost.value) {
         window.location =
           clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
@@ -187,7 +194,8 @@ onMounted(async () => {
       } else {
         router.push(ROUTE_PATHS.DASHBOARD);
       }
-    });
+    }
+  );
 
   /*
    * resize canvas
