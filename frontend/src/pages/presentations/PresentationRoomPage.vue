@@ -184,6 +184,9 @@ onMounted(async () => {
     );
   }
 
+  /*
+   * listen for termination
+   */
   window.Echo.channel(`public.room.${room.value.id}`).listen(
     "PresentationRoomTerminatedEvent",
     () => {

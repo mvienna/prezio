@@ -186,7 +186,7 @@
           icon-right="r_play_arrow"
           :label="$t('presentationLayout.header.run')"
           class="text-semibold"
-          @click="startPresenting()"
+          @click="handleCreatingPresentationRoom()"
         />
 
         <q-btn
@@ -202,6 +202,7 @@
           :label="$t('presentationLayout.header.open')"
           icon-right="r_wifi_tethering"
           class="text-semibold"
+          @click="openInFullscreen()"
         />
 
         <!-- user -->
@@ -253,7 +254,7 @@ const showSettingsDialog = ref(false);
 /*
  * room
  */
-const startPresenting = () => {
+const handleCreatingPresentationRoom = () => {
   api
     .post(`/presentation/${presentation.value.id}/room`)
     .then((response) => {
@@ -261,10 +262,16 @@ const startPresenting = () => {
         clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
           response.data.token
       );
+
+      openInFullscreen();
     })
     .catch((error) => {
       console.log(error);
     });
+};
+
+const openInFullscreen = () => {
+  document.documentElement.requestFullscreen();
 };
 </script>
 

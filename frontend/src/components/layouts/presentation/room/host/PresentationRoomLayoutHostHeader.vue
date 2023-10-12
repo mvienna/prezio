@@ -89,10 +89,10 @@
       <q-btn
         outline
         color="grey"
-        icon="r_fullscreen"
-        disable
+        :icon="isFullscreen ? 'r_fullscreen_exit' : 'r_fullscreen'"
         round
         size="10px"
+        @click="toggleFullscreen()"
       />
     </q-toolbar>
   </q-header>
@@ -154,6 +154,21 @@ const handleRoomTermination = () => {
     .catch((error) => {
       console.log(error);
     });
+};
+
+/*
+ * toggle fullscreen
+ */
+const isFullscreen = ref(true);
+
+const toggleFullscreen = () => {
+  if (document.fullscreenElement) {
+    isFullscreen.value = false;
+    document.exitFullscreen();
+  } else {
+    isFullscreen.value = true;
+    document.documentElement.requestFullscreen();
+  }
 };
 </script>
 
