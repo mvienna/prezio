@@ -198,7 +198,7 @@ const drawerLinks = [
 
 const roomId = ref();
 const roomSearchError = ref();
-const roomLinkPrefix = `${window.location.hostname}/room/`;
+const roomLinkPrefix = `${window.location.hostname}/`;
 
 const handleRoomSearch = () => {
   api
