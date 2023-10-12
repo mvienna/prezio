@@ -9,6 +9,7 @@ use App\Models\Presentation\Presentation;
 use App\Models\Presentation\PresentationRoom;
 use App\Models\Presentation\PresentationSlide;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -48,8 +49,11 @@ class PresentationRoomController extends Controller
             throw new \Exception(trans('errors.accessDenied'));
         }
 
+        $room->update([
+            'terminated_at' => Carbon::now(),
+        ]);
+
         event(new PresentationRoomTerminatedEvent($room));
-        $room->delete();
 
         return $this->successResponse();
     }
@@ -59,7 +63,7 @@ class PresentationRoomController extends Controller
      */
     public function show(string $token): JsonResponse
     {
-        $room = PresentationRoom::where('token', $token)->first();
+        $room = PresentationRoom::where('token', $token)->whereNull('terminated_at')->first();
         if (!$room) {
             throw new \Exception(trans('errors.room.notFound'));
         }
