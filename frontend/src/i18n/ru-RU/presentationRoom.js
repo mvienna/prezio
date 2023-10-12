@@ -7,11 +7,11 @@ export default {
       },
     },
     invitation: {
-      title: "ОТСКАНИРУЙТЕ",
+      title: "Сканируйте",
       otherOption: {
         or: "или",
-        url: "Перейдите на",
-        id: "И введите",
+        url: "Переходите на",
+        id: "И вводите",
       },
     },
   },

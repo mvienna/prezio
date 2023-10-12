@@ -7,7 +7,7 @@ export default {
       },
     },
     invitation: {
-      title: "SCAN QR",
+      title: "Scan the QR",
       otherOption: {
         or: "or",
         url: "Visit",
