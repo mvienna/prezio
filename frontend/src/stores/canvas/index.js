@@ -239,8 +239,8 @@ export const useCanvasStore = defineStore("canvas", {
 
       const tempCanvas = document.createElement("canvas");
       const tempCtx = tempCanvas.getContext("2d");
-      tempCanvas.width = 256;
-      tempCanvas.height = 144;
+      tempCanvas.width = 512;
+      tempCanvas.height = 288;
       tempCtx.drawImage(this.canvas, 0, 0, tempCanvas.width, tempCanvas.height);
       slide.value.preview = tempCanvas.toDataURL("image/png");
       tempCanvas.remove();
