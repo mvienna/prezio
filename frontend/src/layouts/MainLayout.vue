@@ -15,6 +15,36 @@
           </template>
         </q-input>
 
+        <!-- room -->
+        <form
+          @submit.prevent="handleRoomSearch()"
+          class="full-width"
+          style="max-width: 280px"
+        >
+          <q-input
+            v-model="roomId"
+            dense
+            standout="bg-primary text-white"
+            class="q-pr-md"
+            :placeholder="$t('mainLayout.header.room.enterCode')"
+            :prefix="roomLinkPrefix"
+            :error="!!roomSearchError"
+            hide-bottom-space
+          >
+            <template #append>
+              <q-icon
+                name="r_contactless"
+                class="cursor-pointer"
+                @click="handleRoomSearch()"
+              >
+                <q-tooltip>
+                  {{ $t("mainLayout.header.room.join") }}
+                </q-tooltip>
+              </q-icon>
+            </template>
+          </q-input>
+        </form>
+
         <!-- notifications -->
         <q-btn
           text-color="grey-5"
@@ -105,11 +135,16 @@ import { useRouter } from "vue-router";
 import UserMenu from "components/user/UserMenu.vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
+import { api } from "boot/axios";
+import { clearRoutePathFromProps } from "src/helpers/routeUtils";
+import { useQuasar } from "quasar";
 
 /*
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
+
+const $q = useQuasar();
 
 const router = useRouter();
 
@@ -160,10 +195,39 @@ const drawerLinks = [
     link: "",
   },
 ];
+
+const roomId = ref();
+const roomSearchError = ref();
+const roomLinkPrefix = `${window.location.hostname}/room/`;
+
+const handleRoomSearch = () => {
+  api
+    .get(`/room/${roomId.value}`)
+    .then((response) => {
+      router.push(
+        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
+          response.data.room.token
+      );
+    })
+    .catch((error) => {
+      roomSearchError.value = error.response.data.message;
+
+      $q.notify({
+        message: error.response.data.message,
+        color: "red",
+        icon: "r_crisis_alert",
+      });
+    });
+};
 </script>
 
 <style scoped lang="scss">
 .drawer__logo {
   width: 112px;
+}
+
+::v-deep(.q-field__control) {
+  box-shadow: none !important;
+  border-radius: 8px;
 }
 </style>

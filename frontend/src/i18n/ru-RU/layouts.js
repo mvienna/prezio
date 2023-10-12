@@ -12,6 +12,10 @@ export default {
         payments: "Платежи",
         logout: "Выйти",
       },
+      room: {
+        enterCode: "Введите код",
+        join: "Присоединиться",
+      },
     },
     drawer: {
       links: {

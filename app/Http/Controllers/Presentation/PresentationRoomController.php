@@ -54,7 +54,10 @@ class PresentationRoomController extends Controller
 
     public function show(string $token): JsonResponse
     {
-        $room = PresentationRoom::where('token', $token)->whereNull('terminated_at')->first();
+        $room = PresentationRoom::where('token', $token)
+            ->orWhere('id', $token)
+            ->whereNull('terminated_at')
+            ->first();
         if (!$room) {
             return $this->errorResponse(trans('errors.room.notFound'), 404);
         }

@@ -12,6 +12,10 @@ export default {
         payments: "Payments",
         logout: "Logout",
       },
+      room: {
+        enterCode: "Enter code",
+        join: "Join",
+      },
     },
     drawer: {
       links: {
