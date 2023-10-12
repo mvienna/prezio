@@ -16,11 +16,13 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
 
     public PresentationRoom $room;
     public PresentationSlide $slide;
+    public bool $showRoomInvitationPanel;
 
-    public function __construct(PresentationRoom $room, PresentationSlide $slide)
+    public function __construct(PresentationRoom $room, PresentationSlide $slide, bool $showRoomInvitationPanel)
     {
         $this->room = $room;
         $this->slide = $slide;
+        $this->showRoomInvitationPanel = $showRoomInvitationPanel;
     }
 
     public function broadcastOn(): Channel
@@ -30,6 +32,9 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
-        return ['slide' => $this->slide];
+        return [
+            'slide' => $this->slide,
+            'showRoomInvitationPanel' => $this->showRoomInvitationPanel
+        ];
     }
 }

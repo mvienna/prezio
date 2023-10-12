@@ -64,7 +64,14 @@
         </div>
 
         <!-- toggle qr code -->
-        <q-btn flat icon="r_qr_code" color="grey" disable round size="10px" />
+        <q-btn
+          flat
+          icon="r_qr_code"
+          :color="showRoomInvitationPanel ? 'primary' : 'grey'"
+          round
+          size="10px"
+          @click="handleRoomInvitationPanelToggle()"
+        />
       </div>
 
       <q-space />
@@ -116,7 +123,8 @@ const router = useRouter();
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { room, presentation } = storeToRefs(presentationsStore);
+const { room, presentation, showRoomInvitationPanel } =
+  storeToRefs(presentationsStore);
 
 /*
  * room link
@@ -169,6 +177,14 @@ const toggleFullscreen = () => {
     isFullscreen.value = true;
     document.documentElement.requestFullscreen();
   }
+};
+
+/*
+ * toggle room invitation panel
+ */
+const handleRoomInvitationPanelToggle = () => {
+  showRoomInvitationPanel.value = !showRoomInvitationPanel.value;
+  presentationsStore.sendPresentationRoomUpdateEvent();
 };
 </script>
 

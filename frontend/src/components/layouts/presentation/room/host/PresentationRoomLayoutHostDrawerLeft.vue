@@ -90,13 +90,7 @@ const handleSlideChange = async (newSlide) => {
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false, false, undefined, false);
 
-  api
-    .patch(`/presentation/${presentation.value.id}/room/${room.value.id}`, {
-      slide_id: slide.value.id,
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  presentationsStore.sendPresentationRoomUpdateEvent();
 };
 </script>
 

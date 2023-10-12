@@ -1,96 +1,153 @@
 <template>
   <q-page>
-    <!-- canvas -->
     <div class="canvas__wrapper relative-position q-pa-lg">
-      <canvas ref="canvasRef" id="canvas"> </canvas>
-
-      <template v-if="isHost">
-        <!-- previous slide -->
-        <div
-          class="absolute-left column no-wrap justify-center q-ml-lg q-pl-md"
-          style="z-index: 2"
+      <div class="row no-wrap">
+        <!-- room invitation panel -->
+        <q-intersection
+          v-show="showRoomInvitationPanel"
+          transition="scale"
+          class="room_invitation_panel q-mr-md q-pa-md"
         >
-          <q-btn
-            flat
-            round
-            icon="r_arrow_back_ios_new"
-            no-caps
-            no-wrap
-            size="12px"
-            class="q-px-sm q-py-xl"
-            style="
-              background: rgba(255, 255, 255, 0.5);
-              backdrop-filter: blur(4px);
-            "
-            :disable="slideIndex === 0"
-            @click="handleSlideChange('backward')"
-          >
-            <q-tooltip
-              anchor="center right"
-              self="center left"
-              transition-show="jump-right"
-              transition-hide="jump-left"
-              :offset="[8, 0]"
+          <!-- title -->
+          <div class="room_invitation_panel__title q-mb-md">
+            {{ $t("presentationRoom.invitation.title") }}
+          </div>
+
+          <!-- qr code -->
+          <div
+            class="row justify-center"
+            v-html="qrCode?._svg?.outerHTML"
+          ></div>
+
+          <div class="row no-wrap items-center justify-between q-mt-md q-mb-lg">
+            <q-separator style="width: 40%" />
+            <div class="text-grey">
+              {{ $t("presentationRoom.invitation.otherOption.or") }}
+            </div>
+            <q-separator style="width: 40%" />
+          </div>
+
+          <!-- other option -->
+          <div class="room_invitation_panel__other_options">
+            <!-- url -->
+            <div>
+              {{ $t("presentationRoom.invitation.otherOption.url") }}
+              <a :href="url" target="_blank" class="text-primary text-semibold">
+                {{ url }}
+              </a>
+            </div>
+
+            <q-icon
+              name="r_keyboard_double_arrow_down"
+              size="sm"
+              class="q-my-sm"
+              color="primary"
+            />
+
+            <!-- id -->
+            <div>
+              {{ $t("presentationRoom.invitation.otherOption.id") }}:
+              <span class="text-primary text-semibold cursor-pointer">
+                {{ room?.id }}
+              </span>
+            </div>
+          </div>
+        </q-intersection>
+
+        <div class="relative-position column no-wrap justify-center">
+          <!-- canvas -->
+          <canvas ref="canvasRef" id="canvas"> </canvas>
+
+          <!-- controls -->
+          <template v-if="isHost">
+            <!-- previous slide -->
+            <div
+              class="absolute-left column no-wrap justify-center q-ml-md"
+              style="z-index: 2"
             >
-              <div class="text-bold text-center">
-                {{ $t("presentationStudio.preview.controls.previous") }}
-              </div>
-
-              <div
-                v-if="showShortcuts"
-                class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+              <q-btn
+                flat
+                round
+                icon="r_arrow_back_ios_new"
+                no-caps
+                no-wrap
+                size="12px"
+                class="q-px-sm q-py-xl"
+                style="
+                  background: rgba(255, 255, 255, 0.5);
+                  backdrop-filter: blur(4px);
+                "
+                :disable="slideIndex === 0"
+                @click="handleSlideChange('backward')"
               >
-                <div v-if="isMac">⌘</div>
-                <div v-else>Ctrl</div>
-                <div>←</div>
-              </div>
-            </q-tooltip>
-          </q-btn>
-        </div>
+                <q-tooltip
+                  anchor="center right"
+                  self="center left"
+                  transition-show="jump-right"
+                  transition-hide="jump-left"
+                  :offset="[8, 0]"
+                >
+                  <div class="text-bold text-center">
+                    {{ $t("presentationStudio.preview.controls.previous") }}
+                  </div>
 
-        <!-- next slide -->
-        <div
-          class="absolute-right column no-wrap justify-center q-mr-lg q-pr-md"
-          style="z-index: 2"
-        >
-          <q-btn
-            flat
-            round
-            icon="r_arrow_forward_ios"
-            no-caps
-            no-wrap
-            size="12px"
-            class="q-px-sm q-py-xl"
-            style="
-              background: rgba(255, 255, 255, 0.5);
-              backdrop-filter: blur(4px);
-            "
-            :disable="slideIndex === presentation?.slides?.length - 1"
-            @click="handleSlideChange('forward')"
-          >
-            <q-tooltip
-              anchor="center left"
-              self="center right"
-              transition-show="jump-left"
-              transition-hide="jump-right"
-              :offset="[8, 0]"
+                  <div
+                    v-if="showShortcuts"
+                    class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+                  >
+                    <div v-if="isMac">⌘</div>
+                    <div v-else>Ctrl</div>
+                    <div>←</div>
+                  </div>
+                </q-tooltip>
+              </q-btn>
+            </div>
+
+            <!-- next slide -->
+            <div
+              class="absolute-right column no-wrap justify-center q-mr-md"
+              style="z-index: 2"
             >
-              <div class="text-bold text-center">
-                {{ $t("presentationStudio.preview.controls.next") }}
-              </div>
-
-              <div
-                v-if="showShortcuts"
-                class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+              <q-btn
+                flat
+                round
+                icon="r_arrow_forward_ios"
+                no-caps
+                no-wrap
+                size="12px"
+                class="q-px-sm q-py-xl"
+                style="
+                  background: rgba(255, 255, 255, 0.5);
+                  backdrop-filter: blur(4px);
+                "
+                :disable="slideIndex === presentation?.slides?.length - 1"
+                @click="handleSlideChange('forward')"
               >
-                <div v-if="isMac">⌘</div>
-                <div v-else>Ctrl</div>
-                <div>→</div>
-              </div>
-            </q-tooltip>
-          </q-btn>
+                <q-tooltip
+                  anchor="center left"
+                  self="center right"
+                  transition-show="jump-left"
+                  transition-hide="jump-right"
+                  :offset="[8, 0]"
+                >
+                  <div class="text-bold text-center">
+                    {{ $t("presentationStudio.preview.controls.next") }}
+                  </div>
+
+                  <div
+                    v-if="showShortcuts"
+                    class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+                  >
+                    <div v-if="isMac">⌘</div>
+                    <div v-else>Ctrl</div>
+                    <div>→</div>
+                  </div>
+                </q-tooltip>
+              </q-btn>
+            </div>
+          </template>
         </div>
-      </template>
+      </div>
     </div>
   </q-page>
 </template>
@@ -106,6 +163,7 @@ import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
 import { useAuthStore } from "stores/auth";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
+import QRCodeStyling from "qr-code-styling";
 
 /*
  * variables
@@ -130,7 +188,8 @@ const isHost = computed(() => {
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, room } = storeToRefs(presentationsStore);
+const { presentation, slide, room, showRoomInvitationPanel } =
+  storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { canvas, ctx, scale } = storeToRefs(canvasStore);
@@ -175,11 +234,13 @@ onMounted(async () => {
     window.Echo.channel(`public.room.${room.value.id}`).listen(
       "PresentationRoomUpdatedEvent",
       async (event) => {
-        if (event.slide.id === slide.value.id) return;
+        showRoomInvitationPanel.value = event.showRoomInvitationPanel;
 
-        await presentationsStore.setSlide(event.slide);
-        await canvasStore.setElementsFromSlide();
-        canvasStore.redrawCanvas(false, false, undefined, false);
+        if (event.slide.id !== slide.value.id) {
+          await presentationsStore.setSlide(event.slide);
+          await canvasStore.setElementsFromSlide();
+          canvasStore.redrawCanvas(false, false, undefined, false);
+        }
       }
     );
   }
@@ -266,13 +327,7 @@ const handleSlideChange = async (direction) => {
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false, false, undefined, false);
 
-  api
-    .patch(`/presentation/${presentation.value.id}/room/${room.value.id}`, {
-      slide_id: slide.value.id,
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  presentationsStore.sendPresentationRoomUpdateEvent();
 };
 
 /*
@@ -285,6 +340,37 @@ const showShortcuts = computed(() => {
 const isMac = computed(() => {
   return $q.platform.is.platform === "mac";
 });
+
+/*
+ * qr
+ */
+const qrCode = new QRCodeStyling({
+  width: 196,
+  height: 196,
+  type: "svg",
+  data: window.location.href,
+  image: window.location.origin + "/favicon.ico",
+  dotsOptions: {
+    type: "rounded",
+    gradient: {
+      type: "linear",
+      rotation: Math.PI / 4,
+      colorStops: [
+        { offset: 0, color: "#4971FF" },
+        { offset: 1, color: "#4647DA" },
+      ],
+    },
+  },
+  backgroundOptions: {
+    color: "#FFFFFF",
+  },
+  imageOptions: {
+    crossOrigin: "anonymous",
+    margin: 2,
+  },
+});
+
+const url = window.location.host;
 </script>
 
 <style scoped lang="scss">
@@ -316,6 +402,28 @@ const isMac = computed(() => {
     background: $white;
     z-index: 11;
     box-shadow: rgba(73, 112, 255, 0.1) 0 8px 24px;
+  }
+
+  .room_invitation_panel {
+    height: 100%;
+    border: 1.5px solid $blue-2;
+    background: $white;
+    border-radius: 12px;
+
+    .room_invitation_panel__title {
+      font-weight: 800;
+      font-size: 24px;
+      text-align: center;
+      color: $primary;
+      background: linear-gradient(to right, #4971ff, #4647da);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .room_invitation_panel__other_options {
+      text-align: center;
+      font-weight: 500;
+    }
   }
 }
 </style>

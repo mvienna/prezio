@@ -7,6 +7,7 @@ export const usePresentationsStore = defineStore("presentations", {
      * room
      */
     room: null,
+    showRoomInvitationPanel: false,
 
     /*
      * folders
@@ -351,6 +352,20 @@ export const usePresentationsStore = defineStore("presentations", {
         (item) => item.id === this.slide.id
       );
       this.presentation.slides[slideIndex] = this.slide;
+    },
+
+    /*
+     * room
+     */
+    sendPresentationRoomUpdateEvent() {
+      api
+        .patch(`/presentation/${this.presentation.id}/room/${this.room.id}`, {
+          slide_id: this.slide.id,
+          showRoomInvitationPanel: this.showRoomInvitationPanel,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 });
