@@ -250,13 +250,14 @@ export const useCanvasStore = defineStore("canvas", {
 
     renderSlidePreview() {
       // canvas
-      const slideIndex = presentation.value.slides.findIndex(
-        (item) => item.id === slide.value.id
+      const slideIndex = presentation.value?.slides?.findIndex(
+        (item) => item.id === slide.value?.id
       );
+      if (slideIndex === -1) return;
+
       const slide_preview_canvas = document.getElementById(
         `canvas_slide_preview_${slideIndex}`
       );
-
       if (!slide_preview_canvas) return;
 
       slide_preview_canvas.width = 1920;
