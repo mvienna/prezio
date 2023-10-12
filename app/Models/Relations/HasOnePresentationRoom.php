@@ -12,6 +12,6 @@ trait HasOnePresentationRoom
      */
     public function room(): HasOne
     {
-        return $this->hasOne(PresentationRoom::class, 'presentation_id', 'id');
+        return $this->hasOne(PresentationRoom::class, 'presentation_id', 'id')->whereNull('terminated_at');
     }
 }
