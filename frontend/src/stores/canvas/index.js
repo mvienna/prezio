@@ -256,6 +256,9 @@ export const useCanvasStore = defineStore("canvas", {
       const slide_preview_canvas = document.getElementById(
         `canvas_slide_preview_${slideIndex}`
       );
+
+      if (!slide_preview_canvas) return;
+
       slide_preview_canvas.width = 1920;
       slide_preview_canvas.height = 1080;
 
@@ -318,8 +321,7 @@ export const useCanvasStore = defineStore("canvas", {
       saveSlide = true,
       forceSlideSave = false,
       elements = this.elements,
-      showHelpers = true,
-      renderSlidePreview = true
+      showHelpers = true
     ) {
       lastChangedAt.value = new Date();
 
@@ -405,9 +407,7 @@ export const useCanvasStore = defineStore("canvas", {
       /*
        * render live slide preview
        */
-      if (renderSlidePreview) {
-        this.renderSlidePreview();
-      }
+      this.renderSlidePreview();
 
       /*
        * stop if helpers render disabled

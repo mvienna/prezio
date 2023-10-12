@@ -88,7 +88,7 @@ const handleSlideChange = async (newSlide) => {
 
   await presentationsStore.setSlide(newSlide);
   await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(false, false, undefined, false, false);
+  canvasStore.redrawCanvas(false, false, undefined, false);
 
   api
     .patch(`/presentation/${presentation.value.id}/room/${room.value.id}`, {
