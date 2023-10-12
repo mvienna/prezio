@@ -23,7 +23,7 @@ class PresentationRoomController extends Controller
             return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
-        $room = PresentationRoom::where('presentation_id', $presentation->id)->first();
+        $room = PresentationRoom::where('presentation_id', $presentation->id)->whereNull('terminated_at')->first();
 
         if (!$room) {
             $room = PresentationRoom::create([
