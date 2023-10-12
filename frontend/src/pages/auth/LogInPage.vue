@@ -181,7 +181,7 @@ const submit = async () => {
       router.push(ROUTE_PATHS.DASHBOARD);
     })
     .catch((error) => {
-      invalidCredentialsError.value = error.response.data.error;
+      invalidCredentialsError.value = error.response.data.message;
     })
     .finally(() => {
       isLoading.value = false;

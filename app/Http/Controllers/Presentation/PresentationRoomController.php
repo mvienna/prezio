@@ -15,15 +15,12 @@ use Illuminate\Http\Request;
 
 class PresentationRoomController extends Controller
 {
-    /**
-     * @throws \Exception
-     */
     public function store (Presentation $presentation): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         $room = PresentationRoom::where('presentation_id', $presentation->id)->first();
@@ -38,15 +35,12 @@ class PresentationRoomController extends Controller
         return $this->jsonResponse($room->toArray());
     }
 
-    /**
-     * @throws \Exception
-     */
     public function destroy (Presentation $presentation, PresentationRoom $room): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         $room->update([
@@ -58,14 +52,11 @@ class PresentationRoomController extends Controller
         return $this->successResponse();
     }
 
-    /**
-     * @throws \Exception
-     */
     public function show(string $token): JsonResponse
     {
         $room = PresentationRoom::where('token', $token)->whereNull('terminated_at')->first();
         if (!$room) {
-            throw new \Exception(trans('errors.room.notFound'));
+            return $this->errorResponse(trans('errors.room.notFound'), 404);
         }
 
         $room->load('presentation');

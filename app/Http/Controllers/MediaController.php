@@ -74,7 +74,7 @@ class MediaController extends Controller
             return $this->successResponse();
         }
 
-        return $this->errorResponse(trans('errors.media.fileNotFound'));
+        return $this->errorResponse(trans('errors.media.fileNotFound'), 404);
     }
 
     public function moveToTrash(Request $request): JsonResponse
@@ -86,7 +86,7 @@ class MediaController extends Controller
             return $this->successResponse();
         }
 
-        return $this->errorResponse(trans('errors.media.fileNotFound'));
+        return $this->errorResponse(trans('errors.media.fileNotFound'), 404);
 
     }
 
@@ -99,7 +99,7 @@ class MediaController extends Controller
             return $this->successResponse();
         }
 
-        return $this->errorResponse(trans('errors.media.fileNotFound'));
+        return $this->errorResponse(trans('errors.media.fileNotFound'), 404);
     }
 
     /*

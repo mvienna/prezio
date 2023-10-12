@@ -7,7 +7,7 @@ export const sendVerificationCode = async (email, isNewEmail = false) => {
       isNewEmail: isNewEmail,
     })
     .catch((error) => {
-      throw error.response.data.error;
+      throw error.response.data.message;
     });
 };
 
@@ -23,6 +23,6 @@ export const checkVerificationCode = async (
       generateTempToken: generateTempToken,
     })
     .catch((error) => {
-      throw error.response.data.error;
+      throw error.response.data.message;
     });
 };

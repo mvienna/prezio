@@ -28,15 +28,12 @@ class PresentationFolderController extends Controller
         return $this->jsonResponse($folder->toArray());
     }
 
-    /**
-     * @throws \Exception
-     */
     public function update(PresentationFolder $folder, Request $request): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($folder->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         $folder->update([
@@ -48,15 +45,12 @@ class PresentationFolderController extends Controller
         return $this->jsonResponse($folder->toArray());
     }
 
-    /**
-     * @throws \Exception
-     */
     public function destroy(PresentationFolder $folder): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($folder->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         Presentation::where('folder_id', $folder->id)->update(['folder_id' => null]);
@@ -71,15 +65,12 @@ class PresentationFolderController extends Controller
         return $this->jsonResponse($folders->toArray());
     }
 
-    /**
-     * @throws \Exception
-     */
     public function show(PresentationFolder $folder): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($folder->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         return $this->jsonResponse($folder->toArray());

@@ -30,15 +30,12 @@ class PresentationSlideTemplateController extends Controller
         return $this->jsonResponse($template->toArray());
     }
 
-    /**
-     * @throws \Exception
-     */
     public function update (PresentationSlideTemplate $slideTemplate, Request $request): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($slideTemplate->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         $slideTemplate->update([
@@ -51,15 +48,12 @@ class PresentationSlideTemplateController extends Controller
         return $this->jsonResponse($slideTemplate->toArray());
     }
 
-    /**
-     * @throws \Exception
-     */
     public function destroy (PresentationSlideTemplate $slideTemplate): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($slideTemplate->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         $slideTemplate->delete();

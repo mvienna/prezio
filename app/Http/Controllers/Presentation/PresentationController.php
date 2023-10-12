@@ -32,15 +32,12 @@ class PresentationController extends Controller
         return $this->jsonResponse($presentation->toArray());
     }
 
-    /**
-     * @throws \Exception
-     */
     public function update(Presentation $presentation, Request $request): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         $presentation->update([
@@ -55,15 +52,12 @@ class PresentationController extends Controller
         return $this->jsonResponse($presentation->toArray());
     }
 
-    /**
-     * @throws \Exception
-     */
     public function destroy(Presentation $presentation): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         $presentation->load('slides');
@@ -76,15 +70,12 @@ class PresentationController extends Controller
         return $this->successResponse();
     }
 
-    /**
-     * @throws \Exception
-     */
     public function show(Presentation $presentation): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         $presentation->load('slides', 'slides.template', 'slides.answers', 'preview', 'room');

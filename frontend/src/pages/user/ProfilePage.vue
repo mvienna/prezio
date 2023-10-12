@@ -393,7 +393,7 @@ const handleUpdatingUserData = () => {
       });
     })
     .catch((error) => {
-      errors.value.password = error.response.data.error;
+      errors.value.password = error.response.data.message;
     })
     .finally(() => {
       isLoading.value = false;

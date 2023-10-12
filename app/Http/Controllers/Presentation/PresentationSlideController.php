@@ -50,15 +50,12 @@ class PresentationSlideController extends Controller
         return $this->jsonResponse($presentation->toArray());
     }
 
-    /**
-     * @throws \Exception
-     */
     public function destroy (Presentation $presentation, PresentationSlide $slide): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
-            throw new \Exception(trans('errors.accessDenied'));
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
         $slide->load('template');

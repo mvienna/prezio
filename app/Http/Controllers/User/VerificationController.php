@@ -20,7 +20,7 @@ class VerificationController extends Controller
         if (!$request->isNewEmail) {
             $user = User::where('email', $request->email);
             if (!$user->exists()) {
-                return $this->errorResponse(trans('errors.verification.userNotFound'), 422);
+                return $this->errorResponse(trans('errors.verification.userNotFound'), 404);
             }
         }
 
