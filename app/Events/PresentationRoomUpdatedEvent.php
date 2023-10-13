@@ -33,7 +33,7 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'slide' => $this->slide,
+            'slide_id' => $this->slide->id,
             'showRoomInvitationPanel' => $this->showRoomInvitationPanel
         ];
     }

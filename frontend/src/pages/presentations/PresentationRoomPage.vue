@@ -236,8 +236,12 @@ onMounted(async () => {
       async (event) => {
         showRoomInvitationPanel.value = event.showRoomInvitationPanel;
 
-        if (event.slide.id !== slide.value.id) {
-          await presentationsStore.setSlide(event.slide);
+        if (event.slide_id !== slide.value.id) {
+          const newSlide = presentation.value.slides.find(
+            (item) => item.id === event.slide_id
+          );
+
+          await presentationsStore.setSlide(newSlide);
           await canvasStore.setElementsFromSlide();
           canvasStore.redrawCanvas(false, false, undefined, false);
         }
