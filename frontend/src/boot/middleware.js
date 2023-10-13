@@ -54,22 +54,23 @@ export default async ({ app, router }) => {
     cluster: process.env.PUSHER_APP_CLUSTER,
     wsHost: process.env.PUSHER_HOST,
     wsPort: process.env.PUSHER_PORT,
+
     encrypted: false,
     forceTLS: !process.env.DEV,
     disableStats: true,
 
-    // authEndpoint: process.env.pusherAppEndPoint,
+    authEndpoint: process.env.PUSHER_APP_ENDPOINT,
+    auth: {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "X-CSRF-Token": "CSRF_TOKEN",
+      },
+    },
+
     // wssPort: process.env.DEV ? 6001 : 443,
     // enabledTransports: ['ws'],
     // disabledTransports: ['sockjs', 'xhr_polling', 'xhr_streaming'], // Can be removed
     // namespace: '',
-    // auth: {
-    //   //withCredentials: true,
-    //   headers: {
-    //     Referer: window.location.hostname,
-    //     Authorization: 'Bearer ' + token,
-    //   },
-    // },
   });
 
   /*

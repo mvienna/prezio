@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie', 'storage/*', 'media/*'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'storage/*', 'media/*', 'laravel-websockets/*', 'broadcasting/auth'],
 
     'allowed_methods' => ['*'],
 
