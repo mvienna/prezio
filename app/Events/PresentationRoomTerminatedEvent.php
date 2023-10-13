@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\Presentation\PresentationRoom;
+use App\Models\Presentation\Room\PresentationRoom;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;

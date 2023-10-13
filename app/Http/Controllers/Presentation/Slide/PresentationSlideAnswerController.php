@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Presentation;
+namespace App\Http\Controllers\Presentation\Slide;
 
 use App\Http\Controllers\Controller;
-use App\Models\Presentation\PresentationSlide;
-use App\Models\Presentation\PresentationSlideAnswer;
+use App\Models\Presentation\Slide\PresentationSlide;
+use App\Models\Presentation\Slide\PresentationSlideAnswer;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

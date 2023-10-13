@@ -2,10 +2,10 @@
 
 namespace App\Models\Relations;
 
-use App\Models\Presentation\PresentationSlide;
+use App\Models\Presentation\Slide\PresentationSlide;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-trait HasManyPresentationSlides
+trait HasManySlides
 {
     /**
      * @return HasMany

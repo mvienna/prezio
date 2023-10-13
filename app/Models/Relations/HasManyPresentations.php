@@ -12,6 +12,6 @@ trait HasManyPresentations
      */
     public function presentations(): HasMany
     {
-        return $this->hasMany(Presentation::class, 'folder_id', 'id');
+        return $this->hasMany(Presentation::class);
     }
 }

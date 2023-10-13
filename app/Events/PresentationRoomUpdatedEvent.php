@@ -2,8 +2,8 @@
 
 namespace App\Events;
 
-use App\Models\Presentation\PresentationRoom;
-use App\Models\Presentation\PresentationSlide;
+use App\Models\Presentation\Room\PresentationRoom;
+use App\Models\Presentation\Slide\PresentationSlide;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;

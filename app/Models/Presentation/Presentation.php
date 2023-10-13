@@ -3,13 +3,15 @@
 namespace App\Models\Presentation;
 
 use App\Models\BaseModel;
-use App\Models\Relations\HasManyPresentationSlides;
-use App\Models\Relations\HasOnePresentationRoom;
+use App\Models\Relations\BelongsToUser;
+use App\Models\Relations\HasManySlides;
+use App\Models\Relations\HasOneFolder;
 use App\Models\Relations\HasOnePreview;
+use App\Models\Relations\HasOneRoom;
 use App\Traits\ByUserScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Presentation extends BaseModel
 {
-    use HasFactory, ByUserScoped, HasManyPresentationSlides, HasOnePreview, HasOnePresentationRoom;
+    use HasFactory, ByUserScoped, HasOneRoom, HasOnePreview, HasManySlides, HasOneFolder, BelongsToUser;
 }
