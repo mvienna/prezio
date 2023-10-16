@@ -1,27 +1,27 @@
 <template>
   <q-card flat class="scroll--hidden" style="height: 100%; width: 400px">
-    <q-card-section>
-      <q-toolbar
-        class="items-center justify-between q-mb-md bg-white"
-        style="position: sticky; top: 0; z-index: 1"
-      >
-        <div class="text-h7 text-semibold">
-          {{ $t("presentationStudio.settings.title") }}
-        </div>
+    <q-toolbar
+      class="items-center justify-between bg-white q-py-md q-px-lg"
+      style="position: sticky; top: 0; z-index: 1"
+    >
+      <div class="text-h7 text-semibold">
+        {{ $t("presentationStudio.settings.title") }}
+      </div>
 
-        <q-btn
-          icon="r_close"
-          size="12px"
-          round
-          flat
-          color="grey"
-          @click="$emit('cancel')"
-        />
-      </q-toolbar>
+      <q-btn
+        icon="r_close"
+        size="12px"
+        round
+        flat
+        color="grey"
+        @click="$emit('cancel')"
+      />
+    </q-toolbar>
 
+    <q-card-section class="q-pt-none">
       <div class="column no-wrap q-gutter-sm">
         <q-expansion-item
-          v-for="(tab, tabIndex) in tabs"
+          v-for="(tab, tabIndex) in Object.values(tabs)"
           :key="tab.name"
           v-model="isExpandedTabs[tabIndex]"
           :icon="tab.icon"
@@ -30,16 +30,21 @@
           expand-icon="r_keyboard_arrow_down"
           :class="isExpandedTabs[tabIndex] ? 'q-expansion-item--active' : ''"
         >
-          <div class="q-mt-lg q-mb-md">
+          <div class="q-mt-lg">
             <!-- general info -->
             <PresentationSettingsGeneralInfo
-              v-if="tab.name === 'generalInformation'"
+              v-if="tab.name === tabs.generalInformation.name"
+            />
+
+            <!-- collect participants info -->
+            <PresentationSettingsCollectParticipantsInfo
+              v-if="tab.name === tabs.collectParticipantsInfo.name"
             />
 
             <!-- language -->
-            <PresentationSettingsLanguage v-if="tab.name === 'language'" />
-
-            <q-separator class="q-mt-lg" />
+            <PresentationSettingsLanguage
+              v-if="tab.name === tabs.language.name"
+            />
           </div>
         </q-expansion-item>
       </div>
@@ -52,6 +57,7 @@ import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import PresentationSettingsGeneralInfo from "components/presentationStudio/settings/PresentationSettingsGeneralInfo.vue";
 import PresentationSettingsLanguage from "components/presentationStudio/settings/PresentationSettingsLanguage.vue";
+import PresentationSettingsCollectParticipantsInfo from "components/presentationStudio/settings/PresentationSettingsCollectParticipantsInfo.vue";
 
 /*
  * variables
@@ -63,50 +69,55 @@ defineEmits(["cancel"]);
 /*
  * tabs
  */
-const tabs = [
-  {
+const tabs = {
+  generalInformation: {
     name: "generalInformation",
     icon: "r_settings",
     label: t("presentationStudio.settings.generalInformation.title"),
   },
-  {
+  collectParticipantsInfo: {
+    name: "collectParticipantsInfo",
+    icon: "r_contacts",
+    label: t("presentationStudio.settings.collectParticipantsInfo.title"),
+  },
+  audienceAuthentication: {
     name: "audienceAuthentication",
     icon: "r_security",
     disable: true,
     label: t("presentationStudio.settings.audienceAuthentication.title"),
   },
-  {
-    name: "questionsAndAnswersFromAudience",
+  qnaFromAudience: {
+    name: "qnaFromAudience",
     icon: "r_flaky",
     disable: true,
     label: t(
       "presentationStudio.settings.questionsAndAnswersFromAudience.title"
     ),
   },
-  {
+  quizSetup: {
     name: "quizSetup",
     icon: "r_quiz",
     disable: true,
     label: t("presentationStudio.settings.quizSetup.title"),
   },
-  {
+  language: {
     name: "language",
     icon: "r_translate",
     label: t("presentationStudio.settings.language.title"),
   },
-  {
+  leader: {
     name: "leader",
     icon: "r_settings_accessibility",
     disable: true,
     label: t("presentationStudio.settings.leader.title"),
   },
-  {
+  other: {
     name: "other",
     icon: "r_more_horiz",
     disable: true,
     label: t("presentationStudio.settings.other.title"),
   },
-];
+};
 
 const isExpandedTabs = ref([]);
 </script>
@@ -120,7 +131,7 @@ const isExpandedTabs = ref([]);
       outline: 3px solid transparent;
 
       &:hover {
-        background: $grey-1;
+        background: $grey-2;
       }
 
       .q-item__label {
@@ -138,7 +149,8 @@ const isExpandedTabs = ref([]);
   .q-expansion-item__container {
     .q-item {
       background: $grey-1;
-      outline: 3px solid $grey-2;
+      color: $primary;
+      outline: 3px solid $blue-2;
     }
   }
 }

@@ -221,7 +221,7 @@ import { date } from "quasar";
 import { useCanvasStore } from "stores/canvas";
 import { ref } from "vue";
 import PresentationSettings from "components/presentationStudio/settings/PresentationSettings.vue";
-import PresentationStudioPreviewPresentation from "components/preview/PresentationStudioPreview.vue";
+import PresentationStudioPreviewPresentation from "components/presentationStudio/preview/PresentationStudioPreview.vue";
 import { api } from "boot/axios";
 import { useRouter } from "vue-router";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";

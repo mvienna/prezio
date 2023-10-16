@@ -22,7 +22,6 @@ export default async ({ app, router }) => {
    */
   if (process.env.DEV) {
     const credentials = JSON.parse(localStorage.getItem("credentials"));
-
     if (credentials) {
       try {
         await userStore.login(credentials.email, credentials.password);
@@ -64,15 +63,10 @@ export default async ({ app, router }) => {
     authEndpoint: process.env.PUSHER_APP_ENDPOINT,
     auth: {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("participantToken")}`,
         "X-CSRF-Token": "CSRF_TOKEN",
       },
     },
-
-    // wssPort: process.env.DEV ? 6001 : 443,
-    // enabledTransports: ['ws'],
-    // disabledTransports: ['sockjs', 'xhr_polling', 'xhr_streaming'], // Can be removed
-    // namespace: '',
   });
 
   /*

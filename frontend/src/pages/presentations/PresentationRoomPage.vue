@@ -1,6 +1,13 @@
 <template>
   <q-page>
-    <div class="canvas__wrapper relative-position q-pa-lg">
+    <!-- collect participant's info -->
+    <PresentationRoomAuthForm v-if="!isAuthenticated" />
+
+    <!-- content -->
+    <div
+      v-show="isAuthenticated"
+      class="canvas__wrapper relative-position q-pa-lg"
+    >
       <div class="row no-wrap">
         <!-- room invitation panel -->
         <q-intersection
@@ -162,8 +169,9 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
 import { useAuthStore } from "stores/auth";
-import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import QRCodeStyling from "qr-code-styling";
+import PresentationRoomAuthForm from "components/presentationRoom/PresentationRoomAuthForm.vue";
+import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 
 /*
  * variables
@@ -188,11 +196,20 @@ const isHost = computed(() => {
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, room, showRoomInvitationPanel } =
+const { presentation, slide, room, participant, showRoomInvitationPanel } =
   storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { canvas, ctx, scale } = storeToRefs(canvasStore);
+
+const isAuthenticated = computed(() => {
+  return (
+    isHost.value ||
+    !presentation.value?.settings?.require_participants_info ||
+    (presentation.value?.settings?.require_participants_info &&
+      participant.value)
+  );
+});
 
 /*
  * authenticate
@@ -214,6 +231,7 @@ onMounted(async () => {
     .then((response) => {
       room.value = response.data.room;
       presentation.value = response.data.presentation;
+
       presentationsStore.setSlide(response.data.slide);
       canvasStore.setElementsFromSlide();
     })
@@ -228,42 +246,21 @@ onMounted(async () => {
     });
 
   /*
-   * listen for updates
+   * auth
    */
-  if (!isHost.value) {
-    window.Echo.channel(`public.room.${room.value.id}`).listen(
-      "PresentationRoomUpdatedEvent",
-      async (event) => {
-        showRoomInvitationPanel.value = event.showRoomInvitationPanel;
+  const token = localStorage.getItem("participantToken");
+  if (token) {
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-        if (event.slide_id !== slide.value.id) {
-          const newSlide = presentation.value.slides.find(
-            (item) => item.id === event.slide_id
-          );
-
-          await presentationsStore.setSlide(newSlide);
-          await canvasStore.setElementsFromSlide();
-          canvasStore.redrawCanvas(false, false, undefined, false);
-        }
-      }
-    );
+    await api
+      .get("/user/room")
+      .then((response) => {
+        participant.value = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
-
-  /*
-   * listen for termination
-   */
-  window.Echo.channel(`public.room.${room.value.id}`).listen(
-    "PresentationRoomTerminatedEvent",
-    () => {
-      if (isHost.value) {
-        window.location =
-          clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
-          presentation.value.id;
-      } else {
-        router.push(ROUTE_PATHS.DASHBOARD);
-      }
-    }
-  );
 
   /*
    * resize canvas
@@ -273,6 +270,11 @@ onMounted(async () => {
     canvasStore.redrawCanvas(false, false, undefined, false);
   }, 100);
   window.addEventListener("resize", resizeCanvas);
+
+  /*
+   * connect to web sockets
+   */
+  connectToRoomChannels();
 });
 
 const resizeCanvas = () => {
@@ -282,6 +284,58 @@ const resizeCanvas = () => {
   ctx.value.scale(scale.value, scale.value);
 
   canvasStore.redrawCanvas(false, false, undefined, false);
+};
+
+const connectToRoomChannels = () => {
+  /*
+   * connecting to room channels
+   */
+  const channel = window.Echo.channel(`public.room.${room.value.id}`);
+
+  if (participant.value || user.value) {
+    window.Echo.join(`public.room.${room.value.id}`)
+      .here((users) => {
+        console.log(users.length);
+      })
+      .joining(() => {
+        console.log("joining");
+      })
+      .leaving(() => {
+        console.log("leaving");
+      });
+  }
+
+  /*
+   * listen for updates
+   */
+  if (!isHost.value) {
+    channel.listen("PresentationRoomUpdatedEvent", async (event) => {
+      showRoomInvitationPanel.value = event.showRoomInvitationPanel;
+
+      if (event.slide_id !== slide.value.id) {
+        const newSlide = presentation.value.slides.find(
+          (item) => item.id === event.slide_id
+        );
+
+        await presentationsStore.setSlide(newSlide);
+        await canvasStore.setElementsFromSlide();
+        canvasStore.redrawCanvas(false, false, undefined, false);
+      }
+    });
+  }
+
+  /*
+   * listen for termination
+   */
+  channel.listen("PresentationRoomTerminatedEvent", () => {
+    if (isHost.value) {
+      window.location =
+        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
+        presentation.value.id;
+    } else {
+      router.push(ROUTE_PATHS.DASHBOARD);
+    }
+  });
 };
 
 /*
@@ -382,6 +436,9 @@ const url = window.location.host;
   height: calc(100vh - 64px);
 }
 
+/*
+ * content
+ */
 .canvas__wrapper {
   display: flex;
   flex-direction: column;

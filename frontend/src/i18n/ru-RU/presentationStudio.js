@@ -140,6 +140,42 @@ export default {
         },
       },
 
+      collectParticipantsInfo: {
+        title: "Сбор данных участников",
+        checkbox: "Требовать ввода информации",
+
+        fields: {
+          title: "Поля для заполнения",
+
+          heading: {
+            title: "Заголовок",
+            default: "Добро пожаловать!",
+          },
+
+          default: {
+            label: "Название",
+            name: "Поле",
+            value: "Введите имя",
+          },
+
+          mandatory: {
+            on: 'Это поле <span class="text-bold">является</span><br/>обязательным для заполнения',
+            off: 'Это поле <span class="text-bold">не является</span><br/>обязательным для заполнения',
+          },
+
+          types: {
+            text: "Текст",
+            email: "E-mail",
+            number: "Цифры",
+            color: "Цвет",
+            date: "Дата",
+            password: "Пароль",
+          },
+
+          add: "Добавить",
+        },
+      },
+
       audienceAuthentication: {
         title: "Аутентификация аудитории",
       },

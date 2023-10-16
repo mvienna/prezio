@@ -7,6 +7,7 @@ use App\Events\PresentationRoomUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Presentation\Presentation;
 use App\Models\Presentation\Room\PresentationRoom;
+use App\Models\Presentation\Room\PresentationRoomParticipant;
 use App\Models\Presentation\Slide\PresentationSlide;
 use App\Models\User;
 use Carbon\Carbon;
@@ -63,12 +64,12 @@ class PresentationRoomController extends Controller
         }
 
         $room->load('presentation');
-        $room->presentation->load('slides', 'slides.answers', 'preview');
+        $room->presentation->load('slides', 'slides.answers', 'preview', 'settings');
 
         return $this->jsonResponse([
             'room' => $room,
             'presentation' => $room->presentation,
-            'slide' => $room->presentation['slides'][0]
+            'slide' => $room->presentation['slides'][0],
         ]);
     }
 
@@ -78,5 +79,29 @@ class PresentationRoomController extends Controller
         event(new PresentationRoomUpdatedEvent($room, $slide, $request->showRoomInvitationPanel));
 
         return $this->successResponse();
+    }
+
+    public function login(Request $request): JsonResponse
+    {
+        $participant = PresentationRoomParticipant::find($request->participant_id);
+        if (!$participant) {
+            $participant = PresentationRoomParticipant::create([
+                'room_id' => $request->room_id,
+                'user_data' => $request->data
+            ]);
+        }
+
+        $token = $participant->createToken('authToken')->plainTextToken;
+
+        return $this->jsonResponse([
+            'token' => $token,
+            'participant' => $participant
+        ]);
+    }
+
+    public function user(): JsonResponse
+    {
+        $participant = auth()->user();
+        return $this->jsonResponse($participant->toArray());
     }
 }

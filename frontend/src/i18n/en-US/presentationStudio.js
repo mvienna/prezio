@@ -140,6 +140,10 @@ export default {
         },
       },
 
+      collectParticipantsInfo: {
+        title: "Collect Participants Info",
+      },
+
       audienceAuthentication: {
         title: "Audience Authentication",
       },

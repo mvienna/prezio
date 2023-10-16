@@ -27,6 +27,7 @@ Route::post('/email/verification-code/check', [VerificationController::class, 'c
  * room
  */
 Route::get('/room/{token}', [PresentationRoomController::class, 'show']);
+Route::post('/room/login', [PresentationRoomController::class, 'login']);
 
 /*
  * authenticated
@@ -36,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
      * user
      */
     Route::get('/user', [AuthController::class, 'user']);
+    Route::get('/user/room', [PresentationRoomController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::patch('/user', [AuthController::class, 'update']);
 

@@ -7,6 +7,7 @@ export const usePresentationsStore = defineStore("presentations", {
      * room
      */
     room: null,
+    participant: null,
     showRoomInvitationPanel: false,
 
     /*
@@ -196,7 +197,7 @@ export const usePresentationsStore = defineStore("presentations", {
           description: presentation.description,
           preview_id: presentation.preview_id,
           is_private: presentation.is_private,
-          lang: presentation.lang,
+          settings: presentation.settings,
         })
         .then(() => {
           const presentationIndex = this.presentations.findIndex(
@@ -365,6 +366,23 @@ export const usePresentationsStore = defineStore("presentations", {
         })
         .catch((error) => {
           console.log(error);
+        });
+    },
+
+    async login(data) {
+      return await api
+        .post(`/room/login`, {
+          room_id: this.room?.id,
+          data: JSON.stringify(data),
+        })
+        .then((response) => {
+          this.participant = response.data.participant;
+
+          api.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${response.data.token}`;
+
+          localStorage.setItem("participantToken", response.data.token);
         });
     },
   },

@@ -14,5 +14,10 @@ export default {
         id: "And enter",
       },
     },
+    auth: {
+      form: {
+        submit: "Join Now",
+      },
+    },
   },
 };

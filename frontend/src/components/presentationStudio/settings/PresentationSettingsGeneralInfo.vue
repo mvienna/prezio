@@ -1,97 +1,93 @@
 <template>
-  <div>
-    <!-- description -->
-    <div class="text-caption text-grey q-mb-xs">
-      {{
-        $t("presentationStudio.settings.generalInformation.description.title")
-      }}
-    </div>
+  <!-- description -->
+  <div class="text-caption text-grey q-mb-xs">
+    {{ $t("presentationStudio.settings.generalInformation.description.title") }}
+  </div>
 
-    <q-input
-      v-model="description"
-      :placeholder="
-        $t(
-          'presentationStudio.settings.generalInformation.description.placeholder'
-        )
+  <q-input
+    v-model="description"
+    :placeholder="
+      $t(
+        'presentationStudio.settings.generalInformation.description.placeholder'
+      )
+    "
+    outlined
+    autogrow
+  >
+    <template #append>
+      <q-btn
+        round
+        flat
+        size="10px"
+        icon="r_done"
+        color="primary"
+        :disable="description === presentation.description"
+        @click="
+          () => {
+            presentation.description = description;
+            presentationsStore.updatePresentation();
+          }
+        "
+      />
+    </template>
+  </q-input>
+
+  <!-- preview -->
+  <div class="text-caption text-grey q-mb-xs q-mt-md">
+    {{ $t("presentationStudio.settings.generalInformation.preview.title") }}
+  </div>
+
+  <q-img
+    :src="
+      presentation?.preview?.preview_url ||
+      presentation?.preview?.original_url ||
+      presentation.slides[0].preview
+    "
+    class="presentation_preview relative-position"
+  />
+
+  <div class="row no-wrap q-pt-md q-mb-md">
+    <!-- open preview selection -->
+    <q-btn
+      :label="
+        $t('presentationStudio.settings.generalInformation.preview.select')
       "
-      outlined
-      autogrow
-    >
-      <template #append>
-        <q-btn
-          round
-          unelevated
-          size="10px"
-          icon="r_save"
-          color="primary"
-          :disable="description === presentation.description"
-          @click="
-            () => {
-              presentation.description = description;
-              presentationsStore.updatePresentation();
-            }
-          "
-        />
-      </template>
-    </q-input>
-
-    <!-- preview -->
-    <div class="text-caption text-grey q-mb-xs q-mt-md">
-      {{ $t("presentationStudio.settings.generalInformation.preview.title") }}
-    </div>
-
-    <q-img
-      :src="
-        presentation?.preview?.preview_url ||
-        presentation?.preview?.original_url ||
-        presentation.slides[0].preview
-      "
-      class="presentation_preview relative-position"
+      icon-right="r_upload"
+      unelevated
+      text-color="primary"
+      no-caps
+      class="q-py-sm full-width presentation_preview__upload_btn"
+      @click="showSelectPreviewDialog = true"
     />
 
-    <div class="row no-wrap q-pt-md">
-      <!-- open preview selection -->
-      <q-btn
-        :label="
-          $t('presentationStudio.settings.generalInformation.preview.select')
-        "
-        icon-right="r_upload"
-        unelevated
-        text-color="primary"
-        no-caps
-        class="q-py-sm full-width presentation_preview__upload_btn"
-        @click="showSelectPreviewDialog = true"
-      />
-
-      <!-- delete preview -->
-      <q-btn
-        v-if="presentation.preview"
-        icon="r_delete"
-        flat
-        round
-        color="red"
-        class="q-py-sm q-ml-md"
-        @click="
-          presentation.preview = null;
-          presentation.preview_id = null;
-          presentationsStore.updatePresentation();
-        "
-      />
-    </div>
-
-    <!-- select preview -->
-    <q-dialog v-model="showSelectPreviewDialog">
-      <SelectMedia
-        @cancel="showSelectPreviewDialog = false"
-        @select="
-          presentation.preview = $event;
-          presentation.preview_id = $event.id;
-          presentationsStore.updatePresentation();
-          showSelectPreviewDialog = false;
-        "
-      />
-    </q-dialog>
+    <!-- delete preview -->
+    <q-btn
+      v-if="presentation.preview"
+      icon="r_delete"
+      flat
+      round
+      color="red"
+      class="q-py-sm q-ml-md"
+      @click="
+        presentation.preview = null;
+        presentation.preview_id = null;
+        presentationsStore.updatePresentation();
+      "
+    />
   </div>
+
+  <!-- select preview -->
+  <q-dialog v-model="showSelectPreviewDialog">
+    <SelectMedia
+      @cancel="showSelectPreviewDialog = false"
+      @select="
+        presentation.preview = $event;
+        presentation.preview_id = $event.id;
+        presentationsStore.updatePresentation();
+        showSelectPreviewDialog = false;
+      "
+    />
+  </q-dialog>
 </template>
 
 <script setup>

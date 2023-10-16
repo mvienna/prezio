@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 use App\Models\Relations\BelongsToUser;
 use App\Models\Relations\HasManySlides;
 use App\Models\Relations\HasOneFolder;
+use App\Models\Relations\HasOnePresentationSettings;
 use App\Models\Relations\HasOnePreview;
 use App\Models\Relations\HasOneRoom;
 use App\Traits\ByUserScoped;
@@ -13,5 +14,5 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Presentation extends BaseModel
 {
-    use HasFactory, ByUserScoped, HasOneRoom, HasOnePreview, HasManySlides, HasOneFolder, BelongsToUser;
+    use HasFactory, ByUserScoped, HasOneRoom, HasOnePreview, HasManySlides, HasOneFolder, BelongsToUser, HasOnePresentationSettings;
 }

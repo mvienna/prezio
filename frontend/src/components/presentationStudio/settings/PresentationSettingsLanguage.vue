@@ -1,32 +1,31 @@
 <template>
-  <div>
-    <q-select
-      v-model="lang"
-      :options="Object.values(LANGUAGES)"
-      emit-value
-      map-options
-      outlined
-      option-value="value"
-      hide-dropdown-icon
-    >
-      <template #append>
-        <q-btn
-          round
-          unelevated
-          size="10px"
-          icon="r_save"
-          color="primary"
-          :disable="lang === presentation.lang"
-          @click="
-            () => {
-              presentation.lang = lang;
-              presentationsStore.updatePresentation();
-            }
-          "
-        />
-      </template>
-    </q-select>
-  </div>
+  <q-select
+    v-model="lang"
+    :options="Object.values(LANGUAGES)"
+    emit-value
+    map-options
+    outlined
+    option-value="value"
+    hide-dropdown-icon
+    class="q-mb-md"
+  >
+    <template #append>
+      <q-btn
+        round
+        flat
+        size="10px"
+        icon="r_done"
+        color="primary"
+        :disable="lang === presentation.settings.lang"
+        @click="
+          () => {
+            presentation.settings.lang = lang;
+            presentationsStore.updatePresentation();
+          }
+        "
+      />
+    </template>
+  </q-select>
 </template>
 
 <script setup>
@@ -44,5 +43,5 @@ const { presentation } = storeToRefs(presentationsStore);
 /*
  * lang
  */
-const lang = ref(presentation.value.lang);
+const lang = ref(presentation.value.settings.lang);
 </script>

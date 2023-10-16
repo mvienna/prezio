@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Presentation;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Presentation\Slide\PresentationSlideController;
 use App\Models\Presentation\Presentation;
+use App\Models\Presentation\PresentationSettings;
 use App\Models\Presentation\Slide\PresentationSlide;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -28,7 +29,12 @@ class PresentationController extends Controller
         PresentationSlide::create([
             'presentation_id' => $presentation->id
         ]);
-        $presentation->load('slides');
+
+        PresentationSettings::create([
+            'presentation_id' => $presentation->id,
+        ]);
+
+        $presentation->load('slides', 'settings');
 
         return $this->jsonResponse($presentation->toArray());
     }
@@ -47,7 +53,13 @@ class PresentationController extends Controller
             'description' => $request->description,
             'preview_id' => $request->preview_id,
             'is_private' => $request->is_private,
-            'lang' => $request->lang,
+        ]);
+
+        $presentation->settings()->update([
+            'lang' => $request->settings['lang'],
+            'require_participants_info' => $request->settings['require_participants_info'],
+            'participants_info_form_title' => $request->settings['participants_info_form_title'],
+            'participants_info_form_fields_data' => $request->settings['participants_info_form_fields_data'],
         ]);
 
         return $this->jsonResponse($presentation->toArray());
@@ -66,6 +78,7 @@ class PresentationController extends Controller
             app(PresentationSlideController::class)->destroy($presentation, $slide);
         }
 
+        $presentation->settings()->delete();
         $presentation->delete();
 
         return $this->successResponse();
@@ -79,7 +92,16 @@ class PresentationController extends Controller
             return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
-        $presentation->load('slides', 'slides.template', 'slides.answers', 'preview', 'room');
+        $presentation->load('slides', 'slides.template', 'slides.answers', 'preview', 'room', 'settings');
+
+        if (!$presentation->settings) {
+            PresentationSettings::create([
+                'presentation_id' => $presentation->id,
+            ]);
+
+            $presentation->load('settings');
+        }
+
         return $this->jsonResponse($presentation->toArray());
     }
 
