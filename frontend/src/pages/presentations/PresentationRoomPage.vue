@@ -154,6 +154,18 @@
             </div>
           </template>
         </div>
+
+        <!-- stats panel -->
+        <div class="stats_panel">
+          <!-- reactions -->
+          <div></div>
+
+          <!-- participants count -->
+          <div class="stats_panel__participants_count">
+            <span>{{ participantsCount }}</span>
+            <span class="stats_panel__participants_count__limit">/200</span>
+          </div>
+        </div>
       </div>
     </div>
   </q-page>
@@ -182,17 +194,6 @@ const $q = useQuasar();
 const { user } = storeToRefs(useAuthStore());
 
 /*
- * role
- */
-const isHost = computed(() => {
-  if (user.value && presentation.value) {
-    return user.value.id === presentation.value.user_id;
-  }
-
-  return false;
-});
-
-/*
  * stores
  */
 const presentationsStore = usePresentationsStore();
@@ -201,6 +202,17 @@ const { presentation, slide, room, participant, showRoomInvitationPanel } =
 
 const canvasStore = useCanvasStore();
 const { canvas, ctx, scale } = storeToRefs(canvasStore);
+
+/*
+ * statuses
+ */
+const isHost = computed(() => {
+  if (user.value && presentation.value) {
+    return user.value.id === presentation.value.user_id;
+  }
+
+  return false;
+});
 
 const isAuthenticated = computed(() => {
   return (
@@ -211,10 +223,13 @@ const isAuthenticated = computed(() => {
   );
 });
 
+const participantsCount = ref(0);
+
 /*
  * authenticate
  * fetch data
  * load slide
+ * establish connection to room channels
  */
 const canvasRef = ref();
 
@@ -272,7 +287,7 @@ onMounted(async () => {
   window.addEventListener("resize", resizeCanvas);
 
   /*
-   * connect to web sockets
+   * establish connection to room channels
    */
   connectToRoomChannels();
 });
@@ -287,21 +302,18 @@ const resizeCanvas = () => {
 };
 
 const connectToRoomChannels = () => {
-  /*
-   * connecting to room channels
-   */
   const channel = window.Echo.channel(`public.room.${room.value.id}`);
 
   if (participant.value || user.value) {
     window.Echo.join(`public.room.${room.value.id}`)
       .here((users) => {
-        console.log(users.length);
+        participantsCount.value = users.length;
       })
       .joining(() => {
-        console.log("joining");
+        participantsCount.value++;
       })
       .leaving(() => {
-        console.log("leaving");
+        participantsCount.value--;
       });
   }
 
@@ -456,34 +468,53 @@ const url = window.location.host;
     max-height: 90vh;
     z-index: 1;
   }
+}
 
-  .canvas__toolbar {
-    width: 100%;
-    border-radius: 10px;
-    background: $white;
-    z-index: 11;
-    box-shadow: rgba(73, 112, 255, 0.1) 0 8px 24px;
+/*
+ * room invitation panel
+ */
+.room_invitation_panel {
+  height: 100%;
+  border: 1.5px solid $blue-2;
+  background: $white;
+  border-radius: 12px;
+
+  .room_invitation_panel__title {
+    font-weight: 800;
+    font-size: 24px;
+    text-align: center;
+    color: $primary;
+    background: linear-gradient(to right, #4971ff, #4647da);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
-  .room_invitation_panel {
-    height: 100%;
-    border: 1.5px solid $blue-2;
-    background: $white;
-    border-radius: 12px;
+  .room_invitation_panel__other_options {
+    text-align: center;
+    font-weight: 500;
+  }
+}
 
-    .room_invitation_panel__title {
-      font-weight: 800;
-      font-size: 24px;
-      text-align: center;
-      color: $primary;
-      background: linear-gradient(to right, #4971ff, #4647da);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+/*
+ * stats panel
+ */
+.stats_panel {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  background: rgba(0, 0, 0, 0.7);
+  color: $white;
+  backdrop-filter: blur(4px);
+  border-radius: 24px;
+  padding: 8px 16px;
+  z-index: 1;
 
-    .room_invitation_panel__other_options {
-      text-align: center;
-      font-weight: 500;
+  .stats_panel__participants_count {
+    font-size: 18px;
+
+    .stats_panel__participants_count__limit {
+      font-size: 12px;
+      opacity: 0.7;
     }
   }
 }
