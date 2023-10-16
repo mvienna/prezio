@@ -59,12 +59,11 @@
 
         <!-- go premium -->
         <q-btn
-          color="yellow-9"
-          text-color="black"
+          color="black"
           unelevated
           no-caps
           no-wrap
-          icon="r_workspace_premium"
+          icon-right="r_diamond"
           :label="$t('mainLayout.header.goPro')"
           class="q-mr-md text-semibold q-px-lg"
         />
