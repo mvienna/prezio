@@ -257,8 +257,21 @@ onMounted(async () => {
       room.value = response.data.room;
       presentation.value = response.data.presentation;
 
-      presentationsStore.setSlide(slide.value || response.data.slide);
+      /*
+       * update slide
+       */
+      presentationsStore.setSlide(
+        slide.value ||
+          presentation.value.slides.find(
+            (item) => item.id === room.value.slide_id
+          ) ||
+          presentation.value.slides[0]
+      );
       canvasStore.setElementsFromSlide();
+
+      if (isHost.value && slide.value.id !== room.value.slide_id) {
+        presentationsStore.sendPresentationRoomUpdateEvent();
+      }
     })
     .catch((error) => {
       $q.notify({
@@ -365,7 +378,7 @@ const connectToRoomChannels = () => {
  */
 const slideIndex = computed(() => {
   return presentation.value?.slides?.findIndex(
-    (item) => item.id === slide.value.id
+    (item) => item.id === slide.value?.id
   );
 });
 

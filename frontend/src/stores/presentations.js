@@ -358,10 +358,14 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * room
      */
-    sendPresentationRoomUpdateEvent() {
+    sendPresentationRoomUpdateEvent(
+      presentation_id = this.presentation?.id,
+      room_id = this.room?.id,
+      slide_id = this.slide?.id
+    ) {
       api
-        .patch(`/presentation/${this.presentation.id}/room/${this.room.id}`, {
-          slide_id: this.slide.id,
+        .patch(`/presentation/${presentation_id}/room/${room_id}`, {
+          slide_id: slide_id,
           showRoomInvitationPanel: this.showRoomInvitationPanel,
         })
         .catch((error) => {

@@ -69,13 +69,16 @@ class PresentationRoomController extends Controller
         return $this->jsonResponse([
             'room' => $room,
             'presentation' => $room->presentation,
-            'slide' => $room->presentation['slides'][0],
         ]);
     }
 
     public function update(Presentation $presentation, PresentationRoom $room, Request $request): JsonResponse
     {
         $slide = PresentationSlide::find($request->slide_id);
+        $room->update([
+            'slide_id' => $slide->id
+        ]);
+
         event(new PresentationRoomUpdatedEvent($room, $slide, $request->showRoomInvitationPanel));
 
         return $this->successResponse();
