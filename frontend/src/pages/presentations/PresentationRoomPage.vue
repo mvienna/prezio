@@ -161,9 +161,19 @@
           <div></div>
 
           <!-- participants count -->
-          <div class="stats_panel__participants_count">
-            <span>{{ participantsCount }}</span>
-            <span class="stats_panel__participants_count__limit">/200</span>
+          <div class="stats_panel__participants_count row no-wrap items-center">
+            <div class="relative-position q-mr-xs">
+              <q-icon name="r_person" color="grey" size="24px" />
+              <div
+                class="stats_panel__participants_count__status absolute-bottom-right"
+                :class="participantsCount ? 'bg-green' : 'bg-white'"
+              ></div>
+            </div>
+
+            <div>
+              <span>{{ participantsCount }}</span>
+              <span class="stats_panel__participants_count__limit">/200</span>
+            </div>
           </div>
         </div>
       </div>
@@ -307,7 +317,7 @@ const connectToRoomChannels = () => {
   if (participant.value || user.value) {
     window.Echo.join(`public.room.${room.value.id}`)
       .here((users) => {
-        participantsCount.value = users.length;
+        participantsCount.value = users.length; // subtract the host from the count
       })
       .joining(() => {
         participantsCount.value++;
@@ -511,6 +521,14 @@ const url = window.location.host;
 
   .stats_panel__participants_count {
     font-size: 18px;
+
+    .stats_panel__participants_count__status {
+      border-radius: 100%;
+      width: 8px;
+      height: 8px;
+      margin-bottom: 1px;
+      margin-right: 1px;
+    }
 
     .stats_panel__participants_count__limit {
       font-size: 12px;
