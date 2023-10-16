@@ -47,8 +47,25 @@ export default {
   presentationLayout: {
     header: {
       preview: "Предпросмотр",
-      run: "Запустить",
-      open: "Открыть",
+      present: {
+        title: "Запустить",
+
+        now: {
+          title: "Быстрый запуск",
+          description: "Презентовать с текущего слайда",
+        },
+        fromBeginning: {
+          title: "Запуск с начала",
+          description: "Презентовать с первого слайда",
+        },
+        withBackstage: {
+          title: "Презентовать с бэкстейджем",
+          description: "Расширенный контроль над презентацией",
+          beta: "Бета",
+        },
+
+        fullscreen: "Полноэкранный режим",
+      },
     },
 
     leftDrawer: {

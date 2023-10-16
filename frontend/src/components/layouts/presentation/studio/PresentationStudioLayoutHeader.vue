@@ -177,33 +177,109 @@
         </q-dialog>
 
         <!-- room -->
-        <q-btn
-          v-if="!presentation?.room"
+        <q-btn-dropdown
+          split
+          no-caps
           color="primary"
           unelevated
-          no-caps
-          no-wrap
-          icon-right="r_play_arrow"
-          :label="$t('presentationLayout.header.run')"
-          class="text-semibold"
-          @click="handleCreatingPresentationRoom()"
-        />
+          :label="$t('presentationLayout.header.present.title')"
+          :menu-offset="[0, 8]"
+          content-class="shadow"
+          @click="handleStartPresenting()"
+        >
+          <q-list class="present_btn__menu__list">
+            <!-- present now -->
+            <q-item
+              clickable
+              v-close-popup
+              class="q-pa-md"
+              @click="handleStartPresenting()"
+            >
+              <q-item-section>
+                <q-item-label>
+                  {{ $t("presentationLayout.header.present.now.title") }}
+                </q-item-label>
+                <q-item-label caption>
+                  {{ $t("presentationLayout.header.present.now.description") }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
 
-        <q-btn
-          v-else
-          color="green"
-          unelevated
-          no-caps
-          no-wrap
-          :to="
-            clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
-            presentation.room.token
-          "
-          :label="$t('presentationLayout.header.open')"
-          icon-right="r_wifi_tethering"
-          class="text-semibold"
-          @click="openInFullscreen()"
-        />
+            <q-separator />
+
+            <!-- present from beginning -->
+            <template v-if="slideIndex > 0">
+              <q-item
+                clickable
+                v-close-popup
+                class="q-pa-md"
+                @click="
+                  presentationsStore.setSlide(presentation.slides[0], elements);
+                  handleStartPresenting();
+                "
+              >
+                <q-item-section>
+                  <q-item-label>
+                    {{
+                      $t(
+                        "presentationLayout.header.present.fromBeginning.title"
+                      )
+                    }}
+                  </q-item-label>
+                  <q-item-label caption>
+                    {{
+                      $t(
+                        "presentationLayout.header.present.fromBeginning.description"
+                      )
+                    }}
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-separator />
+            </template>
+
+            <!-- present with backstage -->
+            <q-item clickable disable v-close-popup class="q-pa-md">
+              <q-item-section>
+                <q-item-label>
+                  <span>
+                    {{
+                      $t(
+                        "presentationLayout.header.present.withBackstage.title"
+                      )
+                    }}
+                  </span>
+                  <q-badge color="dark" rounded class="text-grey-3 q-ml-xs">
+                    {{
+                      $t("presentationLayout.header.present.withBackstage.beta")
+                    }}
+                  </q-badge>
+                </q-item-label>
+                <q-item-label caption>
+                  {{
+                    $t(
+                      "presentationLayout.header.present.withBackstage.description"
+                    )
+                  }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-separator />
+
+            <!-- fullscreen -->
+            <q-item class="q-pl-sm">
+              <q-checkbox v-model="isFullscreen" size="sm" color="dark">
+                <template #default>
+                  <div class="q-pl-xs text-dark">
+                    {{ $t("presentationLayout.header.present.fullscreen") }}
+                  </div>
+                </template>
+              </q-checkbox>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
 
         <!-- user -->
         <UserMenu is-avatar-only />
@@ -219,7 +295,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { date } from "quasar";
 import { useCanvasStore } from "stores/canvas";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import PresentationSettings from "components/presentationStudio/settings/PresentationSettings.vue";
 import PresentationStudioPreviewPresentation from "components/presentationStudio/preview/PresentationStudioPreview.vue";
 import { api } from "boot/axios";
@@ -236,6 +312,7 @@ const router = useRouter();
  */
 const presentationsStore = usePresentationsStore();
 const {
+  slide,
   presentation,
   isSaving,
   isSavingError,
@@ -252,59 +329,69 @@ const { elements } = storeToRefs(canvasStore);
 const showSettingsDialog = ref(false);
 
 /*
+ * slide index
+ */
+const slideIndex = computed(() => {
+  return presentation.value.slides.findIndex(
+    (item) => item.id === slide.value.id
+  );
+});
+
+/*
  * room
  */
-const handleCreatingPresentationRoom = () => {
-  api
+const isFullscreen = ref(true);
+
+const handleStartPresenting = async () => {
+  if (isFullscreen.value) {
+    await document.documentElement.requestFullscreen();
+  }
+
+  if (presentation?.room) {
+    openPresentationRoom();
+  } else {
+    await createPresentationRoom();
+    openPresentationRoom();
+  }
+};
+
+const openPresentationRoom = () => {
+  router.push(
+    clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
+      presentation.value.room.token
+  );
+};
+
+const createPresentationRoom = async () => {
+  await api
     .post(`/presentation/${presentation.value.id}/room`)
     .then((response) => {
-      router.push(
-        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
-          response.data.token
-      );
-
-      openInFullscreen();
+      presentation.value.room.token = response.data.token;
     })
     .catch((error) => {
       console.log(error);
     });
 };
-
-const openInFullscreen = () => {
-  document.documentElement.requestFullscreen();
-};
 </script>
 
 <style scoped lang="scss">
-.pulsing_circle {
-  position: relative;
-  width: 10px;
-  height: 10px;
-  background-color: $white;
-  border-radius: 50%;
-  animation: pulse 1s infinite alternate;
-}
-
-.pulsing_circle::before,
-.pulsing_circle::after {
-  content: "";
-  position: absolute;
-  width: inherit;
-  height: inherit;
-  border-radius: inherit;
-  animation: inherit;
-}
-
-.pulsing_circle::before {
-  animation-delay: 0.5s;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
+::v-deep(.q-btn-group) {
+  .q-btn__content {
+    font-weight: 600;
   }
-  100% {
-    transform: scale(0.8);
+}
+
+.present_btn__menu__list {
+  .q-item:nth-child(1) {
+    border-radius: 8px 8px 0 0;
+  }
+  .q-item:nth-child(3),
+  .q-item:nth-child(5) {
+    border-radius: 0 0;
+  }
+
+  .q-item:nth-child(7) {
+    border-radius: 0 0 8px 8px;
   }
 }
 </style>

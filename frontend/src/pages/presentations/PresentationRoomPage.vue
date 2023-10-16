@@ -247,7 +247,7 @@ onMounted(async () => {
       room.value = response.data.room;
       presentation.value = response.data.presentation;
 
-      presentationsStore.setSlide(response.data.slide);
+      presentationsStore.setSlide(slide.value || response.data.slide);
       canvasStore.setElementsFromSlide();
     })
     .catch((error) => {

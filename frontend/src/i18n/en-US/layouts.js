@@ -47,8 +47,11 @@ export default {
   presentationLayout: {
     header: {
       preview: "Preview",
-      run: "Run",
-      open: "Open",
+      present: {
+        title: "Present",
+
+        now: "Present now",
+      },
     },
 
     leftDrawer: {
