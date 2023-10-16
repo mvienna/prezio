@@ -50,7 +50,21 @@ export default {
       present: {
         title: "Present",
 
-        now: "Present now",
+        now: {
+          title: "Present now",
+          description: "Present from the current slide",
+        },
+        fromBeginning: {
+          title: "Present from beginning",
+          description: "Present from the first slide",
+        },
+        withBackstage: {
+          title: "Present with Backstage",
+          description: "Extended control over presentation",
+          beta: "Beta",
+        },
+
+        fullscreen: "Fullscreen",
       },
     },
 
