@@ -94,11 +94,23 @@ const routes = [
    */
   {
     path: "/",
-    component: () => import("layouts/PresentationRoomLayout.vue"),
+    component: () => import("layouts/NoLayout.vue"),
     children: [
       {
         path: ROUTE_PATHS.PRESENTATION_ROOM,
         component: () => import("pages/presentations/PresentationRoomPage.vue"),
+      },
+    ],
+  },
+
+  {
+    path: "/",
+    component: () => import("layouts/PresentationRoomBackstageLayout.vue"),
+    children: [
+      {
+        path: ROUTE_PATHS.PRESENTATION_ROOM_BACKSTAGE,
+        component: () =>
+          import("pages/presentations/PresentationRoomBackstagePage.vue"),
       },
     ],
   },

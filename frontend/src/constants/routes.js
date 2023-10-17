@@ -23,4 +23,5 @@ export const ROUTE_PATHS = {
   PRESENTATIONS_BROWSER: "/presentations",
   PRESENTATION_STUDIO: "/presentation/:presentation_id",
   PRESENTATION_ROOM: "/room/:token",
+  PRESENTATION_ROOM_BACKSTAGE: "/room/:token/backstage",
 };

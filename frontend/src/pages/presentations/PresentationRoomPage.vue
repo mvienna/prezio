@@ -1,180 +1,77 @@
 <template>
   <q-page>
-    <!-- collect participant's info -->
-    <PresentationRoomAuthForm v-if="!isAuthenticated" />
+    <div class="container relative-position column no-wrap justify-center">
+      <!-- auth form -->
+      <PresentationRoomAuthForm v-if="!isAuthenticated" />
 
-    <!-- content -->
-    <div
-      v-show="isAuthenticated"
-      class="canvas__wrapper relative-position q-pa-lg"
-    >
-      <div class="row no-wrap">
+      <!-- content -->
+      <div
+        v-show="isAuthenticated"
+        class="row no-wrap"
+        :class="showRoomInvitationPanel ? 'q-px-md' : ''"
+      >
         <!-- room invitation panel -->
-        <q-intersection
-          v-show="showRoomInvitationPanel"
-          transition="scale"
-          class="room_invitation_panel q-mr-md q-pa-md"
+        <transition
+          appear
+          enter-active-class="animated zoomIn"
+          leave-active-class="animated zoomOut"
         >
-          <!-- title -->
-          <div class="room_invitation_panel__title q-mb-md">
-            {{ $t("presentationRoom.invitation.title") }}
-          </div>
+          <PresentationRoomInvitationPanel
+            v-if="showRoomInvitationPanel"
+            :qr-code="qrCode"
+            @toggle-invitation-panel="toggleInvitationPanel()"
+          />
+        </transition>
 
-          <!-- qr code -->
-          <div
-            class="row justify-center"
-            v-html="qrCode?._svg?.outerHTML"
-          ></div>
+        <!-- slide  -->
+        <div
+          class="relative-position column no-wrap justify-center"
+          :style="
+            showRoomInvitationPanel
+              ? 'border-radius: 12px; overflow: hidden;'
+              : ''
+          "
+        >
+          <!-- header -->
+          <PresentationRoomHeader
+            :is-host="isHost"
+            :is-mouse-active="isMouseActive"
+            :show-room-information-panel="showRoomInformationPanel"
+            @mouseover="clearIsMouseActiveTimeout()"
+            @toggle-invitation-panel="toggleInvitationPanel()"
+          />
 
-          <div class="row no-wrap items-center justify-between q-mt-md q-mb-lg">
-            <q-separator style="width: 40%" />
-            <div class="text-grey">
-              {{ $t("presentationRoom.invitation.otherOption.or") }}
-            </div>
-            <q-separator style="width: 40%" />
-          </div>
-
-          <!-- other option -->
-          <div class="room_invitation_panel__other_options">
-            <!-- url -->
-            <div>
-              {{ $t("presentationRoom.invitation.otherOption.url") }}
-              <a :href="url" target="_blank" class="text-primary text-semibold">
-                {{ url }}
-              </a>
-            </div>
-
-            <q-icon
-              name="r_keyboard_double_arrow_down"
-              size="sm"
-              class="q-my-sm"
-              color="primary"
-            />
-
-            <!-- id -->
-            <div>
-              {{ $t("presentationRoom.invitation.otherOption.id") }}:
-              <span class="text-primary text-semibold cursor-pointer">
-                {{ room?.id }}
-              </span>
-            </div>
-          </div>
-        </q-intersection>
-
-        <div class="relative-position column no-wrap justify-center">
           <!-- canvas -->
-          <canvas ref="canvasRef" id="canvas"> </canvas>
+          <canvas
+            ref="canvasRef"
+            id="canvas"
+            @mousemove="handleCanvasMouseMoveEvent"
+          ></canvas>
+
+          <!-- menu panel -->
+          <PresentationRoomMenu
+            v-if="isHost"
+            :is-fullscreen="isFullscreen"
+            :show-room-information-panel="showRoomInformationPanel"
+            :show-room-invitation-panel="showRoomInvitationPanel"
+            @terminate-room="terminateRoom()"
+            @toggle-fullscreen="toggleFullscreen()"
+            @toggle-invitation-panel="toggleInvitationPanel()"
+            @toggle-information-panel="
+              showRoomInformationPanel = !showRoomInformationPanel
+            "
+          />
+
+          <!-- stats panel -->
+          <PresentationRoomData :participants-count="participantsCount || 0" />
 
           <!-- controls -->
-          <template v-if="isHost">
-            <!-- previous slide -->
-            <div
-              class="absolute-left column no-wrap justify-center q-ml-md"
-              style="z-index: 2"
-            >
-              <q-btn
-                flat
-                round
-                icon="r_arrow_back_ios_new"
-                no-caps
-                no-wrap
-                size="12px"
-                class="q-px-sm q-py-xl"
-                style="
-                  background: rgba(255, 255, 255, 0.5);
-                  backdrop-filter: blur(4px);
-                "
-                :disable="slideIndex === 0"
-                @click="handleSlideChange('backward')"
-              >
-                <q-tooltip
-                  anchor="center right"
-                  self="center left"
-                  transition-show="jump-right"
-                  transition-hide="jump-left"
-                  :offset="[8, 0]"
-                >
-                  <div class="text-bold text-center">
-                    {{ $t("presentationStudio.preview.controls.previous") }}
-                  </div>
-
-                  <div
-                    v-if="showShortcuts"
-                    class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-                  >
-                    <div v-if="isMac">⌘</div>
-                    <div v-else>Ctrl</div>
-                    <div>←</div>
-                  </div>
-                </q-tooltip>
-              </q-btn>
-            </div>
-
-            <!-- next slide -->
-            <div
-              class="absolute-right column no-wrap justify-center q-mr-md"
-              style="z-index: 2"
-            >
-              <q-btn
-                flat
-                round
-                icon="r_arrow_forward_ios"
-                no-caps
-                no-wrap
-                size="12px"
-                class="q-px-sm q-py-xl"
-                style="
-                  background: rgba(255, 255, 255, 0.5);
-                  backdrop-filter: blur(4px);
-                "
-                :disable="slideIndex === presentation?.slides?.length - 1"
-                @click="handleSlideChange('forward')"
-              >
-                <q-tooltip
-                  anchor="center left"
-                  self="center right"
-                  transition-show="jump-left"
-                  transition-hide="jump-right"
-                  :offset="[8, 0]"
-                >
-                  <div class="text-bold text-center">
-                    {{ $t("presentationStudio.preview.controls.next") }}
-                  </div>
-
-                  <div
-                    v-if="showShortcuts"
-                    class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-                  >
-                    <div v-if="isMac">⌘</div>
-                    <div v-else>Ctrl</div>
-                    <div>→</div>
-                  </div>
-                </q-tooltip>
-              </q-btn>
-            </div>
-          </template>
-        </div>
-
-        <!-- stats panel -->
-        <div class="stats_panel">
-          <!-- reactions -->
-          <div></div>
-
-          <!-- participants count -->
-          <div class="stats_panel__participants_count row no-wrap items-center">
-            <div class="relative-position q-mr-xs">
-              <q-icon name="r_person" color="grey" size="24px" />
-              <div
-                class="stats_panel__participants_count__status absolute-bottom-right"
-                :class="participantsCount ? 'bg-green' : 'bg-white'"
-              ></div>
-            </div>
-
-            <div>
-              <span>{{ participantsCount }}</span>
-              <span class="stats_panel__participants_count__limit">/200</span>
-            </div>
-          </div>
+          <PresentationRoomSlideControls
+            :is-host="isHost"
+            :is-mouse-active="isMouseActive"
+            @change-slide="handleSlideChange($event)"
+            @hover="clearIsMouseActiveTimeout()"
+          />
         </div>
       </div>
     </div>
@@ -194,6 +91,11 @@ import { useAuthStore } from "stores/auth";
 import QRCodeStyling from "qr-code-styling";
 import PresentationRoomAuthForm from "components/presentationRoom/PresentationRoomAuthForm.vue";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
+import PresentationRoomHeader from "components/presentationRoom/PresentationRoomHeader.vue";
+import PresentationRoomMenu from "components/presentationRoom/PresentationRoomMenu.vue";
+import PresentationRoomData from "components/presentationRoom/PresentationRoomData.vue";
+import PresentationRoomInvitationPanel from "components/presentationRoom/PresentationRoomInvitationPanel.vue";
+import PresentationRoomSlideControls from "components/presentationRoom/PresentationRoomSlideControls.vue";
 
 /*
  * variables
@@ -234,6 +136,8 @@ const isAuthenticated = computed(() => {
 });
 
 const participantsCount = ref(0);
+
+const showRoomInformationPanel = ref(true);
 
 /*
  * authenticate
@@ -286,18 +190,20 @@ onMounted(async () => {
   /*
    * auth
    */
-  const token = localStorage.getItem("participantToken");
-  if (token) {
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  if (!isHost.value) {
+    const token = localStorage.getItem("participantToken");
+    if (token) {
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-    await api
-      .get("/user/room")
-      .then((response) => {
-        participant.value = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      await api
+        .get("/user/room")
+        .then((response) => {
+          participant.value = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }
 
   /*
@@ -330,7 +236,7 @@ const connectToRoomChannels = () => {
   if (participant.value || user.value) {
     window.Echo.join(`public.room.${room.value.id}`)
       .here((users) => {
-        participantsCount.value = users.length; // subtract the host from the count
+        participantsCount.value = users.length;
       })
       .joining(() => {
         participantsCount.value++;
@@ -368,19 +274,10 @@ const connectToRoomChannels = () => {
         clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
         presentation.value.id;
     } else {
-      router.push(ROUTE_PATHS.DASHBOARD);
+      window.location = ROUTE_PATHS.DASHBOARD;
     }
   });
 };
-
-/*
- * slide index
- */
-const slideIndex = computed(() => {
-  return presentation.value?.slides?.findIndex(
-    (item) => item.id === slide.value?.id
-  );
-});
 
 /*
  * handle slides change
@@ -410,9 +307,13 @@ const handleKeyDownEvent = (event) => {
 };
 
 const handleSlideChange = async (direction) => {
+  const slideIndex = presentation.value?.slides?.findIndex(
+    (item) => item.id === slide.value?.id
+  );
+
   const newSlide =
     presentation.value.slides?.[
-      slideIndex.value + (direction === "forward" ? 1 : -1)
+      slideIndex + (direction === "forward" ? 1 : -1)
     ];
   if (!newSlide) return;
 
@@ -424,38 +325,47 @@ const handleSlideChange = async (direction) => {
 };
 
 /*
- * shortcuts
+ * mouse activity
  */
-const showShortcuts = computed(() => {
-  return $q.platform.is.desktop;
-});
+const isMouseActive = ref(false);
+const isMouseActiveTimeout = ref();
 
-const isMac = computed(() => {
-  return $q.platform.is.platform === "mac";
-});
+const handleCanvasMouseMoveEvent = () => {
+  clearIsMouseActiveTimeout();
+  isMouseActive.value = true;
+
+  isMouseActiveTimeout.value = setTimeout(() => {
+    isMouseActive.value = false;
+  }, 2000);
+};
+
+const clearIsMouseActiveTimeout = () => {
+  clearTimeout(isMouseActiveTimeout.value);
+};
 
 /*
  * qr
  */
 const qrCode = new QRCodeStyling({
-  width: 196,
-  height: 196,
+  width: 236,
+  height: 236,
   type: "svg",
   data: window.location.href,
-  image: window.location.origin + "/favicon.ico",
+  image: window.location.origin + "/logo_white.png",
   dotsOptions: {
     type: "rounded",
-    gradient: {
-      type: "linear",
-      rotation: Math.PI / 4,
-      colorStops: [
-        { offset: 0, color: "#4971FF" },
-        { offset: 1, color: "#4647DA" },
-      ],
-    },
+    // gradient: {
+    //   type: "linear",
+    //   rotation: Math.PI / 4,
+    //   colorStops: [
+    //     { offset: 0, color: "#4971FF" },
+    //     { offset: 1, color: "#4647DA" },
+    //   ],
+    // },
+    color: "#FFFFFF",
   },
   backgroundOptions: {
-    color: "#FFFFFF",
+    color: "#1F1F29",
   },
   imageOptions: {
     crossOrigin: "anonymous",
@@ -463,90 +373,62 @@ const qrCode = new QRCodeStyling({
   },
 });
 
-const url = window.location.host;
+/*
+ * toggle invitation panel
+ */
+const toggleInvitationPanel = () => {
+  showRoomInvitationPanel.value = !showRoomInvitationPanel.value;
+  presentationsStore.sendPresentationRoomUpdateEvent();
+};
+
+/*
+ * fullscreen
+ */
+const isFullscreen = ref(!!document.fullscreenElement);
+
+const toggleFullscreen = () => {
+  if (document.fullscreenElement) {
+    isFullscreen.value = false;
+    document.exitFullscreen();
+  } else {
+    isFullscreen.value = true;
+    document.documentElement.requestFullscreen();
+  }
+};
+
+/*
+ * terminate room
+ */
+const terminateRoom = () => {
+  api
+    .delete(`/presentation/${presentation.value.id}/room/${room.value.id}`)
+    .catch((error) => {
+      console.log(error);
+    });
+};
 </script>
 
 <style scoped lang="scss">
 .q-page {
-  height: calc(100vh - 64px);
+  overflow: hidden;
+  background: black;
 }
 
 /*
  * content
  */
-.canvas__wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  overflow: hidden;
-  z-index: 1;
-
-  canvas {
-    background-color: $white;
-    border-radius: 12px;
-    aspect-ratio: 16/9;
-    max-width: 100%;
-    max-height: 90vh;
-    z-index: 1;
-  }
+.container {
+  max-width: 100%;
+  padding: 0;
+  height: 100vh;
+  aspect-ratio: 16/9;
 }
 
-/*
- * room invitation panel
- */
-.room_invitation_panel {
-  height: 100%;
-  border: 1.5px solid $blue-2;
-  background: $white;
-  border-radius: 12px;
-
-  .room_invitation_panel__title {
-    font-weight: 800;
-    font-size: 24px;
-    text-align: center;
-    color: $primary;
-    background: linear-gradient(to right, #4971ff, #4647da);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .room_invitation_panel__other_options {
-    text-align: center;
-    font-weight: 500;
-  }
-}
-
-/*
- * stats panel
- */
-.stats_panel {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  background: rgba(0, 0, 0, 0.7);
-  color: $white;
-  backdrop-filter: blur(4px);
-  border-radius: 24px;
-  padding: 8px 16px;
+canvas {
+  background-color: $white;
+  margin: 0;
   z-index: 1;
-
-  .stats_panel__participants_count {
-    font-size: 18px;
-
-    .stats_panel__participants_count__status {
-      border-radius: 100%;
-      width: 8px;
-      height: 8px;
-      margin-bottom: 1px;
-      margin-right: 1px;
-    }
-
-    .stats_panel__participants_count__limit {
-      font-size: 12px;
-      opacity: 0.7;
-    }
-  }
+  width: 100%;
+  aspect-ratio: 16/9;
 }
 </style>

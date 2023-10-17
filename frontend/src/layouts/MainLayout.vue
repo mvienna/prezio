@@ -84,7 +84,7 @@
       <!-- logo -->
       <div class="drawer__logo q-ma-lg">
         <router-link :to="ROUTE_PATHS.INDEX">
-          <q-img src="/logo_black.png" />
+          <q-img src="/logo_with_title_black.png" />
         </router-link>
       </div>
 

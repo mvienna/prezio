@@ -3,7 +3,7 @@
     <div class="container">
       <!-- logo -->
       <div class="container__logo q-pb-xl">
-        <q-img src="/logo_black.png" />
+        <q-img src="/logo_with_title_black.png" />
       </div>
 
       <q-form @submit.prevent="submit()">

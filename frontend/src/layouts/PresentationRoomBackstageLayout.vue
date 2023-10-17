@@ -23,9 +23,9 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "stores/auth";
 import { computed } from "vue";
-import PresentationRoomLayoutHostDrawerLeft from "components/layouts/presentation/room/host/PresentationRoomLayoutHostDrawerLeft.vue";
-import PresentationRoomLayoutParticipantHeader from "components/layouts/presentation/room/participant/PresentationRoomLayoutParticipantHeader.vue";
-import PresentationRoomLayoutHostHeader from "components/layouts/presentation/room/host/PresentationRoomLayoutHostHeader.vue";
+import PresentationRoomLayoutHostDrawerLeft from "components/layouts/presentation/room/backstage/host/PresentationRoomBackstageLayoutHostDrawerLeft.vue";
+import PresentationRoomLayoutParticipantHeader from "components/layouts/presentation/room/backstage/participant/PresentationRoomBackstageLayoutParticipantHeader.vue";
+import PresentationRoomLayoutHostHeader from "components/layouts/presentation/room/backstage/host/PresentationRoomBackstageLayoutHostHeader.vue";
 
 /*
  * stores

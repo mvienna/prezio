@@ -20,7 +20,7 @@ class PresentationRoomController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
+        if ($presentation->user_id !== $user->id && !$user?->isAdmin()) {
             return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
@@ -40,7 +40,7 @@ class PresentationRoomController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
+        if ($presentation->user_id !== $user->id && !$user?->isAdmin()) {
             return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 

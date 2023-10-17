@@ -78,7 +78,11 @@
 
       <!-- logo -->
       <div style="min-width: 64px" class="q-mr-md">
-        <q-img src="/logo_black.png" style="height: 32px" fit="contain" />
+        <q-img
+          src="/logo_with_title_black.png"
+          style="height: 32px"
+          fit="contain"
+        />
       </div>
 
       <!-- stop presenting -->
