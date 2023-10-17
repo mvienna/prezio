@@ -212,10 +212,7 @@ onMounted(async () => {
     }
 
     // login as guest
-    if (
-      !participant.value &&
-      !presentation.value?.settings?.require_participants_info
-    ) {
+    if (!participant.value) {
       await presentationsStore.loginRoom([
         {
           name: "name",
