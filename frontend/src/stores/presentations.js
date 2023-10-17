@@ -373,7 +373,7 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async login(data) {
+    async loginRoom(data) {
       return await api
         .post(`/room/login`, {
           room_id: this.room?.id,
@@ -387,6 +387,22 @@ export const usePresentationsStore = defineStore("presentations", {
           ] = `Bearer ${response.data.token}`;
 
           localStorage.setItem("participantToken", response.data.token);
+        });
+    },
+
+    async sendPresentationRoomReaction(reaction) {
+      if (!reaction) return;
+
+      return await api
+        .post(
+          `/presentation/${this.presentation?.id}/room/${this.room?.id}/react`,
+          {
+            reaction: reaction,
+          }
+        )
+        .catch((error) => {
+          console.log(error);
+          console.log(error.response.data);
         });
     },
   },

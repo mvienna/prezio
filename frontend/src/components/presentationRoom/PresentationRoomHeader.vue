@@ -65,7 +65,7 @@
       <!-- link -->
       <div
         class="ellipsis room_link"
-        style="max-width: 600px; font-size: 18px"
+        style="max-width: 500px; font-size: 18px"
         @click="copyRoomLinkToClipboard()"
       >
         <span class="text-grey q-mr-xs">

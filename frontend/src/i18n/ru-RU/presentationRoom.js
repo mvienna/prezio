@@ -48,6 +48,7 @@ export default {
       form: {
         submit: "Присоединяйся сейчас",
       },
+      guest: "Гость",
     },
   },
 };

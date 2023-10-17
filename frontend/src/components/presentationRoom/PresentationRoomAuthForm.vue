@@ -131,7 +131,7 @@ const submit = async () => {
     return { name: field.name, value: field.value };
   });
 
-  await presentationsStore.login(data);
+  await presentationsStore.loginRoom(data);
   window.location.reload();
 };
 </script>

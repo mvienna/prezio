@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Presentation;
 
+use App\Events\PresentationRoomNewReactionEvent;
 use App\Events\PresentationRoomTerminatedEvent;
 use App\Events\PresentationRoomUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Presentation\Presentation;
 use App\Models\Presentation\Room\PresentationRoom;
 use App\Models\Presentation\Room\PresentationRoomParticipant;
+use App\Models\Presentation\Room\PresentationRoomReactions;
 use App\Models\Presentation\Slide\PresentationSlide;
 use App\Models\User;
 use Carbon\Carbon;
@@ -16,6 +18,9 @@ use Illuminate\Http\Request;
 
 class PresentationRoomController extends Controller
 {
+    /*
+     * room
+     */
     public function store (Presentation $presentation): JsonResponse
     {
         /** @var User $user */
@@ -30,6 +35,10 @@ class PresentationRoomController extends Controller
             $room = PresentationRoom::create([
                 'presentation_id' => $presentation->id,
                 'token' => bin2hex(random_bytes(32)),
+            ]);
+
+            PresentationRoomReactions::create([
+                'room_id' => $room->id
             ]);
         }
 
@@ -63,8 +72,16 @@ class PresentationRoomController extends Controller
             return $this->errorResponse(trans('errors.room.notFound'), 404);
         }
 
-        $room->load('presentation');
+        $room->load('presentation', 'reactions');
         $room->presentation->load('slides', 'slides.answers', 'preview', 'settings');
+
+        if (!$room->reactions) {
+            PresentationRoomReactions::create([
+                'room_id' => $room->id,
+            ]);
+
+            $room->load('reactions');
+        }
 
         return $this->jsonResponse([
             'room' => $room,
@@ -84,6 +101,31 @@ class PresentationRoomController extends Controller
         return $this->successResponse();
     }
 
+    /*
+     * reactions
+     */
+    public function react(Presentation $presentation, PresentationRoom $room, Request $request): JsonResponse
+    {
+        $validReactions = ['like', 'love', 'haha', 'wow', 'sad', 'angry'];
+        $reaction = $request->input('reaction');
+
+        $request->validate([
+            'reaction' => 'required|in:' . implode(',', $validReactions),
+        ]);
+
+        if (in_array($reaction, $validReactions)) {
+            $room->reactions()->increment($reaction);
+
+            $room->load('reactions');
+            event(new PresentationRoomNewReactionEvent($room, $room->reactions));
+        }
+
+        return $this->successResponse();
+    }
+
+    /*
+     *  auth
+     */
     public function login(Request $request): JsonResponse
     {
         $participant = PresentationRoomParticipant::find($request->participant_id);

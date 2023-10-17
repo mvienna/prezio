@@ -61,12 +61,6 @@ export default async ({ app, router }) => {
     disableStats: true,
 
     authEndpoint: process.env.PUSHER_APP_ENDPOINT,
-    auth: {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("participantToken")}`,
-        "X-CSRF-Token": "CSRF_TOKEN",
-      },
-    },
   });
 
   /*

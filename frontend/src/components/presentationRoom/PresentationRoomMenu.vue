@@ -1,5 +1,6 @@
 <template>
   <div class="room_menu row no-wrap">
+    <!-- menu -->
     <q-btn
       :label="$t('presentationRoom.footer.menu.title')"
       flat
@@ -100,7 +101,7 @@
             @click="$emit('toggleInformationPanel')"
           />
 
-          <!-- header toggle -->
+          <!-- privacy toggle -->
           <q-btn
             :label="
               $t(
@@ -115,13 +116,16 @@
             no-caps
             align="left"
             flat
+            disable
             style="border-radius: 8px 8px 16px 16px"
             v-close-popup
           />
         </div>
       </q-menu>
     </q-btn>
-    <q-btn flat round icon="r_celebration" />
+
+    <!-- spice things up with effect -->
+    <q-btn flat round icon="r_celebration" disable />
   </div>
 </template>
 

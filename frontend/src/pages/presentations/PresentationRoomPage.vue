@@ -7,7 +7,7 @@
       <!-- content -->
       <div
         v-show="isAuthenticated"
-        class="row no-wrap"
+        class="row no-wrap items-center"
         :class="showRoomInvitationPanel ? 'q-px-md' : ''"
       >
         <!-- room invitation panel -->
@@ -26,6 +26,7 @@
         <!-- slide  -->
         <div
           class="relative-position column no-wrap justify-center"
+          style="background: pink"
           :style="
             showRoomInvitationPanel
               ? 'border-radius: 12px; overflow: hidden;'
@@ -93,15 +94,20 @@ import PresentationRoomAuthForm from "components/presentationRoom/PresentationRo
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import PresentationRoomHeader from "components/presentationRoom/PresentationRoomHeader.vue";
 import PresentationRoomMenu from "components/presentationRoom/PresentationRoomMenu.vue";
-import PresentationRoomData from "components/presentationRoom/PresentationRoomData.vue";
+import PresentationRoomData from "components/presentationRoom/data/PresentationRoomData.vue";
 import PresentationRoomInvitationPanel from "components/presentationRoom/PresentationRoomInvitationPanel.vue";
 import PresentationRoomSlideControls from "components/presentationRoom/PresentationRoomSlideControls.vue";
+import Echo from "laravel-echo";
+import { randomNames } from "src/constants/mock";
+import { useI18n } from "vue-i18n";
 
 /*
  * variables
  */
 const router = useRouter();
 const $q = useQuasar();
+
+const { t } = useI18n({ useScope: "global" });
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -204,6 +210,19 @@ onMounted(async () => {
           console.log(error);
         });
     }
+
+    // login as guest
+    if (!participant.value) {
+      await presentationsStore.loginRoom([
+        {
+          name: "name",
+          value:
+            t("presentationRoom.auth.guest") +
+            " " +
+            randomNames[Math.floor(Math.random() * randomNames.length)],
+        },
+      ]);
+    }
   }
 
   /*
@@ -234,6 +253,18 @@ const connectToRoomChannels = () => {
   const channel = window.Echo.channel(`public.room.${room.value.id}`);
 
   if (participant.value || user.value) {
+    window.Echo = new Echo({
+      ...window.Echo.options,
+      auth: {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            isHost.value ? "token" : "participantToken"
+          )}`,
+          "X-CSRF-Token": "CSRF_TOKEN",
+        },
+      },
+    });
+
     window.Echo.join(`public.room.${room.value.id}`)
       .here((users) => {
         participantsCount.value = users.length;
@@ -249,21 +280,26 @@ const connectToRoomChannels = () => {
   /*
    * listen for updates
    */
-  if (!isHost.value) {
-    channel.listen("PresentationRoomUpdatedEvent", async (event) => {
-      showRoomInvitationPanel.value = event.showRoomInvitationPanel;
+  channel.listen("PresentationRoomUpdatedEvent", async (event) => {
+    showRoomInvitationPanel.value = event.showRoomInvitationPanel;
 
-      if (event.slide_id !== slide.value.id) {
-        const newSlide = presentation.value.slides.find(
-          (item) => item.id === event.slide_id
-        );
+    if (event.slide_id !== slide.value.id) {
+      const newSlide = presentation.value.slides.find(
+        (item) => item.id === event.slide_id
+      );
 
-        await presentationsStore.setSlide(newSlide);
-        await canvasStore.setElementsFromSlide();
-        canvasStore.redrawCanvas(false, false, undefined, false);
-      }
-    });
-  }
+      await presentationsStore.setSlide(newSlide);
+      await canvasStore.setElementsFromSlide();
+      canvasStore.redrawCanvas(false, false, undefined, false);
+    }
+  });
+
+  /*
+   * listen for new reactions
+   */
+  channel.listen("PresentationRoomNewReactionEvent", (event) => {
+    room.value.reactions = event.reactions;
+  });
 
   /*
    * listen for termination

@@ -72,4 +72,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/presentation/slide/{slide}/answer', PresentationSlideAnswerController::class)->only(['store', 'destroy']);
 
     Route::resource('/presentation/{presentation}/room', PresentationRoomController::class)->only(['store', 'update', 'destroy']);
+    Route::post('/presentation/{presentation}/room/{room}/react', [PresentationRoomController::class, 'react']);
 });
