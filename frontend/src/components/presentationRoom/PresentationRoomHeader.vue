@@ -121,7 +121,7 @@
     </div>
   </q-toolbar>
 
-  <q-toolbar v-else class="row justify-center">
+  <q-toolbar v-else class="row justify-end q-pa-lg">
     <div style="width: 96px">
       <q-img
         src="/logo_white_with_title_white.png"
