@@ -424,12 +424,25 @@ const isFullscreen = ref(!!document.fullscreenElement);
 
 const toggleFullscreen = () => {
   if (document.fullscreenElement) {
-    isFullscreen.value = false;
     document.exitFullscreen();
   } else {
-    isFullscreen.value = true;
     document.documentElement.requestFullscreen();
   }
+};
+
+onBeforeMount(() => {
+  document.addEventListener("fullscreenchange", (event) => {
+    console.log(event);
+    handleFullscreenChangeEvent();
+  });
+});
+
+onUnmounted(() => {
+  document.removeEventListener("fullscreenchange", handleKeyDownEvent);
+});
+
+const handleFullscreenChangeEvent = () => {
+  isFullscreen.value = !!document.fullscreenElement;
 };
 
 /*
