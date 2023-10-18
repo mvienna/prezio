@@ -73,14 +73,18 @@ class PresentationController extends Controller
             return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
-        $presentation->load('slides', 'rooms', 'rooms.participants', 'rooms.reactions');
+        $presentation->load('settings', 'slides', 'rooms', 'rooms.participants', 'rooms.reactions');
 
         // delete presentation rooms, rooms participants and rooms reactions
         foreach ($presentation->rooms as $room) {
             foreach ($room->participants as $participant) {
                 $participant->delete();
             }
-            $room->reactions->delete();
+
+            if ($room->reactions) {
+                $room->reactions->delete();
+            }
+
             $room->delete();
         }
 
@@ -90,7 +94,9 @@ class PresentationController extends Controller
         }
 
         // delete presentation settings
-        $presentation->settings()->delete();
+        if ($presentation->settings) {
+            $presentation->settings->delete();
+        }
 
         // delete presentation
         $presentation->delete();
