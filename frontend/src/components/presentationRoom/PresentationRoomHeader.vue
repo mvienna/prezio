@@ -187,25 +187,6 @@ const copyRoomLinkToClipboard = () => {
       console.error(error);
     });
 };
-
-/*
- *- --
- */
-function getColorAtPixel(imageData, x, y) {
-  const offset = (y * imageData.width + x) * 4;
-  const red = imageData.data[offset];
-  const green = imageData.data[offset + 1];
-  const blue = imageData.data[offset + 2];
-  return `rgb(${red},${green},${blue})`;
-}
-
-function updateButtonColor(x, y, width, height) {
-  const imageData = ctx.value.getImageData(x, y, width, height);
-
-  const averageColor = getColorAtPixel(imageData, 0, 0);
-
-  console.log(averageColor);
-}
 </script>
 
 <style scoped lang="scss">

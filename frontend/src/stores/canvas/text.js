@@ -306,7 +306,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.customization.formatting.isLineThrough ? "line-through" : ""
       } ${this.customization.formatting.isUnderline ? "underline" : ""}`;
 
-      console.log(this.input.innerHTML);
       const text = this.input.innerHTML
         .replace(/<(?!br\s*\/?)[^>]+>/g, "")
         .trim();

@@ -432,7 +432,6 @@ const toggleFullscreen = () => {
 
 onBeforeMount(() => {
   document.addEventListener("fullscreenchange", (event) => {
-    console.log(event);
     handleFullscreenChangeEvent();
   });
 });
