@@ -398,7 +398,6 @@ const handleSlideChange = async (newSlide) => {
   deselectElement();
 
   await presentationsStore.setSlide(newSlide, elements.value);
-
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false, false, undefined, false);
 };

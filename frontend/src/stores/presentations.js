@@ -254,11 +254,11 @@ export const usePresentationsStore = defineStore("presentations", {
       return await this.setSlide(response.data);
     },
 
-    saveSlide(slide = this.slide, elements) {
+    async saveSlide(slide = this.slide, elements) {
       this.isSavingError = false;
       this.isSaving = true;
 
-      api
+      return await api
         .patch(`/presentation/${this.presentation.id}/slide/${slide.id}`, {
           canvas_data: elements,
           preview: slide.preview,
@@ -358,12 +358,12 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * room
      */
-    sendPresentationRoomUpdateEvent(
+    async sendPresentationRoomUpdateEvent(
       presentation_id = this.presentation?.id,
       room_id = this.room?.id,
       slide_id = this.slide?.id
     ) {
-      api
+      return await api
         .patch(`/presentation/${presentation_id}/room/${room_id}`, {
           slide_id: slide_id,
           showRoomInvitationPanel: this.showRoomInvitationPanel,

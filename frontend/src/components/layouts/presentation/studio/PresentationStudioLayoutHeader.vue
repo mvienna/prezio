@@ -213,10 +213,7 @@
                 clickable
                 v-close-popup
                 class="q-pa-md"
-                @click="
-                  presentationsStore.setSlide(presentation.slides[0], elements);
-                  handleStartPresenting();
-                "
+                @click="handleStartPresenting(presentation.slides[0])"
               >
                 <q-item-section>
                   <q-item-label>
@@ -342,17 +339,23 @@ const slideIndex = computed(() => {
  */
 const isFullscreen = ref(true);
 
-const handleStartPresenting = async () => {
+const handleStartPresenting = async (startSlide = slide.value) => {
+  await presentationsStore.saveSlide(slide.value, elements.value);
+
   if (isFullscreen.value) {
     await document.documentElement.requestFullscreen();
   }
 
-  if (presentation.value?.room?.token) {
-    openPresentationRoom();
-  } else {
+  if (!presentation.value?.room?.token) {
     await createPresentationRoom();
-    openPresentationRoom();
   }
+
+  await presentationsStore.sendPresentationRoomUpdateEvent(
+    undefined,
+    presentation.value.room.id,
+    startSlide.id
+  );
+  openPresentationRoom();
 };
 
 const openPresentationRoom = () => {

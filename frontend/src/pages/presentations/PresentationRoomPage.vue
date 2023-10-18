@@ -119,7 +119,7 @@ const { presentation, slide, room, participant, showRoomInvitationPanel } =
   storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
-const { canvas, ctx, scale } = storeToRefs(canvasStore);
+const { canvas, ctx, scale, elements } = storeToRefs(canvasStore);
 
 /*
  * statuses
@@ -163,24 +163,22 @@ onMounted(async () => {
    */
   await api
     .get(`/room/${router.currentRoute.value.params.token}`)
-    .then((response) => {
+    .then(async (response) => {
       room.value = response.data.room;
       presentation.value = response.data.presentation;
 
       /*
        * update slide
        */
-      presentationsStore.setSlide(
-        slide.value ||
-          presentation.value.slides.find(
-            (item) => item.id === room.value.slide_id
-          ) ||
-          presentation.value.slides[0]
-      );
-      canvasStore.setElementsFromSlide();
+      slide.value =
+        presentation.value.slides.find(
+          (item) => item.id === room.value.slide_id
+        ) || presentation.value.slides[0];
+
+      await canvasStore.setElementsFromSlide();
 
       if (isHost.value && slide.value.id !== room.value.slide_id) {
-        presentationsStore.sendPresentationRoomUpdateEvent();
+        await presentationsStore.sendPresentationRoomUpdateEvent();
       }
     })
     .catch((error) => {
@@ -466,17 +464,16 @@ const terminateRoom = () => {
  * content
  */
 .container {
-  max-width: 100%;
   padding: 0;
   height: 100vh;
   aspect-ratio: 16/9;
+  max-width: 100%;
+  z-index: 1;
 }
 
 canvas {
   background-color: $white;
-  margin: 0;
   z-index: 1;
   width: 100%;
-  aspect-ratio: 16/9;
 }
 </style>
