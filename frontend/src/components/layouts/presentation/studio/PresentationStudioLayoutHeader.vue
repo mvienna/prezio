@@ -347,7 +347,7 @@ const handleStartPresenting = async () => {
     await document.documentElement.requestFullscreen();
   }
 
-  if (presentation?.room) {
+  if (presentation.value?.room?.token) {
     openPresentationRoom();
   } else {
     await createPresentationRoom();
@@ -356,17 +356,19 @@ const handleStartPresenting = async () => {
 };
 
 const openPresentationRoom = () => {
+  if (!presentation.value?.room?.token) return;
+
   router.push(
     clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
-      presentation.value.room.token
+      presentation.value?.room?.token
   );
 };
 
 const createPresentationRoom = async () => {
-  await api
+  return await api
     .post(`/presentation/${presentation.value.id}/room`)
     .then((response) => {
-      presentation.value.room.token = response.data.token;
+      presentation.value.room = response.data;
     })
     .catch((error) => {
       console.log(error);
