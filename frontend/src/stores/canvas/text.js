@@ -347,13 +347,15 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.input.style.outline = "none";
         this.input.style.zIndex = "2";
         this.input.style.marginTop = "-1px";
-        this.input.style.padding = "10px";
+        this.input.style.padding = canvasStore.computeRealSize(20) + "px";
         // this.input.style.wordBreak = "break-all";
 
         this.input.style.color = this.customization.color;
         this.input.style.lineHeight = this.customization.lineHeight;
         this.input.style.fontFamily = this.customization.font;
-        this.input.style.fontSize = this.customization.fontSize;
+        this.input.style.fontSize =
+          canvasStore.computeRealSize(parseFloat(this.customization.fontSize)) +
+          "px";
         this.input.style.fontWeight = this.customization.formatting.isBold
           ? "bold"
           : "normal";
