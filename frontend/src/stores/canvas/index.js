@@ -242,7 +242,9 @@ export const useCanvasStore = defineStore("canvas", {
       tempCanvas.width = 512;
       tempCanvas.height = 288;
       tempCtx.drawImage(this.canvas, 0, 0, tempCanvas.width, tempCanvas.height);
-      slide.value.preview = tempCanvas.toDataURL("image/png");
+      if (slide.value) {
+        slide.value.preview = tempCanvas.toDataURL("image/png");
+      }
       tempCanvas.remove();
 
       presentationsStore.updateLocalSlide();
