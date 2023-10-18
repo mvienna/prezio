@@ -214,11 +214,7 @@ export const usePresentationsStore = defineStore("presentations", {
       return await api
         .delete(`/presentation/${presentation.id}`)
         .catch((error) => {
-          console.log(error);
-          console.log(error.response);
-          console.log(error.response.data);
-          console.log(error.response.data.error);
-          console.log(error.response.data.message);
+          console.log(error.response?.data?.message);
         });
     },
 
