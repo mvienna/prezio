@@ -403,12 +403,14 @@ const handleSlideChange = async (newSlide) => {
 };
 
 const handleAddingNewSlide = async (type) => {
-  canvasStore.saveSlidePreview();
-  deselectElement();
+  if (slide.value) {
+    canvasStore.saveSlidePreview();
+    deselectElement();
 
-  slide.value.canvas_data = JSON.stringify(elements.value);
-  presentationsStore.updateLocalSlide();
-  presentationsStore.saveSlide(undefined, elements.value);
+    slide.value.canvas_data = JSON.stringify(elements.value);
+    presentationsStore.updateLocalSlide();
+    presentationsStore.saveSlide(undefined, elements.value);
+  }
 
   let preparedElements = null;
 
