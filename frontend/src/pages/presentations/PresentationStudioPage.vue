@@ -10,18 +10,23 @@
     />
 
     <!-- canvas -->
-    <div class="canvas__wrapper q-pa-lg" @click="handleClickOutsideOfCanvas">
+    <div
+      class="canvas__container row justify-center"
+      @click="handleClickOutsideOfCanvas"
+    >
       <teleport
         :disabled="!isPresentationPreview"
         :to="isPresentationPreview ? '#presentationPreview' : 'body'"
       >
-        <canvas
-          ref="canvasRef"
-          id="canvas"
-          :class="[canvasCursorClass, canvasHighlightClass]"
-          @mousedown="handleCanvasMouseDown"
-          @click="handleCanvasClick"
-        ></canvas>
+        <div class="canvas__wrapper column justify-center">
+          <canvas
+            ref="canvasRef"
+            id="canvas"
+            :class="[canvasCursorClass, canvasHighlightClass]"
+            @mousedown="handleCanvasMouseDown"
+            @click="handleCanvasClick"
+          ></canvas>
+        </div>
       </teleport>
     </div>
 
@@ -733,39 +738,23 @@ watch(
   height: calc(100vh - 66px);
 }
 
-.canvas__wrapper {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  overflow: hidden;
-  z-index: 1;
+.canvas__container {
+  width: 100%;
+  height: calc(100% - 68px);
+  padding: calc(68px + 24px) 24px 24px;
 
-  canvas {
-    background-color: $white;
-    border-radius: 6px;
-    width: 100%;
+  .canvas__wrapper {
+    height: 100%;
+    aspect-ratio: 16/9;
+    max-width: 100%;
     z-index: 1;
-  }
 
-  /*
-   * highlight canvas
-   */
-  .canvas--highlighted {
-    border: 2px solid transparent;
-    animation: pulse 4s infinite;
-    box-shadow: 0 0 0 0 $primary;
-    transition: box-shadow 1s ease-in-out;
-
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 $primary;
-      }
-      50% {
-        box-shadow: 0 0 20px 10px transparent;
-      }
-      100% {
-        box-shadow: 0 0 0 0 transparent;
-      }
+    canvas {
+      background-color: $white;
+      width: 100%;
+      height: 16/9;
+      border-radius: 8px;
+      z-index: 1;
     }
   }
 }
