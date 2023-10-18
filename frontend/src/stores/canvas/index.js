@@ -477,10 +477,12 @@ export const useCanvasStore = defineStore("canvas", {
       /*
        * compute props
        */
-      const padding = this.computeAdjustedSize(10);
-      const adjustedFontSize =
-        (parseFloat(element.fontSize) * this.canvas.width) /
-        this.canvasRect().width;
+      // const padding = this.computeAdjustedSize(10);
+      // const adjustedFontSize =
+      //   (parseFloat(element.fontSize) * this.canvas.width) /
+      //   this.canvasRect().width;
+      const padding = 20;
+      const adjustedFontSize = parseFloat(element.fontSize);
 
       /*
        * apply text customization
