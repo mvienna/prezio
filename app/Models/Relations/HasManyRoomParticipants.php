@@ -12,6 +12,6 @@ trait HasManyRoomParticipants
      */
     public function participants(): HasMany
     {
-        return $this->hasMany(PresentationRoomParticipant::class);
+        return $this->hasMany(PresentationRoomParticipant::class, 'room_id');
     }
 }
