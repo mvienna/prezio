@@ -321,7 +321,7 @@ export const usePresentationsStore = defineStore("presentations", {
      * slide
      */
     async setSlide(newSlide, elements = null, saveSlide = true) {
-      if (this.slide?.id === newSlide.id) return;
+      if (!newSlide || this.slide?.id === newSlide.id) return;
 
       // save previous slide
       if (this.slide && elements && saveSlide) {
