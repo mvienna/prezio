@@ -6,7 +6,7 @@
 
       <!-- content -->
       <div
-        v-show="isAuthenticated"
+        v-show="isAuthenticated && isCanvasReady"
         class="row no-wrap items-center"
         :class="showRoomInvitationPanel ? 'q-px-md' : ''"
       >
@@ -83,7 +83,7 @@
 import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
-import { useQuasar } from "quasar";
+import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
@@ -152,6 +152,14 @@ const showRoomInformationPanel = ref(true);
  * establish connection to room channels
  */
 const canvasRef = ref();
+const isCanvasReady = ref(false);
+
+onBeforeMount(() => {
+  $q.loading.show({
+    spinner: QSpinnerIos,
+    message: t("loading.fetchingData"),
+  });
+});
 
 onMounted(async () => {
   canvas.value = canvasRef.value;
@@ -236,6 +244,12 @@ onMounted(async () => {
    * establish connection to room channels
    */
   connectToRoomChannels();
+
+  /*
+   * hide loader
+   */
+  $q.loading.hide();
+  isCanvasReady.value = true;
 });
 
 const resizeCanvas = () => {
