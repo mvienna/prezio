@@ -18,7 +18,7 @@
       />
     </q-toolbar>
 
-    <q-card-section class="q-pt-none">
+    <q-card-section class="q-pt-xs">
       <div class="column no-wrap q-gutter-sm">
         <q-expansion-item
           v-for="(tab, tabIndex) in Object.values(tabs)"
