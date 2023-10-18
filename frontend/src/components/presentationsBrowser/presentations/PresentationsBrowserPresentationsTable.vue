@@ -634,17 +634,35 @@ const presentationsColumns = [
     label: t("myPresentations.columns.updated"),
     align: "center",
     field: (row) => {
-      const latestUpdatedSlide = row.slides?.reduce((prev, current) =>
-        new Date(current.updated_at) > new Date(prev.updated_at)
-          ? current
-          : prev
-      );
+      // handle the case where row or row.updated_at is missing
+      if (!row || !row.updated_at) {
+        return null;
+      }
 
-      return row.updated_at > latestUpdatedSlide.updated_at
-        ? row.updated_at
-        : latestUpdatedSlide.updated_at;
+      const slides = row.slides || [];
+
+      const latestUpdatedSlide = slides.reduce((previous, current) => {
+        // skip invalid slides
+        if (!current || !current.updated_at) {
+          return previous;
+        }
+
+        const previousDate = new Date(previous.updated_at);
+        const currentDate = new Date(current.updated_at);
+
+        return currentDate > previousDate ? current : previous;
+      }, slides[0]);
+
+      // if there are no valid slides, return row.updated_at
+      if (!latestUpdatedSlide) {
+        return row.updated_at;
+      }
+
+      const latestRowDate = new Date(row.updated_at);
+      const latestSlideDate = new Date(latestUpdatedSlide.updated_at);
+
+      return latestRowDate > latestSlideDate ? latestRowDate : latestSlideDate;
     },
-    sortable: true,
   },
   {
     name: presentationColumnsNames.createdAt,
