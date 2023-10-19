@@ -1,11 +1,18 @@
 <template>
   <q-toolbar
     v-if="isHost"
-    class="q-pa-lg"
+    class="q-pa-lg cursor-pointer"
     :style="
       showRoomInformationPanel
         ? 'background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);'
         : ''
+    "
+    @click="
+      (event) => {
+        if (['DIV', 'IMG'].includes(event.target.nodeName)) {
+          $emit('toggleInvitationPanel');
+        }
+      }
     "
   >
     <transition
@@ -15,7 +22,9 @@
     >
       <div
         class="row no-wrap q-gutter-sm"
-        v-if="showRoomInformationPanel || isMouseActive"
+        v-if="showRoomInformationPanel"
+        style="transition: 0.2s"
+        :style="!isMouseActive ? 'opacity: 0' : ''"
       >
         <!-- back to studio -->
         <q-btn
