@@ -47,20 +47,6 @@
             {{ $t("presentationRoom.header.backToStudio") }}
           </q-tooltip>
         </q-btn>
-
-        <!-- volume controls -->
-        <q-btn
-          :flat="showRoomInformationPanel"
-          :unelevated="!showRoomInformationPanel"
-          :color="showRoomInformationPanel ? 'grey' : 'black'"
-          :text-color="showRoomInformationPanel ? 'white' : 'white'"
-          :style="!showRoomInformationPanel ? 'opacity: 0.7' : ''"
-          icon="r_library_music"
-          disable
-          round
-          size="14px"
-          style="border-radius: 50%"
-        />
       </div>
     </transition>
 
