@@ -7,7 +7,7 @@
       <!-- content -->
       <div
         v-show="isAuthenticated && isCanvasReady"
-        class="row no-wrap items-center"
+        class="row no-wrap justify-center items-center"
         :class="showRoomInvitationPanel ? 'q-px-md' : ''"
       >
         <!-- room invitation panel -->

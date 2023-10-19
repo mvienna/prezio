@@ -24,7 +24,7 @@
         icon="r_arrow_back"
         no-caps
         no-wrap
-        size="16px"
+        size="1.25em"
         :disable="slideIndex === 0"
         @click="$emit('changeSlide', 'backward')"
       >
@@ -77,7 +77,7 @@
         icon="r_arrow_forward"
         no-caps
         no-wrap
-        size="16px"
+        size="1.25em"
         :disable="slideIndex === presentation?.slides?.length - 1"
         @click="$emit('changeSlide', 'forward')"
       >
@@ -159,7 +159,7 @@ const isMac = computed(() => {
 
 <style scoped lang="scss">
 .room_controls__btn {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   color: $white;
   border-radius: 50%;

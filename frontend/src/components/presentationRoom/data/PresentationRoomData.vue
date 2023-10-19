@@ -35,7 +35,7 @@
 
       <div>
         <span>{{ participantsCount }}</span>
-        <span class="room_data__participants_count__limit">/200</span>
+        <span class="room_data__participants_count__limit">/∞</span>
       </div>
     </div>
   </div>
@@ -98,16 +98,15 @@ const { room } = storeToRefs(presentationsStore);
   position: absolute;
   right: 24px;
   bottom: 24px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   color: $white;
   backdrop-filter: blur(4px);
   border-radius: 24px;
   padding: 16px;
   z-index: 2;
+  font-size: 1em;
 
   .room_data__participants_count {
-    font-size: 18px;
-
     .room_data__participants_count__status {
       border-radius: 100%;
       width: 8px;
@@ -117,7 +116,7 @@ const { room } = storeToRefs(presentationsStore);
     }
 
     .room_data__participants_count__limit {
-      font-size: 12px;
+      font-size: 0.85em;
       opacity: 0.7;
     }
   }

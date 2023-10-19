@@ -4,7 +4,7 @@
     class="q-pa-lg"
     :style="
       showRoomInformationPanel
-        ? 'background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px);'
+        ? 'background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);'
         : ''
     "
   >
@@ -65,7 +65,7 @@
       <!-- link -->
       <div
         class="ellipsis room_link"
-        style="max-width: 500px; font-size: 18px"
+        style="max-width: 550px; font-size: 1.25em"
         @click="copyRoomLinkToClipboard()"
       >
         <span class="text-grey q-mr-xs">

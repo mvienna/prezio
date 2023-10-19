@@ -15,7 +15,7 @@
         transition-hide="jump-down"
         :offset="[8, 16]"
         style="
-          background: rgba(0, 0, 0, 0.7);
+          background: rgba(0, 0, 0, 0.5);
           color: white;
           backdrop-filter: blur(4px);
           border-radius: 24px;
@@ -34,7 +34,7 @@
             @click="$emit('terminateRoom')"
           />
 
-          <q-separator class="bg-grey-8" />
+          <q-separator class="bg-white" style="opacity: 0.5" />
 
           <!-- open backstage -->
           <q-btn
@@ -165,15 +165,17 @@ const { presentation } = storeToRefs(presentationsStore);
   position: absolute;
   left: 24px;
   bottom: 24px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   color: $white;
   backdrop-filter: blur(4px);
   border-radius: 24px;
   padding: 8px;
   z-index: 1;
+  height: 62px;
 
   .q-btn {
     border-radius: 16px;
+    font-size: 1em;
   }
 }
 </style>
