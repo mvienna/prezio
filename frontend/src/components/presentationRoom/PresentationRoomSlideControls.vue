@@ -38,15 +38,6 @@
           <div class="text-bold text-center">
             {{ $t("presentationStudio.preview.controls.previous") }}
           </div>
-
-          <div
-            v-if="showShortcuts"
-            class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-          >
-            <div v-if="isMac">⌘</div>
-            <div v-else>Ctrl</div>
-            <div>←</div>
-          </div>
         </q-tooltip>
       </q-btn>
     </div>
@@ -91,15 +82,6 @@
           <div class="text-bold text-center">
             {{ $t("presentationStudio.preview.controls.next") }}
           </div>
-
-          <div
-            v-if="showShortcuts"
-            class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-          >
-            <div v-if="isMac">⌘</div>
-            <div v-else>Ctrl</div>
-            <div>→</div>
-          </div>
         </q-tooltip>
       </q-btn>
     </div>
@@ -110,12 +92,6 @@
 import { computed } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { useQuasar } from "quasar";
-
-/*
- * variables
- */
-const $q = useQuasar();
 
 /*
  * props
@@ -143,17 +119,6 @@ const slideIndex = computed(() => {
   return presentation.value?.slides?.findIndex(
     (item) => item.id === slide.value?.id
   );
-});
-
-/*
- * shortcuts
- */
-const showShortcuts = computed(() => {
-  return $q.platform.is.desktop;
-});
-
-const isMac = computed(() => {
-  return $q.platform.is.platform === "mac";
 });
 </script>
 

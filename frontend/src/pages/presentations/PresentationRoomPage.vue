@@ -338,16 +338,12 @@ onUnmounted(() => {
 
 const handleKeyDownEvent = (event) => {
   if (isHost.value) {
-    if (event.ctrlKey || event.metaKey) {
-      if (event.keyCode === 37) {
-        event.preventDefault();
-        handleSlideChange("backward");
-      }
+    if (event.keyCode === 37) {
+      handleSlideChange("backward");
+    }
 
-      if (event.keyCode === 39) {
-        event.preventDefault();
-        handleSlideChange("forward");
-      }
+    if (event.keyCode === 39) {
+      handleSlideChange("forward");
     }
   }
 };
