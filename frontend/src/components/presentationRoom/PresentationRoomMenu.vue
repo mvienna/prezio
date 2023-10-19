@@ -3,6 +3,7 @@
     <!-- menu -->
     <q-btn
       :label="$t('presentationRoom.footer.menu.title')"
+      icon="r_menu"
       flat
       rounded
       no-caps
