@@ -185,7 +185,10 @@
           :label="$t('presentationLayout.header.present.title')"
           :menu-offset="[0, 8]"
           content-class="shadow"
+          style="z-index: 2"
           @click="handleStartPresenting()"
+          @before-show="showStartPresentingOptionsMenu = true"
+          @before-hide="showStartPresentingOptionsMenu = false"
         >
           <q-list class="present_btn__menu__list">
             <!-- present now -->
@@ -278,6 +281,17 @@
           </q-list>
         </q-btn-dropdown>
 
+        <transition
+          appear
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+        >
+          <div
+            v-if="showStartPresentingOptionsMenu"
+            class="start_presenting_options_menu__backdrop"
+          ></div>
+        </transition>
+
         <!-- user -->
         <UserMenu is-avatar-only />
       </div>
@@ -337,6 +351,7 @@ const slideIndex = computed(() => {
 /*
  * room
  */
+const showStartPresentingOptionsMenu = ref(false);
 const isFullscreen = ref(true);
 
 const handleStartPresenting = async (startSlide = slide.value) => {
@@ -398,5 +413,15 @@ const createPresentationRoom = async () => {
   .q-item:nth-child(7) {
     border-radius: 0 0 8px 8px;
   }
+}
+
+.start_presenting_options_menu__backdrop {
+  position: fixed;
+  left: -16px;
+  top: -16px;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
 }
 </style>
