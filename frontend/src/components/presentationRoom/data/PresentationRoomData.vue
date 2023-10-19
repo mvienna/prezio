@@ -1,7 +1,10 @@
 <template>
-  <div class="room_data row no-wrap">
+  <div
+    class="room_data row no-wrap"
+    :class="isHost ? 'room_data__host' : 'room_data__participant q-mt-md'"
+  >
     <!-- reactions -->
-    <div class="row no-wrap q-gutter-md q-mr-md">
+    <div class="row no-wrap q-gutter-md">
       <!-- like -->
       <PresentationRoomDataLike
         :stage="stage.like"
@@ -24,7 +27,10 @@
     </div>
 
     <!-- participants count -->
-    <div class="room_data__participants_count row no-wrap items-center">
+    <div
+      v-if="isHost"
+      class="room_data__participants_count row no-wrap items-center q-ml-md"
+    >
       <div class="relative-position q-mr-xs">
         <q-icon name="r_person" color="grey" size="24px" />
         <div
@@ -53,6 +59,7 @@ import { storeToRefs } from "pinia";
  */
 defineProps({
   participantsCount: { type: Number },
+  isHost: { type: Boolean },
 });
 
 /*
@@ -95,16 +102,23 @@ const { room } = storeToRefs(presentationsStore);
 
 <style scoped lang="scss">
 .room_data {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  background: rgba(0, 0, 0, 0.5);
   color: $white;
-  backdrop-filter: blur(4px);
   border-radius: 24px;
   padding: 16px;
   z-index: 2;
   font-size: 1em;
+
+  &.room_data__host {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+  }
+
+  &.room_data__participant {
+    justify-content: center;
+  }
 
   .room_data__participants_count {
     .room_data__participants_count__status {

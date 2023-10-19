@@ -1,6 +1,15 @@
 <template>
-  <q-page>
-    <div class="container relative-position column no-wrap justify-center">
+  <q-page
+    :style="
+      !isHost
+        ? `background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${slide?.preview});`
+        : 'background: black;'
+    "
+  >
+    <div
+      class="container relative-position column no-wrap"
+      :class="isHost ? 'justify-center' : ''"
+    >
       <!-- auth form -->
       <PresentationRoomAuthForm v-if="!isAuthenticated" />
 
@@ -9,7 +18,7 @@
         v-show="isAuthenticated && isCanvasReady"
         class="row no-wrap justify-center items-center"
         style="transition: 0.5s"
-        :class="showRoomInvitationPanel ? 'q-px-md' : ''"
+        :class="showRoomInvitationPanel || !isHost ? 'q-px-md' : ''"
       >
         <!-- room invitation panel -->
         <transition
@@ -24,13 +33,13 @@
           />
         </transition>
 
-        <!-- slide  -->
+        <!-- slide -->
         <div
           class="relative-position column no-wrap justify-center"
           :class="showRoomInvitationPanel ? 'q-ml-md' : ''"
           style="transition: 0.5s"
           :style="
-            showRoomInvitationPanel
+            showRoomInvitationPanel || !isHost
               ? 'border-radius: 12px; overflow: hidden;'
               : ''
           "
@@ -48,6 +57,11 @@
           <canvas
             ref="canvasRef"
             id="canvas"
+            :style="
+              showRoomInvitationPanel || !isHost
+                ? 'border-radius: 12px; overflow: hidden;'
+                : ''
+            "
             @mousemove="handleCanvasMouseMoveEvent"
           ></canvas>
 
@@ -66,7 +80,10 @@
           />
 
           <!-- participants count, reactions -->
-          <PresentationRoomData :participants-count="participantsCount || 0" />
+          <PresentationRoomData
+            :participants-count="participantsCount || 0"
+            :is-host="isHost"
+          />
 
           <!-- controls -->
           <PresentationRoomSlideControls
@@ -467,7 +484,10 @@ const terminateRoom = () => {
 <style scoped lang="scss">
 .q-page {
   overflow: hidden;
-  background: black;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position-x: 50% !important;
+  height: 100vh;
 }
 
 /*
