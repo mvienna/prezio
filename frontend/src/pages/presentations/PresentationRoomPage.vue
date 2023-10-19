@@ -293,8 +293,6 @@ const connectToRoomChannels = () => {
    * listen for updates
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
-    showRoomInvitationPanel.value = event.showRoomInvitationPanel;
-
     if (event.slide_id !== slide.value.id) {
       const newSlide = presentation.value.slides.find(
         (item) => item.id === event.slide_id

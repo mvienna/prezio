@@ -96,7 +96,7 @@ class PresentationRoomController extends Controller
             'slide_id' => $slide->id
         ]);
 
-        event(new PresentationRoomUpdatedEvent($room, $slide, $request->showRoomInvitationPanel));
+        event(new PresentationRoomUpdatedEvent($room, $slide));
 
         return $this->successResponse();
     }
