@@ -1,6 +1,6 @@
 <template>
   <div
-    class="room_invitation_panel relative-position column no-wrap justify-center q-mr-md q-pa-md"
+    class="room_invitation_panel relative-position column no-wrap justify-center q-py-md"
   >
     <div class="absolute-right q-mr-md q-mt-md">
       <q-btn
@@ -21,12 +21,14 @@
     <!-- qr code -->
     <div class="row justify-center" v-html="qrCode?._svg?.outerHTML"></div>
 
-    <div class="row no-wrap items-center justify-between q-mt-md q-mb-lg">
-      <q-separator class="bg-grey-9" style="width: 40%" />
-      <div class="text-grey-4">
-        {{ $t("presentationRoom.invitationPanel.otherOption.or") }}
+    <div class="q-px-md">
+      <div class="row no-wrap items-center justify-between q-mt-md q-mb-lg">
+        <q-separator class="bg-grey-9" style="width: 40%" />
+        <div class="text-grey-4">
+          {{ $t("presentationRoom.invitationPanel.otherOption.or") }}
+        </div>
+        <q-separator class="bg-grey-9" style="width: 40%" />
       </div>
-      <q-separator class="bg-grey-9" style="width: 40%" />
     </div>
 
     <!-- other option -->
@@ -91,6 +93,8 @@ const url = window.location.host;
   border: 1.5px solid $grey-9;
   background: $black;
   border-radius: 12px;
+  min-width: 260px;
+  width: 260px;
 
   .room_invitation_panel__title {
     font-weight: 800;

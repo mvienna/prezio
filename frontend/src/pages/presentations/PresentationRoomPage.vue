@@ -8,13 +8,14 @@
       <div
         v-show="isAuthenticated && isCanvasReady"
         class="row no-wrap justify-center items-center"
+        style="transition: 0.5s"
         :class="showRoomInvitationPanel ? 'q-px-md' : ''"
       >
         <!-- room invitation panel -->
         <transition
           appear
-          enter-active-class="animated zoomIn"
-          leave-active-class="animated zoomOut"
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
         >
           <PresentationRoomInvitationPanel
             v-if="showRoomInvitationPanel"
@@ -26,7 +27,8 @@
         <!-- slide  -->
         <div
           class="relative-position column no-wrap justify-center"
-          style="background: pink"
+          :class="showRoomInvitationPanel ? 'q-ml-md' : ''"
+          style="transition: 0.5s"
           :style="
             showRoomInvitationPanel
               ? 'border-radius: 12px; overflow: hidden;'
@@ -63,7 +65,7 @@
             "
           />
 
-          <!-- stats panel -->
+          <!-- participants count, reactions -->
           <PresentationRoomData :participants-count="participantsCount || 0" />
 
           <!-- controls -->
@@ -483,5 +485,54 @@ canvas {
   background-color: $white;
   z-index: 1;
   width: 100%;
+}
+
+/*
+ * toggle invitation panel smooth transition
+ */
+.animated.fadeIn {
+  animation-name: fadeIn;
+  animation-duration: 0.5s;
+}
+
+@keyframes fadeIn {
+  0% {
+    min-width: 0;
+    width: 0;
+    opacity: 0;
+    transform: scale(0);
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    min-width: 260px;
+    width: 260px;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animated.fadeOut {
+  animation-name: fadeOut;
+  animation-duration: 0.5s;
+}
+
+@keyframes fadeOut {
+  0% {
+    min-width: 260px;
+    width: 260px;
+    opacity: 1;
+    transform: scale(1);
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    min-width: 0;
+    width: 0;
+    opacity: 0;
+    transform: scale(0);
+  }
 }
 </style>
