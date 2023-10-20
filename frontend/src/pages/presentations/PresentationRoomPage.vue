@@ -7,6 +7,7 @@
     "
   >
     <div
+      v-show="isCanvasReady"
       class="container relative-position column no-wrap"
       :class="isHost ? 'justify-center' : ''"
     >
@@ -134,8 +135,14 @@ const { user } = storeToRefs(useAuthStore());
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, room, participant, showRoomInvitationPanel } =
-  storeToRefs(presentationsStore);
+const {
+  presentation,
+  slide,
+  room,
+  participant,
+  isGuest,
+  showRoomInvitationPanel,
+} = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { canvas, ctx, scale, elements } = storeToRefs(canvasStore);
@@ -156,12 +163,12 @@ const isAuthenticated = computed(() => {
     isHost.value ||
     !presentation.value?.settings?.require_participants_info ||
     (presentation.value?.settings?.require_participants_info &&
-      participant.value)
+      participant.value &&
+      !isGuest.value)
   );
 });
 
 const participantsCount = ref(0);
-
 const showRoomInformationPanel = ref(true);
 
 /*
@@ -238,6 +245,7 @@ onMounted(async () => {
 
     // login as guest
     if (!participant.value) {
+      isGuest.value = true;
       await presentationsStore.loginRoom([
         {
           name: "name",

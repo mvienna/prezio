@@ -5,9 +5,13 @@ export const usePresentationsStore = defineStore("presentations", {
   state: () => ({
     /*
      * room
+     * participant
      */
     room: null,
+
     participant: null,
+    isGuest: false,
+
     showRoomInvitationPanel: false,
 
     /*
