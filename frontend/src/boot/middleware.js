@@ -56,7 +56,7 @@ export default async ({ app, router }) => {
       `api-${process.env.PUSHER_APP_CLUSTER}.pusher.com`,
     wsPort: process.env.PUSHER_PORT || 443,
 
-    encrypted: false,
+    encrypted: !process.env.DEV,
     forceTLS: !process.env.DEV,
     disableStats: true,
 
