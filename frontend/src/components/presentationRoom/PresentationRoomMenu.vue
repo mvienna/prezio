@@ -30,6 +30,7 @@
             align="left"
             no-caps
             flat
+            :size="$q.screen.lt.md ? '0.8em' : '1em'"
             style="border-radius: 16px 16px 8px 8px"
             @click="$emit('terminateRoom')"
           />
@@ -44,6 +45,7 @@
             align="left"
             flat
             disable
+            :size="$q.screen.lt.md ? '0.8em' : '1em'"
             v-close-popup
             style="border-radius: 8px"
           />
@@ -61,6 +63,7 @@
             no-caps
             align="left"
             flat
+            :size="$q.screen.lt.md ? '0.8em' : '1em'"
             v-close-popup
             style="border-radius: 8px"
             @click="$emit('toggleFullscreen')"
@@ -80,6 +83,7 @@
             align="left"
             flat
             style="border-radius: 8px"
+            :size="$q.screen.lt.md ? '0.8em' : '1em'"
             v-close-popup
             @click="$emit('toggleInvitationPanel')"
           />
@@ -98,6 +102,7 @@
             align="left"
             flat
             style="border-radius: 8px"
+            :size="$q.screen.lt.md ? '0.8em' : '1em'"
             v-close-popup
             @click="$emit('toggleInformationPanel')"
           />
@@ -117,6 +122,7 @@
             no-caps
             align="left"
             flat
+            :size="$q.screen.lt.md ? '0.8em' : '1em'"
             disable
             style="border-radius: 8px 8px 16px 16px"
             v-close-popup
@@ -176,6 +182,19 @@ const { presentation } = storeToRefs(presentationsStore);
   .q-btn {
     border-radius: 16px;
     font-size: 1em;
+    transition: 0.2s;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .room_menu {
+    height: 50px;
+    left: 8px;
+    bottom: 8px;
+
+    .q-btn {
+      font-size: 0.8em;
+    }
   }
 }
 </style>

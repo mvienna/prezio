@@ -107,6 +107,7 @@ const { room } = storeToRefs(presentationsStore);
   padding: 16px;
   z-index: 2;
   font-size: 1em;
+  transition: 0.2s;
 
   &.room_data__host {
     background: rgba(0, 0, 0, 0.5);
@@ -114,6 +115,7 @@ const { room } = storeToRefs(presentationsStore);
     position: absolute;
     right: 24px;
     bottom: 24px;
+    transition: 0.2s;
   }
 
   &.room_data__participant {
@@ -132,6 +134,18 @@ const { room } = storeToRefs(presentationsStore);
     .room_data__participants_count__limit {
       font-size: 0.85em;
       opacity: 0.7;
+    }
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .room_data {
+    height: 50px;
+    font-size: 0.8em;
+
+    &.room_data__host {
+      right: 8px;
+      bottom: 8px;
     }
   }
 }

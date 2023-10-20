@@ -1,7 +1,8 @@
 <template>
   <q-toolbar
     v-if="isHost"
-    class="q-pa-lg cursor-pointer"
+    class="cursor-pointer"
+    :class="$q.screen.lt.lg ? 'q-pa-md' : 'q-pa-lg'"
     :style="
       showRoomInformationPanel
         ? 'background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);'
@@ -24,7 +25,7 @@
         class="row no-wrap q-gutter-sm"
         v-if="showRoomInformationPanel"
         style="transition: 0.2s"
-        :style="!isMouseActive ? 'opacity: 0' : ''"
+        :style="!isMouseActive && !$q.screen.lt.sm ? 'opacity: 0' : ''"
       >
         <!-- back to studio -->
         <q-btn
@@ -55,7 +56,8 @@
     <!-- invitation link -->
     <div
       v-if="showRoomInformationPanel"
-      class="row no-wrap items-center justify-center"
+      class="row no-wrap items-center justify-center ellipsis"
+      style="max-width: 70%"
     >
       <!-- link -->
       <div
@@ -63,7 +65,7 @@
         style="max-width: 550px; font-size: 1.25em"
         @click="copyRoomLinkToClipboard()"
       >
-        <span class="text-grey q-mr-xs">
+        <span v-if="!$q.screen.lt.sm" class="text-grey q-mr-xs">
           {{ $t("presentationRoom.header.roomLink.title") }}
         </span>
 
@@ -107,7 +109,7 @@
     <q-space />
 
     <!-- logo -->
-    <div style="min-width: 96px">
+    <div :style="$q.screen.lt.sm ? 'min-width: 64px' : 'min-width: 96px'">
       <q-img
         src="/logo_white_with_title_white.png"
         style="height: 48px"
@@ -135,18 +137,26 @@ import { computed, ref } from "vue";
 import { api } from "boot/axios";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
+import { useQuasar } from "quasar";
 
 /*
  * variables
  */
 const router = useRouter();
+const $q = useQuasar();
 
+/*
+ * props
+ */
 defineProps({
   isHost: { type: Boolean },
   isMouseActive: { type: Boolean },
   showRoomInformationPanel: { type: Boolean },
 });
 
+/*
+ * emits
+ */
 defineEmits(["toggleInvitationPanel"]);
 
 /*
@@ -193,6 +203,12 @@ const copyRoomLinkToClipboard = () => {
   width: 100%;
   z-index: 2;
   color: $white;
+}
+
+@media screen and (max-width: 960px) {
+  .q-toolbar {
+    height: 40px;
+  }
 }
 
 .room_link {
