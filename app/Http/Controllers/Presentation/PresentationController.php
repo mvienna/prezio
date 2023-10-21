@@ -51,7 +51,6 @@ class PresentationController extends Controller
         // send event to room channel to inform about privacy setting change
         $presentation->load('room');
         if ($presentation->room && $presentation->is_private !== $request->is_private) {
-            \Log::info('here');
             event(new PresentationRoomPrivacyUpdatedEvent($presentation->room, $request->is_private));
         }
 
