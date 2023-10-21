@@ -61,6 +61,7 @@ module.exports = configure(function (ctx) {
         PUSHER_APP_ENDPOINT: env.PUSHER_APP_ENDPOINT,
         PUSHER_HOST: env.PUSHER_HOST,
         PUSHER_PORT: env.PUSHER_PORT,
+        PUSHER_WS_HOST: env.PUSHER_WS_HOST,
 
         baseURL: env.APP_URL,
       },

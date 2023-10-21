@@ -53,6 +53,7 @@ export default async ({ app, router }) => {
     cluster: process.env.PUSHER_APP_CLUSTER,
 
     wsHost:
+      process.env.PUSHER_WS_HOST ||
       process.env.PUSHER_HOST ||
       `api-${process.env.PUSHER_APP_CLUSTER}.pusher.com`,
 
