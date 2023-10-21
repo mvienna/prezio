@@ -52,7 +52,19 @@ export default async ({ app, router }) => {
     key: process.env.PUSHER_APP_KEY,
     cluster: process.env.PUSHER_APP_CLUSTER,
 
-    forceTLS: process.env.PUSHER_SCHEME === "https",
+    wsHost:
+      process.env.PUSHER_HOST ||
+      `api-${process.env.PUSHER_APP_CLUSTER}.pusher.com`,
+
+    wsPort: process.env.PUSHER_PORT || 80,
+    wssPort: process.env.PUSHER_PORT || 443,
+
+    encrypted: !process.env.DEV,
+    forceTLS: !process.env.DEV,
+    disableStats: true,
+
+    enabledTransports: ["ws", "wss"],
+    disabledTransports: ["sockjs", "xhr_polling", "xhr_streaming"],
 
     authEndpoint: process.env.PUSHER_APP_ENDPOINT,
   });

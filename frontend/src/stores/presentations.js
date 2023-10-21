@@ -210,8 +210,6 @@ export const usePresentationsStore = defineStore("presentations", {
           this.presentations[presentationIndex] = presentation;
         })
         .catch((error) => {
-          console.log(error.response);
-          console.log(error.response?.data);
           console.log(error.response?.data?.message);
         });
     },
