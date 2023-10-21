@@ -82,7 +82,6 @@ const layoutDefaultElementProps = {
   width: canvasStore.computeAdjustedSize(
     (canvasStore.canvasRect().width * 90) / 100
   ),
-  height: 96,
 };
 
 /*
@@ -106,10 +105,6 @@ const layoutElements = {
     y: canvasStore.computeAdjustedSize(
       (canvasStore.canvasRect().width * 5) / 100
     ),
-
-    height: canvasStore.computeAdjustedSize(
-      ((48 / 2 + 48 / 8) * canvas.value.width) / canvasStore.canvasRect().width
-    ),
   },
 
   /*
@@ -131,10 +126,6 @@ const layoutElements = {
         (canvasStore.canvasRect().height * 50) / 100
       ) -
       ((48 / 2 + 48 / 8) * canvas.value.width) / canvasStore.canvasRect().width,
-
-    height: canvasStore.computeAdjustedSize(
-      ((48 / 2 + 48 / 8) * canvas.value.width) / canvasStore.canvasRect().width
-    ),
   },
 
   /*
@@ -156,11 +147,7 @@ const layoutElements = {
       canvasStore.computeAdjustedSize(
         (canvasStore.canvasRect().height * 50) / 100
       ) -
-      ((48 * 2 * canvas.value.width) / canvasStore.canvasRect().width) * 2,
-
-    height: canvasStore.computeAdjustedSize(
-      (48 * 2 * canvas.value.width) / canvasStore.canvasRect().width
-    ),
+      (48 * canvas.value.width) / canvasStore.canvasRect().width,
   },
 
   /*
@@ -176,14 +163,8 @@ const layoutElements = {
     fontSize: "36px",
     textAlign: ALIGNMENT.horizontal.center,
 
-    y:
-      canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 50) / 100
-      ) +
-      (48 * canvas.value.width) / canvasStore.canvasRect().width / 2,
-
-    height: canvasStore.computeAdjustedSize(
-      (48 * canvas.value.width) / canvasStore.canvasRect().width
+    y: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().height * 50) / 100
     ),
   },
 
@@ -201,16 +182,8 @@ const layoutElements = {
     textAlign: ALIGNMENT.horizontal.left,
 
     y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100 + 96
+      (canvasStore.canvasRect().width * 5) / 100 + 48
     ),
-
-    height:
-      canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100
-      ) +
-      canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 65) / 100
-      ),
   },
 
   /*
@@ -227,15 +200,8 @@ const layoutElements = {
     textAlign: ALIGNMENT.horizontal.left,
 
     y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100 + 96
+      (canvasStore.canvasRect().width * 5) / 100 + 48
     ),
-    height:
-      canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100
-      ) +
-      canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 55) / 100
-      ),
     width: canvasStore.computeAdjustedSize(
       (canvasStore.canvasRect().width * 45) / 100
     ),
@@ -255,21 +221,14 @@ const layoutElements = {
     textAlign: ALIGNMENT.horizontal.left,
 
     x: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * (5 + 45 + 5)) / 100
+      (canvasStore.canvasRect().width * (45 + 5)) / 100
     ),
     y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100 + 96
+      (canvasStore.canvasRect().width * 5) / 100 + 48
     ),
 
-    height:
-      canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100
-      ) +
-      canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 55) / 100
-      ),
     width: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 40) / 100
+      (canvasStore.canvasRect().width * 45) / 100
     ),
   },
 };
@@ -335,6 +294,20 @@ const layouts = [
  * apply layout
  */
 const handleLayoutSelection = (layout) => {
+  const previousLayoutElements = elements.value.filter((element) =>
+    element.id.includes("layout-")
+  );
+  const previousLayoutTitle = previousLayoutElements.find((element) =>
+    element.id.includes("-title-")
+  );
+
+  layout.elements = layout.elements.map((element) => {
+    if (element.id.includes("-title-") && previousLayoutTitle) {
+      element.text = previousLayoutTitle.text;
+    }
+    return element;
+  });
+
   elements.value = elements.value.filter(
     (element) => !element.id.includes("layout-")
   );

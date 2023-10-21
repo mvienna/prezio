@@ -228,8 +228,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
       const addTextToCanvas = () => {
         selectedElement.value = {
-          id: element.id,
-          ...this.computeTextElementProps(x, y),
+          ...this.computeTextElementProps(x, y, element.id),
         };
         canvasStore.switchMode(MODES_OPTIONS.value.text);
         updateSelectedElement();
@@ -298,7 +297,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
     computeTextElementProps(
       x = selectedElement.value?.x,
-      y = selectedElement.value?.y
+      y = selectedElement.value?.y,
+      id = generateUniqueId(undefined, elements.value)
     ) {
       if (!x || !y) return;
 
@@ -311,7 +311,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         .trim();
 
       return {
-        id: generateUniqueId(undefined, elements.value),
+        id: id,
         mode: MODES_OPTIONS.value.text,
         isVisible: true,
         isLocked: false,
