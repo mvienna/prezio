@@ -2,7 +2,7 @@
   <q-page
     :style="
       !isHost
-        ? slide?.preview
+        ? slide?.preview && (!presentation?.is_private || isHost)
           ? `background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${slide?.preview});`
           : 'background: white;'
         : 'background: black;'
