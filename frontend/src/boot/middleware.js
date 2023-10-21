@@ -46,16 +46,10 @@ export default async ({ app, router }) => {
   /*
    * web sockets
    */
-  window.Pusher = Pusher;
-  window.Echo = new Echo({
+  const options = {
     broadcaster: "pusher",
     key: process.env.PUSHER_APP_KEY,
     cluster: process.env.PUSHER_APP_CLUSTER,
-
-    wsHost:
-      process.env.PUSHER_WS_HOST ||
-      process.env.PUSHER_HOST ||
-      `api-${process.env.PUSHER_APP_CLUSTER}.pusher.com`,
 
     wsPort: process.env.PUSHER_PORT || 80,
     wssPort: process.env.PUSHER_PORT || 443,
@@ -68,7 +62,14 @@ export default async ({ app, router }) => {
     disabledTransports: ["sockjs", "xhr_polling", "xhr_streaming"],
 
     authEndpoint: process.env.PUSHER_APP_ENDPOINT,
-  });
+  };
+
+  window.Pusher = Pusher;
+  window.Echo = new Echo(
+    process.env.DEV
+      ? { ...options, wsHost: window.location.hostname }
+      : { ...options, wssHost: window.location.hostname }
+  );
 
   /*
    * route middleware
