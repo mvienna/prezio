@@ -51,14 +51,14 @@ export default async ({ app, router }) => {
     broadcaster: "pusher",
     key: process.env.PUSHER_APP_KEY,
     cluster: process.env.PUSHER_APP_CLUSTER,
-    wsHost:
-      process.env.PUSHER_HOST ||
-      `api-${process.env.PUSHER_APP_CLUSTER}.pusher.com`,
-    wsPort: process.env.PUSHER_PORT || 443,
+    // wsHost:
+    //   process.env.PUSHER_HOST ||
+    //   `api-${process.env.PUSHER_APP_CLUSTER}.pusher.com`,
+    // wsPort: process.env.PUSHER_PORT || 443,
 
     encrypted: !process.env.DEV,
     forceTLS: !process.env.DEV,
-    disableStats: true,
+    // disableStats: true,
 
     authEndpoint: process.env.PUSHER_APP_ENDPOINT,
   });
