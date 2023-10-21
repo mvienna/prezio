@@ -140,7 +140,7 @@ const props = defineProps({
 const form = ref({
   name: "",
   description: "",
-  is_private: true,
+  is_private: false,
   folder_id: props.selectedFolder?.id,
 });
 

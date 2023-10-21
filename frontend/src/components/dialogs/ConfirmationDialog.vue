@@ -1,6 +1,18 @@
 <template>
   <q-card flat class="q-pa-sm">
     <q-card-section class="q-pa-lg">
+      <div class="absolute-right q-mr-sm q-mt-sm">
+        <q-btn
+          color="grey"
+          round
+          flat
+          icon="r_close"
+          size="12px"
+          style="border-radius: 100%"
+          @click="$emit('cancel')"
+        />
+      </div>
+
       <!-- icon -->
       <div class="row justify-center q-mt-md">
         <q-icon :name="icon" :color="iconColor" size="52px" />
@@ -61,7 +73,8 @@ defineEmits(["cancel", "confirm"]);
 
 <style scoped lang="scss">
 .q-card {
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   border-radius: 16px !important;
 }
 

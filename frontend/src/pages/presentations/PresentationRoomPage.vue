@@ -2,21 +2,54 @@
   <q-page
     :style="
       !isHost
-        ? `background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${slide?.preview});`
+        ? slide?.preview
+          ? `background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${slide?.preview});`
+          : 'background: white;'
         : 'background: black;'
     "
   >
+    <!-- no access -->
+    <div v-if="presentation?.is_private && !isHost">
+      <!-- logo -->
+      <div class="row justify-center q-pa-lg">
+        <div style="width: 96px">
+          <q-img
+            src="/logo_with_title_black.png"
+            style="height: 48px"
+            fit="contain"
+          />
+        </div>
+      </div>
+
+      <div class="row no-wrap justify-center text-center">
+        <div style="max-width: 500px">
+          <div class="text-bold text-h7">
+            {{ $t("presentationRoom.isPrivate.title") }}
+          </div>
+
+          <div class="q-mt-md text-grey">
+            {{ $t("presentationRoom.isPrivate.description") }}
+          </div>
+
+          <div class="row justify-center q-mt-xl">
+            <q-img src="/assets/images/bird_singing.svg" width="300px" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- has access -->
     <div
-      v-show="isCanvasReady"
+      v-else
       class="container relative-position column no-wrap"
       :class="isHost ? 'justify-center' : ''"
     >
-      <!-- auth form -->
-      <PresentationRoomAuthForm v-if="!isAuthenticated" />
+      <!-- auth form - collecting participants info -->
+      <PresentationRoomAuthForm v-if="!isAuthenticated && isLoaded" />
 
-      <!-- content -->
+      <!-- presentation content -->
       <div
-        v-show="isAuthenticated && isCanvasReady"
+        v-show="isAuthenticated && isLoaded"
         class="row no-wrap justify-center items-center"
         style="transition: 0.5s"
         :class="showRoomInvitationPanel || !isHost ? 'q-px-md' : ''"
@@ -30,7 +63,9 @@
           <PresentationRoomInvitationPanel
             v-if="showRoomInvitationPanel"
             :qr-code="qrCode"
-            @toggle-invitation-panel="toggleInvitationPanel()"
+            @toggle-invitation-panel="
+              showRoomInvitationPanel = !showRoomInvitationPanel
+            "
           />
         </transition>
 
@@ -45,16 +80,18 @@
               : ''
           "
         >
-          <!-- header -->
+          <!-- header - information panel -->
           <PresentationRoomHeader
             :is-host="isHost"
             :is-mouse-active="isMouseActive"
             :show-room-information-panel="showRoomInformationPanel"
             @mouseover="clearIsMouseActiveTimeout()"
-            @toggle-invitation-panel="toggleInvitationPanel()"
+            @toggle-invitation-panel="
+              showRoomInvitationPanel = !showRoomInvitationPanel
+            "
           />
 
-          <!-- canvas -->
+          <!-- canvas slide -->
           <canvas
             ref="canvasRef"
             id="canvas"
@@ -74,19 +111,21 @@
             :show-room-invitation-panel="showRoomInvitationPanel"
             @terminate-room="terminateRoom()"
             @toggle-fullscreen="toggleFullscreen()"
-            @toggle-invitation-panel="toggleInvitationPanel()"
+            @toggle-invitation-panel="
+              showRoomInvitationPanel = !showRoomInvitationPanel
+            "
             @toggle-information-panel="
               showRoomInformationPanel = !showRoomInformationPanel
             "
           />
 
-          <!-- participants count, reactions -->
+          <!-- room data - participants count, reactions -->
           <PresentationRoomData
             :participants-count="participantsCount || 0"
             :is-host="isHost"
           />
 
-          <!-- controls -->
+          <!-- controls (← / →) -->
           <PresentationRoomSlideControls
             :is-host="isHost"
             :is-mouse-active="isMouseActive"
@@ -129,8 +168,6 @@ const $q = useQuasar();
 
 const { t } = useI18n({ useScope: "global" });
 
-const { user } = storeToRefs(useAuthStore());
-
 /*
  * stores
  */
@@ -146,6 +183,8 @@ const {
 
 const canvasStore = useCanvasStore();
 const { canvas, ctx, scale, elements } = storeToRefs(canvasStore);
+
+const { user } = storeToRefs(useAuthStore());
 
 /*
  * statuses
@@ -168,8 +207,40 @@ const isAuthenticated = computed(() => {
   );
 });
 
-const participantsCount = ref(0);
+// header - information panel
 const showRoomInformationPanel = ref(true);
+
+// room data
+const participantsCount = ref(0);
+
+/*
+ * canvas slide
+ */
+const canvasRef = ref();
+
+const initCanvas = () => {
+  canvas.value = canvasRef.value;
+  ctx.value = canvas.value.getContext("2d");
+  ctx.value.imageSmoothingEnabled = true;
+};
+
+const initSlide = async () => {
+  slide.value =
+    presentation.value.slides.find((item) => item.id === room.value.slide_id) ||
+    presentation.value.slides[0];
+
+  await canvasStore.setElementsFromSlide();
+  return true;
+};
+
+const resizeCanvas = () => {
+  canvas.value.width = 1920;
+  canvas.value.height = 1080;
+
+  ctx.value.scale(scale.value, scale.value);
+
+  canvasStore.redrawCanvas(false, false, undefined, false);
+};
 
 /*
  * authenticate
@@ -177,8 +248,7 @@ const showRoomInformationPanel = ref(true);
  * load slide
  * establish connection to room channels
  */
-const canvasRef = ref();
-const isCanvasReady = ref(false);
+const isLoaded = ref(false);
 
 onBeforeMount(() => {
   $q.loading.show({
@@ -188,10 +258,6 @@ onBeforeMount(() => {
 });
 
 onMounted(async () => {
-  canvas.value = canvasRef.value;
-  ctx.value = canvas.value.getContext("2d");
-  ctx.value.imageSmoothingEnabled = true;
-
   /*
    * fetch room data
    */
@@ -201,18 +267,29 @@ onMounted(async () => {
       room.value = response.data.room;
       presentation.value = response.data.presentation;
 
-      /*
-       * update slide
-       */
-      slide.value =
-        presentation.value.slides.find(
-          (item) => item.id === room.value.slide_id
-        ) || presentation.value.slides[0];
+      if (isHost.value || !presentation.value?.is_private) {
+        /*
+         * init canvas slide
+         */
+        initCanvas();
+        await initSlide();
 
-      await canvasStore.setElementsFromSlide();
+        /*
+         * update slide
+         * case: host started presenting in already exisiting room from the new slide he's chosen
+         */
+        if (isHost.value && slide.value.id !== room.value.slide_id) {
+          await presentationsStore.sendPresentationRoomUpdateEvent();
+        }
 
-      if (isHost.value && slide.value.id !== room.value.slide_id) {
-        await presentationsStore.sendPresentationRoomUpdateEvent();
+        /*
+         * resize canvas
+         */
+        resizeCanvas();
+        setTimeout(() => {
+          canvasStore.redrawCanvas(false, false, undefined, false);
+        }, 100);
+        window.addEventListener("resize", resizeCanvas);
       }
     })
     .catch((error) => {
@@ -229,6 +306,7 @@ onMounted(async () => {
    * auth
    */
   if (!isHost.value) {
+    // auth
     const token = localStorage.getItem("participantToken");
     if (token) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -236,7 +314,10 @@ onMounted(async () => {
       await api
         .get("/user/room")
         .then((response) => {
-          participant.value = response.data;
+          // don't authenticate participant that has token from another room
+          if (response.data.room_id === room.value.id) {
+            participant.value = response.data;
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -259,15 +340,6 @@ onMounted(async () => {
   }
 
   /*
-   * resize canvas
-   */
-  resizeCanvas();
-  setTimeout(() => {
-    canvasStore.redrawCanvas(false, false, undefined, false);
-  }, 100);
-  window.addEventListener("resize", resizeCanvas);
-
-  /*
    * establish connection to room channels
    */
   connectToRoomChannels();
@@ -276,18 +348,16 @@ onMounted(async () => {
    * hide loader
    */
   $q.loading.hide();
-  isCanvasReady.value = true;
+  isLoaded.value = true;
 });
 
-const resizeCanvas = () => {
-  canvas.value.width = 1920;
-  canvas.value.height = 1080;
+onUnmounted(() => {
+  window.removeEventListener("resize", resizeCanvas);
+});
 
-  ctx.value.scale(scale.value, scale.value);
-
-  canvasStore.redrawCanvas(false, false, undefined, false);
-};
-
+/*
+ * webhooks
+ */
 const connectToRoomChannels = () => {
   const channel = window.Echo.channel(`public.room.${room.value.id}`);
 
@@ -320,6 +390,8 @@ const connectToRoomChannels = () => {
    * listen for updates
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
+    if (!isHost.value && presentation.value?.is_private) return;
+
     if (event.slide_id !== slide.value.id) {
       const newSlide = presentation.value.slides.find(
         (item) => item.id === event.slide_id
@@ -339,7 +411,34 @@ const connectToRoomChannels = () => {
   });
 
   /*
-   * listen for termination
+   * listen for presentation privacy setting change
+   */
+  channel.listen("PresentationRoomPrivacyUpdatedEvent", async (event) => {
+    if (!isHost.value) {
+      presentation.value.is_private = event.is_private;
+
+      if (!presentation.value.is_private) {
+        setTimeout(async () => {
+          isLoaded.value = false;
+
+          initCanvas();
+          await initSlide();
+
+          resizeCanvas();
+          setTimeout(() => {
+            canvasStore.redrawCanvas(false, false, undefined, false);
+            isLoaded.value = true;
+          }, 100);
+          window.addEventListener("resize", resizeCanvas);
+        });
+      } else {
+        window.removeEventListener("resize", resizeCanvas);
+      }
+    }
+  });
+
+  /*
+   * listen for room termination
    */
   channel.listen("PresentationRoomTerminatedEvent", () => {
     if (isHost.value) {
@@ -441,14 +540,6 @@ const qrCode = new QRCodeStyling({
     margin: 2,
   },
 });
-
-/*
- * toggle invitation panel
- */
-const toggleInvitationPanel = () => {
-  showRoomInvitationPanel.value = !showRoomInvitationPanel.value;
-  presentationsStore.sendPresentationRoomUpdateEvent();
-};
 
 /*
  * fullscreen

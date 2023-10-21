@@ -186,7 +186,10 @@
           :menu-offset="[0, 8]"
           content-class="shadow"
           style="z-index: 2"
-          @click="handleStartPresenting()"
+          @click="
+            startPresentingFromSlide = slide;
+            handleStartPresenting();
+          "
           @before-show="showStartPresentingOptionsMenu = true"
           @before-hide="showStartPresentingOptionsMenu = false"
         >
@@ -196,7 +199,10 @@
               clickable
               v-close-popup
               class="q-pa-md"
-              @click="handleStartPresenting()"
+              @click="
+                startPresentingFromSlide = slide;
+                handleStartPresenting();
+              "
             >
               <q-item-section>
                 <q-item-label>
@@ -216,7 +222,10 @@
                 clickable
                 v-close-popup
                 class="q-pa-md"
-                @click="handleStartPresenting(presentation.slides[0])"
+                @click="
+                  startPresentingFromSlide = presentation.slides[0];
+                  handleStartPresenting();
+                "
               >
                 <q-item-section>
                   <q-item-label>
@@ -292,6 +301,49 @@
           ></div>
         </transition>
 
+        <!-- confirm presenting in private -->
+        <q-dialog v-model="showStartPresentingInPrivateConfirmationDialog">
+          <ConfirmationDialog
+            style="max-width: 500px"
+            icon="r_visibility_off"
+            icon-color="primary"
+            :title="
+              $t(
+                'presentationLayout.header.present.privacySettingsWarning.title'
+              )
+            "
+            :message="
+              $t(
+                'presentationLayout.header.present.privacySettingsWarning.message'
+              )
+            "
+            cancel-btn-color="grey"
+            :cancel-btn-text="
+              $t(
+                'presentationLayout.header.present.privacySettingsWarning.presentAnyway'
+              )
+            "
+            confirm-btn-color="primary"
+            :confirm-btn-text="
+              $t(
+                'presentationLayout.header.present.privacySettingsWarning.switchToPublic'
+              )
+            "
+            @cancel="
+              handleStartPresenting();
+              showStartPresentingInPrivateConfirmationDialog = false;
+            "
+            @confirm="
+              async () => {
+                presentation.is_private = !presentation.is_private;
+                await presentationsStore.updatePresentation();
+                await handleStartPresenting();
+                showStartPresentingInPrivateConfirmationDialog = false;
+              }
+            "
+          />
+        </q-dialog>
+
         <!-- user -->
         <UserMenu is-avatar-only />
       </div>
@@ -304,7 +356,7 @@ import { ROUTE_PATHS } from "src/constants/routes";
 import UserMenu from "components/user/UserMenu.vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { date } from "quasar";
+import { date, useQuasar } from "quasar";
 import { useCanvasStore } from "stores/canvas";
 import { computed, ref } from "vue";
 import PresentationSettings from "components/presentationStudio/settings/PresentationSettings.vue";
@@ -312,11 +364,13 @@ import PresentationStudioPreviewPresentation from "components/presentationStudio
 import { api } from "boot/axios";
 import { useRouter } from "vue-router";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
+import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 
 /*
  * variables
  */
 const router = useRouter();
+const $q = useQuasar();
 
 /*
  * stores
@@ -352,9 +406,20 @@ const slideIndex = computed(() => {
  * room
  */
 const showStartPresentingOptionsMenu = ref(false);
+const showStartPresentingInPrivateConfirmationDialog = ref(false);
+const startPresentingFromSlide = ref();
+
 const isFullscreen = ref(true);
 
-const handleStartPresenting = async (startSlide = slide.value) => {
+const handleStartPresenting = async () => {
+  if (
+    presentation.value.is_private &&
+    !showStartPresentingInPrivateConfirmationDialog.value
+  ) {
+    showStartPresentingInPrivateConfirmationDialog.value = true;
+    return;
+  }
+
   await presentationsStore.saveSlide(slide.value, elements.value);
 
   if (isFullscreen.value) {
@@ -368,7 +433,7 @@ const handleStartPresenting = async (startSlide = slide.value) => {
   await presentationsStore.sendPresentationRoomUpdateEvent(
     undefined,
     presentation.value.room.id,
-    startSlide.id
+    startPresentingFromSlide.value.id
   );
   openPresentationRoom();
 };

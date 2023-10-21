@@ -49,5 +49,10 @@ export default {
       },
       guest: "Гость",
     },
+    isPrivate: {
+      title: "The presentation is in private mode",
+      description:
+        "Once the presenter has switched to public, you can see and interact with their slides",
+    },
   },
 };

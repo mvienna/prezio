@@ -215,7 +215,14 @@
 
               <div class="row no-wrap items-center">
                 <!-- privacy -->
-                <div class="row no-wrap items-center text-grey-5">
+                <button
+                  class="row no-wrap items-center text-grey-5 cursor-pointer q-px-none"
+                  style="background: transparent; border: none"
+                  @click="
+                    props.row.is_private = !props.row.is_private;
+                    presentationsStore.updatePresentation(props.row);
+                  "
+                >
                   <q-icon
                     :name="
                       props.row.is_private ? 'r_visibility_off' : 'r_visibility'
@@ -229,10 +236,10 @@
                       }`
                     )
                   }}
-                </div>
+                </button>
 
                 <!-- slides -->
-                <div class="row no-wrap items-center text-grey-5 q-pl-md">
+                <div class="row no-wrap items-center text-grey-5 q-pl-sm">
                   <q-icon name="r_layers" class="q-mr-xs" />
                   {{ props.row.slides.length }}
                 </div>
@@ -682,7 +689,7 @@ const presentationsColumns = [
  * open presentation
  */
 const handlePresentationClick = (event, item) => {
-  if (!["I", "SPAN"].includes(event.target.nodeName)) {
+  if (["TD", "IMG"].includes(event.target.nodeName)) {
     router.push(
       clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) + item.id
     );

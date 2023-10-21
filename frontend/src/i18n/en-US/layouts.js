@@ -65,6 +65,14 @@ export default {
         },
 
         fullscreen: "Fullscreen",
+
+        privacySettingsWarning: {
+          title: "Presentation is private",
+          message:
+            "Your audience won't be able to see your slides or interact from their devices. Would you like to proceed?",
+          switchToPublic: "Switch to public",
+          presentAnyway: "Present anyway",
+        },
       },
     },
 

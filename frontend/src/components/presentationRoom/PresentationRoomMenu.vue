@@ -123,9 +123,12 @@
             align="left"
             flat
             :size="$q.screen.lt.md ? '0.8em' : '1em'"
-            disable
             style="border-radius: 8px 8px 16px 16px"
             v-close-popup
+            @click="
+              presentation.is_private = !presentation.is_private;
+              presentationsStore.updatePresentation();
+            "
           />
         </div>
       </q-menu>

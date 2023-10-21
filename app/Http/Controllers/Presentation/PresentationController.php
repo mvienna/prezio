@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Presentation;
 
+use App\Events\PresentationRoomPrivacyUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Presentation\Slide\PresentationSlideController;
 use App\Models\Presentation\Presentation;
@@ -45,6 +46,13 @@ class PresentationController extends Controller
         $user = auth()->user();
         if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
             return $this->errorResponse(trans('errors.accessDenied'), 403);
+        }
+
+        // send event to room channel to inform about privacy setting change
+        $presentation->load('room');
+        if ($presentation->room && $presentation->is_private !== $request->is_private) {
+            \Log::info('here');
+            event(new PresentationRoomPrivacyUpdatedEvent($presentation->room, $request->is_private));
         }
 
         $presentation->update([
@@ -147,7 +155,7 @@ class PresentationController extends Controller
             ->with(['slides' => function ($query) {
                 $query->select('id', 'presentation_id', 'updated_at');
             }])
-            ->with('preview');
+            ->with('preview', 'settings');
 
         $query = $query->where('folder_id', $folder_id);
         $totalFiltered = $query->count();
