@@ -186,7 +186,12 @@ export const usePresentationsStore = defineStore("presentations", {
         .get(`/presentation/${id}`)
         .then((response) => {
           this.presentation = response.data;
-          this.setSlide(this.presentation.slides[0]);
+
+          const lastSlide = this.presentation.slides.find(
+            (slide) => slide.id === this.presentation.settings.last_slide_id
+          );
+
+          this.setSlide(lastSlide || this.presentation.slides[0]);
         })
         .catch((error) => {
           throw error.response.data.message;
@@ -258,7 +263,7 @@ export const usePresentationsStore = defineStore("presentations", {
       return await this.setSlide(response.data);
     },
 
-    async saveSlide(slide = this.slide, elements) {
+    async saveSlide(slide = this.slide, elements, newSlide) {
       this.isSavingError = false;
       this.isSaving = true;
 
@@ -270,6 +275,7 @@ export const usePresentationsStore = defineStore("presentations", {
           type: slide.type,
           notes: slide.notes,
           animation: slide.animation,
+          last_slide_id: newSlide?.id || slide?.id,
         })
         .then(() => {
           this.lastSavedAt = new Date();
@@ -304,13 +310,20 @@ export const usePresentationsStore = defineStore("presentations", {
     async deleteSlide(slide) {
       if (this.presentation.slides.length === 1) return;
 
+      const slideIndex = this.presentation.slides.findIndex(
+        (item) => item.id === slide.id
+      );
+
+      const slideToShowAfterDeleting =
+        this.presentation.slides[slideIndex + (slideIndex !== 0 ? -1 : 1)];
+
       return await api
         .delete(`/presentation/${this.presentation.id}/slide/${slide.id}`)
         .then(() => {
           this.presentation.slides = this.presentation.slides.filter(
             (item) => item.id !== slide.id
           );
-          this.setSlide(this.presentation.slides[0]);
+          this.setSlide(slideToShowAfterDeleting);
         })
         .catch((error) => {
           console.log(error);
@@ -327,7 +340,7 @@ export const usePresentationsStore = defineStore("presentations", {
       if (this.slide && elements && saveSlide) {
         this.slide.canvas_data = JSON.stringify(elements);
         this.updateLocalSlide();
-        this.saveSlide(undefined, elements);
+        this.saveSlide(undefined, elements, newSlide);
       }
 
       this.slide = newSlide;

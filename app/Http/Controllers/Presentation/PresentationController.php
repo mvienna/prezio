@@ -82,7 +82,7 @@ class PresentationController extends Controller
 
         $presentation->load('settings', 'slides', 'rooms', 'rooms.participants', 'rooms.reactions');
 
-        // delete presentation rooms, rooms participants and rooms reactions
+        // delete presentation rooms, participants data, reactions
         foreach ($presentation->rooms as $room) {
             foreach ($room->participants as $participant) {
                 $participant->delete();
@@ -95,14 +95,14 @@ class PresentationController extends Controller
             $room->delete();
         }
 
-        // delete presemtation slides
-        foreach ($presentation->slides as $slide) {
-            app(PresentationSlideController::class)->destroy($presentation, $slide);
-        }
-
         // delete presentation settings
         if ($presentation->settings) {
             $presentation->settings->delete();
+        }
+
+        // delete presentation slides
+        foreach ($presentation->slides as $slide) {
+            app(PresentationSlideController::class)->destroy($presentation, $slide);
         }
 
         // delete presentation

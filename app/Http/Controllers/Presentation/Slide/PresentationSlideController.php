@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class PresentationSlideController extends Controller
 {
-    public function store (Presentation $presentation, Request $request): JsonResponse
+    public function store(Presentation $presentation, Request $request): JsonResponse
     {
         $slide = PresentationSlide::create([
             'presentation_id' => $presentation->id,
@@ -20,10 +20,14 @@ class PresentationSlideController extends Controller
             'type' => $request->type,
         ]);
 
+        $presentation->settings()->update([
+            'last_slide_id' => $slide->id
+        ]);
+
         return $this->jsonResponse($slide->toArray());
     }
 
-    public function update (Presentation $presentation, PresentationSlide $slide, Request $request): JsonResponse
+    public function update(Presentation $presentation, PresentationSlide $slide, Request $request): JsonResponse
     {
         $slide->update([
             'canvas_data' => $request->canvas_data,
@@ -33,12 +37,15 @@ class PresentationSlideController extends Controller
             'notes' => $request->notes,
             'animation' => $request->animation,
         ]);
-        $presentation->load('slides');
+
+        $presentation->settings()->update([
+            'last_slide_id' => $request->last_slide_id
+        ]);
 
         return $this->successResponse();
     }
 
-    public function updateSlides (Presentation $presentation, Request $request): JsonResponse
+    public function updateSlides(Presentation $presentation, Request $request): JsonResponse
     {
         foreach ($request->slides as $slide) {
             PresentationSlide::find($slide['id'])->update([
@@ -50,7 +57,7 @@ class PresentationSlideController extends Controller
         return $this->jsonResponse($presentation->toArray());
     }
 
-    public function destroy (Presentation $presentation, PresentationSlide $slide): JsonResponse
+    public function destroy(Presentation $presentation, PresentationSlide $slide): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
