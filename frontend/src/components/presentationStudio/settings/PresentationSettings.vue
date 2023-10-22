@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="scroll--hidden" style="height: 100%; width: 400px">
+  <q-card flat class="scroll--hidden">
     <q-toolbar
       class="items-center justify-between bg-white q-py-md q-px-lg"
       style="position: sticky; top: 0; z-index: 1"
@@ -123,6 +123,12 @@ const isExpandedTabs = ref([]);
 </script>
 
 <style scoped lang="scss">
+.q-card {
+  height: 100%;
+  width: 400px;
+  border-radius: 16px !important;
+}
+
 ::v-deep(.q-expansion-item) {
   .q-expansion-item__container {
     .q-item {

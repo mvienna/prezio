@@ -161,13 +161,16 @@
         />
 
         <q-btn
+          v-if="isUnsavedChanges"
           unelevated
           color="primary"
-          :icon="isUnsavedChanges ? 'r_save' : 'r_done'"
+          icon="r_done"
           round
-          :disable="!isUnsavedChanges || !isFieldsValid"
+          :disable="!isFieldsValid"
           @click="handleSave()"
         />
+
+        <q-btn v-else flat color="grey" icon="r_save" round disable />
       </div>
     </div>
   </q-slide-transition>
