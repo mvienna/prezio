@@ -248,32 +248,35 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * slides
      */
-    async addNewSlide(elements = null, type, insertAtIndex = null) {
+    async addNewSlide(elements = null, type) {
+      // find insert index for the new slide
+      const slideIndex = this.presentation.slides.findIndex(
+        (item) => item.id === this.slide.id
+      );
+      const insertAtIndex = slideIndex + 1;
+
+      // create new slide
       const response = await api
         .post(`/presentation/${this.presentation.id}/slide`, {
           canvas_data: JSON.stringify(elements),
-          order:
-            insertAtIndex >= 0
-              ? insertAtIndex
-              : this.presentation.slides.length,
+          order: insertAtIndex,
           type: type,
         })
         .catch((error) => {
           console.log(error);
         });
 
-      this.presentation.slides.splice(
-        insertAtIndex >= 0 ? insertAtIndex : this.presentation.slides.length,
-        0,
-        response.data
-      );
+      // insert new slide
+      this.presentation.slides.splice(insertAtIndex, 0, response.data);
 
+      // update slides order
       this.presentation.slides = this.presentation.slides.map((item, index) => {
         item.order = index;
         return item;
       });
       await this.updateSlidesOrder();
 
+      // set new slide
       return await this.setSlide(response.data);
     },
 
@@ -304,11 +307,7 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     async duplicateSlide(slide, elements) {
-      const slideIndex = this.presentation.slides.findIndex(
-        (item) => item.id === slide.id
-      );
-
-      await this.addNewSlide(elements, slide.type, slideIndex + 1);
+      await this.addNewSlide(elements, slide.type);
     },
 
     async deleteSlide(slide) {
