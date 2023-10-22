@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Presentation\Slide;
 
+use App\Events\PresentationRoomUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Presentation\Presentation;
+use App\Models\Presentation\Room\PresentationRoom;
 use App\Models\Presentation\Slide\PresentationSlide;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -74,6 +76,13 @@ class PresentationSlideController extends Controller
         if ($presentation->settings?->last_slide_id === $slide->id) {
             $presentation->settings()->update([
                 'last_slide_id' => null
+            ]);
+        }
+
+        $room = PresentationRoom::where('slide_id', $slide->id)->whereNull('terminated_at')->first();
+        if ($room) {
+            $room->update([
+                'slide_id' => null,
             ]);
         }
 
