@@ -3,7 +3,7 @@
     :style="
       !isHost
         ? roomBackground && !presentation?.is_private
-          ? `background: url(${roomBackground.imageSrc})`
+          ? `background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${roomBackground.imageSrc})`
           : 'background: white;'
         : 'background: black;'
     "
@@ -587,7 +587,7 @@ const toggleFullscreen = () => {
 };
 
 onBeforeMount(() => {
-  document.addEventListener("fullscreenchange", (event) => {
+  document.addEventListener("fullscreenchange", () => {
     handleFullscreenChangeEvent();
   });
 });
