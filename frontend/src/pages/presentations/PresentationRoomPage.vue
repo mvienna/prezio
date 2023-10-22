@@ -108,7 +108,8 @@
               :show-room-information-panel="showRoomInformationPanel"
               :logo="
                 averageRoomBackgroundBrightness >=
-                  roomBackgroundBrightnessThreshold && !showRoomInformationPanel
+                  roomBackgroundBrightnessThreshold &&
+                (!isHost || (isHost && !showRoomInformationPanel))
                   ? '/logo_with_title_black.png'
                   : '/logo_white_with_title_white.png'
               "
