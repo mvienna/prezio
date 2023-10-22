@@ -2,8 +2,8 @@
   <q-page
     :style="
       !isHost
-        ? slide?.preview && (!presentation?.is_private || isHost)
-          ? `background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${slide?.preview});`
+        ? roomBackground && (!presentation?.is_private || isHost)
+          ? `background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${roomBackground});`
           : 'background: white;'
         : 'background: black;'
     "
@@ -182,7 +182,8 @@ const {
 } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
-const { canvas, ctx, scale, elements } = storeToRefs(canvasStore);
+const { canvas, ctx, scale, elements, MODES_OPTIONS } =
+  storeToRefs(canvasStore);
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -212,6 +213,13 @@ const showRoomInformationPanel = ref(true);
 
 // room data
 const participantsCount = ref(0);
+
+// room background
+const roomBackground = computed(() => {
+  return elements.value?.find(
+    (element) => element.mode === MODES_OPTIONS.value.background
+  )?.imageSrc;
+});
 
 /*
  * canvas slide
