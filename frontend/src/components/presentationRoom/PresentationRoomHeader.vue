@@ -3,8 +3,9 @@
     v-if="isHost"
     class="cursor-pointer"
     :class="$q.screen.lt.lg ? 'q-pa-md' : 'q-pa-lg'"
+    style="transition: 0.2s"
     :style="
-      showRoomInformationPanel
+      showRoomInformationPanel || isHovered
         ? 'background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);'
         : ''
     "
@@ -12,12 +13,14 @@
       (event) => {
         if (
           ['DIV', 'IMG'].includes(event.target.nodeName) &&
-          showRoomInformationPanel
+          (showRoomInformationPanel || isHovered)
         ) {
           $emit('toggleInvitationPanel');
         }
       }
     "
+    @mouseover="isHovered = true"
+    @mouseleave="isHovered = false"
   >
     <transition
       appear
@@ -56,63 +59,77 @@
     <q-space />
 
     <!-- invitation link -->
-    <div
-      v-if="showRoomInformationPanel"
-      class="row no-wrap items-center justify-center ellipsis"
-      style="max-width: 70%"
+    <transition
+      appear
+      enter-active-class="animated fadeInDown"
+      leave-active-class="animated fadeOutUp"
     >
-      <!-- link -->
       <div
-        class="ellipsis room_link"
-        style="max-width: 550px; font-size: 1.25em"
-        @click="copyRoomLinkToClipboard()"
+        v-if="showRoomInformationPanel || isHovered"
+        class="row no-wrap items-center justify-center ellipsis"
+        style="max-width: 70%"
       >
-        <span v-if="!$q.screen.lt.sm" class="text-grey q-mr-xs">
-          {{ $t("presentationRoom.header.roomLink.title") }}
-        </span>
+        <!-- link -->
+        <div
+          class="ellipsis room_link"
+          style="max-width: 550px; font-size: 1.25em"
+          @click="copyRoomLinkToClipboard()"
+        >
+          <span v-if="!$q.screen.lt.sm" class="text-grey q-mr-xs">
+            {{ $t("presentationRoom.header.roomLink.title") }}
+          </span>
 
-        <span class="text-semibold">
-          {{ roomLink }}
-        </span>
+          <span class="text-semibold">
+            {{ roomLink }}
+          </span>
 
-        <q-tooltip :offset="[0, 0]">
-          {{
-            $t(
-              `presentationRoom.header.roomLink.${
-                isCopied ? "copied" : "copyToClipboard"
-              }`
-            )
-          }}
-        </q-tooltip>
+          <q-tooltip :offset="[0, 0]">
+            {{
+              $t(
+                `presentationRoom.header.roomLink.${
+                  isCopied ? "copied" : "copyToClipboard"
+                }`
+              )
+            }}
+          </q-tooltip>
+        </div>
+
+        <!-- toggle invitation panel -->
+        <q-btn
+          flat
+          icon="r_qr_code"
+          :color="showRoomInvitationPanel ? 'white' : 'grey'"
+          round
+          size="12px"
+          class="q-ml-sm"
+          @click="$emit('toggleInvitationPanel')"
+        >
+          <q-tooltip>
+            {{
+              $t(
+                `presentationRoom.header.invitationPanel.${
+                  showRoomInvitationPanel ? "hide" : "show"
+                }`
+              )
+            }}
+          </q-tooltip>
+        </q-btn>
       </div>
-
-      <!-- toggle invitation panel -->
-      <q-btn
-        flat
-        icon="r_qr_code"
-        :color="showRoomInvitationPanel ? 'white' : 'grey'"
-        round
-        size="12px"
-        class="q-ml-sm"
-        @click="$emit('toggleInvitationPanel')"
-      >
-        <q-tooltip>
-          {{
-            $t(
-              `presentationRoom.header.invitationPanel.${
-                showRoomInvitationPanel ? "hide" : "show"
-              }`
-            )
-          }}
-        </q-tooltip>
-      </q-btn>
-    </div>
+    </transition>
 
     <q-space />
 
     <!-- logo -->
     <div :style="$q.screen.lt.sm ? 'min-width: 64px' : 'min-width: 96px'">
-      <q-img :src="logo" style="height: 48px" fit="contain" />
+      <q-img
+        :src="
+          showRoomInformationPanel || isHovered
+            ? '/logo_white_with_title_white.png'
+            : logo
+        "
+        style="height: 48px"
+        fit="contain"
+      />
     </div>
   </q-toolbar>
 
@@ -138,6 +155,8 @@ import { useQuasar } from "quasar";
  */
 const router = useRouter();
 const $q = useQuasar();
+
+const isHovered = ref(false);
 
 /*
  * props
