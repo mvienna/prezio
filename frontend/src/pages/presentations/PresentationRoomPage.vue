@@ -3,7 +3,7 @@
     :style="
       !isHost
         ? roomBackground && !presentation?.is_private
-          ? `background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${roomBackground.imageSrc})`
+          ? `background: url(${roomBackground.imageSrc})`
           : 'background: white;'
         : 'background: black;'
     "
@@ -59,7 +59,14 @@
         :class="isHost ? 'justify-center' : ''"
       >
         <!-- auth form - collecting participants info -->
-        <PresentationRoomAuthForm v-if="!isAuthenticated && isLoaded" />
+        <PresentationRoomAuthForm
+          v-if="!isAuthenticated && isLoaded"
+          :logo="
+            averageRoomBackgroundBrightness >= roomBackgroundBrightnessThreshold
+              ? '/logo_with_title_black.png'
+              : '/logo_white_with_title_white.png'
+          "
+        />
 
         <!-- presentation content -->
         <div
@@ -99,6 +106,12 @@
               :is-host="isHost"
               :is-mouse-active="isMouseActive"
               :show-room-information-panel="showRoomInformationPanel"
+              :logo="
+                averageRoomBackgroundBrightness >=
+                  roomBackgroundBrightnessThreshold && !showRoomInformationPanel
+                  ? '/logo_with_title_black.png'
+                  : '/logo_white_with_title_white.png'
+              "
               @mouseover="clearIsMouseActiveTimeout()"
               @toggle-invitation-panel="
                 showRoomInvitationPanel = !showRoomInvitationPanel
@@ -227,13 +240,6 @@ const showRoomInformationPanel = ref(true);
 
 // room data
 const participantsCount = ref(0);
-
-// room background
-const roomBackground = computed(() => {
-  return elements.value?.find(
-    (element) => element.mode === MODE_OPTIONS.value.background
-  );
-});
 
 /*
  * canvas slide
@@ -603,6 +609,67 @@ const terminateRoom = () => {
       console.log(error);
     });
 };
+
+/*
+ * room background
+ */
+const roomBackground = computed(() => {
+  return elements.value?.find(
+    (element) => element.mode === MODE_OPTIONS.value.background
+  );
+});
+
+const roomBackgroundBrightnessThreshold = 128;
+const averageRoomBackgroundBrightness = computed(() => {
+  const element = roomBackground.value;
+  if (!element?.image?.nodeType) return 0;
+
+  // define canvas
+  const roomBackgroundCanvas = document.createElement("canvas");
+  const roomBackgroundCtx = roomBackgroundCanvas.getContext("2d");
+  roomBackgroundCanvas.width = element.width;
+  roomBackgroundCanvas.height = element.height;
+
+  // filters
+  roomBackgroundCtx.filter = `blur(${element.blur || 0}px) contrast(${
+    element.contrast >= 0 ? element.contrast : 100
+  }%) brightness(${
+    element.brightness >= 0 ? element.brightness : 100
+  }%) invert(${element.invert || 0}%) grayscale(${element.grayscale || 0}%)`;
+
+  if (element.opacity >= 0) {
+    roomBackgroundCtx.globalAlpha = element.opacity / 100;
+  }
+
+  // draw background
+  roomBackgroundCtx.drawImage(
+    element.image,
+    0,
+    0,
+    element.width,
+    element.height
+  );
+
+  // compute average brightness
+  let sumBrightness = 0;
+  const imageData = roomBackgroundCtx.getImageData(
+    0,
+    0,
+    element.width,
+    element.height
+  ).data;
+
+  for (let i = 0; i < imageData.length; i += 4) {
+    const r = imageData[i];
+    const g = imageData[i + 1];
+    const b = imageData[i + 2];
+    const brightness = (r + g + b) / 3; // avg brightness of the pixel
+    sumBrightness += brightness;
+  }
+
+  roomBackgroundCanvas.remove();
+  return sumBrightness / (element.width * element.height);
+});
 </script>
 
 <style scoped lang="scss">

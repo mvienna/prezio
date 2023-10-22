@@ -5,11 +5,7 @@
         <!-- logo -->
         <div class="row justify-center q-mb-lg">
           <div style="width: 96px">
-            <q-img
-              src="/logo_with_title_black.png"
-              style="height: 48px"
-              fit="contain"
-            />
+            <q-img :src="logo" style="height: 48px" fit="contain" />
           </div>
         </div>
 
@@ -93,6 +89,13 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 /*
+ * props
+ */
+defineProps({
+  logo: { type: String, default: "/logo_white_with_title_white.png" },
+});
+
+/*
  * stores
  */
 const presentationsStore = usePresentationsStore();
@@ -149,6 +152,7 @@ const submit = async () => {
 
 ::v-deep(.q-field__control) {
   background: $white;
+  border-radius: 8px;
 }
 
 @media screen and (max-width: 600px) {

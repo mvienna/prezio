@@ -10,7 +10,10 @@
     "
     @click="
       (event) => {
-        if (['DIV', 'IMG'].includes(event.target.nodeName)) {
+        if (
+          ['DIV', 'IMG'].includes(event.target.nodeName) &&
+          showRoomInformationPanel
+        ) {
           $emit('toggleInvitationPanel');
         }
       }
@@ -23,7 +26,6 @@
     >
       <div
         class="row no-wrap q-gutter-sm"
-        v-if="showRoomInformationPanel"
         style="transition: 0.2s"
         :style="!isMouseActive && !$q.screen.lt.sm ? 'opacity: 0' : ''"
       >
@@ -110,21 +112,13 @@
 
     <!-- logo -->
     <div :style="$q.screen.lt.sm ? 'min-width: 64px' : 'min-width: 96px'">
-      <q-img
-        src="/logo_white_with_title_white.png"
-        style="height: 48px"
-        fit="contain"
-      />
+      <q-img :src="logo" style="height: 48px" fit="contain" />
     </div>
   </q-toolbar>
 
   <div v-else class="row justify-center q-pa-lg">
     <div style="width: 96px">
-      <q-img
-        src="/logo_white_with_title_white.png"
-        style="height: 48px"
-        fit="contain"
-      />
+      <q-img :src="logo" style="height: 48px" fit="contain" />
     </div>
   </div>
 </template>
@@ -152,6 +146,7 @@ defineProps({
   isHost: { type: Boolean },
   isMouseActive: { type: Boolean },
   showRoomInformationPanel: { type: Boolean },
+  logo: { type: String, default: "/logo_with_title_white.png" },
 });
 
 /*
