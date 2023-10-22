@@ -70,6 +70,13 @@ class PresentationSlideController extends Controller
             $slide->template->delete();
         }
 
+        $presentation->load('settings');
+        if ($presentation->settings?->last_slide_id === $slide->id) {
+            $presentation->settings()->update([
+                'last_slide_id' => null
+            ]);
+        }
+
         $slide->delete();
         return $this->successResponse();
     }
