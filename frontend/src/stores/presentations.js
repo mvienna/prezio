@@ -248,18 +248,32 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * slides
      */
-    async addNewSlide(elements = null, type) {
+    async addNewSlide(elements = null, type, insertAtIndex = null) {
       const response = await api
         .post(`/presentation/${this.presentation.id}/slide`, {
           canvas_data: JSON.stringify(elements),
-          order: this.presentation.slides.length,
+          order:
+            insertAtIndex >= 0
+              ? insertAtIndex
+              : this.presentation.slides.length,
           type: type,
         })
         .catch((error) => {
           console.log(error);
         });
 
-      this.presentation.slides.push(response.data);
+      this.presentation.slides.splice(
+        insertAtIndex >= 0 ? insertAtIndex : this.presentation.slides.length,
+        0,
+        response.data
+      );
+
+      this.presentation.slides = this.presentation.slides.map((item, index) => {
+        item.order = index;
+        return item;
+      });
+      await this.updateSlidesOrder();
+
       return await this.setSlide(response.data);
     },
 
@@ -290,21 +304,11 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     async duplicateSlide(slide, elements) {
-      // add new slide
-      await this.addNewSlide(elements, slide.type);
+      const slideIndex = this.presentation.slides.findIndex(
+        (item) => item.id === slide.id
+      );
 
-      // // copy original slides props into the new one
-      // this.slide = {
-      //   ...this.slide,
-      //   canvas_data: slide.canvas_data,
-      //   preview: slide.preview,
-      //   notes: slide.notes,
-      //   animation: slide.animation,
-      // };
-      // this.updateLocalSlide();
-      //
-      // // save new slide
-      // this.saveSlide(undefined, elements);
+      await this.addNewSlide(elements, slide.type, slideIndex + 1);
     },
 
     async deleteSlide(slide) {
