@@ -2,136 +2,150 @@
   <q-page
     :style="
       !isHost
-        ? roomBackground && (!presentation?.is_private || isHost)
-          ? `background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${roomBackground});`
+        ? roomBackground && !presentation?.is_private
+          ? `background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${roomBackground.imageSrc})`
           : 'background: white;'
         : 'background: black;'
     "
   >
-    <!-- no access -->
-    <div v-if="presentation?.is_private && !isHost">
-      <!-- logo -->
-      <div class="row justify-center q-pa-lg">
-        <div style="width: 96px">
-          <q-img
-            src="/logo_with_title_black.png"
-            style="height: 48px"
-            fit="contain"
-          />
-        </div>
-      </div>
-
-      <div class="row no-wrap justify-center text-center">
-        <div style="max-width: 500px">
-          <div class="text-bold text-h7">
-            {{ $t("presentationRoom.isPrivate.title") }}
-          </div>
-
-          <div class="q-mt-md text-grey">
-            {{ $t("presentationRoom.isPrivate.description") }}
-          </div>
-
-          <div class="row justify-center q-mt-xl">
-            <q-img src="/assets/images/bird_singing.svg" width="300px" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- has access -->
     <div
-      v-else
-      class="container relative-position column no-wrap"
-      :class="isHost ? 'justify-center' : ''"
+      :style="
+        !isHost && roomBackground && !presentation.is_private
+          ? `backdrop-filter: blur(${roomBackground.blur || 0}px) contrast(${
+              roomBackground.contrast >= 0 ? roomBackground.contrast : 100
+            }%) brightness(${
+              roomBackground.brightness >= 0 ? roomBackground.brightness : 100
+            }%) invert(${roomBackground.invert || 0}%) grayscale(${
+              roomBackground.grayscale || 0
+            }%) opacity(${roomBackground.opacity || 100}%)`
+          : ''
+      "
     >
-      <!-- auth form - collecting participants info -->
-      <PresentationRoomAuthForm v-if="!isAuthenticated && isLoaded" />
+      <!-- no access -->
+      <div v-if="presentation?.is_private && !isHost">
+        <!-- logo -->
+        <div class="row justify-center q-pa-lg">
+          <div style="width: 96px">
+            <q-img
+              src="/logo_with_title_black.png"
+              style="height: 48px"
+              fit="contain"
+            />
+          </div>
+        </div>
 
-      <!-- presentation content -->
+        <div class="row no-wrap justify-center text-center">
+          <div style="max-width: 500px">
+            <div class="text-bold text-h7">
+              {{ $t("presentationRoom.isPrivate.title") }}
+            </div>
+
+            <div class="q-mt-md text-grey">
+              {{ $t("presentationRoom.isPrivate.description") }}
+            </div>
+
+            <div class="row justify-center q-mt-xl">
+              <q-img src="/assets/images/bird_singing.svg" width="300px" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- has access -->
       <div
-        v-show="isAuthenticated && isLoaded"
-        class="row no-wrap justify-center items-center"
-        style="transition: 0.5s"
-        :class="showRoomInvitationPanel || !isHost ? 'q-px-md' : ''"
+        v-else
+        class="container relative-position column no-wrap"
+        :class="isHost ? 'justify-center' : ''"
       >
-        <!-- room invitation panel -->
-        <transition
-          appear
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-        >
-          <PresentationRoomInvitationPanel
-            v-if="showRoomInvitationPanel"
-            :qr-code="qrCode"
-            @toggle-invitation-panel="
-              showRoomInvitationPanel = !showRoomInvitationPanel
-            "
-          />
-        </transition>
+        <!-- auth form - collecting participants info -->
+        <PresentationRoomAuthForm v-if="!isAuthenticated && isLoaded" />
 
-        <!-- slide -->
+        <!-- presentation content -->
         <div
-          class="relative-position column no-wrap justify-center"
-          :class="showRoomInvitationPanel ? 'q-ml-md' : ''"
+          v-show="isAuthenticated && isLoaded"
+          class="row no-wrap justify-center items-center"
           style="transition: 0.5s"
-          :style="
-            showRoomInvitationPanel || !isHost
-              ? 'border-radius: 12px; overflow: hidden;'
-              : ''
-          "
+          :class="showRoomInvitationPanel || !isHost ? 'q-px-md' : ''"
         >
-          <!-- header - information panel -->
-          <PresentationRoomHeader
-            :is-host="isHost"
-            :is-mouse-active="isMouseActive"
-            :show-room-information-panel="showRoomInformationPanel"
-            @mouseover="clearIsMouseActiveTimeout()"
-            @toggle-invitation-panel="
-              showRoomInvitationPanel = !showRoomInvitationPanel
-            "
-          />
+          <!-- room invitation panel -->
+          <transition
+            appear
+            enter-active-class="animated fadeIn"
+            leave-active-class="animated fadeOut"
+          >
+            <PresentationRoomInvitationPanel
+              v-if="showRoomInvitationPanel"
+              :qr-code="qrCode"
+              @toggle-invitation-panel="
+                showRoomInvitationPanel = !showRoomInvitationPanel
+              "
+            />
+          </transition>
 
-          <!-- canvas slide -->
-          <canvas
-            ref="canvasRef"
-            id="canvas"
+          <!-- slide -->
+          <div
+            class="relative-position column no-wrap justify-center"
+            :class="showRoomInvitationPanel ? 'q-ml-md' : ''"
+            style="transition: 0.5s"
             :style="
               showRoomInvitationPanel || !isHost
                 ? 'border-radius: 12px; overflow: hidden;'
                 : ''
             "
-            @mousemove="handleCanvasMouseMoveEvent"
-          ></canvas>
+          >
+            <!-- header - information panel -->
+            <PresentationRoomHeader
+              :is-host="isHost"
+              :is-mouse-active="isMouseActive"
+              :show-room-information-panel="showRoomInformationPanel"
+              @mouseover="clearIsMouseActiveTimeout()"
+              @toggle-invitation-panel="
+                showRoomInvitationPanel = !showRoomInvitationPanel
+              "
+            />
 
-          <!-- menu panel -->
-          <PresentationRoomMenu
-            v-if="isHost"
-            :is-fullscreen="isFullscreen"
-            :show-room-information-panel="showRoomInformationPanel"
-            :show-room-invitation-panel="showRoomInvitationPanel"
-            @terminate-room="terminateRoom()"
-            @toggle-fullscreen="toggleFullscreen()"
-            @toggle-invitation-panel="
-              showRoomInvitationPanel = !showRoomInvitationPanel
-            "
-            @toggle-information-panel="
-              showRoomInformationPanel = !showRoomInformationPanel
-            "
-          />
+            <!-- canvas slide -->
+            <canvas
+              ref="canvasRef"
+              id="canvas"
+              :style="
+                showRoomInvitationPanel || !isHost
+                  ? 'border-radius: 12px; overflow: hidden;'
+                  : ''
+              "
+              @mousemove="handleCanvasMouseMoveEvent"
+            ></canvas>
 
-          <!-- room data - participants count, reactions -->
-          <PresentationRoomData
-            :participants-count="participantsCount || 0"
-            :is-host="isHost"
-          />
+            <!-- menu panel -->
+            <PresentationRoomMenu
+              v-if="isHost"
+              :is-fullscreen="isFullscreen"
+              :show-room-information-panel="showRoomInformationPanel"
+              :show-room-invitation-panel="showRoomInvitationPanel"
+              @terminate-room="terminateRoom()"
+              @toggle-fullscreen="toggleFullscreen()"
+              @toggle-invitation-panel="
+                showRoomInvitationPanel = !showRoomInvitationPanel
+              "
+              @toggle-information-panel="
+                showRoomInformationPanel = !showRoomInformationPanel
+              "
+            />
 
-          <!-- controls (← / →) -->
-          <PresentationRoomSlideControls
-            :is-host="isHost"
-            :is-mouse-active="isMouseActive"
-            @change-slide="handleSlideChange($event)"
-            @hover="clearIsMouseActiveTimeout()"
-          />
+            <!-- room data - participants count, reactions -->
+            <PresentationRoomData
+              :participants-count="participantsCount || 0"
+              :is-host="isHost"
+            />
+
+            <!-- controls (← / →) -->
+            <PresentationRoomSlideControls
+              :is-host="isHost"
+              :is-mouse-active="isMouseActive"
+              @change-slide="handleSlideChange($event)"
+              @hover="clearIsMouseActiveTimeout()"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -217,7 +231,7 @@ const participantsCount = ref(0);
 const roomBackground = computed(() => {
   return elements.value?.find(
     (element) => element.mode === MODE_OPTIONS.value.background
-  )?.imageSrc;
+  );
 });
 
 /*
