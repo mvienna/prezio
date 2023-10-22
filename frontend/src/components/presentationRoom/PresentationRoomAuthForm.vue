@@ -1,7 +1,18 @@
 <template>
-  <div class="container__wrapper">
+  <div class="container__wrapper q-mt-lg">
     <div class="container">
       <q-form @submit.prevent="submit()">
+        <!-- logo -->
+        <div class="row justify-center q-mb-lg">
+          <div style="width: 96px">
+            <q-img
+              src="/logo_with_title_black.png"
+              style="height: 48px"
+              fit="contain"
+            />
+          </div>
+        </div>
+
         <!-- title -->
         <div
           v-if="presentation?.settings?.participants_info_form_title"
@@ -12,10 +23,10 @@
 
         <!-- google -->
         <q-btn
-          outline
+          flat
           color="primary"
           no-caps
-          class="full-width q-py-md text-bold q-mt-lg"
+          class="full-width q-py-md text-bold q-mt-lg bg-white"
         >
           <template #default>
             <q-img
@@ -30,7 +41,7 @@
         </q-btn>
 
         <!-- or -->
-        <div class="q-py-lg text-center text-grey-5">
+        <div class="q-py-lg text-center text-grey-2">
           {{ $t("auth.login.or") }}
         </div>
 
@@ -65,23 +76,6 @@
             :disable="!isValid"
           />
         </div>
-
-        <svg
-          class="form__svg"
-          style="right: 5%; top: 0"
-          width="53"
-          height="51"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g>
-            <path
-              d="M13.81 47.388c-2.05-.767-4.005-1.768-5.967-2.716a64.79 64.79 0 0 0-4.025-1.792c-.063-.025-1.036-.312-.998-.456.081-.313.512-.654.71-.877 1.072-1.197 2.106-2.416 3.004-3.744 1.273-1.882 2.492-4.036 2.763-6.3"
-            ></path>
-            <path
-              d="M3 42.42c15.225-3.279 28.41-9.747 36.76-23.393C46.038 8.767 50.728-3.093 52.217-15"
-            ></path>
-          </g>
-        </svg>
       </q-form>
     </div>
   </div>
@@ -138,39 +132,23 @@ const submit = async () => {
 
 <style scoped lang="scss">
 .container__wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: auto 0;
-  height: 100%;
-  width: 100%;
-
   .container {
-    max-width: 600px;
+    max-width: 500px;
     width: 100%;
   }
 
   form {
-    padding: 48px;
-    background: $white;
-    border-radius: 16px;
-    box-shadow: rgba(73, 112, 255, 0.1) 0 8px 24px;
-
     .form__title {
       text-align: center;
       font-size: 20px;
       font-weight: 600;
-    }
-
-    .form__svg {
-      position: absolute;
-      pointer-events: none;
-      stroke: $primary;
-      fill: none;
-      stroke-width: 1.5;
-      stroke-linecap: round;
+      color: $white;
     }
   }
+}
+
+::v-deep(.q-field__control) {
+  background: $white;
 }
 
 @media screen and (max-width: 600px) {
@@ -181,14 +159,6 @@ const submit = async () => {
 
     form {
       border: none;
-    }
-  }
-}
-
-@media screen and (max-width: 470px) {
-  .container__wrapper {
-    form {
-      padding: 24px;
     }
   }
 }

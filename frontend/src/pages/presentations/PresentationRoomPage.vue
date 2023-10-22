@@ -34,6 +34,7 @@
           </div>
         </div>
 
+        <!-- message & illustration -->
         <div class="row no-wrap justify-center text-center">
           <div style="max-width: 500px">
             <div class="text-bold text-h7">
