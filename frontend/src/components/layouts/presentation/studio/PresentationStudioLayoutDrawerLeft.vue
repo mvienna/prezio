@@ -294,13 +294,15 @@ import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/t
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { useI18n } from "vue-i18n";
 
 /*
  * variables
  */
-const leftDrawerOpen = ref(true);
-
 const $q = useQuasar();
+const { t } = useI18n({ useScope: "global" });
+
+const leftDrawerOpen = ref(true);
 
 /*
  * stores
@@ -456,7 +458,7 @@ const handleAddingNewSlide = async (type) => {
       ...layoutDefaultElementProps,
 
       id: "layout-title-top-titleAndBody",
-      text: "Click to add title",
+      text: t("presentationStudio.layouts.defaultTexts.title"),
 
       color: "#313232",
       fontSize: "48px",
@@ -467,7 +469,7 @@ const handleAddingNewSlide = async (type) => {
       ...layoutDefaultElementProps,
 
       id: "layout-body",
-      text: "Click to add body",
+      text: t("presentationStudio.layouts.defaultTexts.body"),
 
       fontSize: "16px",
       color: "#808080",

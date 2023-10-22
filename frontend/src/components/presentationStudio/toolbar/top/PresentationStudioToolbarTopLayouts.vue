@@ -95,7 +95,7 @@ const layoutElements = {
     ...layoutDefaultElementProps,
 
     id: "layout-title-top",
-    text: "Click to add title",
+    text: t("presentationStudio.layouts.defaultTexts.title"),
 
     color: "#313232",
     fontSize: "48px",
@@ -114,7 +114,7 @@ const layoutElements = {
     ...layoutDefaultElementProps,
 
     id: "layout-title-center",
-    text: "Click to add title",
+    text: t("presentationStudio.layouts.defaultTexts.title"),
 
     color: "#313232",
     fontSize: "48px",
@@ -135,7 +135,7 @@ const layoutElements = {
     ...layoutDefaultElementProps,
 
     id: "layout-title-center-above",
-    text: "Click to add title",
+    text: t("presentationStudio.layouts.defaultTexts.title"),
 
     color: "#313232",
     fontSize: "48px",
@@ -157,7 +157,7 @@ const layoutElements = {
     ...layoutDefaultElementProps,
 
     id: "layout-subtitle-center-below",
-    text: "Click to add subtitle",
+    text: t("presentationStudio.layouts.defaultTexts.subtitle"),
 
     color: "#808080",
     fontSize: "36px",
@@ -175,7 +175,7 @@ const layoutElements = {
     ...layoutDefaultElementProps,
 
     id: "layout-body",
-    text: "Click to add body",
+    text: t("presentationStudio.layouts.defaultTexts.body"),
 
     fontSize: "16px",
     color: "#808080",
@@ -193,7 +193,7 @@ const layoutElements = {
     ...layoutDefaultElementProps,
 
     id: "layout-body-left",
-    text: "Click to add body",
+    text: t("presentationStudio.layouts.defaultTexts.body"),
 
     fontSize: "16px",
     color: "#808080",
@@ -214,7 +214,7 @@ const layoutElements = {
     ...layoutDefaultElementProps,
 
     id: "layout-body-right",
-    text: "Click to add body",
+    text: t("presentationStudio.layouts.defaultTexts.body"),
 
     fontSize: "16px",
     color: "#808080",

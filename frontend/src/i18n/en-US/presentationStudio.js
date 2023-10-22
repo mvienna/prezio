@@ -179,5 +179,16 @@ export default {
         next: "Next",
       },
     },
+
+    /*
+     * layouts
+     */
+    layouts: {
+      defaultTexts: {
+        title: "Click to add title",
+        subtitle: "Click to add subtitle",
+        body: "Click to add text",
+      },
+    },
   },
 };

@@ -176,7 +176,7 @@ const handleChangingSlideType = async (type) => {
       ...layoutDefaultElementProps,
 
       id: "layout-title-top-addon",
-      text: "Click to add title",
+      text: t("presentationStudio.layouts.defaultTexts.title"),
 
       color: "#313232",
       fontSize: "48px",
