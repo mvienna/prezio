@@ -6,44 +6,46 @@
     class="bg-white q-px-sm q-py-md"
   >
     <!-- header -->
-    <div class="row no-wrap q-gutter-md justify-center">
-      <!-- new slide -->
-      <q-btn
-        color="primary"
-        icon-right="r_add"
-        no-caps
-        unelevated
-        :label="$t('presentationLayout.leftDrawer.newSlide')"
-      >
-        <q-menu
-          anchor="bottom left"
-          self="top left"
-          transition-show="jump-down"
-          transition-hide="jump-up"
-          :offset="[0, 16]"
-          class="q-pa-md scroll--hidden bg-white"
-          max-height="70vh"
-          style="width: 399px"
+    <div class="bg-white" style="position: sticky; top: -16px; z-index: 1">
+      <div class="row no-wrap q-gutter-md justify-center">
+        <!-- new slide -->
+        <q-btn
+          color="primary"
+          icon-right="r_add"
+          no-caps
+          unelevated
+          :label="$t('presentationLayout.leftDrawer.newSlide')"
         >
-          <PresentationStudioTabsTypesTab
-            disable-layout-selection
-            v-close-popup
-            @select="handleAddingNewSlide($event)"
-          />
-        </q-menu>
-      </q-btn>
+          <q-menu
+            anchor="bottom left"
+            self="top left"
+            transition-show="jump-down"
+            transition-hide="jump-up"
+            :offset="[0, 16]"
+            class="q-pa-md scroll--hidden bg-white"
+            max-height="70vh"
+            style="width: 399px"
+          >
+            <PresentationStudioTabsTypesTab
+              disable-layout-selection
+              v-close-popup
+              @select="handleAddingNewSlide($event)"
+            />
+          </q-menu>
+        </q-btn>
 
-      <!-- import -->
-      <q-btn
-        outline
-        color="primary"
-        no-caps
-        disable
-        :label="$t('presentationLayout.leftDrawer.import')"
-      />
+        <!-- import -->
+        <q-btn
+          outline
+          color="primary"
+          no-caps
+          disable
+          :label="$t('presentationLayout.leftDrawer.import')"
+        />
+      </div>
+
+      <q-separator class="q-my-md" />
     </div>
-
-    <q-separator class="q-my-md" />
 
     <div class="q-px-sm">
       <!-- slides -->
@@ -63,7 +65,7 @@
         @reordered="handleSlidesReorder"
       >
         <template #item="{ element, index }">
-          <div class="row no-wrap">
+          <div class="row no-wrap" :id="`slide_preview_${element.id}`">
             <div class="column no-wrap justify-between q-pr-md">
               <!-- index -->
               <div
@@ -281,7 +283,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onUnmounted, ref } from "vue";
+import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import draggable from "vuedraggable/src/vuedraggable";
@@ -504,6 +506,26 @@ const showShortcuts = computed(() => {
 const isMac = computed(() => {
   return $q.platform.is.platform === "mac";
 });
+
+/*
+ * scroll slide into view when changed
+ */
+watch(
+  () => slide.value,
+  () => {
+    const slideElement = document.getElementById(
+      `slide_preview_${slide.value.id}`
+    );
+
+    if (slideElement) {
+      slideElement.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }
+  }
+);
 </script>
 
 <style scoped lang="scss">
