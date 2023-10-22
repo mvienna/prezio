@@ -89,7 +89,7 @@ const presentationsStore = usePresentationsStore();
 const { presentation, slide } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
-const { elements, MODES_OPTIONS } = storeToRefs(canvasStore);
+const { elements, MODE_OPTIONS } = storeToRefs(canvasStore);
 
 const textStore = useCanvasTextStore();
 const { customization } = storeToRefs(textStore);
@@ -138,7 +138,7 @@ const handleChangingSlideType = async (type) => {
 
   if (type !== SLIDE_TYPES.CONTENT) {
     const layoutDefaultElementProps = {
-      mode: MODES_OPTIONS.value.text,
+      mode: MODE_OPTIONS.value.text,
       isVisible: true,
       isLocked: false,
       fontFamily: customization.value.font,

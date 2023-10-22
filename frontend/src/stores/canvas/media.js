@@ -4,7 +4,7 @@ import { generateUniqueId } from "src/helpers/generationUtils";
 import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
 
 const canvasStore = useCanvasStore();
-const { ctx, canvas, elements, MODES_OPTIONS } = storeToRefs(canvasStore);
+const { ctx, canvas, elements, MODE_OPTIONS } = storeToRefs(canvasStore);
 
 export const useCanvasMediaStore = defineStore("canvasMedia", {
   actions: {
@@ -18,7 +18,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
       width = null,
       height = null,
       layer = "top",
-      mode = MODES_OPTIONS.value.media,
+      mode = MODE_OPTIONS.value.media,
       isLocked = false,
       opacity = 100,
       blur = 0,
@@ -73,7 +73,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           elements.value.unshift(imageData);
         } else {
           const isBaseFillElementExists = elements.value.find(
-            (element) => element.mode === MODES_OPTIONS.value.baseFill
+            (element) => element.mode === MODE_OPTIONS.value.baseFill
           );
 
           elements.value.splice(

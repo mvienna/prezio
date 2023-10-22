@@ -70,7 +70,7 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const canvasStore = useCanvasStore();
-const { elements, MODES_OPTIONS, canvas } = storeToRefs(canvasStore);
+const { elements, MODE_OPTIONS, canvas } = storeToRefs(canvasStore);
 
 /*
  * props
@@ -150,12 +150,12 @@ const handleBackgroundMouseOver = (background) => {
 const handleBackgroundMouseLeave = () => {
   // remove preview background
   elements.value = elements.value.filter(
-    (element) => element.mode !== MODES_OPTIONS.value.backgroundPreview
+    (element) => element.mode !== MODE_OPTIONS.value.backgroundPreview
   );
 
   // un-hide active background
   const backgroundElementIndex = elements.value.findIndex(
-    (element) => element.mode === MODES_OPTIONS.value.background
+    (element) => element.mode === MODE_OPTIONS.value.background
   );
   if (backgroundElementIndex !== -1) {
     elements.value[backgroundElementIndex].isVisible = true;

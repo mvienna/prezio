@@ -148,7 +148,7 @@ const {
 
   // mode
   mode,
-  MODES_OPTIONS,
+  MODE_OPTIONS,
 
   // select
   selectedElement,
@@ -284,7 +284,7 @@ const handleKeyDownEvent = (event) => {
 
     // paste element
     if (event.key === "v") {
-      if (mode.value === MODES_OPTIONS.value.textEditing) return;
+      if (mode.value === MODE_OPTIONS.value.textEditing) return;
       if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
 
       event.preventDefault();
@@ -345,7 +345,7 @@ const handleKeyDownEvent = (event) => {
   if (selectedElement.value) {
     // delete selected element
     if (event.key === "Delete" || event.key === "Backspace") {
-      if (mode.value === MODES_OPTIONS.value.textEditing) return;
+      if (mode.value === MODE_OPTIONS.value.textEditing) return;
       if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
 
       event.preventDefault();
@@ -354,7 +354,7 @@ const handleKeyDownEvent = (event) => {
 
     // deselect
     if (event.key === "Escape" || event.key === "Enter") {
-      if (mode.value === MODES_OPTIONS.value.textEditing) return;
+      if (mode.value === MODE_OPTIONS.value.textEditing) return;
 
       event.preventDefault();
       deselectElement();
@@ -366,8 +366,8 @@ const handleKeyDownEvent = (event) => {
      * turn off adding new text*text shortcuts (formatting)
      *
      */
-    case MODES_OPTIONS.value.text:
-    case MODES_OPTIONS.value.textEditing:
+    case MODE_OPTIONS.value.text:
+    case MODE_OPTIONS.value.textEditing:
       textStore.shortcuts(event);
       break;
   }
@@ -428,9 +428,9 @@ const canvasCursorClass = computed(() => {
       break;
   }
 
-  return mode.value === MODES_OPTIONS.value.drawing
+  return mode.value === MODE_OPTIONS.value.drawing
     ? "cursor-crosshair"
-    : mode.value === MODES_OPTIONS.value.text && !selectedElement.value
+    : mode.value === MODE_OPTIONS.value.text && !selectedElement.value
     ? "cursor-text"
     : resizeHandle.value
     ? resizeCursor
@@ -453,7 +453,7 @@ const handleCanvasMouseDown = () => {
   isJustDragged.value = false;
 
   if (
-    ![MODES_OPTIONS.value.textEditing, MODES_OPTIONS.value.drawing].includes(
+    ![MODE_OPTIONS.value.textEditing, MODE_OPTIONS.value.drawing].includes(
       mode.value
     )
   ) {
@@ -504,7 +504,7 @@ const handleCanvasMouseDown = () => {
    * start drawing
    */
   switch (mode.value) {
-    case MODES_OPTIONS.value.drawing:
+    case MODE_OPTIONS.value.drawing:
       drawingStore.startDrawing();
       break;
   }
@@ -574,7 +574,7 @@ const handleCanvasMouseMove = (event) => {
    * drawing
    */
   switch (mode.value) {
-    case MODES_OPTIONS.value.drawing:
+    case MODE_OPTIONS.value.drawing:
       if (drawingState.isDrawing.value) {
         if (drawingState.eraserMode.value) {
           drawingStore.erase();
@@ -618,7 +618,7 @@ const handleCanvasMouseUp = () => {
    * stop drawing
    */
   switch (mode.value) {
-    case MODES_OPTIONS.value.drawing:
+    case MODE_OPTIONS.value.drawing:
       if (drawingState.isDrawing.value) {
         drawingStore.stopDrawing();
         return;
@@ -634,7 +634,7 @@ const handleCanvasClick = (event) => {
     /*
      * text
      */
-    case MODES_OPTIONS.value.text:
+    case MODE_OPTIONS.value.text:
       // // create new text
       // if (!selectedElement.value) {
       //   textStore.addNewText(event, t);
@@ -651,7 +651,7 @@ const handleCanvasClick = (event) => {
         doubleSelectElement();
         timesSelected.value = 0;
 
-        if (mode.value === MODES_OPTIONS.value.textEditing) {
+        if (mode.value === MODE_OPTIONS.value.textEditing) {
           textStore.editText();
           return;
         }
@@ -661,7 +661,7 @@ const handleCanvasClick = (event) => {
     /*
      * drawing
      */
-    case MODES_OPTIONS.value.drawing:
+    case MODE_OPTIONS.value.drawing:
       selectElement();
       break;
   }

@@ -7,7 +7,7 @@ const {
   elements,
   mode,
   mouse,
-  MODES_OPTIONS,
+  MODE_OPTIONS,
   selectedElement,
   selectedElementIndex,
   magnet,
@@ -32,7 +32,7 @@ export const getHoveredElement = () => {
     /*
      * drawing
      */
-    // case MODES_OPTIONS.value.drawing:
+    // case MODE_OPTIONS.value.drawing:
     //   if (
     //     mouse.value.x >= element.x &&
     //     mouse.value.x <= element.x + element.width &&
@@ -44,7 +44,7 @@ export const getHoveredElement = () => {
     //   }
     //   break;
 
-    // case MODES_OPTIONS.value.drawing:
+    // case MODE_OPTIONS.value.drawing:
     //   angle = (element.rotationAngle * Math.PI) / 180;
     //   centerX = element.x + element.width / 2;
     //   centerY = element.y + element.height / 2;
@@ -78,7 +78,7 @@ export const getHoveredElement = () => {
     /*
      * text
      */
-    // case MODES_OPTIONS.value.text:
+    // case MODE_OPTIONS.value.text:
     //   if (
     //     Math.round(mouse.value.x) >= Math.round(element.x) &&
     //     Math.round(mouse.value.x) <=
@@ -96,7 +96,7 @@ export const getHoveredElement = () => {
     //   }
     //   break;
 
-    // case MODES_OPTIONS.value.text:
+    // case MODE_OPTIONS.value.text:
     // const angle = (element.rotationAngle * Math.PI) / 180;
     // const centerX =
     //   element.x + canvasStore.computeAdjustedSize(element.width) / 2;
@@ -131,9 +131,9 @@ export const getHoveredElement = () => {
     /*
      * media
      */
-    // case MODES_OPTIONS.value.media:
-    // case MODES_OPTIONS.value.mediaEmoji:
-    // case MODES_OPTIONS.value.shape:
+    // case MODE_OPTIONS.value.media:
+    // case MODE_OPTIONS.value.mediaEmoji:
+    // case MODE_OPTIONS.value.shape:
     angle = (element.rotationAngle * Math.PI) / 180;
     centerX = element.x + element.width / 2;
     centerY = element.y + element.height / 2;
@@ -171,8 +171,7 @@ export const selectElement = (element = null) => {
       (item) => item.id === element.id
     );
   } else {
-    if (mode.value === MODES_OPTIONS.value.text && selectedElement.value)
-      return;
+    if (mode.value === MODE_OPTIONS.value.text && selectedElement.value) return;
 
     const isSelectedElementExisted = !!selectedElement.value;
 
@@ -214,8 +213,8 @@ export const doubleSelectElement = () => {
 
     if (previousSelectedElementIndex === selectedElementIndex.value)
       switch (mode.value) {
-        case MODES_OPTIONS.value.text:
-          canvasStore.switchMode(MODES_OPTIONS.value.textEditing);
+        case MODE_OPTIONS.value.text:
+          canvasStore.switchMode(MODE_OPTIONS.value.textEditing);
           break;
       }
   } else {
@@ -227,7 +226,7 @@ export const doubleSelectElement = () => {
 
 export const deselectElement = () => {
   if (selectedElement.value) {
-    if (selectedElement.value.mode === MODES_OPTIONS.value.text) {
+    if (selectedElement.value.mode === MODE_OPTIONS.value.text) {
       textStore.clearFormatting();
     }
 

@@ -22,7 +22,7 @@
           :class="`${
             element.id === selectedElement?.id ? 'layer--active' : ''
           } ${
-            [MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
+            [MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
               element.mode
             )
               ? 'layer--background'
@@ -32,16 +32,16 @@
           <!-- slide background / base fill -->
           <div
             v-if="
-              [MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
+              [MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
                 element.mode
               )
             "
             class="layer__background"
             :style="`${
-              element.mode === MODES_OPTIONS.background
+              element.mode === MODE_OPTIONS.background
                 ? `background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(${
                     elements.find(
-                      (item) => item.mode === MODES_OPTIONS.background
+                      (item) => item.mode === MODE_OPTIONS.background
                     ).imageSrc
                   }); filter: opacity(${element.opacity}%) blur(${
                     element.blur
@@ -50,11 +50,10 @@
                   }%) invert(${element.invert}%) grayscale(${
                     element.grayscale
                   }%);`
-                : element.mode === MODES_OPTIONS.baseFill
+                : element.mode === MODE_OPTIONS.baseFill
                 ? `background: ${
-                    elements.find(
-                      (item) => item.mode === MODES_OPTIONS.baseFill
-                    ).fillColor
+                    elements.find((item) => item.mode === MODE_OPTIONS.baseFill)
+                      .fillColor
                   };`
                 : ''
             }`"
@@ -66,7 +65,7 @@
             <!-- drag handle -->
             <q-icon
               v-if="
-                [MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
+                [MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
                   element.mode
                 )
               "
@@ -87,7 +86,7 @@
             <span
               class="text-semibold q-pl-md q-py-sm q-my-xs"
               :style="
-                element.mode === MODES_OPTIONS.baseFill
+                element.mode === MODE_OPTIONS.baseFill
                   ? `color: ${textColorOnAColoredBackground(
                       element.fillColor
                     )};`
@@ -131,7 +130,7 @@
             <!-- lock button -->
             <q-btn
               v-if="
-                ![MODES_OPTIONS.background, MODES_OPTIONS.baseFill].includes(
+                ![MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
                   element.mode
                 ) && slide?.type === SLIDE_TYPES.CONTENT
               "
@@ -247,7 +246,7 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const canvasStore = useCanvasStore();
-const { elements, selectedElement, MODES_OPTIONS } = storeToRefs(canvasStore);
+const { elements, selectedElement, MODE_OPTIONS } = storeToRefs(canvasStore);
 
 const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);

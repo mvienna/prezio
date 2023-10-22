@@ -8,8 +8,8 @@
       round
       size="12px"
       :disable="disabled"
-      :class="mode === MODES_OPTIONS.drawing ? 'bg-grey-1' : ''"
-      @click="$emit('switchMode', MODES_OPTIONS.drawing)"
+      :class="mode === MODE_OPTIONS.drawing ? 'bg-grey-1' : ''"
+      @click="$emit('switchMode', MODE_OPTIONS.drawing)"
     >
       <q-tooltip>
         {{ $t("presentationStudio.toolbar.drawing.title") }}
@@ -24,9 +24,9 @@
       round
       size="12px"
       :disable="disabled"
-      :class="mode === MODES_OPTIONS.text ? 'bg-grey-1' : ''"
+      :class="mode === MODE_OPTIONS.text ? 'bg-grey-1' : ''"
       @click="
-        $emit('switchMode', MODES_OPTIONS.text);
+        $emit('switchMode', MODE_OPTIONS.text);
         textStore.addNewText(undefined, t);
       "
     >
@@ -44,7 +44,7 @@
       size="12px"
       :disable="disabled"
       @click="
-        $emit('switchMode', MODES_OPTIONS.media);
+        $emit('switchMode', MODE_OPTIONS.media);
         showSelectMediaDialog = true;
       "
     >
@@ -75,7 +75,7 @@
       round
       :disable="disabled"
       size="12px"
-      @click="$emit('switchMode', MODES_OPTIONS.mediaEmoji)"
+      @click="$emit('switchMode', MODE_OPTIONS.mediaEmoji)"
     >
       <q-tooltip>
         {{ $t("presentationStudio.toolbar.emoji.title") }}
@@ -112,7 +112,7 @@
     <!-- shapes -->
     <q-btn
       icon="r_shape_line"
-      :class="mode === MODES_OPTIONS.shape ? 'bg-grey-1' : ''"
+      :class="mode === MODE_OPTIONS.shape ? 'bg-grey-1' : ''"
       unelevated
       text-color="dark"
       round
@@ -138,7 +138,7 @@
             class="q-pa-sm"
             v-close-popup
             @click="
-              $emit('switchMode', MODES_OPTIONS.shape);
+              $emit('switchMode', MODE_OPTIONS.shape);
               $emit('addShape', shape.name);
             "
           >
@@ -182,7 +182,7 @@ defineEmits(["switchMode", "addImage", "addShape"]);
 /*
  * stores
  */
-const { mode, MODES_OPTIONS, selectedElement } = storeToRefs(useCanvasStore());
+const { mode, MODE_OPTIONS, selectedElement } = storeToRefs(useCanvasStore());
 
 const textStore = useCanvasTextStore();
 

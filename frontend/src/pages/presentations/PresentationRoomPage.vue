@@ -182,8 +182,7 @@ const {
 } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
-const { canvas, ctx, scale, elements, MODES_OPTIONS } =
-  storeToRefs(canvasStore);
+const { canvas, ctx, scale, elements, MODE_OPTIONS } = storeToRefs(canvasStore);
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -217,7 +216,7 @@ const participantsCount = ref(0);
 // room background
 const roomBackground = computed(() => {
   return elements.value?.find(
-    (element) => element.mode === MODES_OPTIONS.value.background
+    (element) => element.mode === MODE_OPTIONS.value.background
   )?.imageSrc;
 });
 

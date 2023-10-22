@@ -7,7 +7,7 @@ import {
 } from "stores/canvas/helpers/select";
 
 const canvasStore = useCanvasStore();
-const { canvas, MODES_OPTIONS, elements, selectedElement } =
+const { canvas, MODE_OPTIONS, elements, selectedElement } =
   storeToRefs(canvasStore);
 
 export const useCanvasShapeStore = defineStore("canvasShape", {
@@ -33,7 +33,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       width = null,
       height = null,
       layer = "top",
-      mode = MODES_OPTIONS.value.shape,
+      mode = MODE_OPTIONS.value.shape,
       isLocked = false,
       strokeColor = this.customization.strokeColor,
       fillColor = this.customization.fillColor,
@@ -87,7 +87,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
     applyStyles() {
       if (
         selectedElement.value &&
-        selectedElement.value.mode === MODES_OPTIONS.value.shape
+        selectedElement.value.mode === MODE_OPTIONS.value.shape
       ) {
         selectedElement.value.strokeColor = this.customization.strokeColor;
         selectedElement.value.fillColor = this.customization.fillColor;

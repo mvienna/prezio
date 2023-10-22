@@ -3,7 +3,7 @@ import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generationUtils";
 import { updateSelectedElement } from "stores/canvas/helpers/select";
 
-const { ctx, elements, mouse, MODES_OPTIONS, selectedElement } = storeToRefs(
+const { ctx, elements, mouse, MODE_OPTIONS, selectedElement } = storeToRefs(
   useCanvasStore()
 );
 const canvasStore = useCanvasStore();
@@ -168,7 +168,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       if (!this.currentLine) {
         this.currentLine = {
           id: generateUniqueId(undefined, elements.value),
-          mode: MODES_OPTIONS.value.drawing,
+          mode: MODE_OPTIONS.value.drawing,
           isVisible: true,
           isLocked: false,
           color: this.eraserMode ? "white" : this.customization.color,
@@ -204,7 +204,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
 
     erase() {
       elements.value.forEach((element, index) => {
-        if (element.mode === MODES_OPTIONS.value.drawing) {
+        if (element.mode === MODE_OPTIONS.value.drawing) {
           element.points.forEach((point, pointIndex) => {
             if (
               Math.round(mouse.value.x) >=
@@ -235,7 +235,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
     applyStyles() {
       if (
         selectedElement.value &&
-        selectedElement.value.mode === MODES_OPTIONS.value.drawing
+        selectedElement.value.mode === MODE_OPTIONS.value.drawing
       ) {
         selectedElement.value.color = this.customization.color;
         selectedElement.value.brushSize = this.customization.brushSize;

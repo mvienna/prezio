@@ -10,7 +10,7 @@ const {
   dragFrom,
   mouse,
   selectedElement,
-  MODES_OPTIONS,
+  MODE_OPTIONS,
   magnet,
   MAGNET_AXIS_OPTIONS,
 } = storeToRefs(canvasStore);
@@ -69,7 +69,7 @@ export const dragElement = () => {
 export const moveElement = (newX, newY) => {
   let deltaX, deltaY;
 
-  if (selectedElement.value.mode === MODES_OPTIONS.value.drawing) {
+  if (selectedElement.value.mode === MODE_OPTIONS.value.drawing) {
     deltaX = newX - dragStart.value.x;
     deltaY = newY - dragStart.value.y;
     selectedElement.value.points.forEach((point) => {

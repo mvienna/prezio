@@ -42,7 +42,7 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const canvasStore = useCanvasStore();
-const { elements, canvas, MODES_OPTIONS } = storeToRefs(canvasStore);
+const { elements, canvas, MODE_OPTIONS } = storeToRefs(canvasStore);
 
 const textStore = useCanvasTextStore();
 const { customization } = storeToRefs(textStore);
@@ -51,7 +51,7 @@ const { customization } = storeToRefs(textStore);
  * layout default element props
  */
 const layoutDefaultElementProps = {
-  mode: MODES_OPTIONS.value.text,
+  mode: MODE_OPTIONS.value.text,
   isVisible: true,
   isLocked: false,
   fontFamily: customization.value.font,

@@ -10,7 +10,7 @@ import { usePresentationsStore } from "stores/presentations";
 const canvasStore = useCanvasStore();
 const {
   mouse,
-  MODES_OPTIONS,
+  MODE_OPTIONS,
   selectedElement,
   selectedElementBorder,
   resizeStart,
@@ -57,7 +57,7 @@ export const getResizeHandle = () => {
     /*
      * text
      */
-    case MODES_OPTIONS.value.text:
+    case MODE_OPTIONS.value.text:
       allowedHandles = [
         RESIZE_HANDLES_OPTIONS.value.centerLeft,
         RESIZE_HANDLES_OPTIONS.value.centerRight,
@@ -67,7 +67,7 @@ export const getResizeHandle = () => {
     /*
      * shapes
      */
-    case MODES_OPTIONS.value.shape:
+    case MODE_OPTIONS.value.shape:
       allowedHandles = [SHAPES_OPTIONS.circle, SHAPES_OPTIONS.star].includes(
         selectedElement.value.type
       )
@@ -83,7 +83,7 @@ export const getResizeHandle = () => {
     /*
      * drawing
      */
-    case MODES_OPTIONS.value.drawing:
+    case MODE_OPTIONS.value.drawing:
       allowedHandles = [];
       break;
 

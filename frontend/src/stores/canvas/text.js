@@ -9,7 +9,7 @@ import {
 } from "stores/canvas/helpers/select";
 
 const {
-  MODES_OPTIONS,
+  MODE_OPTIONS,
   mouse,
   selectedElementBorder,
   elements,
@@ -158,7 +158,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.computeTextElementProps(mouse.value.x, mouse.value.y)
       );
 
-      canvasStore.switchMode(MODES_OPTIONS.value.textEditing);
+      canvasStore.switchMode(MODE_OPTIONS.value.textEditing);
       this.removeTextInput();
 
       selectElement(elements.value[0]);
@@ -230,7 +230,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         selectedElement.value = {
           ...this.computeTextElementProps(x, y, element.id),
         };
-        canvasStore.switchMode(MODES_OPTIONS.value.text);
+        canvasStore.switchMode(MODE_OPTIONS.value.text);
         updateSelectedElement();
 
         canvasStore.redrawCanvas(true, true);
@@ -312,7 +312,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
 
       return {
         id: id,
-        mode: MODES_OPTIONS.value.text,
+        mode: MODE_OPTIONS.value.text,
         isVisible: true,
         isLocked: false,
         text: text,
@@ -410,8 +410,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
        */
       if (
         selectedElement.value &&
-        (selectedElement.value.mode === MODES_OPTIONS.value.text ||
-          selectedElement.value.mode === MODES_OPTIONS.value.textEditing)
+        (selectedElement.value.mode === MODE_OPTIONS.value.text ||
+          selectedElement.value.mode === MODE_OPTIONS.value.textEditing)
       ) {
         selectedElement.value.color = this.customization.color;
 

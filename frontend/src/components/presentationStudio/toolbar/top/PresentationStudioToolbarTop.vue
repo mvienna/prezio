@@ -2,7 +2,7 @@
   <div class="presentation_toolbar__top bg-white q-pa-md row no-wrap">
     <template
       v-if="
-        mode && ![MODES_OPTIONS.mediaEmoji, MODES_OPTIONS.media].includes(mode)
+        mode && ![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode)
       "
     >
       <q-btn
@@ -67,17 +67,17 @@
     >
       <!-- drawing customization -->
       <PresentationStudioToolbarTopCustomizationDrawing
-        v-if="mode === MODES_OPTIONS.drawing"
+        v-if="mode === MODE_OPTIONS.drawing"
       />
 
       <!-- text customization -->
       <PresentationStudioToolbarTopCustomizationText
-        v-if="[MODES_OPTIONS.text, MODES_OPTIONS.textEditing].includes(mode)"
+        v-if="[MODE_OPTIONS.text, MODE_OPTIONS.textEditing].includes(mode)"
       />
 
       <!-- shape customization -->
       <PresentationStudioToolbarTopCustomizationShape
-        v-if="mode === MODES_OPTIONS.shape"
+        v-if="mode === MODE_OPTIONS.shape"
       />
     </div>
 
@@ -141,7 +141,7 @@ const $q = useQuasar();
 const canvasStore = useCanvasStore();
 const {
   mode,
-  MODES_OPTIONS,
+  MODE_OPTIONS,
   selectedElement,
   selectedElementIndex,
   copiedElement,
@@ -168,10 +168,10 @@ const showCustomizationMenu = computed(() => {
   return (
     mode.value &&
     [
-      MODES_OPTIONS.value.drawing,
-      MODES_OPTIONS.value.text,
-      MODES_OPTIONS.value.textEditing,
-      MODES_OPTIONS.value.shape,
+      MODE_OPTIONS.value.drawing,
+      MODE_OPTIONS.value.text,
+      MODE_OPTIONS.value.textEditing,
+      MODE_OPTIONS.value.shape,
     ].includes(mode.value)
   );
 });
@@ -184,15 +184,15 @@ watch(
   () => {
     if (selectedElementIndex.value !== -1) {
       switch (selectedElement.value.mode) {
-        case MODES_OPTIONS.value.text:
+        case MODE_OPTIONS.value.text:
           textStore.loadSelectedElementCustomization();
           break;
 
-        case MODES_OPTIONS.value.drawing:
+        case MODE_OPTIONS.value.drawing:
           drawingStore.loadSelectedElementCustomization();
           break;
 
-        case MODES_OPTIONS.value.shape:
+        case MODE_OPTIONS.value.shape:
           shapeStore.loadSelectedElementCustomization();
           break;
       }

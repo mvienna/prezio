@@ -133,7 +133,7 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const canvasStore = useCanvasStore();
-const { elements, MODES_OPTIONS, canvas } = storeToRefs(canvasStore);
+const { elements, MODE_OPTIONS, canvas } = storeToRefs(canvasStore);
 
 const mediaStore = useCanvasMediaStore();
 const shapeStore = useCanvasShapeStore();
@@ -146,7 +146,7 @@ const { presentation, slide } = storeToRefs(presentationsStore);
  */
 const backgroundElement = computed(() => {
   return elements.value.find(
-    (element) => element.mode === MODES_OPTIONS.value.background
+    (element) => element.mode === MODE_OPTIONS.value.background
   );
 });
 
@@ -169,8 +169,8 @@ const handleBackgroundChange = (
     elements.value = elements.value.filter(
       (element) =>
         ![
-          MODES_OPTIONS.value.background,
-          MODES_OPTIONS.value.backgroundPreview,
+          MODE_OPTIONS.value.background,
+          MODE_OPTIONS.value.backgroundPreview,
         ].includes(element.mode)
     );
   }
@@ -178,7 +178,7 @@ const handleBackgroundChange = (
   // hide active background (for preview)
   if (isPreview) {
     const backgroundElementIndex = elements.value.findIndex(
-      (element) => element.mode === MODES_OPTIONS.value.background
+      (element) => element.mode === MODE_OPTIONS.value.background
     );
     if (backgroundElementIndex !== -1) {
       elements.value[backgroundElementIndex].isVisible = false;
@@ -202,8 +202,8 @@ const handleBackgroundChange = (
       height,
       "bottom",
       isPreview
-        ? MODES_OPTIONS.value.backgroundPreview
-        : MODES_OPTIONS.value.background,
+        ? MODE_OPTIONS.value.backgroundPreview
+        : MODE_OPTIONS.value.background,
       true,
       backgroundFilters.opacity,
       backgroundFilters.blur,
@@ -229,7 +229,7 @@ const defaultBackgroundFilters = {
 
 const changeBackgroundFilters = (backgroundFilters) => {
   const backgroundElementIndex = elements.value.findIndex(
-    (element) => element.mode === MODES_OPTIONS.value.background
+    (element) => element.mode === MODE_OPTIONS.value.background
   );
 
   elements.value[backgroundElementIndex] = {
@@ -250,13 +250,13 @@ const changeBackgroundFilters = (backgroundFilters) => {
  */
 const baseFillElement = computed(() => {
   return elements.value.find(
-    (element) => element.mode === MODES_OPTIONS.value.baseFill
+    (element) => element.mode === MODE_OPTIONS.value.baseFill
   );
 });
 
 const handleBaseFillChange = (color) => {
   elements.value = elements.value.filter(
-    (element) => element.mode !== MODES_OPTIONS.value.baseFill
+    (element) => element.mode !== MODE_OPTIONS.value.baseFill
   );
 
   shapeStore.addShape(
@@ -266,7 +266,7 @@ const handleBaseFillChange = (color) => {
     canvas.value.width,
     canvas.value.height,
     "bottom",
-    MODES_OPTIONS.value.baseFill,
+    MODE_OPTIONS.value.baseFill,
     true,
     color,
     color,
@@ -303,8 +303,8 @@ const applyDesignToAllSlides = () => {
       item.canvas_data = item.canvas_data.filter(
         (element) =>
           ![
-            MODES_OPTIONS.value.background,
-            MODES_OPTIONS.value.baseFill,
+            MODE_OPTIONS.value.background,
+            MODE_OPTIONS.value.baseFill,
           ].includes(element.mode)
       );
 
