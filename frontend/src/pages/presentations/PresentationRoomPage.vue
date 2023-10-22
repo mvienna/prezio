@@ -4,7 +4,7 @@
       !isHost
         ? roomBackground && !presentation?.is_private
           ? `background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${roomBackground.imageSrc})`
-          : 'background: white;'
+          : 'background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));'
         : 'background: black;'
     "
   >
