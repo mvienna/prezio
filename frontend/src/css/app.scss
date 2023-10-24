@@ -102,6 +102,14 @@ a, .link {
   opacity: 1;
 }
 
+.q-toggle__inner--truthy .q-toggle__thumb .q-icon{
+    color: $primary;
+}
+
+.q-toggle__inner {
+  height: 100%;
+}
+
 .q-toggle__track {
   height: .5em;
   border-radius: 20px;
@@ -306,3 +314,4 @@ a, .link {
 .q-img__container {
   border-radius: initial;
 }
+

@@ -1,25 +1,30 @@
 import { ref, computed } from "vue";
 
 const timeLeft = ref();
+const timeLeftPercentage = ref();
 const countdownInterval = ref();
 
 const startCountdown = (seconds = 60) => {
-  // clear previous interval
-  if (countdownInterval.value) {
-    clearInterval(countdownInterval.value);
-  }
+  stopCountdown();
 
-  // set seconds
   timeLeft.value = seconds;
 
-  // start interval
   countdownInterval.value = setInterval(() => {
     timeLeft.value--;
+    timeLeftPercentage.value = ((seconds - timeLeft.value) * 100) / seconds;
 
     if (timeLeft.value === 0) {
-      clearInterval(countdownInterval.value);
+      stopCountdown();
     }
   }, 1000);
+};
+
+const stopCountdown = () => {
+  if (countdownInterval.value) {
+    clearInterval(countdownInterval.value);
+    timeLeft.value = 0;
+    timeLeftPercentage.value = 0;
+  }
 };
 
 const countdown = computed(() => {
@@ -28,4 +33,10 @@ const countdown = computed(() => {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 });
 
-export { startCountdown, countdown, timeLeft };
+export {
+  startCountdown,
+  stopCountdown,
+  countdown,
+  timeLeft,
+  timeLeftPercentage,
+};

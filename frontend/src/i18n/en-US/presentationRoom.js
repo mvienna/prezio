@@ -12,9 +12,11 @@ export default {
         hide: "Hide QR code",
       },
     },
+
     footer: {
       menu: {
         title: "Menu",
+
         terminateRoom: "End Presentation",
         openBackstage: "Show Backstage",
         fullscreen: {
@@ -34,7 +36,35 @@ export default {
           public: "Make Public",
         },
       },
+
+      hideResults: {
+        tooltip: {
+          on: "Results are displayed",
+          off: "Results are hidden",
+        },
+
+        dialog: {
+          title: "Results are hidden",
+          description: `Received {answersCount} answers`,
+          toggle: "Show results",
+        },
+      },
+
+      submissionLock: {
+        on: "Submission allowed",
+        off: "Submission blocked",
+
+        toggle: {
+          on: "Click to unlock answer submission",
+          off: "Click to lock answer submission",
+        },
+
+        resetTime: {
+          sec: "sec",
+        },
+      },
     },
+
     invitationPanel: {
       title: "Scan",
       otherOption: {
@@ -43,6 +73,7 @@ export default {
         id: "And enter",
       },
     },
+
     auth: {
       form: {
         submit: "Join Now",
@@ -53,6 +84,20 @@ export default {
       title: "The presentation is in private mode",
       description:
         "Once the presenter has switched to public, you can see and interact with their slides",
+    },
+
+    answers: {
+      placeholder: "Your Answer...",
+      invalidLength: "The answer should contain no more than 25 characters",
+      submit: {
+        title: "Submit",
+        submissionIsLocked: "Submission is locked",
+      },
+      waitForSubmissionToBeUnlocked: "Wait for the voting to begin",
+      multipleEntriesAvailable:
+        "You can submit answers an unlimited number of times",
+      answersSubmittedWait:
+        "You've already answered this question. Please wait for the presenter to show the next slide.",
     },
   },
 };

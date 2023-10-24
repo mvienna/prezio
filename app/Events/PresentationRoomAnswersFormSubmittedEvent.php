@@ -3,24 +3,23 @@
 namespace App\Events;
 
 use App\Models\Presentation\Room\PresentationRoom;
-use App\Models\Presentation\Slide\PresentationSlide;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PresentationRoomUpdatedEvent implements ShouldBroadcast
+class PresentationRoomAnswersFormSubmittedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public PresentationRoom $room;
-    public PresentationSlide $slide;
+    public array $answers;
 
-    public function __construct(PresentationRoom $room, PresentationSlide $slide)
+    public function __construct(PresentationRoom $room, array $answers)
     {
         $this->room = $room;
-        $this->slide = $slide;
+        $this->answers = $answers;
     }
 
     public function broadcastOn(): Channel
@@ -31,8 +30,7 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'slide_id' => $this->slide->id,
-            'settings_data' => $this->slide->settings_data,
+            'answers' => $this->answers,
         ];
     }
 }

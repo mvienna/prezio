@@ -1,30 +1,54 @@
 <template>
   <div
     class="room_data row no-wrap"
-    :class="isHost ? 'room_data__host' : 'room_data__participant q-mt-md'"
+    :class="`${
+      isHost ? 'room_data__host' : 'room_data__participant q-mt-md'
+    } text-${textColor}`"
   >
     <!-- reactions -->
     <div class="row no-wrap q-gutter-md">
       <!-- like -->
       <PresentationRoomDataLike
+        v-if="!isHost || (isHost && room?.reactions?.like > 0)"
         :stage="stage.like"
         :value="room?.reactions?.like || 0"
+        :disabled="isHost"
         @react="
           presentationsStore.sendPresentationRoomReaction('like');
           animate('like');
         "
-      />
+      >
+        <template #value>
+          {{ room?.reactions?.like || 0 }}
+        </template>
+      </PresentationRoomDataLike>
 
       <!-- love -->
       <PresentationRoomDataLove
+        v-if="!isHost || (isHost && room?.reactions?.love > 0)"
         :stage="stage.love"
-        :value="room?.reactions?.love || 0"
+        :disabled="isHost"
         @react="
           presentationsStore.sendPresentationRoomReaction('love');
           animate('love');
         "
-      />
+      >
+        <template #value>
+          {{ room?.reactions?.love || 0 }}
+        </template>
+      </PresentationRoomDataLove>
     </div>
+
+    <!-- answers count -->
+    <PresentationRoomDataSubmissions
+      v-if="isHost && slide?.type !== SLIDE_TYPES.CONTENT"
+      :stage="stage.pin"
+      class="q-ml-md"
+    >
+      <template #value>
+        {{ slide?.answers?.length }}
+      </template>
+    </PresentationRoomDataSubmissions>
 
     <!-- participants count -->
     <div
@@ -48,11 +72,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import PresentationRoomDataLike from "components/presentationRoom/data/PresentationRoomDataLike.vue";
 import PresentationRoomDataLove from "components/presentationRoom/data/PresentationRoomDataLove.vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
+import PresentationRoomDataSubmissions from "components/presentationRoom/data/PresentationRoomDataSubmissions.vue";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
+
+/*
+ * stores
+ */
+const presentationsStore = usePresentationsStore();
+const { room, slide } = storeToRefs(presentationsStore);
 
 /*
  * props
@@ -60,6 +92,7 @@ import { storeToRefs } from "pinia";
 defineProps({
   participantsCount: { type: Number },
   isHost: { type: Boolean },
+  textColor: { type: String, default: "white" },
 });
 
 /*
@@ -68,10 +101,12 @@ defineProps({
 const stage = ref({
   like: -1,
   love: -1,
+  pin: -1,
 });
 const timeouts = ref({
   like: [],
   love: [],
+  pin: [],
 });
 
 const animate = (key) => {
@@ -93,11 +128,26 @@ const animate = (key) => {
   }, 250);
 };
 
-/*
- * stores
- */
-const presentationsStore = usePresentationsStore();
-const { room } = storeToRefs(presentationsStore);
+watch(
+  () => room.value?.reactions?.like,
+  () => {
+    animate("like");
+  }
+);
+
+watch(
+  () => room.value?.reactions?.love,
+  () => {
+    animate("love");
+  }
+);
+
+watch(
+  () => slide.value?.answers?.length,
+  () => {
+    animate("pin");
+  }
+);
 </script>
 
 <style scoped lang="scss">

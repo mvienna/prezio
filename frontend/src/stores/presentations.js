@@ -40,6 +40,7 @@ export const usePresentationsStore = defineStore("presentations", {
      */
     presentation: null,
     slide: null,
+    slideSettings: null,
 
     isPresentationPreview: false,
 
@@ -249,13 +250,11 @@ export const usePresentationsStore = defineStore("presentations", {
      * slides
      */
     async addNewSlide(elements = null, type) {
-      // find insert index for the new slide
       const slideIndex = this.presentation.slides.findIndex(
         (item) => item.id === this.slide.id
       );
       const insertAtIndex = slideIndex + 1;
 
-      // create new slide
       const response = await api
         .post(`/presentation/${this.presentation.id}/slide`, {
           canvas_data: JSON.stringify(elements),
@@ -266,17 +265,14 @@ export const usePresentationsStore = defineStore("presentations", {
           console.log(error);
         });
 
-      // insert new slide
       this.presentation.slides.splice(insertAtIndex, 0, response.data);
 
-      // update slides order
       this.presentation.slides = this.presentation.slides.map((item, index) => {
         item.order = index;
         return item;
       });
       await this.updateSlidesOrder();
 
-      // set new slide
       return await this.setSlide(response.data);
     },
 
@@ -290,6 +286,7 @@ export const usePresentationsStore = defineStore("presentations", {
           preview: slide.preview,
           order: slide.order,
           type: slide.type,
+          settings_data: slide.settings_data,
           notes: slide.notes,
           animation: slide.animation,
           last_slide_id: newSlide?.id || slide?.id,
@@ -334,7 +331,7 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     /*
-     * slide
+     * slide - local
      */
     async setSlide(newSlide, elements = null, saveSlide = true) {
       if (!newSlide || this.slide?.id === newSlide.id) return;
@@ -347,6 +344,7 @@ export const usePresentationsStore = defineStore("presentations", {
       }
 
       this.slide = newSlide;
+      this.slideSettings = JSON.parse(this.slide.settings_data);
     },
 
     async updateSlidesOrder() {
@@ -372,6 +370,7 @@ export const usePresentationsStore = defineStore("presentations", {
       const slideIndex = this.presentation.slides.findIndex(
         (item) => item.id === this.slide.id
       );
+      this.slide.settings_data = JSON.stringify(this.slideSettings);
       this.presentation.slides[slideIndex] = this.slide;
     },
 
@@ -409,14 +408,33 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async sendPresentationRoomReaction(reaction) {
+    async sendPresentationRoomReaction(
+      reaction,
+      presentation_id = this.presentation?.id,
+      room_id = this.room?.id
+    ) {
       if (!reaction) return;
 
       return await api
+        .post(`/presentation/${presentation_id}/room/${room_id}/react`, {
+          reaction: reaction,
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log(error.response.data);
+        });
+    },
+
+    async submitPresentationRoomAnswers(answers) {
+      answers = answers.filter((answer) => answer?.length);
+      if (!answers?.length) return;
+
+      return await api
         .post(
-          `/presentation/${this.presentation?.id}/room/${this.room?.id}/react`,
+          `/presentation/${this.presentation?.id}/room/${this.room?.id}/submit-answers`,
           {
-            reaction: reaction,
+            slide_id: this.slide?.id,
+            answers: answers,
           }
         )
         .catch((error) => {

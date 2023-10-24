@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Presentation;
 
+use App\Events\PresentationRoomAnswersFormSubmittedEvent;
 use App\Events\PresentationRoomNewReactionEvent;
 use App\Events\PresentationRoomTerminatedEvent;
 use App\Events\PresentationRoomUpdatedEvent;
@@ -11,6 +12,7 @@ use App\Models\Presentation\Room\PresentationRoom;
 use App\Models\Presentation\Room\PresentationRoomParticipant;
 use App\Models\Presentation\Room\PresentationRoomReactions;
 use App\Models\Presentation\Slide\PresentationSlide;
+use App\Models\Presentation\Slide\PresentationSlideAnswer;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +23,7 @@ class PresentationRoomController extends Controller
     /*
      * room
      */
-    public function store (Presentation $presentation): JsonResponse
+    public function store(Presentation $presentation): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
@@ -45,7 +47,7 @@ class PresentationRoomController extends Controller
         return $this->jsonResponse($room->toArray());
     }
 
-    public function destroy (Presentation $presentation, PresentationRoom $room): JsonResponse
+    public function destroy(Presentation $presentation, PresentationRoom $room): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
@@ -119,6 +121,33 @@ class PresentationRoomController extends Controller
             $room->load('reactions');
             event(new PresentationRoomNewReactionEvent($room, $room->reactions));
         }
+
+        return $this->successResponse();
+    }
+
+    /*
+     * answers
+     */
+    public function submitAnswers(Presentation $presentation, PresentationRoom $room, Request $request): JsonResponse
+    {
+        $user = auth()->user();
+
+        $answers = [];
+        foreach ($request->answers as $answer) {
+            $sameAnswer = PresentationSlideAnswer::where('slide_id', $request->slide_id)->where('answer_data', json_encode(['text' => $answer]));
+
+            if (!$sameAnswer->exists()) {
+                $answer = PresentationSlideAnswer::create([
+                    'participant_id' => $user->id,
+                    'slide_id' => $request->slide_id,
+                    'answer_data' => json_encode(['text' => $answer]),
+                ]);
+
+                $answers[] = $answer;
+            }
+        }
+
+        event(new PresentationRoomAnswersFormSubmittedEvent($room, $answers));
 
         return $this->successResponse();
     }

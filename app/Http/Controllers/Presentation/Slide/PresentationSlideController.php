@@ -36,6 +36,7 @@ class PresentationSlideController extends Controller
             'preview' => $request->preview,
             'order' => $request->order,
             'type' => $request->type,
+            'settings_data' => $request->settings_data,
             'notes' => $request->notes,
             'animation' => $request->animation,
         ]);

@@ -187,9 +187,7 @@ export const useCanvasStore = defineStore("canvas", {
      * slide
      */
     async setElementsFromSlide() {
-      this.elements = slide.value?.canvas_data
-        ? JSON.parse(slide.value.canvas_data)
-        : [];
+      this.elements = JSON.parse(slide.value.canvas_data) || [];
 
       const loadImage = (element) => {
         return new Promise(async (resolve, reject) => {
@@ -225,7 +223,7 @@ export const useCanvasStore = defineStore("canvas", {
         });
       };
 
-      const imageLoadingPromises = this.elements.map(loadImage);
+      const imageLoadingPromises = this.elements?.map(loadImage);
 
       try {
         this.elements = await Promise.all(imageLoadingPromises);

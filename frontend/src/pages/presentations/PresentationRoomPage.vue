@@ -3,8 +3,16 @@
     :style="
       !isHost
         ? roomBackground && !presentation?.is_private
-          ? `background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${roomBackground.imageSrc})`
-          : 'background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));'
+          ? `background: linear-gradient(rgba(0, 0, 0, ${
+              isHost || (!isHost && slide?.type === SLIDE_TYPES.CONTENT)
+                ? '0.4'
+                : '0'
+            }), rgba(0, 0, 0, ${
+              isHost || (!isHost && slide?.type === SLIDE_TYPES.CONTENT)
+                ? '0.4'
+                : '0'
+            })), url(${roomBackground.imageSrc})`
+          : 'background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));'
         : 'background: black;'
     "
   >
@@ -95,11 +103,11 @@
             class="relative-position column no-wrap justify-center"
             :class="showRoomInvitationPanel ? 'q-ml-md' : ''"
             style="transition: 0.5s"
-            :style="
+            :style="`${!isHost ? 'max-width: 100vh; width: 100%;' : ''} ${
               showRoomInvitationPanel || !isHost
                 ? 'border-radius: 12px; overflow: hidden;'
                 : ''
-            "
+            }`"
           >
             <!-- header - information panel -->
             <PresentationRoomHeader
@@ -120,6 +128,9 @@
 
             <!-- canvas slide -->
             <canvas
+              v-show="
+                isHost || (!isHost && slide?.type === SLIDE_TYPES.CONTENT)
+              "
               ref="canvasRef"
               id="canvas"
               :style="
@@ -129,6 +140,28 @@
               "
               @mousemove="handleCanvasMouseMoveEvent"
             ></canvas>
+
+            <!-- addons -->
+            <PresentationStudioAddons
+              v-if="
+                canvasStore.canvasRect()?.width > 0 &&
+                isHost &&
+                isLoaded &&
+                slide?.type !== SLIDE_TYPES.CONTENT &&
+                !slideSettings.isResultsHidden
+              "
+            />
+
+            <!-- participant answer form -->
+            <PresentationRoomAnswerForm
+              v-if="!isHost && slide?.type !== SLIDE_TYPES.CONTENT"
+              :text-color="
+                averageRoomBackgroundBrightness >=
+                roomBackgroundBrightnessThreshold
+                  ? 'black'
+                  : 'white'
+              "
+            />
 
             <!-- menu panel -->
             <PresentationRoomMenu
@@ -146,10 +179,18 @@
               "
             />
 
-            <!-- room data - participants count, reactions -->
+            <!-- room data - participants count, reactions, answers count -->
             <PresentationRoomData
               :participants-count="participantsCount || 0"
               :is-host="isHost"
+              :text-color="
+                !isHost && slide?.type !== SLIDE_TYPES.CONTENT
+                  ? averageRoomBackgroundBrightness >=
+                    roomBackgroundBrightnessThreshold
+                    ? 'black'
+                    : 'white'
+                  : 'white'
+              "
             />
 
             <!-- controls (← / →) -->
@@ -187,6 +228,9 @@ import PresentationRoomSlideControls from "components/presentationRoom/Presentat
 import Echo from "laravel-echo";
 import { randomNames } from "src/constants/mock";
 import { useI18n } from "vue-i18n";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import PresentationRoomAnswerForm from "components/presentationRoom/PresentationRoomAnswerForm.vue";
+import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
 
 /*
  * variables
@@ -203,6 +247,7 @@ const presentationsStore = usePresentationsStore();
 const {
   presentation,
   slide,
+  slideSettings,
   room,
   participant,
   isGuest,
@@ -257,6 +302,8 @@ const initSlide = async () => {
     presentation.value.slides.find((item) => item.id === room.value.slide_id) ||
     presentation.value.slides[0];
 
+  slideSettings.value = JSON.parse(slide.value.settings_data);
+
   await canvasStore.setElementsFromSlide();
   return true;
 };
@@ -294,31 +341,6 @@ onMounted(async () => {
     .then(async (response) => {
       room.value = response.data.room;
       presentation.value = response.data.presentation;
-
-      if (isHost.value || !presentation.value?.is_private) {
-        /*
-         * init canvas slide
-         */
-        initCanvas();
-        await initSlide();
-
-        /*
-         * update slide
-         * case: host started presenting in already exisiting room from the new slide he's chosen
-         */
-        if (isHost.value && slide.value.id !== room.value.slide_id) {
-          await presentationsStore.sendPresentationRoomUpdateEvent();
-        }
-
-        /*
-         * resize canvas
-         */
-        resizeCanvas();
-        setTimeout(() => {
-          canvasStore.redrawCanvas(false, false, undefined, false);
-        }, 100);
-        window.addEventListener("resize", resizeCanvas);
-      }
     })
     .catch((error) => {
       $q.notify({
@@ -331,10 +353,38 @@ onMounted(async () => {
     });
 
   /*
+   * render slide
+   */
+  if (isHost.value || !presentation.value?.is_private) {
+    /*
+     * init canvas slide
+     */
+    initCanvas();
+    await initSlide();
+
+    /*
+     * update slide
+     * case: host started presenting in already existing room from the new slide he's chosen
+     */
+    if (isHost.value && slide.value.id !== room.value.slide_id) {
+      await presentationsStore.sendPresentationRoomUpdateEvent();
+    }
+
+    /*
+     * resize canvas
+     */
+    resizeCanvas();
+    setTimeout(() => {
+      canvasStore.redrawCanvas(false, false, undefined, false);
+    }, 100);
+    window.addEventListener("resize", resizeCanvas);
+  }
+
+  /*
    * auth
    */
   if (!isHost.value) {
-    // auth
+    // auth participant by saved token
     const token = localStorage.getItem("participantToken");
     if (token) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -357,6 +407,9 @@ onMounted(async () => {
       !participant.value &&
       !presentation.value?.settings?.require_participants_info
     ) {
+      /*
+       * add is_guest to participants table
+       */
       isGuest.value = true;
       await presentationsStore.loginRoom([
         {
@@ -424,13 +477,22 @@ const connectToRoomChannels = () => {
     if (!isHost.value && presentation.value?.is_private) return;
 
     if (event.slide_id !== slide.value.id) {
+      /*
+       * TODO: request slide data from api instead of using the old data
+       */
       const newSlide = presentation.value.slides.find(
         (item) => item.id === event.slide_id
       );
 
-      await presentationsStore.setSlide(newSlide);
+      await presentationsStore.setSlide({
+        ...newSlide,
+        settings_data: event.settings_data,
+      });
       await canvasStore.setElementsFromSlide();
       canvasStore.redrawCanvas(false, false, undefined, false);
+    } else {
+      slideSettings.value = JSON.parse(event.settings_data);
+      presentationsStore.updateLocalSlide();
     }
   });
 
@@ -439,6 +501,14 @@ const connectToRoomChannels = () => {
    */
   channel.listen("PresentationRoomNewReactionEvent", (event) => {
     room.value.reactions = event.reactions;
+  });
+
+  /*
+   * listen for new submitted answers
+   */
+  channel.listen("PresentationRoomAnswersFormSubmittedEvent", (event) => {
+    slide.value.answers = [...slide.value.answers, ...event.answers];
+    presentationsStore.updateLocalSlide();
   });
 
   /*

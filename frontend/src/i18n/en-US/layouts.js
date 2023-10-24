@@ -185,6 +185,58 @@ export default {
         },
 
         /*
+         * content
+         */
+        content: {
+          title: "Content",
+
+          question: {
+            title: "Your Question",
+            placeholder: "Your question...",
+
+            description: {
+              title: "Detailed Description",
+              caption:
+                "A more detailed description will be shown on your audience's devices. You can also display it during the presentation by hovering over the question's title.",
+              placeholder: "Your question description...",
+            },
+          },
+
+          multipleEntries: {
+            on: "Each participant can answer an unlimited number of times",
+            off: "Each participant can answer only once",
+          },
+
+          entriesPerParticipant: {
+            title: "Number of Answers per Participant",
+            description:
+              "A single answer can consist of multiple words. You can increase this limit up to 10.",
+            invalid: "Invalid value. Enter a number from 1 to 10.",
+          },
+
+          timeLimit: {
+            title: "Time Limit",
+            description: "The time in which participants must respond",
+            invalid:
+              "Invalid value. Enter a number equal to or greater than 5.",
+            seconds: "Seconds",
+          },
+
+          lockSubmission: {
+            title: "Submission Lock",
+            description:
+              "Lock submissions on this slide to present it to the audience for voting before enabling voting.",
+          },
+
+          hideResults: {
+            title: "Hide Answers",
+            description:
+              "Hide participant answers while voting is still in progress. This helps prevent bias in voting.",
+            applyToAllQuestions: "Apply to all questions in the presentation",
+          },
+        },
+
+        /*
          * templates
          */
         templates: {

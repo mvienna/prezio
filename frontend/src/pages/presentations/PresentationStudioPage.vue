@@ -44,7 +44,12 @@
     </transition>
 
     <!-- addons -->
-    <PresentationStudioAddons v-if="isCanvasReady" />
+    <PresentationStudioAddons
+      v-if="isCanvasReady && slide?.type !== SLIDE_TYPES.CONTENT"
+      :hovered-element="
+        lastElementHovered && isElementHovered ? lastElementHovered : null
+      "
+    />
 
     <!-- bottom toolbar -->
     <PresentationStudioToolbarBottom
@@ -113,7 +118,7 @@ import {
 } from "stores/canvas/helpers/elementsContextMenuActions";
 import PresentationStudioElementsContextMenu from "components/presentationStudio/PresentationStudioElementsContextMenu.vue";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
-import PresentationStudioAddons from "components/presentationStudio/addons/PresentationStudioAddons.vue";
+import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
 
 /*
  * variables

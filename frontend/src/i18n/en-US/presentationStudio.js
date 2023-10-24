@@ -188,6 +188,7 @@ export default {
         title: "Click to add title",
         subtitle: "Click to add subtitle",
         body: "Click to add text",
+        question: "Click to add question",
       },
     },
   },

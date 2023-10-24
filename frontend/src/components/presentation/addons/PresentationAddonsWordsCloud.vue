@@ -27,10 +27,6 @@ const emit = defineEmits(["removeWord"]);
 const canvasStore = useCanvasStore();
 const { canvas } = storeToRefs(canvasStore);
 
-const canvasRect = computed(() => {
-  return canvasStore.canvasRect();
-});
-
 /*
  * props
  */
@@ -38,11 +34,15 @@ const props = defineProps({
   words: { type: Array, default: null },
 });
 
-const wordCloud = ref();
-
 /*
  * data
  */
+const wordCloud = ref();
+
+const canvasRect = computed(() => {
+  return canvasStore.canvasRect();
+});
+
 let frequencyCount = computed(() => {
   return props.words.reduce(function (acc, curr) {
     if (typeof acc[curr] == "undefined") {
@@ -115,21 +115,26 @@ const updateWordsCloud = () => {
 
   const svg = d3.select(wordCloud.value).select("svg");
 
-  cloud()
+  const layout = cloud()
     .size([width, height])
     .words(data.value)
     .padding(5)
     .rotate(() => ~~(Math.random() * 2) * 90)
-    .fontSize((d) => d.size)
-    .on("end", (words) => draw(svg, words))
-    .start();
+    .fontSize((d) => Math.min(2 * d.size, 60))
+    .on("end", (words) => draw(svg, words));
+
+  layout.start();
 };
 
 const draw = (svg, words) => {
-  const cloud = svg.selectAll("g text").data(words, (d) => d.text);
+  let wordGroup = svg.select("g.word-group");
+  if (wordGroup.empty()) {
+    wordGroup = svg.append("g").attr("class", "word-group");
+  }
 
-  // entering words
-  cloud
+  const cloud = wordGroup.selectAll("text").data(words, (d) => d.text);
+
+  const newElements = cloud
     .enter()
     .append("text")
     .style("fill", () => colors[Math.floor(Math.random() * colors.length)])
@@ -139,14 +144,18 @@ const draw = (svg, words) => {
     .text((d) => d.text)
     .attr("transform", (d) => `translate(${d.x},${d.y}) rotate(${d.rotate})`);
 
-  // entering & exiting words
+  newElements
+    .style("fill-opacity", 1e-6)
+    .transition()
+    .duration(600)
+    .style("fill-opacity", 1);
+
   cloud
     .transition()
     .duration(600)
     .attr("transform", (d) => `translate(${d.x},${d.y}) rotate(${d.rotate})`)
     .style("fill-opacity", 1);
 
-  // exiting words
   cloud
     .exit()
     .transition()

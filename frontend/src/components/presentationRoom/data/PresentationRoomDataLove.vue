@@ -1,6 +1,9 @@
 <template>
   <div class="row no-wrap items-center">
-    <div style="width: 30px; height: 30px" @click="$emit('react')">
+    <div
+      style="width: 30px; height: 30px"
+      @click="!disabled ? $emit('react') : ''"
+    >
       <svg
         width="30"
         height="30"
@@ -105,7 +108,7 @@
       </svg>
     </div>
 
-    <div class="q-ml-sm">{{ value }}</div>
+    <div class="q-ml-sm"><slot name="value" /></div>
   </div>
 </template>
 
@@ -113,6 +116,7 @@
 defineProps({
   stage: { type: Number },
   value: { type: Number },
+  disabled: { type: Boolean },
 });
 
 defineEmits(["react"]);

@@ -75,7 +75,7 @@
           style="max-width: 550px; font-size: 1.25em"
           @click="copyRoomLinkToClipboard()"
         >
-          <span v-if="!$q.screen.lt.sm" class="text-grey q-mr-xs">
+          <span v-if="!$q.screen.lt.sm" class="text-grey-4 q-mr-xs">
             {{ $t("presentationRoom.header.roomLink.title") }}
           </span>
 
@@ -98,7 +98,7 @@
         <q-btn
           flat
           icon="r_qr_code"
-          :color="showRoomInvitationPanel ? 'white' : 'grey'"
+          :color="showRoomInvitationPanel ? 'white' : 'grey-4'"
           round
           size="12px"
           class="q-ml-sm"
@@ -145,7 +145,6 @@ import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
-import { api } from "boot/axios";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";

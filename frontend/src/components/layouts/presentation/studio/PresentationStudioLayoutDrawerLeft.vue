@@ -416,44 +416,43 @@ const handleAddingNewSlide = async (type) => {
     presentationsStore.saveSlide(undefined, elements.value);
   }
 
-  let preparedElements = null;
+  let preparedElements;
+  const layoutDefaultElementProps = {
+    mode: MODE_OPTIONS.value.text,
+    isVisible: true,
+    isLocked: false,
+    fontFamily: customization.value.font,
+    lineHeight: customization.value.lineHeight,
+    fontWeight: "normal",
+    textDecoration: "none",
+    fontStyle: "normal",
+    textAlign: ALIGNMENT.horizontal.left,
+    verticalAlign: ALIGNMENT.vertical.top,
+    rotationAngle: 0,
+
+    /*
+     * editable
+     */
+    id: "layout-",
+    text: "",
+
+    fontSize: "48px",
+    color: customization.value.color,
+
+    x: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 5) / 100
+    ),
+    y: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 5) / 100
+    ),
+
+    width: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 90) / 100
+    ),
+    height: canvasStore.computeAdjustedSize(30),
+  };
 
   if (type === SLIDE_TYPES.CONTENT) {
-    const layoutDefaultElementProps = {
-      mode: MODE_OPTIONS.value.text,
-      isVisible: true,
-      isLocked: false,
-      fontFamily: customization.value.font,
-      lineHeight: customization.value.lineHeight,
-      fontWeight: "normal",
-      textDecoration: "none",
-      fontStyle: "normal",
-      textAlign: ALIGNMENT.horizontal.left,
-      verticalAlign: ALIGNMENT.vertical.top,
-      rotationAngle: 0,
-
-      /*
-       * editable
-       */
-      id: "layout-",
-      text: "",
-
-      fontSize: "48px",
-      color: customization.value.color,
-
-      x: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100
-      ),
-      y: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100
-      ),
-
-      width: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 90) / 100
-      ),
-      height: canvasStore.computeAdjustedSize(30),
-    };
-
     const titleElement = {
       ...layoutDefaultElementProps,
 
@@ -482,6 +481,20 @@ const handleAddingNewSlide = async (type) => {
     };
 
     preparedElements = [titleElement, bodyElement];
+  } else {
+    const titleElement = {
+      ...layoutDefaultElementProps,
+
+      id: "layout-title-top-titleAndBody",
+      text: t("presentationStudio.layouts.defaultTexts.question"),
+      textAlign: "center",
+
+      color: "#313232",
+      fontSize: "48px",
+      fontWeight: "bold",
+    };
+
+    preparedElements = [titleElement];
   }
 
   await presentationsStore.addNewSlide(preparedElements, type);

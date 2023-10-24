@@ -1,5 +1,8 @@
 <template>
-  <div class="presentation_toolbar__top bg-white q-pa-md row no-wrap">
+  <div
+    v-if="slide?.type === SLIDE_TYPES.CONTENT"
+    class="presentation_toolbar__top bg-white q-pa-md row no-wrap"
+  >
     <template
       v-if="
         mode && ![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode)
@@ -111,6 +114,12 @@
       </q-btn>
     </template>
   </div>
+
+  <div
+    v-else
+    class="presentation_toolbar__top bg-white q-pa-md row no-wrap"
+    style="height: 68px"
+  ></div>
 </template>
 
 <script setup>
