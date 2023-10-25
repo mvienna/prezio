@@ -314,7 +314,7 @@
 <script setup>
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
@@ -343,6 +343,19 @@ const { slide, slideSettings } = storeToRefs(presentationsStore);
 onBeforeMount(() => {
   question.value = layoutTitle.value?.text;
 
+  checkSlideSettings();
+
+  handleSlideSettingsUpdate();
+});
+
+watch(
+  () => slide.value,
+  () => {
+    checkSlideSettings();
+  }
+);
+
+const checkSlideSettings = () => {
   if (!slideSettings.value) {
     slideSettings.value = settingsDefaultState;
   }
@@ -352,9 +365,7 @@ onBeforeMount(() => {
       slideSettings.value[prop] = settingsDefaultState[prop];
     }
   }
-
-  handleSlideSettingsUpdate();
-});
+};
 
 /*
  * layout title (question)

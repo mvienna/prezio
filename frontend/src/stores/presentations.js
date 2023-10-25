@@ -344,7 +344,9 @@ export const usePresentationsStore = defineStore("presentations", {
       }
 
       this.slide = newSlide;
-      this.slideSettings = JSON.parse(this.slide.settings_data);
+      this.slideSettings = this.slide.settings_data
+        ? JSON.parse(this.slide.settings_data)
+        : {};
     },
 
     async updateSlidesOrder() {
