@@ -22,39 +22,33 @@
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
   >
-    <transition
-      appear
-      enter-active-class="animated fadeIn"
-      leave-active-class="animated fadeOut"
+    <div
+      class="row no-wrap q-gutter-sm"
+      style="transition: 0.2s"
+      :style="!isMouseActive && !$q.screen.lt.sm ? 'opacity: 0' : ''"
     >
-      <div
-        class="row no-wrap q-gutter-sm"
-        style="transition: 0.2s"
-        :style="!isMouseActive && !$q.screen.lt.sm ? 'opacity: 0' : ''"
+      <!-- back to studio -->
+      <q-btn
+        :flat="showRoomInformationPanel"
+        :unelevated="!showRoomInformationPanel"
+        :color="showRoomInformationPanel ? 'grey' : 'black'"
+        :text-color="showRoomInformationPanel ? 'white' : 'white'"
+        :style="!showRoomInformationPanel ? 'opacity: 0.7' : ''"
+        icon="r_keyboard_return"
+        round
+        size="14px"
+        :disable="!presentation?.id"
+        :href="
+          clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
+          presentation?.id
+        "
+        style="border-radius: 50%"
       >
-        <!-- back to studio -->
-        <q-btn
-          :flat="showRoomInformationPanel"
-          :unelevated="!showRoomInformationPanel"
-          :color="showRoomInformationPanel ? 'grey' : 'black'"
-          :text-color="showRoomInformationPanel ? 'white' : 'white'"
-          :style="!showRoomInformationPanel ? 'opacity: 0.7' : ''"
-          icon="r_keyboard_return"
-          round
-          size="14px"
-          :disable="!presentation?.id"
-          :href="
-            clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
-            presentation?.id
-          "
-          style="border-radius: 50%"
-        >
-          <q-tooltip>
-            {{ $t("presentationRoom.header.backToStudio") }}
-          </q-tooltip>
-        </q-btn>
-      </div>
-    </transition>
+        <q-tooltip>
+          {{ $t("presentationRoom.header.backToStudio") }}
+        </q-tooltip>
+      </q-btn>
+    </div>
 
     <q-space />
 
