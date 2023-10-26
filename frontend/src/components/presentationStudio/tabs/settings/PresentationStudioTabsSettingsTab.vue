@@ -479,7 +479,7 @@ const settingsDefaultState = {
   entriesPerParticipant: 3,
 
   isLimitedTime: true,
-  timeLimit: 20,
+  timeLimit: 40,
 
   isSubmissionLocked: true,
   isResultsHidden: false,
