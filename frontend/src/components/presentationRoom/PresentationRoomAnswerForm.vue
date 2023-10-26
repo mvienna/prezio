@@ -2,7 +2,14 @@
   <q-form
     v-if="slideSettings"
     :class="`text-${textColor}`"
-    style="width: 100%; max-width: 500px; margin: 0 auto"
+    style="
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      overflow-y: scroll;
+      max-height: calc(100vh - 96px - 96px);
+    "
+    class="scroll--hidden"
     @submit.prevent="handleSubmittingAnswers()"
   >
     <!-- question title -->
@@ -28,7 +35,7 @@
               ? 'yellow-10'
               : timeLeftPercentage < 75
               ? 'orange'
-              : ''
+              : 'red'
           "
         />
       </div>
@@ -46,6 +53,7 @@
           <q-input
             v-model="answerInputs[n - 1]"
             outlined
+            hide-bottom-space
             color="primary"
             :placeholder="$t('presentationRoom.answers.placeholder')"
             :maxlength="25"
@@ -74,6 +82,7 @@
         :icon-right="slideSettings.isSubmissionLocked ? 'r_lock' : 'r_done'"
         color="primary"
         class="full-width q-py-md q-mt-md"
+        style="position: sticky; bottom: 0"
       >
         <template #default>
           <div class="q-mr-sm">
@@ -231,8 +240,13 @@ const check = () => {
   border-radius: 8px;
 }
 
+.q-btn.disabled {
+  opacity: 1 !important;
+  background: $black !important;
+}
+
 /*
- *
+ * checkmark
  */
 .checkmark__circle {
   stroke-dasharray: 166;
