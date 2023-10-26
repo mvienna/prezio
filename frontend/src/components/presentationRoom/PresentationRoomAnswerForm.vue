@@ -12,18 +12,37 @@
     class="scroll--hidden"
     @submit.prevent="handleSubmittingAnswers()"
   >
-    <!-- question title -->
-    <div class="text-h6 text-semibold text-center">
-      {{ layoutTitleElement?.text }}
-    </div>
+    <template
+      v-if="
+        slideSettings.isMultipleEntries ||
+        (!slideSettings.isMultipleEntries && participantAnswersCount === 0)
+      "
+    >
+      <!-- question title -->
+      <div class="text-h6 text-semibold text-center">
+        {{ layoutTitleElement?.text }}
+      </div>
 
-    <!-- question description -->
-    <div class="text-semibold text-center q-mt-sm q-mb-lg">
-      {{ slideSettings.description }}
+      <!-- question description -->
+      <div class="text-semibold text-center q-mt-sm q-mb-lg">
+        {{ slideSettings.description }}
+      </div>
+    </template>
+
+    <!-- thanks for participation -->
+    <div v-else class="text-h6 text-semibold text-center q-mb-md">
+      {{ $t("presentationRoom.answers.thanksForParticipation") }}
     </div>
 
     <q-slide-transition>
-      <div v-if="timeLeft" class="q-pb-md">
+      <div
+        v-if="
+          timeLeft &&
+          (slideSettings.isMultipleEntries ||
+            (!slideSettings.isMultipleEntries && participantAnswersCount === 0))
+        "
+        class="q-pb-md"
+      >
         <q-linear-progress
           size="xl"
           rounded
@@ -132,23 +151,30 @@
       </div>
     </transition>
 
-    <!-- submission is locked, please wait -->
-    <div
-      v-if="slideSettings.isSubmissionLocked"
-      class="text-center q-mt-md"
-      style="opacity: 0.7"
+    <template
+      v-if="
+        slideSettings.isMultipleEntries ||
+        (!slideSettings.isMultipleEntries && participantAnswersCount === 0)
+      "
     >
-      {{ $t("presentationRoom.answers.waitForSubmissionToBeUnlocked") }}
-    </div>
+      <!-- submission is locked, please wait -->
+      <div
+        v-if="slideSettings.isSubmissionLocked"
+        class="text-center q-mt-md"
+        style="opacity: 0.7"
+      >
+        {{ $t("presentationRoom.answers.waitForSubmissionToBeUnlocked") }}
+      </div>
 
-    <!-- multiple entries available -->
-    <div
-      v-else-if="slideSettings.isMultipleEntries"
-      class="text-center q-mt-md"
-      style="opacity: 0.7"
-    >
-      {{ $t("presentationRoom.answers.multipleEntriesAvailable") }}
-    </div>
+      <!-- multiple entries available -->
+      <div
+        v-else-if="slideSettings.isMultipleEntries"
+        class="text-center q-mt-md"
+        style="opacity: 0.7"
+      >
+        {{ $t("presentationRoom.answers.multipleEntriesAvailable") }}
+      </div>
+    </template>
   </q-form>
 </template>
 

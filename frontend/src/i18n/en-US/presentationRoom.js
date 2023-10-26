@@ -98,6 +98,7 @@ export default {
         "You can submit answers an unlimited number of times",
       answersSubmittedWait:
         "You've already answered this question. Please wait for the presenter to show the next slide.",
+      thanksForParticipation: "Thank you for your participation",
     },
   },
 };
