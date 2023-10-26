@@ -481,7 +481,7 @@ const settingsDefaultState = {
   isLimitedTime: true,
   timeLimit: 40,
 
-  isSubmissionLocked: true,
+  isSubmissionLocked: false,
   isResultsHidden: false,
 };
 
