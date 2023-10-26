@@ -203,6 +203,8 @@ export default {
           },
 
           multipleEntries: {
+            title: "Don't limit submissions",
+
             on: "Each participant can answer an unlimited number of times",
             off: "Each participant can answer only once",
           },

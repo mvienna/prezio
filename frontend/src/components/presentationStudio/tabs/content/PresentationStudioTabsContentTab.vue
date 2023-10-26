@@ -139,8 +139,39 @@
 
     <q-separator class="q-my-md" />
 
-    <!-- entries per participant -->
     <div class="row no-wrap items-center justify-between text-semibold">
+      <span>
+        {{
+          $t(
+            "presentationLayout.rightDrawer.tabs.content.multipleEntries.title"
+          )
+        }}
+
+        <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+          <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
+            {{
+              $t(
+                `presentationLayout.rightDrawer.tabs.content.multipleEntries.${
+                  slideSettings.isMultipleEntries ? "on" : "off"
+                }`
+              )
+            }}
+          </q-tooltip>
+        </q-icon>
+      </span>
+
+      <q-toggle
+        v-model="slideSettings.isMultipleEntries"
+        color="primary"
+        checked-icon="r_all_inclusive"
+        @update:model-value="handleSlideSettingsUpdate()"
+      />
+    </div>
+
+    <!-- entries per participant -->
+    <div
+      class="row no-wrap items-center justify-between text-semibold q-mt-sm q-pb-xs"
+    >
       <span>
         {{
           $t(
@@ -158,28 +189,12 @@
           </q-tooltip>
         </q-icon>
       </span>
-
-      <q-toggle
-        v-model="slideSettings.isMultipleEntries"
-        color="primary"
-        checked-icon="r_all_inclusive"
-        @update:model-value="handleSlideSettingsUpdate()"
-      >
-        <q-tooltip class="text-center" max-width="200px" :offset="[0, 0]">
-          {{
-            $t(
-              `presentationLayout.rightDrawer.tabs.content.multipleEntries.${
-                slideSettings.isMultipleEntries ? "on" : "off"
-              }`
-            )
-          }}
-        </q-tooltip>
-      </q-toggle>
     </div>
 
     <q-input
       v-model="slideSettings.entriesPerParticipant"
       type="number"
+      class="q-mt-sm"
       outlined
       dense
       :min="1"
