@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
@@ -143,6 +143,18 @@ const rightDrawerTabs = computed(() => {
   ];
 });
 const rightDrawerTab = ref(rightDrawerTabs.value[0].name);
+
+/*
+ * handle slide change
+ */
+watch(
+  () => slide.value,
+  () => {
+    if (slide.value?.type && slide.value.type !== SLIDE_TYPES.CONTENT) {
+      rightDrawerTab.value = rightDrawerTabs.value[1].name;
+    }
+  }
+);
 
 /*
  * change slide type
