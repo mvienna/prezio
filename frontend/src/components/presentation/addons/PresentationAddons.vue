@@ -29,6 +29,7 @@
   <PresentationStudioWordsCloud
     v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD && slideAnswers?.length"
     :words="slideAnswers"
+    :style="isPresentationPreview ? 'z-index: 6001;' : ''"
     @remove-word="handleRemovingAnswer($event)"
   />
 </template>
@@ -55,7 +56,8 @@ defineProps({
 const canvasStore = useCanvasStore();
 
 const presentationsStore = usePresentationsStore();
-const { slide, slideSettings } = storeToRefs(presentationsStore);
+const { slide, slideSettings, isPresentationPreview } =
+  storeToRefs(presentationsStore);
 
 /*
  * slide answers

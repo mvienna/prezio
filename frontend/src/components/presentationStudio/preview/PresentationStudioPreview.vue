@@ -11,7 +11,14 @@
 
     <!-- cancel -->
     <div class="absolute-right q-mt-md q-mr-md">
-      <q-btn icon="close" color="grey" flat round @click="$emit('cancel')" />
+      <q-btn
+        icon="close"
+        color="grey"
+        flat
+        round
+        @click="$emit('cancel')"
+        style="border-radius: 50%"
+      />
     </div>
 
     <!-- content -->
@@ -27,15 +34,11 @@
         <q-btn
           flat
           round
-          icon="r_arrow_back_ios_new"
+          class="presentation_preview__controls__btn"
+          icon="r_arrow_back"
           no-caps
           no-wrap
-          size="12px"
-          class="q-px-sm q-py-xl"
-          style="
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(4px);
-          "
+          size="1em"
           :disable="slideIndex === 0"
           @click="handleSlideChange('backward')"
         >
@@ -49,15 +52,6 @@
             <div class="text-bold text-center">
               {{ $t("presentationStudio.preview.controls.previous") }}
             </div>
-
-            <div
-              v-if="showShortcuts"
-              class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-            >
-              <div v-if="isMac">⌘</div>
-              <div v-else>Ctrl</div>
-              <div>←</div>
-            </div>
           </q-tooltip>
         </q-btn>
       </div>
@@ -67,15 +61,11 @@
         <q-btn
           flat
           round
-          icon="r_arrow_forward_ios"
+          class="presentation_preview__controls__btn"
+          icon="r_arrow_forward"
           no-caps
           no-wrap
-          size="12px"
-          class="q-px-sm q-py-xl"
-          style="
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(4px);
-          "
+          size="1em"
           :disable="slideIndex === presentation.slides.length - 1"
           @click="handleSlideChange('forward')"
         >
@@ -88,15 +78,6 @@
           >
             <div class="text-bold text-center">
               {{ $t("presentationStudio.preview.controls.next") }}
-            </div>
-
-            <div
-              v-if="showShortcuts"
-              class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-            >
-              <div v-if="isMac">⌘</div>
-              <div v-else>Ctrl</div>
-              <div>→</div>
             </div>
           </q-tooltip>
         </q-btn>
@@ -174,16 +155,14 @@ onUnmounted(() => {
 });
 
 const handleKeyDownEvent = (event) => {
-  if (event.ctrlKey || event.metaKey) {
-    if (event.keyCode === 37) {
-      event.preventDefault();
-      handleSlideChange("backward");
-    }
+  if (event.keyCode === 37) {
+    event.preventDefault();
+    handleSlideChange("backward");
+  }
 
-    if (event.keyCode === 39) {
-      event.preventDefault();
-      handleSlideChange("forward");
-    }
+  if (event.keyCode === 39) {
+    event.preventDefault();
+    handleSlideChange("forward");
   }
 };
 
@@ -198,17 +177,6 @@ const handleSlideChange = async (direction) => {
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false, false, undefined, false);
 };
-
-/*
- * shortcuts
- */
-const showShortcuts = computed(() => {
-  return $q.platform.is.desktop;
-});
-
-const isMac = computed(() => {
-  return $q.platform.is.platform === "mac";
-});
 </script>
 
 <style lang="scss">
@@ -285,5 +253,12 @@ const isMac = computed(() => {
   backdrop-filter: blur(4px);
   border-radius: 6px;
   color: $grey-10;
+}
+
+.presentation_preview__controls__btn {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  color: $white;
+  border-radius: 50%;
 }
 </style>
