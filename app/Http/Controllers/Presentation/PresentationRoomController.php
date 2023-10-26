@@ -36,7 +36,6 @@ class PresentationRoomController extends Controller
         if (!$room) {
             $room = PresentationRoom::create([
                 'presentation_id' => $presentation->id,
-                'token' => bin2hex(random_bytes(32)),
             ]);
 
             PresentationRoomReactions::create([
