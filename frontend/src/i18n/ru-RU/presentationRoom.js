@@ -37,6 +37,10 @@ export default {
         },
       },
 
+      reactions: {
+        answersCount: "Получено ответов - ",
+      },
+
       hideResults: {
         tooltip: {
           on: "Результаты отображаются",

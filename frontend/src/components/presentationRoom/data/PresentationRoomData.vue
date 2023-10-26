@@ -43,6 +43,7 @@
     <PresentationRoomDataSubmissions
       v-if="isHost && slide?.type !== SLIDE_TYPES.CONTENT"
       :stage="stage.pin"
+      :answers-count="slide?.answers?.length || 0"
       class="q-ml-md"
     >
       <template #value>
