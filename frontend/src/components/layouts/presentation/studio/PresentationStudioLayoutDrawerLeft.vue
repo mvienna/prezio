@@ -70,7 +70,7 @@
           :id="`slide_preview_${element.id}`"
           :class="element.id === slide.id ? 'bg-blue-1' : ''"
         >
-          <div class="column no-wrap justify-between q-pr-md">
+          <div class="column no-wrap q-pr-md">
             <!-- index -->
             <div
               class="text-center"
@@ -78,6 +78,13 @@
             >
               {{ index + 1 }}
             </div>
+
+            <q-icon
+              v-if="element.id === presentation?.room?.slide_id"
+              name="r_play_arrow"
+              color="primary"
+              class="q-mt-xs"
+            />
           </div>
 
           <q-space />
