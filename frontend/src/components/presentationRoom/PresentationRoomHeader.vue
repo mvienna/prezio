@@ -2,13 +2,9 @@
   <q-toolbar
     v-if="isHost"
     class="cursor-pointer"
-    :class="$q.screen.lt.lg ? 'q-pa-md' : 'q-pa-lg'"
-    style="transition: 0.2s"
-    :style="
-      showRoomInformationPanel || isHovered
-        ? 'background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);'
-        : ''
-    "
+    :class="`${$q.screen.lt.lg ? 'q-pa-md' : 'q-pa-lg'} ${
+      showRoomInformationPanel || isHovered ? 'q-toolbar--appear' : ''
+    }`"
     @click="
       (event) => {
         if (
@@ -22,32 +18,55 @@
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
   >
+    <!-- back to studio -->
     <div
       class="row no-wrap q-gutter-sm"
       style="transition: 0.2s"
       :style="!isMouseActive && !$q.screen.lt.sm ? 'opacity: 0' : ''"
     >
-      <!-- back to studio -->
-      <q-btn
-        :flat="showRoomInformationPanel"
-        :unelevated="!showRoomInformationPanel"
-        :color="showRoomInformationPanel ? 'grey' : 'black'"
-        :text-color="showRoomInformationPanel ? 'white' : 'white'"
-        :style="!showRoomInformationPanel ? 'opacity: 0.7' : ''"
-        icon="r_keyboard_return"
-        round
-        size="14px"
-        :disable="!presentation?.id"
-        :href="
-          clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
-          presentation?.id
-        "
-        style="border-radius: 50%"
+      <q-intersection
+        transition="fade"
+        v-if="showRoomInformationPanel || isHovered"
       >
-        <q-tooltip>
-          {{ $t("presentationRoom.header.backToStudio") }}
-        </q-tooltip>
-      </q-btn>
+        <q-btn
+          flat
+          icon="r_keyboard_return"
+          text-color="white"
+          color="grey"
+          round
+          size="14px"
+          :disable="!presentation?.id"
+          :href="
+            clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
+            presentation?.id
+          "
+          style="border-radius: 50%; transition: 0.2s"
+        >
+          <q-tooltip>
+            {{ $t("presentationRoom.header.backToStudio") }}
+          </q-tooltip>
+        </q-btn>
+      </q-intersection>
+      <q-intersection v-else transition="fade">
+        <q-btn
+          unelevated
+          color="black"
+          text-color="white"
+          style="opacity: 0.7; border-radius: 50%"
+          icon="r_keyboard_return"
+          round
+          size="14px"
+          :disable="!presentation?.id"
+          :href="
+            clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
+            presentation?.id
+          "
+        >
+          <q-tooltip>
+            {{ $t("presentationRoom.header.backToStudio") }}
+          </q-tooltip>
+        </q-btn>
+      </q-intersection>
     </div>
 
     <q-space />
@@ -215,6 +234,27 @@ const copyRoomLinkToClipboard = () => {
 @media screen and (max-width: 960px) {
   .q-toolbar {
     height: 40px;
+  }
+}
+
+.q-toolbar--appear {
+  animation: toolbarAppearAnimation 0.4s ease-in-out;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+@keyframes toolbarAppearAnimation {
+  0% {
+    background: transparent;
+  }
+
+  50% {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: none;
+  }
+
+  100% {
+    backdrop-filter: blur(4px);
   }
 }
 
