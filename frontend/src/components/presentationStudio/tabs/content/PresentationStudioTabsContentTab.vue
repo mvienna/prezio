@@ -97,21 +97,30 @@
     </q-input>
 
     <!-- description -->
-    <q-expansion-item
-      :label="
-        $t(
-          'presentationLayout.rightDrawer.tabs.content.question.description.title'
-        )
-      "
-      class="q-mt-sm text-grey-10"
-    >
-      <div class="text-caption text-grey">
-        {{
-          $t(
-            "presentationLayout.rightDrawer.tabs.content.question.description.caption"
-          )
-        }}
-      </div>
+    <q-expansion-item class="q-mt-sm text-grey-10">
+      <template #header>
+        <div class="row no-wrap items-center">
+          <div class="q-item__label">
+            {{
+              $t(
+                "presentationLayout.rightDrawer.tabs.content.question.description.title"
+              )
+            }}
+          </div>
+
+          <q-icon name="r_info" class="q-ml-xs">
+            <q-tooltip max-width="300px" class="text-center">
+              {{
+                $t(
+                  "presentationLayout.rightDrawer.tabs.content.question.description.caption"
+                )
+              }}
+            </q-tooltip>
+          </q-icon>
+        </div>
+
+        <q-space />
+      </template>
 
       <q-input
         v-model="slideSettings.description"
@@ -123,7 +132,7 @@
         outlined
         dense
         autogrow
-        class="q-mt-md"
+        class="q-mt-sm"
         @update:model-value="handleSlideSettingsUpdate()"
       />
     </q-expansion-item>
