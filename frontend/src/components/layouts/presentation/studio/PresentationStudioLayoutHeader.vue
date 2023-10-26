@@ -1,5 +1,5 @@
 <template>
-  <q-header class="bg-white q-pa-sm" elevated>
+  <q-header class="bg-white q-pa-xs" elevated>
     <q-toolbar>
       <!-- logo -->
       <q-btn
@@ -14,30 +14,7 @@
         </template>
       </q-btn>
 
-      <!-- undo / redo -->
-      <div class="row no-wrap items-center q-gutter-sm q-px-lg">
-        <q-btn
-          icon="r_undo"
-          unelevated
-          round
-          disable
-          text-color="grey-5"
-          size="12px"
-          class="q-btn--bordered"
-        />
-
-        <q-btn
-          icon="r_redo"
-          unelevated
-          round
-          disable
-          text-color="grey-5"
-          size="12px"
-          class="q-btn--bordered"
-        />
-      </div>
-
-      <div v-if="presentation" class="text-h6 text-semibold text-black">
+      <div v-if="presentation" class="text-h6 text-semibold text-black q-ml-md">
         <!-- presentation name -->
         <span style="cursor: text">
           {{ presentation.name }}
@@ -60,121 +37,141 @@
         </span>
 
         <!-- visibility -->
-        <q-icon
-          :name="presentation?.is_private ? 'r_visibility_off' : 'r_visibility'"
-          color="grey-5"
-          class="q-ml-sm cursor-pointer"
+        <q-btn
+          text-color="dark"
+          flat
+          no-caps
+          no-wrap
+          round
+          size="12px"
+          class="q-ml-sm"
+          :icon="presentation?.is_private ? 'r_visibility_off' : 'r_visibility'"
           @click="
             presentation.is_private = !presentation.is_private;
             presentationsStore.updatePresentation();
           "
-        >
-        </q-icon>
+        />
+      </div>
+
+      <q-separator vertical class="q-my-sm q-mx-sm" />
+
+      <!-- undo / redo -->
+      <div class="row no-wrap items-center">
+        <q-btn
+          icon="r_undo"
+          flat
+          round
+          disable
+          text-color="grey-5"
+          size="12px"
+        />
+
+        <q-btn
+          icon="r_redo"
+          flat
+          round
+          disable
+          text-color="grey-5"
+          size="12px"
+        />
       </div>
 
       <q-space />
 
-      <div v-if="presentation" class="row no-wrap items-center q-gutter-md">
-        <!-- saving presentation -->
-        <q-spinner-ios v-if="isSaving" color="grey-4" size="24px" />
+      <div v-if="presentation" class="row no-wrap items-center">
+        <div class="row no-wrap q-gutter-xs">
+          <!-- save -->
+          <q-btn
+            flat
+            no-caps
+            no-wrap
+            round
+            size="12px"
+            :loading="isSaving"
+            :color="isSavingError ? 'negative' : 'positive'"
+            :icon="isSavingError ? 'r_report' : 'r_check_circle'"
+            @click="
+              canvasStore.saveSlidePreview();
+              presentationsStore.saveSlide(undefined, elements);
+            "
+          >
+            <template v-slot:loading>
+              <q-spinner-ios color="grey-4" size="24px" />
+            </template>
 
-        <!-- saving presentation error -->
-        <q-icon
-          v-else-if="isSavingError"
-          name="r_report"
-          color="red"
-          size="24px"
-        >
-          <q-tooltip class="text-red bg-red-1 text-center">
-            {{ $t("presentationLayout.errors.somethingWentWrong") }}
-          </q-tooltip>
-        </q-icon>
+            <q-tooltip>
+              {{
+                isSavingError
+                  ? $t("presentationLayout.errors.somethingWentWrong")
+                  : date.formatDate(
+                      lastSavedAt || new Date(presentation.updated_at),
+                      "DD.MM.YYYY HH:mm"
+                    )
+              }}
+            </q-tooltip>
+          </q-btn>
 
-        <!-- presentation is saved -->
-        <q-icon
-          v-else
-          name="r_save"
-          color="grey-4"
-          size="24px"
-          class="cursor-pointer"
-          @click="
-            canvasStore.saveSlidePreview();
-            presentationsStore.saveSlide(undefined, elements);
-          "
-        >
-          <q-tooltip>
-            {{
-              date.formatDate(
-                lastSavedAt || new Date(presentation.updated_at),
-                "DD.MM.YYYY HH:mm"
-              )
-            }}
-          </q-tooltip>
-        </q-icon>
-
-        <!-- share -->
-        <q-btn
-          text-color="grey-5"
-          unelevated
-          no-caps
-          no-wrap
-          round
-          disable
-          size="12px"
-          icon="r_share"
-          class="q-btn--bordered"
-        />
-
-        <!-- settings -->
-        <q-btn
-          text-color="grey-5"
-          unelevated
-          no-caps
-          no-wrap
-          round
-          size="12px"
-          icon="r_settings"
-          class="q-btn--bordered"
-          @click="showSettingsDialog = true"
-        />
-
-        <q-dialog v-model="showSettingsDialog" position="right">
-          <PresentationSettings
-            @cancel="showSettingsDialog = false"
-            class="q-mr-md"
-            style="height: calc(100vh - 24px - 66px - 24px); margin-top: 66px"
+          <!-- share -->
+          <q-btn
+            color="dark"
+            flat
+            no-caps
+            no-wrap
+            round
+            disable
+            size="12px"
+            icon="r_share"
           />
-        </q-dialog>
 
-        <!-- download -->
-        <q-btn
-          text-color="grey-5"
-          unelevated
-          no-caps
-          no-wrap
-          round
-          disable
-          size="12px"
-          icon="r_downloading"
-          class="q-btn--bordered"
-        />
-
-        <!-- preview -->
-        <q-btn
-          color="primary"
-          outline
-          no-caps
-          no-wrap
-          :label="$t('presentationLayout.header.preview')"
-          class="text-semibold"
-          @click="isPresentationPreview = true"
-        />
-
-        <q-dialog v-model="isPresentationPreview">
-          <PresentationStudioPreviewPresentation
-            @cancel="isPresentationPreview = false"
+          <!-- download -->
+          <q-btn
+            color="dark"
+            flat
+            no-caps
+            no-wrap
+            round
+            disable
+            size="12px"
+            icon="r_downloading"
           />
-        </q-dialog>
+
+          <!-- settings -->
+          <q-btn
+            color="dark"
+            flat
+            no-caps
+            no-wrap
+            round
+            size="12px"
+            icon="r_settings"
+            @click="showSettingsDialog = true"
+          />
+
+          <q-dialog v-model="showSettingsDialog" position="right">
+            <PresentationSettings
+              @cancel="showSettingsDialog = false"
+              class="q-mr-md"
+              style="height: calc(100vh - 24px - 66px - 24px); margin-top: 66px"
+            />
+          </q-dialog>
+
+          <!-- preview -->
+          <q-btn
+            color="primary"
+            outline
+            no-caps
+            no-wrap
+            :label="$t('presentationLayout.header.preview')"
+            class="text-semibold"
+            @click="isPresentationPreview = true"
+          />
+
+          <q-dialog v-model="isPresentationPreview">
+            <PresentationStudioPreviewPresentation
+              @cancel="isPresentationPreview = false"
+            />
+          </q-dialog>
+        </div>
 
         <!-- room -->
         <q-btn-dropdown
@@ -186,6 +183,8 @@
           :menu-offset="[0, 8]"
           content-class="shadow"
           style="z-index: 2"
+          class="q-ml-sm"
+          icon="r_play_arrow"
           @click="
             startPresentingFromSlide = slide;
             handleStartPresenting();
@@ -345,7 +344,7 @@
         </q-dialog>
 
         <!-- user -->
-        <UserMenu is-avatar-only />
+        <UserMenu is-avatar-only class="q-ml-xs" />
       </div>
     </q-toolbar>
   </q-header>
@@ -464,6 +463,14 @@ const createPresentationRoom = async () => {
   .q-btn__content {
     font-weight: 600;
   }
+
+  .q-btn:first-child {
+    padding-left: 12px;
+
+    i {
+      margin-right: 8px;
+    }
+  }
 }
 
 .present_btn__menu__list {
@@ -482,8 +489,8 @@ const createPresentationRoom = async () => {
 
 .start_presenting_options_menu__backdrop {
   position: fixed;
-  left: -16px;
-  top: -16px;
+  left: 0;
+  top: 0;
   height: 100vh;
   width: 100vw;
   background: rgba(0, 0, 0, 0.4);

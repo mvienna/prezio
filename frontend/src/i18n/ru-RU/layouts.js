@@ -77,7 +77,7 @@ export default {
     },
 
     leftDrawer: {
-      newSlide: "Новый слайд",
+      newSlide: "Слайд",
       import: "Импорт",
     },
 

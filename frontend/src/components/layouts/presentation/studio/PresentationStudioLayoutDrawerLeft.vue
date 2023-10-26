@@ -3,20 +3,26 @@
     v-model="leftDrawerOpen"
     show-if-above
     side="left"
-    class="bg-white q-px-sm q-py-md"
+    :width="220"
+    class="bg-white q-py-md scroll--hidden"
   >
     <!-- header -->
-    <div class="bg-white" style="position: sticky; top: -16px; z-index: 1">
+    <div
+      class="bg-white q-px-md"
+      style="position: sticky; top: -16px; z-index: 1"
+    >
       <div class="row no-wrap q-gutter-md justify-center">
         <!-- new slide -->
         <q-btn
           color="primary"
-          icon-right="r_add"
+          icon="r_loupe"
           no-caps
           unelevated
           :label="$t('presentationLayout.leftDrawer.newSlide')"
+          style="width: 100%"
         >
           <q-menu
+            v-model="showNewSlideTypeSelectionMenu[0]"
             anchor="bottom left"
             self="top left"
             transition-show="jump-down"
@@ -29,257 +35,275 @@
             <PresentationStudioTabsTypesTab
               disable-layout-selection
               v-close-popup
+              style="z-index: 2"
               @select="handleAddingNewSlide($event)"
             />
           </q-menu>
         </q-btn>
 
         <!-- import -->
-        <q-btn
-          outline
-          color="primary"
-          no-caps
-          disable
-          :label="$t('presentationLayout.leftDrawer.import')"
-        />
+        <q-btn outline color="primary" no-caps disable icon="r_download" />
       </div>
 
-      <q-separator class="q-my-md" />
+      <q-separator class="q-mt-md" />
     </div>
 
-    <div class="q-px-sm">
-      <!-- slides -->
-      <draggable
-        v-if="presentation?.slides?.length"
-        v-model="presentation.slides"
-        :component-data="{
-          tag: 'ul',
-          type: 'transition-group',
-          class: 'column no-wrap q-gutter-lg',
-        }"
-        v-bind="slidesDraggingOptions"
-        item-key="id"
-        handle=".slide_handle"
-        @start="handleStartDragging"
-        @end="handleSlidesReorder"
-        @reordered="handleSlidesReorder"
-      >
-        <template #item="{ element, index }">
-          <div class="row no-wrap" :id="`slide_preview_${element.id}`">
-            <div class="column no-wrap justify-between q-pr-md">
-              <!-- index -->
-              <div
-                class="text-center"
-                :class="element.id === slide.id ? 'text-semibold' : ''"
-              >
-                {{ index + 1 }}
+    <!-- slides -->
+    <draggable
+      v-if="presentation?.slides?.length"
+      v-model="presentation.slides"
+      :component-data="{
+        tag: 'ul',
+        type: 'transition-group',
+        class: 'column no-wrap',
+      }"
+      v-bind="slidesDraggingOptions"
+      item-key="id"
+      handle=".slide_handle"
+      @start="handleStartDragging"
+      @end="handleSlidesReorder"
+      @reordered="handleSlidesReorder"
+    >
+      <template #item="{ element, index }">
+        <div
+          class="row no-wrap q-pa-md"
+          :id="`slide_preview_${element.id}`"
+          :class="element.id === slide.id ? 'bg-blue-1' : ''"
+        >
+          <div class="column no-wrap justify-between q-pr-md">
+            <!-- index -->
+            <div
+              class="text-center"
+              :class="element.id === slide.id ? 'text-semibold' : ''"
+            >
+              {{ index + 1 }}
+            </div>
+          </div>
+
+          <q-space />
+
+          <!-- preview -->
+          <q-card
+            flat
+            v-ripple
+            class="slide slide_handle relative-position cursor-pointer q-hoverable"
+            :class="`${element.id === slide.id ? 'slide--active' : ''} ${
+              !isSlideDragging && hoveredSlideIndex === index
+                ? 'slide--hovered'
+                : ''
+            }`"
+            @mouseover="hoveredSlideIndex = index"
+            @mouseleave="hoveredSlideIndex = null"
+            @click="handleSlideChange(element)"
+            @contextmenu.prevent="
+              showSlideContextMenu[index] = !showSlideContextMenu[index]
+            "
+          >
+            <!-- live preview -->
+            <canvas
+              v-show="element.isLivePreview"
+              :id="`canvas_slide_preview_${index}`"
+            />
+
+            <!-- saved preview -->
+            <q-img
+              v-show="!element.isLivePreview"
+              :src="element.preview"
+              fit="cover"
+            />
+
+            <!-- slide type -->
+            <div
+              v-if="element.type !== SLIDE_TYPES.CONTENT"
+              class="absolute-center"
+            >
+              <div class="row justify-center">
+                <q-img
+                  :src="`/assets/icons/temp/slideTypes/${element.type}.svg`"
+                  style="width: 48px; height: 48px; background: transparent"
+                />
+              </div>
+
+              <div class="text-semibold text-primary">
+                {{
+                  $t(
+                    `presentationLayout.rightDrawer.tabs.types.options.${element.type}`
+                  )
+                }}
               </div>
             </div>
 
-            <q-space />
-
-            <!-- preview -->
-            <q-card
-              flat
-              v-ripple
-              class="slide slide_handle relative-position cursor-pointer q-hoverable"
-              :class="`${element.id === slide.id ? 'slide--active' : ''} ${
-                !isSlideDragging && hoveredSlideIndex === index
-                  ? 'slide--hovered'
-                  : ''
-              }`"
-              @mouseover="hoveredSlideIndex = index"
-              @mouseleave="hoveredSlideIndex = null"
-              @click="handleSlideChange(element)"
-              @contextmenu.prevent="
-                showSlideContextMenu[index] = !showSlideContextMenu[index]
-              "
-            >
-              <!-- live preview -->
-              <canvas
-                v-show="element.isLivePreview"
-                :id="`canvas_slide_preview_${index}`"
-              />
-
-              <!-- saved preview -->
-              <q-img
-                v-show="!element.isLivePreview"
-                :src="element.preview"
-                fit="cover"
-              />
-
-              <!-- slide type -->
-              <div
-                v-if="element.type !== SLIDE_TYPES.CONTENT"
-                class="absolute-center"
-              >
-                <div class="row justify-center">
-                  <q-img
-                    :src="`/assets/icons/temp/slideTypes/${element.type}.svg`"
-                    style="width: 48px; height: 48px; background: transparent"
-                  />
-                </div>
-
-                <div class="text-semibold text-primary">
-                  {{
-                    $t(
-                      `presentationLayout.rightDrawer.tabs.types.options.${element.type}`
-                    )
-                  }}
-                </div>
-              </div>
-
-              <!-- actions -->
-              <div class="absolute-right q-pt-sm q-pr-sm">
-                <q-btn icon="more_vert" round flat size="10px">
-                  <q-menu
-                    v-model="showSlideContextMenu[index]"
-                    anchor="bottom right"
-                    self="top right"
-                    transition-show="jump-down"
-                    transition-hide="jump-up"
-                    :offset="[0, 8]"
-                    class="q-pa-sm"
-                    style="width: 250px"
+            <!-- actions -->
+            <div class="absolute-right q-pt-sm q-pr-sm">
+              <q-btn icon="more_vert" round flat size="8px">
+                <q-menu
+                  v-model="showSlideContextMenu[index]"
+                  anchor="bottom right"
+                  self="top right"
+                  transition-show="jump-down"
+                  transition-hide="jump-up"
+                  :offset="[0, 8]"
+                  class="q-pa-sm"
+                  style="width: 250px"
+                >
+                  <!-- new slide -->
+                  <q-item
+                    class="items-center justify-start q-px-md q-py-sm"
+                    clickable
+                    dense
                   >
-                    <!-- new slide -->
-                    <q-item
-                      class="items-center justify-start q-px-md q-py-sm"
-                      clickable
-                      dense
+                    <q-icon name="r_add" size="16px" class="q-mr-sm" />
+
+                    <div>
+                      {{ $t("presentationStudio.slide.actions.newSlide") }}
+                    </div>
+
+                    <q-menu
+                      v-model="showNewSlideTypeSelectionMenu[1]"
+                      anchor="top right"
+                      self="top left"
+                      transition-show="jump-right"
+                      transition-hide="jump-left"
+                      :offset="[24, 8]"
+                      class="q-pa-md scroll--hidden bg-white"
+                      max-height="70vh"
+                      style="width: 399px"
                     >
-                      <q-icon name="r_add" size="16px" class="q-mr-sm" />
-
-                      <div>
-                        {{ $t("presentationStudio.slide.actions.newSlide") }}
-                      </div>
-
-                      <q-menu
-                        anchor="center right"
-                        self="center left"
-                        transition-show="jump-right"
-                        transition-hide="jump-left"
-                        :offset="[48, 0]"
-                        class="q-pa-md scroll--hidden bg-white"
-                        max-height="70vh"
-                        style="width: 399px"
-                      >
-                        <PresentationStudioTabsTypesTab
-                          disable-layout-selection
-                          v-close-popup
-                          @select="
-                            handleAddingNewSlide($event);
-                            showSlideContextMenu[index] = false;
-                          "
-                        />
-                      </q-menu>
-                    </q-item>
-
-                    <!-- duplicate -->
-                    <q-item
-                      class="items-center justify-start q-px-md q-py-sm"
-                      clickable
-                      dense
-                      v-close-popup
-                      @click="handleDuplicatingSlide(element)"
-                    >
-                      <q-icon
-                        name="r_dynamic_feed"
-                        size="16px"
-                        class="q-mr-sm"
+                      <PresentationStudioTabsTypesTab
+                        disable-layout-selection
+                        v-close-popup
+                        @select="
+                          handleAddingNewSlide($event);
+                          showSlideContextMenu[index] = false;
+                        "
                       />
+                    </q-menu>
+                  </q-item>
 
-                      <div>
-                        {{ $t("presentationStudio.slide.actions.duplicate") }}
-                      </div>
+                  <!-- duplicate -->
+                  <q-item
+                    class="items-center justify-start q-px-md q-py-sm"
+                    clickable
+                    dense
+                    v-close-popup
+                    @click="handleDuplicatingSlide(element)"
+                  >
+                    <q-icon name="r_dynamic_feed" size="16px" class="q-mr-sm" />
 
-                      <q-space />
+                    <div>
+                      {{ $t("presentationStudio.slide.actions.duplicate") }}
+                    </div>
 
-                      <div
-                        v-if="showShortcuts"
-                        class="shortcut row no-wrap q-gutter-xs"
-                      >
-                        <div v-if="isMac">⌘</div>
-                        <div v-else>Ctrl</div>
-                        <div>D</div>
-                      </div>
-                    </q-item>
+                    <q-space />
 
-                    <q-separator class="q-my-sm" />
-
-                    <!-- delete -->
-                    <q-item
-                      class="items-center justify-start q-px-md q-py-sm text-red"
-                      clickable
-                      dense
-                      v-close-popup
-                      :disable="presentation.slides.length === 1"
-                      @click="handleSlideDeletion(element)"
+                    <div
+                      v-if="showShortcuts"
+                      class="shortcut row no-wrap q-gutter-xs"
                     >
-                      <q-icon
-                        name="r_delete"
-                        color="red"
-                        size="16px"
-                        class="q-mr-sm"
-                      />
+                      <div v-if="isMac">⌘</div>
+                      <div v-else>Ctrl</div>
+                      <div>D</div>
+                    </div>
+                  </q-item>
 
-                      <div>
-                        {{ $t("presentationStudio.slide.actions.delete") }}
-                      </div>
+                  <q-separator class="q-my-sm" />
 
-                      <q-space />
+                  <!-- delete -->
+                  <q-item
+                    class="items-center justify-start q-px-md q-py-sm text-red"
+                    clickable
+                    dense
+                    v-close-popup
+                    :disable="presentation.slides.length === 1"
+                    @click="handleSlideDeletion(element)"
+                  >
+                    <q-icon
+                      name="r_delete"
+                      color="red"
+                      size="16px"
+                      class="q-mr-sm"
+                    />
 
-                      <div
-                        v-if="showShortcuts"
-                        class="shortcut row no-wrap q-gutter-xs"
-                      >
-                        <div>⌫</div>
-                      </div>
-                    </q-item>
-                  </q-menu>
-                </q-btn>
-              </div>
-            </q-card>
-          </div>
-        </template>
-      </draggable>
+                    <div>
+                      {{ $t("presentationStudio.slide.actions.delete") }}
+                    </div>
 
-      <!-- new slide -->
-      <div class="row no-wrap justify-end">
-        <q-card
-          flat
-          v-ripple
+                    <q-space />
+
+                    <div
+                      v-if="showShortcuts"
+                      class="shortcut row no-wrap q-gutter-xs"
+                    >
+                      <div>⌫</div>
+                    </div>
+                  </q-item>
+                </q-menu>
+              </q-btn>
+            </div>
+          </q-card>
+        </div>
+      </template>
+    </draggable>
+
+    <!-- new slide -->
+    <div class="row no-wrap justify-end q-px-md">
+      <q-card
+        flat
+        v-ripple
+        color="primary"
+        class="bg-blue-1 relative-position q-py-xl q-mt-md cursor-pointer q-hoverable slide slide--hoverable"
+        style="border: none"
+      >
+        <q-icon
+          name="r_add"
           color="primary"
-          class="bg-blue-1 relative-position q-py-xl q-mt-md cursor-pointer q-hoverable slide slide--hoverable"
-          style="border: none"
-        >
-          <q-icon
-            name="r_add"
-            color="primary"
-            class="absolute-center"
-            size="md"
-          />
+          class="absolute-center"
+          size="md"
+        />
 
-          <q-menu
-            anchor="center right"
-            self="center left"
-            transition-show="jump-right"
-            transition-hide="jump-left"
-            :offset="[24, 0]"
-            class="q-pa-md scroll--hidden bg-white"
-            max-height="70vh"
-            style="width: 399px"
-          >
-            <PresentationStudioTabsTypesTab
-              disable-layout-selection
-              v-close-popup
-              @select="handleAddingNewSlide($event)"
-            />
-          </q-menu>
-        </q-card>
-      </div>
+        <q-menu
+          v-model="showNewSlideTypeSelectionMenu[2]"
+          anchor="center right"
+          self="center left"
+          transition-show="jump-right"
+          transition-hide="jump-left"
+          :offset="[24, 0]"
+          class="q-pa-md scroll--hidden bg-white"
+          max-height="70vh"
+          style="width: 399px"
+        >
+          <PresentationStudioTabsTypesTab
+            disable-layout-selection
+            v-close-popup
+            @select="handleAddingNewSlide($event)"
+          />
+        </q-menu>
+      </q-card>
     </div>
   </q-drawer>
+
+  <transition
+    appear
+    enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut"
+  >
+    <div
+      v-if="
+        showNewSlideTypeSelectionMenu[0] ||
+        showNewSlideTypeSelectionMenu[1] ||
+        showNewSlideTypeSelectionMenu[2]
+      "
+      style="
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 100vw;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 2000;
+      "
+    ></div>
+  </transition>
 </template>
 
 <script setup>
@@ -303,6 +327,8 @@ const $q = useQuasar();
 const { t } = useI18n({ useScope: "global" });
 
 const leftDrawerOpen = ref(true);
+
+const showNewSlideTypeSelectionMenu = ref([false, false, false]);
 
 /*
  * stores
@@ -548,8 +574,8 @@ watch(
   outline: 3px solid transparent;
   transition: 0.2s;
   border: 1.5px solid $grey-2;
-  width: 240px;
-  height: calc(240px * 9 / 16);
+  width: 160px;
+  height: calc(160px * 9 / 16);
   border-radius: 8px;
 
   canvas,

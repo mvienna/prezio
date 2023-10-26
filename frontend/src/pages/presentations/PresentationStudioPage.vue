@@ -18,7 +18,10 @@
         :disabled="!isPresentationPreview"
         :to="isPresentationPreview ? '#presentationPreview' : 'body'"
       >
-        <div class="canvas__wrapper column justify-center">
+        <div
+          class="canvas__wrapper"
+          :class="false ? 'column justify-center' : ''"
+        >
           <canvas
             ref="canvasRef"
             id="canvas"

@@ -218,7 +218,6 @@ const handleChangingSlideType = async (type) => {
  */
 ::v-deep(.q-tab) {
   color: $grey-5;
-  height: 50px;
 
   .q-tab__indicator {
     background: $grey-5;
