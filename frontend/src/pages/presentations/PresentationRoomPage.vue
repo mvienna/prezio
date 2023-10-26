@@ -458,7 +458,7 @@ const connectToRoomChannels = () => {
       },
     });
 
-    window.Echo.join(`public.room.${room.value.id}`)
+    window.Echo.join(`presence.room.${room.value.id}`)
       .here((users) => {
         participantsCount.value = users.length;
       })
