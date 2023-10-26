@@ -29,6 +29,7 @@ export const useCanvasStore = defineStore("canvas", {
     },
 
     scale: 1,
+    ZOOM_OPTIONS: [0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3],
     minZoom: 0.5,
     maxZoom: 4,
     sensitivity: 0.05,

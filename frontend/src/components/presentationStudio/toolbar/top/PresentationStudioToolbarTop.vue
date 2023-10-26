@@ -1,125 +1,173 @@
 <template>
-  <div
-    v-if="slide?.type === SLIDE_TYPES.CONTENT"
-    class="presentation_toolbar__top bg-white q-pa-md row no-wrap"
-  >
-    <template
-      v-if="
-        mode && ![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode)
-      "
-    >
-      <q-btn
-        icon="r_close"
-        unelevated
-        text-color="dark"
-        round
-        size="12px"
-        @click="$emit('switchMode', null)"
-      />
-
-      <q-separator vertical class="q-mx-sm" />
-    </template>
-
-    <template v-else>
-      <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
+  <div class="presentation_toolbar__top bg-white q-pa-md row no-wrap">
+    <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
+      <template
+        v-if="
+          mode && ![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode)
+        "
+      >
         <q-btn
-          icon="r_space_dashboard"
+          icon="r_close"
           unelevated
           text-color="dark"
-          :class="showLayoutsMenu ? 'bg-grey-2' : ''"
           round
           size="12px"
-        >
-          <q-tooltip>
-            {{ $t("presentationStudio.toolbar.layouts.title") }}
-          </q-tooltip>
-
-          <!-- layouts -->
-          <q-menu
-            v-model="showLayoutsMenu"
-            anchor="top left"
-            self="bottom left"
-            transition-show="jump-down"
-            transition-hide="jump-up"
-            :offset="[0, 16]"
-            class="q-pa-md bg-white"
-            max-height="70vh"
-            style="width: 424px"
-          >
-            <PresentationStudioToolbarTopLayouts v-close-popup />
-          </q-menu>
-        </q-btn>
+          @click="$emit('switchMode', null)"
+        />
 
         <q-separator vertical class="q-mx-sm" />
       </template>
 
-      <!-- modes -->
-      <PresentationStudioToolbarTopModes
-        :disabled="slide?.type !== SLIDE_TYPES.CONTENT"
-        @switch-mode="$emit('switchMode', $event)"
-        @add-image="$emit('addImage', $event)"
-        @add-shape="$emit('addShape', $event)"
-      />
+      <template v-else>
+        <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
+          <q-btn
+            icon="r_space_dashboard"
+            unelevated
+            text-color="dark"
+            :class="showLayoutsMenu ? 'bg-grey-2' : ''"
+            round
+            size="12px"
+          >
+            <q-tooltip>
+              {{ $t("presentationStudio.toolbar.layouts.title") }}
+            </q-tooltip>
+
+            <!-- layouts -->
+            <q-menu
+              v-model="showLayoutsMenu"
+              anchor="top left"
+              self="bottom left"
+              transition-show="jump-down"
+              transition-hide="jump-up"
+              :offset="[0, 16]"
+              class="q-pa-md bg-white"
+              max-height="70vh"
+              style="width: 424px"
+            >
+              <PresentationStudioToolbarTopLayouts v-close-popup />
+            </q-menu>
+          </q-btn>
+
+          <q-separator vertical class="q-mx-sm" />
+        </template>
+
+        <!-- modes -->
+        <PresentationStudioToolbarTopModes
+          :disabled="slide?.type !== SLIDE_TYPES.CONTENT"
+          @switch-mode="$emit('switchMode', $event)"
+          @add-image="$emit('addImage', $event)"
+          @add-shape="$emit('addShape', $event)"
+        />
+      </template>
+
+      <!-- modes customization -->
+      <div
+        v-if="showCustomizationMenu"
+        class="row no-wrap items-center q-gutter-sm scroll--hidden"
+        style="width: 100%; overflow-x: scroll"
+      >
+        <!-- drawing customization -->
+        <PresentationStudioToolbarTopCustomizationDrawing
+          v-if="mode === MODE_OPTIONS.drawing"
+        />
+
+        <!-- text customization -->
+        <PresentationStudioToolbarTopCustomizationText
+          v-if="[MODE_OPTIONS.text, MODE_OPTIONS.textEditing].includes(mode)"
+        />
+
+        <!-- shape customization -->
+        <PresentationStudioToolbarTopCustomizationShape
+          v-if="mode === MODE_OPTIONS.shape"
+        />
+      </div>
+
+      <q-space />
+
+      <!-- selected item actions -->
+      <template v-if="copiedElement">
+        <!-- deselect line button -->
+        <q-btn
+          icon="r_paste"
+          unelevated
+          text-color="dark"
+          size="12px"
+          round
+          @click="paste()"
+        >
+          <q-tooltip>
+            <div class="text-center">
+              {{ $t("presentationStudio.elementsContextMenu.paste") }}
+            </div>
+
+            <div
+              v-if="showShortcuts"
+              class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+            >
+              <div v-if="isMac">⌘</div>
+              <div v-else>Ctrl</div>
+              <div>V</div>
+            </div>
+          </q-tooltip>
+        </q-btn>
+      </template>
     </template>
 
-    <!-- modes customization -->
-    <div
-      v-if="showCustomizationMenu"
-      class="row no-wrap items-center q-gutter-sm scroll--hidden"
-      style="width: 100%; overflow-x: scroll"
-    >
-      <!-- drawing customization -->
-      <PresentationStudioToolbarTopCustomizationDrawing
-        v-if="mode === MODE_OPTIONS.drawing"
-      />
+    <template v-else>
+      <q-space />
+    </template>
 
-      <!-- text customization -->
-      <PresentationStudioToolbarTopCustomizationText
-        v-if="[MODE_OPTIONS.text, MODE_OPTIONS.textEditing].includes(mode)"
-      />
-
-      <!-- shape customization -->
-      <PresentationStudioToolbarTopCustomizationShape
-        v-if="mode === MODE_OPTIONS.shape"
-      />
-    </div>
-
-    <q-space />
-
-    <!-- selected item actions -->
-    <template v-if="copiedElement">
-      <!-- deselect line button -->
+    <div class="row no-wrap">
       <q-btn
-        icon="r_paste"
-        unelevated
-        text-color="dark"
-        size="12px"
+        icon="r_zoom_out"
         round
-        @click="paste()"
+        size="12px"
+        unelevated
+        @click="$emit('zoomOut')"
       >
         <q-tooltip>
-          <div class="text-center">
-            {{ $t("presentationStudio.elementsContextMenu.paste") }}
-          </div>
-
-          <div
-            v-if="showShortcuts"
-            class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-          >
-            <div v-if="isMac">⌘</div>
-            <div v-else>Ctrl</div>
-            <div>V</div>
-          </div>
+          {{ $t("presentationStudio.toolbar.zoom.in") }}
         </q-tooltip>
       </q-btn>
-    </template>
-  </div>
 
-  <div
-    v-else
-    class="presentation_toolbar__top bg-white q-pa-md row no-wrap"
-    style="height: 68px"
-  ></div>
+      <q-btn :label="`${Math.round(scale * 100)}%`" unelevated>
+        <q-tooltip>
+          {{ $t("presentationStudio.toolbar.zoom.select") }}
+        </q-tooltip>
+
+        <q-menu
+          anchor="top middle"
+          self="bottom middle"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :offset="[0, 8]"
+          class="q-pa-sm"
+        >
+          <q-item
+            v-for="option in ZOOM_OPTIONS"
+            :key="option"
+            clickable
+            class="items-center justify-center"
+            @click="$emit('zoom', option)"
+          >
+            {{ option * 100 }}%
+          </q-item>
+        </q-menu>
+      </q-btn>
+
+      <q-btn
+        icon="r_zoom_in"
+        round
+        size="12px"
+        unelevated
+        @click="$emit('zoomIn')"
+      >
+        <q-tooltip>
+          {{ $t("presentationStudio.toolbar.zoom.out") }}
+        </q-tooltip>
+      </q-btn>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -150,6 +198,8 @@ const $q = useQuasar();
 const canvasStore = useCanvasStore();
 const {
   mode,
+  scale,
+  ZOOM_OPTIONS,
   MODE_OPTIONS,
   selectedElement,
   selectedElementIndex,
@@ -166,7 +216,14 @@ const { slide } = storeToRefs(presentationsStore);
 /*
  * emits
  */
-defineEmits(["switchMode", "addImage", "addShape"]);
+defineEmits([
+  "switchMode",
+  "addImage",
+  "addShape",
+  "zoomIn",
+  "zoomOut",
+  "zoom",
+]);
 
 /*
  * variables

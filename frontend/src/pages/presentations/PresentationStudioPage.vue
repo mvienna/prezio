@@ -7,6 +7,9 @@
       @delete="selectedElement ? deleteElement() : ''"
       @add-image="mediaStore.addImage($event)"
       @add-shape="shapeStore.addShape($event)"
+      @zoom="canvasStore.handleZoom(null, mouse.x, mouse.y, $event)"
+      @zoomIn="canvasStore.handleZoom(null, mouse.x, mouse.y, scale + 0.25)"
+      @zoomOut="canvasStore.handleZoom(null, mouse.x, mouse.y, scale - 0.25)"
     />
 
     <!-- canvas -->
@@ -55,11 +58,7 @@
     />
 
     <!-- bottom toolbar -->
-    <PresentationStudioToolbarBottom
-      @zoom="canvasStore.handleZoom(null, mouse.x, mouse.y, $event)"
-      @zoomIn="canvasStore.handleZoom(null, mouse.x, mouse.y, scale + 0.25)"
-      @zoomOut="canvasStore.handleZoom(null, mouse.x, mouse.y, scale - 0.25)"
-    />
+    <PresentationStudioToolbarBottom />
   </q-page>
 </template>
 

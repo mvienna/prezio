@@ -4,6 +4,7 @@
     show-if-above
     side="left"
     :width="220"
+    bordered
     class="bg-white q-py-md scroll--hidden"
   >
     <!-- header -->
@@ -40,9 +41,6 @@
             />
           </q-menu>
         </q-btn>
-
-        <!-- import -->
-        <q-btn outline color="primary" no-caps disable icon="r_download" />
       </div>
 
       <q-separator class="q-mt-md" />
@@ -66,8 +64,9 @@
     >
       <template #item="{ element, index }">
         <div
-          class="row no-wrap q-pa-md"
+          class="row no-wrap q-px-md q-py-md"
           :id="`slide_preview_${element.id}`"
+          style="transition: 0.2s"
           :class="element.id === slide.id ? 'bg-blue-1' : ''"
         >
           <div class="column no-wrap q-pr-md">
@@ -127,11 +126,13 @@
               <div class="row justify-center">
                 <q-img
                   :src="`/assets/icons/temp/slideTypes/${element.type}.svg`"
-                  style="width: 48px; height: 48px; background: transparent"
+                  style="width: 36px; height: 36px; background: transparent"
                 />
               </div>
 
-              <div class="text-semibold text-primary">
+              <div
+                class="text-semibold text-primary text-center text-caption text-no-wrap"
+              >
                 {{
                   $t(
                     `presentationLayout.rightDrawer.tabs.types.options.${element.type}`
@@ -253,13 +254,12 @@
     </draggable>
 
     <!-- new slide -->
-    <div class="row no-wrap justify-end q-px-md">
+    <div class="row no-wrap justify-end q-px-md" style="aspect-ratio: 16/9">
       <q-card
         flat
         v-ripple
         color="primary"
-        class="bg-blue-1 relative-position q-py-xl q-mt-md cursor-pointer q-hoverable slide slide--hoverable"
-        style="border: none"
+        class="bg-blue-1 relative-position q-mt-md cursor-pointer q-hoverable slide slide--hoverable"
       >
         <q-icon
           name="r_add"
@@ -595,7 +595,8 @@ watch(
 
   &.slide--hovered,
   &.slide--hoverable:hover {
-    outline: 3px solid $blue-3;
+    border: 1.5px solid $blue-4;
+    outline: 1.5px solid $blue-4;
   }
 
   &:active {
@@ -604,7 +605,7 @@ watch(
 
   &.slide--active {
     border: 1.5px solid $primary;
-    outline: 3px solid $blue-3;
+    outline: 2.5px solid $blue-4;
   }
 }
 

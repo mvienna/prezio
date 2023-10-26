@@ -5,6 +5,7 @@
     side="right"
     class="bg-white scroll--hidden"
     :width="400"
+    bordered
   >
     <q-tabs
       v-model="rightDrawerTab"
