@@ -37,8 +37,8 @@
         />
       </q-tab-panel>
 
-      <!-- content -->
-      <q-tab-panel name="content">
+      <!-- settings -->
+      <q-tab-panel name="settings">
         <PresentationStudioTabsContentTab />
       </q-tab-panel>
 
@@ -80,7 +80,7 @@ import { useCanvasStore } from "stores/canvas";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
-import PresentationStudioTabsContentTab from "components/presentationStudio/tabs/content/PresentationStudioTabsContentTab.vue";
+import PresentationStudioTabsContentTab from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTab.vue";
 
 /*
  * variables
@@ -112,9 +112,9 @@ const rightDrawerTabs = computed(() => {
       label: t("presentationLayout.rightDrawer.tabs.types.title"),
     },
     {
-      name: "content",
+      name: "settings",
       icon: "r_view_in_ar",
-      label: t("presentationLayout.rightDrawer.tabs.content.title"),
+      label: t("presentationLayout.rightDrawer.tabs.settings.title"),
       hidden: ![SLIDE_TYPES.WORD_CLOUD].includes(slide.value?.type),
     },
     {

@@ -222,10 +222,10 @@ export default {
         },
 
         /*
-         * content
+         * settings
          */
-        content: {
-          title: "Контент",
+        settings: {
+          title: "Настройки",
 
           question: {
             title: "Ваш вопрос",

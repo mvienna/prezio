@@ -185,10 +185,10 @@ export default {
         },
 
         /*
-         * content
+         * settings
          */
-        content: {
-          title: "Content",
+        settings: {
+          title: "Настройки",
 
           question: {
             title: "Your Question",

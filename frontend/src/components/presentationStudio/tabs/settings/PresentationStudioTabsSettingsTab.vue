@@ -3,7 +3,7 @@
     <!-- title -->
     <div class="row no-wrap items-center justify-between">
       <div class="text-semibold">
-        {{ $t("presentationLayout.rightDrawer.tabs.content.question.title") }}
+        {{ $t("presentationLayout.rightDrawer.tabs.settings.question.title") }}
       </div>
     </div>
 
@@ -11,7 +11,7 @@
     <q-input
       v-model="question"
       :placeholder="
-        $t('presentationLayout.rightDrawer.tabs.content.question.placeholder')
+        $t('presentationLayout.rightDrawer.tabs.settings.question.placeholder')
       "
       outlined
       dense
@@ -103,7 +103,7 @@
           <div class="q-item__label">
             {{
               $t(
-                "presentationLayout.rightDrawer.tabs.content.question.description.title"
+                "presentationLayout.rightDrawer.tabs.settings.question.description.title"
               )
             }}
           </div>
@@ -112,7 +112,7 @@
             <q-tooltip max-width="300px" class="text-center">
               {{
                 $t(
-                  "presentationLayout.rightDrawer.tabs.content.question.description.caption"
+                  "presentationLayout.rightDrawer.tabs.settings.question.description.caption"
                 )
               }}
             </q-tooltip>
@@ -126,7 +126,7 @@
         v-model="slideSettings.description"
         :placeholder="
           $t(
-            'presentationLayout.rightDrawer.tabs.content.question.description.placeholder'
+            'presentationLayout.rightDrawer.tabs.settings.question.description.placeholder'
           )
         "
         outlined
@@ -143,7 +143,7 @@
       <span>
         {{
           $t(
-            "presentationLayout.rightDrawer.tabs.content.multipleEntries.title"
+            "presentationLayout.rightDrawer.tabs.settings.multipleEntries.title"
           )
         }}
 
@@ -151,7 +151,7 @@
           <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
             {{
               $t(
-                `presentationLayout.rightDrawer.tabs.content.multipleEntries.${
+                `presentationLayout.rightDrawer.tabs.settings.multipleEntries.${
                   slideSettings.isMultipleEntries ? "on" : "off"
                 }`
               )
@@ -175,7 +175,7 @@
       <span>
         {{
           $t(
-            "presentationLayout.rightDrawer.tabs.content.entriesPerParticipant.title"
+            "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.title"
           )
         }}
 
@@ -183,7 +183,7 @@
           <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
             {{
               $t(
-                "presentationLayout.rightDrawer.tabs.content.entriesPerParticipant.description"
+                "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.description"
               )
             }}
           </q-tooltip>
@@ -211,13 +211,13 @@
     <!-- time limit -->
     <div class="row no-wrap items-center justify-between text-semibold">
       <span>
-        {{ $t("presentationLayout.rightDrawer.tabs.content.timeLimit.title") }}
+        {{ $t("presentationLayout.rightDrawer.tabs.settings.timeLimit.title") }}
 
         <q-icon name="r_info" class="q-ml-xs" color="grey-8">
           <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
             {{
               $t(
-                "presentationLayout.rightDrawer.tabs.content.timeLimit.description"
+                "presentationLayout.rightDrawer.tabs.settings.timeLimit.description"
               )
             }}
           </q-tooltip>
@@ -253,7 +253,7 @@
             <div class="text-caption">
               {{
                 $t(
-                  "presentationLayout.rightDrawer.tabs.content.timeLimit.seconds"
+                  "presentationLayout.rightDrawer.tabs.settings.timeLimit.seconds"
                 )
               }}
             </div>
@@ -266,14 +266,16 @@
     <div class="row no-wrap items-center justify-between text-semibold">
       <span>
         {{
-          $t("presentationLayout.rightDrawer.tabs.content.lockSubmission.title")
+          $t(
+            "presentationLayout.rightDrawer.tabs.settings.lockSubmission.title"
+          )
         }}
 
         <q-icon name="r_info" class="q-ml-xs" color="grey-8">
           <q-tooltip class="text-center" max-width="330px" :offset="[0, 8]">
             {{
               $t(
-                "presentationLayout.rightDrawer.tabs.content.lockSubmission.description"
+                "presentationLayout.rightDrawer.tabs.settings.lockSubmission.description"
               )
             }}
           </q-tooltip>
@@ -291,14 +293,14 @@
     <div class="row no-wrap items-center justify-between text-semibold">
       <span>
         {{
-          $t("presentationLayout.rightDrawer.tabs.content.hideResults.title")
+          $t("presentationLayout.rightDrawer.tabs.settings.hideResults.title")
         }}
 
         <q-icon name="r_info" class="q-ml-xs" color="grey-8">
           <q-tooltip class="text-center" max-width="320px" :offset="[0, 8]">
             {{
               $t(
-                "presentationLayout.rightDrawer.tabs.content.hideResults.description"
+                "presentationLayout.rightDrawer.tabs.settings.hideResults.description"
               )
             }}
           </q-tooltip>
@@ -318,7 +320,7 @@
             <q-tooltip class="text-center" :offset="[0, 8]">
               {{
                 $t(
-                  "presentationLayout.rightDrawer.tabs.content.hideResults.applyToAllQuestions"
+                  "presentationLayout.rightDrawer.tabs.settings.hideResults.applyToAllQuestions"
                 )
               }}
             </q-tooltip>
@@ -503,7 +505,7 @@ const entriesPerParticipantRules = [
   (val) =>
     isEntriesPerParticipantValid(val) ||
     t(
-      "presentationLayout.rightDrawer.tabs.content.entriesPerParticipant.invalid"
+      "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.invalid"
     ),
 ];
 
@@ -514,7 +516,7 @@ const isTimeLimitValid = (val) => {
 const timeLimitRules = [
   (val) =>
     isTimeLimitValid(val) ||
-    t("presentationLayout.rightDrawer.tabs.content.timeLimit.invalid"),
+    t("presentationLayout.rightDrawer.tabs.settings.timeLimit.invalid"),
 ];
 </script>
 
