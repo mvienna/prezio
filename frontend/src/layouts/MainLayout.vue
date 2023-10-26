@@ -47,6 +47,7 @@
 
         <!-- notifications -->
         <q-btn
+          v-if="false"
           text-color="grey-5"
           unelevated
           no-caps
@@ -59,6 +60,7 @@
 
         <!-- go premium -->
         <q-btn
+          v-if="false"
           color="black"
           unelevated
           no-caps
@@ -81,43 +83,63 @@
       :width="260"
       class="q-px-sm"
     >
-      <!-- logo -->
-      <div class="drawer__logo q-ma-lg">
-        <router-link :to="ROUTE_PATHS.INDEX">
-          <q-img src="/logo_with_title_black.png" />
-        </router-link>
-      </div>
+      <q-list class="column no-wrap full-height">
+        <!-- logo -->
+        <div class="drawer__logo q-ma-lg">
+          <router-link :to="ROUTE_PATHS.INDEX">
+            <q-img src="/logo_with_title_black.png" />
+          </router-link>
+        </div>
 
-      <!-- links -->
-      <div class="column q-pa-sm">
-        <q-item
-          v-for="item in drawerLinks"
-          :key="item.name"
-          :to="item.link"
-          dense
-          :disable="item.disable"
-          class="items-center justify-start q-py-md"
-          style="border-radius: 8px"
-        >
-          <q-icon
-            :name="item.icon"
-            class="q-mr-sm text-semibold"
-            :class="
-              item.link === router.currentRoute.value.path ? 'text-primary' : ''
-            "
-            size="24px"
-          />
-          <div
-            :class="
-              item.link === router.currentRoute.value.path
-                ? 'text-semibold'
-                : ''
-            "
+        <div class="column no-wrap q-pa-sm" style="height: 100%">
+          <!-- links -->
+          <q-item
+            v-for="item in drawerLinks"
+            :key="item.name"
+            :to="item.link"
+            dense
+            :disable="item.disable"
+            class="items-center justify-start q-py-md"
+            style="border-radius: 8px"
           >
-            {{ item.label }}
+            <q-icon
+              :name="item.icon"
+              class="q-mr-sm text-semibold"
+              :class="
+                item.link === router.currentRoute.value.path
+                  ? 'text-primary'
+                  : ''
+              "
+              size="24px"
+            />
+            <div
+              :class="
+                item.link === router.currentRoute.value.path
+                  ? 'text-semibold'
+                  : ''
+              "
+            >
+              {{ item.label }}
+            </div>
+          </q-item>
+
+          <q-space />
+
+          <div class="text-italic text-grey-5 text-right q-pr-sm q-py-sm">
+            beta
+            <q-chip
+              color="grey-2"
+              text-color="grey"
+              dense
+              class="q-px-sm text-semibold"
+              clickable
+              @click="copyToClipboard(VERSION)"
+            >
+              {{ VERSION }}
+            </q-chip>
           </div>
-        </q-item>
-      </div>
+        </div>
+      </q-list>
     </q-drawer>
 
     <q-page-container>
@@ -136,7 +158,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { api } from "boot/axios";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
-import { useQuasar } from "quasar";
+import { copyToClipboard, useQuasar } from "quasar";
 
 /*
  * variables
@@ -218,6 +240,11 @@ const handleRoomSearch = () => {
       });
     });
 };
+
+/*
+ * assembly version
+ */
+const VERSION = process.env.VERSION?.substring(0, 7)?.replaceAll('"', "");
 </script>
 
 <style scoped lang="scss">

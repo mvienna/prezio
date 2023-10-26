@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh Lpr lff">
+  <q-layout view="lHh Lpr lFf">
     <!-- header -->
     <q-header class="bg-white q-pa-sm" elevated>
       <q-toolbar>
@@ -18,6 +18,7 @@
 
         <!-- notifications -->
         <q-btn
+          v-if="false"
           text-color="grey-5"
           unelevated
           no-caps
@@ -30,6 +31,7 @@
 
         <!-- go premium -->
         <q-btn
+          v-if="false"
           color="black"
           unelevated
           no-caps
@@ -49,50 +51,60 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      class="q-px-sm q-pt-sm"
+      class="q-px-sm"
       :width="260"
     >
-      <q-list class="full-height column">
-        <!-- user links -->
-        <q-item
-          v-for="item in links"
-          :key="item.name"
-          :to="item.link"
-          class="items-center justify-start q-px-lg q-py-md"
-        >
-          <q-icon
-            :name="item.icon"
-            class="q-mr-sm"
-            :class="
-              item.link !== router.currentRoute.value.path ? 'text-grey-5' : ''
-            "
-            size="20px"
-            style="transition: 0.2s"
-          />
-          <div
-            :class="
-              item.link === router.currentRoute.value.path
-                ? 'text-black text-semibold'
-                : 'text-dark'
-            "
-            style="transition: 0.2s"
+      <q-list class="column no-wrap full-height">
+        <!-- logo -->
+        <div class="drawer__logo q-ma-lg">
+          <router-link :to="ROUTE_PATHS.INDEX">
+            <q-img src="/logo_with_title_black.png" />
+          </router-link>
+        </div>
+
+        <div class="column no-wrap q-pa-sm" style="height: 100%">
+          <!-- user links -->
+          <q-item
+            v-for="item in links"
+            :key="item.name"
+            :to="item.link"
+            :disable="item.disable"
+            class="items-center justify-start q-py-md"
           >
-            {{ item.label }}
-          </div>
-        </q-item>
+            <q-icon
+              :name="item.icon"
+              class="q-mr-sm text-semibold"
+              :class="
+                item.link !== router.currentRoute.value.path
+                  ? 'text-primary'
+                  : ''
+              "
+              size="24px"
+            />
+            <div
+              :class="
+                item.link === router.currentRoute.value.path
+                  ? 'text-semibold'
+                  : ''
+              "
+            >
+              {{ item.label }}
+            </div>
+          </q-item>
 
-        <q-space />
+          <q-space />
 
-        <!-- logout -->
-        <q-item
-          :to="ROUTE_PATHS.AUTH.LOGOUT"
-          class="items-center justify-start q-px-lg q-py-sm text-red"
-        >
-          <q-icon name="r_logout" class="q-mr-sm" size="20px" />
-          <div>
-            {{ $t("userLayout.drawer.links.logout") }}
-          </div>
-        </q-item>
+          <!-- logout -->
+          <q-item
+            :to="ROUTE_PATHS.AUTH.LOGOUT"
+            class="items-center justify-start q-py-md q-mb-sm text-red"
+          >
+            <q-icon name="r_logout" class="q-mr-sm" size="24px" />
+            <div>
+              {{ $t("userLayout.drawer.links.logout") }}
+            </div>
+          </q-item>
+        </div>
       </q-list>
     </q-drawer>
 
@@ -143,13 +155,21 @@ const links = ref([
     name: "my_plan",
     label: t("userLayout.drawer.links.myPlan"),
     icon: "r_track_changes",
-    link: ROUTE_PATHS.USER.MY_PLAN,
+    link: "/",
+    disable: true,
   },
   {
     name: "payments",
     label: t("userLayout.drawer.links.payments"),
     icon: "r_wallet",
-    link: ROUTE_PATHS.USER.PAYMENTS,
+    link: "/",
+    disable: true,
   },
 ]);
 </script>
+
+<style scoped lang="scss">
+.drawer__logo {
+  width: 112px;
+}
+</style>

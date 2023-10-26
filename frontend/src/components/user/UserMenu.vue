@@ -26,6 +26,7 @@
         transition-hide="jump-up"
         :offset="[0, 8]"
         class="q-pa-sm"
+        style="border-radius: 12px"
         fit
       >
         <div class="column q-gutter-sm">
@@ -34,6 +35,7 @@
             :key="item.name"
             :to="item.link"
             dense
+            :disable="item.disable"
             class="items-center text-semibold justify-start rounded-borders q-px-lg q-py-sm"
             :class="
               item.name ===
@@ -63,10 +65,6 @@
             </div>
           </q-item>
         </div>
-
-        <!--        <div class="text-italic text-grey-5 text-right q-pr-sm q-py-sm">-->
-        <!--          v{{ VERSION }}-->
-        <!--        </div>-->
       </q-menu>
     </template>
   </q-btn>
@@ -105,13 +103,15 @@ const userMenuLinks = ref([
     name: "my_plan",
     label: t("mainLayout.header.userMenuLinks.myPlan"),
     icon: "r_track_changes",
-    link: ROUTE_PATHS.USER.MY_PLAN,
+    link: "/",
+    disable: true,
   },
   {
     name: "payments",
     label: t("mainLayout.header.userMenuLinks.payments"),
     icon: "r_wallet",
-    link: ROUTE_PATHS.USER.PAYMENTS,
+    link: "/",
+    disable: true,
   },
   {
     name: "logout",
@@ -120,11 +120,6 @@ const userMenuLinks = ref([
     link: ROUTE_PATHS.AUTH.LOGOUT,
   },
 ]);
-
-/*
- * assembly version
- */
-const VERSION = process.env.VERSION?.substring(0, 7)?.replaceAll('"', "");
 </script>
 
 <style scoped lang="scss">

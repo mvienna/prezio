@@ -16,8 +16,6 @@ export const ROUTE_PATHS = {
 
   USER: {
     PROFILE: "/user/profile",
-    MY_PLAN: "/user/my-plan",
-    PAYMENTS: "/user/payments",
   },
 
   PRESENTATIONS_BROWSER: "/presentations",

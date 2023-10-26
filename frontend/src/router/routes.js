@@ -63,14 +63,6 @@ const routes = [
         path: ROUTE_PATHS.USER.PROFILE,
         component: () => import("pages/user/ProfilePage.vue"),
       },
-      {
-        path: ROUTE_PATHS.USER.MY_PLAN,
-        component: () => import("pages/user/MyPlanPage.vue"),
-      },
-      {
-        path: ROUTE_PATHS.USER.PAYMENTS,
-        component: () => import("pages/user/PaymentsPage.vue"),
-      },
     ],
   },
 
