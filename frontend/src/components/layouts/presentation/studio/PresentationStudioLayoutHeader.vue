@@ -154,24 +154,24 @@
               style="height: calc(100vh - 24px - 66px - 24px); margin-top: 66px"
             />
           </q-dialog>
-
-          <!-- preview -->
-          <q-btn
-            color="primary"
-            outline
-            no-caps
-            no-wrap
-            :label="$t('presentationLayout.header.preview')"
-            class="text-semibold"
-            @click="isPresentationPreview = true"
-          />
-
-          <q-dialog v-model="isPresentationPreview">
-            <PresentationStudioPreviewPresentation
-              @cancel="isPresentationPreview = false"
-            />
-          </q-dialog>
         </div>
+
+        <!-- preview -->
+        <q-btn
+          color="primary"
+          outline
+          no-caps
+          no-wrap
+          :label="$t('presentationLayout.header.preview')"
+          class="text-semibold q-ml-sm"
+          @click="isPresentationPreview = true"
+        />
+
+        <q-dialog v-model="isPresentationPreview">
+          <PresentationStudioPreviewPresentation
+            @cancel="isPresentationPreview = false"
+          />
+        </q-dialog>
 
         <!-- room -->
         <q-btn-dropdown
