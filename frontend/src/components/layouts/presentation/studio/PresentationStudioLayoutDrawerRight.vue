@@ -150,8 +150,12 @@ const rightDrawerTab = ref(rightDrawerTabs.value[0].name);
 watch(
   () => slide.value,
   () => {
-    if (slide.value?.type && slide.value.type !== SLIDE_TYPES.CONTENT) {
-      rightDrawerTab.value = rightDrawerTabs.value[1].name;
+    if (slide.value?.type) {
+      if (slide.value.type === SLIDE_TYPES.CONTENT) {
+        rightDrawerTab.value = rightDrawerTabs.value[0].name;
+      } else {
+        rightDrawerTab.value = rightDrawerTabs.value[1].name;
+      }
     }
   }
 );
