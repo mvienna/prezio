@@ -51,7 +51,7 @@
       <!-- token -->
       <div>
         {{ $t("presentationRoom.invitationPanel.otherOption.id") }}:
-        <span class="text-white text-semibold cursor-pointer">
+        <span class="text-white text-semibold cursor-pointer text-uppercase">
           {{ room?.token }}
         </span>
       </div>

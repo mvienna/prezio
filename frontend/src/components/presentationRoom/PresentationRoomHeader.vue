@@ -85,7 +85,7 @@
         <!-- link -->
         <div
           class="ellipsis room_link"
-          style="max-width: 550px; font-size: 1.25em"
+          style="font-size: 1.25em"
           @click="copyRoomLinkToClipboard()"
         >
           <span v-if="!$q.screen.lt.sm" class="text-grey-4 q-mr-xs">
@@ -93,7 +93,9 @@
           </span>
 
           <span class="text-semibold">
-            {{ roomLink }}
+            {{ host }}/room/<b class="text-uppercase">
+              {{ router.currentRoute.value.params.token }}
+            </b>
           </span>
 
           <q-tooltip :offset="[0, 0]">
@@ -160,7 +162,7 @@ import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { useQuasar } from "quasar";
+import { copyToClipboard, useQuasar } from "quasar";
 
 /*
  * variables
@@ -195,6 +197,7 @@ const { room, presentation, showRoomInvitationPanel } =
 /*
  * room link
  */
+const host = window.location.hostname;
 const roomLink = computed(() => {
   return `${window.location.hostname}/room/${router.currentRoute.value.params.token}`;
 });
@@ -205,18 +208,12 @@ const copiedTimeout = ref();
 const copyRoomLinkToClipboard = () => {
   clearTimeout(copiedTimeout.value);
 
-  navigator.clipboard
-    .writeText(window.location)
-    .then(() => {
-      isCopied.value = true;
+  copyToClipboard(roomLink.value);
+  isCopied.value = true;
 
-      copiedTimeout.value = setTimeout(() => {
-        isCopied.value = false;
-      }, 3000);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  copiedTimeout.value = setTimeout(() => {
+    isCopied.value = false;
+  }, 3000);
 };
 </script>
 

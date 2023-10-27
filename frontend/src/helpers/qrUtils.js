@@ -1,8 +1,8 @@
 import QRCodeStyling from "qr-code-styling";
 
 export const generateQrCode = (
-  width = 236,
-  height = 236,
+  width = 225,
+  height = 225,
   data = window.location.href,
   image = window.location.origin + "/logo_white.png",
   backgroundColor = "#1F1F29",
