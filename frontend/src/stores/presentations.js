@@ -66,8 +66,23 @@ export const usePresentationsStore = defineStore("presentations", {
 
   actions: {
     /*
-     * folders
+     * FOLDERS API
      */
+    fetchFolders() {
+      this.isLoading.fetchingFolders = true;
+      api
+        .get("/folders")
+        .then((response) => {
+          this.folders = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.isLoading.fetchingFolders = false;
+        });
+    },
+
     async createNewFolder(data) {
       this.isLoading.creatingFolder = true;
 
@@ -125,7 +140,7 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     /*
-     * presentations
+     * PRESENTATIONS API
      */
     fetchPresentations(props = null) {
       const { page, rowsPerPage, sortBy, descending } =
@@ -164,23 +179,8 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    fetchFolders() {
-      this.isLoading.fetchingFolders = true;
-      api
-        .get("/folders")
-        .then((response) => {
-          this.folders = response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          this.isLoading.fetchingFolders = false;
-        });
-    },
-
     /*
-     * presentation
+     * PRESENTATION API
      */
     async fetchPresentationData(id) {
       return await api
@@ -247,8 +247,16 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     /*
-     * slides
+     * SLIDES API
      */
+    async fetchSlideData(slideId = this.slide.id) {
+      return await api
+        .get(`/presentation/${this.presentation.id}/slide/${slideId}`)
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
     async addNewSlide(elements = null, type) {
       const slideIndex = this.presentation.slides.findIndex(
         (item) => item.id === this.slide.id
@@ -331,7 +339,7 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     /*
-     * slide - local
+     * SLIDE - LOCAL
      */
     async setSlide(newSlide, elements = null, saveSlide = true) {
       if (!newSlide || this.slide?.id === newSlide.id) return;
@@ -384,6 +392,8 @@ export const usePresentationsStore = defineStore("presentations", {
       room_id = this.room?.id,
       slide_id = this.slide?.id
     ) {
+      if (!presentation_id || !room_id || !slide_id) return;
+
       return await api
         .patch(`/presentation/${presentation_id}/room/${room_id}`, {
           slide_id: slide_id,

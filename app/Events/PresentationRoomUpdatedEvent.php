@@ -32,7 +32,6 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
     {
         return [
             'slide_id' => $this->slide->id,
-            'settings_data' => $this->slide->settings_data,
         ];
     }
 }

@@ -63,7 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/presentation', PresentationController::class)->only(['store', 'update', 'destroy', 'show']);
     Route::get('/presentations', [PresentationController::class, 'get']);
 
-    Route::resource('/presentation/{presentation}/slide', PresentationSlideController::class)->only(['store', 'update', 'destroy']);
+    Route::resource('/presentation/{presentation}/slide', PresentationSlideController::class)->only(['store', 'update', 'destroy', 'show']);
     Route::patch('/presentation/{presentation}/slides', [PresentationSlideController::class, 'updateSlides']);
 
     Route::resource('/slide-template', PresentationSlideTemplateController::class)->only(['store', 'update', 'destroy']);

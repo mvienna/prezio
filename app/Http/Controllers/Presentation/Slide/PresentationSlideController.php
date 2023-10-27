@@ -57,6 +57,11 @@ class PresentationSlideController extends Controller
             'last_slide_id' => $request->last_slide_id
         ]);
 
+        $presentation->load('room');
+        if ($presentation->room && $slide->id === $presentation->room->slide_id) {
+            event(new PresentationRoomUpdatedEvent($presentation->room, $slide));
+        }
+
         return $this->successResponse();
     }
 
@@ -115,5 +120,11 @@ class PresentationSlideController extends Controller
 
         $slide->delete();
         return $this->successResponse();
+    }
+
+    public function show(Presentation $presentation, PresentationSlide $slide): JsonResponse
+    {
+        $slide->load('template', 'answers');
+        return $this->jsonResponse($slide->toArray());
     }
 }

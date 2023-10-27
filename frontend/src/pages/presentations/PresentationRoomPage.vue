@@ -476,24 +476,16 @@ const connectToRoomChannels = () => {
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
     if (!isHost.value && presentation.value?.is_private) return;
 
-    if (event.slide_id !== slide.value.id) {
-      /*
-       * TODO: request slide data from api instead of using the old data
-       */
-      const newSlide = presentation.value.slides.find(
-        (item) => item.id === event.slide_id
-      );
+    const newSlide = await presentationsStore.fetchSlideData(event.slide_id);
 
-      await presentationsStore.setSlide({
-        ...newSlide,
-        settings_data: event.settings_data,
-      });
-      await canvasStore.setElementsFromSlide();
-      canvasStore.redrawCanvas(false, false, undefined, false);
-    } else {
-      slideSettings.value = JSON.parse(event.settings_data);
-      presentationsStore.updateLocalSlide();
-    }
+    slide.value = newSlide.data;
+    slideSettings.value = slide.value.settings_data
+      ? JSON.parse(slide.value.settings_data)
+      : {};
+    presentationsStore.updateLocalSlide();
+
+    await canvasStore.setElementsFromSlide();
+    canvasStore.redrawCanvas(false, false, undefined, false);
   });
 
   /*
