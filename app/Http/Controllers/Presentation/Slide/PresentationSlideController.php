@@ -99,24 +99,19 @@ class PresentationSlideController extends Controller
             return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
-        $slide->load('template');
-        if ($slide->template) {
-            $slide->template->delete();
-        }
+        $slide->template()->delete();
+        $slide->answers()->delete();
 
-        $presentation->load('settings');
+        $presentation->load('settings', 'room');
         if ($presentation->settings?->last_slide_id === $slide->id) {
             $presentation->settings()->update([
                 'last_slide_id' => null
             ]);
         }
 
-        $room = PresentationRoom::where('slide_id', $slide->id)->whereNull('terminated_at')->first();
-        if ($room) {
-            $room->update([
-                'slide_id' => null,
-            ]);
-        }
+        PresentationRoom::where('slide_id', $slide->id)->update([
+            'slide_id' => null,
+        ]);
 
         $slide->delete();
         return $this->successResponse();
