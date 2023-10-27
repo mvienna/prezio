@@ -114,6 +114,52 @@
     </template>
 
     <template v-else>
+      <q-btn
+        outline
+        color="grey"
+        :label="$t('presentationStudio.toolbar.resetResults.title')"
+        icon="r_restart_alt"
+        no-caps
+        @click="showResetResultsConfirmationDialog = true"
+      />
+
+      <q-dialog v-model="showResetResultsConfirmationDialog">
+        <ConfirmationDialog
+          icon="r_restart_alt"
+          icon-color="primary"
+          :title="
+            $t('presentationStudio.toolbar.resetResults.confirmation.title')
+          "
+          :message="
+            $t('presentationStudio.toolbar.resetResults.confirmation.message')
+          "
+          confirm-btn-color="red"
+          @cancel="showResetResultsConfirmationDialog = false"
+          @confirm="
+            showResetResultsConfirmationDialog = false;
+            handleResettingResults();
+          "
+        >
+          <template #default>
+            <q-toggle
+              v-model="isResetPresentation"
+              :label="
+                isResetPresentation
+                  ? $t(
+                      'presentationStudio.toolbar.resetResults.options.resetPresentation'
+                    )
+                  : $t(
+                      'presentationStudio.toolbar.resetResults.options.resetSlide'
+                    )
+              "
+              color="primary"
+              left-label
+              class="q-mb-lg full-width justify-between"
+            />
+          </template>
+        </ConfirmationDialog>
+      </q-dialog>
+
       <q-space />
     </template>
 
@@ -186,6 +232,8 @@ import PresentationStudioToolbarTopLayouts from "components/presentationStudio/t
 import { useQuasar } from "quasar";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
+import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
+import { api } from "boot/axios";
 
 /*
  * variables
@@ -211,7 +259,7 @@ const textStore = useCanvasTextStore();
 const shapeStore = useCanvasShapeStore();
 
 const presentationsStore = usePresentationsStore();
-const { slide } = storeToRefs(presentationsStore);
+const { presentation, slide } = storeToRefs(presentationsStore);
 
 /*
  * emits
@@ -226,7 +274,7 @@ defineEmits([
 ]);
 
 /*
- * variables
+ * display variables
  */
 const showLayoutsMenu = ref(false);
 
@@ -241,6 +289,56 @@ const showCustomizationMenu = computed(() => {
     ].includes(mode.value)
   );
 });
+
+/*
+ * reset results
+ */
+const showResetResultsConfirmationDialog = ref(false);
+const isResetPresentation = ref(true);
+
+const handleResettingResults = () => {
+  if (isResetPresentation.value) {
+    api
+      .delete(`/presentation/${presentation.value.id}/answers`)
+      .then(() => {
+        presentation.value.slides = presentation.value.slides.map((item) => {
+          item.answers = [];
+          return item;
+        });
+
+        slide.value.answers = [];
+      })
+      .catch((error) => {
+        console.log(error);
+
+        if (error.response?.data?.message) {
+          $q.notify({
+            message: error.response.data.message,
+            color: "red",
+            icon: "r_crisis_alert",
+          });
+        }
+      });
+  } else {
+    api
+      .delete(`/presentation/slide/${slide.value.id}/answers`)
+      .then(() => {
+        slide.value.answers = [];
+        presentationsStore.updateLocalSlide();
+      })
+      .catch((error) => {
+        console.log(error);
+
+        if (error.response?.data?.message) {
+          $q.notify({
+            message: error.response.data.message,
+            color: "red",
+            icon: "r_crisis_alert",
+          });
+        }
+      });
+  }
+};
 
 /*
  * handle element selection - apply customization styles

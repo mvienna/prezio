@@ -74,6 +74,22 @@ export default {
         select: "Выбрать масштабирование",
       },
 
+      // reset results
+      resetResults: {
+        title: "Сбросить результаты",
+
+        confirmation: {
+          title: "Сбросить результаты?",
+          message:
+            "Вы уверены, что хотите сбросить результаты (ответы), полученные от участников ранее?",
+        },
+
+        options: {
+          resetPresentation: "Сбросить всю презентацию",
+          resetSlide: "Сбросить этот слайд",
+        },
+      },
+
       // layouts
       layouts: {
         title: "Макет",

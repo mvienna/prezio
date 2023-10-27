@@ -74,6 +74,22 @@ export default {
         select: "Select Zoom",
       },
 
+      // reset results
+      resetResults: {
+        title: "Reset results",
+
+        confirmation: {
+          title: "Reset results?",
+          message:
+            "Are you sure you want to reset results (submissions), received from participants before?",
+        },
+
+        options: {
+          resetPresentation: "Reset the whole presentation",
+          resetSlide: "Reset only this slide",
+        },
+      },
+
       // layouts
       layouts: {
         title: "Layout",

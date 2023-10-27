@@ -153,7 +153,7 @@
             />
 
             <!-- participant answer form -->
-            <PresentationRoomAnswerForm
+            <PresentationRoomSubmissionForm
               v-if="!isHost && slide?.type !== SLIDE_TYPES.CONTENT"
               :text-color="
                 averageRoomBackgroundBrightness >=
@@ -229,7 +229,7 @@ import Echo from "laravel-echo";
 import { randomNames } from "src/constants/mock";
 import { useI18n } from "vue-i18n";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
-import PresentationRoomAnswerForm from "components/presentationRoom/PresentationRoomAnswerForm.vue";
+import PresentationRoomSubmissionForm from "components/presentationRoom/PresentationRoomSubmissionForm.vue";
 import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
 
 /*

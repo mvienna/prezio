@@ -63,9 +63,11 @@ const { slide, slideSettings, isPresentationPreview } =
  * slide answers
  */
 const slideAnswers = computed(() => {
-  return slide.value?.answers?.map((item) => {
-    return JSON.parse(item.answer_data).text;
-  });
+  return (
+    slide.value?.answers?.map((item) => {
+      return JSON.parse(item.answer_data).text;
+    }) || []
+  );
 });
 
 const handleRemovingAnswer = (text) => {

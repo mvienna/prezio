@@ -22,9 +22,12 @@
       <div class="text-h6 text-bold text-center q-mt-lg">{{ title }}</div>
 
       <!-- message -->
-      <div class="text-h7 q-mt-sm text-center">{{ message }}</div>
+      <div class="text-h7 q-mt-sm text-center q-mb-lg" v-html="message"></div>
 
-      <div class="row no-wrap q-gutter-lg q-mt-sm">
+      <!-- slot -->
+      <slot name="default" />
+
+      <div class="row no-wrap q-gutter-lg">
         <!-- cancel -->
         <q-btn
           outline
