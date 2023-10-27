@@ -234,7 +234,15 @@ export default {
             title: "Hide Answers",
             description:
               "Hide participant answers while voting is still in progress. This helps prevent bias in voting.",
-            applyToAllQuestions: "Apply to all questions in the presentation",
+          },
+
+          applyToAllQuestions: {
+            title: "Apply to all questions",
+            confirmation: {
+              title: "Apply to all questions?",
+              message:
+                "Are you sure you want to apply the following settings to all the questions in this presentation?",
+            },
           },
         },
 

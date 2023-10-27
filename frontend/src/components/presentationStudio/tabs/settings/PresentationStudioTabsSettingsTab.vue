@@ -141,6 +141,12 @@
 
     <div class="row no-wrap items-center justify-between text-semibold">
       <span>
+        <q-icon
+          v-if="isApplySettingsToAllQuestionsHovered"
+          name="r_east"
+          color="primary"
+        />
+
         {{
           $t(
             "presentationLayout.rightDrawer.tabs.settings.multipleEntries.title"
@@ -211,6 +217,12 @@
     <!-- time limit -->
     <div class="row no-wrap items-center justify-between text-semibold">
       <span>
+        <q-icon
+          v-if="isApplySettingsToAllQuestionsHovered"
+          name="r_east"
+          color="primary"
+        />
+
         {{ $t("presentationLayout.rightDrawer.tabs.settings.timeLimit.title") }}
 
         <q-icon name="r_info" class="q-ml-xs" color="grey-8">
@@ -265,6 +277,12 @@
     <!-- lock submission -->
     <div class="row no-wrap items-center justify-between text-semibold">
       <span>
+        <q-icon
+          v-if="isApplySettingsToAllQuestionsHovered"
+          name="r_east"
+          color="primary"
+        />
+
         {{
           $t(
             "presentationLayout.rightDrawer.tabs.settings.lockSubmission.title"
@@ -292,6 +310,12 @@
     <!-- hide results -->
     <div class="row no-wrap items-center justify-between text-semibold">
       <span>
+        <q-icon
+          v-if="isApplySettingsToAllQuestionsHovered"
+          name="r_east"
+          color="primary"
+        />
+
         {{
           $t("presentationLayout.rightDrawer.tabs.settings.hideResults.title")
         }}
@@ -307,33 +331,123 @@
         </q-icon>
       </span>
 
-      <div class="row no-wrap">
-        <div class="column justify-center">
-          <q-btn
-            outline
-            color="grey"
-            icon="r_call_missed_outgoing"
-            round
-            disable
-            size="sm"
-          >
-            <q-tooltip class="text-center" :offset="[0, 8]">
-              {{
-                $t(
-                  "presentationLayout.rightDrawer.tabs.settings.hideResults.applyToAllQuestions"
-                )
-              }}
-            </q-tooltip>
-          </q-btn>
-        </div>
-
-        <q-toggle
-          v-model="slideSettings.isResultsHidden"
-          color="primary"
-          @update:model-value="handleSlideSettingsUpdate()"
-        />
-      </div>
+      <q-toggle
+        v-model="slideSettings.isResultsHidden"
+        color="primary"
+        @update:model-value="handleSlideSettingsUpdate()"
+      />
     </div>
+
+    <q-separator class="q-my-md" />
+
+    <!-- apply to all questions -->
+    <q-btn
+      unelevated
+      color="primary"
+      icon-right="r_move_down"
+      :label="
+        $t(
+          'presentationLayout.rightDrawer.tabs.settings.applyToAllQuestions.title'
+        )
+      "
+      no-caps
+      class="full-width q-py-sm"
+      @mouseover="isApplySettingsToAllQuestionsHovered = true"
+      @mouseleave="isApplySettingsToAllQuestionsHovered = false"
+      @click="showApplySettingsToAllQuestionsDialog = true"
+    />
+
+    <q-dialog v-model="showApplySettingsToAllQuestionsDialog">
+      <ConfirmationDialog
+        icon="r_move_down"
+        icon-color="primary"
+        :title="
+          $t(
+            'presentationLayout.rightDrawer.tabs.settings.applyToAllQuestions.confirmation.title'
+          )
+        "
+        :message="
+          $t(
+            'presentationLayout.rightDrawer.tabs.settings.applyToAllQuestions.confirmation.message'
+          )
+        "
+        confirm-btn-color="primary"
+        @cancel="showApplySettingsToAllQuestionsDialog = false"
+        @confirm="
+          applySettingsToAllQuestions();
+          showApplySettingsToAllQuestionsDialog = false;
+        "
+      >
+        <template #default>
+          <div class="column no-wrap q-pb-lg">
+            <!-- multiple entries -->
+            <q-toggle
+              v-model="settingsToApplyToAllQuestions.isMultipleEntries"
+              :label="
+                $t(
+                  'presentationLayout.rightDrawer.tabs.settings.multipleEntries.title'
+                )
+              "
+              color="primary"
+              left-label
+              class="full-width justify-between"
+            />
+
+            <!-- entries per participant -->
+            <q-toggle
+              v-model="settingsToApplyToAllQuestions.entriesPerParticipant"
+              :label="
+                $t(
+                  'presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.title'
+                )
+              "
+              color="primary"
+              left-label
+              class="full-width justify-between"
+            />
+
+            <!-- limit time -->
+            <q-toggle
+              v-model="settingsToApplyToAllQuestions.isLimitedTime"
+              :label="
+                $t(
+                  'presentationLayout.rightDrawer.tabs.settings.timeLimit.title'
+                )
+              "
+              color="primary"
+              left-label
+              class="full-width justify-between"
+            />
+
+            <!-- lock submissions -->
+            <q-toggle
+              v-model="settingsToApplyToAllQuestions.isSubmissionLocked"
+              :label="
+                $t(
+                  'presentationLayout.rightDrawer.tabs.settings.lockSubmission.title'
+                )
+              "
+              color="primary"
+              left-label
+              class="full-width justify-between"
+            />
+
+            <!-- hide results -->
+            <q-toggle
+              v-model="settingsToApplyToAllQuestions.isResultsHidden"
+              :label="
+                $t(
+                  'presentationLayout.rightDrawer.tabs.settings.hideResults.title'
+                )
+              "
+              color="primary"
+              left-label
+              class="full-width justify-between"
+            />
+          </div>
+        </template>
+      </ConfirmationDialog>
+    </q-dialog>
   </div>
 </template>
 
@@ -345,6 +459,9 @@ import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
+import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { api } from "boot/axios";
 
 /*
  * variables
@@ -361,7 +478,7 @@ const textStore = useCanvasTextStore();
 const { customization } = storeToRefs(textStore);
 
 const presentationsStore = usePresentationsStore();
-const { slide, slideSettings } = storeToRefs(presentationsStore);
+const { presentation, slide, slideSettings } = storeToRefs(presentationsStore);
 
 /*
  * load
@@ -518,6 +635,74 @@ const timeLimitRules = [
     isTimeLimitValid(val) ||
     t("presentationLayout.rightDrawer.tabs.settings.timeLimit.invalid"),
 ];
+
+/*
+ * apply to all questions
+ */
+const isApplySettingsToAllQuestionsHovered = ref(false);
+const showApplySettingsToAllQuestionsDialog = ref(false);
+
+const settingsToApplyToAllQuestions = ref({
+  isMultipleEntries: true,
+  entriesPerParticipant: false,
+  isLimitedTime: true,
+  isSubmissionLocked: true,
+  isResultsHidden: true,
+});
+
+const applySettingsToAllQuestions = () => {
+  let settingsToUpdate = {};
+
+  if (settingsToApplyToAllQuestions.value.isMultipleEntries) {
+    settingsToUpdate.isMultipleEntries = slideSettings.value.isMultipleEntries;
+  }
+
+  if (settingsToApplyToAllQuestions.value.entriesPerParticipant) {
+    settingsToUpdate.entriesPerParticipant =
+      slideSettings.value.entriesPerParticipant;
+  }
+
+  if (settingsToApplyToAllQuestions.value.isLimitedTime) {
+    settingsToUpdate.isLimitedTime = slideSettings.value.isLimitedTime;
+    settingsToUpdate.timeLimit = slideSettings.value.timeLimit;
+  }
+
+  if (settingsToApplyToAllQuestions.value.isSubmissionLocked) {
+    settingsToUpdate.isSubmissionLocked =
+      slideSettings.value.isSubmissionLocked;
+  }
+
+  if (settingsToApplyToAllQuestions.value.isResultsHidden) {
+    settingsToUpdate.isResultsHidden = slideSettings.value.isResultsHidden;
+  }
+
+  let slidesToUpdate = [];
+  presentation.value.slides.map((item, index) => {
+    if (item.id === slide.value.id) return;
+
+    if (item.type !== SLIDE_TYPES.CONTENT) {
+      const settings_data = JSON.stringify({
+        ...JSON.parse(item.settings_data),
+        ...settingsToUpdate,
+      });
+
+      slidesToUpdate.push({
+        id: item.id,
+        settings_data: settings_data,
+      });
+
+      presentation.value.slides[index].settings_data = settings_data;
+    }
+  });
+
+  api
+    .patch(`/presentation/${presentation.value.id}/slides`, {
+      slides: slidesToUpdate,
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 </script>
 
 <style scoped lang="scss">

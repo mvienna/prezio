@@ -15,6 +15,12 @@ class PresentationSlideController extends Controller
 {
     public function store(Presentation $presentation, Request $request): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
+        }
+
         $slide = PresentationSlide::create([
             'presentation_id' => $presentation->id,
             'canvas_data' => $request->canvas_data,
@@ -31,6 +37,12 @@ class PresentationSlideController extends Controller
 
     public function update(Presentation $presentation, PresentationSlide $slide, Request $request): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
+        }
+
         $slide->update([
             'canvas_data' => $request->canvas_data,
             'preview' => $request->preview,
@@ -50,10 +62,24 @@ class PresentationSlideController extends Controller
 
     public function updateSlides(Presentation $presentation, Request $request): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
+        }
+
         foreach ($request->slides as $slide) {
-            PresentationSlide::find($slide['id'])->update([
-                'order' => $slide['order']
-            ]);
+            $data = [];
+
+            if (isset($slide['order'])) {
+                $data['order'] = $slide['order'];
+            }
+
+            if (isset($slide['settings_data'])) {
+                $data['settings_data'] = $slide['settings_data'];
+            }
+
+            PresentationSlide::find($slide['id'])->update($data);
         }
 
         $presentation->load('slides');
