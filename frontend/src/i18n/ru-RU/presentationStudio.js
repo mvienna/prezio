@@ -85,8 +85,8 @@ export default {
         },
 
         options: {
-          resetPresentation: "Сбросить всю презентацию",
-          resetSlide: "Сбросить этот слайд",
+          resetPresentation: "Сбросить результаты для всей презентации",
+          resetSlide: "Сбросить результаты для этого слайда",
         },
       },
 
