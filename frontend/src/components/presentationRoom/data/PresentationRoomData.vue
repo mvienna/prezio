@@ -157,6 +157,7 @@ watch(
   border-radius: 24px;
   padding: 16px;
   z-index: 2;
+  height: 62px;
   font-size: 1em;
   transition: 0.2s;
 
