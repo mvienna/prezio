@@ -34,7 +34,11 @@
       {{ $t("presentationRoom.answers.thanksForParticipation") }}
     </div>
 
-    <q-slide-transition>
+    <transition
+      appear
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+    >
       <div
         v-if="
           timeLeft &&
@@ -58,7 +62,7 @@
           "
         />
       </div>
-    </q-slide-transition>
+    </transition>
 
     <template
       v-if="
