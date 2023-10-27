@@ -74,6 +74,29 @@ export default {
           presentAnyway: "Продолжить",
         },
       },
+      share: {
+        title: "Поделиться",
+        inviteAudience: {
+          title: "Приглашение аудитории",
+          link: {
+            title: "Аудитория сможет присоединиться по адресу",
+            copy: "Скопировать",
+          },
+          qr: {
+            title: "Или отсканировав QR код",
+            download: "Скачать",
+          },
+        },
+        addEditor: {
+          title: "Поделиться доступом",
+        },
+        shareSlides: {
+          title: "Поделиться слайдами",
+        },
+        publish: {
+          title: "Опубликовать",
+        },
+      },
     },
 
     leftDrawer: {

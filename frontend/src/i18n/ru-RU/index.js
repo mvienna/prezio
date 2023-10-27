@@ -25,6 +25,13 @@ export default {
   },
 
   /*
+   * error
+   */
+  errors: {
+    fieldIsRequired: "Поле является обязательным для заполнения",
+  },
+
+  /*
    * user
    */
   you: "(вы)",

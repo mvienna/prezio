@@ -32,6 +32,7 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
     {
         return [
             'slide_id' => $this->slide->id,
+            'token' => $this->room->token,
         ];
     }
 }

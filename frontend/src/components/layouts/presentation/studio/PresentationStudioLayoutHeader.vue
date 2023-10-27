@@ -118,10 +118,16 @@
             no-caps
             no-wrap
             round
-            disable
             size="12px"
             icon="r_share"
+            @click="showShareDialog = true"
           />
+
+          <q-dialog v-model="showShareDialog">
+            <PresentationStudioLayoutHeaderShareDialog
+              @cancel="showShareDialog = false"
+            />
+          </q-dialog>
 
           <!-- download -->
           <q-btn
@@ -364,6 +370,7 @@ import { api } from "boot/axios";
 import { useRouter } from "vue-router";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
+import PresentationStudioLayoutHeaderShareDialog from "components/layouts/presentation/studio/PresentationStudioLayoutHeaderShareDialog.vue";
 
 /*
  * variables
@@ -391,6 +398,7 @@ const { elements } = storeToRefs(canvasStore);
  * dialogs
  */
 const showSettingsDialog = ref(false);
+const showShareDialog = ref(false);
 
 /*
  * slide index

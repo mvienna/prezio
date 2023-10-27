@@ -18,11 +18,12 @@ trait JsonResponses
         ]);
     }
 
-    protected function errorResponse(string $error, $statusCode = 500): JsonResponse
+    protected function errorResponse(string $error, $statusCode = 500, array $details = []): JsonResponse
     {
         return $this->jsonResponse([
             'success' => false,
             'message'  => $error,
+            'details' => $details
         ], $statusCode);
     }
 }

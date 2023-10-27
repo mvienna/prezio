@@ -25,6 +25,13 @@ export default {
   },
 
   /*
+   * error
+   */
+  errors: {
+    fieldIsRequired: "Field is required",
+  },
+
+  /*
    * user
    */
   you: "(you)",

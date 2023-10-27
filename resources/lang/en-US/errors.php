@@ -19,6 +19,8 @@ return [
     ],
     'room' => [
         'notFound' => 'Room not found',
+        'tokenIsTaken' => 'Code is already taken',
+        'invalidToken' => 'Max code length - 10 characters'
     ],
     'accessDenied' => 'Access denied',
 ];

@@ -231,6 +231,7 @@ import { useI18n } from "vue-i18n";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import PresentationRoomSubmissionForm from "components/presentationRoom/PresentationRoomSubmissionForm.vue";
 import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
+import { generateQrCode } from "src/helpers/qrUtils";
 
 /*
  * variables
@@ -474,6 +475,12 @@ const connectToRoomChannels = () => {
    * listen for updates
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
+    if (event.token !== room.value.token) {
+      return await router.push(
+        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) + event.token
+      );
+    }
+
     if (!isHost.value && presentation.value?.is_private) return;
 
     const newSlide = await presentationsStore.fetchSlideData(event.slide_id);
@@ -607,32 +614,7 @@ const clearIsMouseActiveTimeout = () => {
 /*
  * qr
  */
-const qrCode = new QRCodeStyling({
-  width: 236,
-  height: 236,
-  type: "svg",
-  data: window.location.href,
-  image: window.location.origin + "/logo_white.png",
-  dotsOptions: {
-    type: "rounded",
-    // gradient: {
-    //   type: "linear",
-    //   rotation: Math.PI / 4,
-    //   colorStops: [
-    //     { offset: 0, color: "#4971FF" },
-    //     { offset: 1, color: "#4647DA" },
-    //   ],
-    // },
-    color: "#FFFFFF",
-  },
-  backgroundOptions: {
-    color: "#1F1F29",
-  },
-  imageOptions: {
-    crossOrigin: "anonymous",
-    margin: 2,
-  },
-});
+const qrCode = generateQrCode();
 
 /*
  * fullscreen

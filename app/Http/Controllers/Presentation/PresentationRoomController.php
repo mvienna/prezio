@@ -89,11 +89,39 @@ class PresentationRoomController extends Controller
 
     public function update(Presentation $presentation, PresentationRoom $room, Request $request): JsonResponse
     {
-        $slide = PresentationSlide::find($request->slide_id);
-        $room->update([
-            'slide_id' => $slide->id
-        ]);
+        $props = [];
 
+        // slide
+        $slide_id = $request->input('slide_id');
+        $slide = PresentationSlide::find($slide_id ?? $room->slide_id);
+        if ($slide) {
+            $props['slide_id'] = $slide->id;
+        }
+
+        // token
+        if (!empty($request->token)) {
+            if (strlen($request->token) > 10) {
+                return $this->errorResponse(
+                    trans('errors.room.invalidToken'),
+                    422,
+                    ['token' => $room->token]
+                );
+            }
+
+            $roomWithRequestToken = PresentationRoom::where('token', $request->token);
+            if ($roomWithRequestToken->exists()) {
+                return $this->errorResponse(
+                    trans('errors.room.tokenIsTaken'),
+                    422,
+                    ['token' => $room->token]
+                );
+            }
+
+            $props['token'] = $request->token;
+        }
+
+        // update
+        $room->update($props);
         event(new PresentationRoomUpdatedEvent($room, $slide));
 
         return $this->successResponse();

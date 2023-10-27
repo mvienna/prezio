@@ -249,6 +249,54 @@
         </q-td>
       </template>
 
+      <template v-slot:body-cell-roomToken="props">
+        <q-td :props="props">
+          <span class="text-semibold">
+            <span class="text-uppercase text-monospace">
+              {{ props.row?.room?.token }}
+            </span>
+
+            <q-popup-edit
+              v-if="props.row?.room?.token"
+              v-model="props.row.room.token"
+              v-slot="scope"
+              @update:model-value="
+                () => {
+                  presentationsStore
+                    .sendPresentationRoomUpdateEvent(
+                      props.row.id,
+                      props.row.room.id,
+                      null,
+                      props.row.room.token
+                    )
+                    .catch((error) => {
+                      props.row.room.token = error.details.token;
+
+                      $q.notify({
+                        message: error.message,
+                        color: 'red',
+                        icon: 'r_crisis_alert',
+                      });
+                    });
+                }
+              "
+            >
+              <q-input
+                v-model="scope.value"
+                dense
+                type="text"
+                autofocus
+                :min="1"
+                :max="10"
+                hide-bottom-space
+                :rules="[(val) => !!val || $t('errors.fieldIsRequired')]"
+                @keyup.enter="scope.set"
+              />
+            </q-popup-edit>
+          </span>
+        </q-td>
+      </template>
+
       <!-- updated at -->
       <template v-slot:body-cell-updated_at="props">
         <q-td :props="props">

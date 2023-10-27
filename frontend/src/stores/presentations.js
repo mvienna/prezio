@@ -390,16 +390,21 @@ export const usePresentationsStore = defineStore("presentations", {
     async sendPresentationRoomUpdateEvent(
       presentation_id = this.presentation?.id,
       room_id = this.room?.id,
-      slide_id = this.slide?.id
+      slide_id = this.slide?.id,
+      token = null
     ) {
-      if (!presentation_id || !room_id || !slide_id) return;
+      if (!presentation_id || !room_id) return;
 
       return await api
         .patch(`/presentation/${presentation_id}/room/${room_id}`, {
           slide_id: slide_id,
+          token: token,
         })
         .catch((error) => {
-          console.log(error);
+          throw {
+            message: error.response.data.message,
+            details: error.response.data.details,
+          };
         });
     },
 
