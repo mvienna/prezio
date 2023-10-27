@@ -22,7 +22,7 @@
           style="max-width: 280px"
         >
           <q-input
-            v-model="roomId"
+            v-model="roomToken"
             dense
             standout="bg-primary text-white"
             class="q-pr-md"
@@ -217,13 +217,13 @@ const drawerLinks = [
   },
 ];
 
-const roomId = ref();
+const roomToken = ref();
 const roomSearchError = ref();
 const roomLinkPrefix = `${window.location.hostname}/`;
 
 const handleRoomSearch = () => {
   api
-    .get(`/room/${roomId.value}`)
+    .get(`/room/${roomToken.value}`)
     .then((response) => {
       router.push(
         clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
