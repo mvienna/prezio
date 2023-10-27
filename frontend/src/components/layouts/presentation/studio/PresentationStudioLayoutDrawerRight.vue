@@ -176,7 +176,7 @@ const handleChangingSlideType = async (type) => {
       fontWeight: "normal",
       textDecoration: "none",
       fontStyle: "normal",
-      textAlign: ALIGNMENT.horizontal.left,
+      textAlign: ALIGNMENT.horizontal.center,
       verticalAlign: ALIGNMENT.vertical.top,
       rotationAngle: 0,
 
