@@ -26,7 +26,7 @@ export default {
      */
     columns: {
       name: "Presentation Name",
-      accessKey: "Access Code",
+      roomToken: "Room Code",
       updated: "Updated",
       created: "Created",
     },

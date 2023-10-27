@@ -615,7 +615,7 @@ onBeforeMount(() => {
  */
 const presentationColumnsNames = {
   name: "name",
-  accessKey: "accessKey",
+  roomToken: "roomToken",
   updatedAt: "updated_at",
   createdAt: "created_at",
   actions: "actions",
@@ -630,10 +630,10 @@ const presentationsColumns = [
     sortable: true,
   },
   {
-    name: presentationColumnsNames.accessKey,
-    label: t("myPresentations.columns.accessKey"),
+    name: presentationColumnsNames.roomToken,
+    label: t("myPresentations.columns.roomToken"),
     align: "center",
-    field: (row) => row.accessKey,
+    field: (row) => row?.room?.token,
     sortable: true,
   },
   {

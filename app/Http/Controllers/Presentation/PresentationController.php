@@ -146,7 +146,7 @@ class PresentationController extends Controller
             ->with(['slides' => function ($query) {
                 $query->select('id', 'presentation_id', 'updated_at');
             }])
-            ->with('preview', 'settings');
+            ->with('preview', 'settings', 'room');
 
         $query = $query->where('folder_id', $folder_id);
         $totalFiltered = $query->count();

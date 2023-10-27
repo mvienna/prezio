@@ -25,7 +25,7 @@ export default {
      */
     columns: {
       name: "Название презентации",
-      accessKey: "Код доступа",
+      roomToken: "Код комнаты",
       updated: "Изменено",
       created: "Создано",
     },
