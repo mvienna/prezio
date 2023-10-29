@@ -122,7 +122,9 @@ class PresentationRoomController extends Controller
 
         // update
         $room->update($props);
-        event(new PresentationRoomUpdatedEvent($room, $slide));
+        if ($slide) {
+            event(new PresentationRoomUpdatedEvent($room, $slide));
+        }
 
         return $this->successResponse();
     }
