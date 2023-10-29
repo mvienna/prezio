@@ -164,7 +164,11 @@ watch(
  * change slide type
  */
 const handleChangingSlideType = async (type) => {
-  const newElements = [];
+  const newElements = elements.value.filter((element) =>
+    [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+      element.mode
+    )
+  );
 
   if (type !== SLIDE_TYPES.CONTENT) {
     const layoutDefaultElementProps = {
