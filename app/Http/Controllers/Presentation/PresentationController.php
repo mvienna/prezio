@@ -35,7 +35,9 @@ class PresentationController extends Controller
             'presentation_id' => $presentation->id,
         ]);
 
-        $presentation->load('slides', 'settings');
+        app(PresentationRoomController::class)->store($presentation);
+
+        $presentation->load('slides', 'settings', 'room');
 
         return $this->jsonResponse($presentation->toArray());
     }
