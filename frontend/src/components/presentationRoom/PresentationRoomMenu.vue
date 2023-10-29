@@ -306,7 +306,7 @@
         v-html="
           $t('presentationRoom.footer.hideResults.dialog.description', {
             answersCount: `<span class='q-px-sm q-py-xs text-primary bg-blue-1 q-mx-xs' style='border-radius: 8px'>${
-              slide.answers?.length || 0
+              slide?.answers?.length || 0
             }</span>`,
           })
         "
