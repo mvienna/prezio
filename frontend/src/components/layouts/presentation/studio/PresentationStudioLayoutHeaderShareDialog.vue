@@ -100,6 +100,7 @@
                       autofocus
                       :min="1"
                       :max="10"
+                      mask="XXXXXXXXXX"
                       hide-bottom-space
                       :rules="[(val) => !!val || $t('errors.fieldIsRequired')]"
                       @keyup.enter="scope.set"
