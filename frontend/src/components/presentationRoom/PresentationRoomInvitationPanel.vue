@@ -36,24 +36,19 @@
       <!-- url -->
       <div>
         {{ $t("presentationRoom.invitationPanel.otherOption.url") }}
-        <a :href="url" target="_blank" class="text-white text-semibold">
-          {{ url }}
-        </a>
+      </div>
+      <a :href="url" target="_blank" class="text-white text-semibold">
+        {{ url }}
+      </a>
+
+      <div class="q-my-sm">
+        <q-icon name="r_keyboard_double_arrow_down" size="sm" color="white" />
       </div>
 
-      <q-icon
-        name="r_keyboard_double_arrow_down"
-        size="sm"
-        class="q-my-sm"
-        color="white"
-      />
-
       <!-- token -->
-      <div>
-        {{ $t("presentationRoom.invitationPanel.otherOption.id") }}:
-        <span class="text-white text-semibold cursor-pointer text-uppercase">
-          {{ room?.token }}
-        </span>
+      <div>{{ $t("presentationRoom.invitationPanel.otherOption.id") }}</div>
+      <div class="text-white text-semibold cursor-pointer text-uppercase">
+        {{ room?.token }}
       </div>
     </div>
   </div>
