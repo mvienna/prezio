@@ -285,11 +285,14 @@
   <q-card
     v-if="slideSettings?.isResultsHidden"
     bordered
+    flat
     class="absolute-center shadow"
     style="
       z-index: 1;
       border-radius: 24px !important;
-      box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.05);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      color: white;
     "
   >
     <q-card-section :class="$q.screen.lt.lg ? 'q-pa-lg' : 'q-pa-xl'">
@@ -305,7 +308,7 @@
         :class="$q.screen.lt.lg ? '' : 'text-h7'"
         v-html="
           $t('presentationRoom.footer.hideResults.dialog.description', {
-            answersCount: `<span class='q-px-sm q-py-xs text-primary bg-blue-1 q-mx-xs' style='border-radius: 8px'>${
+            answersCount: `<span class='q-px-sm q-py-xs text-white bg-grey-5 q-mx-xs' style='border-radius: 8px'>${
               slide?.answers?.length || 0
             }</span>`,
           })
@@ -314,7 +317,8 @@
 
       <q-btn
         unelevated
-        color="primary"
+        color="white"
+        text-color="black"
         no-caps
         class="full-width text-semibold"
         :class="$q.screen.lt.lg ? 'q-mt-lg q-py-sm' : 'q-mt-xl q-py-md'"
