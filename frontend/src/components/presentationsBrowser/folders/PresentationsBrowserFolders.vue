@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="userHasPresentations"
     class="row no-wrap q-gutter-md q-pt-lg q-px-sm folders scroll-x"
     style="height: 131.6px"
   >
@@ -213,6 +214,7 @@ const {
   selectedFolder,
   presentations,
   selectedPresentations,
+  userHasPresentations,
   isLoading,
 } = storeToRefs(presentationsStore);
 

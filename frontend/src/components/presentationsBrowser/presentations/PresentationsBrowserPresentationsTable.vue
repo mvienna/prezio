@@ -1,6 +1,7 @@
 <template>
   <div class="full-height">
     <q-table
+      v-if="userHasPresentations"
       :rows="presentations"
       :columns="presentationsColumns"
       v-model:pagination="pagination"
@@ -542,18 +543,21 @@
         </q-td>
       </template>
     </q-table>
+  </div>
 
-    <!-- no presentations -->
-    <div
-      v-if="!userHasPresentations"
-      class="column no-wrap justify-center q-mt-lg"
-    >
+  <!-- no presentations -->
+  <div
+    v-if="!userHasPresentations"
+    class="column no-wrap justify-center"
+    style="height: calc(100vh - 66px)"
+  >
+    <div>
       <!-- winking emoji -->
       <div class="row justify-center">
-        <q-img src="/assets/icons/emojis/Winking.png" style="width: 64px" />
+        <q-icon name="icon-presentation" color="primary" size="64px" />
       </div>
 
-      <div class="text-center q-pb-lg q-pt-md">
+      <div class="text-center q-py-lg">
         <!-- title -->
         <div class="text-h6 text-semibold">
           {{ $t("myPresentations.noPresentations.title") }}
@@ -575,7 +579,6 @@
 
         <!-- create -->
         <q-btn
-          icon-right="add"
           :label="$t('myPresentations.noPresentations.create')"
           unelevated
           color="primary"
