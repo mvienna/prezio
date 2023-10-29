@@ -523,6 +523,13 @@ const layoutTitle = computed(() => {
   return elements.value.find((element) => element.id.includes("-title-top-"));
 });
 
+watch(
+  () => layoutTitle.value,
+  () => {
+    question.value = layoutTitle.value?.text;
+  }
+);
+
 const handleQuestionInput = (textAlign = null) => {
   const index = elements.value.findIndex(
     (element) => element.id === layoutTitle.value?.id
