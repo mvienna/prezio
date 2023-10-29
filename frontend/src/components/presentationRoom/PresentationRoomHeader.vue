@@ -50,9 +50,12 @@
       <q-intersection v-else transition="fade">
         <q-btn
           unelevated
-          color="black"
           text-color="white"
-          style="opacity: 0.7; border-radius: 50%"
+          style="
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+          "
           icon="r_keyboard_return"
           round
           size="14px"
