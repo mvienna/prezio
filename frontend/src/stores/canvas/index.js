@@ -261,8 +261,8 @@ export const useCanvasStore = defineStore("canvas", {
       );
       if (!slide_preview_canvas) return;
 
-      slide_preview_canvas.width = 1920;
-      slide_preview_canvas.height = 1080;
+      slide_preview_canvas.width = 2560;
+      slide_preview_canvas.height = 1440;
 
       // ctx
       const slide_preview_ctx = slide_preview_canvas.getContext("2d");

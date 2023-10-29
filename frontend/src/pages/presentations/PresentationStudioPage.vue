@@ -263,8 +263,8 @@ onUnmounted(() => {
 });
 
 const resizeCanvas = () => {
-  canvas.value.width = 1920;
-  canvas.value.height = 1080;
+  canvas.value.width = 2560;
+  canvas.value.height = 1440;
 
   ctx.value.scale(scale.value, scale.value);
 
