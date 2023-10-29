@@ -139,7 +139,48 @@
 
     <q-separator class="q-my-md" />
 
-    <div class="row no-wrap items-center justify-between text-semibold">
+    <!-- entries per participant -->
+    <div class="row no-wrap items-center justify-between text-semibold q-pb-xs">
+      <span>
+        {{
+          $t(
+            "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.title"
+          )
+        }}
+
+        <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+          <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
+            {{
+              $t(
+                "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.description"
+              )
+            }}
+          </q-tooltip>
+        </q-icon>
+      </span>
+    </div>
+
+    <q-input
+      v-model="slideSettings.entriesPerParticipant"
+      type="number"
+      class="q-mt-sm"
+      outlined
+      dense
+      :min="1"
+      :max="10"
+      placeholder="1"
+      style="width: 160px"
+      hide-bottom-space
+      :rules="entriesPerParticipantRules"
+      @update:model-value="handleSlideSettingsUpdate()"
+    >
+      <template #prepend>
+        <q-icon name="r_keyboard_return" color="dark" class="q-mr-xs" />
+      </template>
+    </q-input>
+
+    <!-- multiple entries -->
+    <div class="row no-wrap items-center justify-between text-semibold q-mt-sm">
       <span>
         <q-icon
           v-if="isApplySettingsToAllQuestionsHovered"
@@ -173,46 +214,6 @@
         @update:model-value="handleSlideSettingsUpdate()"
       />
     </div>
-
-    <!-- entries per participant -->
-    <div
-      class="row no-wrap items-center justify-between text-semibold q-mt-sm q-pb-xs"
-    >
-      <span>
-        {{
-          $t(
-            "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.title"
-          )
-        }}
-
-        <q-icon name="r_info" class="q-ml-xs" color="grey-8">
-          <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
-            {{
-              $t(
-                "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.description"
-              )
-            }}
-          </q-tooltip>
-        </q-icon>
-      </span>
-    </div>
-
-    <q-input
-      v-model="slideSettings.entriesPerParticipant"
-      type="number"
-      class="q-mt-sm"
-      outlined
-      dense
-      :min="1"
-      :max="10"
-      placeholder="1"
-      :rules="entriesPerParticipantRules"
-      @update:model-value="handleSlideSettingsUpdate()"
-    >
-      <template #prepend>
-        <q-icon name="r_keyboard_return" color="dark" class="q-mr-xs" />
-      </template>
-    </q-input>
 
     <!-- time limit -->
     <div class="row no-wrap items-center justify-between text-semibold">
@@ -251,9 +252,12 @@
           outlined
           dense
           :min="5"
+          :max="1800"
           placeholder="1"
           hide-bottom-space
           :rules="timeLimitRules"
+          style="width: 160px"
+          no-error-icon
           class="q-pb-sm"
           @update:model-value="handleSlideSettingsUpdate()"
         >
@@ -603,6 +607,10 @@ const settingsDefaultState = {
 };
 
 const handleSlideSettingsUpdate = () => {
+  if (slideSettings.value.timeLimit > 1800) {
+    slideSettings.value.timeLimit = 1800;
+  }
+
   if (
     !isEntriesPerParticipantValid(
       Number(slideSettings.value.entriesPerParticipant)
@@ -627,7 +635,7 @@ const entriesPerParticipantRules = [
 ];
 
 const isTimeLimitValid = (val) => {
-  return val >= 5;
+  return val >= 5 && val <= 1800;
 };
 
 const timeLimitRules = [
