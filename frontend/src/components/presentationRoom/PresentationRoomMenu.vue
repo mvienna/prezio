@@ -285,20 +285,24 @@
   <q-card
     v-if="slideSettings?.isResultsHidden"
     bordered
-    class="fixed-center shadow"
+    class="absolute-center shadow"
     style="
       z-index: 1;
       border-radius: 24px !important;
       box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.05);
     "
   >
-    <q-card-section class="q-pa-xl">
-      <div class="text-center text-bold text-h4">
+    <q-card-section :class="$q.screen.lt.lg ? 'q-pa-lg' : 'q-pa-xl'">
+      <div
+        class="text-center text-bold"
+        :class="$q.screen.lt.lg ? 'text-h6' : 'text-h4'"
+      >
         {{ $t("presentationRoom.footer.hideResults.dialog.title") }}
       </div>
 
       <div
-        class="text-center text-grey q-mt-md text-h7"
+        class="text-center text-grey q-mt-md"
+        :class="$q.screen.lt.lg ? '' : 'text-h7'"
         v-html="
           $t('presentationRoom.footer.hideResults.dialog.description', {
             answersCount: `<span class='q-px-sm q-py-xs text-primary bg-blue-1 q-mx-xs' style='border-radius: 8px'>${
@@ -312,7 +316,8 @@
         unelevated
         color="primary"
         no-caps
-        class="q-mt-xl full-width text-semibold q-py-md"
+        class="full-width text-semibold"
+        :class="$q.screen.lt.lg ? 'q-mt-lg q-py-sm' : 'q-mt-xl q-py-md'"
         :label="$t('presentationRoom.footer.hideResults.dialog.toggle')"
         @click="handleResultsHiddenSettingToggle()"
       />
