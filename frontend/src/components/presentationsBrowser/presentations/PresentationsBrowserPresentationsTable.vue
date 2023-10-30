@@ -587,34 +587,34 @@
         />
       </div>
     </div>
-
-    <!-- new presentation form -->
-    <q-dialog v-model="showNewPresentationDialog">
-      <PresentationBrowserNewPresentation
-        :folders="folders"
-        :selected-folder="selectedFolder"
-        :is-loading="isLoading.creatingPresentation"
-        @cancel="showNewPresentationDialog = false"
-        @submit="handleCreatingNewPresentation($event)"
-      />
-    </q-dialog>
-
-    <!-- new folder form -->
-    <q-dialog v-model="showNewFolderDialog">
-      <PresentationBrowserNewFolder
-        :presentations="
-          presentations.filter((presentation) => !presentation.folder_id)
-        "
-        :selected-presentations="selectedPresentations"
-        :is-loading="isLoading.creatingFolder"
-        @cancel="showNewFolderDialog = false"
-        @submit="
-          presentationsStore.createNewFolder($event);
-          showNewFolderDialog = false;
-        "
-      />
-    </q-dialog>
   </div>
+
+  <!-- new presentation form -->
+  <q-dialog v-model="showNewPresentationDialog">
+    <PresentationBrowserNewPresentation
+      :folders="folders"
+      :selected-folder="selectedFolder"
+      :is-loading="isLoading.creatingPresentation"
+      @cancel="showNewPresentationDialog = false"
+      @submit="handleCreatingNewPresentation($event)"
+    />
+  </q-dialog>
+
+  <!-- new folder form -->
+  <q-dialog v-model="showNewFolderDialog">
+    <PresentationBrowserNewFolder
+      :presentations="
+        presentations.filter((presentation) => !presentation.folder_id)
+      "
+      :selected-presentations="selectedPresentations"
+      :is-loading="isLoading.creatingFolder"
+      @cancel="showNewFolderDialog = false"
+      @submit="
+        presentationsStore.createNewFolder($event);
+        showNewFolderDialog = false;
+      "
+    />
+  </q-dialog>
 </template>
 
 <script setup>
