@@ -220,6 +220,20 @@ export const useCanvasTextStore = defineStore("canvasText", {
       this.moveInputCursorToTheEnd();
 
       /*
+       * select default text
+       */
+      if (
+        selectedElement.value.text.includes("Нажмите чтобы добавить") ||
+        selectedElement.value.text.includes("Click to add")
+      ) {
+        let selection = window.getSelection();
+        let range = document.createRange();
+        range.selectNodeContents(this.input);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+
+      /*
        * add text to canvas
        */
       const x = selectedElement.value.x;
