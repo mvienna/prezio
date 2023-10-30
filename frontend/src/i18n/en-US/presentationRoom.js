@@ -45,7 +45,7 @@ export default {
 
         dialog: {
           title: "Results are hidden",
-          description: `Received {answersCount} answers`,
+          description: `Received answers`,
           toggle: "Show results",
         },
       },

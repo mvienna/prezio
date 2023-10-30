@@ -304,16 +304,17 @@
       </div>
 
       <div
-        class="text-center text-grey q-mt-md"
+        class="text-center text-grey-4 q-mt-md"
         :class="$q.screen.lt.lg ? '' : 'text-h7'"
-        v-html="
-          $t('presentationRoom.footer.hideResults.dialog.description', {
-            answersCount: `<span class='q-px-sm q-py-xs text-white bg-grey-5 q-mx-xs' style='border-radius: 8px'>${
-              slide?.answers?.length || 0
-            }</span>`,
-          })
-        "
-      ></div>
+      >
+        {{ $t("presentationRoom.footer.hideResults.dialog.description") }}
+        <span
+          class="q-px-sm q-py-xs text-white bg-grey-5 q-mx-xs"
+          style="border-radius: 8px"
+        >
+          {{ slide?.answers?.length || 0 }}
+        </span>
+      </div>
 
       <q-btn
         unelevated

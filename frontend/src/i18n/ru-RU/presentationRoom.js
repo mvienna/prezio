@@ -49,7 +49,7 @@ export default {
 
         dialog: {
           title: "Результаты скрыты",
-          description: `Получено {answersCount} ответов`,
+          description: "Получено ответов ",
           toggle: "Показать результаты",
         },
       },
