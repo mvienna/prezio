@@ -231,7 +231,9 @@ const answerInputs = ref([]);
 
 const participantAnswersCount = computed(() => {
   return slide.value.answers.filter(
-    (answer) => answer.participant_id === participant.value?.id
+    (answer) =>
+      answer.participant_id === participant.value?.id &&
+      answer.type === slide.value?.type
   ).length;
 });
 

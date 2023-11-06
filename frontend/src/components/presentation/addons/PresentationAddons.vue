@@ -30,8 +30,7 @@
     v-if="
       slide?.type === SLIDE_TYPES.WORD_CLOUD &&
       slideAnswers?.length &&
-      !slideSettings?.isResultsHidden &&
-      participants
+      !slideSettings?.isResultsHidden
     "
     :words="slideAnswers"
     :style="isPresentationPreview ? 'z-index: 6001;' : ''"
@@ -83,9 +82,11 @@ const { room, slide, slideSettings, isPresentationPreview, participants } =
  */
 const slideAnswers = computed(() => {
   return (
-    slide.value?.answers?.map((item) => {
-      return JSON.parse(item.answer_data).text;
-    }) || []
+    slide.value?.answers
+      .filter((item) => item.slide_type === slide.value?.type)
+      ?.map((item) => {
+        return JSON.parse(item.answer_data).text;
+      }) || []
   );
 });
 

@@ -175,9 +175,12 @@ class PresentationRoomController extends Controller
 
         $answers = [];
         foreach ($request->answers as $answer) {
+            $slide = PresentationSlide::find($request->slide_id);
+
             $answer = PresentationSlideAnswer::create([
                 'participant_id' => $user->id,
-                'slide_id' => $request->slide_id,
+                'slide_id' => $slide->id,
+                'slide_type' => $slide->type,
                 'answer_data' => json_encode(['text' => $answer]),
             ]);
 

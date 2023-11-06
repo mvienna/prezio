@@ -258,7 +258,7 @@ import {
   timeLeftPercentage,
 } from "src/helpers/countdown";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
-import { SLIDE_TYPES } from "../../../constants/presentationStudio";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
 /*
  * stores
@@ -309,7 +309,11 @@ const handleSubmittingAnswers = () => {
 
 const participantAnswers = computed(() => {
   return slide.value.answers
-    .filter((answer) => answer.participant_id === participant.value?.id)
+    .filter(
+      (answer) =>
+        answer.participant_id === participant.value?.id &&
+        answer.type === slide.value?.type
+    )
     .map((answer) => JSON.parse(answer.answer_data)?.text);
 });
 
