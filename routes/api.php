@@ -37,9 +37,12 @@ Route::middleware('auth:sanctum')->group(function () {
      * user
      */
     Route::get('/user', [AuthController::class, 'user']);
-    Route::get('/user/room', [PresentationRoomController::class, 'user']);
-    Route::post('/logout', [AuthController::class, 'logout']);
     Route::patch('/user', [AuthController::class, 'update']);
+
+    Route::get('/user/room', [PresentationRoomController::class, 'getParticipantData']);
+    Route::patch('/user/room', [PresentationRoomController::class, 'updateParticipantData']);
+
+    Route::post('/logout', [AuthController::class, 'logout']);
 
     /*
      * media

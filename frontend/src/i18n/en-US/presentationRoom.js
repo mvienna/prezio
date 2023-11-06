@@ -76,10 +76,32 @@ export default {
 
     auth: {
       form: {
+        title: "Let's get to know each other",
+        name: "Enter your name",
+        avatar: "Choose avatar",
+        fieldIsRequired: "Field is required",
         submit: "Join Now",
       },
       guest: "Гость",
     },
+
+    waitingForParticipants: {
+      title: "Waiting for participants",
+      startQuiz: {
+        title: "Start the Quiz!",
+        shortcut: "You can also press",
+      },
+    },
+
+    waitingForQuizStart: {
+      title: "Get ready!",
+      description: "Quiz is about to start",
+    },
+
+    quizCountdown: {
+      title: "Check your device!",
+    },
+
     isPrivate: {
       title: "The presentation is in private mode",
       description:
@@ -93,12 +115,14 @@ export default {
         title: "Submit",
         submissionIsLocked: "Submission is locked",
       },
+
       waitForSubmissionToBeUnlocked: "Wait for the voting to begin",
       multipleEntriesAvailable:
         "You can submit answers an unlimited number of times",
       answersSubmittedWait:
         "You've already answered this question. Please wait for the presenter to show the next slide.",
       thanksForParticipation: "Thank you for your participation",
+      timesUp: "Time's up!",
     },
   },
 };

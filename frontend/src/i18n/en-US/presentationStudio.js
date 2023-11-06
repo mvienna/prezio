@@ -168,8 +168,23 @@ export default {
         title: "Questions and Answers from Your Audience",
       },
 
-      quizSetup: {
-        title: "Quiz/Poll Setup",
+      quiz: {
+        title: "Quiz Settings",
+        info: {
+          title: "Settings apply to all 'Quizzes & Games' and 'Opinion' slides",
+        },
+
+        warning: {
+          dismiss: "Don't remind about the absence of a correct answer",
+        },
+
+        options: {
+          liveChat: "Live Chat",
+          lobbyMusic: "Lobby Music",
+          countdown: "5-Second Countdown",
+          playAsTeam: "Play as a Team",
+          shuffleAnswerOptions: "Shuffle Answer Options",
+        },
       },
 
       language: {

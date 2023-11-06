@@ -108,7 +108,7 @@
             }}
           </div>
 
-          <q-icon name="r_info" class="q-ml-xs">
+          <q-icon name="r_info" class="q-ml-xs" color="grey-8">
             <q-tooltip max-width="300px" class="text-center">
               {{
                 $t(
@@ -140,54 +140,55 @@
     <q-separator class="q-my-md" />
 
     <!-- entries per participant -->
-    <div class="row no-wrap items-center justify-between text-semibold q-pb-xs">
-      <span>
-        {{
-          $t(
-            "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.title"
-          )
-        }}
+    <div v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD">
+      <div
+        class="row no-wrap items-center justify-between text-semibold q-pb-xs"
+      >
+        <span>
+          {{
+            $t(
+              "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.title"
+            )
+          }}
 
-        <q-icon name="r_info" class="q-ml-xs" color="grey-8">
-          <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
-            {{
-              $t(
-                "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.description"
-              )
-            }}
-          </q-tooltip>
-        </q-icon>
-      </span>
+          <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+            <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
+              {{
+                $t(
+                  "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.description"
+                )
+              }}
+            </q-tooltip>
+          </q-icon>
+        </span>
+      </div>
+
+      <q-input
+        v-model="slideSettings.entriesPerParticipant"
+        type="number"
+        class="q-mt-sm"
+        outlined
+        dense
+        :min="1"
+        :max="10"
+        placeholder="1"
+        style="width: 160px"
+        hide-bottom-space
+        :rules="entriesPerParticipantRules"
+        @update:model-value="handleSlideSettingsUpdate()"
+      >
+        <template #prepend>
+          <q-icon name="r_keyboard_return" color="dark" class="q-mr-xs" />
+        </template>
+      </q-input>
     </div>
 
-    <q-input
-      v-model="slideSettings.entriesPerParticipant"
-      type="number"
-      class="q-mt-sm"
-      outlined
-      dense
-      :min="1"
-      :max="10"
-      placeholder="1"
-      style="width: 160px"
-      hide-bottom-space
-      :rules="entriesPerParticipantRules"
-      @update:model-value="handleSlideSettingsUpdate()"
-    >
-      <template #prepend>
-        <q-icon name="r_keyboard_return" color="dark" class="q-mr-xs" />
-      </template>
-    </q-input>
-
     <!-- multiple entries -->
-    <div class="row no-wrap items-center justify-between text-semibold q-mt-sm">
+    <div
+      class="row no-wrap items-center justify-between text-semibold q-mt-sm"
+      v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
+    >
       <span>
-        <q-icon
-          v-if="isApplySettingsToAllQuestionsHovered"
-          name="r_east"
-          color="primary"
-        />
-
         {{
           $t(
             "presentationLayout.rightDrawer.tabs.settings.multipleEntries.title"
@@ -215,15 +216,236 @@
       />
     </div>
 
+    <!-- quiz -->
+    <template
+      v-if="
+        [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
+      "
+    >
+      <div class="row no-wrap items-center text-semibold q-mb-sm">
+        {{
+          $t("presentationLayout.rightDrawer.tabs.settings.answerOptions.title")
+        }}
+
+        <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+          <q-tooltip class="text-center" max-width="350px" :offset="[0, 8]">
+            {{
+              $t(
+                `presentationLayout.rightDrawer.tabs.settings.answerOptions.description.${slide?.type}`
+              )
+            }}
+          </q-tooltip>
+        </q-icon>
+      </div>
+
+      <!-- answer options -->
+      <draggable
+        v-if="slideSettings.answerOptions.length"
+        v-model="slideSettings.answerOptions"
+        :component-data="{
+          tag: 'ul',
+          type: 'transition-group',
+          class: 'column no-wrap q-gutter-sm',
+        }"
+        v-bind="answerOptionsDraggingOptions"
+        item-key="id"
+        handle=".layer_handle"
+        @start="handleStartDraggingAnswerOptions"
+        @end="handleLayersReorderAnswerOptions"
+        @reordered="handleLayersReorderAnswerOptions"
+      >
+        <template #item="{ element, index }">
+          <div class="row no-wrap items-center q-gutter-sm">
+            <q-icon
+              name="r_drag_indicator"
+              color="grey"
+              size="sm"
+              class="layer_handle cursor-pointer q-mr-sm"
+            />
+
+            <q-input
+              v-model="element.value"
+              outlined
+              dense
+              style="width: 100%"
+              :placeholder="
+                $t(
+                  'presentationLayout.rightDrawer.tabs.settings.answerOptions.answerOption'
+                ) +
+                (index + 1)
+              "
+              :maxlength="150"
+              :rules="[
+                (val) =>
+                  val.length <= 150 ||
+                  $t(
+                    'presentationLayout.rightDrawer.tabs.settings.answerOptions.maxLengthErrorMessage'
+                  ),
+              ]"
+              hide-bottom-space
+              no-error-icon
+            >
+              <template #append>
+                <div class="text-caption">
+                  {{ 150 - element.value?.length }}
+                </div>
+              </template>
+            </q-input>
+
+            <div class="row no-wrap">
+              <q-checkbox
+                v-model="element.isCorrect"
+                checked-icon="r_check_circle"
+                unchecked-icon="r_cancel"
+                :color="element.isCorrect ? 'positive' : 'red'"
+                keep-color
+                style="font-size: 20px"
+              />
+
+              <q-btn
+                flat
+                round
+                color="grey"
+                style="border-radius: 50%"
+                :disable="slideSettings.answerOptions.length <= 2"
+                @click="handleRemovingAnswerOption(index)"
+              >
+                <q-icon name="r_delete" size="22px" />
+              </q-btn>
+            </div>
+          </div>
+        </template>
+      </draggable>
+
+      <!-- add answer option -->
+      <q-btn
+        v-if="slideSettings.answerOptions?.length < 8"
+        unelevated
+        :label="
+          $t(
+            'presentationLayout.rightDrawer.tabs.settings.answerOptions.addAnswerOption'
+          )
+        "
+        icon-right="r_add"
+        no-caps
+        class="q-mt-md q-py-sm full-width"
+        color="primary"
+        @click="handleAddingNewAnswerOption()"
+      />
+
+      <!-- points -->
+      <div class="row no-wrap items-center q-mt-lg text-semibold q-mb-sm">
+        {{ $t("presentationLayout.rightDrawer.tabs.settings.points.title") }}
+
+        <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+          <q-tooltip class="text-center" max-width="250px" :offset="[0, 8]">
+            {{
+              $t(
+                "presentationLayout.rightDrawer.tabs.settings.points.description"
+              )
+            }}
+          </q-tooltip>
+        </q-icon>
+      </div>
+
+      <div class="row no-wrap items-center q-gutter-md">
+        <div class="text-semibold text-no-wrap">
+          {{ $t("presentationLayout.rightDrawer.tabs.settings.points.min") }}
+        </div>
+
+        <q-range
+          v-model="slideSettings.points"
+          :min="0"
+          :max="1000"
+          :step="1"
+          label
+          snap
+          color="primary"
+          drag-range
+        />
+
+        <div class="text-semibold text-no-wrap">
+          {{ $t("presentationLayout.rightDrawer.tabs.settings.points.max") }}
+        </div>
+      </div>
+
+      <!-- score depends on time -->
+      <div
+        class="row no-wrap items-center justify-between text-semibold q-mt-sm"
+      >
+        <span>
+          {{
+            $t(
+              "presentationLayout.rightDrawer.tabs.settings.points.scoreDependsOnTime.title"
+            )
+          }}
+
+          <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+            <q-tooltip class="text-center" max-width="220px" :offset="[0, 8]">
+              {{
+                $t(
+                  `presentationLayout.rightDrawer.tabs.settings.points.scoreDependsOnTime.description.${
+                    slideSettings.scoreDependsOnTime ? "on" : "off"
+                  }`
+                )
+              }}
+            </q-tooltip>
+          </q-icon>
+        </span>
+
+        <q-toggle
+          v-model="slideSettings.scoreDependsOnTime"
+          color="primary"
+          @update:model-value="handleSlideSettingsUpdate()"
+        />
+      </div>
+
+      <!-- partial scoring -->
+      <q-slide-transition>
+        <div
+          v-if="
+            slideSettings.answerOptions?.filter((option) => option.isCorrect)
+              ?.length > 1
+          "
+        >
+          <div class="row no-wrap items-center justify-between text-semibold">
+            <span>
+              {{
+                $t(
+                  "presentationLayout.rightDrawer.tabs.settings.points.partialScoring.title"
+                )
+              }}
+
+              <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+                <q-tooltip
+                  class="text-center"
+                  max-width="200px"
+                  :offset="[0, 8]"
+                >
+                  {{
+                    $t(
+                      "presentationLayout.rightDrawer.tabs.settings.points.partialScoring.description"
+                    )
+                  }}
+                </q-tooltip>
+              </q-icon>
+            </span>
+
+            <q-toggle
+              v-model="slideSettings.partialScoring"
+              color="primary"
+              @update:model-value="handleSlideSettingsUpdate()"
+            />
+          </div>
+        </div>
+      </q-slide-transition>
+
+      <q-separator class="q-mt-md q-mb-md" />
+    </template>
+
     <!-- time limit -->
     <div class="row no-wrap items-center justify-between text-semibold">
       <span>
-        <q-icon
-          v-if="isApplySettingsToAllQuestionsHovered"
-          name="r_east"
-          color="primary"
-        />
-
         {{ $t("presentationLayout.rightDrawer.tabs.settings.timeLimit.title") }}
 
         <q-icon name="r_info" class="q-ml-xs" color="grey-8">
@@ -238,6 +460,7 @@
       </span>
 
       <q-toggle
+        v-if="[SLIDE_TYPES.WORD_CLOUD].includes(slide?.type)"
         v-model="slideSettings.isLimitedTime"
         color="primary"
         @update:model-value="handleSlideSettingsUpdate()"
@@ -259,6 +482,9 @@
           style="width: 160px"
           no-error-icon
           class="q-pb-sm"
+          :class="
+            ![SLIDE_TYPES.WORD_CLOUD].includes(slide?.type) ? 'q-mt-md' : ''
+          "
           @update:model-value="handleSlideSettingsUpdate()"
         >
           <template #prepend>
@@ -278,15 +504,42 @@
       </div>
     </q-slide-transition>
 
-    <!-- lock submission -->
-    <div class="row no-wrap items-center justify-between text-semibold">
+    <!-- leaderboard -->
+    <div
+      class="row no-wrap items-center justify-between text-semibold q-mt-sm"
+      v-if="
+        [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
+      "
+    >
       <span>
-        <q-icon
-          v-if="isApplySettingsToAllQuestionsHovered"
-          name="r_east"
-          color="primary"
-        />
+        {{
+          $t("presentationLayout.rightDrawer.tabs.settings.leaderboard.title")
+        }}
 
+        <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+          <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
+            {{
+              $t(
+                "presentationLayout.rightDrawer.tabs.settings.leaderboard.description"
+              )
+            }}
+          </q-tooltip>
+        </q-icon>
+      </span>
+
+      <q-toggle
+        v-model="slideSettings.showLeaderboard"
+        color="primary"
+        @update:model-value="handleSlideSettingsUpdate()"
+      />
+    </div>
+
+    <!-- lock submission -->
+    <div
+      v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
+      class="row no-wrap items-center justify-between text-semibold"
+    >
+      <span>
         {{
           $t(
             "presentationLayout.rightDrawer.tabs.settings.lockSubmission.title"
@@ -305,21 +558,18 @@
       </span>
 
       <q-toggle
-        v-model="slideSettings.isSubmissionLocked"
+        v-model="slideSettings.isInitialSubmissionLocked"
         color="primary"
         @update:model-value="handleSlideSettingsUpdate()"
       />
     </div>
 
     <!-- hide results -->
-    <div class="row no-wrap items-center justify-between text-semibold">
+    <div
+      v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
+      class="row no-wrap items-center justify-between text-semibold"
+    >
       <span>
-        <q-icon
-          v-if="isApplySettingsToAllQuestionsHovered"
-          name="r_east"
-          color="primary"
-        />
-
         {{
           $t("presentationLayout.rightDrawer.tabs.settings.hideResults.title")
         }}
@@ -342,7 +592,34 @@
       />
     </div>
 
-    <q-separator class="q-my-md" />
+    <div class="q-pb-sm">
+      <q-separator class="q-mb-lg q-mt-md" />
+    </div>
+
+    <!-- open general quiz settings -->
+    <q-btn
+      v-if="
+        [
+          SLIDE_TYPES.TYPE_ANSWER,
+          SLIDE_TYPES.PICK_IMAGE,
+          SLIDE_TYPES.PICK_ANSWER,
+        ].includes(slide?.type)
+      "
+      outline
+      color="primary"
+      icon-right="r_quiz"
+      :label="
+        $t(
+          'presentationLayout.rightDrawer.tabs.settings.openGeneralQuizSettings.title'
+        )
+      "
+      no-caps
+      class="full-width q-py-sm q-mb-md"
+      @click="
+        showSettingsDialog = true;
+        presentationSettingsTabsExpanded = [false, false, false, false, true];
+      "
+    />
 
     <!-- apply to all questions -->
     <q-btn
@@ -356,8 +633,6 @@
       "
       no-caps
       class="full-width q-py-sm"
-      @mouseover="isApplySettingsToAllQuestionsHovered = true"
-      @mouseleave="isApplySettingsToAllQuestionsHovered = false"
       @click="showApplySettingsToAllQuestionsDialog = true"
     />
 
@@ -384,32 +659,6 @@
       >
         <template #default>
           <div class="column no-wrap q-pb-lg">
-            <!-- multiple entries -->
-            <q-toggle
-              v-model="settingsToApplyToAllQuestions.isMultipleEntries"
-              :label="
-                $t(
-                  'presentationLayout.rightDrawer.tabs.settings.multipleEntries.title'
-                )
-              "
-              color="primary"
-              left-label
-              class="full-width justify-between"
-            />
-
-            <!-- entries per participant -->
-            <q-toggle
-              v-model="settingsToApplyToAllQuestions.entriesPerParticipant"
-              :label="
-                $t(
-                  'presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.title'
-                )
-              "
-              color="primary"
-              left-label
-              class="full-width justify-between"
-            />
-
             <!-- limit time -->
             <q-toggle
               v-model="settingsToApplyToAllQuestions.isLimitedTime"
@@ -423,31 +672,62 @@
               class="full-width justify-between"
             />
 
-            <!-- lock submissions -->
-            <q-toggle
-              v-model="settingsToApplyToAllQuestions.isSubmissionLocked"
-              :label="
-                $t(
-                  'presentationLayout.rightDrawer.tabs.settings.lockSubmission.title'
-                )
-              "
-              color="primary"
-              left-label
-              class="full-width justify-between"
-            />
+            <!-- word cloud -->
+            <template v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD">
+              <!-- multiple entries -->
+              <q-toggle
+                v-model="settingsToApplyToAllQuestions.isMultipleEntries"
+                :label="
+                  $t(
+                    'presentationLayout.rightDrawer.tabs.settings.multipleEntries.title'
+                  )
+                "
+                color="primary"
+                left-label
+                class="full-width justify-between"
+              />
 
-            <!-- hide results -->
-            <q-toggle
-              v-model="settingsToApplyToAllQuestions.isResultsHidden"
-              :label="
-                $t(
-                  'presentationLayout.rightDrawer.tabs.settings.hideResults.title'
-                )
-              "
-              color="primary"
-              left-label
-              class="full-width justify-between"
-            />
+              <!-- entries per participant -->
+              <q-toggle
+                v-model="settingsToApplyToAllQuestions.entriesPerParticipant"
+                :label="
+                  $t(
+                    'presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.title'
+                  )
+                "
+                color="primary"
+                left-label
+                class="full-width justify-between"
+              />
+
+              <!-- lock submissions -->
+              <q-toggle
+                v-model="
+                  settingsToApplyToAllQuestions.isInitialSubmissionLocked
+                "
+                :label="
+                  $t(
+                    'presentationLayout.rightDrawer.tabs.settings.lockSubmission.title'
+                  )
+                "
+                color="primary"
+                left-label
+                class="full-width justify-between"
+              />
+
+              <!-- hide results -->
+              <q-toggle
+                v-model="settingsToApplyToAllQuestions.isResultsHidden"
+                :label="
+                  $t(
+                    'presentationLayout.rightDrawer.tabs.settings.hideResults.title'
+                  )
+                "
+                color="primary"
+                left-label
+                class="full-width justify-between"
+              />
+            </template>
           </div>
         </template>
       </ConfirmationDialog>
@@ -466,11 +746,15 @@ import { useCanvasTextStore } from "stores/canvas/text";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { api } from "boot/axios";
+import draggable from "vuedraggable/src/vuedraggable";
+import { useQuasar } from "quasar";
 
 /*
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
+
+const $q = useQuasar();
 
 /*
  * stores
@@ -482,7 +766,13 @@ const textStore = useCanvasTextStore();
 const { customization } = storeToRefs(textStore);
 
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, slideSettings } = storeToRefs(presentationsStore);
+const {
+  presentation,
+  slide,
+  slideSettings,
+  showSettingsDialog,
+  presentationSettingsTabsExpanded,
+} = storeToRefs(presentationsStore);
 
 /*
  * load
@@ -603,14 +893,27 @@ const handleQuestionInput = (textAlign = null) => {
 const settingsDefaultState = {
   description: "",
 
-  isMultipleEntries: false,
-  entriesPerParticipant: 3,
-
   isLimitedTime: true,
   timeLimit: 40,
 
-  isSubmissionLocked: false,
+  // word cloud
+  isMultipleEntries: false,
+  entriesPerParticipant: 3,
+  isInitialSubmissionLocked: false,
   isResultsHidden: false,
+
+  // quiz
+  answerOptions: [
+    { value: "", isCorrect: true, isSelected: false },
+    { value: "", isCorrect: false, isSelected: false },
+  ],
+  points: {
+    min: 0,
+    max: 100,
+  },
+  scoreDependsOnTime: true,
+  partialScoring: false,
+  showLeaderboard: true,
 };
 
 const handleSlideSettingsUpdate = () => {
@@ -654,41 +957,45 @@ const timeLimitRules = [
 /*
  * apply to all questions
  */
-const isApplySettingsToAllQuestionsHovered = ref(false);
 const showApplySettingsToAllQuestionsDialog = ref(false);
 
 const settingsToApplyToAllQuestions = ref({
+  isLimitedTime: true,
+
+  // word cloud
   isMultipleEntries: true,
   entriesPerParticipant: false,
-  isLimitedTime: true,
-  isSubmissionLocked: true,
+  isInitialSubmissionLocked: true,
   isResultsHidden: true,
 });
 
 const applySettingsToAllQuestions = () => {
   let settingsToUpdate = {};
 
-  if (settingsToApplyToAllQuestions.value.isMultipleEntries) {
-    settingsToUpdate.isMultipleEntries = slideSettings.value.isMultipleEntries;
-  }
-
-  if (settingsToApplyToAllQuestions.value.entriesPerParticipant) {
-    settingsToUpdate.entriesPerParticipant =
-      slideSettings.value.entriesPerParticipant;
-  }
-
   if (settingsToApplyToAllQuestions.value.isLimitedTime) {
     settingsToUpdate.isLimitedTime = slideSettings.value.isLimitedTime;
     settingsToUpdate.timeLimit = slideSettings.value.timeLimit;
   }
 
-  if (settingsToApplyToAllQuestions.value.isSubmissionLocked) {
-    settingsToUpdate.isSubmissionLocked =
-      slideSettings.value.isSubmissionLocked;
-  }
+  if (slide.value?.type === SLIDE_TYPES.WORD_CLOUD) {
+    if (settingsToApplyToAllQuestions.value.isMultipleEntries) {
+      settingsToUpdate.isMultipleEntries =
+        slideSettings.value.isMultipleEntries;
+    }
 
-  if (settingsToApplyToAllQuestions.value.isResultsHidden) {
-    settingsToUpdate.isResultsHidden = slideSettings.value.isResultsHidden;
+    if (settingsToApplyToAllQuestions.value.entriesPerParticipant) {
+      settingsToUpdate.entriesPerParticipant =
+        slideSettings.value.entriesPerParticipant;
+    }
+
+    if (settingsToApplyToAllQuestions.value.isInitialSubmissionLocked) {
+      settingsToUpdate.isInitialSubmissionLocked =
+        slideSettings.value.isInitialSubmissionLocked;
+    }
+
+    if (settingsToApplyToAllQuestions.value.isResultsHidden) {
+      settingsToUpdate.isResultsHidden = slideSettings.value.isResultsHidden;
+    }
   }
 
   let slidesToUpdate = [];
@@ -714,9 +1021,55 @@ const applySettingsToAllQuestions = () => {
     .patch(`/presentation/${presentation.value.id}/slides`, {
       slides: slidesToUpdate,
     })
+    .then(() => {
+      $q.notify({
+        message: t(
+          "presentationLayout.rightDrawer.tabs.settings.appliedToAllQuestionsSuccessfully"
+        ),
+        icon: "r_done",
+      });
+    })
     .catch((error) => {
       console.log(error);
     });
+};
+
+/*
+ * answer options
+ */
+const handleAddingNewAnswerOption = () => {
+  slideSettings.value.answerOptions.push({
+    value: "",
+    isCorrect: false,
+    isSelected: false,
+  });
+};
+
+const handleRemovingAnswerOption = (answerOptionIndex) => {
+  slideSettings.value.answerOptions = slideSettings.value.answerOptions.filter(
+    (option, index) => index !== answerOptionIndex
+  );
+};
+
+const isAnswerOptionDragging = ref(false);
+const answerOptionsDraggingOptions = ref({
+  animation: 200,
+  group: "attributes",
+  direction: "vertical",
+  disabled: false,
+  ghostClass: "ghost",
+});
+
+const handleStartDraggingAnswerOptions = () => {
+  isAnswerOptionDragging.value = true;
+};
+
+const handleEndDraggingAnswerOptions = () => {
+  isAnswerOptionDragging.value = false;
+};
+
+const handleLayersReorderAnswerOptions = async () => {
+  handleEndDraggingAnswerOptions();
 };
 </script>
 

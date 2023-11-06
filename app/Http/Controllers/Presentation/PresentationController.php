@@ -66,9 +66,12 @@ class PresentationController extends Controller
 
         $presentation->settings()->update([
             'lang' => $request->settings['lang'],
+            'is_fullscreen' => $request->settings['is_fullscreen'],
             'require_participants_info' => $request->settings['require_participants_info'],
             'participants_info_form_title' => $request->settings['participants_info_form_title'],
             'participants_info_form_fields_data' => $request->settings['participants_info_form_fields_data'],
+            'quiz_data' => $request->settings['quiz_data'],
+            'quiz_warning_dismissed' => $request->settings['quiz_warning_dismissed'],
         ]);
 
         return $this->jsonResponse($presentation->toArray());
@@ -113,7 +116,7 @@ class PresentationController extends Controller
             return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
-        $presentation->load('slides', 'slides.template', 'slides.answers', 'preview', 'room', 'settings');
+        $presentation->load('slides', 'slides.template', 'slides.answers', 'slides.answers.participant', 'preview', 'room', 'settings');
 
         if (!$presentation->settings) {
             PresentationSettings::create([

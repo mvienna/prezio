@@ -103,7 +103,6 @@ const types = {
       label: t(
         `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.PICK_ANSWER}`
       ),
-      disable: true,
     },
     {
       name: SLIDE_TYPES.PICK_IMAGE,

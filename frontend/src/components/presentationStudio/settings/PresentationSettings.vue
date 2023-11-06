@@ -23,12 +23,16 @@
         <q-expansion-item
           v-for="(tab, tabIndex) in Object.values(tabs)"
           :key="tab.name"
-          v-model="isExpandedTabs[tabIndex]"
+          v-model="presentationSettingsTabsExpanded[tabIndex]"
           :icon="tab.icon"
           :disable="tab.disable"
           :label="tab.label"
           expand-icon="r_keyboard_arrow_down"
-          :class="isExpandedTabs[tabIndex] ? 'q-expansion-item--active' : ''"
+          :class="
+            presentationSettingsTabsExpanded[tabIndex]
+              ? 'q-expansion-item--active'
+              : ''
+          "
         >
           <div class="q-mt-lg">
             <!-- general info -->
@@ -40,6 +44,9 @@
             <PresentationSettingsCollectParticipantsInfo
               v-if="tab.name === tabs.collectParticipantsInfo.name"
             />
+
+            <!-- quiz settings -->
+            <PresentationSettingsQuiz v-if="tab.name === tabs.quiz.name" />
 
             <!-- language -->
             <PresentationSettingsLanguage
@@ -54,10 +61,12 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
-import { ref } from "vue";
 import PresentationSettingsGeneralInfo from "components/presentationStudio/settings/PresentationSettingsGeneralInfo.vue";
 import PresentationSettingsLanguage from "components/presentationStudio/settings/PresentationSettingsLanguage.vue";
 import PresentationSettingsCollectParticipantsInfo from "components/presentationStudio/settings/PresentationSettingsCollectParticipantsInfo.vue";
+import PresentationSettingsQuiz from "components/presentationStudio/settings/PresentationSettingsQuiz.vue";
+import { usePresentationsStore } from "stores/presentations";
+import { storeToRefs } from "pinia";
 
 /*
  * variables
@@ -65,6 +74,9 @@ import PresentationSettingsCollectParticipantsInfo from "components/presentation
 const { t } = useI18n({ useScope: "global" });
 
 defineEmits(["cancel"]);
+
+const presentationsStore = usePresentationsStore();
+const { presentationSettingsTabsExpanded } = storeToRefs(presentationsStore);
 
 /*
  * tabs
@@ -94,11 +106,10 @@ const tabs = {
       "presentationStudio.settings.questionsAndAnswersFromAudience.title"
     ),
   },
-  quizSetup: {
-    name: "quizSetup",
+  quiz: {
+    name: "quiz",
     icon: "r_quiz",
-    disable: true,
-    label: t("presentationStudio.settings.quizSetup.title"),
+    label: t("presentationStudio.settings.quiz.title"),
   },
   language: {
     name: "language",
@@ -118,8 +129,6 @@ const tabs = {
     label: t("presentationStudio.settings.other.title"),
   },
 };
-
-const isExpandedTabs = ref([]);
 </script>
 
 <style scoped lang="scss">

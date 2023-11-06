@@ -144,7 +144,7 @@
         style="width: 46px"
       />
 
-      <template v-if="slide?.type !== SLIDE_TYPES.CONTENT && slideSettings">
+      <template v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD && slideSettings">
         <!-- hide results -->
         <q-btn
           flat
@@ -153,7 +153,7 @@
           class="q-ml-sm"
           style="width: 46px"
           :style="slideSettings.isResultsHidden ? 'opacity: 0.5;' : ''"
-          @click="handleResultsHiddenSettingToggle()"
+          @click="toggleResultsHiddenSetting()"
         >
           <q-tooltip
             anchor="top middle"
@@ -174,21 +174,20 @@
         <!-- submission is locked -->
         <q-btn
           flat
-          :icon="slideSettings.isSubmissionLocked ? 'r_lock' : 'r_lock_open'"
+          :icon="room?.is_submission_locked ? 'r_lock' : 'r_lock_open'"
           no-caps
           :label="
-            slideSettings.isSubmissionLocked
+            room?.is_submission_locked
               ? $t(
                   `presentationRoom.footer.submissionLock.${
-                    slideSettings.isSubmissionLocked ? 'off' : 'on'
+                    room?.is_submission_locked ? 'off' : 'on'
                   }`
                 )
               : ''
           "
           class="q-ml-sm"
-          :class="slideSettings.isSubmissionLocked ? '' : ''"
-          :style="!slideSettings.isSubmissionLocked ? 'width: 46px' : ''"
-          @click="handleSubmissionLockSettingToggle()"
+          :style="!room?.is_submission_locked ? 'width: 46px' : ''"
+          @click="toggleSubmissionLockSetting()"
         >
           <q-tooltip
             anchor="top middle"
@@ -199,17 +198,56 @@
             {{
               $t(
                 `presentationRoom.footer.submissionLock.toggle.${
-                  slideSettings.isSubmissionLocked ? "on" : "off"
+                  room?.is_submission_locked ? "on" : "off"
                 }`
               )
             }}
           </q-tooltip>
         </q-btn>
       </template>
+
+      <template
+        v-if="
+          [
+            SLIDE_TYPES.PICK_ANSWER,
+            SLIDE_TYPES.PICK_IMAGE,
+            SLIDE_TYPES.TYPE_ANSWER,
+          ].includes(slide?.type) && room?.is_quiz_started
+        "
+      >
+        <!-- submission is locked -->
+        <q-btn
+          flat
+          icon="r_sports_score"
+          no-caps
+          label="
+            Завершить викторину
+          "
+          class="q-ml-sm"
+          @click="
+            () => {
+              room.is_quiz_started = false;
+              room.is_submission_locked = true;
+              presentationsStore.sendPresentationRoomUpdateEvent(
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                {
+                  is_quiz_started: room.is_quiz_started,
+                  is_submission_locked: room.is_submission_locked,
+                  countdown: 0,
+                }
+              );
+            }
+          "
+        >
+        </q-btn>
+      </template>
     </div>
 
     <!-- countdown -->
-    <div v-if="timeLeft" class="room_menu__card">
+    <div v-if="timeLeft && !room.is_submission_locked" class="room_menu__card">
       <q-btn flat class="q-px-sm">
         <q-circular-progress
           :value="timeLeftPercentage"
@@ -256,9 +294,18 @@
               @click="
                 async () => {
                   slideSettings.timeLimit = n * 10;
-                  handleStartingSubmissionLockCountdown();
+                  startCountdown(slideSettings.timeLimit);
                   await updateSlideSettings();
-                  presentationsStore.sendPresentationRoomUpdateEvent();
+                  presentationsStore.sendPresentationRoomUpdateEvent(
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                    {
+                      countdown: slideSettings.timeLimit,
+                      is_submission_locked: room.is_submission_locked,
+                    }
+                  );
                 }
               "
               class="column justify-center"
@@ -324,7 +371,7 @@
         class="full-width text-semibold"
         :class="$q.screen.lt.lg ? 'q-mt-lg q-py-sm' : 'q-mt-xl q-py-md'"
         :label="$t('presentationRoom.footer.hideResults.dialog.toggle')"
-        @click="handleResultsHiddenSettingToggle()"
+        @click="toggleResultsHiddenSetting()"
       />
     </q-card-section>
   </q-card>
@@ -342,7 +389,6 @@ import {
   timeLeft,
   timeLeftPercentage,
 } from "src/helpers/countdown";
-import { ref, watch } from "vue";
 
 /*
  * props
@@ -367,7 +413,8 @@ defineEmits([
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, slideSettings } = storeToRefs(presentationsStore);
+const { room, presentation, slide, slideSettings } =
+  storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { elements } = storeToRefs(canvasStore);
@@ -380,60 +427,32 @@ const updateSlideSettings = async () => {
   await presentationsStore.saveSlide(undefined, elements.value);
 };
 
-const handleResultsHiddenSettingToggle = () => {
+const toggleResultsHiddenSetting = () => {
   slideSettings.value.isResultsHidden = !slideSettings.value.isResultsHidden;
   updateSlideSettings();
 };
 
-const handleSubmissionLockSettingToggle = async () => {
-  slideSettings.value.isSubmissionLocked =
-    !slideSettings.value.isSubmissionLocked;
+const toggleSubmissionLockSetting = async () => {
+  room.value.is_submission_locked = !room.value.is_submission_locked;
 
-  checkSubmissionLockForCountdown();
-
-  await updateSlideSettings();
-  presentationsStore.sendPresentationRoomUpdateEvent();
-};
-
-const checkSubmissionLockForCountdown = () => {
-  if (
-    !slideSettings.value.isSubmissionLocked &&
-    slideSettings.value.isLimitedTime
-  ) {
-    handleStartingSubmissionLockCountdown();
+  if (!room.value.is_submission_locked && slideSettings.value.isLimitedTime) {
+    startCountdown(slideSettings.value.timeLimit);
   } else {
-    handleStoppingSubmissionLockCountdown();
+    stopCountdown();
   }
-};
 
-watch(
-  () => slide.value,
-  () => {
-    if (slideSettings.value) {
-      checkSubmissionLockForCountdown();
-    } else {
-      handleStoppingSubmissionLockCountdown();
+  presentationsStore.sendPresentationRoomUpdateEvent(
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    {
+      countdown: !room.value.is_submission_locked
+        ? slideSettings.value.timeLimit
+        : 0,
+      is_submission_locked: room.value.is_submission_locked,
     }
-  }
-);
-
-/*
- * countdown
- */
-const submissionLockCountdownEndTimeout = ref();
-
-const handleStartingSubmissionLockCountdown = () => {
-  handleStoppingSubmissionLockCountdown();
-  startCountdown(slideSettings.value.timeLimit);
-
-  submissionLockCountdownEndTimeout.value = setTimeout(() => {
-    handleSubmissionLockSettingToggle();
-  }, Number(slideSettings.value.timeLimit) * 1000);
-};
-
-const handleStoppingSubmissionLockCountdown = () => {
-  clearTimeout(submissionLockCountdownEndTimeout.value);
-  stopCountdown();
+  );
 };
 </script>
 

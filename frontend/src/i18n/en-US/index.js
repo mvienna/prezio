@@ -35,4 +35,20 @@ export default {
    * user
    */
   you: "(you)",
+
+  /*
+   * emoji
+   */
+  emoji: {
+    searchPlaceholder: "Search emoji",
+    skinTone: "Skin tone",
+    smileys_people: "Smiles & People",
+    animals_nature: "Animals & Nature",
+    food_drink: "Food & Drink",
+    activities: "Activities",
+    travel_places: "Travel places",
+    objects: "Objects",
+    symbols: "Symbols",
+    flags: "Flags",
+  },
 };

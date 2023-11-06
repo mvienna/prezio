@@ -284,7 +284,11 @@
 
             <!-- fullscreen -->
             <q-item class="q-pl-sm">
-              <q-checkbox v-model="isFullscreen" size="sm" color="dark">
+              <q-checkbox
+                v-model="presentation.settings.is_fullscreen"
+                size="sm"
+                color="dark"
+              >
                 <template #default>
                   <div class="q-pl-xs text-dark">
                     {{ $t("presentationLayout.header.present.fullscreen") }}
@@ -349,6 +353,68 @@
           />
         </q-dialog>
 
+        <!-- confirm presenting without a correct answer in quiz slide -->
+        <q-dialog v-model="showStartPresentingWithQuizWithoutCorrectAnswer">
+          <ConfirmationDialog
+            style="max-width: 500px"
+            icon="r_rule"
+            icon-color="primary"
+            :title="
+              $t('presentationLayout.header.present.quizSettingsWarning.title')
+            "
+            cancel-btn-color="grey"
+            confirm-btn-color="primary"
+            :confirm-btn-text="
+              $t(
+                'presentationLayout.header.present.quizSettingsWarning.presentAnyway'
+              )
+            "
+            @cancel="
+              async () => {
+                await presentationsStore.updatePresentation();
+                showStartPresentingWithQuizWithoutCorrectAnswer = false;
+              }
+            "
+            @confirm="
+              async () => {
+                await handleStartPresenting();
+                showStartPresentingWithQuizWithoutCorrectAnswer = false;
+              }
+            "
+          >
+            <template #default>
+              <div class="column no-wrap q-gutterm-md text-center q-pb-md">
+                <div
+                  v-for="slide in quizSlidesWithoutCorrectAnswers"
+                  :key="slide.index"
+                >
+                  <b style="text-decoration: underline">
+                    {{
+                      $t(
+                        "presentationLayout.header.present.quizSettingsWarning.message"
+                      )
+                    }}
+                    №{{ slide.index + 1 }}:
+                  </b>
+                  {{ slide.title }}
+                </div>
+              </div>
+
+              <div class="column no-wrap q-pb-lg">
+                <q-toggle
+                  v-model="presentation.settings.quiz_warning_dismissed"
+                  :label="
+                    $t(
+                      'presentationLayout.header.present.quizSettingsWarning.dismiss'
+                    )
+                  "
+                  color="primary"
+                />
+              </div>
+            </template>
+          </ConfirmationDialog>
+        </q-dialog>
+
         <!-- user -->
         <UserMenu is-avatar-only class="q-ml-xs" />
       </div>
@@ -363,7 +429,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { date, useQuasar } from "quasar";
 import { useCanvasStore } from "stores/canvas";
-import { computed, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import PresentationSettings from "components/presentationStudio/settings/PresentationSettings.vue";
 import PresentationStudioPreviewPresentation from "components/presentationStudio/preview/PresentationStudioPreview.vue";
 import { api } from "boot/axios";
@@ -371,6 +437,7 @@ import { useRouter } from "vue-router";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import PresentationStudioLayoutHeaderShareDialog from "components/layouts/presentation/studio/PresentationStudioLayoutHeaderShareDialog.vue";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
 /*
  * variables
@@ -389,6 +456,7 @@ const {
   isSavingError,
   lastSavedAt,
   isPresentationPreview,
+  showSettingsDialog,
 } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
@@ -397,7 +465,6 @@ const { elements } = storeToRefs(canvasStore);
 /*
  * dialogs
  */
-const showSettingsDialog = ref(false);
 const showShareDialog = ref(false);
 
 /*
@@ -414,9 +481,10 @@ const slideIndex = computed(() => {
  */
 const showStartPresentingOptionsMenu = ref(false);
 const showStartPresentingInPrivateConfirmationDialog = ref(false);
-const startPresentingFromSlide = ref();
+const showStartPresentingWithQuizWithoutCorrectAnswer = ref(false);
+const quizSlidesWithoutCorrectAnswers = ref([]);
 
-const isFullscreen = ref(true);
+const startPresentingFromSlide = ref();
 
 const handleStartPresenting = async () => {
   if (
@@ -428,8 +496,55 @@ const handleStartPresenting = async () => {
   }
 
   await presentationsStore.saveSlide(slide.value, elements.value);
+  await presentationsStore.updateLocalSlide();
+  await presentationsStore.updatePresentation();
 
-  if (isFullscreen.value) {
+  /*
+   * check presentation slides for correct answers existence
+   */
+  if (
+    !presentation.value.settings.quiz_warning_dismissed &&
+    !showStartPresentingWithQuizWithoutCorrectAnswer.value
+  ) {
+    quizSlidesWithoutCorrectAnswers.value = [];
+
+    presentation.value.slides.map((slide, slideIndex) => {
+      if (
+        [
+          SLIDE_TYPES.PICK_ANSWER,
+          SLIDE_TYPES.PICK_IMAGE,
+          SLIDE_TYPES.TYPE_ANSWER,
+        ].includes(slide.type)
+      ) {
+        const slideSettings = slide.settings_data
+          ? JSON.parse(slide.settings_data)
+          : {};
+
+        if (
+          slideSettings?.answerOptions &&
+          !slideSettings.answerOptions.filter((option) => option.isCorrect)
+            .length
+        ) {
+          quizSlidesWithoutCorrectAnswers.value.push({
+            index: slideIndex,
+            title: JSON.parse(slide.canvas_data)?.find((element) =>
+              element.id.includes("-title-top-")
+            )?.text,
+          });
+        }
+      }
+    });
+
+    if (quizSlidesWithoutCorrectAnswers.value.length) {
+      presentation.value.settings.quiz_warning_dismissed = Boolean(
+        presentation.value.settings.quiz_warning_dismissed
+      );
+      showStartPresentingWithQuizWithoutCorrectAnswer.value = true;
+      return;
+    }
+  }
+
+  if (presentation.value.settings.is_fullscreen) {
     await document.documentElement.requestFullscreen();
   }
 

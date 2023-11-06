@@ -89,17 +89,24 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 /*
- * props
- */
-defineProps({
-  logo: { type: String, default: "/logo_white_with_title_white.png" },
-});
-
-/*
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation } = storeToRefs(presentationsStore);
+const {
+  presentation,
+  averageRoomBackgroundBrightness,
+  roomBackgroundBrightnessThreshold,
+} = storeToRefs(presentationsStore);
+
+/*
+ * logo
+ */
+const logo = computed(() => {
+  return averageRoomBackgroundBrightness.value >=
+    roomBackgroundBrightnessThreshold.value
+    ? "/logo_with_title_black.png"
+    : "/logo_white_with_title_white.png";
+});
 
 /*
  * form
@@ -125,7 +132,7 @@ const isValid = computed(() => {
  */
 const submit = async () => {
   const data = fields.value.map((field) => {
-    return { name: field.name, value: field.value };
+    return { [field.name]: field.value };
   });
 
   await presentationsStore.loginRoom(data);

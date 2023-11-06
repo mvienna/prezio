@@ -4,7 +4,7 @@ export default {
    */
   mainLayout: {
     header: {
-      search: "Find Presentation",
+      search: "Search Presentation",
       goPro: "Go Pro",
       userMenuLinks: {
         profile: "Profile",
@@ -13,7 +13,7 @@ export default {
         logout: "Logout",
       },
       room: {
-        enterCode: "Enter code",
+        enterCode: "Enter Code",
         join: "Join",
       },
     },
@@ -48,30 +48,61 @@ export default {
     header: {
       preview: "Preview",
       present: {
-        title: "Present",
+        title: "Start",
 
         now: {
-          title: "Present now",
+          title: "Quick Start",
           description: "Present from the current slide",
         },
         fromBeginning: {
-          title: "Present from beginning",
+          title: "Start from the Beginning",
           description: "Present from the first slide",
         },
         withBackstage: {
           title: "Present with Backstage",
-          description: "Extended control over presentation",
+          description: "Advanced control over the presentation",
           beta: "Beta",
         },
 
-        fullscreen: "Fullscreen",
+        fullscreen: "Full Screen Mode",
 
         privacySettingsWarning: {
-          title: "Presentation is private",
+          title: "Presentation - Private",
           message:
-            "Your audience won't be able to see your slides or interact from their devices. Would you like to proceed?",
-          switchToPublic: "Switch to public",
-          presentAnyway: "Present anyway",
+            "The audience won't be able to see or interact with slides from their devices. Are you sure you want to continue?",
+          switchToPublic: "Make Public",
+          presentAnyway: "Continue",
+        },
+
+        quizSettingsWarning: {
+          title: "You haven't specified the correct answer",
+          message: "Slide ",
+          dismiss: "Don't remind me in this presentation",
+          cancel: "Cancel",
+          presentAnyway: "Start Anyway",
+        },
+      },
+      share: {
+        title: "Share",
+        inviteAudience: {
+          title: "Audience Invitation",
+          link: {
+            title: "The audience can join at",
+            copy: "Copy",
+          },
+          qr: {
+            title: "Or by scanning the QR code",
+            download: "Download",
+          },
+        },
+        addEditor: {
+          title: "Share Access",
+        },
+        shareSlides: {
+          title: "Share Slides",
+        },
+        publish: {
+          title: "Publish",
         },
       },
     },
@@ -131,7 +162,7 @@ export default {
             confirmation: {
               title: "Apply to All Slides",
               message:
-                "Are you sure you want to apply base fill and background to all other slides in this presentation?",
+                "Are you sure you want to apply the base fill and background to all other slides in this presentation?",
             },
           },
 
@@ -180,7 +211,44 @@ export default {
            * slide text default customization
            */
           defaultTextCustomization: {
-            title: "Default text params",
+            title: "Default Text Customization",
+          },
+        },
+
+        /*
+         * types
+         */
+        types: {
+          title: "Types",
+
+          options: {
+            content: "Content",
+            qr: "QR Code",
+            video: "Video",
+
+            /*
+             * quizzes & games
+             */
+            quizzesAndGames: "Quizzes & Games",
+
+            pick_answer: "Pick Answer",
+            pick_image: "Pick Image",
+            type_answer: "Type Answer",
+            spinner_wheel: "Spinner Wheel",
+            match_pairs: "Match Pairs",
+            correct_order: "Correct Order",
+
+            /*
+             * opinion
+             */
+            userAnswer: "Opinion",
+
+            poll: "Poll",
+            open_ended: "Open Ended",
+            word_cloud: "Word Cloud",
+            scales: "Scales",
+            qna: "Q&A",
+            brain_storm: "Brainstorm",
           },
         },
 
@@ -188,61 +256,111 @@ export default {
          * settings
          */
         settings: {
-          title: "Настройки",
+          title: "Settings",
+          appliedToAllQuestionsSuccessfully:
+            "Settings applied to all 'Quizzes & Games' and 'Opinion' slides successfully",
 
           question: {
-            title: "Your Question",
-            placeholder: "Your question...",
+            title: "Your Title",
+            placeholder: "Your Title...",
 
             description: {
               title: "Detailed Description",
               caption:
-                "A more detailed description will be shown on your audience's devices. You can also display it during the presentation by hovering over the question's title.",
-              placeholder: "Your question description...",
+                "A more detailed description will be shown on your audience's devices. You can also display it during the presentation by hovering over the question title",
+              placeholder: "Your Question Description...",
             },
-          },
-
-          multipleEntries: {
-            title: "Don't limit submissions",
-
-            on: "Each participant can answer an unlimited number of times",
-            off: "Each participant can answer only once",
-          },
-
-          entriesPerParticipant: {
-            title: "Number of Answers per Participant",
-            description:
-              "A single answer can consist of multiple words. You can increase this limit up to 10.",
-            invalid: "Invalid value. Enter a number from 1 to 10.",
           },
 
           timeLimit: {
             title: "Time Limit",
-            description: "The time in which participants must respond",
-            invalid:
-              "Invalid value. Enter a number equal to or greater than 5.",
+            description: "The time participants have to answer",
+            invalid: "Invalid value. Enter a number from 5 to 1800",
             seconds: "Seconds",
           },
 
           lockSubmission: {
-            title: "Submission Lock",
+            title: "Lock Answers at Start",
             description:
-              "Lock submissions on this slide to present it to the audience for voting before enabling voting.",
+              "Lock answer submission on this slide to present it before allowing the audience to vote",
           },
 
           hideResults: {
             title: "Hide Answers",
             description:
-              "Hide participant answers while voting is still in progress. This helps prevent bias in voting.",
+              "Hide participant answers while voting is still ongoing. This helps prevent bias in voting",
           },
 
           applyToAllQuestions: {
-            title: "Apply to all questions",
+            title: "Apply to All Questions",
             confirmation: {
-              title: "Apply to all questions?",
+              title: "Apply to All Questions?",
               message:
-                "Are you sure you want to apply the following settings to all the questions in this presentation?",
+                "Are you sure you want to apply the following settings to all questions in the presentation?",
             },
+          },
+
+          // word cloud
+          multipleEntries: {
+            title: "Allow Multiple Entries",
+
+            on: "Each participant can respond multiple times",
+            off: "Each participant can respond once",
+          },
+
+          entriesPerParticipant: {
+            title: "Entries per Participant",
+            description:
+              "One response can consist of multiple words. You can increase this limit to 10",
+            invalid: "Invalid value. Enter a number from 1 to 10",
+          },
+
+          // quiz
+          answerOptions: {
+            title: "Answer Options",
+            description: {
+              pick_answer:
+                "Write answer options for participants to choose from",
+              pick_image:
+                "Attach photos as answer options for participants to choose from. Additionally, you can add labels to them",
+            },
+
+            answerOption: "Answer Option #",
+            addAnswerOption: "Add Answer Option",
+
+            maxLengthErrorMessage: "Maximum 150 characters",
+          },
+
+          points: {
+            title: "Points",
+            description: "Select the point range for this question",
+
+            min: "Min",
+            max: "Max",
+
+            scoreDependsOnTime: {
+              title: "Score Depends on Time",
+              description: {
+                on: "Faster responses earn more points",
+                off: "A correct response earns the maximum points, while a wrong response earns the minimum",
+              },
+            },
+
+            partialScoring: {
+              title: "Partial Scoring",
+              description:
+                "Participants receive points for each correct answer, but selecting even one incorrect answer results in the minimum score",
+            },
+          },
+
+          leaderboard: {
+            title: "Leaderboard",
+            description:
+              "Display a leaderboard with the results of the entire quiz after this question?",
+          },
+
+          openGeneralQuizSettings: {
+            title: "Open General Quiz Settings",
           },
         },
 
@@ -263,7 +381,7 @@ export default {
           },
 
           search: {
-            placeholder: "Search for a template...",
+            placeholder: "Search Template...",
             noResults: {
               title: "Nothing Found",
               template: "Template",
@@ -284,7 +402,7 @@ export default {
                 public: {
                   title: "Public",
                   description:
-                    "The template will be visible and accessible only to you",
+                    "The template will only be visible and accessible to you",
                 },
                 private: {
                   title: "Private",
@@ -296,50 +414,13 @@ export default {
 
               errors: {
                 name: {
-                  required: "Please enter the template name",
+                  required: "Template name is required",
                 },
               },
             },
           },
 
           applied: "Template applied successfully",
-        },
-
-        /*
-         * types
-         */
-        types: {
-          title: "Types",
-
-          options: {
-            content: "Content",
-            qr: "QR code",
-            video: "Video",
-
-            /*
-             * quizzes & games
-             */
-            quizzesAndGames: "Quizzes & Games",
-
-            pick_answer: "Pick Answer",
-            pick_image: "Pick Image",
-            type_answer: "Type Answer",
-            spinner_wheel: "Spinner Wheel",
-            match_pairs: "Match Pairs",
-            correct_order: "Correct Order",
-
-            /*
-             * opinion
-             */
-            userAnswer: "Opinion & Question - Answer",
-
-            poll: "Poll",
-            open_ended: "Open Ended",
-            word_cloud: "Word Cloud",
-            scales: "Scaled",
-            qna: "Q&A",
-            brain_storm: "Brain Storm",
-          },
         },
 
         /*

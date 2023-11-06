@@ -16,7 +16,12 @@
     "@quasar/extras": "^1.16.6",
     "axios": "^0.21.1",
     "d3": "^7.8.5",
+    "d3-array": "^3.2.4",
+    "d3-axis": "^3.0.0",
     "d3-cloud": "^1.2.7",
+    "d3-scale": "^4.0.2",
+    "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.1",
     "dotenv": "^16.3.1",
     "git-describe": "^4.1.1",
     "laravel-echo": "^1.15.3",
@@ -27,6 +32,7 @@
     "vue": "^3.0.0",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.0",
+    "vue3-emoji-picker": "^1.1.8",
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {

@@ -9,7 +9,7 @@
 
     <q-btn
       v-if="
-        presentation?.slides?.filter((slide) => slide.answers.length).length
+        presentation?.slides?.filter((slide) => slide?.answers?.length).length
       "
       outline
       color="primary"

@@ -27,10 +27,28 @@
 
   <!-- words cloud -->
   <PresentationStudioWordsCloud
-    v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD && slideAnswers?.length"
+    v-if="
+      slide?.type === SLIDE_TYPES.WORD_CLOUD &&
+      slideAnswers?.length &&
+      !slideSettings?.isResultsHidden &&
+      participants
+    "
     :words="slideAnswers"
     :style="isPresentationPreview ? 'z-index: 6001;' : ''"
     @remove-word="handleRemovingAnswer($event)"
+  />
+
+  <!-- bar chart -->
+  <PresentationAddonsBarChart
+    v-if="
+      [
+        SLIDE_TYPES.TYPE_ANSWER,
+        SLIDE_TYPES.PICK_ANSWER,
+        SLIDE_TYPES.PICK_IMAGE,
+      ].includes(slide?.type) &&
+      slideAnswers?.length &&
+      (!room || (room && room.is_quiz_started && !room.is_submission_locked))
+    "
   />
 </template>
 
@@ -42,6 +60,7 @@ import PresentationStudioWordsCloud from "components/presentation/addons/Present
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { api } from "boot/axios";
 import { useCanvasStore } from "stores/canvas";
+import PresentationAddonsBarChart from "components/presentation/addons/PresentationAddonsBarChart.vue";
 
 /*
  * props
@@ -56,7 +75,7 @@ defineProps({
 const canvasStore = useCanvasStore();
 
 const presentationsStore = usePresentationsStore();
-const { slide, slideSettings, isPresentationPreview } =
+const { room, slide, slideSettings, isPresentationPreview, participants } =
   storeToRefs(presentationsStore);
 
 /*

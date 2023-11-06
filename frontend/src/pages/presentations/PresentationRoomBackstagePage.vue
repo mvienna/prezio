@@ -192,7 +192,7 @@ import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
 import { useAuthStore } from "stores/auth";
 import QRCodeStyling from "qr-code-styling";
-import PresentationRoomAuthForm from "components/presentationRoom/PresentationRoomAuthForm.vue";
+import PresentationRoomAuthForm from "components/presentationRoom/authForm/PresentationRoomAuthForm.vue";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 
 /*

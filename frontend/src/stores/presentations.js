@@ -1,5 +1,11 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
+import {
+  countdown,
+  startCountdown,
+  timeLeft,
+  timeLeftPercentage,
+} from "src/helpers/countdown";
 
 export const usePresentationsStore = defineStore("presentations", {
   state: () => ({
@@ -10,9 +16,13 @@ export const usePresentationsStore = defineStore("presentations", {
     room: null,
 
     participant: null,
+    participants: [],
     isGuest: false,
 
     showRoomInvitationPanel: false,
+
+    averageRoomBackgroundBrightness: 0,
+    roomBackgroundBrightnessThreshold: 128,
 
     /*
      * folders
@@ -43,6 +53,9 @@ export const usePresentationsStore = defineStore("presentations", {
     slideSettings: null,
 
     isPresentationPreview: false,
+
+    showSettingsDialog: false,
+    presentationSettingsTabsExpanded: [],
 
     /*
      * save
@@ -187,6 +200,9 @@ export const usePresentationsStore = defineStore("presentations", {
         .get(`/presentation/${id}`)
         .then((response) => {
           this.presentation = response.data;
+          this.presentation.settings.is_fullscreen = Boolean(
+            this.presentation.settings.is_fullscreen
+          );
 
           const lastSlide = this.presentation.slides.find(
             (slide) => slide.id === this.presentation.settings.last_slide_id
@@ -210,10 +226,12 @@ export const usePresentationsStore = defineStore("presentations", {
           settings: presentation.settings,
         })
         .then(() => {
-          const presentationIndex = this.presentations.findIndex(
+          const presentationIndex = this.presentations?.findIndex(
             (item) => item.id === presentation.id
           );
-          this.presentations[presentationIndex] = presentation;
+          if (presentationIndex !== -1) {
+            this.presentations[presentationIndex] = presentation;
+          }
         })
         .catch((error) => {
           console.log(error.response?.data?.message);
@@ -391,7 +409,8 @@ export const usePresentationsStore = defineStore("presentations", {
       presentation_id = this.presentation?.id,
       room_id = this.room?.id,
       slide_id = this.slide?.id,
-      token = null
+      token = null,
+      data = null
     ) {
       if (!presentation_id || !room_id) return;
 
@@ -399,6 +418,7 @@ export const usePresentationsStore = defineStore("presentations", {
         .patch(`/presentation/${presentation_id}/room/${room_id}`, {
           slide_id: slide_id,
           token: token,
+          data: data,
         })
         .catch((error) => {
           throw {
@@ -458,6 +478,50 @@ export const usePresentationsStore = defineStore("presentations", {
           console.log(error);
           console.log(error.response.data);
         });
+    },
+
+    handleQuizStart() {
+      this.room.is_quiz_started = true;
+
+      let timeout = 4000;
+      if (
+        (this.presentation.settings.quiz_data &&
+          JSON.parse(this.presentation.settings.quiz_data).countdown) ||
+        !this.presentation.settings.quiz_data
+      ) {
+        timeout += 5000;
+      }
+
+      startCountdown(timeout / 1000);
+      this.room.is_submission_locked = true;
+      this.sendPresentationRoomUpdateEvent(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          is_submission_locked: this.room.is_submission_locked,
+          countdown: timeout / 1000,
+          is_quiz_started: this.room.is_quiz_started,
+        }
+      );
+
+      setTimeout(() => {
+        this.room.is_submission_locked = false;
+        startCountdown(this.slideSettings.timeLimit);
+
+        this.sendPresentationRoomUpdateEvent(
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          {
+            is_submission_locked: this.room.is_submission_locked,
+            countdown: this.slideSettings.timeLimit,
+            is_quiz_started: this.room.is_quiz_started,
+          }
+        );
+      }, timeout);
     },
   },
 });

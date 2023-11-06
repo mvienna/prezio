@@ -71,7 +71,7 @@ class PresentationRoomController extends Controller
         }
 
         $room->load('presentation', 'reactions');
-        $room->presentation->load('slides', 'slides.answers', 'preview', 'settings');
+        $room->presentation->load('slides', 'slides.answers', 'slides.answers.participant', 'preview', 'settings');
 
         if (!$room->reactions) {
             PresentationRoomReactions::create([
@@ -120,10 +120,25 @@ class PresentationRoomController extends Controller
             $props['token'] = $request->token;
         }
 
+        // countdown
+        if (isset($request->data)) {
+            if (isset($request->data['is_quiz_started'])) {
+                $props['is_quiz_started'] = $request->data['is_quiz_started'];
+            }
+
+            if (isset($request->data['is_submission_locked'])) {
+                $props['is_submission_locked'] = $request->data['is_submission_locked'];
+            }
+
+            if (isset($request->data['countdown'])) {
+                $props['countdown'] = $request->data['countdown'];
+            }
+        }
+
         // update
         $room->update($props);
         if ($slide) {
-            event(new PresentationRoomUpdatedEvent($room, $slide));
+            event(new PresentationRoomUpdatedEvent($room));
         }
 
         return $this->successResponse();
@@ -160,17 +175,14 @@ class PresentationRoomController extends Controller
 
         $answers = [];
         foreach ($request->answers as $answer) {
-            $sameAnswer = PresentationSlideAnswer::where('slide_id', $request->slide_id)->where('answer_data', json_encode(['text' => $answer]));
+            $answer = PresentationSlideAnswer::create([
+                'participant_id' => $user->id,
+                'slide_id' => $request->slide_id,
+                'answer_data' => json_encode(['text' => $answer]),
+            ]);
 
-            if (!$sameAnswer->exists()) {
-                $answer = PresentationSlideAnswer::create([
-                    'participant_id' => $user->id,
-                    'slide_id' => $request->slide_id,
-                    'answer_data' => json_encode(['text' => $answer]),
-                ]);
-
-                $answers[] = $answer;
-            }
+            $answer->load('participant');
+            $answers[] = $answer;
         }
 
         event(new PresentationRoomAnswersFormSubmittedEvent($room, $answers));
@@ -199,9 +211,20 @@ class PresentationRoomController extends Controller
         ]);
     }
 
-    public function user(): JsonResponse
+    public function getParticipantData(): JsonResponse
     {
         $participant = auth()->user();
+        return $this->jsonResponse($participant->toArray());
+    }
+
+    public function updateParticipantData(Request $request): JsonResponse
+    {
+        $participant = auth()->user();
+
+        $participant->update([
+           'user_data' => $request->user_data
+        ]);
+
         return $this->jsonResponse($participant->toArray());
     }
 }

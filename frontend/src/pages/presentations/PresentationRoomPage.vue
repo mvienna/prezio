@@ -67,18 +67,33 @@
         :class="isHost ? 'justify-center' : ''"
       >
         <!-- auth form - collecting participants info -->
-        <PresentationRoomAuthForm
-          v-if="!isAuthenticated && isLoaded"
-          :logo="
-            averageRoomBackgroundBrightness >= roomBackgroundBrightnessThreshold
-              ? '/logo_with_title_black.png'
-              : '/logo_white_with_title_white.png'
+        <PresentationRoomAuthForm v-if="!isAuthenticated && isLoaded" />
+
+        <!-- auth form - collecting participants avatar & updating name -->
+        <PresentationRoomBaseInfoForm
+          v-if="
+            isAuthenticated &&
+            !isHost &&
+            slide?.type !== SLIDE_TYPES.CONTENT &&
+            (participant?.user_data
+              ? !JSON.parse(participant.user_data).avatar
+              : false)
           "
         />
 
         <!-- presentation content -->
         <div
-          v-show="isAuthenticated && isLoaded"
+          v-show="
+            isAuthenticated &&
+            isLoaded &&
+            (isHost ||
+              (!isHost && slide?.type === SLIDE_TYPES.CONTENT) ||
+              (!isHost &&
+                slide?.type !== SLIDE_TYPES.CONTENT &&
+                (participant?.user_data
+                  ? JSON.parse(participant.user_data).avatar
+                  : false)))
+          "
           class="row no-wrap justify-center items-center"
           style="transition: 0.5s"
           :class="showRoomInvitationPanel || !isHost ? 'q-px-md' : ''"
@@ -114,12 +129,6 @@
               :is-host="isHost"
               :is-mouse-active="isMouseActive"
               :show-room-information-panel="showRoomInformationPanel"
-              :logo="
-                averageRoomBackgroundBrightness >=
-                roomBackgroundBrightnessThreshold
-                  ? '/logo_with_title_black.png'
-                  : '/logo_white_with_title_white.png'
-              "
               @mouseover="clearIsMouseActiveTimeout()"
               @toggle-invitation-panel="
                 showRoomInvitationPanel = !showRoomInvitationPanel
@@ -147,19 +156,48 @@
                 canvasStore.canvasRect()?.width > 0 &&
                 isHost &&
                 isLoaded &&
-                slide?.type !== SLIDE_TYPES.CONTENT &&
-                !slideSettings.isResultsHidden
+                slide?.type !== SLIDE_TYPES.CONTENT
               "
             />
 
-            <!-- participant answer form -->
-            <PresentationRoomSubmissionForm
-              v-if="!isHost && slide?.type !== SLIDE_TYPES.CONTENT"
-              :text-color="
-                averageRoomBackgroundBrightness >=
-                roomBackgroundBrightnessThreshold
-                  ? 'black'
-                  : 'white'
+            <template
+              v-if="
+                canvasStore.canvasRect()?.width > 0 &&
+                isHost &&
+                isLoaded &&
+                [
+                  SLIDE_TYPES.PICK_ANSWER,
+                  SLIDE_TYPES.PICK_IMAGE,
+                  SLIDE_TYPES.TYPE_ANSWER,
+                ].includes(slide?.type) &&
+                room
+              "
+            >
+              <!-- waiting for participants -->
+              <PresentationRoomQuizWaitingForParticipants
+                v-if="!room.is_quiz_started"
+              />
+
+              <!-- quiz countdown -->
+              <PresentationRoomQuizCountdown
+                v-if="
+                  room.is_quiz_started && room.is_submission_locked && timeLeft
+                "
+              />
+            </template>
+
+            <!-- participant submission form - word cloud -->
+            <PresentationRoomSubmissionFormWordCloud
+              v-if="!isHost && slide?.type === SLIDE_TYPES.WORD_CLOUD"
+            />
+
+            <!-- participant submission form - pick answer -->
+            <PresentationRoomSubmissionFormPickAnswer
+              v-if="
+                !isHost &&
+                [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
+                  slide?.type
+                )
               "
             />
 
@@ -181,16 +219,8 @@
 
             <!-- room data - participants count, reactions, answers count -->
             <PresentationRoomData
-              :participants-count="participantsCount || 0"
+              :participants-count="participants?.length || 0"
               :is-host="isHost"
-              :text-color="
-                !isHost && slide?.type !== SLIDE_TYPES.CONTENT
-                  ? averageRoomBackgroundBrightness >=
-                    roomBackgroundBrightnessThreshold
-                    ? 'black'
-                    : 'white'
-                  : 'white'
-              "
             />
 
             <!-- controls (← / →) -->
@@ -217,8 +247,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
 import { useAuthStore } from "stores/auth";
-import QRCodeStyling from "qr-code-styling";
-import PresentationRoomAuthForm from "components/presentationRoom/PresentationRoomAuthForm.vue";
+import PresentationRoomAuthForm from "components/presentationRoom/authForm/PresentationRoomAuthForm.vue";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import PresentationRoomHeader from "components/presentationRoom/PresentationRoomHeader.vue";
 import PresentationRoomMenu from "components/presentationRoom/PresentationRoomMenu.vue";
@@ -229,9 +258,14 @@ import Echo from "laravel-echo";
 import { randomNames } from "src/constants/mock";
 import { useI18n } from "vue-i18n";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
-import PresentationRoomSubmissionForm from "components/presentationRoom/PresentationRoomSubmissionForm.vue";
+import PresentationRoomSubmissionFormWordCloud from "components/presentationRoom/submissionForm/PresentationRoomSubmissionFormWordCloud.vue";
 import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
 import { generateQrCode } from "src/helpers/qrUtils";
+import PresentationRoomSubmissionFormPickAnswer from "components/presentationRoom/submissionForm/PresentationRoomSubmissionFormPickAnswer.vue";
+import PresentationRoomBaseInfoForm from "components/presentationRoom/authForm/PresentationRoomBaseInfoForm.vue";
+import { startCountdown, stopCountdown, timeLeft } from "src/helpers/countdown";
+import PresentationRoomQuizWaitingForParticipants from "components/presentationRoom/quiz/PresentationRoomQuizWaitingForParticipants.vue";
+import PresentationRoomQuizCountdown from "components/presentationRoom/quiz/PresentationRoomQuizCountdown.vue";
 
 /*
  * variables
@@ -250,9 +284,11 @@ const {
   slide,
   slideSettings,
   room,
+  participants,
   participant,
   isGuest,
   showRoomInvitationPanel,
+  averageRoomBackgroundBrightness,
 } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
@@ -283,9 +319,6 @@ const isAuthenticated = computed(() => {
 
 // header - information panel
 const showRoomInformationPanel = ref(true);
-
-// room data
-const participantsCount = ref(0);
 
 /*
  * canvas slide
@@ -371,6 +404,25 @@ onMounted(async () => {
       await presentationsStore.sendPresentationRoomUpdateEvent();
     }
 
+    if (
+      [
+        SLIDE_TYPES.PICK_ANSWER,
+        SLIDE_TYPES.PICK_IMAGE,
+        SLIDE_TYPES.TYPE_ANSWER,
+      ].includes(slide.value.type) &&
+      !room.value.is_quiz_started
+    ) {
+      elements.value = elements.value.filter((element) =>
+        [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+          element.mode
+        )
+      );
+
+      if (isHost.value) {
+        showRoomInvitationPanel.value = true;
+      }
+    }
+
     /*
      * resize canvas
      */
@@ -412,15 +464,12 @@ onMounted(async () => {
        * add is_guest to participants table
        */
       isGuest.value = true;
-      await presentationsStore.loginRoom([
-        {
-          name: "name",
-          value:
-            t("presentationRoom.auth.guest") +
-            " " +
-            randomNames[Math.floor(Math.random() * randomNames.length)],
-        },
-      ]);
+      await presentationsStore.loginRoom({
+        name:
+          t("presentationRoom.auth.guest") +
+          " " +
+          randomNames[Math.floor(Math.random() * randomNames.length)],
+      });
     }
   }
 
@@ -428,6 +477,16 @@ onMounted(async () => {
    * establish connection to room channels
    */
   connectToRoomChannels();
+
+  /*
+   * countdown
+   */
+  if (room.value.countdown > 0) {
+    stopCountdown();
+    startCountdown(room.value.countdown);
+  } else {
+    handleCountdownOnSlideChange(true);
+  }
 
   /*
    * hide loader
@@ -461,13 +520,17 @@ const connectToRoomChannels = () => {
 
     window.Echo.join(`presence.room.${room.value.id}`)
       .here((users) => {
-        participantsCount.value = users.length;
+        participants.value = users.filter(
+          (item) => item.id !== user.value?.id && item.room_id
+        );
       })
-      .joining(() => {
-        participantsCount.value++;
+      .joining((userJoined) => {
+        participants.value.push(userJoined);
       })
-      .leaving(() => {
-        participantsCount.value--;
+      .leaving((userLeft) => {
+        participants.value = participants.value.filter(
+          (item) => item.id !== userLeft?.id && item.room_id
+        );
       });
   }
 
@@ -475,16 +538,24 @@ const connectToRoomChannels = () => {
    * listen for updates
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
-    if (event.token !== room.value.token) {
+    if (event.room.token !== room.value.token) {
       return await router.push(
-        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) + event.token
+        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
+          event.room.token
       );
     }
 
     if (!isHost.value && presentation.value?.is_private) return;
 
-    const newSlide = await presentationsStore.fetchSlideData(event.slide_id);
+    room.value = event.room;
+    stopCountdown();
+    if (room.value.countdown > 0) {
+      startCountdown(room.value.countdown);
+    }
 
+    const newSlide = await presentationsStore.fetchSlideData(
+      room.value.slide_id
+    );
     slide.value = newSlide.data;
     slideSettings.value = slide.value.settings_data
       ? JSON.parse(slide.value.settings_data)
@@ -492,6 +563,22 @@ const connectToRoomChannels = () => {
     presentationsStore.updateLocalSlide();
 
     await canvasStore.setElementsFromSlide();
+
+    if (
+      [
+        SLIDE_TYPES.PICK_ANSWER,
+        SLIDE_TYPES.PICK_IMAGE,
+        SLIDE_TYPES.TYPE_ANSWER,
+      ].includes(slide.value.type) &&
+      !room.value.is_quiz_started
+    ) {
+      elements.value = elements.value.filter((element) =>
+        [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+          element.mode
+        )
+      );
+    }
+
     canvasStore.redrawCanvas(false, false, undefined, false);
   });
 
@@ -569,7 +656,31 @@ const handleKeyDownEvent = (event) => {
     }
 
     if (event.keyCode === 39) {
-      handleSlideChange("forward");
+      if (
+        [
+          SLIDE_TYPES.PICK_IMAGE,
+          SLIDE_TYPES.PICK_ANSWER,
+          SLIDE_TYPES.TYPE_ANSWER,
+        ].includes(slide.value?.type) &&
+        !room.value.is_quiz_started
+      ) {
+        presentationsStore.handleQuizStart();
+      } else {
+        handleSlideChange("forward");
+      }
+    }
+
+    if (event.keyCode === 13) {
+      if (
+        [
+          SLIDE_TYPES.PICK_IMAGE,
+          SLIDE_TYPES.PICK_ANSWER,
+          SLIDE_TYPES.TYPE_ANSWER,
+        ].includes(slide.value?.type) &&
+        !room.value.is_quiz_started
+      ) {
+        presentationsStore.handleQuizStart();
+      }
     }
   }
 };
@@ -589,7 +700,58 @@ const handleSlideChange = async (direction) => {
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false, false, undefined, false);
 
-  presentationsStore.sendPresentationRoomUpdateEvent();
+  handleCountdownOnSlideChange();
+};
+
+const handleCountdownOnSlideChange = (isOnLoad = false) => {
+  if (
+    (slide.value?.type === SLIDE_TYPES.WORD_CLOUD &&
+      slideSettings.value &&
+      !slideSettings.value.isInitialSubmissionLocked) ||
+    ([
+      SLIDE_TYPES.PICK_IMAGE,
+      SLIDE_TYPES.PICK_ANSWER,
+      SLIDE_TYPES.TYPE_ANSWER,
+    ].includes(slide.value?.type) &&
+      room.value.is_quiz_started &&
+      room.value.is_submission_locked &&
+      !isOnLoad)
+  ) {
+    room.value.is_submission_locked = false;
+    if (!room.value.is_submission_locked && slideSettings.value.isLimitedTime) {
+      startCountdown(slideSettings.value.timeLimit);
+    } else {
+      stopCountdown();
+    }
+
+    presentationsStore.sendPresentationRoomUpdateEvent(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      {
+        countdown: !room.value.is_submission_locked
+          ? slideSettings.value.timeLimit
+          : 0,
+        is_submission_locked: room.value.is_submission_locked,
+      }
+    );
+  } else {
+    if (!isOnLoad) {
+      room.value.is_submission_locked = true;
+      stopCountdown();
+      presentationsStore.sendPresentationRoomUpdateEvent(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          countdown: 0,
+          is_submission_locked: room.value.is_submission_locked,
+        }
+      );
+    }
+  }
 };
 
 /*
@@ -663,8 +825,7 @@ const roomBackground = computed(() => {
   );
 });
 
-const roomBackgroundBrightnessThreshold = 128;
-const averageRoomBackgroundBrightness = computed(() => {
+averageRoomBackgroundBrightness.value = computed(() => {
   const element = roomBackground.value;
   if (!element?.image?.nodeType) return 0;
 
@@ -707,7 +868,7 @@ const averageRoomBackgroundBrightness = computed(() => {
     const r = imageData[i];
     const g = imageData[i + 1];
     const b = imageData[i + 2];
-    const brightness = (r + g + b) / 3; // avg brightness of the pixel
+    const brightness = (r + g + b) / 3;
     sumBrightness += brightness;
   }
 

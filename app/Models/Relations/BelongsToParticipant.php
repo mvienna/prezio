@@ -12,6 +12,6 @@ trait BelongsToParticipant
      */
     public function participant(): BelongsTo
     {
-        return $this->belongsTo(PresentationRoomParticipant::class, 'id', 'participant_id');
+        return $this->belongsTo(PresentationRoomParticipant::class);
     }
 }

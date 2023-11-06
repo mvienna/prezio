@@ -22,7 +22,11 @@
     <div
       class="row no-wrap q-gutter-sm"
       style="transition: 0.2s"
-      :style="!isMouseActive && !$q.screen.lt.sm ? 'opacity: 0' : ''"
+      :style="
+        !showRoomInformationPanel && !isHovered && !isMouseActive
+          ? 'opacity: 0;'
+          : ''
+      "
     >
       <q-intersection
         transition="fade"
@@ -40,13 +44,14 @@
             clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
             presentation?.id
           "
-          style="border-radius: 50%; transition: 0.2s"
+          style="border-radius: 50%; transition: 0.2s; min-width: 42px"
         >
           <q-tooltip>
             {{ $t("presentationRoom.header.backToStudio") }}
           </q-tooltip>
         </q-btn>
       </q-intersection>
+
       <q-intersection v-else transition="fade">
         <q-btn
           unelevated
@@ -182,7 +187,6 @@ defineProps({
   isHost: { type: Boolean },
   isMouseActive: { type: Boolean },
   showRoomInformationPanel: { type: Boolean },
-  logo: { type: String, default: "/logo_with_title_white.png" },
 });
 
 /*
@@ -194,8 +198,23 @@ defineEmits(["toggleInvitationPanel"]);
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { room, presentation, showRoomInvitationPanel } =
-  storeToRefs(presentationsStore);
+const {
+  room,
+  presentation,
+  showRoomInvitationPanel,
+  averageRoomBackgroundBrightness,
+  roomBackgroundBrightnessThreshold,
+} = storeToRefs(presentationsStore);
+
+/*
+ * logo
+ */
+const logo = computed(() => {
+  return averageRoomBackgroundBrightness.value >=
+    roomBackgroundBrightnessThreshold.value
+    ? "/logo_with_title_black.png"
+    : "/logo_white_with_title_white.png";
+});
 
 /*
  * room link

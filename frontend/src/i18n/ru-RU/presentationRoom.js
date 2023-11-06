@@ -80,9 +80,30 @@ export default {
 
     auth: {
       form: {
-        submit: "Присоединяйся сейчас",
+        title: "Давайте познакомимся",
+        name: "Введите ваше имя",
+        avatar: "Выберите себе аватар",
+        fieldIsRequired: "Поле обязательно для заполнения",
+        submit: "Присоединиться сейчас",
       },
       guest: "Гость",
+    },
+
+    waitingForParticipants: {
+      title: "Ожидание присоединяющихся участников",
+      startQuiz: {
+        title: "Начать викторину!",
+        shortcut: "Вы также можете нажать",
+      },
+    },
+
+    waitingForQuizStart: {
+      title: "Приготовьтесь к игре!",
+      description: "Викторина скоро начнется",
+    },
+
+    quizCountdown: {
+      title: "Посмотрите на свое устройство",
     },
 
     isPrivate: {
@@ -98,12 +119,14 @@ export default {
         title: "Отправить",
         submissionIsLocked: "Отправка завершена",
       },
+
       waitForSubmissionToBeUnlocked: "Ожидайте начала голосование",
       multipleEntriesAvailable:
         "Вы можете отправлять ответы неограниченное кол-во раз",
       answersSubmittedWait:
         "Вы уже ответили на этот вопрос. Пожалуйста, подождите, пока ведущий покажет следующий слайд.",
       thanksForParticipation: "Благодарим за Ваше участие",
+      timesUp: "Время вышло",
     },
   },
 };

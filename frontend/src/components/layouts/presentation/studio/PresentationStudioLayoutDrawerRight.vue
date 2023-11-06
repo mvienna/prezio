@@ -115,7 +115,12 @@ const rightDrawerTabs = computed(() => {
       name: "settings",
       icon: "r_view_in_ar",
       label: t("presentationLayout.rightDrawer.tabs.settings.title"),
-      hidden: ![SLIDE_TYPES.WORD_CLOUD].includes(slide.value?.type),
+      hidden: ![
+        SLIDE_TYPES.WORD_CLOUD,
+        SLIDE_TYPES.PICK_ANSWER,
+        SLIDE_TYPES.PICK_IMAGE,
+        SLIDE_TYPES.TYPE_ANSWER,
+      ].includes(slide.value?.type),
     },
     {
       name: "layers",

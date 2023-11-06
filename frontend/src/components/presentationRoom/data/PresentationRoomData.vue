@@ -41,7 +41,7 @@
 
     <!-- answers count -->
     <PresentationRoomDataSubmissions
-      v-if="isHost && slide?.type !== SLIDE_TYPES.CONTENT"
+      v-if="isHost && slide?.type === SLIDE_TYPES.WORD_CLOUD"
       :stage="stage.pin"
       :answers-count="slide?.answers?.length || 0"
       class="q-ml-md"
@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import PresentationRoomDataLike from "components/presentationRoom/data/PresentationRoomDataLike.vue";
 import PresentationRoomDataLove from "components/presentationRoom/data/PresentationRoomDataLove.vue";
 import { usePresentationsStore } from "stores/presentations";
@@ -85,15 +85,31 @@ import { SLIDE_TYPES } from "src/constants/presentationStudio";
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { room, slide } = storeToRefs(presentationsStore);
+const {
+  room,
+  slide,
+  averageRoomBackgroundBrightness,
+  roomBackgroundBrightnessThreshold,
+} = storeToRefs(presentationsStore);
 
 /*
  * props
  */
-defineProps({
+const props = defineProps({
   participantsCount: { type: Number },
   isHost: { type: Boolean },
-  textColor: { type: String, default: "white" },
+});
+
+/*
+ * text color
+ */
+const textColor = computed(() => {
+  return !props.isHost && slide?.type !== SLIDE_TYPES.CONTENT
+    ? averageRoomBackgroundBrightness.value >=
+      roomBackgroundBrightnessThreshold.value
+      ? "black"
+      : "white"
+    : "white";
 });
 
 /*

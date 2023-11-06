@@ -313,7 +313,7 @@ const handleKeyDownEvent = (event) => {
         cut();
       }
 
-      // cut element
+      // duplicate element
       if (event.key === "d") {
         if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
 

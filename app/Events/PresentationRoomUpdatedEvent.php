@@ -15,12 +15,10 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public PresentationRoom $room;
-    public PresentationSlide $slide;
 
-    public function __construct(PresentationRoom $room, PresentationSlide $slide)
+    public function __construct(PresentationRoom $room)
     {
         $this->room = $room;
-        $this->slide = $slide;
     }
 
     public function broadcastOn(): Channel
@@ -31,8 +29,7 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'slide_id' => $this->slide->id,
-            'token' => $this->room->token,
+            'room' => $this->room
         ];
     }
 }

@@ -1,0 +1,436 @@
+<template>
+  <q-form
+    v-if="slideSettings"
+    :class="`text-${textColor}`"
+    style="
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      overflow-y: scroll;
+      max-height: calc(100vh - 96px - 96px);
+    "
+    class="scroll--hidden"
+    @submit.prevent="handleSubmittingAnswers()"
+  >
+    <!-- waiting for quiz to start -->
+    <template v-if="!room.is_quiz_started && room.is_submission_locked">
+      <div
+        class="text-center q-mb-md text-h7 text-semibold"
+        :style="`color: ${
+          wordCloudTextColors[
+            Math.floor(Math.random() * wordCloudTextColors.length)
+          ]
+        }`"
+      >
+        {{
+          participant?.user_data
+            ? JSON.parse(participant.user_data).avatar + " "
+            : ""
+        }}
+        {{
+          participant?.user_data ? JSON.parse(participant.user_data).name : ""
+        }}
+      </div>
+
+      <div class="waiting_for_quiz_start__title">
+        {{ $t("presentationRoom.waitingForQuizStart.title") }}
+      </div>
+
+      <div class="text-center q-mt-md" style="opacity: 0.7">
+        {{ $t("presentationRoom.waitingForQuizStart.description") }}
+      </div>
+    </template>
+
+    <!-- 5s timeout -->
+    <template
+      v-else-if="room.is_quiz_started && room.is_submission_locked && timeLeft"
+    >
+      <template
+        v-if="
+          timeLeft > 5 ||
+          (presentation.settings.quiz_data &&
+            !JSON.parse(presentation.settings.quiz_data).countdown)
+        "
+      >
+        <div class="text-h6 text-semibold text-center">
+          Вопрос
+          {{
+            presentation.slides
+              .filter((item) =>
+                [
+                  SLIDE_TYPES.PICK_IMAGE,
+                  SLIDE_TYPES.PICK_ANSWER,
+                  SLIDE_TYPES.TYPE_ANSWER,
+                ].includes(item.type)
+              )
+              .findIndex((item) => item.id === slide.id) + 1
+          }}
+          из
+          {{
+            presentation.slides.filter((item) =>
+              [
+                SLIDE_TYPES.PICK_IMAGE,
+                SLIDE_TYPES.PICK_ANSWER,
+                SLIDE_TYPES.TYPE_ANSWER,
+              ].includes(item.type)
+            ).length
+          }}
+        </div>
+
+        <div v-if="slideSettings.scoreDependsOnTime">
+          <div class="text-center">Более быстрые ответы дают больше баллов</div>
+          <div class="row no-wrap justify-center q-mt-md">
+            <q-icon name="r_timer" size="48px" />
+          </div>
+        </div>
+
+        <div v-else class="text-center">
+          <div>Ответьте до истечения времени</div>
+          <div class="text-grey q-mt-xs">
+            (скорость ответа не имеет значения)
+          </div>
+        </div>
+      </template>
+
+      <template v-else>
+        <div class="row no-wrap justify-center">
+          <q-circular-progress
+            :value="timeLeftPercentage"
+            size="64px"
+            :thickness="1"
+            :color="
+              timeLeftPercentage < 25
+                ? 'positive'
+                : timeLeftPercentage < 50
+                ? 'yellow-10'
+                : timeLeftPercentage < 75
+                ? 'orange'
+                : 'red'
+            "
+            track-color="white"
+          />
+        </div>
+
+        <div class="text-center text-semibold text-h7 q-mt-md">
+          {{ countdown }}
+        </div>
+      </template>
+    </template>
+
+    <!-- answer -->
+    <template v-else>
+      <!-- question title -->
+      <div class="text-h6 text-semibold text-center">
+        {{ layoutTitleElement?.text }}
+      </div>
+
+      <!-- question description -->
+      <div class="text-semibold text-center q-mt-sm q-mb-lg">
+        {{ slideSettings.description }}
+      </div>
+
+      <transition
+        appear
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
+        <div v-if="timeLeft && !participantAnswers?.length" class="q-pb-md">
+          <q-linear-progress
+            size="xl"
+            rounded
+            :value="1 - timeLeftPercentage / 100"
+            :color="
+              timeLeftPercentage < 25
+                ? 'positive'
+                : timeLeftPercentage < 50
+                ? 'yellow-10'
+                : timeLeftPercentage < 75
+                ? 'orange'
+                : 'red'
+            "
+          />
+        </div>
+      </transition>
+
+      <!-- answer inputs -->
+      <div class="column no-wrap q-gutter-md">
+        <q-card
+          v-for="(
+            answerOptions, answerOptionIndex
+          ) in slideSettings.answerOptions"
+          :key="answerOptionIndex"
+          flat
+          :style="`border: 1px solid ${
+            answerOptions.isSelected
+              ? timeLeft && !participantAnswers?.length
+                ? 'var(--q-primary)'
+                : answerOptions.isCorrect
+                ? 'var(--q-positive)'
+                : 'var(--q-negative)'
+              : 'transparent'
+          }`"
+          class="text-black"
+        >
+          <q-card-section class="q-py-sm q-px-md">
+            <q-checkbox
+              v-model="answerOptions.isSelected"
+              :class="!isMultipleAnswers ? 'q-checkbox--round' : ''"
+              class="full-width"
+              :color="
+                timeLeft && !participantAnswers?.length
+                  ? 'primary'
+                  : answerOptions.isCorrect
+                  ? 'positive'
+                  : 'negative'
+              "
+              :disable="!timeLeft || participantAnswers?.length > 0"
+              @update:model-value="
+                () => {
+                  if (!isMultipleAnswers) {
+                    slideSettings.answerOptions =
+                      slideSettings.answerOptions.map((item, index) => {
+                        if (item.isSelected && index !== answerOptionIndex) {
+                          item.isSelected = false;
+                        }
+
+                        return item;
+                      });
+                  }
+                }
+              "
+            >
+              <div class="q-ml-sm">
+                {{ answerOptions.value }}
+              </div>
+            </q-checkbox>
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <!-- submit -->
+      <q-btn
+        type="submit"
+        unelevated
+        no-caps
+        :disable="
+          !!room?.is_submission_locked ||
+          !timeLeft ||
+          participantAnswers?.length > 0
+        "
+        :icon-right="
+          room?.is_submission_locked || participantAnswers?.length > 0
+            ? 'r_lock'
+            : 'r_done'
+        "
+        color="primary"
+        class="full-width q-py-md q-mt-md"
+        style="position: sticky; bottom: 0"
+      >
+        <template #default>
+          <div class="q-mr-sm">
+            {{
+              room?.is_submission_locked || participantAnswers?.length > 0
+                ? $t("presentationRoom.answers.submit.submissionIsLocked")
+                : $t("presentationRoom.answers.submit.title")
+            }}
+
+            {{ timeLeft && !participantAnswers?.length ? countdown : "" }}
+          </div>
+        </template>
+      </q-btn>
+
+      <div v-if="!timeLeft" class="text-center text-semibold text-grey q-mt-md">
+        {{ $t("presentationRoom.answers.timesUp") }}
+      </div>
+    </template>
+  </q-form>
+</template>
+
+<script setup>
+import { computed, watch } from "vue";
+import { usePresentationsStore } from "stores/presentations";
+import { storeToRefs } from "pinia";
+import { useCanvasStore } from "stores/canvas";
+import {
+  countdown,
+  stopCountdown,
+  timeLeft,
+  timeLeftPercentage,
+} from "src/helpers/countdown";
+import { wordCloudTextColors } from "src/helpers/colorUtils";
+import { SLIDE_TYPES } from "../../../constants/presentationStudio";
+
+/*
+ * stores
+ */
+const presentationsStore = usePresentationsStore();
+const {
+  presentation,
+  room,
+  slide,
+  slideSettings,
+  participant,
+  averageRoomBackgroundBrightness,
+  roomBackgroundBrightnessThreshold,
+} = storeToRefs(presentationsStore);
+
+const canvasStore = useCanvasStore();
+const { elements } = storeToRefs(canvasStore);
+
+/*
+ * text color
+ */
+const textColor = computed(() => {
+  return averageRoomBackgroundBrightness.value >=
+    roomBackgroundBrightnessThreshold.value
+    ? "black"
+    : "white";
+});
+
+/*
+ * title
+ */
+const layoutTitleElement = computed(() => {
+  return elements.value?.find((element) => element.id.includes("-title-top-"));
+});
+
+/*
+ * answer entries
+ */
+const handleSubmittingAnswers = () => {
+  presentationsStore.submitPresentationRoomAnswers(
+    slideSettings.value.answerOptions
+      .filter((option) => option.isSelected)
+      .map((answer) => answer.value)
+  );
+  stopCountdown();
+  room.value.is_submission_locked = true;
+};
+
+const participantAnswers = computed(() => {
+  return slide.value.answers
+    .filter((answer) => answer.participant_id === participant.value?.id)
+    .map((answer) => JSON.parse(answer.answer_data)?.text);
+});
+
+watch(
+  () => participantAnswers.value,
+  () => {
+    slideSettings.value.answerOptions.map((option, index) => {
+      if (participantAnswers.value.includes(option.value)) {
+        slideSettings.value.answerOptions[index].isSelected = true;
+      }
+    });
+  },
+  { deep: true }
+);
+
+const isMultipleAnswers = computed(() => {
+  return (
+    slideSettings.value.answerOptions.filter((option) => option.isCorrect)
+      .length > 1
+  );
+});
+</script>
+
+<style scoped lang="scss">
+::v-deep(.q-field__control) {
+  background: $white;
+  border-radius: 8px;
+}
+
+.q-btn.disabled {
+  opacity: 1 !important;
+  background: $black !important;
+}
+
+/*
+ * checkmark
+ */
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: $green-5;
+  fill: $positive;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 2;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  margin: 0 auto 16px auto;
+  box-shadow: inset 0 0 0 $green-5;
+  animation: fill 0.4s ease-in-out 0.4s forwards,
+    scale 0.3s ease-in-out 0.9s both;
+}
+
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes scale {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: scale3d(1.1, 1.1, 1);
+  }
+}
+@keyframes fill {
+  100% {
+    box-shadow: inset 0 0 0 30px $green-5;
+  }
+}
+
+/*
+ * checkbox
+ */
+::v-deep(.q-checkbox--round) {
+  .q-checkbox__bg {
+    border-radius: 100% !important;
+  }
+
+  .q-checkbox__svg {
+    padding: 2px;
+  }
+}
+
+/*
+ * waiting for quiz start
+ */
+.waiting_for_quiz_start__title {
+  z-index: 2;
+  font-size: 2em;
+  font-weight: 600;
+  text-align: center;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+</style>

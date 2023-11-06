@@ -58,7 +58,9 @@
               ? 'yellow-10'
               : timeLeftPercentage < 75
               ? 'orange'
-              : 'red'
+              : timeLeftPercentage < 100
+              ? 'red'
+              : 'white'
           "
         />
       </div>
@@ -101,8 +103,8 @@
         type="submit"
         unelevated
         no-caps
-        :disable="slideSettings.isSubmissionLocked"
-        :icon-right="slideSettings.isSubmissionLocked ? 'r_lock' : 'r_done'"
+        :disable="!!room?.is_submission_locked"
+        :icon-right="room?.is_submission_locked ? 'r_lock' : 'r_done'"
         color="primary"
         class="full-width q-py-md q-mt-md"
         style="position: sticky; bottom: 0"
@@ -110,7 +112,7 @@
         <template #default>
           <div class="q-mr-sm">
             {{
-              slideSettings.isSubmissionLocked
+              room?.is_submission_locked
                 ? $t("presentationRoom.answers.submit.submissionIsLocked")
                 : $t("presentationRoom.answers.submit.title")
             }}
@@ -163,7 +165,7 @@
     >
       <!-- submission is locked, please wait -->
       <div
-        v-if="slideSettings.isSubmissionLocked"
+        v-if="room?.is_submission_locked"
         class="text-center q-mt-md"
         style="opacity: 0.7"
       >
@@ -183,33 +185,37 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
-import {
-  countdown,
-  startCountdown,
-  stopCountdown,
-  timeLeft,
-  timeLeftPercentage,
-} from "src/helpers/countdown";
-
-/*
- * props
- */
-defineProps({
-  textColor: { type: String, default: "white" },
-});
+import { countdown, timeLeft, timeLeftPercentage } from "src/helpers/countdown";
 
 /*
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { slide, slideSettings, participant } = storeToRefs(presentationsStore);
+const {
+  room,
+  slide,
+  slideSettings,
+  participant,
+  averageRoomBackgroundBrightness,
+  roomBackgroundBrightnessThreshold,
+} = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { elements } = storeToRefs(canvasStore);
+
+/*
+ * text color
+ */
+const textColor = computed(() => {
+  return averageRoomBackgroundBrightness.value >=
+    roomBackgroundBrightnessThreshold.value
+    ? "black"
+    : "white";
+});
 
 /*
  * title
@@ -233,35 +239,6 @@ const handleSubmittingAnswers = () => {
   presentationsStore.submitPresentationRoomAnswers(answerInputs.value);
   answerInputs.value = [];
 };
-
-watch(
-  () => slideSettings.value,
-  () => {
-    if (slideSettings.value) {
-      check();
-    } else {
-      stopCountdown();
-    }
-  },
-  { deep: true }
-);
-
-onBeforeMount(() => {
-  if (slideSettings.value) {
-    check();
-  }
-});
-
-const check = () => {
-  if (
-    !slideSettings.value.isSubmissionLocked &&
-    slideSettings.value.isLimitedTime
-  ) {
-    startCountdown(slideSettings.value.timeLimit);
-  } else {
-    stopCountdown();
-  }
-};
 </script>
 
 <style scoped lang="scss">
@@ -273,59 +250,5 @@ const check = () => {
 .q-btn.disabled {
   opacity: 1 !important;
   background: $black !important;
-}
-
-/*
- * checkmark
- */
-.checkmark__circle {
-  stroke-dasharray: 166;
-  stroke-dashoffset: 166;
-  stroke-width: 2;
-  stroke-miterlimit: 10;
-  stroke: $green-5;
-  fill: $positive;
-  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-}
-
-.checkmark {
-  width: 128px;
-  height: 128px;
-  border-radius: 50%;
-  display: block;
-  stroke-width: 2;
-  stroke: #fff;
-  stroke-miterlimit: 10;
-  margin: 0 auto 16px auto;
-  box-shadow: inset 0 0 0 $green-5;
-  animation: fill 0.4s ease-in-out 0.4s forwards,
-    scale 0.3s ease-in-out 0.9s both;
-}
-
-.checkmark__check {
-  transform-origin: 50% 50%;
-  stroke-dasharray: 48;
-  stroke-dashoffset: 48;
-  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-}
-
-@keyframes stroke {
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-@keyframes scale {
-  0%,
-  100% {
-    transform: none;
-  }
-  50% {
-    transform: scale3d(1.1, 1.1, 1);
-  }
-}
-@keyframes fill {
-  100% {
-    box-shadow: inset 0 0 0 30px $green-5;
-  }
 }
 </style>
