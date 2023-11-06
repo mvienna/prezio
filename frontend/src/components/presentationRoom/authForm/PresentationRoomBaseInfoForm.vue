@@ -199,10 +199,14 @@ const submit = async () => {
     return;
   }
 
+  const data = participant.value?.user_data
+    ? JSON.parse(participant.value.user_data)
+    : {};
+
   await api
     .patch("/user/room", {
       user_data: JSON.stringify({
-        ...JSON.parse(participant.value.user_data),
+        ...data,
         name: form.value.name,
         avatar: form.value.avatar,
       }),
