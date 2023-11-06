@@ -32,7 +32,7 @@ const canvasStore = useCanvasStore();
  * data
  */
 const data = computed(() => {
-  return slideSettings.value.answerOptions.map((option) => {
+  return slideSettings.value.answerOptions?.map((option) => {
     if (!slide.value?.answers) {
       return {
         group: (option.isCorrect ? "✅" : "❌") + " " + option.value,

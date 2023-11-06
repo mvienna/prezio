@@ -919,7 +919,7 @@ const settingsDefaultState = {
 
   // quiz
   answerOptions: [
-    { value: "", isCorrect: true, isSelected: false },
+    { value: "", isCorrect: false, isSelected: false },
     { value: "", isCorrect: false, isSelected: false },
   ],
   points: {
