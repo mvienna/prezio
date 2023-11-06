@@ -77,7 +77,7 @@ const tooltip = ref();
 const canvasRect = ref(canvasStore.canvasRect());
 const margin = { top: 50, right: 100, bottom: 50, left: 100 };
 const width = computed(() => {
-  return (canvasRect.value.width * 40) / 100;
+  return (canvasRect.value.width * 80) / 100;
 });
 const height = computed(() => {
   return (canvasRect.value.height * 40) / 100;
@@ -151,7 +151,7 @@ const update = () => {
   x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
   xAxis.value = svg.value
     .select("g")
-    .attr("transform", `translate(0, ${height.value + 1})`);
+    .attr("transform", `translate(0, ${height.value})`);
 
   y.value = d3.scaleLinear().range([height.value, 0]);
   yAxis.value = svg.value.select("g").attr("class", "myYaxis");
