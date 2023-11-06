@@ -54,7 +54,6 @@ import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
 import cloud from "d3-cloud";
-import { startCountdown, stopCountdown } from "src/helpers/countdown";
 
 /*
  * stores

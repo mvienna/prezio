@@ -429,7 +429,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { date, useQuasar } from "quasar";
 import { useCanvasStore } from "stores/canvas";
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, ref } from "vue";
 import PresentationSettings from "components/presentationStudio/settings/PresentationSettings.vue";
 import PresentationStudioPreviewPresentation from "components/presentationStudio/preview/PresentationStudioPreview.vue";
 import { api } from "boot/axios";

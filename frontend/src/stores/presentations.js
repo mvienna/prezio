@@ -1,11 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import {
-  countdown,
-  startCountdown,
-  timeLeft,
-  timeLeftPercentage,
-} from "src/helpers/countdown";
+import { startCountdown } from "src/helpers/countdown";
 
 export const usePresentationsStore = defineStore("presentations", {
   state: () => ({
