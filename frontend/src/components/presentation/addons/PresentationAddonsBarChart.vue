@@ -33,6 +33,15 @@ const canvasStore = useCanvasStore();
  */
 const data = computed(() => {
   return slideSettings.value.answerOptions.map((option) => {
+    if (!slide.value?.answers) {
+      return {
+        group: (option.isCorrect ? "✅" : "❌") + " " + option.value,
+        value: 0,
+        participants: [],
+        isCorrect: option.isCorrect,
+      };
+    }
+
     return {
       group: (option.isCorrect ? "✅" : "❌") + " " + option.value,
       value: slide.value.answers.filter(
@@ -40,7 +49,9 @@ const data = computed(() => {
       ).length,
       participants: slide.value.answers
         .filter(
-          (answer) => JSON.parse(answer.answer_data)?.text === option.value
+          (answer) =>
+            JSON.parse(answer.answer_data)?.text === option.value &&
+            answer.slide_type === slide.value?.type
         )
         .map((answer) =>
           answer.participant?.user_data
@@ -97,7 +108,13 @@ onMounted(() => {
       d.target.style.opacity = 0.85;
     })
     .on("mousemove", (d) => {
-      if (!d.target?.__data__?.value) return;
+      if (!d.target?.__data__?.value) {
+        tooltip.value.style("opacity", 0);
+        d.target
+          .querySelectorAll("rect")
+          .forEach((rect) => (rect.style.opacity = 1));
+        return;
+      }
 
       tooltip.value
         .html(

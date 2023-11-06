@@ -45,7 +45,6 @@
         SLIDE_TYPES.PICK_ANSWER,
         SLIDE_TYPES.PICK_IMAGE,
       ].includes(slide?.type) &&
-      slideAnswers?.length &&
       (!room || (room && room.is_quiz_started && !room.is_submission_locked))
     "
   />
