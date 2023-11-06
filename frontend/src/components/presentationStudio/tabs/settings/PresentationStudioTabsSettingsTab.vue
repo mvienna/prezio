@@ -296,10 +296,14 @@
               <q-checkbox
                 v-model="element.isCorrect"
                 checked-icon="r_check_circle"
-                unchecked-icon="r_cancel"
-                :color="element.isCorrect ? 'positive' : 'red'"
+                :unchecked-icon="
+                  element.isHovered ? 'o_check_circle' : 'o_circle'
+                "
+                :color="element.isCorrect ? 'positive' : 'grey'"
                 keep-color
                 style="font-size: 20px"
+                @mouseover="element.isHovered = true"
+                @mouseleave="element.isHovered = false"
               />
 
               <q-btn
