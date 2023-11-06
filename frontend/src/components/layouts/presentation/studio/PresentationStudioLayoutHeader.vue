@@ -388,7 +388,7 @@
                   v-for="slide in quizSlidesWithoutCorrectAnswers"
                   :key="slide.index"
                 >
-                  <b style="text-decoration: underline">
+                  <b>
                     {{
                       $t(
                         "presentationLayout.header.present.quizSettingsWarning.message"
