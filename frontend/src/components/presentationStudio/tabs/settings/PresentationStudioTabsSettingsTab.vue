@@ -455,7 +455,7 @@
         </div>
       </q-slide-transition>
 
-      <q-separator class="q-mt-md q-mb-md" />
+      <q-separator class="q-mt-sm q-mb-md" />
     </template>
 
     <!-- time limit -->
@@ -498,7 +498,7 @@
           no-error-icon
           class="q-pb-sm"
           :class="
-            ![SLIDE_TYPES.WORD_CLOUD].includes(slide?.type) ? 'q-mt-md' : ''
+            ![SLIDE_TYPES.WORD_CLOUD].includes(slide?.type) ? 'q-mt-sm' : ''
           "
           @update:model-value="handleSlideSettingsUpdate()"
         >
@@ -521,7 +521,7 @@
 
     <!-- leaderboard -->
     <div
-      class="row no-wrap items-center justify-between text-semibold q-mt-sm"
+      class="row no-wrap items-center justify-between text-semibold"
       v-if="
         [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
       "
@@ -607,8 +607,36 @@
       />
     </div>
 
-    <div class="q-pb-sm">
-      <q-separator class="q-mb-lg q-mt-md" />
+    <q-separator class="q-mt-md" />
+
+    <!-- filter profanity -->
+    <div
+      v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
+      class="row no-wrap items-center justify-between text-semibold q-my-sm"
+    >
+      <span>
+        {{
+          $t(
+            "presentationLayout.rightDrawer.tabs.settings.filterProfanity.title"
+          )
+        }}
+
+        <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+          <q-tooltip class="text-center" max-width="250px" :offset="[0, 8]">
+            {{
+              $t(
+                "presentationLayout.rightDrawer.tabs.settings.filterProfanity.description"
+              )
+            }}
+          </q-tooltip>
+        </q-icon>
+      </span>
+
+      <q-toggle
+        v-model="slideSettings.filterProfanity"
+        color="primary"
+        @update:model-value="handleSlideSettingsUpdate()"
+      />
     </div>
 
     <!-- open general quiz settings -->
@@ -629,7 +657,7 @@
         )
       "
       no-caps
-      class="full-width q-py-sm q-mb-md"
+      class="full-width q-py-sm q-mb-md q-mt-lg"
       @click="
         showSettingsDialog = true;
         presentationSettingsTabsExpanded = [false, false, false, false, true];
@@ -929,6 +957,7 @@ const settingsDefaultState = {
   scoreDependsOnTime: true,
   partialScoring: false,
   showLeaderboard: true,
+  filterProfanity: true,
 };
 
 const handleSlideSettingsUpdate = () => {

@@ -368,6 +368,12 @@ export default {
           openGeneralQuizSettings: {
             title: "Open General Quiz Settings",
           },
+
+          filterProfanity: {
+            title: "Filter profanity",
+            description:
+              "Participants won't be able to submit answers that have profanity words",
+          },
         },
 
         /*

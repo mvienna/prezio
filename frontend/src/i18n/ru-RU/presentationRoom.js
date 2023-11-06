@@ -114,7 +114,12 @@ export default {
 
     answers: {
       placeholder: "Ваш ответ...",
-      invalidLength: "Ответ должен содержать не болеее 25 символов",
+
+      errors: {
+        invalidLength: "Ответ должен содержать не болеее 25 символов",
+        profanity: "Ответ не должен содержать недопустимой лексики",
+      },
+
       submit: {
         title: "Отправить",
         submissionIsLocked: "Отправка завершена",

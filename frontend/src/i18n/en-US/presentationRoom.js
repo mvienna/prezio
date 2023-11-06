@@ -110,7 +110,11 @@ export default {
 
     answers: {
       placeholder: "Your Answer...",
-      invalidLength: "The answer should contain no more than 25 characters",
+
+      errors: {
+        invalidLength: "The answer should contain no more than 25 characters",
+      },
+
       submit: {
         title: "Submit",
         submissionIsLocked: "Submission is locked",

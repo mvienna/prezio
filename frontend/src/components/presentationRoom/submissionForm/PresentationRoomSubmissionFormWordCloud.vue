@@ -82,12 +82,8 @@
             color="primary"
             :placeholder="$t('presentationRoom.answers.placeholder')"
             :maxlength="25"
-            :rules="[
-              (val) =>
-                !val?.length ||
-                val?.length <= 25 ||
-                $t('presentationRoom.answers.invalidLength'),
-            ]"
+            :rules="answerRules"
+            reactive-rules
           >
             <template #append>
               <div class="text-caption">
@@ -190,6 +186,13 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
 import { countdown, timeLeft, timeLeftPercentage } from "src/helpers/countdown";
+import { russianProfanityWords } from "src/constants/profanity";
+import { useI18n } from "vue-i18n";
+
+/*
+ * variables
+ */
+const { t } = useI18n({ useScope: "global" });
 
 /*
  * stores
@@ -241,6 +244,22 @@ const handleSubmittingAnswers = () => {
   presentationsStore.submitPresentationRoomAnswers(answerInputs.value);
   answerInputs.value = [];
 };
+
+/*
+ * answer rules (length & profanity)
+ */
+const answerRules = [
+  (val) =>
+    !val?.length ||
+    val?.length <= 25 ||
+    t("presentationRoom.answers.errors.invalidLength"),
+  (val) =>
+    (slideSettings.value?.filterProfanity
+      ? !russianProfanityWords.filter((word) => {
+          return val.replaceAll(/\s/g, "").includes(word);
+        }).length
+      : true) || t("presentationRoom.answers.errors.profanity"),
+];
 </script>
 
 <style scoped lang="scss">
