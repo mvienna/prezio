@@ -348,25 +348,36 @@
         </q-icon>
       </div>
 
-      <div class="row no-wrap items-center q-gutter-md">
-        <div class="text-semibold text-no-wrap">
-          {{ $t("presentationLayout.rightDrawer.tabs.settings.points.min") }}
-        </div>
-
-        <q-range
-          v-model="slideSettings.points"
+      <div class="row no-wrap justify-between items-center q-gutter-md">
+        <!-- min -->
+        <q-input
+          v-model="slideSettings.points.min"
+          outlined
+          type="number"
           :min="0"
-          :max="1000"
-          :step="1"
-          label
-          snap
-          color="primary"
-          drag-range
+          :mmax="0"
+          dense
+          placeholder="1"
+          :rules="minScorePointsRules"
+          lazy-rules
+          style="width: 100%"
+          :label="$t('presentationLayout.rightDrawer.tabs.settings.points.min')"
         />
 
-        <div class="text-semibold text-no-wrap">
-          {{ $t("presentationLayout.rightDrawer.tabs.settings.points.max") }}
-        </div>
+        <!-- max -->
+        <q-input
+          v-model="slideSettings.points.max"
+          outlined
+          type="number"
+          :min="0"
+          :mmax="0"
+          dense
+          placeholder="1000"
+          :rules="maxScorePointsRules"
+          lazy-rules
+          style="width: 100%"
+          :label="$t('presentationLayout.rightDrawer.tabs.settings.points.max')"
+        />
       </div>
 
       <!-- score depends on time -->
@@ -924,8 +935,17 @@ const handleSlideSettingsUpdate = () => {
   if (
     !isEntriesPerParticipantValid(
       Number(slideSettings.value.entriesPerParticipant)
-    ) ||
-    !isTimeLimitValid(Number(slideSettings.value.timeLimit))
+    )
+  )
+    return;
+
+  if (!isTimeLimitValid(Number(slideSettings.value.timeLimit))) return;
+
+  if (
+    !isScorePointsValid(Number(slideSettings.value.points.min)) ||
+    !isScorePointsValid(Number(slideSettings.value.points.max)) ||
+    isMinScorePointsValid(Number(slideSettings.value.points.min)) ||
+    isMaxScorePointsValid(Number(slideSettings.value.points.max))
   )
     return;
 
@@ -952,6 +972,37 @@ const timeLimitRules = [
   (val) =>
     isTimeLimitValid(val) ||
     t("presentationLayout.rightDrawer.tabs.settings.timeLimit.invalid"),
+];
+
+// points validation
+const isScorePointsValid = (val) => {
+  return val >= 0 && val <= 1000;
+};
+
+const isMinScorePointsValid = (val) => {
+  return val <= slideSettings.value.points.max;
+};
+
+const minScorePointsRules = [
+  (val) =>
+    isScorePointsValid(val) ||
+    t("presentationLayout.rightDrawer.tabs.settings.points.errors.invalid"),
+  (val) =>
+    isMinScorePointsValid(val) ||
+    t("presentationLayout.rightDrawer.tabs.settings.points.errors.invalidMin"),
+];
+
+const isMaxScorePointsValid = (val) => {
+  return val >= slideSettings.value.points.min;
+};
+
+const maxScorePointsRules = [
+  (val) =>
+    isScorePointsValid(val) ||
+    t("presentationLayout.rightDrawer.tabs.settings.points.errors.invalid"),
+  (val) =>
+    isMaxScorePointsValid(val) ||
+    t("presentationLayout.rightDrawer.tabs.settings.points.errors.invalidMax"),
 ];
 
 /*

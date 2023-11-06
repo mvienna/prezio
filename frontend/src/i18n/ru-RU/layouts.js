@@ -338,6 +338,12 @@ export default {
             min: "Мин.",
             max: "Макс.",
 
+            errors: {
+              invalid: "The value must be in the range from 0 to 1000",
+              invalidMin: "The value must be less than or equal to max",
+              invalidMax: "The value must be greater than or equal to min",
+            },
+
             scoreDependsOnTime: {
               title: "Подсчет баллов зависит от времени",
               description: {
