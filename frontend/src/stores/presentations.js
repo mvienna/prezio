@@ -478,7 +478,7 @@ export const usePresentationsStore = defineStore("presentations", {
     handleQuizStart() {
       this.room.is_quiz_started = true;
 
-      let timeout = 4000;
+      let timeout = 5000;
       if (
         (this.presentation.settings.quiz_data &&
           JSON.parse(this.presentation.settings.quiz_data).countdown) ||

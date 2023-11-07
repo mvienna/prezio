@@ -111,15 +111,19 @@
       <template v-else-if="timeLeft !== -1">
         <div class="row no-wrap justify-center">
           <q-circular-progress
-            :value="timeLeftPercentage"
+            :value="
+              timeLeftPercentage * 2 + 20 - 100 < 100
+                ? timeLeftPercentage * 2 + 20 - 100
+                : 100
+            "
             size="64px"
             :thickness="1"
             :color="
-              timeLeftPercentage < 25
+              timeLeftPercentage * 2 - 100 + 20 < 25
                 ? 'positive'
-                : timeLeftPercentage < 50
+                : timeLeftPercentage * 2 - 100 + 20 < 50
                 ? 'yellow-10'
-                : timeLeftPercentage < 75
+                : timeLeftPercentage * 2 - 100 + 20 < 75
                 ? 'orange'
                 : 'red'
             "
