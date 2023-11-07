@@ -96,7 +96,7 @@
             {{ countdown }}
           </div>
 
-          <div class="text-center text-no-wrap">
+          <div class="text-center text-semibold q-mt-sm text-no-wrap">
             {{ $t("presentationRoom.quizCountdown.title") }}
           </div>
         </div>
