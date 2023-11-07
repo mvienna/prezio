@@ -178,16 +178,14 @@
       <!-- answer inputs -->
       <div class="column no-wrap q-gutter-md">
         <q-card
-          v-for="(
-            answerOptions, answerOptionIndex
-          ) in slideSettings.answerOptions"
+          v-for="(answerOption, answerOptionIndex) in answerOptions"
           :key="answerOptionIndex"
           flat
           :style="`border: 1px solid ${
-            answerOptions.isSelected
+            answerOption.isSelected
               ? timeLeft !== -1 && !participantAnswers?.length
                 ? 'var(--q-primary)'
-                : answerOptions.isCorrect
+                : answerOption.isCorrect
                 ? 'var(--q-positive)'
                 : 'var(--q-negative)'
               : 'transparent'
@@ -196,20 +194,24 @@
         >
           <q-card-section class="q-py-sm q-px-md">
             <q-checkbox
-              v-model="answerOptions.isSelected"
-              :class="!isMultipleAnswers ? 'q-checkbox--round' : ''"
+              v-model="answerOption.isSelected"
+              :class="
+                !isAllowedToSelectMultipleAnswerOptions
+                  ? 'q-checkbox--round'
+                  : ''
+              "
               class="full-width"
               :color="
                 timeLeft !== -1 && !participantAnswers?.length
                   ? 'primary'
-                  : answerOptions.isCorrect
+                  : answerOption.isCorrect
                   ? 'positive'
                   : 'negative'
               "
               :disable="timeLeft === -1 || participantAnswers?.length > 0"
               @update:model-value="
                 () => {
-                  if (!isMultipleAnswers) {
+                  if (!isAllowedToSelectMultipleAnswerOptions) {
                     slideSettings.answerOptions =
                       slideSettings.answerOptions.map((item, index) => {
                         if (item.isSelected && index !== answerOptionIndex) {
@@ -223,7 +225,7 @@
               "
             >
               <div class="q-ml-sm">
-                {{ answerOptions.value }}
+                {{ answerOption.value }}
               </div>
             </q-checkbox>
           </q-card-section>
@@ -287,6 +289,7 @@ import {
 } from "src/helpers/countdown";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { shuffleArray } from "src/helpers/arrayUtils";
 
 /*
  * stores
@@ -357,11 +360,18 @@ watch(
   { deep: true }
 );
 
-const isMultipleAnswers = computed(() => {
+const isAllowedToSelectMultipleAnswerOptions = computed(() => {
   return (
     slideSettings.value.answerOptions.filter((option) => option.isCorrect)
       .length > 1
   );
+});
+
+const answerOptions = computed(() => {
+  return presentation.value.settings.quiz_data &&
+    JSON.parse(presentation.value.settings.quiz_data).shuffleAnswerOptions
+    ? shuffleArray(slideSettings.value.answerOptions)
+    : slideSettings.value.answerOptions;
 });
 </script>
 
