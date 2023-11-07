@@ -55,8 +55,14 @@
 <script setup>
 import { useI18n } from "vue-i18n";
 
+/*
+ * variables
+ */
 const { t } = useI18n({ useScope: "global" });
 
+/*
+ * props
+ */
 defineProps({
   icon: { type: String, default: "r_crisis_alert" },
   iconColor: { type: String, default: "orange" },
@@ -71,6 +77,9 @@ defineProps({
   confirmBtnColor: { type: String, default: "positive" },
 });
 
+/*
+ * emits
+ */
 defineEmits(["cancel", "confirm"]);
 </script>
 

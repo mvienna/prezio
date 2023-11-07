@@ -115,6 +115,14 @@ export default {
           subtitle: "(the speed of the response does not matter)",
         },
       },
+
+      inProgressWarning: {
+        title: "Quiz is in progress",
+        message: "If you want to change the slide anyway, press the same key",
+        leave: "Leave",
+        stay: "Stay",
+        sec: "sec",
+      },
     },
 
     isPrivate: {

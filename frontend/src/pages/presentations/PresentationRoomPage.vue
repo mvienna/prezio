@@ -204,6 +204,31 @@
               @change-slide="handleSlideChange($event)"
               @hover="clearIsMouseActiveTimeout()"
             />
+
+            <q-dialog v-model="showQuizInProgressWarning">
+              <ConfirmationDialog
+                icon="r_pending"
+                icon-color="primary"
+                :title="
+                  $t('presentationRoom.quizCountdown.inProgressWarning.title')
+                "
+                :message="
+                  $t('presentationRoom.quizCountdown.inProgressWarning.message')
+                "
+                :cancel-btn-text="
+                  $t('presentationRoom.quizCountdown.inProgressWarning.stay') +
+                  ` (${quizInProgressWarningAutoCloseCountdown} ${$t(
+                    'presentationRoom.quizCountdown.inProgressWarning.sec'
+                  )})`
+                "
+                :confirm-btn-text="
+                  $t('presentationRoom.quizCountdown.inProgressWarning.leave')
+                "
+                confirm-btn-color="primary"
+                @cancel="showQuizInProgressWarning = false"
+                @confirm="handleSlideChange(slideChangeDirection)"
+              />
+            </q-dialog>
           </div>
         </div>
       </div>
@@ -243,6 +268,7 @@ import PresentationRoomHostMenu from "components/presentationRoom/host/Presentat
 import PresentationRoomHostData from "components/presentationRoom/host/data/PresentationRoomHostData.vue";
 import PresentationRoomHostSlideControls from "components/presentationRoom/host/PresentationRoomHostSlideControls.vue";
 import PresentationRoomParticipantNoAccess from "components/presentationRoom/participant/PresentationRoomParticipantNoAccess.vue";
+import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 
 /*
  * variables
@@ -655,10 +681,12 @@ onUnmounted(() => {
 
 const handleKeyDownEvent = (event) => {
   if (isHost.value) {
+    // ← left arrow
     if (event.keyCode === 37) {
       handleSlideChange("backward");
     }
 
+    // → right arrow
     if (event.keyCode === 39) {
       if (
         [
@@ -674,6 +702,7 @@ const handleKeyDownEvent = (event) => {
       }
     }
 
+    // ⏎ enter
     if (event.keyCode === 13) {
       if (
         [
@@ -690,6 +719,10 @@ const handleKeyDownEvent = (event) => {
 };
 
 const handleSlideChange = async (direction) => {
+  stopQuizInProgressWarningAuthClose();
+  const quizInProgressWarning = warnAboutQuizInProgress(direction);
+  if (!quizInProgressWarning) return;
+
   const slideIndex = presentation.value?.slides?.findIndex(
     (item) => item.id === slide.value?.id
   );
@@ -709,17 +742,9 @@ const handleSlideChange = async (direction) => {
 
 const handleCountdownOnSlideChange = (isOnLoad = false) => {
   if (
-    (slide.value?.type === SLIDE_TYPES.WORD_CLOUD &&
-      slideSettings.value &&
-      !slideSettings.value.isInitialSubmissionLocked) ||
-    ([
-      SLIDE_TYPES.PICK_IMAGE,
-      SLIDE_TYPES.PICK_ANSWER,
-      SLIDE_TYPES.TYPE_ANSWER,
-    ].includes(slide.value?.type) &&
-      room.value.is_quiz_started &&
-      room.value.is_submission_locked &&
-      !isOnLoad)
+    slide.value?.type === SLIDE_TYPES.WORD_CLOUD &&
+    slideSettings.value &&
+    !slideSettings.value.isInitialSubmissionLocked
   ) {
     room.value.is_submission_locked = false;
     if (!room.value.is_submission_locked && slideSettings.value.isLimitedTime) {
@@ -740,6 +765,17 @@ const handleCountdownOnSlideChange = (isOnLoad = false) => {
         is_submission_locked: room.value.is_submission_locked,
       }
     );
+  } else if (
+    [
+      SLIDE_TYPES.PICK_IMAGE,
+      SLIDE_TYPES.PICK_ANSWER,
+      SLIDE_TYPES.TYPE_ANSWER,
+    ].includes(slide.value?.type) &&
+    room.value.is_quiz_started &&
+    room.value.is_submission_locked &&
+    !isOnLoad
+  ) {
+    presentationsStore.handleQuizStart();
   } else {
     if (!isOnLoad) {
       room.value.is_submission_locked = true;
@@ -757,6 +793,46 @@ const handleCountdownOnSlideChange = (isOnLoad = false) => {
     }
   }
 };
+
+/*
+ * quiz in progress warning
+ */
+const showQuizInProgressWarning = ref(false);
+const slideChangeDirection = ref();
+const quizInProgressWarningAutoCloseCountdown = ref();
+const quizInProgressWarningAutoCloseInterval = ref();
+
+const warnAboutQuizInProgress = (direction) => {
+  if (
+    !room.value.is_submission_locked &&
+    timeLeft.value !== -1 &&
+    !showQuizInProgressWarning.value
+  ) {
+    showQuizInProgressWarning.value = true;
+    slideChangeDirection.value = direction;
+
+    quizInProgressWarningAutoCloseInterval.value = setInterval(() => {
+      quizInProgressWarningAutoCloseCountdown.value--;
+
+      if (quizInProgressWarningAutoCloseCountdown.value === 0) {
+        showQuizInProgressWarning.value = false;
+        stop();
+      }
+    }, 1000);
+
+    return false;
+  }
+
+  showQuizInProgressWarning.value = false;
+  stopQuizInProgressWarningAuthClose();
+
+  return true;
+};
+
+function stopQuizInProgressWarningAuthClose() {
+  quizInProgressWarningAutoCloseCountdown.value = 10;
+  clearInterval(quizInProgressWarningAutoCloseInterval.value);
+}
 
 /*
  * mouse activity
