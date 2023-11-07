@@ -60,6 +60,8 @@ class PresentationRoomController extends Controller
 
         event(new PresentationRoomTerminatedEvent($room));
 
+        $this->store($presentation);
+
         return $this->successResponse();
     }
 
