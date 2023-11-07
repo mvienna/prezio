@@ -256,7 +256,7 @@ const answerRules = [
   (val) =>
     (slideSettings.value?.filterProfanity
       ? !russianProfanityWords.filter((word) => {
-          return val.replaceAll(/\s/g, "").includes(word);
+          return val?.replaceAll(/\s/g, "")?.includes(word);
         }).length
       : true) || t("presentationRoom.answers.errors.profanity"),
 ];

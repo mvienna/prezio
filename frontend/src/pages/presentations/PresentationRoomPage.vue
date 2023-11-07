@@ -99,11 +99,7 @@
             <PresentationRoomHostHeader
               :is-host="isHost"
               :is-mouse-active="isMouseActive"
-              :show-room-information-panel="showRoomInformationPanel"
               @mouseover="clearIsMouseActiveTimeout()"
-              @toggle-invitation-panel="
-                showRoomInvitationPanel = !showRoomInvitationPanel
-              "
             />
 
             <!-- ALL - canvas slide -->
@@ -176,20 +172,7 @@
             />
 
             <!-- HOST - menu -->
-            <PresentationRoomHostMenu
-              v-if="isHost"
-              :is-fullscreen="isFullscreen"
-              :show-room-information-panel="showRoomInformationPanel"
-              :show-room-invitation-panel="showRoomInvitationPanel"
-              @terminate-room="terminateRoom()"
-              @toggle-fullscreen="toggleFullscreen()"
-              @toggle-invitation-panel="
-                showRoomInvitationPanel = !showRoomInvitationPanel
-              "
-              @toggle-information-panel="
-                showRoomInformationPanel = !showRoomInformationPanel
-              "
-            />
+            <PresentationRoomHostActions v-if="isHost" />
 
             <!-- HOST - room data (participants count, reactions, answers count) -->
             <PresentationRoomHostData
@@ -205,6 +188,7 @@
               @hover="clearIsMouseActiveTimeout()"
             />
 
+            <!-- HOST - quiz in progress warning  -->
             <q-dialog v-model="showQuizInProgressWarning">
               <ConfirmationDialog
                 icon="r_pending"
@@ -264,7 +248,7 @@ import PresentationRoomHostQuizWaitingForParticipants from "components/presentat
 import PresentationRoomHostQuizCountdown from "components/presentationRoom/host/quiz/PresentationRoomHostQuizCountdown.vue";
 import PresentationRoomParticipantFormsSubmissionsWordCloud from "components/presentationRoom/participant/forms/submissions/PresentationRoomParticipantFormsSubmissionsWordCloud.vue";
 import PresentationRoomParticipantFormsSubmissionsPickAnswer from "components/presentationRoom/participant/forms/submissions/PresentationRoomParticipantFormsSubmissionsPickAnswer.vue";
-import PresentationRoomHostMenu from "components/presentationRoom/host/PresentationRoomHostMenu.vue";
+import PresentationRoomHostActions from "components/presentationRoom/host/actions/PresentationRoomHostActions.vue";
 import PresentationRoomHostData from "components/presentationRoom/host/data/PresentationRoomHostData.vue";
 import PresentationRoomHostSlideControls from "components/presentationRoom/host/PresentationRoomHostSlideControls.vue";
 import PresentationRoomParticipantNoAccess from "components/presentationRoom/participant/PresentationRoomParticipantNoAccess.vue";
@@ -319,9 +303,6 @@ const isAuthenticated = computed(() => {
       !isGuest.value)
   );
 });
-
-// header - information panel
-const showRoomInformationPanel = ref(true);
 
 /*
  * canvas slide
@@ -851,44 +832,6 @@ const handleCanvasMouseMoveEvent = () => {
 
 const clearIsMouseActiveTimeout = () => {
   clearTimeout(isMouseActiveTimeout.value);
-};
-
-/*
- * fullscreen
- */
-const isFullscreen = ref(!!document.fullscreenElement);
-
-const toggleFullscreen = () => {
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-  } else {
-    document.documentElement.requestFullscreen();
-  }
-};
-
-onBeforeMount(() => {
-  document.addEventListener("fullscreenchange", () => {
-    handleFullscreenChangeEvent();
-  });
-});
-
-onUnmounted(() => {
-  document.removeEventListener("fullscreenchange", handleKeyDownEvent);
-});
-
-const handleFullscreenChangeEvent = () => {
-  isFullscreen.value = !!document.fullscreenElement;
-};
-
-/*
- * terminate room
- */
-const terminateRoom = () => {
-  api
-    .delete(`/presentation/${presentation.value.id}/room/${room.value.id}`)
-    .catch((error) => {
-      console.log(error);
-    });
 };
 
 /*

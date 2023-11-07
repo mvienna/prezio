@@ -11,7 +11,7 @@
           ['DIV', 'IMG'].includes(event.target.nodeName) &&
           (showRoomInformationPanel || isHovered)
         ) {
-          $emit('toggleInvitationPanel');
+          showRoomInvitationPanel = !showRoomInvitationPanel;
         }
       }
     "
@@ -125,7 +125,7 @@
           round
           size="12px"
           class="q-ml-sm"
-          @click="$emit('toggleInvitationPanel')"
+          @click="showRoomInvitationPanel = !showRoomInvitationPanel"
         >
           <q-tooltip>
             {{
@@ -186,13 +186,7 @@ const isHovered = ref(false);
 defineProps({
   isHost: { type: Boolean },
   isMouseActive: { type: Boolean },
-  showRoomInformationPanel: { type: Boolean },
 });
-
-/*
- * emits
- */
-defineEmits(["toggleInvitationPanel"]);
 
 /*
  * stores
@@ -202,6 +196,7 @@ const {
   room,
   presentation,
   showRoomInvitationPanel,
+  showRoomInformationPanel,
   averageRoomBackgroundBrightness,
   roomBackgroundBrightnessThreshold,
 } = storeToRefs(presentationsStore);

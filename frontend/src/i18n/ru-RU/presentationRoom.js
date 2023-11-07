@@ -35,6 +35,9 @@ export default {
           private: "Сделать приватной",
           public: "Сделать публичной",
         },
+        finishQuiz: {
+          title: "Завершить викторину",
+        },
       },
 
       reactions: {

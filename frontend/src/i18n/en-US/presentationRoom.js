@@ -35,6 +35,9 @@ export default {
           private: "Make Private",
           public: "Make Public",
         },
+        finishQuiz: {
+          title: "Finish Quiz",
+        },
       },
 
       hideResults: {
