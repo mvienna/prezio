@@ -36,7 +36,7 @@ const data = computed(() => {
     if (!slide.value?.answers) {
       return {
         group: (option.isCorrect ? "✅" : "❌") + " " + option.value,
-        value: 0,
+        value: 1,
         participants: [],
         isCorrect: option.isCorrect,
       };
@@ -102,7 +102,6 @@ onMounted(() => {
     .attr("width", width.value)
     .attr("height", height.value)
     .append("g")
-    // .attr("transform", `translate(${margin.left},${margin.top})`)
     .on("mouseover", (d) => {
       tooltip.value.style("opacity", 1);
       d.target.style.opacity = 0.85;
@@ -179,7 +178,9 @@ const update = () => {
     .attr("x", (d) => x.value(d.group))
     .attr("y", (d) => y.value(d.value))
     .attr("width", x.value.bandwidth())
-    .attr("height", (d) => height.value - y.value(d.value))
+    .attr("height", (d) => {
+      return d.value > 0 ? height.value - y.value(d.value) : 0;
+    })
     .attr("fill", (d) => {
       return d.isCorrect ? "#21BA45" : "#EA5757";
     });
