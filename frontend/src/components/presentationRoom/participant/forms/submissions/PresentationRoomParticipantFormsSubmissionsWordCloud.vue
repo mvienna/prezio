@@ -41,7 +41,7 @@
     >
       <div
         v-if="
-          timeLeft &&
+          !!timeLeft &&
           (slideSettings.isMultipleEntries ||
             (!slideSettings.isMultipleEntries && participantAnswersCount === 0))
         "
@@ -113,7 +113,7 @@
                 : $t("presentationRoom.answers.submit.title")
             }}
 
-            {{ timeLeft ? countdown : "" }}
+            {{ !!timeLeft ? countdown : "" }}
           </div>
         </template>
       </q-btn>

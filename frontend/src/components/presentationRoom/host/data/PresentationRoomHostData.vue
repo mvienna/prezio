@@ -74,11 +74,11 @@
 
 <script setup>
 import { computed, ref, watch } from "vue";
-import PresentationRoomDataLike from "components/presentationRoom/data/PresentationRoomDataLike.vue";
-import PresentationRoomDataLove from "components/presentationRoom/data/PresentationRoomDataLove.vue";
+import PresentationRoomDataLike from "components/presentationRoom/host/data/PresentationRoomHostDataLike.vue";
+import PresentationRoomDataLove from "components/presentationRoom/host/data/PresentationRoomHostDataLove.vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import PresentationRoomDataSubmissions from "components/presentationRoom/data/PresentationRoomDataSubmissions.vue";
+import PresentationRoomDataSubmissions from "components/presentationRoom/host/data/PresentationRoomHostDataSubmissions.vue";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
 /*

@@ -247,7 +247,10 @@
     </div>
 
     <!-- countdown -->
-    <div v-if="timeLeft && !room.is_submission_locked" class="room_menu__card">
+    <div
+      v-if="!!timeLeft && !room.is_submission_locked"
+      class="room_menu__card"
+    >
       <q-btn flat class="q-px-sm">
         <q-circular-progress
           :value="timeLeftPercentage"

@@ -43,7 +43,9 @@
 
     <!-- 5s timeout -->
     <template
-      v-else-if="room.is_quiz_started && room.is_submission_locked && timeLeft"
+      v-else-if="
+        room.is_quiz_started && room.is_submission_locked && !!timeLeft
+      "
     >
       <template
         v-if="
@@ -134,7 +136,7 @@
         enter-active-class="animated fadeIn"
         leave-active-class="animated fadeOut"
       >
-        <div v-if="timeLeft && !participantAnswers?.length" class="q-pb-md">
+        <div v-if="!!timeLeft && !participantAnswers?.length" class="q-pb-md">
           <q-linear-progress
             size="xl"
             rounded
@@ -162,7 +164,7 @@
           flat
           :style="`border: 1px solid ${
             answerOptions.isSelected
-              ? timeLeft && !participantAnswers?.length
+              ? !!timeLeft && !participantAnswers?.length
                 ? 'var(--q-primary)'
                 : answerOptions.isCorrect
                 ? 'var(--q-positive)'
@@ -177,7 +179,7 @@
               :class="!isMultipleAnswers ? 'q-checkbox--round' : ''"
               class="full-width"
               :color="
-                timeLeft && !participantAnswers?.length
+                !!timeLeft && !participantAnswers?.length
                   ? 'primary'
                   : answerOptions.isCorrect
                   ? 'positive'
@@ -234,7 +236,7 @@
                 : $t("presentationRoom.answers.submit.title")
             }}
 
-            {{ timeLeft && !participantAnswers?.length ? countdown : "" }}
+            {{ !!timeLeft && !participantAnswers?.length ? countdown : "" }}
           </div>
         </template>
       </q-btn>

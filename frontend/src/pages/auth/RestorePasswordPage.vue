@@ -106,7 +106,7 @@
         </div>
 
         <div v-if="step === STEPS.code" class="form__sub_action q-mt-lg">
-          <div v-if="timeLeft" class="text-grey-5 cursor-not-allowed">
+          <div v-if="!!timeLeft" class="text-grey-5 cursor-not-allowed">
             {{ countdown }}
           </div>
 

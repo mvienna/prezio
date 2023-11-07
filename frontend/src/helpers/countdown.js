@@ -22,8 +22,8 @@ const startCountdown = (seconds = 60) => {
 const stopCountdown = () => {
   if (countdownInterval.value) {
     clearInterval(countdownInterval.value);
-    timeLeft.value = 0;
-    timeLeftPercentage.value = 0;
+    timeLeft.value = null;
+    timeLeftPercentage.value = null;
   }
 };
 

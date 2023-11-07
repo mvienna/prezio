@@ -95,18 +95,6 @@ const routes = [
     ],
   },
 
-  {
-    path: "/",
-    component: () => import("layouts/PresentationRoomBackstageLayout.vue"),
-    children: [
-      {
-        path: ROUTE_PATHS.PRESENTATION_ROOM_BACKSTAGE,
-        component: () =>
-          import("pages/presentations/PresentationRoomBackstagePage.vue"),
-      },
-    ],
-  },
-
   /*
    * 404
    */

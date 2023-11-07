@@ -29,48 +29,23 @@
           : ''
       "
     >
-      <!-- no access -->
-      <div v-if="presentation?.is_private && !isHost">
-        <!-- logo -->
-        <div class="row justify-center q-pa-lg">
-          <div style="width: 96px">
-            <q-img
-              src="/logo_with_title_black.png"
-              style="height: 48px"
-              fit="contain"
-            />
-          </div>
-        </div>
+      <!-- PARTICIPANT - no access -->
+      <PresentationRoomParticipantNoAccess
+        v-if="presentation?.is_private && !isHost"
+      />
 
-        <!-- message & illustration -->
-        <div class="row no-wrap justify-center text-center">
-          <div style="max-width: 500px">
-            <div class="text-bold text-h7">
-              {{ $t("presentationRoom.isPrivate.title") }}
-            </div>
-
-            <div class="q-mt-md text-grey">
-              {{ $t("presentationRoom.isPrivate.description") }}
-            </div>
-
-            <div class="row justify-center q-mt-xl">
-              <q-img src="/assets/images/bird_singing.svg" width="300px" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- has access -->
       <div
         v-else
         class="container relative-position column no-wrap"
         :class="isHost ? 'justify-center' : ''"
       >
-        <!-- auth form - collecting participants info -->
-        <PresentationRoomAuthForm v-if="!isAuthenticated && isLoaded" />
+        <!-- PARTICIPANT - auth form (collecting participants info) -->
+        <PresentationRoomParticipantFormsAuth
+          v-if="!isAuthenticated && isLoaded"
+        />
 
-        <!-- auth form - collecting participants avatar & updating name -->
-        <PresentationRoomBaseInfoForm
+        <!-- PARTICIPANT - base info form (avatar & name, for quiz) -->
+        <PresentationRoomParticipantFormsBaseInfo
           v-if="
             isAuthenticated &&
             !isHost &&
@@ -81,7 +56,7 @@
           "
         />
 
-        <!-- presentation content -->
+        <!-- ALL - content -->
         <div
           v-show="
             isAuthenticated &&
@@ -98,22 +73,18 @@
           style="transition: 0.5s"
           :class="showRoomInvitationPanel || !isHost ? 'q-px-md' : ''"
         >
-          <!-- room invitation panel -->
+          <!-- HOST - invitation panel -->
           <transition
             appear
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
           >
-            <PresentationRoomInvitationPanel
+            <PresentationRoomHostInvitationPanel
               v-if="showRoomInvitationPanel"
-              :qr-code="qrCode"
-              @toggle-invitation-panel="
-                showRoomInvitationPanel = !showRoomInvitationPanel
-              "
             />
           </transition>
 
-          <!-- slide -->
+          <!-- ALL - slide -->
           <div
             class="relative-position column no-wrap justify-center"
             :class="showRoomInvitationPanel ? 'q-ml-md' : ''"
@@ -124,8 +95,8 @@
                 : ''
             }`"
           >
-            <!-- header - information panel -->
-            <PresentationRoomHeader
+            <!-- HOST - header (information panel) -->
+            <PresentationRoomHostHeader
               :is-host="isHost"
               :is-mouse-active="isMouseActive"
               :show-room-information-panel="showRoomInformationPanel"
@@ -135,7 +106,7 @@
               "
             />
 
-            <!-- canvas slide -->
+            <!-- ALL - canvas slide -->
             <canvas
               v-show="
                 isHost || (!isHost && slide?.type === SLIDE_TYPES.CONTENT)
@@ -150,21 +121,22 @@
               @mousemove="handleCanvasMouseMoveEvent"
             ></canvas>
 
-            <!-- addons -->
+            <!-- HOST - addons (word cloud, charts) -->
             <PresentationStudioAddons
               v-if="
-                canvasStore.canvasRect()?.width > 0 &&
                 isHost &&
                 isLoaded &&
+                canvasStore.canvasRect()?.width > 0 &&
                 slide?.type !== SLIDE_TYPES.CONTENT
               "
             />
 
+            <!-- HOST - quiz -->
             <template
               v-if="
-                canvasStore.canvasRect()?.width > 0 &&
                 isHost &&
                 isLoaded &&
+                canvasStore.canvasRect()?.width > 0 &&
                 [
                   SLIDE_TYPES.PICK_ANSWER,
                   SLIDE_TYPES.PICK_IMAGE,
@@ -173,26 +145,28 @@
                 room
               "
             >
-              <!-- waiting for participants -->
-              <PresentationRoomQuizWaitingForParticipants
+              <!-- HOST - waiting for participants (word cloud) -->
+              <PresentationRoomHostQuizWaitingForParticipants
                 v-if="!room.is_quiz_started"
               />
 
-              <!-- quiz countdown -->
-              <PresentationRoomQuizCountdown
+              <!-- HOST - quiz countdown  -->
+              <PresentationRoomHostQuizCountdown
                 v-if="
-                  room.is_quiz_started && room.is_submission_locked && timeLeft
+                  room.is_quiz_started &&
+                  room.is_submission_locked &&
+                  !!timeLeft
                 "
               />
             </template>
 
-            <!-- participant submission form - word cloud -->
-            <PresentationRoomSubmissionFormWordCloud
+            <!-- PARTICIPANT - submission form - word cloud -->
+            <PresentationRoomParticipantFormsSubmissionsWordCloud
               v-if="!isHost && slide?.type === SLIDE_TYPES.WORD_CLOUD"
             />
 
-            <!-- participant submission form - pick answer -->
-            <PresentationRoomSubmissionFormPickAnswer
+            <!-- PARTICIPANT - submission form - pick answer -->
+            <PresentationRoomParticipantFormsSubmissionsPickAnswer
               v-if="
                 !isHost &&
                 [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
@@ -201,8 +175,8 @@
               "
             />
 
-            <!-- menu panel -->
-            <PresentationRoomMenu
+            <!-- HOST - menu -->
+            <PresentationRoomHostMenu
               v-if="isHost"
               :is-fullscreen="isFullscreen"
               :show-room-information-panel="showRoomInformationPanel"
@@ -217,14 +191,14 @@
               "
             />
 
-            <!-- room data - participants count, reactions, answers count -->
-            <PresentationRoomData
+            <!-- HOST - room data (participants count, reactions, answers count) -->
+            <PresentationRoomHostData
               :participants-count="participants?.length || 0"
               :is-host="isHost"
             />
 
-            <!-- controls (← / →) -->
-            <PresentationRoomSlideControls
+            <!-- HOST - controls (← / →) -->
+            <PresentationRoomHostSlideControls
               :is-host="isHost"
               :is-mouse-active="isMouseActive"
               @change-slide="handleSlideChange($event)"
@@ -247,25 +221,26 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
 import { useAuthStore } from "stores/auth";
-import PresentationRoomAuthForm from "components/presentationRoom/authForm/PresentationRoomAuthForm.vue";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
-import PresentationRoomHeader from "components/presentationRoom/PresentationRoomHeader.vue";
-import PresentationRoomMenu from "components/presentationRoom/PresentationRoomMenu.vue";
-import PresentationRoomData from "components/presentationRoom/data/PresentationRoomData.vue";
-import PresentationRoomInvitationPanel from "components/presentationRoom/PresentationRoomInvitationPanel.vue";
-import PresentationRoomSlideControls from "components/presentationRoom/PresentationRoomSlideControls.vue";
 import Echo from "laravel-echo";
 import { randomNames } from "src/constants/mock";
 import { useI18n } from "vue-i18n";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
-import PresentationRoomSubmissionFormWordCloud from "components/presentationRoom/submissionForm/PresentationRoomSubmissionFormWordCloud.vue";
 import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
 import { generateQrCode } from "src/helpers/qrUtils";
-import PresentationRoomSubmissionFormPickAnswer from "components/presentationRoom/submissionForm/PresentationRoomSubmissionFormPickAnswer.vue";
-import PresentationRoomBaseInfoForm from "components/presentationRoom/authForm/PresentationRoomBaseInfoForm.vue";
 import { startCountdown, stopCountdown, timeLeft } from "src/helpers/countdown";
-import PresentationRoomQuizWaitingForParticipants from "components/presentationRoom/quiz/PresentationRoomQuizWaitingForParticipants.vue";
-import PresentationRoomQuizCountdown from "components/presentationRoom/quiz/PresentationRoomQuizCountdown.vue";
+import PresentationRoomParticipantFormsAuth from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsAuth.vue";
+import PresentationRoomParticipantFormsBaseInfo from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsBaseInfo.vue";
+import PresentationRoomHostInvitationPanel from "components/presentationRoom/host/PresentationRoomHostInvitationPanel.vue";
+import PresentationRoomHostHeader from "components/presentationRoom/host/PresentationRoomHostHeader.vue";
+import PresentationRoomHostQuizWaitingForParticipants from "components/presentationRoom/host/quiz/PresentationRoomHostQuizWaitingForParticipants.vue";
+import PresentationRoomHostQuizCountdown from "components/presentationRoom/host/quiz/PresentationRoomHostQuizCountdown.vue";
+import PresentationRoomParticipantFormsSubmissionsWordCloud from "components/presentationRoom/participant/forms/submissions/PresentationRoomParticipantFormsSubmissionsWordCloud.vue";
+import PresentationRoomParticipantFormsSubmissionsPickAnswer from "components/presentationRoom/participant/forms/submissions/PresentationRoomParticipantFormsSubmissionsPickAnswer.vue";
+import PresentationRoomHostMenu from "components/presentationRoom/host/PresentationRoomHostMenu.vue";
+import PresentationRoomHostData from "components/presentationRoom/host/data/PresentationRoomHostData.vue";
+import PresentationRoomHostSlideControls from "components/presentationRoom/host/PresentationRoomHostSlideControls.vue";
+import PresentationRoomParticipantNoAccess from "components/presentationRoom/participant/PresentationRoomParticipantNoAccess.vue";
 
 /*
  * variables
@@ -772,11 +747,6 @@ const handleCanvasMouseMoveEvent = () => {
 const clearIsMouseActiveTimeout = () => {
   clearTimeout(isMouseActiveTimeout.value);
 };
-
-/*
- * qr
- */
-const qrCode = generateQrCode();
 
 /*
  * fullscreen

@@ -133,7 +133,7 @@
         />
 
         <div v-if="isVerificationCodeSent" class="text-center q-mt-md">
-          <div v-if="timeLeft" class="text-grey-5 cursor-not-allowed">
+          <div v-if="!!timeLeft" class="text-grey-5 cursor-not-allowed">
             {{ countdown }}
           </div>
 

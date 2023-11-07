@@ -9,7 +9,7 @@
         round
         size="10px"
         flat
-        @click="$emit('toggleInvitationPanel')"
+        @click="showRoomInvitationPanel = !showRoomInvitationPanel"
       />
     </div>
 
@@ -57,29 +57,23 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
-
-/*
- * props
- */
-defineProps({
-  qrCode: { type: Object, default: null },
-});
-
-/*
- * emits
- */
-defineEmits(["toggleInvitationPanel"]);
+import { generateQrCode } from "src/helpers/qrUtils";
 
 /*
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { room } = storeToRefs(presentationsStore);
+const { room, showRoomInvitationPanel } = storeToRefs(presentationsStore);
 
 /*
  * url
  */
 const url = window.location.host;
+
+/*
+ * qr
+ */
+const qrCode = generateQrCode();
 </script>
 
 <style scoped lang="scss">
