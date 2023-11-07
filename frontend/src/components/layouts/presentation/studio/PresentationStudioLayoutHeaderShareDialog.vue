@@ -60,7 +60,7 @@
                 <span class="cursor-not-allowed text-grey-8">
                   {{ host }}/room/
                 </span>
-                <b class="cursor-pointer">
+                <b class="cursor-pointer text-uppercase">
                   {{ presentation?.room?.token }}
 
                   <q-popup-edit
