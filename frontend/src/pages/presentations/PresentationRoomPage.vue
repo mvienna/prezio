@@ -212,14 +212,7 @@
 </template>
 
 <script setup>
-import {
-  computed,
-  onBeforeMount,
-  onMounted,
-  onUnmounted,
-  ref,
-  watch,
-} from "vue";
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
 import { QSpinnerIos, useQuasar } from "quasar";
@@ -237,7 +230,6 @@ import {
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
 import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
-import { generateQrCode } from "src/helpers/qrUtils";
 import { startCountdown, stopCountdown, timeLeft } from "src/helpers/countdown";
 import PresentationRoomParticipantFormsAuth from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsAuth.vue";
 import PresentationRoomParticipantFormsBaseInfo from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsBaseInfo.vue";

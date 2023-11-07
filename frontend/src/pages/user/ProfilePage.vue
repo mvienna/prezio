@@ -214,11 +214,7 @@ const isNoChanges = computed(() => {
     }
   }
 
-  if (form.value.currentPassword && form.value.newPassword) {
-    return false;
-  }
-
-  return true;
+  return !(form.value.currentPassword && form.value.newPassword);
 });
 
 const isLoading = ref(false);
