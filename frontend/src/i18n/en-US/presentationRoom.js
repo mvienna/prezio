@@ -100,6 +100,21 @@ export default {
 
     quizCountdown: {
       title: "Check your device!",
+
+      questionIndex: {
+        title: "Question",
+        outOf: "out of",
+      },
+
+      scoreDependsOnTime: {
+        true: {
+          title: "The faster you answer, the more points you're going to get",
+        },
+        false: {
+          title: "Answer before the time expires",
+          subtitle: "(the speed of the response does not matter)",
+        },
+      },
     },
 
     isPrivate: {

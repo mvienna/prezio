@@ -104,6 +104,21 @@ export default {
 
     quizCountdown: {
       title: "Посмотрите на свое устройство",
+
+      questionIndex: {
+        title: "Вопрос",
+        outOf: "из",
+      },
+
+      scoreDependsOnTime: {
+        true: {
+          title: "Более быстрые ответы дают больше баллов",
+        },
+        false: {
+          title: "Ответьте до истечения времени",
+          subtitle: "(скорость ответа не имеет значения)",
+        },
+      },
     },
 
     isPrivate: {

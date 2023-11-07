@@ -13,7 +13,7 @@
         "
       >
         <div class="text-h6 text-semibold text-center">
-          Вопрос
+          {{ $t("presentationRoom.quizCountdown.questionIndex.title") }}
           {{
             presentation.slides
               .filter((item) =>
@@ -25,7 +25,7 @@
               )
               .findIndex((item) => item.id === slide.id) + 1
           }}
-          из
+          {{ $t("presentationRoom.quizCountdown.questionIndex.outOf") }}
           {{
             presentation.slides.filter((item) =>
               [
@@ -38,16 +38,30 @@
         </div>
 
         <div v-if="slideSettings.scoreDependsOnTime">
-          <div class="text-center">Более быстрые ответы дают больше баллов</div>
+          <div class="text-center">
+            {{
+              $t("presentationRoom.quizCountdown.scoreDependsOnTime.true.title")
+            }}
+          </div>
           <div class="row no-wrap justify-center q-mt-md">
             <q-icon name="r_timer" size="48px" />
           </div>
         </div>
 
         <div v-else class="text-center">
-          <div class="text-h6">Ответьте до истечения времени</div>
+          <div class="text-h6">
+            {{
+              $t(
+                "presentationRoom.quizCountdown.scoreDependsOnTime.false.title"
+              )
+            }}
+          </div>
           <div class="text-grey q-mt-xs">
-            (скорость ответа не имеет значения)
+            {{
+              $t(
+                "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle"
+              )
+            }}
           </div>
         </div>
       </template>
