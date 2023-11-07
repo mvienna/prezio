@@ -56,13 +56,7 @@
 
     <!-- open general quiz settings -->
     <PresentationStudioTabsSettingsTabOpenGeneralQuizSettings
-      v-if="
-        [
-          SLIDE_TYPES.TYPE_ANSWER,
-          SLIDE_TYPES.PICK_IMAGE,
-          SLIDE_TYPES.PICK_ANSWER,
-        ].includes(slide?.type)
-      "
+      v-if="SLIDE_TYPES_OF_QUIZ.includes(slide?.type)"
     />
 
     <!-- apply to all questions -->
@@ -75,7 +69,10 @@ import { storeToRefs } from "pinia";
 import { onBeforeMount, watch } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 import { useQuasar } from "quasar";
 import PresentationStudioTabsSettingsTabHeader from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTabHeader.vue";
 import PresentationStudioTabsSettingsTabApplyToAllQuestions from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTabApplyToAllQuestions.vue";

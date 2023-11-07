@@ -133,11 +133,7 @@
                 isHost &&
                 isLoaded &&
                 canvasStore.canvasRect()?.width > 0 &&
-                [
-                  SLIDE_TYPES.PICK_ANSWER,
-                  SLIDE_TYPES.PICK_IMAGE,
-                  SLIDE_TYPES.TYPE_ANSWER,
-                ].includes(slide?.type) &&
+                SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
                 room
               "
             >
@@ -171,7 +167,7 @@
               "
             />
 
-            <!-- HOST - menu -->
+            <!-- HOST - actions -->
             <PresentationRoomHostActions v-if="isHost" />
 
             <!-- HOST - room data (participants count, reactions, answers count) -->
@@ -389,11 +385,7 @@ onMounted(async () => {
     }
 
     if (
-      [
-        SLIDE_TYPES.PICK_ANSWER,
-        SLIDE_TYPES.PICK_IMAGE,
-        SLIDE_TYPES.TYPE_ANSWER,
-      ].includes(slide.value.type) &&
+      SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
       !room.value.is_quiz_started
     ) {
       elements.value = elements.value.filter((element) =>
@@ -549,11 +541,7 @@ const connectToRoomChannels = () => {
     await canvasStore.setElementsFromSlide();
 
     if (
-      [
-        SLIDE_TYPES.PICK_ANSWER,
-        SLIDE_TYPES.PICK_IMAGE,
-        SLIDE_TYPES.TYPE_ANSWER,
-      ].includes(slide.value.type) &&
+      SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
       !room.value.is_quiz_started
     ) {
       elements.value = elements.value.filter((element) =>
@@ -670,11 +658,7 @@ const handleKeyDownEvent = (event) => {
     // → right arrow
     if (event.keyCode === 39) {
       if (
-        [
-          SLIDE_TYPES.PICK_IMAGE,
-          SLIDE_TYPES.PICK_ANSWER,
-          SLIDE_TYPES.TYPE_ANSWER,
-        ].includes(slide.value?.type) &&
+        SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
         !room.value.is_quiz_started
       ) {
         presentationsStore.handleQuizStart();
@@ -686,11 +670,7 @@ const handleKeyDownEvent = (event) => {
     // ⏎ enter
     if (event.keyCode === 13) {
       if (
-        [
-          SLIDE_TYPES.PICK_IMAGE,
-          SLIDE_TYPES.PICK_ANSWER,
-          SLIDE_TYPES.TYPE_ANSWER,
-        ].includes(slide.value?.type) &&
+        SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
         !room.value.is_quiz_started
       ) {
         presentationsStore.handleQuizStart();
@@ -747,11 +727,7 @@ const handleCountdownOnSlideChange = (isOnLoad = false) => {
       }
     );
   } else if (
-    [
-      SLIDE_TYPES.PICK_IMAGE,
-      SLIDE_TYPES.PICK_ANSWER,
-      SLIDE_TYPES.TYPE_ANSWER,
-    ].includes(slide.value?.type) &&
+    SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
     room.value.is_quiz_started &&
     room.value.is_submission_locked &&
     !isOnLoad

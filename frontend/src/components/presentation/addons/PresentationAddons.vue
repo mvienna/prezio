@@ -40,11 +40,7 @@
   <!-- bar chart -->
   <PresentationAddonsBarChart
     v-if="
-      [
-        SLIDE_TYPES.TYPE_ANSWER,
-        SLIDE_TYPES.PICK_ANSWER,
-        SLIDE_TYPES.PICK_IMAGE,
-      ].includes(slide?.type) &&
+      SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
       (!room ||
         (room &&
           room.is_quiz_started &&
@@ -59,7 +55,10 @@ import { computed, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import PresentationStudioWordsCloud from "components/presentation/addons/PresentationAddonsWordsCloud.vue";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 import { api } from "boot/axios";
 import { useCanvasStore } from "stores/canvas";
 import PresentationAddonsBarChart from "components/presentation/addons/PresentationAddonsBarChart.vue";

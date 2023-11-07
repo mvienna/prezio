@@ -60,23 +60,13 @@
               {{ $t("presentationRoom.quizCountdown.questionIndex.title") }}
               {{
                 presentation.slides
-                  .filter((item) =>
-                    [
-                      SLIDE_TYPES.PICK_IMAGE,
-                      SLIDE_TYPES.PICK_ANSWER,
-                      SLIDE_TYPES.TYPE_ANSWER,
-                    ].includes(item.type)
-                  )
+                  .filter((item) => SLIDE_TYPES_OF_QUIZ.includes(item.type))
                   .findIndex((item) => item.id === slide.id) + 1
               }}
               {{ $t("presentationRoom.quizCountdown.questionIndex.outOf") }}
               {{
                 presentation.slides.filter((item) =>
-                  [
-                    SLIDE_TYPES.PICK_IMAGE,
-                    SLIDE_TYPES.PICK_ANSWER,
-                    SLIDE_TYPES.TYPE_ANSWER,
-                  ].includes(item.type)
+                  SLIDE_TYPES_OF_QUIZ.includes(item.type)
                 ).length
               }}
             </div>
@@ -298,7 +288,10 @@ import {
   timeLeftPercentage,
 } from "src/helpers/countdown";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 import { shuffleArray } from "src/helpers/arrayUtils";
 
 /*

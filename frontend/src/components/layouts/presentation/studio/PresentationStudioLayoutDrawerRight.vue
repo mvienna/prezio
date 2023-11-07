@@ -77,7 +77,10 @@ import PresentationStudioTabsDesignTab from "components/presentationStudio/tabs/
 import PresentationStudioTabsTemplatesTab from "components/presentationStudio/tabs/templates/PresentationStudioTabsTemplatesTab.vue";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
 import { useCanvasStore } from "stores/canvas";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
 import PresentationStudioTabsContentTab from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTab.vue";
@@ -115,12 +118,7 @@ const rightDrawerTabs = computed(() => {
       name: "settings",
       icon: "r_view_in_ar",
       label: t("presentationLayout.rightDrawer.tabs.settings.title"),
-      hidden: ![
-        SLIDE_TYPES.WORD_CLOUD,
-        SLIDE_TYPES.PICK_ANSWER,
-        SLIDE_TYPES.PICK_IMAGE,
-        SLIDE_TYPES.TYPE_ANSWER,
-      ].includes(slide.value?.type),
+      hidden: !SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type),
     },
     {
       name: "layers",

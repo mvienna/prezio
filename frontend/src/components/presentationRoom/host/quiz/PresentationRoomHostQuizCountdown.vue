@@ -17,23 +17,13 @@
             {{ $t("presentationRoom.quizCountdown.questionIndex.title") }}
             {{
               presentation.slides
-                .filter((item) =>
-                  [
-                    SLIDE_TYPES.PICK_IMAGE,
-                    SLIDE_TYPES.PICK_ANSWER,
-                    SLIDE_TYPES.TYPE_ANSWER,
-                  ].includes(item.type)
-                )
+                .filter((item) => SLIDE_TYPES_OF_QUIZ.includes(item.type))
                 .findIndex((item) => item.id === slide.id) + 1
             }}
             {{ $t("presentationRoom.quizCountdown.questionIndex.outOf") }}
             {{
               presentation.slides.filter((item) =>
-                [
-                  SLIDE_TYPES.PICK_IMAGE,
-                  SLIDE_TYPES.PICK_ANSWER,
-                  SLIDE_TYPES.TYPE_ANSWER,
-                ].includes(item.type)
+                SLIDE_TYPES_OF_QUIZ.includes(item.type)
               ).length
             }}
           </div>
@@ -111,7 +101,10 @@ import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { countdown, timeLeft, timeLeftPercentage } from "src/helpers/countdown";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 
 /*
  * stores

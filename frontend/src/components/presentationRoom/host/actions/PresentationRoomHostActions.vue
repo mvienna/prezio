@@ -20,11 +20,7 @@
       <!-- finish quiz -->
       <PresentationRoomHostActionsFinishQuiz
         v-if="
-          [
-            SLIDE_TYPES.PICK_ANSWER,
-            SLIDE_TYPES.PICK_IMAGE,
-            SLIDE_TYPES.TYPE_ANSWER,
-          ].includes(slide?.type) && room?.is_quiz_started
+          SLIDE_TYPES_OF_QUIZ.includes(slide?.type) && room?.is_quiz_started
         "
       />
     </div>
@@ -45,7 +41,10 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 import { timeLeft } from "src/helpers/countdown";
 import PresentationRoomHostActionsMenu from "components/presentationRoom/host/actions/PresentationRoomHostActionsMenu.vue";
 import PresentationRoomHostActionsEffects from "components/presentationRoom/host/actions/PresentationRoomHostActionsEffects.vue";
