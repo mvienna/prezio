@@ -5,98 +5,102 @@
         room.is_quiz_started && room.is_submission_locked && timeLeft !== -1
       "
     >
-      <template
-        v-if="
-          timeLeft > 5 ||
-          (presentation.settings.quiz_data &&
-            !JSON.parse(presentation.settings.quiz_data).countdown)
-        "
-      >
-        <div class="text-h6 text-semibold text-center">
-          {{ $t("presentationRoom.quizCountdown.questionIndex.title") }}
-          {{
-            presentation.slides
-              .filter((item) =>
+      <transition-group appear enter-active-class="animated zoomIn">
+        <div
+          v-if="
+            timeLeft > 5 ||
+            (presentation.settings.quiz_data &&
+              !JSON.parse(presentation.settings.quiz_data).countdown)
+          "
+        >
+          <div class="text-h6 text-semibold text-center">
+            {{ $t("presentationRoom.quizCountdown.questionIndex.title") }}
+            {{
+              presentation.slides
+                .filter((item) =>
+                  [
+                    SLIDE_TYPES.PICK_IMAGE,
+                    SLIDE_TYPES.PICK_ANSWER,
+                    SLIDE_TYPES.TYPE_ANSWER,
+                  ].includes(item.type)
+                )
+                .findIndex((item) => item.id === slide.id) + 1
+            }}
+            {{ $t("presentationRoom.quizCountdown.questionIndex.outOf") }}
+            {{
+              presentation.slides.filter((item) =>
                 [
                   SLIDE_TYPES.PICK_IMAGE,
                   SLIDE_TYPES.PICK_ANSWER,
                   SLIDE_TYPES.TYPE_ANSWER,
                 ].includes(item.type)
-              )
-              .findIndex((item) => item.id === slide.id) + 1
-          }}
-          {{ $t("presentationRoom.quizCountdown.questionIndex.outOf") }}
-          {{
-            presentation.slides.filter((item) =>
-              [
-                SLIDE_TYPES.PICK_IMAGE,
-                SLIDE_TYPES.PICK_ANSWER,
-                SLIDE_TYPES.TYPE_ANSWER,
-              ].includes(item.type)
-            ).length
-          }}
-        </div>
-
-        <div v-if="slideSettings.scoreDependsOnTime">
-          <div class="text-center">
-            {{
-              $t("presentationRoom.quizCountdown.scoreDependsOnTime.true.title")
+              ).length
             }}
           </div>
-          <div class="row no-wrap justify-center q-mt-md">
-            <q-icon name="r_timer" size="48px" />
+
+          <div v-if="slideSettings.scoreDependsOnTime">
+            <div class="text-center">
+              {{
+                $t(
+                  "presentationRoom.quizCountdown.scoreDependsOnTime.true.title"
+                )
+              }}
+            </div>
+            <div class="row no-wrap justify-center q-mt-md">
+              <q-icon name="r_timer" size="48px" />
+            </div>
+          </div>
+
+          <div v-else class="text-center">
+            <div class="text-h6">
+              {{
+                $t(
+                  "presentationRoom.quizCountdown.scoreDependsOnTime.false.title"
+                )
+              }}
+            </div>
+            <div class="text-grey q-mt-xs">
+              {{
+                $t(
+                  "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle"
+                )
+              }}
+            </div>
           </div>
         </div>
 
-        <div v-else class="text-center">
-          <div class="text-h6">
-            {{
-              $t(
-                "presentationRoom.quizCountdown.scoreDependsOnTime.false.title"
-              )
-            }}
+        <div v-else-if="timeLeft !== -1">
+          <div class="row no-wrap justify-center">
+            <q-circular-progress
+              :value="
+                timeLeftPercentage * 2 + 20 - 100 < 100
+                  ? timeLeftPercentage * 2 + 20 - 100
+                  : 100
+              "
+              size="64px"
+              :thickness="1"
+              :color="
+                timeLeftPercentage * 2 - 100 + 20 < 25
+                  ? 'positive'
+                  : timeLeftPercentage * 2 - 100 + 20 < 50
+                  ? 'yellow-10'
+                  : timeLeftPercentage * 2 - 100 + 20 < 75
+                  ? 'orange'
+                  : 'red'
+              "
+              track-color="white"
+            />
           </div>
-          <div class="text-grey q-mt-xs">
-            {{
-              $t(
-                "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle"
-              )
-            }}
+
+          <div class="text-center text-semibold text-h7 q-mt-md">
+            {{ countdown }}
+          </div>
+
+          <div class="text-center text-no-wrap">
+            {{ $t("presentationRoom.quizCountdown.title") }}
           </div>
         </div>
-      </template>
-
-      <template v-else-if="timeLeft !== -1">
-        <div class="row no-wrap justify-center">
-          <q-circular-progress
-            :value="
-              timeLeftPercentage * 2 + 20 - 100 < 100
-                ? timeLeftPercentage * 2 + 20 - 100
-                : 100
-            "
-            size="64px"
-            :thickness="1"
-            :color="
-              timeLeftPercentage * 2 - 100 + 20 < 25
-                ? 'positive'
-                : timeLeftPercentage * 2 - 100 + 20 < 50
-                ? 'yellow-10'
-                : timeLeftPercentage * 2 - 100 + 20 < 75
-                ? 'orange'
-                : 'red'
-            "
-            track-color="white"
-          />
-        </div>
-
-        <div class="text-center text-semibold text-h7 q-mt-md">
-          {{ countdown }}
-        </div>
-
-        <div class="text-center text-no-wrap">
-          {{ $t("presentationRoom.quizCountdown.title") }}
-        </div>
-      </template>
+      </transition-group>
     </template>
   </div>
 </template>

@@ -13,266 +13,272 @@
     @submit.prevent="handleSubmittingAnswers()"
   >
     <!-- waiting for quiz to start -->
-    <template v-if="!room.is_quiz_started && room.is_submission_locked">
-      <div
-        class="text-center q-mb-md text-h7 text-semibold"
-        :style="`color: ${
-          wordCloudTextColors[
-            Math.floor(Math.random() * wordCloudTextColors.length)
-          ]
-        }`"
-      >
-        {{
-          participant?.user_data
-            ? JSON.parse(participant.user_data).avatar + " "
-            : ""
-        }}
-        {{
-          participant?.user_data ? JSON.parse(participant.user_data).name : ""
-        }}
-      </div>
-
-      <div class="waiting_for_quiz_start__title">
-        {{ $t("presentationRoom.waitingForQuizStart.title") }}
-      </div>
-
-      <div class="text-center q-mt-md" style="opacity: 0.7">
-        {{ $t("presentationRoom.waitingForQuizStart.description") }}
-      </div>
-    </template>
-
-    <!-- 5s timeout -->
-    <template
-      v-else-if="
-        room.is_quiz_started && room.is_submission_locked && timeLeft !== -1
-      "
-    >
-      <template
-        v-if="
-          timeLeft > 5 ||
-          (presentation.settings.quiz_data &&
-            !JSON.parse(presentation.settings.quiz_data).countdown)
-        "
-      >
-        <div class="text-h6 text-semibold text-center">
-          {{ $t("presentationRoom.quizCountdown.questionIndex.title") }}
-          {{
-            presentation.slides
-              .filter((item) =>
-                [
-                  SLIDE_TYPES.PICK_IMAGE,
-                  SLIDE_TYPES.PICK_ANSWER,
-                  SLIDE_TYPES.TYPE_ANSWER,
-                ].includes(item.type)
-              )
-              .findIndex((item) => item.id === slide.id) + 1
-          }}
-          {{ $t("presentationRoom.quizCountdown.questionIndex.outOf") }}
-          {{
-            presentation.slides.filter((item) =>
-              [
-                SLIDE_TYPES.PICK_IMAGE,
-                SLIDE_TYPES.PICK_ANSWER,
-                SLIDE_TYPES.TYPE_ANSWER,
-              ].includes(item.type)
-            ).length
-          }}
-        </div>
-
-        <div v-if="slideSettings.scoreDependsOnTime">
-          <div class="text-center">
-            {{
-              $t("presentationRoom.quizCountdown.scoreDependsOnTime.true.title")
-            }}
-          </div>
-          <div class="row no-wrap justify-center q-mt-md">
-            <q-icon name="r_timer" size="48px" />
-          </div>
-        </div>
-
-        <div v-else class="text-center">
-          <div>
-            {{
-              $t(
-                "presentationRoom.quizCountdown.scoreDependsOnTime.false.title"
-              )
-            }}
-          </div>
-          <div class="text-grey q-mt-xs">
-            {{
-              $t(
-                "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle"
-              )
-            }}
-          </div>
-        </div>
-      </template>
-
-      <template v-else-if="timeLeft !== -1">
-        <div class="row no-wrap justify-center">
-          <q-circular-progress
-            :value="
-              timeLeftPercentage * 2 + 20 - 100 < 100
-                ? timeLeftPercentage * 2 + 20 - 100
-                : 100
-            "
-            size="64px"
-            :thickness="1"
-            :color="
-              timeLeftPercentage * 2 - 100 + 20 < 25
-                ? 'positive'
-                : timeLeftPercentage * 2 - 100 + 20 < 50
-                ? 'yellow-10'
-                : timeLeftPercentage * 2 - 100 + 20 < 75
-                ? 'orange'
-                : 'red'
-            "
-            track-color="white"
-          />
-        </div>
-
-        <div class="text-center text-semibold text-h7 q-mt-md">
-          {{ countdown }}
-        </div>
-      </template>
-    </template>
-
-    <!-- answer -->
-    <template v-else>
-      <!-- question title -->
-      <div class="text-h6 text-semibold text-center">
-        {{ layoutTitleElement?.text }}
-      </div>
-
-      <!-- question description -->
-      <div class="text-semibold text-center q-mt-sm q-mb-lg">
-        {{ slideSettings.description }}
-      </div>
-
-      <transition
-        appear
-        enter-active-class="animated fadeIn"
-        leave-active-class="animated fadeOut"
-      >
+    <transition-group appear enter-active-class="animated zoomIn">
+      <div v-if="!room.is_quiz_started && room.is_submission_locked">
         <div
-          v-if="timeLeft !== -1 && !participantAnswers?.length"
-          class="q-pb-md"
-        >
-          <q-linear-progress
-            size="xl"
-            rounded
-            :value="1 - timeLeftPercentage / 100"
-            :color="
-              timeLeftPercentage < 25
-                ? 'positive'
-                : timeLeftPercentage < 50
-                ? 'yellow-10'
-                : timeLeftPercentage < 75
-                ? 'orange'
-                : 'red'
-            "
-          />
-        </div>
-      </transition>
-
-      <!-- answer inputs -->
-      <div class="column no-wrap q-gutter-md">
-        <q-card
-          v-for="(answerOption, answerOptionIndex) in answerOptions"
-          :key="answerOptionIndex"
-          flat
-          :style="`border: 1px solid ${
-            answerOption.isSelected
-              ? timeLeft !== -1 && !participantAnswers?.length
-                ? 'var(--q-primary)'
-                : answerOption.isCorrect
-                ? 'var(--q-positive)'
-                : 'var(--q-negative)'
-              : 'transparent'
+          class="text-center q-mb-md text-h7 text-semibold"
+          :style="`color: ${
+            wordCloudTextColors[
+              Math.floor(Math.random() * wordCloudTextColors.length)
+            ]
           }`"
-          class="text-black"
         >
-          <q-card-section class="q-py-sm q-px-md">
-            <q-checkbox
-              v-model="answerOption.isSelected"
-              :class="
-                !isAllowedToSelectMultipleAnswerOptions
-                  ? 'q-checkbox--round'
-                  : ''
-              "
-              class="full-width"
-              :color="
-                timeLeft !== -1 && !participantAnswers?.length
-                  ? 'primary'
-                  : answerOption.isCorrect
-                  ? 'positive'
-                  : 'negative'
-              "
-              :disable="timeLeft === -1 || participantAnswers?.length > 0"
-              @update:model-value="
-                () => {
-                  if (!isAllowedToSelectMultipleAnswerOptions) {
-                    slideSettings.answerOptions =
-                      slideSettings.answerOptions.map((item, index) => {
-                        if (item.isSelected && index !== answerOptionIndex) {
-                          item.isSelected = false;
-                        }
+          {{
+            participant?.user_data
+              ? JSON.parse(participant.user_data).avatar + " "
+              : ""
+          }}
+          {{
+            participant?.user_data ? JSON.parse(participant.user_data).name : ""
+          }}
+        </div>
 
-                        return item;
-                      });
-                  }
-                }
-              "
-            >
-              <div class="q-ml-sm">
-                {{ answerOption.value }}
-              </div>
-            </q-checkbox>
-          </q-card-section>
-        </q-card>
+        <div class="waiting_for_quiz_start__title">
+          {{ $t("presentationRoom.waitingForQuizStart.title") }}
+        </div>
+
+        <div class="text-center q-mt-md" style="opacity: 0.7">
+          {{ $t("presentationRoom.waitingForQuizStart.description") }}
+        </div>
       </div>
 
-      <!-- submit -->
-      <q-btn
-        type="submit"
-        unelevated
-        no-caps
-        :disable="
-          !!room?.is_submission_locked ||
-          timeLeft === -1 ||
-          participantAnswers?.length > 0
-        "
-        :icon-right="
-          room?.is_submission_locked || participantAnswers?.length > 0
-            ? 'r_lock'
-            : 'r_done'
-        "
-        color="primary"
-        class="full-width q-py-md q-mt-md"
-        style="position: sticky; bottom: 0"
-      >
-        <template #default>
-          <div class="q-mr-sm">
-            {{
-              room?.is_submission_locked || participantAnswers?.length > 0
-                ? $t("presentationRoom.answers.submit.submissionIsLocked")
-                : $t("presentationRoom.answers.submit.title")
-            }}
-
-            {{
-              timeLeft !== -1 && !participantAnswers?.length ? countdown : ""
-            }}
-          </div>
-        </template>
-      </q-btn>
-
+      <!-- 5s timeout -->
       <div
-        v-if="timeLeft === -1 && room?.is_submission_locked"
-        class="text-center text-semibold text-grey q-mt-md"
+        v-else-if="
+          room.is_quiz_started && room.is_submission_locked && timeLeft !== -1
+        "
       >
-        {{ $t("presentationRoom.answers.timesUp") }}
+        <transition-group appear enter-active-class="animated zoomIn">
+          <div
+            v-if="
+              timeLeft > 5 ||
+              (presentation.settings.quiz_data &&
+                !JSON.parse(presentation.settings.quiz_data).countdown)
+            "
+          >
+            <div class="text-h6 text-semibold text-center">
+              {{ $t("presentationRoom.quizCountdown.questionIndex.title") }}
+              {{
+                presentation.slides
+                  .filter((item) =>
+                    [
+                      SLIDE_TYPES.PICK_IMAGE,
+                      SLIDE_TYPES.PICK_ANSWER,
+                      SLIDE_TYPES.TYPE_ANSWER,
+                    ].includes(item.type)
+                  )
+                  .findIndex((item) => item.id === slide.id) + 1
+              }}
+              {{ $t("presentationRoom.quizCountdown.questionIndex.outOf") }}
+              {{
+                presentation.slides.filter((item) =>
+                  [
+                    SLIDE_TYPES.PICK_IMAGE,
+                    SLIDE_TYPES.PICK_ANSWER,
+                    SLIDE_TYPES.TYPE_ANSWER,
+                  ].includes(item.type)
+                ).length
+              }}
+            </div>
+
+            <div v-if="slideSettings.scoreDependsOnTime">
+              <div class="text-center">
+                {{
+                  $t(
+                    "presentationRoom.quizCountdown.scoreDependsOnTime.true.title"
+                  )
+                }}
+              </div>
+              <div class="row no-wrap justify-center q-mt-md">
+                <q-icon name="r_timer" size="48px" />
+              </div>
+            </div>
+
+            <div v-else class="text-center">
+              <div>
+                {{
+                  $t(
+                    "presentationRoom.quizCountdown.scoreDependsOnTime.false.title"
+                  )
+                }}
+              </div>
+              <div class="text-grey q-mt-xs">
+                {{
+                  $t(
+                    "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle"
+                  )
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div v-else-if="timeLeft !== -1">
+            <div class="row no-wrap justify-center">
+              <q-circular-progress
+                :value="
+                  timeLeftPercentage * 2 + 20 - 100 < 100
+                    ? timeLeftPercentage * 2 + 20 - 100
+                    : 100
+                "
+                size="64px"
+                :thickness="1"
+                :color="
+                  timeLeftPercentage * 2 - 100 + 20 < 25
+                    ? 'positive'
+                    : timeLeftPercentage * 2 - 100 + 20 < 50
+                    ? 'yellow-10'
+                    : timeLeftPercentage * 2 - 100 + 20 < 75
+                    ? 'orange'
+                    : 'red'
+                "
+                track-color="white"
+              />
+            </div>
+
+            <div class="text-center text-semibold text-h7 q-mt-md">
+              {{ countdown }}
+            </div>
+          </div>
+        </transition-group>
       </div>
-    </template>
+
+      <!-- answer -->
+      <div v-else>
+        <!-- question title -->
+        <div class="text-h6 text-semibold text-center">
+          {{ layoutTitleElement?.text }}
+        </div>
+
+        <!-- question description -->
+        <div class="text-semibold text-center q-mt-sm q-mb-lg">
+          {{ slideSettings.description }}
+        </div>
+
+        <transition
+          appear
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+        >
+          <div
+            v-if="timeLeft !== -1 && !participantAnswers?.length"
+            class="q-pb-md"
+          >
+            <q-linear-progress
+              size="xl"
+              rounded
+              :value="1 - timeLeftPercentage / 100"
+              :color="
+                timeLeftPercentage < 25
+                  ? 'positive'
+                  : timeLeftPercentage < 50
+                  ? 'yellow-10'
+                  : timeLeftPercentage < 75
+                  ? 'orange'
+                  : 'red'
+              "
+            />
+          </div>
+        </transition>
+
+        <!-- answer inputs -->
+        <div class="column no-wrap q-gutter-md">
+          <q-card
+            v-for="(answerOption, answerOptionIndex) in answerOptions"
+            :key="answerOptionIndex"
+            flat
+            :style="`border: 1px solid ${
+              answerOption.isSelected
+                ? timeLeft !== -1 && !participantAnswers?.length
+                  ? 'var(--q-primary)'
+                  : answerOption.isCorrect
+                  ? 'var(--q-positive)'
+                  : 'var(--q-negative)'
+                : 'transparent'
+            }`"
+            class="text-black"
+          >
+            <q-card-section class="q-py-sm q-px-md">
+              <q-checkbox
+                v-model="answerOption.isSelected"
+                :class="
+                  !isAllowedToSelectMultipleAnswerOptions
+                    ? 'q-checkbox--round'
+                    : ''
+                "
+                class="full-width"
+                :color="
+                  timeLeft !== -1 && !participantAnswers?.length
+                    ? 'primary'
+                    : answerOption.isCorrect
+                    ? 'positive'
+                    : 'negative'
+                "
+                :disable="timeLeft === -1 || participantAnswers?.length > 0"
+                @update:model-value="
+                  () => {
+                    if (!isAllowedToSelectMultipleAnswerOptions) {
+                      slideSettings.answerOptions =
+                        slideSettings.answerOptions.map((item, index) => {
+                          if (item.isSelected && index !== answerOptionIndex) {
+                            item.isSelected = false;
+                          }
+
+                          return item;
+                        });
+                    }
+                  }
+                "
+              >
+                <div class="q-ml-sm">
+                  {{ answerOption.value }}
+                </div>
+              </q-checkbox>
+            </q-card-section>
+          </q-card>
+        </div>
+
+        <!-- submit -->
+        <q-btn
+          type="submit"
+          unelevated
+          no-caps
+          :disable="
+            !!room?.is_submission_locked ||
+            timeLeft === -1 ||
+            participantAnswers?.length > 0
+          "
+          :icon-right="
+            room?.is_submission_locked || participantAnswers?.length > 0
+              ? 'r_lock'
+              : 'r_done'
+          "
+          color="primary"
+          class="full-width q-py-md q-mt-md"
+          style="position: sticky; bottom: 0"
+        >
+          <template #default>
+            <div class="q-mr-sm">
+              {{
+                room?.is_submission_locked || participantAnswers?.length > 0
+                  ? $t("presentationRoom.answers.submit.submissionIsLocked")
+                  : $t("presentationRoom.answers.submit.title")
+              }}
+
+              {{
+                timeLeft !== -1 && !participantAnswers?.length ? countdown : ""
+              }}
+            </div>
+          </template>
+        </q-btn>
+
+        <div
+          v-if="timeLeft === -1 && room?.is_submission_locked"
+          class="text-center text-semibold text-grey q-mt-md"
+        >
+          {{ $t("presentationRoom.answers.timesUp") }}
+        </div>
+      </div>
+    </transition-group>
   </q-form>
 </template>
 
@@ -314,8 +320,8 @@ const { elements } = storeToRefs(canvasStore);
 const textColor = computed(() => {
   return averageRoomBackgroundBrightness.value >=
     roomBackgroundBrightnessThreshold.value
-    ? "black"
-    : "white";
+    ? "white"
+    : "black";
 });
 
 /*
