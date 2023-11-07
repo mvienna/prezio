@@ -44,7 +44,7 @@
     <!-- 5s timeout -->
     <template
       v-else-if="
-        room.is_quiz_started && room.is_submission_locked && !!timeLeft
+        room.is_quiz_started && room.is_submission_locked && timeLeft !== -1
       "
     >
       <template
@@ -94,7 +94,7 @@
         </div>
       </template>
 
-      <template v-else>
+      <template v-else-if="timeLeft !== -1">
         <div class="row no-wrap justify-center">
           <q-circular-progress
             :value="timeLeftPercentage"
@@ -136,7 +136,10 @@
         enter-active-class="animated fadeIn"
         leave-active-class="animated fadeOut"
       >
-        <div v-if="!!timeLeft && !participantAnswers?.length" class="q-pb-md">
+        <div
+          v-if="timeLeft !== -1 && !participantAnswers?.length"
+          class="q-pb-md"
+        >
           <q-linear-progress
             size="xl"
             rounded
@@ -164,7 +167,7 @@
           flat
           :style="`border: 1px solid ${
             answerOptions.isSelected
-              ? !!timeLeft && !participantAnswers?.length
+              ? timeLeft !== -1 && !participantAnswers?.length
                 ? 'var(--q-primary)'
                 : answerOptions.isCorrect
                 ? 'var(--q-positive)'
@@ -179,13 +182,13 @@
               :class="!isMultipleAnswers ? 'q-checkbox--round' : ''"
               class="full-width"
               :color="
-                !!timeLeft && !participantAnswers?.length
+                timeLeft !== -1 && !participantAnswers?.length
                   ? 'primary'
                   : answerOptions.isCorrect
                   ? 'positive'
                   : 'negative'
               "
-              :disable="!timeLeft || participantAnswers?.length > 0"
+              :disable="timeLeft === -1 || participantAnswers?.length > 0"
               @update:model-value="
                 () => {
                   if (!isMultipleAnswers) {
@@ -216,7 +219,7 @@
         no-caps
         :disable="
           !!room?.is_submission_locked ||
-          !timeLeft ||
+          timeLeft === -1 ||
           participantAnswers?.length > 0
         "
         :icon-right="
@@ -236,12 +239,17 @@
                 : $t("presentationRoom.answers.submit.title")
             }}
 
-            {{ !!timeLeft && !participantAnswers?.length ? countdown : "" }}
+            {{
+              timeLeft !== -1 && !participantAnswers?.length ? countdown : ""
+            }}
           </div>
         </template>
       </q-btn>
 
-      <div v-if="!timeLeft" class="text-center text-semibold text-grey q-mt-md">
+      <div
+        v-if="timeLeft === -1 && room?.is_submission_locked"
+        class="text-center text-semibold text-grey q-mt-md"
+      >
         {{ $t("presentationRoom.answers.timesUp") }}
       </div>
     </template>
@@ -314,7 +322,7 @@ const participantAnswers = computed(() => {
     .filter(
       (answer) =>
         answer.participant_id === participant.value?.id &&
-        answer.type === slide.value?.type
+        answer.slide_type === slide.value?.type
     )
     .map((answer) => JSON.parse(answer.answer_data)?.text);
 });

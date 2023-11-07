@@ -45,7 +45,11 @@
         SLIDE_TYPES.PICK_ANSWER,
         SLIDE_TYPES.PICK_IMAGE,
       ].includes(slide?.type) &&
-      (!room || (room && room.is_quiz_started && !room.is_submission_locked))
+      (!room ||
+        (room &&
+          room.is_quiz_started &&
+          (!room.is_submission_locked ||
+            (room.is_submission_locked && timeLeft === -1))))
     "
   />
 </template>
@@ -59,6 +63,7 @@ import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { api } from "boot/axios";
 import { useCanvasStore } from "stores/canvas";
 import PresentationAddonsBarChart from "components/presentation/addons/PresentationAddonsBarChart.vue";
+import { timeLeft } from "src/helpers/countdown";
 
 /*
  * props

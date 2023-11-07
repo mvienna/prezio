@@ -248,7 +248,7 @@
 
     <!-- countdown -->
     <div
-      v-if="!!timeLeft && !room.is_submission_locked"
+      v-if="timeLeft !== -1 && !room.is_submission_locked"
       class="room_menu__card"
     >
       <q-btn flat class="q-px-sm">

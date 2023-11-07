@@ -41,7 +41,7 @@
     >
       <div
         v-if="
-          !!timeLeft &&
+          timeLeft !== -1 &&
           (slideSettings.isMultipleEntries ||
             (!slideSettings.isMultipleEntries && participantAnswersCount === 0))
         "
@@ -113,7 +113,7 @@
                 : $t("presentationRoom.answers.submit.title")
             }}
 
-            {{ !!timeLeft ? countdown : "" }}
+            {{ timeLeft !== -1 ? countdown : "" }}
           </div>
         </template>
       </q-btn>
@@ -236,7 +236,7 @@ const participantAnswersCount = computed(() => {
   return slide.value.answers.filter(
     (answer) =>
       answer.participant_id === participant.value?.id &&
-      answer.type === slide.value?.type
+      answer.slide_type === slide.value?.type
   ).length;
 });
 

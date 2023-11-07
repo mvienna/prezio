@@ -1,6 +1,6 @@
 import { ref, computed } from "vue";
 
-const timeLeft = ref();
+const timeLeft = ref(-1);
 const timeLeftPercentage = ref();
 const countdownInterval = ref();
 
@@ -22,7 +22,7 @@ const startCountdown = (seconds = 60) => {
 const stopCountdown = () => {
   if (countdownInterval.value) {
     clearInterval(countdownInterval.value);
-    timeLeft.value = null;
+    timeLeft.value = -1;
     timeLeftPercentage.value = null;
   }
 };

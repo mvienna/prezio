@@ -155,7 +155,7 @@
                 v-if="
                   room.is_quiz_started &&
                   room.is_submission_locked &&
-                  !!timeLeft
+                  timeLeft !== -1
                 "
               />
             </template>
@@ -212,7 +212,14 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
 import { QSpinnerIos, useQuasar } from "quasar";
@@ -225,7 +232,10 @@ import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import Echo from "laravel-echo";
 import { randomNames } from "src/constants/mock";
 import { useI18n } from "vue-i18n";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
 import { generateQrCode } from "src/helpers/qrUtils";
 import { startCountdown, stopCountdown, timeLeft } from "src/helpers/countdown";
@@ -570,6 +580,33 @@ const connectToRoomChannels = () => {
   channel.listen("PresentationRoomAnswersFormSubmittedEvent", (event) => {
     slide.value.answers = [...slide.value.answers, ...event.answers];
     presentationsStore.updateLocalSlide();
+
+    if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) && isHost.value) {
+      const participantIds = participants.value.map((item) => item.id);
+
+      if (
+        slide.value.answers.filter(
+          (answer) =>
+            slide.value.type === answer.slide_type &&
+            participantIds.includes(answer.participant_id)
+        ).length === participantIds.length
+      ) {
+        stopCountdown();
+        room.value.is_submission_locked = true;
+        room.value.countdown = 0;
+
+        presentationsStore.sendPresentationRoomUpdateEvent(
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          {
+            countdown: room.value.countdown,
+            is_submission_locked: room.value.is_submission_locked,
+          }
+        );
+      }
+    }
   });
 
   /*

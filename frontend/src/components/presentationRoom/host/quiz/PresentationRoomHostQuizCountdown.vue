@@ -1,7 +1,9 @@
 <template>
   <div :class="`text-${textColor}`" class="absolute-center" style="z-index: 2">
     <template
-      v-if="room.is_quiz_started && room.is_submission_locked && !!timeLeft"
+      v-if="
+        room.is_quiz_started && room.is_submission_locked && timeLeft !== -1
+      "
     >
       <template
         v-if="

@@ -26,3 +26,9 @@ export const SLIDE_TYPES = {
   QNA: "qna",
   BRAIN_STORM: "brain_storm",
 };
+
+export const SLIDE_TYPES_OF_QUIZ = [
+  SLIDE_TYPES.PICK_ANSWER,
+  SLIDE_TYPES.PICK_IMAGE,
+  SLIDE_TYPES.TYPE_ANSWER,
+];
