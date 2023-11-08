@@ -83,7 +83,7 @@
                 }}
               </div>
               <div class="row no-wrap justify-center q-mt-md">
-                <q-icon name="r_timer" size="48px" />
+                <q-icon name="r_timer" size="48px" class="timerAnimation" />
               </div>
             </div>
 
@@ -475,6 +475,35 @@ const answerOptions = computed(() => {
   }
   to {
     transform: scale(1);
+  }
+}
+
+/*
+ * timer icon animation
+ */
+.timerAnimationAnimation {
+  animation: timerAnimation 0.7s ease-in-out;
+  animation-delay: 2s;
+}
+
+@keyframes timerAnimation {
+  0% {
+    transform: scale(1) rotate(0);
+  }
+  20% {
+    transform: scale(1.2) rotate(0);
+  }
+  40% {
+    transform: scale(1.2) rotate(-15deg);
+  }
+  60% {
+    transform: scale(1.2) rotate(15deg);
+  }
+  80% {
+    transform: scale(1.2) rotate(0);
+  }
+  100% {
+    transform: scale(1) rotate(0);
   }
 }
 </style>

@@ -33,7 +33,7 @@
             }}
           </div>
           <div class="row no-wrap justify-center q-mt-md">
-            <q-icon name="r_timer" size="48px" class="tiktakAnimation" />
+            <q-icon name="r_timer" size="48px" class="timerAnimation" />
           </div>
         </div>
 
@@ -90,7 +90,7 @@
       <div v-else-if="stage">
         <div
           v-if="timeLeft !== -1"
-          class="text-center text-semibold text-h4 q-mt-md timeOutAnimation"
+          class="text-center text-semibold text-h4 q-mt-md timeOutCountdownAnimation"
         >
           {{ timeLeft }}
         </div>
@@ -177,13 +177,16 @@ watch(
   }
 }
 
-.timeOutAnimation {
-  animation: timeOut 1s infinite ease-in-out;
+/*
+ * 3s left countdown
+ */
+.timeOutCountdownAnimation {
+  animation: timeOutCountdown 1s infinite ease-in-out;
   opacity: 1;
   transform: scale(1);
 }
 
-@keyframes timeOut {
+@keyframes timeOutCountdown {
   0% {
     transform: scale(1);
     opacity: 1;
@@ -201,12 +204,15 @@ watch(
   }
 }
 
-.tiktakAnimation {
-  animation: tiktak 0.7s ease-in-out;
+/*
+ * timer icon animation
+ */
+.timerAnimationAnimation {
+  animation: timerAnimation 0.7s ease-in-out;
   animation-delay: 2s;
 }
 
-@keyframes tiktak {
+@keyframes timerAnimation {
   0% {
     transform: scale(1) rotate(0);
   }
