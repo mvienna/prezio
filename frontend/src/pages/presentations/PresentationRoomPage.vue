@@ -170,6 +170,9 @@
             <!-- HOST - actions -->
             <PresentationRoomHostActions v-if="isHost" />
 
+            <!-- PARTICIPANT - actions -->
+            <PresentationRoomParticipantActions v-else />
+
             <!-- HOST - room data (participants count, reactions, answers count) -->
             <PresentationRoomHostData
               :participants-count="participants?.length || 0"
@@ -249,6 +252,7 @@ import PresentationRoomHostData from "components/presentationRoom/host/data/Pres
 import PresentationRoomHostSlideControls from "components/presentationRoom/host/PresentationRoomHostSlideControls.vue";
 import PresentationRoomParticipantNoAccess from "components/presentationRoom/participant/PresentationRoomParticipantNoAccess.vue";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
+import PresentationRoomParticipantActions from "components/presentationRoom/participant/actions/PresentationRoomParticipantActions.vue";
 
 /*
  * variables
@@ -502,11 +506,35 @@ const connectToRoomChannels = () => {
       })
       .joining((userJoined) => {
         participants.value.push(userJoined);
+
+        api
+          .post(
+            `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
+            {
+              participant_id: userJoined.id,
+              message: "joined",
+            }
+          )
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .leaving((userLeft) => {
         participants.value = participants.value.filter(
           (item) => item.id !== userLeft?.id && item.room_id
         );
+
+        api
+          .post(
+            `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
+            {
+              participant_id: userLeft.id,
+              message: "left",
+            }
+          )
+          .catch((error) => {
+            console.log(error);
+          });
       });
   }
 
@@ -559,6 +587,13 @@ const connectToRoomChannels = () => {
    */
   channel.listen("PresentationRoomNewReactionEvent", (event) => {
     room.value.reactions = event.reactions;
+  });
+
+  /*
+   * listen for new chat messages
+   */
+  channel.listen("PresentationRoomNewChatMessageEvent", (event) => {
+    room.value.messages = [...room.value?.messages, event.message];
   });
 
   /*

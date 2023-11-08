@@ -4,13 +4,14 @@ namespace App\Models\Presentation\Room;
 
 use App\Models\BaseModel;
 use App\Models\Relations\BelongsToPresentation;
+use App\Models\Relations\HasManyPresentationRoomChatMessages;
 use App\Models\Relations\HasManyRoomParticipants;
 use App\Models\Relations\HasOneRoomReactions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PresentationRoom extends BaseModel
 {
-    use HasFactory, BelongsToPresentation, HasManyRoomParticipants, HasOneRoomReactions;
+    use HasFactory, BelongsToPresentation, HasManyRoomParticipants, HasOneRoomReactions, HasManyPresentationRoomChatMessages;
 
     public function __construct(array $attributes = [])
     {

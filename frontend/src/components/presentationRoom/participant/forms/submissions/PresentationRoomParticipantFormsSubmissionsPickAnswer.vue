@@ -14,7 +14,7 @@
   >
     <!-- waiting for quiz to start -->
     <transition-group appear enter-active-class="animated zoomIn">
-      <div v-if="!room.is_quiz_started && room.is_submission_locked">
+      <div v-if="room && !room.is_quiz_started && room.is_submission_locked">
         <div
           class="text-center q-mb-md text-h7 text-semibold"
           :style="`color: ${
@@ -45,7 +45,10 @@
       <!-- 5s timeout -->
       <div
         v-else-if="
-          room.is_quiz_started && room.is_submission_locked && timeLeft !== -1
+          room &&
+          room.is_quiz_started &&
+          room.is_submission_locked &&
+          timeLeft !== -1
         "
       >
         <transition-group appear enter-active-class="animated zoomIn">

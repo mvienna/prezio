@@ -22,7 +22,6 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
 /*
  * emits
@@ -35,8 +34,4 @@ defineEmits(["updateSlideSettings"]);
 const presentationsStore = usePresentationsStore();
 const { slideSettings, showSettingsDialog, presentationSettingsTabsExpanded } =
   storeToRefs(presentationsStore);
-
-/*
- * rules
- */
 </script>

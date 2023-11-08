@@ -1,8 +1,20 @@
 <template>
-  <div class="room_menu row no-wrap q-gutter-md">
-    <div class="room_menu__card row no-wrap">
+  <div class="room_actions row no-wrap q-gutter-md">
+    <div class="room_actions__card row no-wrap">
       <!-- menu -->
       <PresentationRoomHostActionsMenu />
+
+      <!-- chat -->
+      <PresentationRoomActionsChat
+        v-if="
+          SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
+          presentation?.settings &&
+          (!presentation.settings.quiz_data ||
+            (presentation?.settings?.quiz_data &&
+              JSON.parse(presentation.settings.quiz_data)?.liveChat))
+        "
+        :offset="[0, 16]"
+      />
 
       <!-- spice things up with effect -->
       <PresentationRoomHostActionsEffects />
@@ -27,10 +39,10 @@
 
     <!-- countdown -->
     <div
-      v-if="timeLeft !== -1 && !room.is_submission_locked"
-      class="room_menu__card"
+      v-if="timeLeft !== -1 && !room.is_submission_locked && isHost"
+      class="room_actions__card"
     >
-      <PresentationRoomhostActionsCountdown />
+      <PresentationRoomHostActionsCountdown />
     </div>
   </div>
 
@@ -51,23 +63,25 @@ import PresentationRoomHostActionsEffects from "components/presentationRoom/host
 import PresentationRoomHostActionsHideResultsSettings from "components/presentationRoom/host/actions/PresentationRoomHostActionsHideResultsSetting.vue";
 import PresentationRoomHostActionsSubmissionLockSetting from "components/presentationRoom/host/actions/PresentationRoomHostActionsSubmissionLockSetting.vue";
 import PresentationRoomHostActionsFinishQuiz from "components/presentationRoom/host/actions/PresentationRoomHostActionsFinishQuiz.vue";
-import PresentationRoomhostActionsCountdown from "components/presentationRoom/host/actions/PresentationRoomhostActionsCountdown.vue";
+import PresentationRoomHostActionsCountdown from "components/presentationRoom/host/actions/PresentationRoomHostActionsCountdown.vue";
+import PresentationRoomActionsChat from "components/presentationRoom/PresentationRoomActionsChat.vue";
 
 /*
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { room, slide, slideSettings } = storeToRefs(presentationsStore);
+const { room, slide, slideSettings, presentation } =
+  storeToRefs(presentationsStore);
 </script>
 
 <style scoped lang="scss">
-.room_menu {
+.room_actions {
   position: absolute;
   left: 24px;
   bottom: 24px;
   z-index: 1;
 
-  .room_menu__card {
+  .room_actions__card {
     height: 62px;
     padding: 8px;
     background: rgba(0, 0, 0, 0.5);
@@ -85,11 +99,11 @@ const { room, slide, slideSettings } = storeToRefs(presentationsStore);
 }
 
 @media screen and (max-width: 960px) {
-  .room_menu {
+  .room_actions {
     left: 8px;
     bottom: 8px;
 
-    .room_menu__card {
+    .room_actions__card {
       height: 50px;
 
       .q-btn {

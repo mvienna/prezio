@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Presentation;
 
 use App\Events\PresentationRoomAnswersFormSubmittedEvent;
+use App\Events\PresentationRoomNewChatMessageEvent;
 use App\Events\PresentationRoomNewReactionEvent;
 use App\Events\PresentationRoomTerminatedEvent;
 use App\Events\PresentationRoomUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Presentation\Presentation;
 use App\Models\Presentation\Room\PresentationRoom;
+use App\Models\Presentation\Room\PresentationRoomChatMessage;
 use App\Models\Presentation\Room\PresentationRoomParticipant;
 use App\Models\Presentation\Room\PresentationRoomReactions;
 use App\Models\Presentation\Slide\PresentationSlide;
@@ -72,7 +74,7 @@ class PresentationRoomController extends Controller
             return $this->errorResponse(trans('errors.room.notFound'), 404);
         }
 
-        $room->load('presentation', 'reactions');
+        $room->load('presentation', 'reactions', 'messages', 'messages.participant');
         $room->presentation->load('slides', 'slides.answers', 'slides.answers.participant', 'preview', 'settings');
 
         if (!$room->reactions) {
@@ -82,6 +84,8 @@ class PresentationRoomController extends Controller
 
             $room->load('reactions');
         }
+
+        $room['host'] = User::find($room->presentation->user_id);
 
         return $this->jsonResponse([
             'room' => $room,
@@ -231,5 +235,36 @@ class PresentationRoomController extends Controller
         ]);
 
         return $this->jsonResponse($participant->toArray());
+    }
+
+    /*
+     * chat
+     */
+    public function submitChatMessage(Presentation $presentation, PresentationRoom $room, Request $request): JsonResponse
+    {
+        /** @var User $sender */
+        $sender = auth()->user();
+        $type = 'default';
+        if ($presentation->user_id === $sender->id) {
+            if ($request->filled('participant_id')) {
+                $sender = PresentationRoomParticipant::find($request->participant_id);
+                $type = 'system';
+            } else {
+                $sender = null;
+            }
+        }
+
+        $message = PresentationRoomChatMessage::create([
+            'room_id' => $room->id,
+            'participant_id' => $sender?->id,
+            'message' => $request->message,
+            'type' => $type
+        ]);
+
+        $message->load('participant');
+
+        event(new PresentationRoomNewChatMessageEvent($room, $message));
+
+        return $this->successResponse();
     }
 }

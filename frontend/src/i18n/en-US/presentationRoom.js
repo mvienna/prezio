@@ -35,9 +35,30 @@ export default {
           private: "Make Private",
           public: "Make Public",
         },
-        finishQuiz: {
-          title: "Finish Quiz",
+      },
+
+      chat: {
+        title: "Chat",
+
+        system: {
+          joined: "joined",
+          left: "left",
         },
+
+        errors: {
+          fieldRequired: "You have to enter something to send",
+          maxLength: "Max message length is 255 characters",
+        },
+
+        noMessages: {
+          title: "Start chatting!",
+          message:
+            "There aren't any messages here yet. Type something to say hello!",
+        },
+      },
+
+      finishQuiz: {
+        title: "Finish Quiz",
       },
 
       hideResults: {

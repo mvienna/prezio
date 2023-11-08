@@ -2,7 +2,10 @@
   <div :class="`text-${textColor}`" class="absolute-center" style="z-index: 2">
     <template
       v-if="
-        room.is_quiz_started && room.is_submission_locked && timeLeft !== -1
+        room &&
+        room.is_quiz_started &&
+        room.is_submission_locked &&
+        timeLeft !== -1
       "
     >
       <transition-group appear enter-active-class="animated zoomIn">

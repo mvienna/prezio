@@ -79,4 +79,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/presentation/{presentation}/room', PresentationRoomController::class)->only(['store', 'update', 'destroy']);
     Route::post('/presentation/{presentation}/room/{room}/react', [PresentationRoomController::class, 'react']);
     Route::post('/presentation/{presentation}/room/{room}/submit-answers', [PresentationRoomController::class, 'submitAnswers']);
+    Route::post('/presentation/{presentation}/room/{room}/message', [PresentationRoomController::class, 'submitChatMessage']);
 });
