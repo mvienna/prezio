@@ -39,7 +39,7 @@
 
     <!-- countdown -->
     <div
-      v-if="timeLeft !== -1 && !room.is_submission_locked && isHost"
+      v-if="timeLeft !== -1 && !room.is_submission_locked"
       class="room_actions__card"
     >
       <PresentationRoomHostActionsCountdown />

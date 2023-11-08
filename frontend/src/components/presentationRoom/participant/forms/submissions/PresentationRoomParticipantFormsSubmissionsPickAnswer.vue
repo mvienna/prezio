@@ -131,10 +131,6 @@
             <div class="text-center text-semibold text-h7 q-mt-md">
               {{ countdown }}
             </div>
-
-            <div class="text-center text-semibold q-mt-sm text-no-wrap">
-              {{ $t("presentationRoom.quizCountdown.title") }}
-            </div>
           </div>
         </transition-group>
       </div>

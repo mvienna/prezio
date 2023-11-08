@@ -144,11 +144,7 @@
 
               <!-- HOST - quiz countdown  -->
               <PresentationRoomHostQuizCountdown
-                v-if="
-                  room.is_quiz_started &&
-                  room.is_submission_locked &&
-                  timeLeft !== -1
-                "
+                v-if="room && room.is_quiz_started"
               />
             </template>
 
