@@ -3,7 +3,7 @@
     flat
     icon="r_sports_score"
     no-caps
-    :label="$t('presentationRoom.footer.menu.finishQuiz.title')"
+    :label="$t('presentationRoom.footer.finishQuiz.title')"
     class="q-ml-sm"
     @click="finishQuiz()"
   >
