@@ -86,7 +86,7 @@ const { room, slide, slideSettings, isPresentationPreview, participants } =
 const slideAnswers = computed(() => {
   return (
     slide.value?.answers
-      .filter((item) => item.slide_type === slide.value?.type)
+      ?.filter((item) => item.slide_type === slide.value?.type)
       ?.map((item) => {
         return JSON.parse(item.answer_data).text;
       }) || []

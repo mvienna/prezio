@@ -16,7 +16,7 @@
 import * as d3 from "d3";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useCanvasStore } from "stores/canvas";
 
 /*
@@ -27,6 +27,7 @@ const { slide, slideSettings, showRoomInvitationPanel } =
   storeToRefs(presentationStore);
 
 const canvasStore = useCanvasStore();
+const { canvas, canvasRectGetter } = storeToRefs(canvasStore);
 
 /*
  * data
@@ -144,6 +145,12 @@ onMounted(() => {
   yAxis.value = svg.value.append("g").attr("class", "myYaxis");
 
   update();
+
+  window.addEventListener("resize", onResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", onResize);
 });
 
 const update = () => {
@@ -189,7 +196,9 @@ const update = () => {
 watch(
   () => data.value,
   () => {
-    update();
+    if (data.value) {
+      update();
+    }
   },
   { deep: true }
 );
@@ -204,6 +213,11 @@ watch(
   },
   { deep: true }
 );
+
+const onResize = () => {
+  canvasRect.value = canvasStore.canvasRect();
+  update();
+};
 </script>
 
 <style scoped lang="scss">

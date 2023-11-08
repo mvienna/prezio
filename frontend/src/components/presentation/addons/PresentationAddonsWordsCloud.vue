@@ -12,7 +12,14 @@
 <script setup>
 import * as d3 from "d3";
 import cloud from "d3-cloud";
-import { computed, onBeforeMount, onMounted, ref, watch } from "vue";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
@@ -164,6 +171,12 @@ onMounted(() => {
     canvasRect.value = canvasStore.canvasRect();
     generateWordsCloud();
   }, 500);
+
+  window.addEventListener("resize", onResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", onResize);
 });
 
 watch(
@@ -183,6 +196,11 @@ watch(
   },
   { deep: true }
 );
+
+const onResize = () => {
+  canvasRect.value = canvasStore.canvasRect();
+  updateWordsCloud();
+};
 
 /*
  * hover
