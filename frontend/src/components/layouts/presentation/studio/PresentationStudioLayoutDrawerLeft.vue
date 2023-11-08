@@ -530,6 +530,8 @@ const handleAddingNewSlide = async (type) => {
     preparedElements = [titleElement];
   }
 
+  showNewSlideTypeSelectionMenu.value = [false, false, false];
+
   await presentationsStore.addNewSlide(preparedElements, type);
   await canvasStore.setElementsFromSlide();
 
