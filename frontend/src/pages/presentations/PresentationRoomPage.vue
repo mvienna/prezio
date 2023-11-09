@@ -163,6 +163,11 @@
               "
             />
 
+            <!-- PARTICIPANT - leaderboard -->
+            <PresentationRoomParticipantLeaderboard
+              v-if="!isHost && slide?.type === SLIDE_TYPES.LEADERBOARD"
+            />
+
             <!-- HOST - actions -->
             <PresentationRoomHostActions v-if="isHost" />
 
@@ -249,6 +254,7 @@ import PresentationRoomHostSlideControls from "components/presentationRoom/host/
 import PresentationRoomParticipantNoAccess from "components/presentationRoom/participant/PresentationRoomParticipantNoAccess.vue";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import PresentationRoomParticipantActions from "components/presentationRoom/participant/actions/PresentationRoomParticipantActions.vue";
+import PresentationRoomParticipantLeaderboard from "components/presentationRoom/participant/PresentationRoomParticipantLeaderboard.vue";
 
 /*
  * variables

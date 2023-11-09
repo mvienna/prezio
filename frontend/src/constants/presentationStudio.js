@@ -16,6 +16,8 @@ export const SLIDE_TYPES = {
   MATCH_PAIRS: "match_pairs",
   CORRECT_ORDER: "correct_order",
 
+  LEADERBOARD: "leaderboard",
+
   /*
    * opinion & qna
    */

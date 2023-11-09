@@ -124,7 +124,6 @@ const slideSettingsDefault = {
   },
   scoreDependsOnTime: true,
   partialScoring: false,
-  showLeaderboard: true,
   filterProfanity: true,
 };
 

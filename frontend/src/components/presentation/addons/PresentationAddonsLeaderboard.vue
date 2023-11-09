@@ -18,12 +18,14 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useCanvasStore } from "stores/canvas";
+import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
+import { wordCloudTextColors } from "src/helpers/colorUtils";
 
 /*
  * stores
  */
 const presentationStore = usePresentationsStore();
-const { slide, slideSettings, showRoomInvitationPanel } =
+const { slide, slideSettings, showRoomInvitationPanel, presentation } =
   storeToRefs(presentationStore);
 
 const canvasStore = useCanvasStore();
@@ -33,35 +35,39 @@ const { canvas } = storeToRefs(canvasStore);
  * data
  */
 const data = computed(() => {
-  return slideSettings.value.answerOptions?.map((option) => {
-    if (!slide.value?.answers) {
-      return {
-        group: (option.isCorrect ? "✅" : "❌") + " " + option.value,
-        value: 1,
-        participants: [],
-        isCorrect: option.isCorrect,
-      };
-    }
+  const slideIndex = presentation.value.slides.findIndex(
+    (item) => item.id === slide.id
+  );
 
-    return {
-      group: (option.isCorrect ? "✅" : "❌") + " " + option.value,
-      value: slide.value.answers.filter(
-        (answer) => JSON.parse(answer.answer_data)?.text === option.value
-      ).length,
-      participants: slide.value.answers
-        .filter(
-          (answer) =>
-            JSON.parse(answer.answer_data)?.text === option.value &&
-            answer.slide_type === slide.value?.type
-        )
-        .map((answer) =>
-          answer.participant?.user_data
-            ? JSON.parse(answer.participant.user_data)
-            : { avatar: "", name: "" }
-        ),
-      isCorrect: option.isCorrect,
-    };
+  const slides = presentation.value.slides
+    .slice(0, slideIndex)
+    .filter((item) => SLIDE_TYPES_OF_QUIZ.includes(item.type));
+
+  const answers = slides.map((item) => item.answers).flat();
+
+  const scoresMap = new Map();
+
+  answers.forEach((answer) => {
+    const participantId = answer.participant.id;
+    const score = answer.score;
+
+    if (scoresMap.has(participantId)) {
+      scoresMap.get(participantId).totalScore += score;
+    } else {
+      const participantUserData = answer.participant.user_data
+        ? JSON.parse(answer.participant.user_data)
+        : {};
+
+      scoresMap.set(participantId, {
+        group:
+          (participantUserData.avatar ? participantUserData.avatar + " " : "") +
+          participantUserData.name,
+        value: score,
+      });
+    }
   });
+
+  return Array.from(scoresMap.values());
 });
 
 const barChart = ref();
@@ -117,15 +123,7 @@ onMounted(() => {
       }
 
       tooltip.value
-        .html(
-          "<b>Ответов: " +
-            d.target.__data__.value +
-            "</b></br><div>" +
-            d.target.__data__.participants
-              .map((participant) => participant.avatar + " " + participant.name)
-              .join(", ") +
-            "</div>"
-        )
+        .html("Баллов: " + d.target.__data__.value)
         .style("left", d.offsetX + "px")
         .style("top", d.offsetY + "px");
     })
@@ -188,9 +186,13 @@ const update = () => {
     .attr("height", (d) => {
       return d.value > 0 ? height.value - y.value(d.value) : 0;
     })
-    .attr("fill", (d) => {
-      return d.isCorrect ? "#21BA45" : "#EA5757";
-    });
+    .attr(
+      "fill",
+      () =>
+        wordCloudTextColors[
+          Math.floor(Math.random() * wordCloudTextColors.length)
+        ]
+    );
 };
 
 watch(

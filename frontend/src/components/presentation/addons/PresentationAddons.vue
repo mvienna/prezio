@@ -48,6 +48,11 @@
             (room.is_submission_locked && timeLeft === -1))))
     "
   />
+
+  <!-- leaderboard -->
+  <PresentationAddonsLeaderboard
+    v-if="slide?.type === SLIDE_TYPES.LEADERBOARD"
+  />
 </template>
 
 <script setup>
@@ -63,6 +68,7 @@ import { api } from "boot/axios";
 import { useCanvasStore } from "stores/canvas";
 import PresentationAddonsBarChart from "components/presentation/addons/PresentationAddonsBarChart.vue";
 import { timeLeft } from "src/helpers/countdown";
+import PresentationAddonsLeaderboard from "components/presentation/addons/PresentationAddonsLeaderboard.vue";
 
 /*
  * props

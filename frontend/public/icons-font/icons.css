@@ -1,7 +1,7 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.woff?b9388bb547618b4a39ac3252d39ab13f") format("woff"),
-url("./icons.woff2?b9388bb547618b4a39ac3252d39ab13f") format("woff2");
+    src: url("./icons.woff?7255bdc42057d09dd78c9a88d2200ef7") format("woff"),
+url("./icons.woff2?7255bdc42057d09dd78c9a88d2200ef7") format("woff2");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -42,6 +42,9 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
 .icon-presentation:before {
     content: "\f109";
 }
-.icon-unsplash:before {
+.icon-sparkles:before {
     content: "\f10a";
+}
+.icon-unsplash:before {
+    content: "\f10b";
 }

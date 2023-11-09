@@ -30,7 +30,7 @@
             transition-hide="jump-up"
             :offset="[0, 16]"
             class="q-pa-md scroll--hidden bg-white"
-            max-height="70vh"
+            max-height="75vh"
             style="width: 399px"
           >
             <PresentationStudioTabsTypesTab
@@ -174,7 +174,7 @@
                       transition-hide="jump-left"
                       :offset="[24, 8]"
                       class="q-pa-md scroll--hidden bg-white"
-                      max-height="70vh"
+                      max-height="75vh"
                       style="width: 399px"
                     >
                       <PresentationStudioTabsTypesTab
@@ -276,7 +276,7 @@
           transition-hide="jump-left"
           :offset="[24, 0]"
           class="q-pa-md scroll--hidden bg-white"
-          max-height="70vh"
+          max-height="75vh"
           style="width: 399px"
         >
           <PresentationStudioTabsTypesTab

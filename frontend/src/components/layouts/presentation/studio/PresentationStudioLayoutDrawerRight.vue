@@ -118,7 +118,9 @@ const rightDrawerTabs = computed(() => {
       name: "settings",
       icon: "r_view_in_ar",
       label: t("presentationLayout.rightDrawer.tabs.settings.title"),
-      hidden: !SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type),
+      hidden: ![...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(
+        slide.value?.type
+      ),
     },
     {
       name: "layers",
@@ -227,6 +229,7 @@ const handleChangingSlideType = async (type) => {
     ...slide.value,
     type: type,
     canvas_data: JSON.stringify(newElements),
+    settings_data: null,
   };
   presentationsStore.updateLocalSlide();
   await presentationsStore.saveSlide(slide.value, newElements);

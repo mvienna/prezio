@@ -241,7 +241,9 @@ const participantAnswersCount = computed(() => {
 });
 
 const handleSubmittingAnswers = () => {
-  presentationsStore.submitPresentationRoomAnswers(answerInputs.value);
+  presentationsStore.submitPresentationRoomAnswers(
+    answerInputs.value.map((answer) => ({ value: answer }))
+  );
   answerInputs.value = [];
 };
 

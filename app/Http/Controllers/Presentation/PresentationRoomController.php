@@ -188,6 +188,8 @@ class PresentationRoomController extends Controller
                 'slide_id' => $slide->id,
                 'slide_type' => $slide->type,
                 'answer_data' => json_encode(['text' => $answer]),
+                'score' => $request->score,
+                'time_taken_to_answer' => $request->time_taken_to_answer
             ]);
 
             $answer->load('participant');

@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import { startCountdown } from "src/helpers/countdown";
+import { startCountdown, timeLeft } from "src/helpers/countdown";
+import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
 
 export const usePresentationsStore = defineStore("presentations", {
   state: () => ({
@@ -459,8 +460,63 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     async submitPresentationRoomAnswers(answers) {
-      answers = answers.filter((answer) => answer?.length);
+      answers = answers.filter((answer) => answer?.value?.length);
       if (!answers?.length) return;
+
+      let totalScore = null;
+
+      if (SLIDE_TYPES_OF_QUIZ.includes(this.slide?.type)) {
+        totalScore = 0;
+        let pointForCorrectAnswer = this.slideSettings.points.max;
+
+        // compute points for correct answer by speed of answering
+        if (this.slideSettings.scoreDependsOnTime) {
+          const pointsPerSecond =
+            (this.slideSettings.points.max - this.slideSettings.points.min) /
+            this.slideSettings.timeLimit;
+
+          const secondsTookToAnswer =
+            this.slideSettings.timeLimit - timeLeft.value;
+
+          pointForCorrectAnswer = Math.round(
+            this.slideSettings.points.max -
+              pointsPerSecond * secondsTookToAnswer
+          );
+        }
+
+        // partial scoring
+        if (this.slideSettings.partialScoring) {
+          const computeScore = () => {
+            let score = 0;
+
+            for (const answer of answers) {
+              if (answer.isCorrect === false) {
+                return this.slideSettings.points.min;
+              } else if (answer.isCorrect === true) {
+                score += pointForCorrectAnswer;
+              }
+            }
+
+            return score;
+          };
+
+          totalScore = computeScore();
+
+          // whole scoring
+        } else {
+          const computeScore = () => {
+            if (answers.some((option) => option.isCorrect === false)) {
+              return this.slideSettings.points.min;
+            } else {
+              return pointForCorrectAnswer;
+            }
+          };
+
+          totalScore = computeScore();
+        }
+      }
+
+      answers = answers.map((answer) => answer.value);
 
       return await api
         .post(
@@ -468,6 +524,13 @@ export const usePresentationsStore = defineStore("presentations", {
           {
             slide_id: this.slide?.id,
             answers: answers,
+            score:
+              answers.length > 1 && totalScore
+                ? totalScore / answers.length
+                : totalScore,
+            time_taken_to_answer: this.slideSettings.isLimitedTime
+              ? this.slideSettings.timeLimit - timeLeft.value
+              : null,
           }
         )
         .catch((error) => {

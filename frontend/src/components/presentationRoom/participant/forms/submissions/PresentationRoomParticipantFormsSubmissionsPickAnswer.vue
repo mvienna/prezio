@@ -287,10 +287,7 @@ import {
   timeLeftPercentage,
 } from "src/helpers/countdown";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
-import {
-  SLIDE_TYPES,
-  SLIDE_TYPES_OF_QUIZ,
-} from "src/constants/presentationStudio";
+import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
 import { shuffleArray } from "src/helpers/arrayUtils";
 
 /*
@@ -332,9 +329,7 @@ const layoutTitleElement = computed(() => {
  */
 const handleSubmittingAnswers = () => {
   presentationsStore.submitPresentationRoomAnswers(
-    slideSettings.value.answerOptions
-      .filter((option) => option.isSelected)
-      .map((answer) => answer.value)
+    slideSettings.value.answerOptions.filter((option) => option.isSelected)
   );
   stopCountdown();
   room.value.is_submission_locked = true;

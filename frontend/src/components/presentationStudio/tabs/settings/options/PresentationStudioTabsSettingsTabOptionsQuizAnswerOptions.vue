@@ -190,10 +190,10 @@
         @update:model-value="
           () => {
             if (
-              isScorePointsValid(Number(slideSettings.value.points.min)) &&
-              isScorePointsValid(Number(slideSettings.value.points.max)) &&
-              isMinScorePointsValid(Number(slideSettings.value.points.min)) &&
-              isMaxScorePointsValid(Number(slideSettings.value.points.max))
+              isScorePointsValid(Number(slideSettings.points.min)) &&
+              isScorePointsValid(Number(slideSettings.points.max)) &&
+              isMinScorePointsValid(Number(slideSettings.points.min)) &&
+              isMaxScorePointsValid(Number(slideSettings.points.max))
             ) {
               $emit('updateSlideSettings');
             }
@@ -235,12 +235,10 @@
             @update:model-value="
               () => {
                 if (
-                  isScorePointsValid(Number(slideSettings.value.points.min)) &&
-                  isScorePointsValid(Number(slideSettings.value.points.max)) &&
-                  isMinScorePointsValid(
-                    Number(slideSettings.value.points.min)
-                  ) &&
-                  isMaxScorePointsValid(Number(slideSettings.value.points.max))
+                  isScorePointsValid(Number(slideSettings.points.min)) &&
+                  isScorePointsValid(Number(slideSettings.points.max)) &&
+                  isMinScorePointsValid(Number(slideSettings.points.min)) &&
+                  isMaxScorePointsValid(Number(slideSettings.points.max))
                 ) {
                   $emit('updateSlideSettings');
                 }

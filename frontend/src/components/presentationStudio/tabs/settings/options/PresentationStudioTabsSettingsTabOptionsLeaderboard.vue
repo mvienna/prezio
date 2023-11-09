@@ -14,10 +14,14 @@
       </q-icon>
     </span>
 
-    <q-toggle
-      v-model="slideSettings.showLeaderboard"
-      color="primary"
-      @update:model-value="$emit('updateSlideSettings')"
+    <q-btn
+      unelevated
+      color="black"
+      no-caps
+      :label="
+        $t('presentationLayout.rightDrawer.tabs.settings.leaderboard.create')
+      "
+      icon-right="icon-sparkles"
     />
   </div>
 </template>

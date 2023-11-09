@@ -30,8 +30,25 @@
           </div>
 
           <div class="text-center text-caption q-mt-sm ellipsis">
-            {{ type.label }}
+            {{
+              $t(
+                `presentationLayout.rightDrawer.tabs.types.options.${type.name}`
+              )
+            }}
           </div>
+
+          <q-tooltip
+            v-if="
+              type.name === SLIDE_TYPES.LEADERBOARD &&
+              !presentation?.slides?.filter((item) =>
+                SLIDE_TYPES_OF_QUIZ.includes(item.type)
+              )?.length
+            "
+          >
+            {{
+              $t("presentationLayout.rightDrawer.tabs.types.leaderboard.tip")
+            }}
+          </q-tooltip>
         </q-item>
       </div>
     </div>
@@ -42,7 +59,10 @@
 import { useI18n } from "vue-i18n";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 
 /*
  * variables
@@ -62,7 +82,7 @@ defineEmits(["select"]);
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { slide } = storeToRefs(presentationsStore);
+const { slide, presentation } = storeToRefs(presentationsStore);
 
 /*
  * types
@@ -74,22 +94,13 @@ const types = {
   content: [
     {
       name: SLIDE_TYPES.CONTENT,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.CONTENT}`
-      ),
     },
     {
       name: SLIDE_TYPES.QR,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.QR}`
-      ),
       disable: true,
     },
     {
       name: SLIDE_TYPES.VIDEO,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.VIDEO}`
-      ),
       disable: true,
     },
   ],
@@ -100,44 +111,29 @@ const types = {
   quizzesAndGames: [
     {
       name: SLIDE_TYPES.PICK_ANSWER,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.PICK_ANSWER}`
-      ),
     },
     {
       name: SLIDE_TYPES.PICK_IMAGE,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.PICK_IMAGE}`
-      ),
       disable: true,
     },
     {
       name: SLIDE_TYPES.TYPE_ANSWER,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.TYPE_ANSWER}`
-      ),
       disable: true,
     },
     {
       name: SLIDE_TYPES.SPINNER_WHEEL,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.SPINNER_WHEEL}`
-      ),
       disable: true,
     },
     {
       name: SLIDE_TYPES.MATCH_PAIRS,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.MATCH_PAIRS}`
-      ),
       disable: true,
     },
     {
       name: SLIDE_TYPES.CORRECT_ORDER,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.CORRECT_ORDER}`
-      ),
       disable: true,
+    },
+    {
+      name: SLIDE_TYPES.LEADERBOARD,
     },
   ],
 
@@ -147,43 +143,25 @@ const types = {
   userAnswer: [
     {
       name: SLIDE_TYPES.POLL,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.POLL}`
-      ),
       disable: true,
     },
     {
       name: SLIDE_TYPES.OPEN_ENDED,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.OPEN_ENDED}`
-      ),
       disable: true,
     },
     {
       name: SLIDE_TYPES.WORD_CLOUD,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.WORD_CLOUD}`
-      ),
     },
     {
       name: SLIDE_TYPES.SCALES,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.SCALES}`
-      ),
       disable: true,
     },
     {
       name: SLIDE_TYPES.QNA,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.QNA}`
-      ),
       disable: true,
     },
     {
       name: SLIDE_TYPES.BRAIN_STORM,
-      label: t(
-        `presentationLayout.rightDrawer.tabs.types.options.${SLIDE_TYPES.BRAIN_STORM}`
-      ),
       disable: true,
     },
   ],
