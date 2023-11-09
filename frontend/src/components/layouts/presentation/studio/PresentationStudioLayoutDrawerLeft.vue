@@ -222,7 +222,10 @@
                     clickable
                     dense
                     v-close-popup
-                    :disable="presentation.slides.length === 1"
+                    :disable="
+                      presentation.slides.length === 1 ||
+                      isDeletionAvailable(element) !== false
+                    "
                     @click="handleSlideDeletion(element)"
                   >
                     <q-icon
@@ -381,8 +384,50 @@ const handleKeyDownEvent = (event) => {
   }
 };
 
-const handleSlideDeletion = async (element) => {
-  await presentationsStore.deleteSlide(element);
+const isDeletionAvailable = (item) => {
+  const leaderboards = presentation.value.slides.filter(
+    (slideItem) => slideItem.type === SLIDE_TYPES.LEADERBOARD
+  );
+
+  const quizTypeSlides = presentation.value.slides.filter((slideItem) =>
+    SLIDE_TYPES_OF_QUIZ.includes(slideItem.type)
+  );
+
+  const otherSlides = presentation.value.slides.filter(
+    (slideItem) =>
+      ![...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.LEADERBOARD].includes(
+        slideItem.type
+      )
+  );
+
+  return (
+    quizTypeSlides.length === 1 &&
+    SLIDE_TYPES_OF_QUIZ.includes(item.type) &&
+    leaderboards.length &&
+    !otherSlides.length
+  );
+};
+
+const handleSlideDeletion = async (item) => {
+  const leaderboards = presentation.value.slides.filter(
+    (slideItem) => slideItem.type === SLIDE_TYPES.LEADERBOARD
+  );
+
+  const quizTypeSlides = presentation.value.slides.filter((slideItem) =>
+    SLIDE_TYPES_OF_QUIZ.includes(slideItem.type)
+  );
+
+  if (
+    quizTypeSlides.length === 1 &&
+    SLIDE_TYPES_OF_QUIZ.includes(item.type) &&
+    leaderboards.length
+  ) {
+    for (const leaderboard of leaderboards) {
+      await presentationsStore.deleteSlide(leaderboard);
+    }
+  }
+
+  await presentationsStore.deleteSlide(item);
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false);
   slide.value.isLivePreview = false;
