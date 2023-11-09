@@ -61,10 +61,14 @@ class PresentationSlideAnswerController extends Controller
             return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
-        $presentation->load('slides');
+        $presentation->load('slides', 'room');
         foreach ($presentation->slides as $slide) {
             $slide->answers()->delete();
         }
+
+        $presentation->room->messages()->delete();
+        $presentation->room->reactions()->delete();
+        $presentation->room->participants()->delete();
 
         return $this->successResponse();
     }

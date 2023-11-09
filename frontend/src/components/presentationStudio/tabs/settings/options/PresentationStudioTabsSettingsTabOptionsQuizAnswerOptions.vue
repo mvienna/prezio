@@ -270,7 +270,7 @@ defineEmits(["updateSlideSettings"]);
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { slideSettings } = storeToRefs(presentationsStore);
+const { slideSettings, slide } = storeToRefs(presentationsStore);
 
 /*
  * rules

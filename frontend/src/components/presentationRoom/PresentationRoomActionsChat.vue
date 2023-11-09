@@ -72,7 +72,7 @@
                 }`"
               >
                 {{
-                  getParticipantUserData(item).name ||
+                  getParticipantUserData(item)?.name ||
                   (!item.participant ? room.host.name : "")
                 }}
               </span>
