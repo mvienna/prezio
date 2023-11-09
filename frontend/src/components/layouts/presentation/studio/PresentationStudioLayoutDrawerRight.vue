@@ -156,7 +156,11 @@ watch(
   () => slide.value,
   () => {
     if (slide.value?.type) {
-      if (slide.value.type === SLIDE_TYPES.CONTENT) {
+      if (
+        [SLIDE_TYPES.CONTENT, SLIDE_TYPES.LEADERBOARD].includes(
+          slide.value.type
+        )
+      ) {
         rightDrawerTab.value = rightDrawerTabs.value[0].name;
       } else {
         rightDrawerTab.value = rightDrawerTabs.value[1].name;
