@@ -38,12 +38,7 @@
           </div>
 
           <q-tooltip
-            v-if="
-              type.name === SLIDE_TYPES.LEADERBOARD &&
-              !presentation?.slides?.filter((item) =>
-                SLIDE_TYPES_OF_QUIZ.includes(item.type)
-              )?.length
-            "
+            v-if="type.name === SLIDE_TYPES.LEADERBOARD && type.disable"
           >
             {{
               $t("presentationLayout.rightDrawer.tabs.types.leaderboard.tip")
@@ -63,6 +58,7 @@ import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
+import { computed } from "vue";
 
 /*
  * variables
@@ -87,85 +83,90 @@ const { slide, presentation } = storeToRefs(presentationsStore);
 /*
  * types
  */
-const types = {
-  /*
-   * content
-   */
-  content: [
-    {
-      name: SLIDE_TYPES.CONTENT,
-    },
-    {
-      name: SLIDE_TYPES.QR,
-      disable: true,
-    },
-    {
-      name: SLIDE_TYPES.VIDEO,
-      disable: true,
-    },
-  ],
+const types = computed(() => {
+  return {
+    /*
+     * content
+     */
+    content: [
+      {
+        name: SLIDE_TYPES.CONTENT,
+      },
+      {
+        name: SLIDE_TYPES.QR,
+        disable: true,
+      },
+      {
+        name: SLIDE_TYPES.VIDEO,
+        disable: true,
+      },
+    ],
 
-  /*
-   * quizzes & games
-   */
-  quizzesAndGames: [
-    {
-      name: SLIDE_TYPES.PICK_ANSWER,
-    },
-    {
-      name: SLIDE_TYPES.PICK_IMAGE,
-      disable: true,
-    },
-    {
-      name: SLIDE_TYPES.TYPE_ANSWER,
-      disable: true,
-    },
-    {
-      name: SLIDE_TYPES.SPINNER_WHEEL,
-      disable: true,
-    },
-    {
-      name: SLIDE_TYPES.MATCH_PAIRS,
-      disable: true,
-    },
-    {
-      name: SLIDE_TYPES.CORRECT_ORDER,
-      disable: true,
-    },
-    {
-      name: SLIDE_TYPES.LEADERBOARD,
-    },
-  ],
+    /*
+     * quizzes & games
+     */
+    quizzesAndGames: [
+      {
+        name: SLIDE_TYPES.PICK_ANSWER,
+      },
+      {
+        name: SLIDE_TYPES.PICK_IMAGE,
+        disable: true,
+      },
+      {
+        name: SLIDE_TYPES.TYPE_ANSWER,
+        disable: true,
+      },
+      {
+        name: SLIDE_TYPES.SPINNER_WHEEL,
+        disable: true,
+      },
+      {
+        name: SLIDE_TYPES.MATCH_PAIRS,
+        disable: true,
+      },
+      {
+        name: SLIDE_TYPES.CORRECT_ORDER,
+        disable: true,
+      },
+      {
+        name: SLIDE_TYPES.LEADERBOARD,
+        disable: !presentation.value?.slides?.filter((item) =>
+          SLIDE_TYPES_OF_QUIZ.includes(item.type)
+        )?.length,
+      },
+    ],
 
-  /*
-   * opinion & qna
-   */
-  userAnswer: [
-    {
-      name: SLIDE_TYPES.POLL,
-      disable: true,
-    },
-    {
-      name: SLIDE_TYPES.OPEN_ENDED,
-      disable: true,
-    },
-    {
-      name: SLIDE_TYPES.WORD_CLOUD,
-    },
-    {
-      name: SLIDE_TYPES.SCALES,
-      disable: true,
-    },
-    {
-      name: SLIDE_TYPES.QNA,
-      disable: true,
-    },
-    {
-      name: SLIDE_TYPES.BRAIN_STORM,
-      disable: true,
-    },
-  ],
-};
+    /*
+     * opinion & qna
+     */
+    userAnswer: [
+      {
+        name: SLIDE_TYPES.POLL,
+        disable: true,
+      },
+      {
+        name: SLIDE_TYPES.OPEN_ENDED,
+        disable: true,
+      },
+      {
+        name: SLIDE_TYPES.WORD_CLOUD,
+      },
+      {
+        name: SLIDE_TYPES.SCALES,
+        disable: true,
+      },
+      {
+        name: SLIDE_TYPES.QNA,
+        disable: true,
+      },
+      {
+        name: SLIDE_TYPES.BRAIN_STORM,
+        disable: true,
+      },
+    ],
+  };
+});
 </script>
 
 <style scoped lang="scss">
