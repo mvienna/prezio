@@ -143,6 +143,10 @@ class PresentationRoomController extends Controller
 
         // update
         $room->update($props);
+
+        $room->load('presentation', 'reactions', 'messages', 'messages.participant');
+        $room['host'] = User::find($room->presentation->user_id);
+
         if ($slide) {
             event(new PresentationRoomUpdatedEvent($room));
         }
@@ -192,7 +196,7 @@ class PresentationRoomController extends Controller
                 'time_taken_to_answer' => $request->time_taken_to_answer
             ]);
 
-            $answer->load('participant');
+            $answer['participant'] = $user->toArray();
             $answers[] = $answer;
         }
 
