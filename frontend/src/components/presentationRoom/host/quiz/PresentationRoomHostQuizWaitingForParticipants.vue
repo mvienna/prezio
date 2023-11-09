@@ -68,7 +68,7 @@ const {
   slideSettings,
   participants,
   averageRoomBackgroundBrightness,
-  roomBackgroundBrightnessThreshold,
+  backgroundBrightnessThreshold,
   showRoomInvitationPanel,
 } = storeToRefs(presentationsStore);
 
@@ -77,7 +77,7 @@ const {
  */
 const textColor = computed(() => {
   return averageRoomBackgroundBrightness.value >=
-    roomBackgroundBrightnessThreshold.value
+    backgroundBrightnessThreshold.value
     ? "black"
     : "white";
 });

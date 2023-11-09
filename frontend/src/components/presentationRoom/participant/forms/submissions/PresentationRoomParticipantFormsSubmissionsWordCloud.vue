@@ -204,7 +204,7 @@ const {
   slideSettings,
   participant,
   averageRoomBackgroundBrightness,
-  roomBackgroundBrightnessThreshold,
+  backgroundBrightnessThreshold,
 } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
@@ -215,7 +215,7 @@ const { elements } = storeToRefs(canvasStore);
  */
 const textColor = computed(() => {
   return averageRoomBackgroundBrightness.value >=
-    roomBackgroundBrightnessThreshold.value
+    backgroundBrightnessThreshold.value
     ? "black"
     : "white";
 });

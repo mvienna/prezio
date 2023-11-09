@@ -19,7 +19,7 @@ export const usePresentationsStore = defineStore("presentations", {
     showRoomInformationPanel: true,
 
     averageRoomBackgroundBrightness: 0,
-    roomBackgroundBrightnessThreshold: 128,
+    backgroundBrightnessThreshold: 128,
 
     /*
      * folders

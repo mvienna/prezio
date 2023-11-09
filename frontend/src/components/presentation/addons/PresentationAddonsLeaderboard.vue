@@ -25,8 +25,14 @@ import { wordCloudTextColors } from "src/helpers/colorUtils";
  * stores
  */
 const presentationStore = usePresentationsStore();
-const { slide, slideSettings, showRoomInvitationPanel, presentation } =
-  storeToRefs(presentationStore);
+const {
+  slide,
+  slideSettings,
+  showRoomInvitationPanel,
+  presentation,
+  averageRoomBackgroundBrightness,
+  backgroundBrightnessThreshold,
+} = storeToRefs(presentationStore);
 
 const canvasStore = useCanvasStore();
 const { canvas } = storeToRefs(canvasStore);
@@ -68,6 +74,13 @@ const data = computed(() => {
   });
 
   return Array.from(scoresMap.values());
+});
+
+const color = computed(() => {
+  return averageRoomBackgroundBrightness.value >=
+    backgroundBrightnessThreshold.value
+    ? "black"
+    : "white";
 });
 
 const barChart = ref();
@@ -171,6 +184,10 @@ const update = () => {
   x.value.domain(data.value.map((d) => d.group));
   xAxis.value.call(d3.axisBottom(x.value));
 
+  xAxis.value.selectAll("text").style("fill", color.value);
+  xAxis.value.selectAll("path").style("stroke", color.value);
+  xAxis.value.selectAll("line").style("stroke", color.value);
+
   y.value.domain([0, d3.max(data.value, (d) => d.value)]);
   // yAxis.value.transition().duration(1000).call(d3.axisLeft(y));
 
@@ -220,6 +237,15 @@ const onResize = () => {
   canvasRect.value = canvasStore.canvasRect();
   update();
 };
+
+watch(
+  () => averageRoomBackgroundBrightness.value,
+  () => {
+    xAxis.value.selectAll("text").style("fill", color.value);
+    xAxis.value.selectAll("path").style("stroke", color.value);
+    xAxis.value.selectAll("line").style("stroke", color.value);
+  }
+);
 </script>
 
 <style scoped lang="scss">

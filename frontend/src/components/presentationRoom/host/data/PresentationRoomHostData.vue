@@ -89,7 +89,7 @@ const {
   room,
   slide,
   averageRoomBackgroundBrightness,
-  roomBackgroundBrightnessThreshold,
+  backgroundBrightnessThreshold,
 } = storeToRefs(presentationsStore);
 
 /*
@@ -106,7 +106,7 @@ const props = defineProps({
 const textColor = computed(() => {
   return !props.isHost && slide?.type !== SLIDE_TYPES.CONTENT
     ? averageRoomBackgroundBrightness.value >=
-      roomBackgroundBrightnessThreshold.value
+      backgroundBrightnessThreshold.value
       ? "black"
       : "white"
     : "white";
