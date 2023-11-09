@@ -238,6 +238,8 @@ export default {
             match_pairs: "Match Pairs",
             correct_order: "Correct Order",
 
+            leaderboard: "Leaderboard",
+
             /*
              * opinion
              */
@@ -249,6 +251,10 @@ export default {
             scales: "Scales",
             qna: "Q&A",
             brain_storm: "Brainstorm",
+          },
+
+          leaderboard: {
+            tip: "In order to add leaderboard you have to have at least one slide of type «Quiz & Games»",
           },
         },
 
@@ -354,15 +360,18 @@ export default {
 
             partialScoring: {
               title: "Partial Scoring",
-              description:
-                "Participants receive points for each correct answer, but selecting even one incorrect answer results in the minimum score",
+              description: {
+                off: "Participants will get the maximum available amount of points (including score depends on time setting), but only if they choose all the correct answers",
+                on: "Participants receive points for each correct answer, but selecting even one incorrect answer results in the minimum score",
+              },
             },
           },
 
           leaderboard: {
             title: "Leaderboard",
             description:
-              "Display a leaderboard with the results of the entire quiz after this question?",
+              "After the question or at the end of the quiz, you can show a slide leaderboard with the results of the entire quiz",
+            create: "Create after this slide",
           },
 
           openGeneralQuizSettings: {

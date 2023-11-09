@@ -324,7 +324,10 @@ import { useQuasar } from "quasar";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 import { useI18n } from "vue-i18n";
 
 /*
@@ -514,7 +517,7 @@ const handleAddingNewSlide = async (type) => {
     };
 
     preparedElements = [titleElement, bodyElement];
-  } else {
+  } else if ([SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(type)) {
     const titleElement = {
       ...layoutDefaultElementProps,
 
