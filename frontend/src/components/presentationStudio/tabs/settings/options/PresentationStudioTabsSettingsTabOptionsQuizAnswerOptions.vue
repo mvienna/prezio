@@ -219,10 +219,12 @@
             }}
 
             <q-icon name="r_info" class="q-ml-xs" color="grey-8">
-              <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
+              <q-tooltip class="text-center" max-width="320px" :offset="[0, 8]">
                 {{
                   $t(
-                    "presentationLayout.rightDrawer.tabs.settings.points.partialScoring.description"
+                    `presentationLayout.rightDrawer.tabs.settings.points.partialScoring.description.${
+                      slideSettings.partialScoring ? "on" : "off"
+                    }`
                   )
                 }}
               </q-tooltip>
