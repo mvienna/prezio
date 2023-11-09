@@ -5,12 +5,10 @@ import {
   SHAPES_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import { usePresentationsStore } from "stores/presentations";
-import { date } from "quasar";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, lastSavedAt, lastChangedAt } =
-  storeToRefs(presentationsStore);
+const { presentation, slide, lastChangedAt } = storeToRefs(presentationsStore);
 
 export const useCanvasStore = defineStore("canvas", {
   state: () => ({

@@ -117,7 +117,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
         return points;
       }
 
-      const dMax = 0;
+      let dMax = 0;
       let index = 0;
 
       for (let i = 1; i < points.length - 1; i++) {

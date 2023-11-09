@@ -21,10 +21,8 @@
         :disabled="!isPresentationPreview"
         :to="isPresentationPreview ? '#presentationPreview' : 'body'"
       >
-        <div
-          class="canvas__wrapper"
-          :class="false ? 'column justify-center' : ''"
-        >
+        <!-- to justify center verically add classes: "column justify-center" -->
+        <div class="canvas__wrapper">
           <canvas
             ref="canvasRef"
             id="canvas"
@@ -108,7 +106,6 @@ import { useRouter } from "vue-router";
 import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
-import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import {
   copy,
   cut,

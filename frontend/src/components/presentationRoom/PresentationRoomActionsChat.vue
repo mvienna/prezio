@@ -187,7 +187,7 @@ onBeforeMount(() => {
 const participantColors = ref({});
 
 const processMessages = () => {
-  room.value?.messages?.map((message, index) => {
+  room.value?.messages?.map((message) => {
     if (participantColors.value?.[message?.participant?.id]) return;
 
     participantColors.value[message?.participant?.id] =

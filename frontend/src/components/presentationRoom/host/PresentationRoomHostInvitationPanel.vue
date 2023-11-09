@@ -57,7 +57,6 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
-import { generateQrCode } from "src/helpers/qrUtils";
 
 /*
  * props

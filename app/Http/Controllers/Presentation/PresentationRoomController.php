@@ -181,6 +181,7 @@ class PresentationRoomController extends Controller
      */
     public function submitAnswers(Presentation $presentation, PresentationRoom $room, Request $request): JsonResponse
     {
+        /** @var User $user */
         $user = auth()->user();
 
         $answers = [];
