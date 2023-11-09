@@ -49,15 +49,21 @@
 
     <!-- lobby music -->
     <div class="row no-wrap items-center q-pl-md text-semibold">
-      <q-icon name="r_music_note" class="q-mr-md" color="primary" size="24px" />
+      <q-icon
+        name="r_music_note"
+        class="q-mr-md"
+        color="primary"
+        size="24px"
+        style="opacity: 0.5"
+      />
 
-      <div>
+      <div style="opacity: 0.5">
         {{ $t("presentationStudio.settings.quiz.options.lobbyMusic") }}
       </div>
 
       <q-space />
 
-      <q-toggle v-model="quizSettings.lobbyMusic" color="primary" />
+      <q-toggle v-model="quizSettings.lobbyMusic" color="primary" disable />
     </div>
 
     <!-- countdown -->
@@ -80,15 +86,16 @@
         class="q-mr-md"
         color="primary"
         size="24px"
+        style="opacity: 0.5"
       />
 
-      <div>
+      <div style="opacity: 0.5">
         {{ $t("presentationStudio.settings.quiz.options.playAsTeam") }}
       </div>
 
       <q-space />
 
-      <q-toggle v-model="quizSettings.playAsTeam" color="primary" />
+      <q-toggle v-model="quizSettings.playAsTeam" color="primary" disable />
     </div>
 
     <!-- shuffle answer options -->
