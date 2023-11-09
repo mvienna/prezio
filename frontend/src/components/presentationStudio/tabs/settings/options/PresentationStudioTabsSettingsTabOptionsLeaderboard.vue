@@ -21,8 +21,11 @@
       :label="
         $t('presentationLayout.rightDrawer.tabs.settings.leaderboard.create')
       "
+      disable
       icon-right="icon-sparkles"
-    />
+    >
+      <q-tooltip> В разработке </q-tooltip>
+    </q-btn>
   </div>
 </template>
 
