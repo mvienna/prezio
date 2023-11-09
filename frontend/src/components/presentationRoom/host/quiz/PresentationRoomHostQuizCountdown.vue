@@ -134,8 +134,8 @@ const {
 const textColor = computed(() => {
   return averageRoomBackgroundBrightness.value >=
     roomBackgroundBrightnessThreshold.value
-    ? "white"
-    : "black";
+    ? "black"
+    : "white";
 });
 
 /*

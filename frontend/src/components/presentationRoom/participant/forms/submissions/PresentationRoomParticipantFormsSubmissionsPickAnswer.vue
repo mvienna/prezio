@@ -313,8 +313,8 @@ const { elements } = storeToRefs(canvasStore);
 const textColor = computed(() => {
   return averageRoomBackgroundBrightness.value >=
     roomBackgroundBrightnessThreshold.value
-    ? "white"
-    : "black";
+    ? "black"
+    : "white";
 });
 
 /*
