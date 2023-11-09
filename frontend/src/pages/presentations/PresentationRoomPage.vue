@@ -81,6 +81,7 @@
           >
             <PresentationRoomHostInvitationPanel
               v-if="showRoomInvitationPanel"
+              :qr="qr"
             />
           </transition>
 
@@ -255,6 +256,7 @@ import PresentationRoomParticipantNoAccess from "components/presentationRoom/par
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import PresentationRoomParticipantActions from "components/presentationRoom/participant/actions/PresentationRoomParticipantActions.vue";
 import PresentationRoomParticipantLeaderboard from "components/presentationRoom/participant/PresentationRoomParticipantLeaderboard.vue";
+import { generateQrCode } from "src/helpers/qrUtils";
 
 /*
  * variables
@@ -910,6 +912,11 @@ averageRoomBackgroundBrightness.value = computed(() => {
   roomBackgroundCanvas.remove();
   return sumBrightness / (element.width * element.height);
 });
+
+/*
+ * qr
+ */
+const qr = generateQrCode();
 </script>
 
 <style scoped lang="scss">

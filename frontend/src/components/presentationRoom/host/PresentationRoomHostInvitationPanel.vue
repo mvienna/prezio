@@ -19,7 +19,7 @@
     </div>
 
     <!-- qr code -->
-    <div class="row justify-center" v-html="qrCode?._svg?.outerHTML"></div>
+    <div class="row justify-center" v-html="qr?._svg?.outerHTML"></div>
 
     <div class="q-px-md">
       <div class="row no-wrap items-center justify-between q-mt-md q-mb-lg">
@@ -60,6 +60,13 @@ import { usePresentationsStore } from "stores/presentations";
 import { generateQrCode } from "src/helpers/qrUtils";
 
 /*
+ * props
+ */
+defineProps({
+  qr: { type: Object, default: null },
+});
+
+/*
  * stores
  */
 const presentationsStore = usePresentationsStore();
@@ -69,11 +76,6 @@ const { room, showRoomInvitationPanel } = storeToRefs(presentationsStore);
  * url
  */
 const url = window.location.host;
-
-/*
- * qr
- */
-const qrCode = generateQrCode();
 </script>
 
 <style scoped lang="scss">
