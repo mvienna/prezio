@@ -400,7 +400,7 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     /*
-     * room
+     * ROOM
      */
     async sendPresentationRoomUpdateEvent(
       presentation_id = this.presentation?.id,

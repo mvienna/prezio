@@ -487,7 +487,7 @@ onUnmounted(() => {
 const connectToRoomChannels = () => {
   const channel = window.Echo.channel(`public.room.${room.value.id}`);
 
-  if (participant.value || user.value) {
+  if (participant.value || (user.value && isHost.value)) {
     window.Echo = new Echo({
       ...window.Echo.options,
       auth: {
@@ -595,7 +595,11 @@ const connectToRoomChannels = () => {
    * listen for new chat messages
    */
   channel.listen("PresentationRoomNewChatMessageEvent", (event) => {
-    room.value.messages = [...room.value?.messages, event.message];
+    if (room.value.messages) {
+      room.value.messages = [...room.value.messages, event.message];
+    } else {
+      room.value.messages = [event.message];
+    }
   });
 
   /*
