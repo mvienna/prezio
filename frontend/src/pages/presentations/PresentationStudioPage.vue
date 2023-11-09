@@ -21,8 +21,8 @@
         :disabled="!isPresentationPreview"
         :to="isPresentationPreview ? '#presentationPreview' : 'body'"
       >
-        <!-- to justify center verically add classes: "column justify-center" -->
-        <div class="canvas__wrapper">
+        <!-- INFO: to justify center vertically add classes: "column justify-center" -->
+        <div class="canvas__wrapper relative-position">
           <canvas
             ref="canvasRef"
             id="canvas"
@@ -30,6 +30,18 @@
             @mousedown="handleCanvasMouseDown"
             @click="handleCanvasClick"
           ></canvas>
+
+          <!-- logo -->
+          <div class="canvas__logo">
+            <q-img
+              :src="
+                averageRoomBackgroundBrightness >= backgroundBrightnessThreshold
+                  ? '/logo_with_title_black.png'
+                  : '/logo_white_with_title_white.png'
+              "
+              fit="contain"
+            />
+          </div>
         </div>
       </teleport>
     </div>
@@ -134,10 +146,10 @@ const router = useRouter();
 const presentationsStore = usePresentationsStore();
 const {
   presentation,
-  lastSavedAt,
-  lastChangedAt,
   isPresentationPreview,
   slide,
+  averageRoomBackgroundBrightness,
+  backgroundBrightnessThreshold,
 } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
@@ -705,6 +717,66 @@ watch(
     showElementsContextMenu.value = !isRotating.value;
   }
 );
+
+/*
+ * room background
+ */
+const slideBackground = computed(() => {
+  return elements.value?.find(
+    (element) => element.mode === MODE_OPTIONS.value.background
+  );
+});
+
+averageRoomBackgroundBrightness.value = computed(() => {
+  const element = slideBackground.value;
+  if (!element?.image?.nodeType) return 0;
+
+  // define canvas
+  const roomBackgroundCanvas = document.createElement("canvas");
+  const roomBackgroundCtx = roomBackgroundCanvas.getContext("2d");
+  roomBackgroundCanvas.width = element.width;
+  roomBackgroundCanvas.height = element.height;
+
+  // filters
+  roomBackgroundCtx.filter = `blur(${element.blur || 0}px) contrast(${
+    element.contrast >= 0 ? element.contrast : 100
+  }%) brightness(${
+    element.brightness >= 0 ? element.brightness : 100
+  }%) invert(${element.invert || 0}%) grayscale(${element.grayscale || 0}%)`;
+
+  if (element.opacity >= 0) {
+    roomBackgroundCtx.globalAlpha = element.opacity / 100;
+  }
+
+  // draw background
+  roomBackgroundCtx.drawImage(
+    element.image,
+    0,
+    0,
+    element.width,
+    element.height
+  );
+
+  // compute average brightness
+  let sumBrightness = 0;
+  const imageData = roomBackgroundCtx.getImageData(
+    0,
+    0,
+    element.width,
+    element.height
+  ).data;
+
+  for (let i = 0; i < imageData.length; i += 4) {
+    const r = imageData[i];
+    const g = imageData[i + 1];
+    const b = imageData[i + 2];
+    const brightness = (r + g + b) / 3;
+    sumBrightness += brightness;
+  }
+
+  roomBackgroundCanvas.remove();
+  return sumBrightness / (element.width * element.height);
+});
 </script>
 
 <style scoped lang="scss">
@@ -731,6 +803,13 @@ watch(
       height: 16/9;
       border-radius: 8px;
       z-index: 1;
+    }
+
+    .canvas__logo {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      width: 64px;
     }
   }
 }
