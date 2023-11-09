@@ -5,7 +5,7 @@
   </div>
 
   <q-input
-    v-model="description"
+    v-model="presentation.description"
     :placeholder="
       $t(
         'presentationStudio.settings.generalInformation.description.placeholder'
@@ -13,24 +13,9 @@
     "
     outlined
     autogrow
-  >
-    <template #append>
-      <q-btn
-        round
-        flat
-        size="10px"
-        icon="r_done"
-        color="primary"
-        :disable="description === presentation.description"
-        @click="
-          () => {
-            presentation.description = description;
-            presentationsStore.updatePresentation();
-          }
-        "
-      />
-    </template>
-  </q-input>
+    debounce="1000"
+    @update:model-value="presentationsStore.updatePresentation()"
+  />
 
   <!-- preview -->
   <div class="text-caption text-grey q-mb-xs q-mt-md">
@@ -101,11 +86,6 @@ import { storeToRefs } from "pinia";
  */
 const presentationsStore = usePresentationsStore();
 const { presentation } = storeToRefs(presentationsStore);
-
-/*
- * description
- */
-const description = ref(presentation.value.description);
 
 /*
  * preview
