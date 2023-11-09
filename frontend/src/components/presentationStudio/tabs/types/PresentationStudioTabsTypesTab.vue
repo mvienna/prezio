@@ -65,7 +65,7 @@ import { computed } from "vue";
  */
 const { t } = useI18n({ useScope: "global" });
 
-defineProps({
+const props = defineProps({
   disableLayoutSelection: { type: Boolean },
 });
 
@@ -131,8 +131,10 @@ const types = computed(() => {
       },
       {
         name: SLIDE_TYPES.LEADERBOARD,
-        disable: !presentation.value?.slides?.filter((item) =>
-          SLIDE_TYPES_OF_QUIZ.includes(item.type)
+        disable: !presentation.value?.slides?.filter(
+          (item) =>
+            SLIDE_TYPES_OF_QUIZ.includes(item.type) &&
+            (!props.disableLayoutSelection ? item.id !== slide.value?.id : true)
         )?.length,
       },
     ],
