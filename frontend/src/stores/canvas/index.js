@@ -234,7 +234,7 @@ export const useCanvasStore = defineStore("canvas", {
     },
 
     saveSlidePreview() {
-      this.redrawCanvas(false, undefined, undefined, false);
+      this.redrawCanvas(false, undefined, false);
 
       const tempCanvas = document.createElement("canvas");
       const tempCtx = tempCanvas.getContext("2d");
@@ -321,7 +321,6 @@ export const useCanvasStore = defineStore("canvas", {
 
     redrawCanvas(
       saveSlide = true,
-      forceSlideSave = false,
       elements = this.elements,
       showHelpers = true
     ) {
@@ -393,17 +392,16 @@ export const useCanvasStore = defineStore("canvas", {
        * save slide if last save was > 10s ago
        */
       if (saveSlide) {
-        const now = new Date();
-        const secondsDifference = date.getDateDiff(
-          now,
-          lastSavedAt.value,
-          "seconds"
-        );
+        // const now = new Date();
+        // const secondsDifference = date.getDateDiff(
+        //   now,
+        //   lastSavedAt.value,
+        //   "seconds"
+        // );
 
-        if (secondsDifference >= 10 || forceSlideSave) {
-          this.saveSlidePreview();
-          presentationsStore.saveSlide(undefined, this.elements);
-        }
+        // if (secondsDifference >= 10 || forceSlideSave)
+        this.saveSlidePreview();
+        presentationsStore.saveSlide(undefined, this.elements);
       }
 
       /*

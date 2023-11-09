@@ -239,7 +239,7 @@ const handleChangingSlideType = async (type) => {
   await presentationsStore.saveSlide(slide.value, newElements);
 
   await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(false, false, undefined, false);
+  canvasStore.redrawCanvas(false, undefined, false);
 };
 </script>
 

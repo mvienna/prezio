@@ -161,7 +161,7 @@ export const stopResizing = () => {
   isResizing.value = false;
   resizeHandle.value = null;
   removeMagnet();
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };
 
 /*

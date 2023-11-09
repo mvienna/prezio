@@ -78,7 +78,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         selectElement(shape);
       }
 
-      canvasStore.redrawCanvas(true, true);
+      canvasStore.redrawCanvas();
     },
 
     /*

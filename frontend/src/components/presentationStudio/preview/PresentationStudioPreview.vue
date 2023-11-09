@@ -175,7 +175,7 @@ const handleSlideChange = async (direction) => {
 
   await presentationsStore.setSlide(newSlide, elements.value, false);
   await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(false, false, undefined, false);
+  canvasStore.redrawCanvas(false, undefined, false);
 };
 </script>
 

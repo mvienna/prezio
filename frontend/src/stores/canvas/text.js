@@ -247,7 +247,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
         canvasStore.switchMode(MODE_OPTIONS.value.text);
         updateSelectedElement();
 
-        canvasStore.redrawCanvas(true, true);
+        canvasStore.redrawCanvas();
         this.removeTextInput();
         deselectElement();
         this.clearFormatting();

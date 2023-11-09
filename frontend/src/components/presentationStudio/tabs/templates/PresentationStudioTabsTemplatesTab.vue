@@ -329,7 +329,7 @@ const handleApplyTemplate = async (template) => {
 
   slide.value.canvas_data = template.slide.canvas_data;
   await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(true, false, undefined, false);
+  canvasStore.redrawCanvas(undefined, undefined, false);
   canvasStore.saveSlidePreview();
 
   $q.notify({

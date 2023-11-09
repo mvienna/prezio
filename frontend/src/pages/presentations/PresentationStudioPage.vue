@@ -244,11 +244,6 @@ onMounted(async () => {
    */
   document.addEventListener("keydown", handleKeyDownEvent);
 
-  /*
-   * unsaved changes warning
-   */
-  window.addEventListener("beforeunload", handleUnload);
-
   $q.loading.hide();
   isCanvasReady.value = true;
 });
@@ -258,7 +253,6 @@ onUnmounted(() => {
   document.removeEventListener("mousemove", handleCanvasMouseMove);
   document.removeEventListener("mouseup", handleCanvasMouseUp);
   document.removeEventListener("keydown", handleKeyDownEvent);
-  document.removeEventListener("beforeunload", handleUnload);
   canvas.value.removeEventListener("wheel", handleWheelEvent);
 });
 
@@ -377,28 +371,6 @@ const handleKeyDownEvent = (event) => {
     case MODE_OPTIONS.value.textEditing:
       textStore.shortcuts(event);
       break;
-  }
-};
-
-const handleUnload = (event) => {
-  if (
-    !router.currentRoute.value.path.includes(
-      clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO)
-    )
-  ) {
-    return;
-  }
-
-  if (
-    lastSavedAt.value < lastChangedAt.value &&
-    process.env.APP_ENV === "production"
-  ) {
-    event.preventDefault();
-    event.returnValue =
-      "You have unsaved changes. Are you sure you want to leave?";
-
-    canvasStore.saveSlidePreview();
-    presentationsStore.saveSlide(undefined, elements.value);
   }
 };
 

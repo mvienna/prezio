@@ -69,7 +69,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       };
       elements.value[0] = newLine;
 
-      canvasStore.redrawCanvas(true, true);
+      canvasStore.redrawCanvas();
     },
 
     draw() {

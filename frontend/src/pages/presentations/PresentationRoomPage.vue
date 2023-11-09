@@ -336,7 +336,7 @@ const resizeCanvas = () => {
 
   ctx.value.scale(scale.value, scale.value);
 
-  canvasStore.redrawCanvas(false, false, undefined, false);
+  canvasStore.redrawCanvas(false, undefined, false);
 };
 
 /*
@@ -412,7 +412,7 @@ onMounted(async () => {
      */
     resizeCanvas();
     setTimeout(() => {
-      canvasStore.redrawCanvas(false, false, undefined, false);
+      canvasStore.redrawCanvas(false, undefined, false);
     }, 100);
     window.addEventListener("resize", resizeCanvas);
   }
@@ -583,7 +583,7 @@ const connectToRoomChannels = () => {
       );
     }
 
-    canvasStore.redrawCanvas(false, false, undefined, false);
+    canvasStore.redrawCanvas(false, undefined, false);
   });
 
   /*
@@ -655,7 +655,7 @@ const connectToRoomChannels = () => {
 
           resizeCanvas();
           setTimeout(() => {
-            canvasStore.redrawCanvas(false, false, undefined, false);
+            canvasStore.redrawCanvas(false, undefined, false);
             isLoaded.value = true;
           }, 100);
           window.addEventListener("resize", resizeCanvas);
@@ -739,7 +739,7 @@ const handleSlideChange = async (direction) => {
 
   await presentationsStore.setSlide(newSlide);
   await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(false, false, undefined, false);
+  canvasStore.redrawCanvas(false, undefined, false);
 
   handleCountdownOnSlideChange();
 };

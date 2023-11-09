@@ -484,7 +484,7 @@ const handleSlideChange = async (newSlide) => {
 
   await presentationsStore.setSlide(newSlide, elements.value);
   await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(false, false, undefined, false);
+  canvasStore.redrawCanvas(false, undefined, false);
 };
 
 const handleAddingNewSlide = async (type) => {
