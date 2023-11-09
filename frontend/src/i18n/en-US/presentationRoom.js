@@ -175,5 +175,18 @@ export default {
       thanksForParticipation: "Thank you for your participation",
       timesUp: "Time's up!",
     },
+
+    leaderboard: {
+      title: "Congratulations!",
+
+      youAreIn: "You are in",
+      place: "place",
+      outOf: "out of",
+      players: "players",
+
+      youScored: "You score:",
+      points: "points",
+      p: "p.",
+    },
   },
 };

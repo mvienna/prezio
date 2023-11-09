@@ -5,18 +5,25 @@
     </div>
 
     <div class="text-center">
-      <div class="text-h6 text-semibold">Поздравляем!</div>
+      <div class="text-h6 text-semibold">
+        {{ $t("presentationRoom.leaderboard.title") }}
+      </div>
 
       <div class="q-mt-sm">
-        Вы на
-        <span class="text-semibold">{{ participantResults?.place }}</span> месте
-        из <span class="text-semibold">{{ results.length }}</span> игроков
+        {{ $t("presentationRoom.leaderboard.youAreIn") }}
+
+        <span class="text-semibold">{{ participantResults?.place }}</span>
+        {{ $t("presentationRoom.leaderboard.place") }}
+        {{ $t("presentationRoom.leaderboard.outOf") }}
+        <span class="text-semibold">{{ results.length }}</span>
+        {{ $t("presentationRoom.leaderboard.players") }}
       </div>
 
       <div>
-        Вы набрали:
+        {{ $t("presentationRoom.leaderboard.youScored") }}
+
         <span class="text-semibold">{{ participantResults?.data?.score }}</span>
-        баллов
+        {{ $t("presentationRoom.leaderboard.points") }}
       </div>
     </div>
 
@@ -56,7 +63,10 @@
               }}
             </div>
 
-            <div class="q-ml-xl q-pl-xl">{{ result.score }}б</div>
+            <div class="q-ml-xl q-pl-xl">
+              {{ result.score }}
+              {{ $t("presentationRoom.leaderboard.p") }}
+            </div>
           </q-card-section>
         </q-card>
       </div>

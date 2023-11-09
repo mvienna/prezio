@@ -181,5 +181,18 @@ export default {
       thanksForParticipation: "Благодарим за Ваше участие",
       timesUp: "Время вышло",
     },
+
+    leaderboard: {
+      title: "Поздравляем!",
+
+      youAreIn: "Вы на",
+      place: "месте",
+      outOf: "из",
+      players: "игроков",
+
+      youScored: "Вы набрали:",
+      points: "баллов",
+      p: "б.",
+    },
   },
 };
