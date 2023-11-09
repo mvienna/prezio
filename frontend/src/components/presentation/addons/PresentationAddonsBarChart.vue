@@ -36,8 +36,8 @@ const data = computed(() => {
   return slideSettings.value.answerOptions?.map((option) => {
     if (!slide.value?.answers) {
       return {
-        group: (option.isCorrect ? "✅" : "❌") + " " + option.value,
-        value: 1,
+        group: "",
+        value: 0,
         participants: [],
         isCorrect: option.isCorrect,
       };
