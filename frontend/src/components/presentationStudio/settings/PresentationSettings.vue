@@ -1,8 +1,14 @@
 <template>
   <q-card flat class="scroll--hidden">
     <q-toolbar
-      class="items-center justify-between bg-white q-py-md q-px-lg"
-      style="position: sticky; top: 0; z-index: 1"
+      class="items-center justify-between q-py-md q-px-lg"
+      style="
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(4px);
+      "
     >
       <div class="text-h7 text-semibold">
         {{ $t("presentationStudio.settings.title") }}
@@ -52,6 +58,9 @@
             <PresentationSettingsLanguage
               v-if="tab.name === tabs.language.name"
             />
+
+            <!-- others -->
+            <PresentationSettingsOther v-if="tab.name === tabs.other.name" />
           </div>
         </q-expansion-item>
       </div>
@@ -67,6 +76,7 @@ import PresentationSettingsCollectParticipantsInfo from "components/presentation
 import PresentationSettingsQuiz from "components/presentationStudio/settings/PresentationSettingsQuiz.vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
+import PresentationSettingsOther from "components/presentationStudio/settings/PresentationSettingsOther.vue";
 
 /*
  * variables
@@ -125,7 +135,6 @@ const tabs = {
   other: {
     name: "other",
     icon: "r_more_horiz",
-    disable: true,
     label: t("presentationStudio.settings.other.title"),
   },
 };

@@ -108,7 +108,7 @@
       </svg>
     </div>
 
-    <div class="q-ml-sm"><slot name="value" /></div>
+    <div v-if="value >= 0" class="q-ml-sm">{{ value }}</div>
   </div>
 </template>
 

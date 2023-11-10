@@ -197,6 +197,14 @@ export default {
 
       other: {
         title: "Other Settings",
+
+        showRoomInvitationPanel: {
+          title: "Instructions panel to join",
+        },
+
+        reactions: {
+          title: "Available reactions",
+        },
       },
     },
 

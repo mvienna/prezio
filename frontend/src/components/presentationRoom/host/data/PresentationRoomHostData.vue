@@ -17,26 +17,19 @@
           presentationsStore.sendPresentationRoomReaction('like');
           animate('like');
         "
-      >
-        <template #value>
-          {{ room?.reactions?.like || 0 }}
-        </template>
-      </PresentationRoomDataLike>
+      />
 
       <!-- love -->
       <PresentationRoomDataLove
         v-if="!isHost || (isHost && room?.reactions?.love > 0)"
         :stage="stage.love"
         :disabled="isHost"
+        :value="room?.reactions?.love || 0"
         @react="
           presentationsStore.sendPresentationRoomReaction('love');
           animate('love');
         "
-      >
-        <template #value>
-          {{ room?.reactions?.love || 0 }}
-        </template>
-      </PresentationRoomDataLove>
+      />
     </div>
 
     <!-- answers count -->
@@ -44,12 +37,9 @@
       v-if="isHost && slide?.type === SLIDE_TYPES.WORD_CLOUD"
       :stage="stage.pin"
       :answers-count="slide?.answers?.length || 0"
+      :value="slide?.answers?.length"
       class="q-ml-md"
-    >
-      <template #value>
-        {{ slide?.answers?.length }}
-      </template>
-    </PresentationRoomDataSubmissions>
+    />
 
     <!-- participants count -->
     <div

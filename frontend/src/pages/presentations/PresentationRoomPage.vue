@@ -392,6 +392,10 @@ onMounted(async () => {
       await presentationsStore.sendPresentationRoomUpdateEvent();
     }
 
+    if (presentation.value.settings.show_room_invitation_panel) {
+      showRoomInvitationPanel.value = true;
+    }
+
     if (
       SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
       !room.value.is_quiz_started

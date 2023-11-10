@@ -338,7 +338,7 @@
       </svg>
     </div>
 
-    <div class="q-ml-xs"><slot name="value" /></div>
+    <div v-if="value >= 0" class="q-ml-sm">{{ value }}</div>
 
     <q-tooltip
       anchor="center start"
@@ -358,6 +358,7 @@
 <script setup>
 defineProps({
   stage: { type: Number },
+  value: { type: Number },
   answersCount: { type: Number },
 });
 </script>

@@ -104,58 +104,62 @@ const height = computed(() => {
 });
 
 onMounted(() => {
-  tooltip.value = d3
-    .select(barChart.value)
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("position", "absolute")
-    .style("border-radius", "16px")
-    .style("padding", "8px 16px")
-    .style("background", "rgba(0, 0, 0, 0.5)")
-    .style("color", "white")
-    .style("backdrop-filter", "blur(4px)");
+  setTimeout(() => {
+    canvasRect.value = canvasStore.canvasRect();
 
-  svg.value = d3
-    .select(barChart.value)
-    .append("svg")
-    .attr("width", width.value)
-    .attr("height", height.value)
-    .append("g")
-    .on("mouseover", (d) => {
-      tooltip.value.style("opacity", 1);
-      d.target.style.opacity = 0.85;
-    })
-    .on("mousemove", (d) => {
-      if (!d.target?.__data__?.value) {
+    tooltip.value = d3
+      .select(barChart.value)
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("position", "absolute")
+      .style("border-radius", "16px")
+      .style("padding", "8px 16px")
+      .style("background", "rgba(0, 0, 0, 0.5)")
+      .style("color", "white")
+      .style("backdrop-filter", "blur(4px)");
+
+    svg.value = d3
+      .select(barChart.value)
+      .append("svg")
+      .attr("width", width.value)
+      .attr("height", height.value)
+      .append("g")
+      .on("mouseover", (d) => {
+        tooltip.value.style("opacity", 1);
+        d.target.style.opacity = 0.85;
+      })
+      .on("mousemove", (d) => {
+        if (!d.target?.__data__?.value) {
+          tooltip.value.style("opacity", 0);
+          d.target
+            .querySelectorAll("rect")
+            .forEach((rect) => (rect.style.opacity = 1));
+          return;
+        }
+
+        tooltip.value
+          .html("Баллов: " + d.target.__data__.value)
+          .style("left", d.offsetX + "px")
+          .style("top", d.offsetY + "px");
+      })
+      .on("mouseleave", (d) => {
         tooltip.value.style("opacity", 0);
         d.target
           .querySelectorAll("rect")
           .forEach((rect) => (rect.style.opacity = 1));
-        return;
-      }
+      });
 
-      tooltip.value
-        .html("Баллов: " + d.target.__data__.value)
-        .style("left", d.offsetX + "px")
-        .style("top", d.offsetY + "px");
-    })
-    .on("mouseleave", (d) => {
-      tooltip.value.style("opacity", 0);
-      d.target
-        .querySelectorAll("rect")
-        .forEach((rect) => (rect.style.opacity = 1));
-    });
+    x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
+    xAxis.value = svg.value
+      .append("g")
+      .attr("transform", `translate(0, ${height.value + 1})`);
 
-  x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
-  xAxis.value = svg.value
-    .append("g")
-    .attr("transform", `translate(0, ${height.value + 1})`);
+    y.value = d3.scaleLinear().range([height.value, 0]);
+    yAxis.value = svg.value.append("g").attr("class", "myYaxis");
 
-  y.value = d3.scaleLinear().range([height.value, 0]);
-  yAxis.value = svg.value.append("g").attr("class", "myYaxis");
-
-  update();
+    update();
+  }, 500);
 
   window.addEventListener("resize", onResize);
 });

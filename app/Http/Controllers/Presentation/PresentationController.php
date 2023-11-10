@@ -72,6 +72,8 @@ class PresentationController extends Controller
             'participants_info_form_fields_data' => $request->settings['participants_info_form_fields_data'],
             'quiz_data' => $request->settings['quiz_data'],
             'quiz_warning_dismissed' => $request->settings['quiz_warning_dismissed'],
+            'show_room_invitation_panel' => $request->settings['show_room_invitation_panel'],
+            'available_reactions' => $request->settings['available_reactions'],
         ]);
 
         return $this->jsonResponse($presentation->toArray());
