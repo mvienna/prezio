@@ -27,7 +27,7 @@ const {
   slide,
   slideSettings,
   showRoomInvitationPanel,
-  averageRoomBackgroundBrightness,
+  averageBackgroundBrightness,
   backgroundBrightnessThreshold,
 } = storeToRefs(presentationStore);
 
@@ -70,7 +70,7 @@ const data = computed(() => {
 });
 
 const color = computed(() => {
-  return averageRoomBackgroundBrightness.value >=
+  return averageBackgroundBrightness.value >=
     backgroundBrightnessThreshold.value
     ? "black"
     : "white";
@@ -242,11 +242,11 @@ const onResize = () => {
 };
 
 watch(
-  () => averageRoomBackgroundBrightness.value,
+  () => averageBackgroundBrightness.value,
   () => {
-    xAxis.value.selectAll("text").style("fill", color.value);
-    xAxis.value.selectAll("path").style("stroke", color.value);
-    xAxis.value.selectAll("line").style("stroke", color.value);
+    xAxis.value?.selectAll("text")?.style("fill", color.value);
+    xAxis.value?.selectAll("path")?.style("stroke", color.value);
+    xAxis.value?.selectAll("line")?.style("stroke", color.value);
   }
 );
 </script>

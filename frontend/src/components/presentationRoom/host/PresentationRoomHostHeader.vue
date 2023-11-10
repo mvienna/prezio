@@ -197,7 +197,7 @@ const {
   presentation,
   showRoomInvitationPanel,
   showRoomInformationPanel,
-  averageRoomBackgroundBrightness,
+  averageBackgroundBrightness,
   backgroundBrightnessThreshold,
 } = storeToRefs(presentationsStore);
 
@@ -205,7 +205,7 @@ const {
  * logo
  */
 const logo = computed(() => {
-  return averageRoomBackgroundBrightness.value >=
+  return averageBackgroundBrightness.value >=
     backgroundBrightnessThreshold.value
     ? "/logo_with_title_black.png"
     : "/logo_white_with_title_white.png";

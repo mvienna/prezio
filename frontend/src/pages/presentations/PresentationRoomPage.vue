@@ -225,7 +225,7 @@
 import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
-import { QSpinnerIos, useQuasar } from "quasar";
+import { colors, QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
@@ -279,7 +279,7 @@ const {
   participant,
   isGuest,
   showRoomInvitationPanel,
-  averageRoomBackgroundBrightness,
+  averageBackgroundBrightness,
 } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
@@ -866,9 +866,22 @@ const roomBackground = computed(() => {
   );
 });
 
-averageRoomBackgroundBrightness.value = computed(() => {
+const roomBaseFill = computed(() => {
+  return elements.value?.find(
+    (element) => element.mode === MODE_OPTIONS.value.baseFill
+  );
+});
+
+averageBackgroundBrightness.value = computed(() => {
   const element = roomBackground.value;
-  if (!element?.image?.nodeType) return 0;
+  if (!element?.image?.nodeType) {
+    if (roomBaseFill.value?.fillColor) {
+      const rgb = colors.hexToRgb(roomBaseFill.value.fillColor);
+      return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+    } else {
+      return 255;
+    }
+  }
 
   // define canvas
   const roomBackgroundCanvas = document.createElement("canvas");

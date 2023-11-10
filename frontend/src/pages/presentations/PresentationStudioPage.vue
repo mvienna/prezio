@@ -35,7 +35,7 @@
           <div class="canvas__logo">
             <q-img
               :src="
-                averageRoomBackgroundBrightness >= backgroundBrightnessThreshold
+                averageBackgroundBrightness >= backgroundBrightnessThreshold
                   ? '/logo_with_title_black.png'
                   : '/logo_white_with_title_white.png'
               "
@@ -115,7 +115,7 @@ import {
 } from "stores/canvas/helpers/select";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 import { useRouter } from "vue-router";
-import { QSpinnerIos, useQuasar } from "quasar";
+import { colors, QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import {
@@ -148,7 +148,7 @@ const {
   presentation,
   isPresentationPreview,
   slide,
-  averageRoomBackgroundBrightness,
+  averageBackgroundBrightness,
   backgroundBrightnessThreshold,
 } = storeToRefs(presentationsStore);
 
@@ -727,9 +727,22 @@ const slideBackground = computed(() => {
   );
 });
 
-averageRoomBackgroundBrightness.value = computed(() => {
+const slideBaseFill = computed(() => {
+  return elements.value?.find(
+    (element) => element.mode === MODE_OPTIONS.value.baseFill
+  );
+});
+
+averageBackgroundBrightness.value = computed(() => {
   const element = slideBackground.value;
-  if (!element?.image?.nodeType) return 0;
+  if (!element?.image?.nodeType) {
+    if (slideBaseFill.value?.fillColor) {
+      const rgb = colors.hexToRgb(slideBaseFill.value.fillColor);
+      return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+    } else {
+      return 255;
+    }
+  }
 
   // define canvas
   const roomBackgroundCanvas = document.createElement("canvas");
