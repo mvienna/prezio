@@ -17,6 +17,7 @@ export const usePresentationsStore = defineStore("presentations", {
 
     showRoomInvitationPanel: false,
     showRoomInformationPanel: true,
+    showShareDialog: false,
 
     averageBackgroundBrightness: 0,
     backgroundBrightnessThreshold: 128,

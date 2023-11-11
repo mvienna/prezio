@@ -39,23 +39,7 @@
             @click="handleCanvasClick"
           ></canvas>
 
-          <!-- logo -->
-          <div
-            class="canvas__logo"
-            style="position: fixed"
-            :style="`width: ${64 * scale}px; left: ${
-              canvasRect?.left + canvasRect?.width - (64 + 16) * scale
-            }px; top: ${canvasRect?.top + 12 * scale}px;`"
-          >
-            <q-img
-              :src="
-                averageBackgroundBrightness >= backgroundBrightnessThreshold
-                  ? '/logo_with_title_black.png'
-                  : '/logo_white_with_title_white.png'
-              "
-              fit="contain"
-            />
-          </div>
+          <PresentationStudioSlideHeader v-if="isCanvasReady" />
         </div>
       </teleport>
     </div>
@@ -129,7 +113,7 @@ import {
 } from "stores/canvas/helpers/select";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 import { useRouter } from "vue-router";
-import { colors, QSpinnerIos, useQuasar } from "quasar";
+import { colors, copyToClipboard, QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import {
@@ -144,6 +128,7 @@ import {
 import PresentationStudioElementsContextMenu from "components/presentationStudio/PresentationStudioElementsContextMenu.vue";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
+import PresentationStudioSlideHeader from "components/presentationStudio/PresentationStudioSlideHeader.vue";
 
 /*
  * variables
@@ -205,15 +190,6 @@ const textStore = useCanvasTextStore();
 const mediaStore = useCanvasMediaStore();
 
 const shapeStore = useCanvasShapeStore();
-
-const canvasRect = ref(canvasStore.canvasRect());
-
-watch(
-  () => scale.value,
-  () => {
-    canvasRect.value = canvasStore.canvasRect();
-  }
-);
 
 /*
  * canvas setup
@@ -281,7 +257,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  document.removeEventListener("resize", resizeCanvas);
+  window.removeEventListener("resize", resizeCanvas);
   document.removeEventListener("mousemove", handleCanvasMouseMove);
   document.removeEventListener("mouseup", handleCanvasMouseUp);
   document.removeEventListener("keydown", handleKeyDownEvent);
@@ -293,7 +269,6 @@ const resizeCanvas = () => {
   canvas.value.height = 1440;
 
   ctx.value.scale(scale.value, scale.value);
-  canvasRect.value = canvasStore.canvasRect();
 
   canvasStore.redrawCanvas(false);
 };

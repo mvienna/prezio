@@ -96,7 +96,7 @@
                 : ''
             }`"
           >
-            <!-- HOST - header (information panel) -->
+            <!-- HOST - header -->
             <PresentationRoomHostHeader
               :is-host="isHost"
               :is-mouse-active="isMouseActive"

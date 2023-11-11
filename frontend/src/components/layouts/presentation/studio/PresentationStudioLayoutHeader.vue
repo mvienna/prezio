@@ -457,15 +457,11 @@ const {
   lastSavedAt,
   isPresentationPreview,
   showSettingsDialog,
+  showShareDialog,
 } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { elements } = storeToRefs(canvasStore);
-
-/*
- * dialogs
- */
-const showShareDialog = ref(false);
 
 /*
  * slide index
