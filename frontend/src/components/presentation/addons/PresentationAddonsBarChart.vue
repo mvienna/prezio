@@ -32,7 +32,7 @@ const {
 } = storeToRefs(presentationStore);
 
 const canvasStore = useCanvasStore();
-const { canvas } = storeToRefs(canvasStore);
+const { canvas, scale } = storeToRefs(canvasStore);
 
 /*
  * data
@@ -234,6 +234,13 @@ watch(
     }, 500);
   },
   { deep: true }
+);
+
+watch(
+  () => scale.value,
+  () => {
+    onResize();
+  }
 );
 
 const onResize = () => {

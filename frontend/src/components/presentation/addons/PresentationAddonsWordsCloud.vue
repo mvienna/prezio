@@ -34,7 +34,7 @@ const emit = defineEmits(["removeWord"]);
  * stores
  */
 const canvasStore = useCanvasStore();
-const { canvas } = storeToRefs(canvasStore);
+const { canvas, scale } = storeToRefs(canvasStore);
 
 const presentationsStore = usePresentationsStore();
 const { showRoomInvitationPanel } = storeToRefs(presentationsStore);
@@ -195,6 +195,13 @@ watch(
     }, 500);
   },
   { deep: true }
+);
+
+watch(
+  () => scale.value,
+  () => {
+    onResize();
+  }
 );
 
 const onResize = () => {
