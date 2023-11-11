@@ -8,8 +8,16 @@
       @add-image="mediaStore.addImage($event)"
       @add-shape="shapeStore.addShape($event)"
       @zoom="canvasStore.handleZoom(null, mouse.x, mouse.y, $event)"
-      @zoomIn="canvasStore.handleZoom(null, mouse.x, mouse.y, scale + 0.25)"
-      @zoomOut="canvasStore.handleZoom(null, mouse.x, mouse.y, scale - 0.25)"
+      @zoomIn="
+        scale !== 3
+          ? canvasStore.handleZoom(null, mouse.x, mouse.y, scale + 0.25)
+          : ''
+      "
+      @zoomOut="
+        scale !== 0.5
+          ? canvasStore.handleZoom(null, mouse.x, mouse.y, scale - 0.25)
+          : ''
+      "
     />
 
     <!-- canvas -->
@@ -32,7 +40,13 @@
           ></canvas>
 
           <!-- logo -->
-          <div class="canvas__logo">
+          <div
+            class="canvas__logo"
+            style="position: fixed"
+            :style="`width: ${64 * scale}px; left: ${
+              canvasRect?.left + canvasRect?.width - (64 + 16) * scale
+            }px; top: ${canvasRect?.top + 12 * scale}px;`"
+          >
             <q-img
               :src="
                 averageBackgroundBrightness >= backgroundBrightnessThreshold
@@ -192,6 +206,15 @@ const mediaStore = useCanvasMediaStore();
 
 const shapeStore = useCanvasShapeStore();
 
+const canvasRect = ref(canvasStore.canvasRect());
+
+watch(
+  () => scale.value,
+  () => {
+    canvasRect.value = canvasStore.canvasRect();
+  }
+);
+
 /*
  * canvas setup
  */
@@ -270,6 +293,7 @@ const resizeCanvas = () => {
   canvas.value.height = 1440;
 
   ctx.value.scale(scale.value, scale.value);
+  canvasRect.value = canvasStore.canvasRect();
 
   canvasStore.redrawCanvas(false);
 };
@@ -816,13 +840,6 @@ averageBackgroundBrightness.value = computed(() => {
       height: 16/9;
       border-radius: 8px;
       z-index: 1;
-    }
-
-    .canvas__logo {
-      position: absolute;
-      top: 12px;
-      right: 16px;
-      width: 64px;
     }
   }
 }
