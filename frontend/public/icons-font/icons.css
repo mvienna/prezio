@@ -1,7 +1,7 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.woff?7255bdc42057d09dd78c9a88d2200ef7") format("woff"),
-url("./icons.woff2?7255bdc42057d09dd78c9a88d2200ef7") format("woff2");
+    src: url("./icons.woff?43fe0285b9006f2111504cd7493c8d94") format("woff"),
+url("./icons.woff2?43fe0285b9006f2111504cd7493c8d94") format("woff2");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -39,12 +39,15 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
 .icon-mdi_format_color_top:before {
     content: "\f108";
 }
-.icon-presentation:before {
+.icon-olive-branches-award:before {
     content: "\f109";
 }
-.icon-sparkles:before {
+.icon-presentation:before {
     content: "\f10a";
 }
-.icon-unsplash:before {
+.icon-thumb-down-circular:before {
     content: "\f10b";
+}
+.icon-unsplash:before {
+    content: "\f10c";
 }
