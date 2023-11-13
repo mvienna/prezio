@@ -43,6 +43,7 @@ export default {
         system: {
           joined: "присоединился(ась)",
           left: "ушел(а)",
+          allParticipantsSubmittedAnswers: "Все участники ответили",
         },
 
         errors: {

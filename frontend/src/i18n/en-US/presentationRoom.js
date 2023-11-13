@@ -43,6 +43,7 @@ export default {
         system: {
           joined: "joined",
           left: "left",
+          allParticipantsSubmittedAnswers: "All participants submitted answers",
         },
 
         errors: {

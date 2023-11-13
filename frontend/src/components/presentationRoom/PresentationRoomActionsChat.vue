@@ -57,32 +57,42 @@
             @mouseleave="item.isHovered = false"
           >
             <div>
-              <!-- avatar - participant -->
-              <span v-if="getParticipantUserData(item)?.avatar" class="q-mr-xs">
-                {{ getParticipantUserData(item).avatar }}
-              </span>
-
-              <!-- avatar - host -->
-              <span v-else-if="!item.participant" class="q-mr-xs q-pa-xs">
-                <q-icon name="icon-presentation" />
-              </span>
-
-              <!-- name -->
-              <span
-                class="text-semibold q-mr-sm"
-                :style="`color: ${
-                  item.participant
-                    ? participantColors?.[item.participant.id]
-                    : 'white'
-                }`"
+              <template
+                v-if="
+                  item.type === 'default' ||
+                  (item.type === 'system' && item.participant)
+                "
               >
-                {{
-                  getParticipantUserData(item)?.name ||
-                  (!item.participant
-                    ? room?.host?.name || (isHost ? user?.name : "")
-                    : "")
-                }}
-              </span>
+                <!-- avatar - participant -->
+                <span
+                  v-if="getParticipantUserData(item)?.avatar"
+                  class="q-mr-xs"
+                >
+                  {{ getParticipantUserData(item).avatar }}
+                </span>
+
+                <!-- avatar - host -->
+                <span v-else-if="!item.participant" class="q-mr-xs q-pa-xs">
+                  <q-icon name="icon-presentation" />
+                </span>
+
+                <!-- name -->
+                <span
+                  class="text-semibold q-mr-sm"
+                  :style="`color: ${
+                    item.participant
+                      ? participantColors?.[item.participant.id]
+                      : 'white'
+                  }`"
+                >
+                  {{
+                    getParticipantUserData(item)?.name ||
+                    (!item.participant
+                      ? room?.host?.name || (isHost ? user?.name : "")
+                      : "")
+                  }}
+                </span>
+              </template>
 
               <!-- message -->
               <span

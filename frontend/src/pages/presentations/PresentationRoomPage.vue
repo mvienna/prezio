@@ -534,6 +534,7 @@ const connectToRoomChannels = () => {
               {
                 participant_id: userJoined.id,
                 message: "joined",
+                type: "system",
               }
             )
             .catch((error) => {
@@ -553,6 +554,7 @@ const connectToRoomChannels = () => {
               {
                 participant_id: userLeft.id,
                 message: "left",
+                type: "system",
               }
             )
             .catch((error) => {
@@ -644,6 +646,18 @@ const connectToRoomChannels = () => {
         stopCountdown();
         room.value.is_submission_locked = true;
         room.value.countdown = 0;
+
+        api
+          .post(
+            `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
+            {
+              message: "allParticipantsSubmittedAnswers",
+              type: "system",
+            }
+          )
+          .catch((error) => {
+            console.log(error);
+          });
 
         presentationsStore.sendPresentationRoomUpdateEvent(
           undefined,

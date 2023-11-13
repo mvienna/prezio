@@ -255,9 +255,12 @@ class PresentationRoomController extends Controller
         if ($presentation->user_id === $sender->id) {
             if ($request->filled('participant_id')) {
                 $sender = PresentationRoomParticipant::find($request->participant_id);
-                $type = 'system';
             } else {
                 $sender = null;
+            }
+
+            if ($request->type === 'system') {
+                $type = 'system';
             }
         }
 
