@@ -38,11 +38,14 @@
             @mousedown="handleCanvasMouseDown"
             @click="handleCanvasClick"
           ></canvas>
-
-          <PresentationStudioSlideHeader v-if="isCanvasReady" />
         </div>
       </teleport>
     </div>
+
+    <!-- slide header (invitation link, open sharing modal) -->
+    <PresentationStudioSlideHeader
+      v-if="isCanvasReady && !isPresentationPreview"
+    />
 
     <!-- context menu -->
     <transition
