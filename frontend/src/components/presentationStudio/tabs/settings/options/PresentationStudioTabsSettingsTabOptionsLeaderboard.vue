@@ -15,13 +15,14 @@
     </div>
 
     <q-btn
-      outline
-      color="black"
       no-caps
+      unelevated
+      color="grey-3"
+      text-color="black"
       :label="
         $t('presentationLayout.rightDrawer.tabs.settings.leaderboard.create')
       "
-      icon-right="icon-sparkles"
+      icon="r_leaderboard"
       class="q-mt-sm"
       @click="handleAddingLeaderboardSlide()"
     />
