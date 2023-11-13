@@ -195,7 +195,7 @@ watch(
   }
 }
 
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 1023px) {
   .room_data {
     height: 50px;
     font-size: 0.8em;

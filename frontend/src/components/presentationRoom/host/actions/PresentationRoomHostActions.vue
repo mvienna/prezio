@@ -38,7 +38,11 @@
 
     <!-- countdown -->
     <div
-      v-if="timeLeft !== -1 && !room.is_submission_locked"
+      v-if="
+        timeLeft !== -1 &&
+        !room.is_submission_locked &&
+        !SLIDE_TYPES_OF_QUIZ.includes(slide?.type)
+      "
       class="room_actions__card"
     >
       <PresentationRoomHostActionsCountdown />
@@ -47,6 +51,21 @@
 
   <!-- results hidden card -->
   <div id="results_hidden_card"></div>
+
+  <!-- quiz countdown -->
+  <div
+    v-if="
+      timeLeft !== -1 &&
+      !room.is_submission_locked &&
+      SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
+      room?.is_quiz_started
+    "
+    class="room_actions room_actions--quiz_countdown"
+  >
+    <div class="room_actions__card">
+      <PresentationRoomHostActionsCountdown />
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -97,7 +116,26 @@ const { room, slide, slideSettings, presentation } =
   }
 }
 
-@media screen and (max-width: 960px) {
+.room_actions--quiz_countdown {
+  position: absolute;
+  left: 50% !important;
+  top: 50% !important;
+  bottom: auto !important;
+  z-index: 99;
+  transform: translate(-50%, -50%) scale(2);
+}
+
+@media screen and (max-width: 1256px) {
+  .room_actions--quiz_countdown {
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .room_actions--quiz_countdown {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
   .room_actions {
     left: 8px;
     bottom: 8px;

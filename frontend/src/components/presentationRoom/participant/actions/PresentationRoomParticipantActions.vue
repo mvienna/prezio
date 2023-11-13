@@ -52,7 +52,7 @@ const { presentation, slide } = storeToRefs(presentationsStores);
   }
 }
 
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 1023px) {
   .room_actions {
     right: 8px;
     bottom: 8px;

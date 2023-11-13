@@ -52,15 +52,17 @@
       />
     </div>
 
-    <q-btn
-      unelevated
-      no-caps
-      :label="$t('presentationRoom.waitingForParticipants.startQuiz.title')"
-      class="q-px-xl"
-      style="height: 62px"
-      size="18px"
-      @click="presentationsStore.handleQuizStart()"
-    />
+    <div class="row no-wrap justify-center items-center">
+      <q-btn
+        unelevated
+        no-caps
+        :label="$t('presentationRoom.waitingForParticipants.startQuiz.title')"
+        :class="$q.screen.lt.md ? 'q-px-lg' : 'q-px-xl'"
+        :style="$q.screen.lt.md ? 'height: 50px' : 'height: 62px'"
+        :size="$q.screen.lt.md ? '14px' : '18px'"
+        @click="presentationsStore.handleQuizStart()"
+      />
+    </div>
   </div>
 </template>
 
@@ -330,6 +332,12 @@ text {
     background: rgba(0, 0, 0, 0.5);
     color: $white;
     backdrop-filter: blur(4px);
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .waiting_for_participants__footer {
+    bottom: 8px;
   }
 }
 </style>

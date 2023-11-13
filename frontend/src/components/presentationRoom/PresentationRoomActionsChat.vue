@@ -14,7 +14,7 @@
       self="bottom left"
       transition-show="jump-up"
       transition-hide="jump-down"
-      :offset="[0, 16]"
+      :offset="$q.screen.lt.md ? [0, 8] : [0, 16]"
       style="
         background: rgba(0, 0, 0, 0.5);
         color: white;
