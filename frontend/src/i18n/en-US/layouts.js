@@ -267,11 +267,11 @@ export default {
             "Settings applied to all 'Quizzes & Games' and 'Opinion' slides successfully",
 
           question: {
-            title: "Your Title",
-            placeholder: "Your Title...",
+            title: "Your question",
+            placeholder: "Your question...",
 
             description: {
-              title: "Detailed Description",
+              title: "Detailed description",
               caption:
                 "A more detailed description will be shown on your audience's devices. You can also display it during the presentation by hovering over the question title",
               placeholder: "Your Question Description...",
