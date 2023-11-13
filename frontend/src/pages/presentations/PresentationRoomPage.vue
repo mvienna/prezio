@@ -515,34 +515,38 @@ const connectToRoomChannels = () => {
       .joining((userJoined) => {
         participants.value.push(userJoined);
 
-        api
-          .post(
-            `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
-            {
-              participant_id: userJoined.id,
-              message: "joined",
-            }
-          )
-          .catch((error) => {
-            console.log(error);
-          });
+        if (isHost.value) {
+          api
+            .post(
+              `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
+              {
+                participant_id: userJoined.id,
+                message: "joined",
+              }
+            )
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       })
       .leaving((userLeft) => {
         participants.value = participants.value.filter(
           (item) => item.id !== userLeft?.id && item.room_id
         );
 
-        api
-          .post(
-            `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
-            {
-              participant_id: userLeft.id,
-              message: "left",
-            }
-          )
-          .catch((error) => {
-            console.log(error);
-          });
+        if (isHost.value) {
+          api
+            .post(
+              `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
+              {
+                participant_id: userLeft.id,
+                message: "left",
+              }
+            )
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       });
   }
 
