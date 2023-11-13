@@ -79,8 +79,8 @@ const $q = useQuasar();
  */
 const { mouse } = storeToRefs(useCanvasStore());
 
-const presentationsStudio = usePresentationsStore();
-const { presentation, slide } = storeToRefs(presentationsStudio);
+const presentationsStore = usePresentationsStore();
+const { presentation, slide } = storeToRefs(presentationsStore);
 
 /*
  * reset results

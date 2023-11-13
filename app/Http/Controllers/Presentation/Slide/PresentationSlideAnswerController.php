@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Presentation\Slide;
 
+use App\Events\PresentationRoomUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Presentation\Presentation;
 use App\Models\Presentation\Slide\PresentationSlide;
@@ -41,7 +42,7 @@ class PresentationSlideAnswerController extends Controller
 
     public function resetSlideAnswers(PresentationSlide $slide): JsonResponse
     {
-        $slide->load('presentation');
+        $slide->load('presentation', 'presentation.room');
 
         /** @var User $user */
         $user = auth()->user();
@@ -50,6 +51,16 @@ class PresentationSlideAnswerController extends Controller
         }
 
         $slide->answers()->delete();
+
+        $slide->presentation->room()?->update([
+            'is_quiz_started' => false,
+            'is_submission_locked' => true
+        ]);
+
+        if ($slide->presentation?->room) {
+            event(new PresentationRoomUpdatedEvent($slide->presentation->room));
+        }
+
         return $this->successResponse();
     }
 
@@ -66,9 +77,18 @@ class PresentationSlideAnswerController extends Controller
             $slide->answers()->delete();
         }
 
-        $presentation->room->messages()->delete();
-        $presentation->room->reactions()->delete();
-        $presentation->room->participants()->delete();
+        $presentation->room?->messages()?->delete();
+        $presentation->room?->reactions()?->delete();
+        $presentation->room?->participants()?->delete();
+
+        $presentation->room()?->update([
+            'is_quiz_started' => false,
+            'is_submission_locked' => true
+        ]);
+
+        if ($presentation?->room) {
+            event(new PresentationRoomUpdatedEvent($presentation->room));
+        }
 
         return $this->successResponse();
     }
