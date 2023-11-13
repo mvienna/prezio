@@ -203,7 +203,7 @@ class PresentationRoomController extends Controller
 
         event(new PresentationRoomAnswersFormSubmittedEvent($room, $answers));
 
-        return $this->successResponse();
+        return $this->jsonResponse($answers);
     }
 
     /*

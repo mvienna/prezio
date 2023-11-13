@@ -99,7 +99,7 @@
                   )
                 }}
               </div>
-              <div class="q-mt-sm q-mb-lg" style="opacity: 0.5">
+              <div class="q-mt-sm q-mb-md" style="opacity: 0.5">
                 {{
                   $t(
                     "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle"
@@ -156,16 +156,39 @@
           enter-active-class="animated fadeIn"
           leave-active-class="animated fadeOut"
         >
-          <div
-            v-if="timeLeft !== -1 && !participantAnswers?.length"
-            class="q-pb-md"
-          >
+          <!-- progress bar -->
+          <div class="q-pb-md">
+            <div class="row no-wrap justify-between q-mb-sm">
+              <div>
+                {{ slideSettings.points.min }}
+                {{ $t("presentationRoom.leaderboard.p") }}
+              </div>
+
+              <div>
+                {{ slideSettings.points.max }}
+                {{ $t("presentationRoom.leaderboard.p") }}
+              </div>
+            </div>
+
             <q-linear-progress
               size="xl"
               rounded
-              :value="1 - timeLeftPercentage / 100"
+              :value="
+                participantAnswers?.length
+                  ? 1 - timeTakenToAnswerPercentage / 100
+                  : 1 - timeLeftPercentage / 100
+              "
+              style="border: 1px solid rgba(255, 255, 255, 0.1)"
               :color="
-                timeLeftPercentage < 25
+                participantAnswers?.length
+                  ? timeTakenToAnswerPercentage < 25
+                    ? 'positive'
+                    : timeTakenToAnswerPercentage < 50
+                    ? 'yellow-10'
+                    : timeTakenToAnswerPercentage < 75
+                    ? 'orange'
+                    : 'red'
+                  : timeLeftPercentage < 25
                   ? 'positive'
                   : timeLeftPercentage < 50
                   ? 'yellow-10'
@@ -174,6 +197,16 @@
                   : 'red'
               "
             />
+
+            <!--
+participantAnswers
+                      .map((answer) => answer.score)
+                      .reduce(
+                        (accumulator, currentValue) =>
+                          accumulator + currentValue,
+                        0
+                      )
+-->
           </div>
         </transition>
 
@@ -340,20 +373,22 @@ const handleSubmittingAnswers = () => {
 };
 
 const participantAnswers = computed(() => {
-  return slide.value.answers
-    .filter(
-      (answer) =>
-        answer.participant_id === participant.value?.id &&
-        answer.slide_type === slide.value?.type
-    )
-    .map((answer) => JSON.parse(answer.answer_data)?.text);
+  return slide.value.answers.filter(
+    (answer) =>
+      answer.participant_id === participant.value?.id &&
+      answer.slide_type === slide.value?.type
+  );
 });
 
 watch(
   () => participantAnswers.value,
   () => {
     slideSettings.value.answerOptions.map((option, index) => {
-      if (participantAnswers.value.includes(option.value)) {
+      if (
+        participantAnswers.value
+          .map((answer) => JSON.parse(answer.answer_data)?.text)
+          .includes(option.value)
+      ) {
         slideSettings.value.answerOptions[index].isSelected = true;
       }
     });
@@ -373,6 +408,13 @@ const answerOptions = computed(() => {
     JSON.parse(presentation.value.settings.quiz_data).shuffleAnswerOptions
     ? shuffleArray(slideSettings.value.answerOptions)
     : slideSettings.value.answerOptions;
+});
+
+const timeTakenToAnswerPercentage = computed(() => {
+  return (
+    (participantAnswers.value?.[0]?.time_taken_to_answer * 100) /
+    slideSettings.value?.timeLimit
+  );
 });
 </script>
 
