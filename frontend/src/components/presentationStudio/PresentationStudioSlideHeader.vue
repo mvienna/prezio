@@ -32,7 +32,7 @@
 
           <span class="text-semibold">
             {{ host }}/room/<b class="text-uppercase">
-              {{ router.currentRoute.value.params.token }}
+              {{ presentation.room.token }}
             </b>
           </span>
 
@@ -83,12 +83,6 @@ import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
-import { useRouter } from "vue-router";
-
-/*
- * variables
- */
-const router = useRouter();
 
 /*
  * stores
@@ -101,6 +95,7 @@ const {
   averageBackgroundBrightness,
   backgroundBrightnessThreshold,
   showShareDialog,
+  presentation,
 } = storeToRefs(presentationsStore);
 
 /*
@@ -135,7 +130,7 @@ const onResize = () => {
  */
 const host = window.location.hostname;
 const roomLink = computed(() => {
-  return `${window.location.hostname}/room/${router.currentRoute.value.params.token}`;
+  return `${window.location.hostname}/room/${presentation.value.room.token}`;
 });
 
 const isCopied = ref(false);
