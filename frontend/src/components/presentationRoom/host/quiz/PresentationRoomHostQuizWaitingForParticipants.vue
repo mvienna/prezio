@@ -274,9 +274,9 @@ text {
   position: absolute;
   z-index: 2;
   left: 50%;
-  top: 100px;
+  top: 120px;
   transform: translate(-50%, 0) scale(1);
-  font-size: 2em;
+  font-size: 2.5em;
   font-weight: 600;
   text-align: center;
   animation: pulse 2s infinite ease-in-out;
