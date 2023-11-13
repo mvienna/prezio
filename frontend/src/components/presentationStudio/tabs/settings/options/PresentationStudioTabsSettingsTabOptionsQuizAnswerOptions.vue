@@ -116,7 +116,7 @@
           'presentationLayout.rightDrawer.tabs.settings.answerOptions.addAnswerOption'
         )
       "
-      icon-right="r_add"
+      icon="r_add"
       no-caps
       class="q-mt-md q-py-sm full-width"
       color="primary"
