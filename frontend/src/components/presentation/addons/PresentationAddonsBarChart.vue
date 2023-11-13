@@ -172,6 +172,8 @@ onUnmounted(() => {
 });
 
 const update = () => {
+  if (!svg.value) return;
+
   x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
   xAxis.value = svg.value
     .select("g")

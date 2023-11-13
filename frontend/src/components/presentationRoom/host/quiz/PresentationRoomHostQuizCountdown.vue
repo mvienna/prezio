@@ -11,7 +11,8 @@
               !JSON.parse(presentation.settings.quiz_data).countdown))
         "
       >
-        <div class="text-h6 text-semibold text-center">
+        <!-- question №n out of x -->
+        <div class="text-h3 text-semibold text-center q-mb-md">
           {{ $t("presentationRoom.quizCountdown.questionIndex.title") }}
           {{
             presentation.slides
@@ -26,26 +27,29 @@
           }}
         </div>
 
+        <!-- score depends on time + timer icon -->
         <div v-if="slideSettings.scoreDependsOnTime">
-          <div class="text-center">
+          <div class="text-center text-h5">
             {{
               $t("presentationRoom.quizCountdown.scoreDependsOnTime.true.title")
             }}
           </div>
+
           <div class="row no-wrap justify-center q-mt-md">
-            <q-icon name="r_timer" size="48px" class="timerAnimation" />
+            <q-icon name="r_timer" size="64px" class="timerAnimation" />
           </div>
         </div>
 
+        <!-- score doesn't depend on time -->
         <div v-else class="text-center">
-          <div class="text-h6">
+          <div class="text-h5">
             {{
               $t(
                 "presentationRoom.quizCountdown.scoreDependsOnTime.false.title"
               )
             }}
           </div>
-          <div class="text-grey q-mt-xs">
+          <div class="q-mt-sm" style="opacity: 0.5">
             {{
               $t(
                 "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle"
@@ -78,11 +82,11 @@
           />
         </div>
 
-        <div class="text-center text-semibold text-h7 q-mt-md">
+        <div class="text-center text-semibold text-h5 q-mt-md">
           {{ countdown }}
         </div>
 
-        <div class="text-center text-semibold q-mt-sm text-no-wrap text-h6">
+        <div class="text-center text-semibold q-mt-lg text-no-wrap text-h3">
           {{ $t("presentationRoom.quizCountdown.title") }}
         </div>
       </div>
@@ -90,12 +94,12 @@
       <div v-else-if="stage">
         <div
           v-if="timeLeft !== -1"
-          class="text-center text-semibold text-h4 q-mt-md timeOutCountdownAnimation"
+          class="text-center text-semibold text-h3 q-mt-md timeOutCountdownAnimation"
         >
           {{ timeLeft }}
         </div>
 
-        <q-intersection transition="scale" v-else class="text-h6 text-semibold">
+        <q-intersection transition="scale" v-else class="text-h3 text-semibold">
           Время вышло
         </q-intersection>
       </div>
