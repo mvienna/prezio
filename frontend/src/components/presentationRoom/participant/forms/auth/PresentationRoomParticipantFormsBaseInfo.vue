@@ -250,6 +250,7 @@ const submit = async () => {
 
   .q-btn {
     background: transparent !important;
+    backdrop-filter: none !important;
   }
 }
 

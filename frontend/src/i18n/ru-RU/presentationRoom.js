@@ -114,6 +114,14 @@ export default {
 
     waitingForParticipants: {
       title: "Ждем участников...",
+      joined: {
+        title: {
+          participant: "Подключился(ась) - ",
+          participants: "Подключилось - ",
+        },
+        participant: "участник",
+        participants: "участников",
+      },
       startQuiz: {
         title: "Начать викторину!",
         shortcut: "Вы также можете нажать",

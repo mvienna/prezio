@@ -14,7 +14,25 @@
     class="waiting_for_participants__header text-no-wrap"
     :class="`text-${textColor}`"
   >
-    {{ $t("presentationRoom.waitingForParticipants.title") }}
+    <div>{{ $t("presentationRoom.waitingForParticipants.title") }}</div>
+
+    <div v-if="participants.length" class="text-grey-4">
+      {{
+        $t(
+          `presentationRoom.waitingForParticipants.joined.title.${
+            participants.length === 1 ? "participant" : "participants"
+          }`
+        )
+      }}
+      {{ participants.length }}
+      {{
+        $t(
+          `presentationRoom.waitingForParticipants.joined.${
+            participants.length === 1 ? "participant" : "participants"
+          }`
+        )
+      }}
+    </div>
   </div>
 
   <!-- footer -->
@@ -276,10 +294,13 @@ text {
   left: 50%;
   top: 120px;
   transform: translate(-50%, 0) scale(1);
-  font-size: 2.5em;
-  font-weight: 600;
   text-align: center;
   animation: pulse 2s infinite ease-in-out;
+
+  div:first-child {
+    font-size: 2.5em;
+    font-weight: 600;
+  }
 }
 
 @keyframes pulse {

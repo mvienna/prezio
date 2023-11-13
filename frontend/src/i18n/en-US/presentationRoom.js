@@ -110,6 +110,14 @@ export default {
 
     waitingForParticipants: {
       title: "Waiting for participants...",
+      joined: {
+        title: {
+          participant: "Joined - ",
+          participants: "Joined - ",
+        },
+        participant: "participant",
+        participants: "participants",
+      },
       startQuiz: {
         title: "Start the Quiz!",
         shortcut: "You can also press",
