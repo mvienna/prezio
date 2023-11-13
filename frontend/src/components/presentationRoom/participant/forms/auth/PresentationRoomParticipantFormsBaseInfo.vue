@@ -1,6 +1,13 @@
 <template>
   <div class="container__wrapper">
-    <div class="container">
+    <div
+      class="container"
+      :class="
+        averageBackgroundBrightness >= backgroundBrightnessThreshold
+          ? 'container--black'
+          : 'container--white'
+      "
+    >
       <q-form @submit.prevent="submit()">
         <!-- title -->
         <div class="form__title q-mb-md">
@@ -12,7 +19,8 @@
           v-model="form.name"
           type="text"
           :label="$t('presentationRoom.auth.form.name')"
-          outlined
+          borderless
+          maxlength="25"
           hide-bottom-space
           :error-message="$t('presentationRoom.auth.form.fieldIsRequired')"
           :error="isNameError"
@@ -51,11 +59,17 @@
               </q-menu>
             </q-btn>
           </template>
+
+          <template #append>
+            <div class="text-caption text-grey">
+              {{ 25 - (form.name?.length || 0) }}
+            </div>
+          </template>
         </q-input>
 
         <!-- submit -->
         <q-btn
-          color="primary"
+          text-color="white"
           unelevated
           no-caps
           type="submit"
@@ -231,8 +245,46 @@ const submit = async () => {
 }
 
 ::v-deep(.q-field__control) {
-  background: $white;
   border-radius: 8px;
+  padding: 0 16px;
+
+  .q-btn {
+    background: transparent !important;
+  }
+}
+
+::v-deep(.container--black) {
+  .q-field__control {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+    color: $black;
+  }
+
+  .q-btn {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+  }
+}
+
+::v-deep(.container--white) {
+  .q-field__control {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    color: $white;
+  }
+
+  .q-field__native {
+    color: $white;
+  }
+
+  .q-field__label {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .q-btn {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(4px);
+  }
 }
 
 ::v-deep(.q-field__marginal) {
