@@ -454,10 +454,7 @@ onMounted(async () => {
        */
       isGuest.value = true;
       await presentationsStore.loginRoom({
-        name:
-          t("presentationRoom.auth.guest") +
-          " " +
-          randomNames[Math.floor(Math.random() * randomNames.length)],
+        name: randomNames[Math.floor(Math.random() * randomNames.length)],
       });
     }
   }

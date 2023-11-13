@@ -106,7 +106,6 @@ export default {
         fieldIsRequired: "Field is required",
         submit: "Join Now",
       },
-      guest: "Гость",
     },
 
     waitingForParticipants: {

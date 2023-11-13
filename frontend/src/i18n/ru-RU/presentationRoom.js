@@ -110,7 +110,6 @@ export default {
         fieldIsRequired: "Поле обязательно для заполнения",
         submit: "Присоединиться сейчас",
       },
-      guest: "Гость",
     },
 
     waitingForParticipants: {
