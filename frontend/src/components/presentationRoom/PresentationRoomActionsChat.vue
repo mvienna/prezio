@@ -47,7 +47,9 @@
           class="chat__messages q-pb-sm column no-wrap q-gutter-xs scroll--hidden"
         >
           <div
-            v-for="item in room.messages"
+            v-for="item in room.messages.filter(
+              (message) => isHost || (!isHost && message.type !== 'system')
+            )"
             :key="item.id"
             class="chat__messages__item"
             :class="!item.participant ? 'chat__messages__item--host' : ''"
@@ -76,12 +78,16 @@
               >
                 {{
                   getParticipantUserData(item)?.name ||
-                  (!item.participant ? room.host.name : "")
+                  (!item.participant
+                    ? room?.host?.name || (isHost ? user?.name : "")
+                    : "")
                 }}
               </span>
 
               <!-- message -->
-              <span :class="item.type === 'system' ? 'text-grey-4' : ''">
+              <span
+                :class="item.type === 'system' ? 'text-grey-4 text-italic' : ''"
+              >
                 {{
                   item.type === "system"
                     ? $t(`presentationRoom.footer.chat.system.${item.message}`)
@@ -163,6 +169,7 @@ import { onBeforeMount, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { api } from "boot/axios";
 import { date } from "quasar";
+import { useAuthStore } from "stores/auth";
 
 /*
  * variables
@@ -173,7 +180,11 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { room, presentation, showRoomChat } = storeToRefs(presentationsStore);
+const { room, presentation, showRoomChat, isHost } =
+  storeToRefs(presentationsStore);
+
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
 /*
  * prepare messages

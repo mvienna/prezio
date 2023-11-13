@@ -184,7 +184,6 @@ const isHovered = ref(false);
  * props
  */
 defineProps({
-  isHost: { type: Boolean },
   isMouseActive: { type: Boolean },
 });
 
@@ -199,6 +198,7 @@ const {
   showRoomInformationPanel,
   averageBackgroundBrightness,
   backgroundBrightnessThreshold,
+  isHost,
 } = storeToRefs(presentationsStore);
 
 /*

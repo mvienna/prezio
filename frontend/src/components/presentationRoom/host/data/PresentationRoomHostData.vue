@@ -80,6 +80,7 @@ const {
   slide,
   averageBackgroundBrightness,
   backgroundBrightnessThreshold,
+  isHost,
 } = storeToRefs(presentationsStore);
 
 /*
@@ -87,7 +88,6 @@ const {
  */
 const props = defineProps({
   participantsCount: { type: Number },
-  isHost: { type: Boolean },
 });
 
 /*

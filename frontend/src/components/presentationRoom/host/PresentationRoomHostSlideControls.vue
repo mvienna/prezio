@@ -97,7 +97,6 @@ import { storeToRefs } from "pinia";
  * props
  */
 defineProps({
-  isHost: { type: Boolean },
   isMouseActive: { type: Boolean },
 });
 
@@ -110,7 +109,7 @@ defineEmits(["changeSlide", "hover"]);
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide } = storeToRefs(presentationsStore);
+const { presentation, slide, isHost } = storeToRefs(presentationsStore);
 
 /*
  * slide index

@@ -76,7 +76,6 @@
           >
             <!-- HOST - header -->
             <PresentationRoomHostHeader
-              :is-host="isHost"
               :is-mouse-active="isMouseActive"
               @mouseover="clearIsMouseActiveTimeout()"
             />
@@ -169,12 +168,10 @@
             <!-- ALL - room data (participants count, reactions, answers count) -->
             <PresentationRoomHostData
               :participants-count="participants?.length || 0"
-              :is-host="isHost"
             />
 
             <!-- HOST - controls (← / →) -->
             <PresentationRoomHostSlideControls
-              :is-host="isHost"
               :is-mouse-active="isMouseActive"
               @change-slide="handleSlideChange($event)"
               @hover="clearIsMouseActiveTimeout()"
@@ -269,6 +266,7 @@ const {
   participants,
   participant,
   isGuest,
+  isHost,
   showRoomInvitationPanel,
   averageBackgroundBrightness,
   showRoomChat,
@@ -282,7 +280,7 @@ const { user } = storeToRefs(useAuthStore());
 /*
  * statuses
  */
-const isHost = computed(() => {
+isHost.value = computed(() => {
   if (user.value && presentation.value) {
     return user.value.id === presentation.value.user_id;
   }

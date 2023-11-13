@@ -14,6 +14,7 @@ export const usePresentationsStore = defineStore("presentations", {
     participant: null,
     participants: [],
     isGuest: false,
+    isHost: false,
 
     showRoomInvitationPanel: false,
     showRoomInformationPanel: true,
