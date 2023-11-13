@@ -332,7 +332,7 @@ export default {
             },
 
             answerOption: "Вариант ответа №",
-            addAnswerOption: "Добавить вариант ответа",
+            addAnswerOption: "Добавить вариант",
 
             tickTheCorrectAnswerOption: "Пометить правильный ответ",
 

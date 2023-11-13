@@ -332,7 +332,7 @@ export default {
             },
 
             answerOption: "Answer Option #",
-            addAnswerOption: "Add Answer Option",
+            addAnswerOption: "Add an Option",
 
             tickTheCorrectAnswerOption: "Tick the correct answer",
 
