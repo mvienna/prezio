@@ -1,12 +1,13 @@
 <template>
   <div
-    style="
-      height: 40px;
-      background: rgba(255, 255, 255, 0.4);
-      position: fixed;
-      border-radius: 8px 8px 0 0;
-    "
-    :style="`width: ${canvasRect?.width}px; left: ${canvasRect?.left}px; top: ${canvasRect?.top}px;`"
+    style="height: 40px; position: fixed; border-radius: 8px 8px 0 0"
+    :style="`width: ${canvasRect?.width}px; left: ${canvasRect?.left}px; top: ${
+      canvasRect?.top
+    }px; background: ${
+      averageBackgroundBrightness >= backgroundBrightnessThreshold
+        ? 'rgba(0, 0, 0, 0.1)'
+        : 'rgba(255, 255, 255, 0.1)'
+    };`"
     class="row no-wrap items-center justify-center q-px-sm"
     :class="`text-${
       averageBackgroundBrightness >= backgroundBrightnessThreshold
