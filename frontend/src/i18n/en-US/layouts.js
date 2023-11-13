@@ -334,6 +334,8 @@ export default {
             answerOption: "Answer Option #",
             addAnswerOption: "Add Answer Option",
 
+            tickTheCorrectAnswerOption: "Tick the correct answer",
+
             maxLengthErrorMessage: "Maximum 150 characters",
           },
 

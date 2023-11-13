@@ -334,6 +334,8 @@ export default {
             answerOption: "Вариант ответа №",
             addAnswerOption: "Добавить вариант ответа",
 
+            tickTheCorrectAnswerOption: "Пометить правильный ответ",
+
             maxLengthErrorMessage: "Максимум 150 символов",
           },
 

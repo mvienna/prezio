@@ -82,7 +82,15 @@
               style="font-size: 20px"
               @mouseover="element.isHovered = true"
               @mouseleave="element.isHovered = false"
-            />
+            >
+              <q-tooltip>
+                {{
+                  $t(
+                    "presentationLayout.rightDrawer.tabs.settings.answerOptions.tickTheCorrectAnswerOption"
+                  )
+                }}
+              </q-tooltip>
+            </q-checkbox>
 
             <q-btn
               flat
