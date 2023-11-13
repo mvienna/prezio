@@ -114,7 +114,7 @@ export default {
     },
 
     waitingForParticipants: {
-      title: "Ожидание присоединяющихся участников",
+      title: "Ждем участников...",
       startQuiz: {
         title: "Начать викторину!",
         shortcut: "Вы также можете нажать",

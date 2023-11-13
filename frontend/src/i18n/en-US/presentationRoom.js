@@ -110,7 +110,7 @@ export default {
     },
 
     waitingForParticipants: {
-      title: "Waiting for participants",
+      title: "Waiting for participants...",
       startQuiz: {
         title: "Start the Quiz!",
         shortcut: "You can also press",
