@@ -1,14 +1,7 @@
 <template>
-  <div class="container__wrapper q-mt-lg">
+  <div class="container__wrapper">
     <div class="container">
       <q-form @submit.prevent="submit()">
-        <!-- logo -->
-        <div class="row justify-center q-mb-lg">
-          <div style="width: 96px">
-            <q-img :src="logo" style="height: 48px" fit="contain" />
-          </div>
-        </div>
-
         <!-- title -->
         <div class="form__title q-mb-md">
           {{ $t("presentationRoom.auth.form.title") }}

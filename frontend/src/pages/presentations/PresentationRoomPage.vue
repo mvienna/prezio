@@ -44,31 +44,9 @@
           v-if="!isAuthenticated && isLoaded"
         />
 
-        <!-- PARTICIPANT - base info form (avatar & name, for quiz) -->
-        <PresentationRoomParticipantFormsBaseInfo
-          v-if="
-            isAuthenticated &&
-            !isHost &&
-            slide?.type !== SLIDE_TYPES.CONTENT &&
-            (participant?.user_data
-              ? !JSON.parse(participant.user_data).avatar
-              : false)
-          "
-        />
-
         <!-- ALL - content -->
         <div
-          v-show="
-            isAuthenticated &&
-            isLoaded &&
-            (isHost ||
-              (!isHost && slide?.type === SLIDE_TYPES.CONTENT) ||
-              (!isHost &&
-                slide?.type !== SLIDE_TYPES.CONTENT &&
-                (participant?.user_data
-                  ? JSON.parse(participant.user_data).avatar
-                  : false)))
-          "
+          v-show="isAuthenticated && isLoaded"
           class="row no-wrap justify-center items-center"
           style="transition: 0.5s"
           :class="showRoomInvitationPanel || !isHost ? 'q-px-md' : ''"
@@ -149,20 +127,33 @@
               />
             </template>
 
-            <!-- PARTICIPANT - submission form - word cloud -->
-            <PresentationRoomParticipantFormsSubmissionsWordCloud
-              v-if="!isHost && slide?.type === SLIDE_TYPES.WORD_CLOUD"
-            />
+            <template v-if="!isHost && slide?.type !== SLIDE_TYPES.CONTENT">
+              <!-- PARTICIPANT - base info form (avatar & name, for quiz) -->
+              <PresentationRoomParticipantFormsBaseInfo
+                v-if="
+                  participant?.user_data
+                    ? !JSON.parse(participant.user_data).avatar
+                    : false
+                "
+              />
 
-            <!-- PARTICIPANT - submission form - pick answer -->
-            <PresentationRoomParticipantFormsSubmissionsPickAnswer
-              v-if="
-                !isHost &&
-                [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
-                  slide?.type
-                )
-              "
-            />
+              <template v-else>
+                <!-- PARTICIPANT - submission form - word cloud -->
+                <PresentationRoomParticipantFormsSubmissionsWordCloud
+                  v-if="!isHost && slide?.type === SLIDE_TYPES.WORD_CLOUD"
+                />
+
+                <!-- PARTICIPANT - submission form - pick answer -->
+                <PresentationRoomParticipantFormsSubmissionsPickAnswer
+                  v-if="
+                    !isHost &&
+                    [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
+                      slide?.type
+                    )
+                  "
+                />
+              </template>
+            </template>
 
             <!-- PARTICIPANT - leaderboard -->
             <PresentationRoomParticipantLeaderboard
@@ -175,7 +166,7 @@
             <!-- PARTICIPANT - actions -->
             <PresentationRoomParticipantActions v-else />
 
-            <!-- HOST - room data (participants count, reactions, answers count) -->
+            <!-- ALL - room data (participants count, reactions, answers count) -->
             <PresentationRoomHostData
               :participants-count="participants?.length || 0"
               :is-host="isHost"
