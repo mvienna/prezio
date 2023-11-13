@@ -13,7 +13,6 @@
             (presentation?.settings?.quiz_data &&
               JSON.parse(presentation.settings.quiz_data)?.liveChat))
         "
-        :offset="[0, 16]"
       />
 
       <!-- spice things up with effect -->
@@ -79,7 +78,7 @@ const { room, slide, slideSettings, presentation } =
   position: absolute;
   left: 24px;
   bottom: 24px;
-  z-index: 1;
+  z-index: 2;
 
   .room_actions__card {
     height: 62px;

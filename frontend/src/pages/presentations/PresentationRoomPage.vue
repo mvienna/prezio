@@ -280,6 +280,7 @@ const {
   isGuest,
   showRoomInvitationPanel,
   averageBackgroundBrightness,
+  showRoomChat,
 } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
@@ -408,6 +409,15 @@ onMounted(async () => {
 
       if (isHost.value) {
         showRoomInvitationPanel.value = true;
+
+        if (
+          !presentation.value.settings.quiz_data ||
+          JSON.parse(presentation.value.settings.quiz_data).liveChat
+        ) {
+          setTimeout(() => {
+            showRoomChat.value = true;
+          }, 600);
+        }
       }
     }
 

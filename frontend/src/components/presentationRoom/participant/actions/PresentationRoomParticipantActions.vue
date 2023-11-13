@@ -10,7 +10,6 @@
             (presentation?.settings?.quiz_data &&
               JSON.parse(presentation.settings.quiz_data)?.liveChat))
         "
-        :offset="[4, 16]"
       />
     </div>
   </div>

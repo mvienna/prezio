@@ -5,13 +5,16 @@
     flat
     rounded
     no-caps
+    :style="`${showRoomChat ? 'background: rgba(255, 255, 255, 0.1);' : ''}`"
   >
     <q-menu
+      v-model="showRoomChat"
+      target=".room_actions__card"
       anchor="top left"
       self="bottom left"
       transition-show="jump-up"
       transition-hide="jump-down"
-      :offset="offset"
+      :offset="[0, 16]"
       style="
         background: rgba(0, 0, 0, 0.5);
         color: white;
@@ -117,8 +120,12 @@
             dense
             maxlength="255"
             color="white"
-            class="bg-grey-10 q-px-sm"
-            style="width: 100%; border-radius: 8px 8px 8px 16px"
+            class="q-px-sm"
+            style="
+              width: 100%;
+              border-radius: 8px 8px 8px 16px;
+              background: rgba(255, 255, 255, 0.1);
+            "
             placeholder="Сообщение..."
             :rules="newMessageRules"
             lazy-rules
@@ -136,9 +143,11 @@
             icon="r_send"
             round
             unelevated
-            color="grey-10"
             type="submit"
-            style="border-radius: 8px 8px 16px 8px"
+            style="
+              border-radius: 8px 8px 16px 8px;
+              background: rgba(255, 255, 255, 0.1);
+            "
           />
         </q-form>
       </div>
@@ -151,27 +160,23 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
 import { onBeforeMount, ref, watch } from "vue";
-import { date } from "quasar";
 import { useI18n } from "vue-i18n";
 import { api } from "boot/axios";
+import { date } from "quasar";
 
 /*
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
 
-defineProps({
-  offset: { type: Array },
-});
-
 /*
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { room, presentation } = storeToRefs(presentationsStore);
+const { room, presentation, showRoomChat } = storeToRefs(presentationsStore);
 
 /*
- *
+ * prepare messages
  */
 watch(
   () => room.value?.messages,
@@ -234,8 +239,12 @@ const sendNewMessage = () => {
 </script>
 
 <style scoped lang="scss">
+::v-deep(.q-btn) {
+  border-radius: 16px;
+}
+
 .chat {
-  height: 384px;
+  height: 298px;
   width: 400px;
   overflow-y: hidden;
   display: flex;
@@ -259,6 +268,12 @@ const sendNewMessage = () => {
     .chat__messages__item--host {
       background: rgba(255, 255, 255, 0.1);
     }
+  }
+}
+
+@media screen and (max-width: 432px) {
+  .chat {
+    width: calc(100vw - 34px);
   }
 }
 
