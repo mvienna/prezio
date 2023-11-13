@@ -224,7 +224,7 @@ import { useCanvasStore } from "stores/canvas";
 import { useAuthStore } from "stores/auth";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import Echo from "laravel-echo";
-import { randomNames } from "src/constants/mock";
+import { randomUsernames } from "src/constants/mock";
 import { useI18n } from "vue-i18n";
 import {
   SLIDE_TYPES,
@@ -255,7 +255,7 @@ import { generateQrCode } from "src/helpers/qrUtils";
 const router = useRouter();
 const $q = useQuasar();
 
-const { t } = useI18n({ useScope: "global" });
+const { t, locale } = useI18n({ useScope: "global" });
 
 /*
  * stores
@@ -453,8 +453,24 @@ onMounted(async () => {
        * add is_guest to participants table
        */
       isGuest.value = true;
+      const adjective =
+        randomUsernames.adjectives[locale.value === "ru-RU" ? "ru" : "en"][
+          Math.floor(
+            Math.random() *
+              randomUsernames.adjectives[locale.value === "ru-RU" ? "ru" : "en"]
+                .length
+          )
+        ];
+      const noun =
+        randomUsernames.nouns[locale.value === "ru-RU" ? "ru" : "en"][
+          Math.floor(
+            Math.random() *
+              randomUsernames.nouns[locale.value === "ru-RU" ? "ru" : "en"]
+                .length
+          )
+        ];
       await presentationsStore.loginRoom({
-        name: randomNames[Math.floor(Math.random() * randomNames.length)],
+        name: `${adjective} ${noun}`,
       });
     }
   }
