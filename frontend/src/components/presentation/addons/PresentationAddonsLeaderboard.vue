@@ -188,6 +188,7 @@ const update = () => {
   x.value.domain(data.value.map((d) => d.group));
   xAxis.value.call(d3.axisBottom(x.value));
 
+  xAxis.value.selectAll("text").style("font-size", "16px");
   xAxis.value.selectAll("text").style("fill", color.value);
   xAxis.value.selectAll("path").style("stroke", color.value);
   xAxis.value.selectAll("line").style("stroke", color.value);
