@@ -160,12 +160,18 @@ const updateWordsCloud = () => {
     .attr("width", width.value)
     .attr("height", height.value);
 
+  let fontSizeScale = d3.scalePow().exponent(5).domain([0, 1]).range([10, 50]);
+
+  let maxSize = d3.max(data.value, function (d) {
+    return d.size;
+  });
+
   cloud()
     .size([width.value, height.value])
     .words(data.value)
     .padding(5)
     .rotate(() => ~~(Math.random() * 2) * 90)
-    .fontSize((d) => d.size)
+    .fontSize((d) => fontSizeScale(d.size / maxSize))
     .on("end", draw)
     .start();
 };
@@ -224,6 +230,33 @@ const draw = (words) => {
     .style("fill-opacity", 1e-6)
     .attr("font-size", 1)
     .remove();
+
+  let X0 = d3.min(words, function (d) {
+      return d.x - d.width / 2;
+    }),
+    X1 = d3.max(words, function (d) {
+      return d.x + d.width / 2;
+    });
+
+  let Y0 = d3.min(words, function (d) {
+      return d.y - d.height / 2;
+    }),
+    Y1 = d3.max(words, function (d) {
+      return d.y + d.height / 2;
+    });
+
+  let scaleX = (X1 - X0) / width.value;
+  let scaleY = (Y1 - Y0) / height.value;
+
+  let scale = 1 / Math.max(scaleX, scaleY);
+
+  let translateX = Math.abs(X0) * scale;
+  let translateY = Math.abs(Y0) * scale;
+
+  cloud.attr(
+    "transform",
+    "translate(" + translateX + "," + translateY + ")" + " scale(" + scale + ")"
+  );
 };
 
 /*
