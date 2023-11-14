@@ -600,7 +600,6 @@ const connectToRoomChannels = () => {
     presentationsStore.updateLocalSlide();
 
     await canvasStore.setElementsFromSlide();
-
     if (
       SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
       !room.value.is_quiz_started
@@ -611,7 +610,6 @@ const connectToRoomChannels = () => {
         )
       );
     }
-
     canvasStore.redrawCanvas(false, undefined, false);
   });
 

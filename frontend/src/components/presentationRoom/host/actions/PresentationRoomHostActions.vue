@@ -8,6 +8,7 @@
       <PresentationRoomActionsChat
         v-if="
           SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
+          room?.is_submission_locked &&
           presentation?.settings &&
           (!presentation.settings.quiz_data ||
             (presentation?.settings?.quiz_data &&

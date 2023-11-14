@@ -1,16 +1,18 @@
 <template>
-  <div class="room_actions row no-wrap q-gutter-md">
+  <div
+    v-if="
+      SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
+      room?.is_submission_locked &&
+      presentation?.settings &&
+      (!presentation.settings.quiz_data ||
+        (presentation?.settings?.quiz_data &&
+          JSON.parse(presentation.settings.quiz_data)?.liveChat))
+    "
+    class="room_actions row no-wrap q-gutter-md"
+  >
     <div class="room_actions__card row no-wrap">
       <!-- chat -->
-      <PresentationRoomActionsChat
-        v-if="
-          SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
-          presentation?.settings &&
-          (!presentation.settings.quiz_data ||
-            (presentation?.settings?.quiz_data &&
-              JSON.parse(presentation.settings.quiz_data)?.liveChat))
-        "
-      />
+      <PresentationRoomActionsChat />
     </div>
   </div>
 </template>
@@ -25,7 +27,7 @@ import { storeToRefs } from "pinia";
  * stores
  */
 const presentationsStores = usePresentationsStore();
-const { presentation, slide } = storeToRefs(presentationsStores);
+const { presentation, slide, room } = storeToRefs(presentationsStores);
 </script>
 
 <style scoped lang="scss">
