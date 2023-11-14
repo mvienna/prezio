@@ -511,6 +511,9 @@ const handleSlideChange = async (newSlide) => {
 };
 
 const handleAddingNewSlide = async (type) => {
+  /*
+   * save previous slide
+   */
   if (slide.value) {
     canvasStore.saveSlidePreview();
     deselectElement();
@@ -520,6 +523,9 @@ const handleAddingNewSlide = async (type) => {
     presentationsStore.saveSlide(undefined, elements.value);
   }
 
+  /*
+   * prepare default elements
+   */
   let preparedElements;
   const layoutDefaultElementProps = {
     mode: MODE_OPTIONS.value.text,
@@ -601,6 +607,9 @@ const handleAddingNewSlide = async (type) => {
     preparedElements = [titleElement];
   }
 
+  /*
+   * hide type selection menu(s)
+   */
   showNewSlideTypeSelectionMenu.value = [false, false, false];
 
   await presentationsStore.addNewSlide(preparedElements, type);
@@ -608,6 +617,27 @@ const handleAddingNewSlide = async (type) => {
 
   canvasStore.renderSlidePreview();
   canvasStore.saveSlidePreview();
+
+  /*
+   * add leaderboard after new quiz-type slide
+   */
+  if (SLIDE_TYPES_OF_QUIZ.includes(type)) {
+    const newSlideIndex = presentation.value.slides.findIndex(
+      (item) => item.id === slide.value.id
+    );
+
+    const nextSlide = presentation.value.slides?.[newSlideIndex + 1];
+    if (
+      !nextSlide ||
+      (nextSlide && nextSlide.type !== SLIDE_TYPES.LEADERBOARD)
+    ) {
+      await presentationsStore.addNewSlide(
+        undefined,
+        SLIDE_TYPES.LEADERBOARD,
+        false
+      );
+    }
+  }
 };
 
 const handleDuplicatingSlide = async (slide) => {
@@ -682,6 +712,63 @@ const computeSlidePreviewBrightness = (slide) => {
   slidePreviewCanvas.remove();
   return sumBrightness / (width * height);
 };
+
+// const computeSlidePreviewBrightness = async (slide) => {
+//   const width = 160;
+//   const height = (160 * 9) / 16;
+//
+//   // define canvas
+//   const slidePreviewCanvas = document.createElement("canvas");
+//   const slidePreviewCtx = slidePreviewCanvas.getContext("2d");
+//   slidePreviewCanvas.width = width;
+//   slidePreviewCanvas.height = height;
+//
+//   // draw background
+//   return await new Promise(async (resolve, reject) => {
+//     const image = new Image();
+//     image.src = slide.preview;
+//     image.onload = () => {
+//       slidePreviewCtx.drawImage(image, 0, 0, width, width);
+//
+//       // compute average brightness
+//       let sumBrightness = 0;
+//       const imageData = slidePreviewCtx.getImageData(0, 0, width, height).data;
+//
+//       for (let i = 0; i < imageData.length; i += 4) {
+//         const r = imageData[i];
+//         const g = imageData[i + 1];
+//         const b = imageData[i + 2];
+//         const brightness = (r + g + b) / 3;
+//         sumBrightness += brightness;
+//       }
+//
+//       slidePreviewCanvas.remove();
+//
+//       resolve(sumBrightness / (width * height));
+//     };
+//
+//     image.onerror = (error) => {
+//       console.log(error);
+//       resolve(255);
+//     };
+//   });
+// };
+//
+// const slidesAverageBrightness = ref([]);
+//
+// watch(
+//     () => presentation.value?.slides,
+//     () => {
+//       if (presentation.value.slides) {
+//         presentation.value.slides.map(async (item) => {
+//           const b = await computeSlidePreviewBrightness(item);
+//
+//           slidesAverageBrightness.value.push(b);
+//         });
+//       }
+//     },
+//     { deep: true }
+// );
 </script>
 
 <style scoped lang="scss">

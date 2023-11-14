@@ -275,7 +275,7 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async addNewSlide(elements = null, type) {
+    async addNewSlide(elements = null, type, selectNewSlide = true) {
       const slideIndex = this.presentation.slides.findIndex(
         (item) => item.id === this.slide.id
       );
@@ -299,7 +299,11 @@ export const usePresentationsStore = defineStore("presentations", {
       });
       await this.updateSlidesOrder();
 
-      return await this.setSlide(response.data);
+      if (selectNewSlide) {
+        return await this.setSlide(response.data);
+      }
+
+      return true;
     },
 
     async saveSlide(slide = this.slide, elements, newSlide) {

@@ -23,6 +23,7 @@ enum PresentationSlideType: string
     case TYPE_ANSWER = 'type_answer';
     case MATCH_PAIRS = 'match_pairs';
     case CORRECT_ORDER = 'correct_order';
+    case LEADERBOARD = 'leaderboard';
 
     /*
      * opinion & qna
