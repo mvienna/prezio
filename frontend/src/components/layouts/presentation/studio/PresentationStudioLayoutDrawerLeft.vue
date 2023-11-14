@@ -35,6 +35,7 @@
           >
             <PresentationStudioTabsTypesTab
               disable-layout-selection
+              :highlight-active-type="false"
               v-close-popup
               style="z-index: 2"
               @select="handleAddingNewSlide($event)"
@@ -199,6 +200,7 @@
                     >
                       <PresentationStudioTabsTypesTab
                         disable-layout-selection
+                        :highlight-active-type="false"
                         v-close-popup
                         @select="
                           handleAddingNewSlide($event);
@@ -304,6 +306,7 @@
         >
           <PresentationStudioTabsTypesTab
             disable-layout-selection
+            :highlight-active-type="false"
             v-close-popup
             @select="handleAddingNewSlide($event)"
           />

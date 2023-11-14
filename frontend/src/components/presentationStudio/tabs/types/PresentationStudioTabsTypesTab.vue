@@ -40,7 +40,7 @@
           class="type q-pa-sm"
           :disable="type.disable"
           clickable
-          :active="type.name === slide?.type"
+          :active="highlightActiveType && type.name === slide?.type"
           @click="$emit('select', type.name)"
         >
           <div class="row justify-center">
@@ -85,6 +85,7 @@ const { t } = useI18n({ useScope: "global" });
 
 const props = defineProps({
   disableLayoutSelection: { type: Boolean },
+  highlightActiveType: { type: Boolean, default: true },
 });
 
 /*
