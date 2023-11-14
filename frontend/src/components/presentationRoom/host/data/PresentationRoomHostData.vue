@@ -3,7 +3,7 @@
     class="room_data row no-wrap"
     :class="`${
       isHost ? 'room_data__host' : 'room_data__participant q-mt-md'
-    } text-${textColor}`"
+    } text-${isHost ? 'white' : textColor}`"
   >
     <!-- reactions -->
     <div class="row no-wrap q-gutter-md">
