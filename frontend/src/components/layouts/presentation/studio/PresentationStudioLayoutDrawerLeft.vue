@@ -333,7 +333,7 @@ import { usePresentationsStore } from "stores/presentations";
 import draggable from "vuedraggable/src/vuedraggable";
 import { useCanvasStore } from "stores/canvas";
 import { deselectElement } from "stores/canvas/helpers/select";
-import { colors, useQuasar } from "quasar";
+import { useQuasar } from "quasar";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
