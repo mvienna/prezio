@@ -127,11 +127,21 @@
                 <q-img
                   :src="`/assets/icons/temp/slideTypes/${element.type}.svg`"
                   style="width: 36px; height: 36px; background: transparent"
+                  :style="
+                    computeSlidePreviewBrightness(element) >= 128
+                      ? ''
+                      : 'filter: invert(100%) grayscale(100%) brightness(200%);'
+                  "
                 />
               </div>
 
               <div
                 class="text-semibold text-accent text-center text-caption text-no-wrap"
+                :class="
+                  computeSlidePreviewBrightness(element) >= 128
+                    ? 'text-accent'
+                    : 'text-white'
+                "
               >
                 {{
                   $t(
@@ -323,7 +333,7 @@ import { usePresentationsStore } from "stores/presentations";
 import draggable from "vuedraggable/src/vuedraggable";
 import { useCanvasStore } from "stores/canvas";
 import { deselectElement } from "stores/canvas/helpers/select";
-import { useQuasar } from "quasar";
+import { colors, useQuasar } from "quasar";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
@@ -624,6 +634,41 @@ watch(
     }
   }
 );
+
+/*
+ * slide preview brightness
+ */
+const computeSlidePreviewBrightness = (slide) => {
+  const width = 160;
+  const height = (160 * 9) / 16;
+
+  // define canvas
+  const slidePreviewCanvas = document.createElement("canvas");
+  const slidePreviewCtx = slidePreviewCanvas.getContext("2d");
+  slidePreviewCanvas.width = width;
+  slidePreviewCanvas.height = height;
+
+  // draw background
+  const image = new Image();
+  image.src = slide.preview;
+
+  slidePreviewCtx.drawImage(image, 0, 0, width, width);
+
+  // compute average brightness
+  let sumBrightness = 0;
+  const imageData = slidePreviewCtx.getImageData(0, 0, width, height).data;
+
+  for (let i = 0; i < imageData.length; i += 4) {
+    const r = imageData[i];
+    const g = imageData[i + 1];
+    const b = imageData[i + 2];
+    const brightness = (r + g + b) / 3;
+    sumBrightness += brightness;
+  }
+
+  slidePreviewCanvas.remove();
+  return sumBrightness / (width * height);
+};
 </script>
 
 <style scoped lang="scss">
