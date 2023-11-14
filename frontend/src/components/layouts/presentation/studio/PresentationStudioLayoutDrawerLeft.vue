@@ -131,7 +131,7 @@
               </div>
 
               <div
-                class="text-semibold text-primary text-center text-caption text-no-wrap"
+                class="text-semibold text-accent text-center text-caption text-no-wrap"
               >
                 {{
                   $t(

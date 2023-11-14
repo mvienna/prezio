@@ -5,17 +5,35 @@
       :key="index"
       :class="index !== 0 ? 'q-mt-lg' : ''"
     >
-      <div class="text-grey">
-        {{
-          $t(
-            `presentationLayout.rightDrawer.tabs.types.options.${
-              Object.keys(types)[index]
-            }`
-          )
-        }}
+      <div
+        class="bg-blue-1 q-py-sm q-px-md row no-wrap items-center"
+        style="border-radius: 8px"
+      >
+        <q-icon
+          :name="
+            index === 0
+              ? 'r_check_circle'
+              : index === 1
+              ? 'r_sms'
+              : 'r_space_dashboard'
+          "
+          size="20px"
+          color="primary"
+          class="q-mr-sm"
+        />
+
+        <span class="text-semibold">
+          {{
+            $t(
+              `presentationLayout.rightDrawer.tabs.types.options.${
+                Object.keys(types)[index]
+              }`
+            )
+          }}
+        </span>
       </div>
 
-      <div class="types_grid q-mt-sm">
+      <div class="types_grid q-mt-sm q-pt-xs">
         <q-item
           v-for="type in typesGroup"
           :key="type.name"
@@ -118,10 +136,6 @@ const types = computed(() => {
         disable: true,
       },
       {
-        name: SLIDE_TYPES.SPINNER_WHEEL,
-        disable: true,
-      },
-      {
         name: SLIDE_TYPES.MATCH_PAIRS,
         disable: true,
       },
@@ -155,10 +169,6 @@ const types = computed(() => {
         name: SLIDE_TYPES.WORD_CLOUD,
       },
       {
-        name: SLIDE_TYPES.SCALES,
-        disable: true,
-      },
-      {
         name: SLIDE_TYPES.QNA,
         disable: true,
       },
@@ -183,18 +193,18 @@ const types = computed(() => {
   }
 }
 
-.type {
+::v-deep(.type) {
   max-width: 117px;
   width: 100%;
   display: inline-block;
   cursor: pointer;
   transition: 0.2s;
   border-radius: 8px;
-  border: 1.5px solid $grey-2;
+  border: 1.5px solid $secondary;
   outline: 3px solid transparent;
 
   &:hover {
-    outline: 3px solid $blue-2;
+    outline: 3px solid $grey-12;
   }
 
   .q-img {
@@ -202,12 +212,16 @@ const types = computed(() => {
     height: 36px;
   }
 
-  &.type--active {
-    color: $black;
+  .q-focus-helper {
+    display: none !important;
+  }
 
-    .q-img {
-      border: 1.5px solid $primary;
-      outline: 3px solid $blue-2;
+  &.q-item--active {
+    border: 1.5px solid $primary;
+    background: $white !important;
+
+    &:hover {
+      outline: 3px solid $blue-2 !important;
     }
   }
 }

@@ -234,7 +234,6 @@ export default {
             pick_answer: "Pick Answer",
             pick_image: "Pick Image",
             type_answer: "Type Answer",
-            spinner_wheel: "Spinner Wheel",
             match_pairs: "Match Pairs",
             correct_order: "Correct Order",
 
@@ -248,7 +247,6 @@ export default {
             poll: "Poll",
             open_ended: "Open Ended",
             word_cloud: "Word Cloud",
-            scales: "Scales",
             qna: "Q&A",
             brain_storm: "Brainstorm",
           },

@@ -234,7 +234,6 @@ export default {
             pick_answer: "Выбор ответа",
             pick_image: "Выбор изображения",
             type_answer: "Ввод ответа",
-            spinner_wheel: "Колесо фортуны",
             match_pairs: "Совпадающие пары",
             correct_order: "Правильный порядок",
 
@@ -248,7 +247,6 @@ export default {
             poll: "Опрос",
             open_ended: "Открытый ответ",
             word_cloud: "Облако слов",
-            scales: "Графики",
             qna: "Вопрос - Ответ",
             brain_storm: "Брейншторм",
           },

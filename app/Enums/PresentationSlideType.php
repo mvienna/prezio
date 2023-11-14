@@ -21,7 +21,6 @@ enum PresentationSlideType: string
     case PICK_ANSWER = 'pick_answer';
     case PICK_IMAGE = 'pick_image';
     case TYPE_ANSWER = 'type_answer';
-    case SPINNER_WHEEL = 'spinner_wheel';
     case MATCH_PAIRS = 'match_pairs';
     case CORRECT_ORDER = 'correct_order';
 
@@ -31,7 +30,6 @@ enum PresentationSlideType: string
     case POLL = 'poll';
     case OPEN_ENDED = 'open_ended';
     case WORD_CLOUD = 'word_cloud';
-    case SCALES = 'scales';
     case QNA = 'qna';
     case BRAIN_STORM = 'brain_storm';
 }
