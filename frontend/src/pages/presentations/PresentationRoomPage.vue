@@ -382,7 +382,10 @@ onMounted(async () => {
       await presentationsStore.sendPresentationRoomUpdateEvent();
     }
 
-    if (presentation.value.settings.show_room_invitation_panel) {
+    if (
+      presentation.value.settings.show_room_invitation_panel &&
+      isHost.value
+    ) {
       showRoomInvitationPanel.value = true;
     }
 
@@ -401,8 +404,12 @@ onMounted(async () => {
       }
 
       if (
-        !presentation.value.settings.quiz_data ||
-        JSON.parse(presentation.value.settings.quiz_data).liveChat
+        (!presentation.value.settings.quiz_data ||
+          JSON.parse(presentation.value.settings.quiz_data).liveChat) &&
+        isAuthenticated.value &&
+        (isHost.value ||
+          (participant.value?.user_data &&
+            JSON.parse(participant.value.user_data)?.avatar))
       ) {
         setTimeout(() => {
           showRoomChat.value = true;
