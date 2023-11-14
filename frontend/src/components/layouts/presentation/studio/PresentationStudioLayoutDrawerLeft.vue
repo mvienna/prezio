@@ -153,7 +153,17 @@
 
             <!-- actions -->
             <div class="absolute-right q-pt-sm q-pr-sm">
-              <q-btn icon="more_vert" round flat size="8px">
+              <q-btn
+                icon="more_vert"
+                round
+                flat
+                size="8px"
+                :color="
+                  computeSlidePreviewBrightness(element) >= 128
+                    ? 'black'
+                    : 'white'
+                "
+              >
                 <q-menu
                   v-model="showSlideContextMenu[index]"
                   anchor="bottom right"
