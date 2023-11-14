@@ -105,7 +105,7 @@ const slideSettingsDefault = {
   description: "",
 
   isLimitedTime: true,
-  timeLimit: 40,
+  timeLimit: SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) ? 25 : 40,
 
   // word cloud
   isMultipleEntries: false,
