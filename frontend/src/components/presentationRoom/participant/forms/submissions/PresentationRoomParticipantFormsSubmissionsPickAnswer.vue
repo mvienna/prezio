@@ -196,74 +196,76 @@
           </div>
         </transition>
 
-        <div
-          v-if="participantAnswers?.length && room.is_answers_revealed"
-          style="position: fixed; bottom: 0; left: 0"
-          class="full-width row no-wrap justify-center q-py-md"
-          :class="isAnsweredCorrectly ? 'bg-positive' : 'bg-negative'"
-        >
-          <q-card
-            flat
-            style="
-              background: rgba(0, 0, 0, 0.5);
-              border-radius: 24px !important;
-            "
+        <!-- bottom -->
+        <transition appear enter-active-class="animated fadeIn">
+          <div
+            v-if="participantAnswers?.length && room.is_answers_revealed"
+            class="full-width row no-wrap justify-center q-py-md fixed-bottom"
+            :class="isAnsweredCorrectly ? 'bg-positive' : 'bg-negative'"
           >
-            <q-card-section
-              class="row no-wrap items-center q-gutter-md q-px-md q-py-sm"
+            <q-card
+              flat
+              style="
+                background: rgba(0, 0, 0, 0.5);
+                border-radius: 24px !important;
+              "
             >
-              <q-icon
-                v-if="isAnsweredCorrectly"
-                name="icon-olive-branches-award"
-                color="white"
-                size="36px"
-              />
-
-              <q-icon
-                v-else
-                name="icon-thumb-down-circular"
-                color="white"
-                size="36px"
-                style="transform: rotate(180deg) scaleX(-1)"
-              />
-
-              <div class="text-h7 text-semibold text-white">
-                {{ isAnsweredCorrectly ? "Правильно!" : "Неправильно" }}
-              </div>
-
-              <div
-                style="
-                  background: rgba(255, 255, 255, 0.2);
-                  border-radius: 24px;
-                "
-                class="q-px-md q-py-xs row items-center text-white"
+              <q-card-section
+                class="row no-wrap items-center q-gutter-md q-px-md q-py-sm"
               >
-                <span class="text-h7 text-semibold">
-                  +
-                  {{
-                    participantAnswers
-                      .map((answer) => answer.score)
-                      .reduce(
-                        (accumulator, currentValue) =>
-                          accumulator + currentValue,
-                        0
-                      )
-                  }}
+                <q-icon
+                  v-if="isAnsweredCorrectly"
+                  name="icon-olive-branches-award"
+                  color="white"
+                  size="36px"
+                />
 
-                  <q-tooltip
-                    anchor="center end"
-                    self="center start"
-                    transition-show="jump-right"
-                    transition-hide="jump-left"
-                    :offset="[40, 0]"
-                  >
-                    {{ participantAnswers[0].time_taken_to_answer }} сек
-                  </q-tooltip>
-                </span>
-              </div>
-            </q-card-section>
-          </q-card>
-        </div>
+                <q-icon
+                  v-else
+                  name="icon-thumb-down-circular"
+                  color="white"
+                  size="36px"
+                  style="transform: rotate(180deg) scaleX(-1)"
+                />
+
+                <div class="text-h7 text-semibold text-white">
+                  {{ isAnsweredCorrectly ? "Правильно!" : "Неправильно" }}
+                </div>
+
+                <div
+                  style="
+                    background: rgba(255, 255, 255, 0.2);
+                    border-radius: 24px;
+                  "
+                  class="q-px-md q-py-xs row items-center text-white"
+                >
+                  <span class="text-h7 text-semibold">
+                    +
+                    {{
+                      participantAnswers
+                        .map((answer) => answer.score)
+                        .reduce(
+                          (accumulator, currentValue) =>
+                            accumulator + currentValue,
+                          0
+                        )
+                    }}
+
+                    <q-tooltip
+                      anchor="center end"
+                      self="center start"
+                      transition-show="jump-right"
+                      transition-hide="jump-left"
+                      :offset="[40, 0]"
+                    >
+                      {{ participantAnswers[0].time_taken_to_answer }} сек
+                    </q-tooltip>
+                  </span>
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
+        </transition>
 
         <!-- answer inputs -->
         <div class="column no-wrap q-gutter-md">
@@ -362,7 +364,11 @@
           v-if="timeLeft === -1 && room?.is_submission_locked"
           class="text-center text-semibold text-grey q-mt-md"
         >
-          {{ $t("presentationRoom.answers.timesUp") }}
+          {{
+            hasAlreadyAnswered
+              ? $t("presentationRoom.answers.hasAlreadyAnswered")
+              : $t("presentationRoom.answers.thanksForParticipation")
+          }}
         </div>
       </div>
     </transition-group>
@@ -370,7 +376,7 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
@@ -429,6 +435,16 @@ const handleSubmittingAnswers = () => {
   room.value.is_submission_locked = true;
 };
 
+const answerOptions = computed(() => {
+  return presentation.value.settings.quiz_data &&
+    JSON.parse(presentation.value.settings.quiz_data).shuffleAnswerOptions
+    ? shuffleArray(slideSettings.value.answerOptions)
+    : slideSettings.value.answerOptions;
+});
+
+/*
+ * participant answers
+ */
 const participantAnswers = computed(() => {
   return slide.value.answers.filter(
     (answer) =>
@@ -460,13 +476,9 @@ const isAllowedToSelectMultipleAnswerOptions = computed(() => {
   );
 });
 
-const answerOptions = computed(() => {
-  return presentation.value.settings.quiz_data &&
-    JSON.parse(presentation.value.settings.quiz_data).shuffleAnswerOptions
-    ? shuffleArray(slideSettings.value.answerOptions)
-    : slideSettings.value.answerOptions;
-});
-
+/*
+ * submitted answers data
+ */
 const timeTakenToAnswerPercentage = computed(() => {
   return (
     (participantAnswers.value?.[0]?.time_taken_to_answer * 100) /
@@ -483,6 +495,16 @@ const isAnsweredCorrectly = computed(() => {
         ?.includes(JSON.parse(answer.answer_data).text)
     ).length === 0
   );
+});
+
+/*
+ * has already participated
+ */
+const hasAlreadyAnswered = ref(false);
+onBeforeMount(() => {
+  if (participantAnswers.value.length) {
+    hasAlreadyAnswered.value = true;
+  }
 });
 </script>
 

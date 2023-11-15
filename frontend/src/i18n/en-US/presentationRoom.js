@@ -184,7 +184,7 @@ export default {
       answersSubmittedWait:
         "You've already answered this question. Please wait for the presenter to show the next slide.",
       thanksForParticipation: "Thank you for your participation",
-      timesUp: "Time's up!",
+      hasAlreadyAnswered: "You've already answered this question",
     },
 
     leaderboard: {

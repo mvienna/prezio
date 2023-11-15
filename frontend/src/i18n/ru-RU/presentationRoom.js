@@ -190,7 +190,7 @@ export default {
       answersSubmittedWait:
         "Вы уже ответили на этот вопрос. Пожалуйста, подождите, пока ведущий покажет следующий слайд.",
       thanksForParticipation: "Благодарим за Ваше участие",
-      timesUp: "Время вышло",
+      hasAlreadyAnswered: "Вы уже ответили на данный вопрос",
     },
 
     leaderboard: {
