@@ -143,11 +143,21 @@ const filteredBackgrounds = computed(() => {
 /*
  * preview background on hover
  */
+const isHovered = ref(false);
+
 const handleBackgroundMouseOver = (background) => {
-  emit("previewBackground", background);
+  isHovered.value = true;
+
+  setTimeout(() => {
+    if (isHovered.value) {
+      emit("previewBackground", background);
+    }
+  }, 500);
 };
 
 const handleBackgroundMouseLeave = () => {
+  isHovered.value = false;
+
   // remove preview background
   elements.value = elements.value.filter(
     (element) => element.mode !== MODE_OPTIONS.value.backgroundPreview
@@ -162,7 +172,7 @@ const handleBackgroundMouseLeave = () => {
   }
 
   // redraw canvas
-  canvasStore.redrawCanvas();
+  canvasStore.redrawCanvas(false);
 };
 </script>
 

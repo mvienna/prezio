@@ -84,7 +84,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         }
 
         ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);
-        canvasStore.redrawCanvas();
+        canvasStore.redrawCanvas(mode !== MODE_OPTIONS.value.backgroundPreview);
       };
     },
   },
