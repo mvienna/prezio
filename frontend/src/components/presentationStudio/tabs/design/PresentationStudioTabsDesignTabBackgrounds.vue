@@ -58,8 +58,6 @@ import { backgrounds } from "src/constants/assets/backgrounds";
 import { useI18n } from "vue-i18n";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
-import { useCanvasMediaStore } from "stores/canvas/media";
-import { useCanvasShapeStore } from "stores/canvas/shape";
 
 /*
  * variables

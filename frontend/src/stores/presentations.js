@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import { startCountdown, timeLeft } from "src/helpers/countdown";
+import { timeLeft } from "src/helpers/countdown";
 import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
 
 export const usePresentationsStore = defineStore("presentations", {
