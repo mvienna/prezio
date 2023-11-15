@@ -32,7 +32,7 @@ class PresentationSlideController extends Controller
             'last_slide_id' => $slide->id
         ]);
 
-        return $this->jsonResponse($slide->toArray());
+        return $this->show($presentation, $slide);
     }
 
     public function update(Presentation $presentation, PresentationSlide $slide, Request $request): JsonResponse
