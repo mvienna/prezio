@@ -129,7 +129,8 @@
                   :src="`/assets/icons/temp/slideTypes/${element.type}.svg`"
                   style="width: 36px; height: 36px; background: transparent"
                   :style="
-                    element.previewAverageBrightness >= 128
+                    element.previewAverageBrightness >= 128 ||
+                    !element.previewAverageBrightness
                       ? ''
                       : 'filter: invert(100%) grayscale(100%) brightness(200%);'
                   "
@@ -139,7 +140,8 @@
               <div
                 class="text-semibold text-accent text-center text-caption text-no-wrap"
                 :class="
-                  element.previewAverageBrightness >= 128
+                  element.previewAverageBrightness >= 128 ||
+                  !element.previewAverageBrightness
                     ? 'text-accent'
                     : 'text-white'
                 "
@@ -160,7 +162,10 @@
                 flat
                 size="8px"
                 :color="
-                  element.previewAverageBrightness >= 128 ? 'black' : 'white'
+                  element.previewAverageBrightness >= 128 ||
+                  !element.previewAverageBrightness
+                    ? 'black'
+                    : 'white'
                 "
               >
                 <q-menu
@@ -346,13 +351,17 @@ import { useCanvasStore } from "stores/canvas";
 import { deselectElement } from "stores/canvas/helpers/select";
 import { useQuasar } from "quasar";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
-import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
+import {
+  ALIGNMENT,
+  SHAPES_OPTIONS,
+} from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
 import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
 import { useI18n } from "vue-i18n";
+import { generateUniqueId } from "src/helpers/generationUtils";
 
 /*
  * variables
@@ -508,23 +517,12 @@ const handleSlideChange = async (newSlide) => {
   canvasStore.redrawCanvas(false, undefined, false);
 };
 
-const handleAddingNewSlide = async (type) => {
-  /*
-   * save previous slide
-   */
-  if (slide.value) {
-    canvasStore.saveSlidePreview();
-    deselectElement();
-
-    slide.value.canvas_data = JSON.stringify(elements.value);
-    presentationsStore.updateLocalSlide();
-    presentationsStore.saveSlide(undefined, elements.value);
-  }
+const prepareElementsForNewSlide = (type) => {
+  let preparedElements = [];
 
   /*
-   * prepare default elements
+   * default elements
    */
-  let preparedElements;
   const layoutDefaultElementProps = {
     mode: MODE_OPTIONS.value.text,
     isVisible: true,
@@ -560,6 +558,10 @@ const handleAddingNewSlide = async (type) => {
     height: canvasStore.computeAdjustedSize(30),
   };
 
+  /*
+   * element:
+   * content
+   */
   if (type === SLIDE_TYPES.CONTENT) {
     const titleElement = {
       ...layoutDefaultElementProps,
@@ -589,7 +591,13 @@ const handleAddingNewSlide = async (type) => {
     };
 
     preparedElements = [titleElement, bodyElement];
-  } else if ([SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(type)) {
+  }
+
+  /*
+   * quiz
+   * word cloud
+   */
+  if ([...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(type)) {
     const titleElement = {
       ...layoutDefaultElementProps,
 
@@ -606,11 +614,51 @@ const handleAddingNewSlide = async (type) => {
   }
 
   /*
+   * add base fill
+   */
+  const baseFill = {
+    id: generateUniqueId(undefined, []),
+    mode: MODE_OPTIONS.value.baseFill,
+    isVisible: true,
+    isLocked: true,
+    type: SHAPES_OPTIONS.square,
+    x: 0,
+    y: 0,
+    width: 2560,
+    height: 1440,
+    rotationAngle: 0,
+    strokeColor: "#FFFFFF",
+    fillColor: "#FFFFFF",
+    lineWidth: "4px",
+  };
+
+  preparedElements.push(baseFill);
+
+  return preparedElements;
+};
+
+const handleAddingNewSlide = async (type) => {
+  /*
+   * save previous slide
+   */
+  if (slide.value) {
+    canvasStore.saveSlidePreview();
+    deselectElement();
+
+    slide.value.canvas_data = JSON.stringify(elements.value);
+    presentationsStore.updateLocalSlide();
+    presentationsStore.saveSlide(undefined, elements.value);
+  }
+
+  /*
    * hide type selection menu(s)
    */
   showNewSlideTypeSelectionMenu.value = [false, false, false];
 
-  await presentationsStore.addNewSlide(preparedElements, type);
+  /*
+   * add new slide
+   */
+  await presentationsStore.addNewSlide(prepareElementsForNewSlide(type), type);
   await canvasStore.setElementsFromSlide();
 
   canvasStore.renderSlidePreview();
@@ -679,7 +727,9 @@ watch(
 /*
  * slide preview avg. brightness generation
  */
-const computeSlidePreviewAverageBrightness = (slide) => {
+const computeSlidePreviewAverageBrightness = async (element) => {
+  if (!element.preview) return 255;
+
   // define canvas
   const roomBackgroundCanvas = document.createElement("canvas");
   const roomBackgroundCtx = roomBackgroundCanvas.getContext("2d");
@@ -687,48 +737,58 @@ const computeSlidePreviewAverageBrightness = (slide) => {
   roomBackgroundCanvas.height = 1440;
 
   const image = new Image();
-  image.src = slide.preview;
+  image.src = element.preview;
 
-  // draw background
-  roomBackgroundCtx.drawImage(
-    image,
-    0,
-    0,
-    roomBackgroundCanvas.width,
-    roomBackgroundCanvas.height
-  );
+  return await new Promise((resolve, reject) => {
+    image.onload = () => {
+      // draw background
+      roomBackgroundCtx.drawImage(
+        image,
+        0,
+        0,
+        roomBackgroundCanvas.width,
+        roomBackgroundCanvas.height
+      );
 
-  // compute average brightness
-  let sumBrightness = 0;
-  const imageData = roomBackgroundCtx.getImageData(
-    0,
-    0,
-    roomBackgroundCanvas.width,
-    roomBackgroundCanvas.height
-  ).data;
+      // compute average brightness
+      let sumBrightness = 0;
+      const imageData = roomBackgroundCtx.getImageData(
+        0,
+        0,
+        roomBackgroundCanvas.width,
+        roomBackgroundCanvas.height
+      ).data;
 
-  for (let i = 0; i < imageData.length; i += 4) {
-    const r = imageData[i];
-    const g = imageData[i + 1];
-    const b = imageData[i + 2];
-    const brightness = (r + g + b) / 3;
-    sumBrightness += brightness;
-  }
+      for (let i = 0; i < imageData.length; i += 4) {
+        const r = imageData[i];
+        const g = imageData[i + 1];
+        const b = imageData[i + 2];
+        const brightness = (r + g + b) / 3;
+        sumBrightness += brightness;
+      }
 
-  roomBackgroundCanvas.remove();
-  return (
-    sumBrightness / (roomBackgroundCanvas.width * roomBackgroundCanvas.height)
-  );
+      roomBackgroundCanvas.remove();
+      resolve(
+        sumBrightness /
+          (roomBackgroundCanvas.width * roomBackgroundCanvas.height)
+      );
+    };
+
+    image.onerror = (error) => {
+      console.log(error);
+      resolve(255);
+    };
+  });
 };
 
 const setSlidesPreviewAverageBrightness = () => {
-  presentation.value.slides.forEach((item, index) => {
+  presentation.value.slides.forEach(async (item, index) => {
     if (
       item.id === slide.value.id ||
       !presentation.value.slides[index].previewAverageBrightness
     ) {
       presentation.value.slides[index].previewAverageBrightness =
-        computeSlidePreviewAverageBrightness(item);
+        await computeSlidePreviewAverageBrightness(item);
     }
   });
 };
