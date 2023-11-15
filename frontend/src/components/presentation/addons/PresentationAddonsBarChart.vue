@@ -50,7 +50,12 @@ const data = computed(() => {
     }
 
     return {
-      group: (option.isCorrect ? "✅" : "❌") + " " + option.value,
+      group:
+        (!room.value || room.value?.is_answers_revealed
+          ? option.isCorrect
+            ? "✅" + " "
+            : "❌" + " "
+          : "") + option.value,
       value:
         !room.value || room.value?.is_answers_revealed
           ? slide.value.answers.filter(
