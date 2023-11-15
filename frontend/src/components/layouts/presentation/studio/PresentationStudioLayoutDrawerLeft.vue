@@ -129,7 +129,7 @@
                   :src="`/assets/icons/temp/slideTypes/${element.type}.svg`"
                   style="width: 36px; height: 36px; background: transparent"
                   :style="
-                    computeSlidePreviewBrightness(element) >= 128
+                    element.previewAverageBrightness >= 128
                       ? ''
                       : 'filter: invert(100%) grayscale(100%) brightness(200%);'
                   "
@@ -139,7 +139,7 @@
               <div
                 class="text-semibold text-accent text-center text-caption text-no-wrap"
                 :class="
-                  computeSlidePreviewBrightness(element) >= 128
+                  element.previewAverageBrightness >= 128
                     ? 'text-accent'
                     : 'text-white'
                 "
@@ -160,9 +160,7 @@
                 flat
                 size="8px"
                 :color="
-                  computeSlidePreviewBrightness(element) >= 128
-                    ? 'black'
-                    : 'white'
+                  element.previewAverageBrightness >= 128 ? 'black' : 'white'
                 "
               >
                 <q-menu
@@ -679,27 +677,35 @@ watch(
 );
 
 /*
- * slide preview brightness
+ * slide preview avg. brightness generation
  */
-const computeSlidePreviewBrightness = (slide) => {
-  const width = 160;
-  const height = (160 * 9) / 16;
-
+const computeSlidePreviewAverageBrightness = (slide) => {
   // define canvas
-  const slidePreviewCanvas = document.createElement("canvas");
-  const slidePreviewCtx = slidePreviewCanvas.getContext("2d");
-  slidePreviewCanvas.width = width;
-  slidePreviewCanvas.height = height;
+  const roomBackgroundCanvas = document.createElement("canvas");
+  const roomBackgroundCtx = roomBackgroundCanvas.getContext("2d");
+  roomBackgroundCanvas.width = 2560;
+  roomBackgroundCanvas.height = 1440;
 
-  // draw background
   const image = new Image();
   image.src = slide.preview;
 
-  slidePreviewCtx.drawImage(image, 0, 0, width, width);
+  // draw background
+  roomBackgroundCtx.drawImage(
+    image,
+    0,
+    0,
+    roomBackgroundCanvas.width,
+    roomBackgroundCanvas.height
+  );
 
   // compute average brightness
   let sumBrightness = 0;
-  const imageData = slidePreviewCtx.getImageData(0, 0, width, height).data;
+  const imageData = roomBackgroundCtx.getImageData(
+    0,
+    0,
+    roomBackgroundCanvas.width,
+    roomBackgroundCanvas.height
+  ).data;
 
   for (let i = 0; i < imageData.length; i += 4) {
     const r = imageData[i];
@@ -709,66 +715,31 @@ const computeSlidePreviewBrightness = (slide) => {
     sumBrightness += brightness;
   }
 
-  slidePreviewCanvas.remove();
-  return sumBrightness / (width * height);
+  roomBackgroundCanvas.remove();
+  return (
+    sumBrightness / (roomBackgroundCanvas.width * roomBackgroundCanvas.height)
+  );
 };
 
-// const computeSlidePreviewBrightness = async (slide) => {
-//   const width = 160;
-//   const height = (160 * 9) / 16;
-//
-//   // define canvas
-//   const slidePreviewCanvas = document.createElement("canvas");
-//   const slidePreviewCtx = slidePreviewCanvas.getContext("2d");
-//   slidePreviewCanvas.width = width;
-//   slidePreviewCanvas.height = height;
-//
-//   // draw background
-//   return await new Promise(async (resolve, reject) => {
-//     const image = new Image();
-//     image.src = slide.preview;
-//     image.onload = () => {
-//       slidePreviewCtx.drawImage(image, 0, 0, width, width);
-//
-//       // compute average brightness
-//       let sumBrightness = 0;
-//       const imageData = slidePreviewCtx.getImageData(0, 0, width, height).data;
-//
-//       for (let i = 0; i < imageData.length; i += 4) {
-//         const r = imageData[i];
-//         const g = imageData[i + 1];
-//         const b = imageData[i + 2];
-//         const brightness = (r + g + b) / 3;
-//         sumBrightness += brightness;
-//       }
-//
-//       slidePreviewCanvas.remove();
-//
-//       resolve(sumBrightness / (width * height));
-//     };
-//
-//     image.onerror = (error) => {
-//       console.log(error);
-//       resolve(255);
-//     };
-//   });
-// };
-//
-// const slidesAverageBrightness = ref([]);
-//
-// watch(
-//     () => presentation.value?.slides,
-//     () => {
-//       if (presentation.value.slides) {
-//         presentation.value.slides.map(async (item) => {
-//           const b = await computeSlidePreviewBrightness(item);
-//
-//           slidesAverageBrightness.value.push(b);
-//         });
-//       }
-//     },
-//     { deep: true }
-// );
+const setSlidesPreviewAverageBrightness = () => {
+  presentation.value.slides.forEach((item, index) => {
+    if (
+      item.id === slide.value.id ||
+      !presentation.value.slides[index].previewAverageBrightness
+    ) {
+      presentation.value.slides[index].previewAverageBrightness =
+        computeSlidePreviewAverageBrightness(item);
+    }
+  });
+};
+
+watch(
+  () => slide.value,
+  () => {
+    setSlidesPreviewAverageBrightness();
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped lang="scss">
