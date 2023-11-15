@@ -454,9 +454,6 @@ onMounted(async () => {
       !participant.value &&
       !presentation.value?.settings?.require_participants_info
     ) {
-      /*
-       * add is_guest to participants table
-       */
       isGuest.value = true;
       const adjective =
         randomUsernames.adjectives[locale.value === "ru-RU" ? "ru" : "en"][
@@ -474,9 +471,11 @@ onMounted(async () => {
                 .length
           )
         ];
-      await presentationsStore.loginRoom({
-        name: `${adjective} ${noun}`,
-      });
+      await presentationsStore.loginRoom([
+        {
+          name: `${adjective} ${noun}`,
+        },
+      ]);
     }
   }
 
@@ -488,11 +487,10 @@ onMounted(async () => {
   /*
    * countdown
    */
-  if (room.value.countdown > 0) {
-    stopCountdown();
-    startCountdown(room.value.countdown);
-  } else {
+  if (isHost.value) {
     handleCountdownOnSlideChange(true);
+  } else if (room.value.countdown > 0) {
+    startCountdown(room.value.countdown);
   }
 
   /*
@@ -575,6 +573,7 @@ const connectToRoomChannels = () => {
    * listen for updates
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
+    // on room token updated
     if (event.room.token !== room.value.token) {
       return await router.push(
         clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
@@ -582,14 +581,20 @@ const connectToRoomChannels = () => {
       );
     }
 
+    // presentation is private (lock for participants)
     if (!isHost.value && presentation.value?.is_private) return;
 
+    // update room data
     room.value = event.room;
-    stopCountdown();
+
+    // handle room countdown
     if (room.value.countdown > 0) {
       startCountdown(room.value.countdown);
+    } else {
+      stopCountdown();
     }
 
+    // fetch & update fresh slide data
     const newSlide = await presentationsStore.fetchSlideData(
       room.value.slide_id
     );
@@ -600,6 +605,8 @@ const connectToRoomChannels = () => {
     presentationsStore.updateLocalSlide();
 
     await canvasStore.setElementsFromSlide();
+
+    // filter slide elements (leave only background & base fill) for awaiting participants view
     if (
       SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
       !room.value.is_quiz_started
@@ -610,6 +617,8 @@ const connectToRoomChannels = () => {
         )
       );
     }
+
+    // redraw canvas
     canvasStore.redrawCanvas(false, undefined, false);
   });
 
@@ -624,6 +633,7 @@ const connectToRoomChannels = () => {
    * listen for new chat messages
    */
   channel.listen("PresentationRoomNewChatMessageEvent", (event) => {
+    // add new message
     if (room.value.messages) {
       room.value.messages = [...room.value.messages, event.message];
     } else {
@@ -635,22 +645,23 @@ const connectToRoomChannels = () => {
    * listen for new submitted answers
    */
   channel.listen("PresentationRoomAnswersFormSubmittedEvent", (event) => {
+    // add new answers
     slide.value.answers = [...slide.value.answers, ...event.answers];
     presentationsStore.updateLocalSlide();
 
-    if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) && isHost.value) {
-      const participantIds = participants.value.map((item) => item.id);
+    // finish the quiz if all participants have answered
+    if (isHost.value && SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
+      const participantsIds = participants.value.map((item) => item.id);
+      const participantsAnswers = slide.value.answers.filter(
+        (answer) =>
+          slide.value.type === answer.slide_type &&
+          participantsIds.includes(answer.participant_id)
+      );
 
-      if (
-        slide.value.answers.filter(
-          (answer) =>
-            slide.value.type === answer.slide_type &&
-            participantIds.includes(answer.participant_id)
-        ).length === participantIds.length
-      ) {
-        stopCountdown();
+      if (participantsAnswers.length === participantsIds.length) {
         room.value.is_submission_locked = true;
         room.value.countdown = 0;
+        stopCountdown();
 
         api
           .post(
@@ -762,28 +773,30 @@ const handleKeyDownEvent = (event) => {
 };
 
 const handleSlideChange = async (direction) => {
-  stopQuizInProgressWarningAuthClose();
-  const quizInProgressWarning = warnAboutQuizInProgress(direction);
-  if (!quizInProgressWarning) return;
-
+  // find new slide
   const slideIndex = presentation.value?.slides?.findIndex(
     (item) => item.id === slide.value?.id
   );
-
   const newSlide =
     presentation.value.slides?.[
       slideIndex + (direction === "forward" ? 1 : -1)
     ];
   if (!newSlide) return;
 
+  // check if quiz is in progress & warn about it
+  stopQuizInProgressWarningAuthClose();
+  const quizInProgressWarning = warnAboutQuizInProgress(direction);
+  if (!quizInProgressWarning) return;
+
+  // load new slide
   await presentationsStore.setSlide(newSlide);
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false, undefined, false);
 
-  handleCountdownOnSlideChange();
+  handleCountdownOnSlideChange(direction);
 };
 
-const handleCountdownOnSlideChange = (isOnLoad = false) => {
+const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
   if (
     slide.value?.type === SLIDE_TYPES.WORD_CLOUD &&
     slideSettings.value &&
@@ -808,17 +821,19 @@ const handleCountdownOnSlideChange = (isOnLoad = false) => {
         is_submission_locked: room.value.is_submission_locked,
       }
     );
-  } else if (
-    SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
-    room.value.is_quiz_started &&
-    room.value.is_submission_locked &&
-    !isOnLoad
-  ) {
-    presentationsStore.handleQuizStart();
-  } else {
-    if (!isOnLoad) {
+  }
+
+  /*
+   * slide type of quiz
+   */
+  if (SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type)) {
+    if (isOnLoad || direction === "backward") {
       room.value.is_submission_locked = true;
+      room.value.is_quiz_started = false;
+      room.value.is_answers_revealed = false;
+
       stopCountdown();
+
       presentationsStore.sendPresentationRoomUpdateEvent(
         undefined,
         undefined,
@@ -827,8 +842,14 @@ const handleCountdownOnSlideChange = (isOnLoad = false) => {
         {
           countdown: 0,
           is_submission_locked: room.value.is_submission_locked,
+          is_quiz_started: room.value.is_quiz_started,
+          is_answers_revealed: room.value.is_answers_revealed,
         }
       );
+    } else {
+      if (room.value.is_quiz_started) {
+        presentationsStore.handleQuizStart();
+      }
     }
   }
 };

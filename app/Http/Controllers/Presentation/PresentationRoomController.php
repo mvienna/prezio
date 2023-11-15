@@ -136,6 +136,10 @@ class PresentationRoomController extends Controller
                 $props['is_submission_locked'] = $request->data['is_submission_locked'];
             }
 
+            if (isset($request->data['is_answers_revealed'])) {
+                $props['is_answers_revealed'] = $request->data['is_answers_revealed'];
+            }
+
             if (isset($request->data['countdown'])) {
                 $props['countdown'] = $request->data['countdown'];
             }

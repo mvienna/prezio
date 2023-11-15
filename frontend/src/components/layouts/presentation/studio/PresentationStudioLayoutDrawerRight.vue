@@ -39,7 +39,7 @@
 
       <!-- settings -->
       <q-tab-panel name="settings">
-        <PresentationStudioTabsContentTab />
+        <PresentationStudioTabsSettingsTab />
       </q-tab-panel>
 
       <!-- layers -->
@@ -83,7 +83,7 @@ import {
 } from "src/constants/presentationStudio";
 import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
-import PresentationStudioTabsContentTab from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTab.vue";
+import PresentationStudioTabsSettingsTab from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTab.vue";
 
 /*
  * variables

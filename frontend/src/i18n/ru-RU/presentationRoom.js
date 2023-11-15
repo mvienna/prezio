@@ -160,6 +160,9 @@ export default {
         stay: "Остаться",
         sec: "сек",
       },
+
+      timesup: "Время вышло",
+      allParticipantsAnswered: "Все ответили",
     },
 
     isPrivate: {

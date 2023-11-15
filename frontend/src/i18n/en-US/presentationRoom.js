@@ -155,6 +155,9 @@ export default {
         stay: "Stay",
         sec: "sec",
       },
+
+      timesup: "Time's up!",
+      allParticipantsAnswered: "Everyone answered",
     },
 
     isPrivate: {

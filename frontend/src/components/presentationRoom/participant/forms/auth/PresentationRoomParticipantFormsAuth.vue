@@ -19,10 +19,18 @@
 
         <!-- google -->
         <q-btn
-          flat
+          :flat="averageBackgroundBrightness < backgroundBrightnessThreshold"
+          :outline="
+            averageBackgroundBrightness >= backgroundBrightnessThreshold
+          "
           color="primary"
           no-caps
-          class="full-width q-py-md text-bold q-mt-lg bg-white"
+          class="full-width q-py-md text-bold q-mt-lg"
+          :class="
+            averageBackgroundBrightness < backgroundBrightnessThreshold
+              ? 'bg-white'
+              : ''
+          "
         >
           <template #default>
             <q-img
@@ -37,7 +45,14 @@
         </q-btn>
 
         <!-- or -->
-        <div class="q-py-lg text-center text-grey-2">
+        <div
+          class="q-py-lg text-center text-grey-2"
+          :class="
+            averageBackgroundBrightness >= backgroundBrightnessThreshold
+              ? 'text-grey-5'
+              : 'text-grey-2'
+          "
+        >
           {{ $t("auth.login.or") }}
         </div>
 

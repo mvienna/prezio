@@ -24,6 +24,7 @@ import { useCanvasStore } from "stores/canvas";
  */
 const presentationStore = usePresentationsStore();
 const {
+  room,
   slide,
   slideSettings,
   showRoomInvitationPanel,
@@ -50,9 +51,12 @@ const data = computed(() => {
 
     return {
       group: (option.isCorrect ? "✅" : "❌") + " " + option.value,
-      value: slide.value.answers.filter(
-        (answer) => JSON.parse(answer.answer_data)?.text === option.value
-      ).length,
+      value:
+        !room.value || room.value?.is_answers_revealed
+          ? slide.value.answers.filter(
+              (answer) => JSON.parse(answer.answer_data)?.text === option.value
+            ).length
+          : 0,
       participants: slide.value.answers
         .filter(
           (answer) =>

@@ -17,12 +17,13 @@
       class="q-mb-md"
       @update:model-value="presentationsStore.updatePresentation()"
     />
+
+    <q-separator class="q-mt-lg q-mb-md" />
   </div>
 </template>
 
 <script setup>
 import { LANGUAGES } from "src/constants/languages";
-import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 

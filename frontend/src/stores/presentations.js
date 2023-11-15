@@ -546,10 +546,20 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    handleQuizStart() {
+    async handleQuizStart() {
       this.room.is_quiz_started = true;
 
+      // set "is answers revealed" prop to true if setting is turned on (default setting showAnswersManually: false)
+      this.room.is_answers_revealed =
+        !this.presentation?.settings?.quiz_data ||
+        (this.presentation?.settings?.quiz_data &&
+          JSON.parse(this.presentation.settings.quiz_data)
+            ?.showAnswersManually === false);
+
+      // initial countdown (question №n out of №n)
       let timeout = 5000;
+
+      // 5s timeout (default setting countdown: true)
       if (
         (this.presentation.settings.quiz_data &&
           JSON.parse(this.presentation.settings.quiz_data).countdown) ||
@@ -558,23 +568,27 @@ export const usePresentationsStore = defineStore("presentations", {
         timeout += 5000;
       }
 
-      startCountdown(timeout / 1000);
+      // start before-quiz timeout
+      // startCountdown(timeout / 1000);
       this.room.is_submission_locked = true;
-      this.sendPresentationRoomUpdateEvent(
+      await this.sendPresentationRoomUpdateEvent(
         undefined,
         undefined,
         undefined,
         undefined,
         {
+          is_quiz_started: this.room.is_quiz_started,
+          is_answers_revealed: this.room.is_answers_revealed,
+
           is_submission_locked: this.room.is_submission_locked,
           countdown: timeout / 1000,
-          is_quiz_started: this.room.is_quiz_started,
         }
       );
 
+      // start the quiz
       setTimeout(() => {
         this.room.is_submission_locked = false;
-        startCountdown(this.slideSettings.timeLimit);
+        // startCountdown(this.slideSettings.timeLimit);
 
         this.sendPresentationRoomUpdateEvent(
           undefined,
@@ -584,7 +598,6 @@ export const usePresentationsStore = defineStore("presentations", {
           {
             is_submission_locked: this.room.is_submission_locked,
             countdown: this.slideSettings.timeLimit,
-            is_quiz_started: this.room.is_quiz_started,
           }
         );
       }, timeout);

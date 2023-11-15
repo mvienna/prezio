@@ -54,19 +54,25 @@
   <div id="results_hidden_card"></div>
 
   <!-- quiz countdown -->
-  <div
-    v-if="
-      timeLeft !== -1 &&
-      !room.is_submission_locked &&
-      SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
-      room?.is_quiz_started
-    "
-    class="room_actions room_actions--quiz_countdown"
+  <transition
+    appear
+    enter-active-class="animated zoomIn"
+    leave-active-class="animated zoomOut"
   >
-    <div class="room_actions__card">
-      <PresentationRoomHostActionsCountdown />
+    <div
+      v-if="
+        timeLeft > 3 &&
+        !room.is_submission_locked &&
+        SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
+        room?.is_quiz_started
+      "
+      class="room_actions room_actions--quiz_countdown"
+    >
+      <div class="room_actions__card">
+        <PresentationRoomHostActionsCountdown />
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script setup>

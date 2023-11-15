@@ -1,179 +1,192 @@
 <template>
-  <!-- toggle -->
-  <q-checkbox
-    v-model="form.requireParticipantsInfo"
-    :label="$t(`presentationStudio.settings.collectParticipantsInfo.checkbox`)"
-    class="text-semibold q-gutter-xs q-mb-md"
-    :class="form.requireParticipantsInfo ? 'text-primary' : ''"
-    @update:model-value="handleSave()"
-  >
-  </q-checkbox>
+  <div>
+    <!-- toggle -->
+    <q-checkbox
+      v-model="form.requireParticipantsInfo"
+      :label="
+        $t(`presentationStudio.settings.collectParticipantsInfo.checkbox`)
+      "
+      class="text-semibold q-gutter-xs q-mb-md"
+      :class="form.requireParticipantsInfo ? 'text-primary' : ''"
+      @update:model-value="handleSave()"
+    >
+    </q-checkbox>
 
-  <q-slide-transition>
-    <div v-if="form.requireParticipantsInfo">
-      <!-- heading -->
-      <q-input
-        v-model="form.title"
-        outlined
-        :label="
-          $t(
-            `presentationStudio.settings.collectParticipantsInfo.fields.heading.title`
-          )
-        "
-      />
-
-      <!-- form fields -->
-      <div class="q-mt-md q-mb-sm text-grey">
-        {{
-          $t(`presentationStudio.settings.collectParticipantsInfo.fields.title`)
-        }}
-      </div>
-
-      <draggable
-        v-if="form.fields.length"
-        v-model="form.fields"
-        :component-data="{
-          tag: 'ul',
-          type: 'transition-group',
-          class: 'column no-wrap q-gutter-md',
-        }"
-        v-bind="fieldsDraggingOptions"
-        item-key="id"
-        handle=".field_handle"
-        @start="handleStartDragging"
-        @end="handleFieldsReorder"
-        @reordered="handleFieldsReorder"
-      >
-        <template #item="{ element }">
-          <q-card flat class="row no-wrap items-center">
-            <q-icon
-              name="r_drag_indicator"
-              color="grey"
-              size="sm"
-              class="field_handle q-mr-sm"
-            />
-
-            <q-input
-              v-model="element.label"
-              type="text"
-              :label="
-                $t(
-                  'presentationStudio.settings.collectParticipantsInfo.fields.default.label'
-                )
-              "
-              outlined
-              class="full-width"
-            >
-              <template #prepend>
-                <q-select
-                  v-model="element.type"
-                  dense
-                  hide-selected
-                  borderless
-                  hide-dropdown-icon
-                  map-options
-                  emit-value
-                  option-value="value"
-                  class="q-borderless q-ml-xs"
-                  :options="Object.values(fieldTypes)"
-                >
-                  <template #default>
-                    <div class="column justify-center">
-                      <q-icon :name="fieldTypes[element.type].icon" size="sm" />
-                    </div>
-                  </template>
-
-                  <template v-slot:option="scope">
-                    <q-item v-bind="scope.itemProps">
-                      <q-item-section>
-                        <q-icon :name="scope.opt.icon" size="xs" />
-                      </q-item-section>
-                      <q-item-section
-                        class="text-no-wrap q-mr-sm"
-                        style="margin-left: 0"
-                      >
-                        <q-item-label>{{ scope.opt.label }}</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                  </template>
-                </q-select>
-
-                <q-input
-                  v-model="element.name"
-                  type="text"
-                  :label="
-                    $t(
-                      'presentationStudio.settings.collectParticipantsInfo.fields.default.name'
-                    )
-                  "
-                  borderless
-                  class="q-borderless"
-                  style="width: 80px"
-                />
-              </template>
-
-              <template #append>
-                <q-checkbox
-                  v-model="element.isMandatory"
-                  checked-icon="r_emergency"
-                  unchecked-icon="r_check_box_outline_blank"
-                  indeterminate-icon="r_help"
-                >
-                  <q-tooltip>
-                    <div
-                      class="text-center"
-                      v-html="
-                        $t(
-                          `presentationStudio.settings.collectParticipantsInfo.fields.mandatory.${
-                            element.isMandatory ? 'on' : 'off'
-                          }`
-                        )
-                      "
-                    ></div>
-                  </q-tooltip>
-                </q-checkbox>
-
-                <q-btn
-                  v-if="form.fields.length > 1"
-                  flat
-                  round
-                  icon="r_delete"
-                  color="red"
-                  size="sm"
-                  @click="deleteField(element)"
-                />
-              </template>
-            </q-input>
-          </q-card>
-        </template>
-      </draggable>
-
-      <div class="row no-wrap q-gutter-md q-pl-lg q-ml-sm q-pt-md">
-        <q-btn
+    <q-slide-transition>
+      <div v-if="form.requireParticipantsInfo">
+        <!-- heading -->
+        <q-input
+          v-model="form.title"
+          outlined
           :label="
-            $t(`presentationStudio.settings.collectParticipantsInfo.fields.add`)
+            $t(
+              `presentationStudio.settings.collectParticipantsInfo.fields.heading.title`
+            )
           "
-          outline
-          no-caps
-          color="primary"
-          class="full-width"
-          @click="addField()"
         />
 
-        <q-btn
-          v-if="isUnsavedChanges"
-          unelevated
-          color="primary"
-          icon="r_done"
-          round
-          :disable="!isFieldsValid"
-          @click="handleSave()"
-        />
+        <!-- form fields -->
+        <div class="q-mt-md q-mb-sm text-grey">
+          {{
+            $t(
+              `presentationStudio.settings.collectParticipantsInfo.fields.title`
+            )
+          }}
+        </div>
 
-        <q-btn v-else flat color="grey" icon="r_save" round disable />
+        <draggable
+          v-if="form.fields.length"
+          v-model="form.fields"
+          :component-data="{
+            tag: 'ul',
+            type: 'transition-group',
+            class: 'column no-wrap q-gutter-md',
+          }"
+          v-bind="fieldsDraggingOptions"
+          item-key="id"
+          handle=".field_handle"
+          @start="handleStartDragging"
+          @end="handleFieldsReorder"
+          @reordered="handleFieldsReorder"
+        >
+          <template #item="{ element }">
+            <q-card flat class="row no-wrap items-center">
+              <q-icon
+                name="r_drag_indicator"
+                color="grey"
+                size="sm"
+                class="field_handle q-mr-sm"
+              />
+
+              <q-input
+                v-model="element.label"
+                type="text"
+                :label="
+                  $t(
+                    'presentationStudio.settings.collectParticipantsInfo.fields.default.label'
+                  )
+                "
+                outlined
+                class="full-width"
+              >
+                <template #prepend>
+                  <q-select
+                    v-model="element.type"
+                    dense
+                    hide-selected
+                    borderless
+                    hide-dropdown-icon
+                    map-options
+                    emit-value
+                    option-value="value"
+                    class="q-borderless q-ml-xs"
+                    :options="Object.values(fieldTypes)"
+                  >
+                    <template #default>
+                      <div class="column justify-center">
+                        <q-icon
+                          :name="fieldTypes[element.type].icon"
+                          size="sm"
+                        />
+                      </div>
+                    </template>
+
+                    <template v-slot:option="scope">
+                      <q-item v-bind="scope.itemProps">
+                        <q-item-section>
+                          <q-icon :name="scope.opt.icon" size="xs" />
+                        </q-item-section>
+                        <q-item-section
+                          class="text-no-wrap q-mr-sm"
+                          style="margin-left: 0"
+                        >
+                          <q-item-label>{{ scope.opt.label }}</q-item-label>
+                        </q-item-section>
+                      </q-item>
+                    </template>
+                  </q-select>
+
+                  <q-input
+                    v-model="element.name"
+                    type="text"
+                    :label="
+                      $t(
+                        'presentationStudio.settings.collectParticipantsInfo.fields.default.name'
+                      )
+                    "
+                    borderless
+                    class="q-borderless"
+                    style="width: 80px"
+                  />
+                </template>
+
+                <template #append>
+                  <q-checkbox
+                    v-model="element.isMandatory"
+                    checked-icon="r_emergency"
+                    unchecked-icon="r_check_box_outline_blank"
+                    indeterminate-icon="r_help"
+                  >
+                    <q-tooltip>
+                      <div
+                        class="text-center"
+                        v-html="
+                          $t(
+                            `presentationStudio.settings.collectParticipantsInfo.fields.mandatory.${
+                              element.isMandatory ? 'on' : 'off'
+                            }`
+                          )
+                        "
+                      ></div>
+                    </q-tooltip>
+                  </q-checkbox>
+
+                  <q-btn
+                    v-if="form.fields.length > 1"
+                    flat
+                    round
+                    icon="r_delete"
+                    color="red"
+                    size="sm"
+                    @click="deleteField(element)"
+                  />
+                </template>
+              </q-input>
+            </q-card>
+          </template>
+        </draggable>
+
+        <div class="row no-wrap q-gutter-md q-pl-lg q-ml-sm q-pt-md">
+          <q-btn
+            :label="
+              $t(
+                `presentationStudio.settings.collectParticipantsInfo.fields.add`
+              )
+            "
+            outline
+            no-caps
+            color="primary"
+            class="full-width"
+            @click="addField()"
+          />
+
+          <q-btn
+            v-if="isUnsavedChanges"
+            unelevated
+            color="primary"
+            icon="r_done"
+            round
+            :disable="!isFieldsValid"
+            @click="handleSave()"
+          />
+
+          <q-btn v-else flat color="grey" icon="r_save" round disable />
+        </div>
       </div>
-    </div>
-  </q-slide-transition>
+    </q-slide-transition>
+
+    <q-separator class="q-mt-lg q-mb-md" />
+  </div>
 </template>
 
 <script setup>

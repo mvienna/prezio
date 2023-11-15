@@ -179,11 +179,12 @@ export default {
         },
 
         options: {
-          liveChat: "Live Chat",
-          lobbyMusic: "Lobby Music",
-          countdown: "5-Second Countdown",
+          liveChat: "Live chat",
+          lobbyMusic: "Lobby music",
+          countdown: "5-Second countdown",
           playAsTeam: "Play as a Team",
-          shuffleAnswerOptions: "Shuffle Answer Options",
+          shuffleAnswerOptions: "Shuffle answer options",
+          showAnswersManually: "Reveal answers manually",
         },
       },
 

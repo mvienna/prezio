@@ -26,6 +26,7 @@ const { room } = storeToRefs(presentationsStore);
 const finishQuiz = () => {
   room.value.is_quiz_started = false;
   room.value.is_submission_locked = true;
+  room.value.is_answers_revealed = false;
 
   presentationsStore.sendPresentationRoomUpdateEvent(
     undefined,
@@ -35,6 +36,7 @@ const finishQuiz = () => {
     {
       is_quiz_started: room.value.is_quiz_started,
       is_submission_locked: room.value.is_submission_locked,
+      is_answers_revealed: room.value.is_answers_revealed,
       countdown: 0,
     }
   );

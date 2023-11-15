@@ -71,6 +71,7 @@
         <q-btn
           text-color="white"
           unelevated
+          color="primary"
           no-caps
           type="submit"
           class="q-py-md text-bold q-mt-lg full-width"
@@ -176,8 +177,10 @@ const defaultEmojis = [
 onMounted(() => {
   const user_data = JSON.parse(participant.value.user_data);
 
+  console.log(user_data);
+
   form.value = {
-    name: user_data.name,
+    name: user_data[0].name,
     avatar: defaultEmojis[Math.floor(Math.random() * defaultEmojis.length)],
   };
 });
@@ -239,7 +242,6 @@ const submit = async () => {
       text-align: center;
       font-size: 20px;
       font-weight: 600;
-      color: $white;
     }
   }
 }
@@ -255,6 +257,12 @@ const submit = async () => {
 }
 
 ::v-deep(.container--black) {
+  form {
+    .form__title {
+      color: $black;
+    }
+  }
+
   .q-field__control {
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(4px);
@@ -268,6 +276,12 @@ const submit = async () => {
 }
 
 ::v-deep(.container--white) {
+  form {
+    .form__title {
+      color: $white;
+    }
+  }
+
   .q-field__control {
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(4px);

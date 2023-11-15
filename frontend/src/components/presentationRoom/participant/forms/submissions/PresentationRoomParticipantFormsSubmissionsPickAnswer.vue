@@ -197,7 +197,7 @@
         </transition>
 
         <div
-          v-if="participantAnswers?.length"
+          v-if="participantAnswers?.length && room.is_answers_revealed"
           style="position: fixed; bottom: 0; left: 0"
           class="full-width row no-wrap justify-center q-py-md"
           :class="isAnsweredCorrectly ? 'bg-positive' : 'bg-negative'"
@@ -227,7 +227,7 @@
                 style="transform: rotate(180deg) scaleX(-1)"
               />
 
-              <div class="text-h7 text-semibold">
+              <div class="text-h7 text-semibold text-white">
                 {{ isAnsweredCorrectly ? "Правильно!" : "Неправильно" }}
               </div>
 
@@ -236,7 +236,7 @@
                   background: rgba(255, 255, 255, 0.2);
                   border-radius: 24px;
                 "
-                class="q-px-md q-py-xs row items-center"
+                class="q-px-md q-py-xs row items-center text-white"
               >
                 <span class="text-h7 text-semibold">
                   +
@@ -273,7 +273,8 @@
             flat
             :style="`border: 1px solid ${
               answerOption.isSelected
-                ? timeLeft !== -1 && !participantAnswers?.length
+                ? (timeLeft !== -1 && !participantAnswers?.length) ||
+                  !room.is_answers_revealed
                   ? 'var(--q-primary)'
                   : answerOption.isCorrect
                   ? 'var(--q-positive)'
@@ -292,7 +293,8 @@
                 "
                 class="full-width"
                 :color="
-                  timeLeft !== -1 && !participantAnswers?.length
+                  (timeLeft !== -1 && !participantAnswers?.length) ||
+                  !room.is_answers_revealed
                     ? 'primary'
                     : answerOption.isCorrect
                     ? 'positive'

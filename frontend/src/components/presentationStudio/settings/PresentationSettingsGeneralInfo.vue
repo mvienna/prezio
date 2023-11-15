@@ -1,78 +1,84 @@
 <template>
-  <!-- description -->
-  <div class="text-caption text-grey q-mb-xs">
-    {{ $t("presentationStudio.settings.generalInformation.description.title") }}
-  </div>
+  <div>
+    <!-- description -->
+    <div class="text-caption text-grey q-mb-xs">
+      {{
+        $t("presentationStudio.settings.generalInformation.description.title")
+      }}
+    </div>
 
-  <q-input
-    v-model="presentation.description"
-    :placeholder="
-      $t(
-        'presentationStudio.settings.generalInformation.description.placeholder'
-      )
-    "
-    outlined
-    autogrow
-    debounce="1000"
-    @update:model-value="presentationsStore.updatePresentation()"
-  />
-
-  <!-- preview -->
-  <div class="text-caption text-grey q-mb-xs q-mt-md">
-    {{ $t("presentationStudio.settings.generalInformation.preview.title") }}
-  </div>
-
-  <q-img
-    :src="
-      presentation?.preview?.preview_url ||
-      presentation?.preview?.original_url ||
-      presentation.slides[0].preview
-    "
-    class="presentation_preview relative-position"
-  />
-
-  <div class="row no-wrap q-pt-md q-mb-md">
-    <!-- open preview selection -->
-    <q-btn
-      :label="
-        $t('presentationStudio.settings.generalInformation.preview.select')
+    <q-input
+      v-model="presentation.description"
+      :placeholder="
+        $t(
+          'presentationStudio.settings.generalInformation.description.placeholder'
+        )
       "
-      icon-right="r_upload"
-      unelevated
-      text-color="primary"
-      no-caps
-      class="q-py-sm full-width presentation_preview__upload_btn"
-      @click="showSelectPreviewDialog = true"
+      outlined
+      autogrow
+      debounce="1000"
+      @update:model-value="presentationsStore.updatePresentation()"
     />
 
-    <!-- delete preview -->
-    <q-btn
-      v-if="presentation.preview"
-      icon="r_delete"
-      flat
-      round
-      color="red"
-      class="q-py-sm q-ml-md"
-      @click="
-        presentation.preview = null;
-        presentation.preview_id = null;
-        presentationsStore.updatePresentation();
-      "
-    />
-  </div>
+    <!-- preview -->
+    <div class="text-caption text-grey q-mb-xs q-mt-md">
+      {{ $t("presentationStudio.settings.generalInformation.preview.title") }}
+    </div>
 
-  <!-- select preview -->
-  <q-dialog v-model="showSelectPreviewDialog">
-    <SelectMedia
-      @cancel="showSelectPreviewDialog = false"
-      @select="
-        presentation.preview = $event;
-        presentation.preview_id = $event.id;
-        presentationsStore.updatePresentation();
-        showSelectPreviewDialog = false;
+    <q-img
+      :src="
+        presentation?.preview?.preview_url ||
+        presentation?.preview?.original_url ||
+        presentation.slides[0].preview
       "
+      class="presentation_preview relative-position"
     />
-  </q-dialog>
+
+    <div class="row no-wrap q-pt-md q-mb-md">
+      <!-- open preview selection -->
+      <q-btn
+        :label="
+          $t('presentationStudio.settings.generalInformation.preview.select')
+        "
+        icon-right="r_upload"
+        unelevated
+        text-color="primary"
+        no-caps
+        class="q-py-sm full-width presentation_preview__upload_btn"
+        @click="showSelectPreviewDialog = true"
+      />
+
+      <!-- delete preview -->
+      <q-btn
+        v-if="presentation.preview"
+        icon="r_delete"
+        flat
+        round
+        color="red"
+        class="q-py-sm q-ml-md"
+        @click="
+          presentation.preview = null;
+          presentation.preview_id = null;
+          presentationsStore.updatePresentation();
+        "
+      />
+    </div>
+
+    <!-- select preview -->
+    <q-dialog v-model="showSelectPreviewDialog">
+      <SelectMedia
+        @cancel="showSelectPreviewDialog = false"
+        @select="
+          presentation.preview = $event;
+          presentation.preview_id = $event.id;
+          presentationsStore.updatePresentation();
+          showSelectPreviewDialog = false;
+        "
+      />
+    </q-dialog>
+
+    <q-separator class="q-mt-lg q-mb-md" />
+  </div>
 </template>
 
 <script setup>

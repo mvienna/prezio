@@ -112,6 +112,21 @@
 
       <q-toggle v-model="quizSettings.shuffleAnswerOptions" color="primary" />
     </div>
+
+    <!-- show answers manually -->
+    <div class="row no-wrap items-center q-pl-md text-semibold">
+      <q-icon name="r_ads_click" class="q-mr-md" color="primary" size="24px" />
+
+      <div>
+        {{ $t("presentationStudio.settings.quiz.options.showAnswersManually") }}
+      </div>
+
+      <q-space />
+
+      <q-toggle v-model="quizSettings.showAnswersManually" color="primary" />
+    </div>
+
+    <q-separator class="q-my-md" />
   </div>
 </template>
 
@@ -135,6 +150,7 @@ const defaultQuizSettings = {
   countdown: true,
   playAsTeam: false,
   shuffleAnswerOptions: false,
+  showAnswersManually: false,
 };
 
 const quizSettings = ref(

@@ -217,6 +217,7 @@ export default {
           countdown: "Обратный отсчет 5 сек",
           playAsTeam: "Играть командой",
           shuffleAnswerOptions: "Менять прядок вариантов ответов",
+          showAnswersManually: "Показывать ответы вручную",
         },
       },
 
