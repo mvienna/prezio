@@ -9,7 +9,10 @@
       style="z-index: 0"
     />
 
-    <div style="z-index: 2">
+    <div
+      style="z-index: 2; overflow-y: scroll; height: calc(100vh - 96px)"
+      class="scroll--hidden q-pb-lg"
+    >
       <div class="row justify-center">
         <q-img src="/assets/images/champion.svg" class="champion_cup" />
       </div>
@@ -39,9 +42,9 @@
         <div>
           {{ $t("presentationRoom.leaderboard.youScored") }}
 
-          <span class="text-semibold">{{
-            participantResults?.data?.score
-          }}</span>
+          <span class="text-semibold">
+            {{ participantResults?.data?.score }}
+          </span>
           {{ $t("presentationRoom.leaderboard.points") }}
         </div>
       </div>
@@ -53,8 +56,8 @@
             :key="result?.participant?.id"
             flat
             :style="`outline: 2px solid ${result.color}; ${
-              result?.participant?.id === participant?.id
-                ? 'transform: scale(1.1); margin-bottom: 8px; margin-top: 24px;'
+              result?.participant?.id !== participant?.id
+                ? 'transform: scale(0.9); '
                 : ''
             }`"
             style="
@@ -72,7 +75,10 @@
               ).join(',')}, 0.7); width: ${(result.score * 100) / maxScore}%`"
             ></div>
 
-            <q-card-section class="row no-wrap items-center q-pa-md">
+            <q-card-section
+              class="row no-wrap items-center"
+              :class="$q.screen.lt.lg ? 'q-pa-sm' : 'q-pa-md'"
+            >
               <q-btn
                 round
                 flat
@@ -83,7 +89,10 @@
                 {{ index + 1 }}
               </q-btn>
 
-              <div class="text-semibold text-h7">
+              <div
+                class="text-semibold ellipsis text-no-wrap q-mr-md"
+                style="font-size: 1em"
+              >
                 {{
                   (JSON.parse(result.participant.user_data)?.avatar
                     ? JSON.parse(result.participant.user_data)?.avatar + " "
@@ -93,7 +102,7 @@
 
               <q-space />
 
-              <div class="q-ml-xl q-pl-xl">
+              <div class="text-no-wrap">
                 {{ result.score }}
                 {{ $t("presentationRoom.leaderboard.p") }}
               </div>

@@ -11,12 +11,12 @@
     />
 
     <div
-      class="leaderboard q-pa-sm"
+      class="leaderboard scroll--hidden q-pa-sm"
       :style="`top: ${
         canvasRect.top + (canvasRect.height * 20) / 100
       }px; left: ${canvasRect.left + (canvasRect.width * 10) / 100}px; width: ${
         (canvasRect.width * 80) / 100
-      }px; height: ${(canvasRect.height * 80) / 100}px`"
+      }px; height: ${(canvasRect.height * 65) / 100}px`"
     >
       <div class="row no-wrap justify-center">
         <div class="column no-wrap q-gutter-md full-width">
@@ -40,18 +40,24 @@
               ).join(',')}, 0.7); width: ${(result.score * 100) / maxScore}%`"
             ></div>
 
-            <q-card-section class="row no-wrap items-center q-pa-md">
+            <q-card-section
+              class="row no-wrap items-center"
+              :class="$q.screen.lt.lg ? 'q-pa-sm' : 'q-pa-md'"
+            >
               <q-btn
                 round
                 flat
                 style="border-radius: 50%; background: rgba(0, 0, 0, 0.2)"
-                class="q-mr-md"
+                class="q-mr-md text-white"
                 size="8px"
               >
                 {{ index + 1 }}
               </q-btn>
 
-              <div class="text-semibold text-h7">
+              <div
+                class="text-semibold ellipsis text-no-wrap q-mr-md"
+                style="font-size: 1em"
+              >
                 {{
                   (JSON.parse(result.participant.user_data)?.avatar
                     ? JSON.parse(result.participant.user_data)?.avatar + " "
@@ -61,7 +67,7 @@
 
               <q-space />
 
-              <div class="q-ml-xl q-pl-xl">
+              <div class="text-no-wrap">
                 {{ result.score }}
                 {{ $t("presentationRoom.leaderboard.p") }}
               </div>

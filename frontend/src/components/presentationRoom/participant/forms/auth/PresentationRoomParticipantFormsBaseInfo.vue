@@ -177,8 +177,6 @@ const defaultEmojis = [
 onMounted(() => {
   const user_data = JSON.parse(participant.value.user_data);
 
-  console.log(user_data);
-
   form.value = {
     name: user_data[0].name,
     avatar: defaultEmojis[Math.floor(Math.random() * defaultEmojis.length)],
@@ -204,11 +202,13 @@ const handleEmojiSelection = (emoji) => {
  * submit
  */
 const submit = async () => {
+  console.log(form.value.name);
   if (!form.value.name?.length) {
     isNameError.value = true;
     return;
   }
 
+  console.log(participant.value?.user_data);
   const data = participant.value?.user_data
     ? JSON.parse(participant.value.user_data)
     : {};
