@@ -1,5 +1,15 @@
 <template>
   <div>
+    <Vue3Lottie
+      :animationData="confettiJSON"
+      :height="canvasRect.height"
+      :width="canvasRect.width"
+      class="fixed"
+      :scale="2"
+      style="z-index: 1"
+      :style="`top: ${canvasRect.top}px; left: ${canvasRect.left}px;`"
+    />
+
     <div
       class="leaderboard q-pa-sm"
       :style="`top: ${
@@ -71,6 +81,8 @@ import { useCanvasStore } from "stores/canvas";
 import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
 import { colors } from "quasar";
+import { Vue3Lottie } from "vue3-lottie";
+import confettiJSON from "src/assets/animations/confetti.json";
 
 /*
  * stores

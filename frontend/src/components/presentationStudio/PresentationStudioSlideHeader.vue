@@ -4,7 +4,7 @@
       height: 40px;
       position: fixed;
       border-radius: 8px 8px 0 0;
-      z-index: 1;
+      z-index: 2;
     "
     :style="`width: ${canvasRect?.width}px; left: ${canvasRect?.left}px; top: ${
       canvasRect?.top
