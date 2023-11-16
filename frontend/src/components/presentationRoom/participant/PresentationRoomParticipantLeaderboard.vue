@@ -1,74 +1,105 @@
 <template>
   <div>
-    <div class="row justify-center">
-      <q-img src="/assets/images/champion.svg" class="champion_cup" />
-    </div>
+    <Vue3Lottie
+      :animationData="confettiJSON"
+      height="100vh"
+      width="100vw"
+      class="absolute"
+      :scale="2"
+      style="z-index: 0"
+    />
 
-    <div class="text-center">
-      <div class="text-h6 text-semibold">
-        {{ $t("presentationRoom.leaderboard.title") }}
+    <div style="z-index: 2">
+      <div class="row justify-center">
+        <q-img src="/assets/images/champion.svg" class="champion_cup" />
       </div>
 
-      <div class="q-mt-sm">
-        {{ $t("presentationRoom.leaderboard.youAreIn") }}
+      <div
+        class="text-center"
+        :class="`${
+          averageBackgroundBrightness >= backgroundBrightnessThreshold
+            ? 'text-black'
+            : 'text-white'
+        }`"
+      >
+        <div class="text-h6 text-semibold">
+          {{ $t("presentationRoom.leaderboard.title") }}
+        </div>
 
-        <span class="text-semibold">{{ participantResults?.place }}</span>
-        {{ $t("presentationRoom.leaderboard.place") }}
-        {{ $t("presentationRoom.leaderboard.outOf") }}
-        <span class="text-semibold">{{ results.length }}</span>
-        {{ $t("presentationRoom.leaderboard.players") }}
+        <div class="q-mt-sm">
+          {{ $t("presentationRoom.leaderboard.youAreIn") }}
+
+          <span class="text-semibold">{{ participantResults?.place }}</span>
+          {{ $t("presentationRoom.leaderboard.place") }}
+          {{ $t("presentationRoom.leaderboard.outOf") }}
+          <span class="text-semibold">{{ results.length }}</span>
+          {{ $t("presentationRoom.leaderboard.players") }}
+        </div>
+
+        <div>
+          {{ $t("presentationRoom.leaderboard.youScored") }}
+
+          <span class="text-semibold">{{
+            participantResults?.data?.score
+          }}</span>
+          {{ $t("presentationRoom.leaderboard.points") }}
+        </div>
       </div>
 
-      <div>
-        {{ $t("presentationRoom.leaderboard.youScored") }}
-
-        <span class="text-semibold">{{ participantResults?.data?.score }}</span>
-        {{ $t("presentationRoom.leaderboard.points") }}
-      </div>
-    </div>
-
-    <div class="row justify-center q-mt-md">
-      <div class="column no-wrap q-gutter-md q-pt-md">
-        <q-card
-          v-for="(result, index) in results"
-          :key="result?.participant?.id"
-          flat
-          :style="`background: rgba(${Object.values(
-            colors.textToRgb(result.color)
-          ).join(',')}, 0.7)`"
-          style="border-radius: 24px !important; backdrop-filter: blur(4px)"
-        >
-          <q-card-section
-            class="row no-wrap items-center justify-between q-pa-md"
+      <div class="row justify-center q-mt-md">
+        <div class="column no-wrap q-gutter-md q-pt-md">
+          <q-card
+            v-for="(result, index) in results"
+            :key="result?.participant?.id"
+            flat
+            :style="`outline: 2px solid ${result.color}; ${
+              result?.participant?.id === participant?.id
+                ? 'transform: scale(1.1); margin-bottom: 8px; margin-top: 24px;'
+                : ''
+            }`"
+            style="
+              border-radius: 24px !important;
+              backdrop-filter: blur(4px);
+              overflow: hidden;
+              background: rgba(255, 255, 255, 0.4);
+            "
           >
-            <q-btn
-              round
-              flat
-              style="
-                border-radius: 50%;
-                background: rgba(0, 0, 0, 0.2);
-                backdrop-filter: blur(4px);
-              "
-              class="q-mr-sm"
-              size="8px"
-            >
-              {{ index + 1 }}
-            </q-btn>
+            <div
+              class="absolute-left"
+              style="height: 100%; border-radius: 0"
+              :style="`background: rgba(${Object.values(
+                colors.textToRgb(result.color)
+              ).join(',')}, 0.7); width: ${(result.score * 100) / maxScore}%`"
+            ></div>
 
-            <div class="text-semibold">
-              {{
-                (JSON.parse(result.participant.user_data)?.avatar
-                  ? JSON.parse(result.participant.user_data)?.avatar + " "
-                  : "") + JSON.parse(result.participant.user_data).name
-              }}
-            </div>
+            <q-card-section class="row no-wrap items-center q-pa-md">
+              <q-btn
+                round
+                flat
+                style="border-radius: 50%; background: rgba(0, 0, 0, 0.2)"
+                class="q-mr-sm"
+                size="8px"
+              >
+                {{ index + 1 }}
+              </q-btn>
 
-            <div class="q-ml-xl q-pl-xl">
-              {{ result.score }}
-              {{ $t("presentationRoom.leaderboard.p") }}
-            </div>
-          </q-card-section>
-        </q-card>
+              <div class="text-semibold text-h7">
+                {{
+                  (JSON.parse(result.participant.user_data)?.avatar
+                    ? JSON.parse(result.participant.user_data)?.avatar + " "
+                    : "") + JSON.parse(result.participant.user_data).name
+                }}
+              </div>
+
+              <q-space />
+
+              <div class="q-ml-xl q-pl-xl">
+                {{ result.score }}
+                {{ $t("presentationRoom.leaderboard.p") }}
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
       </div>
     </div>
   </div>
@@ -81,12 +112,20 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
 import { colors } from "quasar";
+import confettiJSON from "assets/animations/confetti.json";
+import { Vue3Lottie } from "vue3-lottie";
 
 /*
  * stores
  */
 const presentationsStudio = usePresentationsStore();
-const { presentation, slide, participant } = storeToRefs(presentationsStudio);
+const {
+  presentation,
+  slide,
+  participant,
+  averageBackgroundBrightness,
+  backgroundBrightnessThreshold,
+} = storeToRefs(presentationsStudio);
 
 /*
  * results
@@ -125,6 +164,13 @@ const results = computed(() => {
   return Array.from(scoresMap.values()).sort((a, b) => {
     return b.score - a.score;
   });
+});
+
+const maxScore = computed(() => {
+  return results.value.reduce(
+    (max, obj) => (obj.score > max ? obj.score : max),
+    results.value[0].score
+  );
 });
 
 const participantResults = computed(() => {

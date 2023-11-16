@@ -300,7 +300,7 @@ const applyDesignToAllSlides = () => {
     if (slide.id !== slide.value.id) {
       item.canvas_data = item.canvas_data ? JSON.parse(item.canvas_data) : [];
 
-      item.canvas_data = item.canvas_data.filter(
+      item.canvas_data = item.canvas_data?.filter(
         (element) =>
           ![
             MODE_OPTIONS.value.background,
