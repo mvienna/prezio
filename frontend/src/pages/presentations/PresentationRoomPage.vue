@@ -797,6 +797,9 @@ const handleSlideChange = async (direction) => {
 };
 
 const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
+  /*
+   * slide type of wordcloud
+   */
   if (
     slide.value?.type === SLIDE_TYPES.WORD_CLOUD &&
     slideSettings.value &&
@@ -821,6 +824,8 @@ const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
         is_submission_locked: room.value.is_submission_locked,
       }
     );
+
+    return;
   }
 
   /*
@@ -828,30 +833,20 @@ const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
    */
   if (SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type)) {
     if (isOnLoad || direction === "backward") {
-      room.value.is_submission_locked = true;
-      room.value.is_quiz_started = false;
-      room.value.is_answers_revealed = false;
-
-      stopCountdown();
-
-      presentationsStore.sendPresentationRoomUpdateEvent(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        {
-          countdown: 0,
-          is_submission_locked: room.value.is_submission_locked,
-          is_quiz_started: room.value.is_quiz_started,
-          is_answers_revealed: room.value.is_answers_revealed,
-        }
-      );
+      presentationsStore.handleQuizStop();
     } else {
       if (room.value.is_quiz_started) {
         presentationsStore.handleQuizStart();
       }
     }
+
+    return;
   }
+
+  /*
+   * other slide types
+   */
+  presentationsStore.handleQuizStop();
 };
 
 /*

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import { timeLeft } from "src/helpers/countdown";
+import { stopCountdown, timeLeft } from "src/helpers/countdown";
 import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
 
 export const usePresentationsStore = defineStore("presentations", {
@@ -599,6 +599,27 @@ export const usePresentationsStore = defineStore("presentations", {
           }
         );
       }, timeout);
+    },
+
+    handleQuizStop() {
+      this.room.is_submission_locked = true;
+      this.room.is_quiz_started = false;
+      this.room.is_answers_revealed = false;
+
+      stopCountdown();
+
+      this.sendPresentationRoomUpdateEvent(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          countdown: 0,
+          is_submission_locked: this.room.is_submission_locked,
+          is_quiz_started: this.room.is_quiz_started,
+          is_answers_revealed: this.room.is_answers_revealed,
+        }
+      );
     },
   },
 });
