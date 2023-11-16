@@ -1,25 +1,76 @@
 <template>
   <div>
     <div
-      class="bar_chart"
-      ref="barChart"
+      class="leaderboard q-pa-sm"
       :style="`top: ${
-        canvasRect.top + canvasRect.height / 2 - height / 2 - margin.top
-      }px; left: ${
-        canvasRect.left + canvasRect.width / 2 - width / 2 - margin.left
-      }px;`"
-    ></div>
+        canvasRect.top + (canvasRect.height * 20) / 100
+      }px; left: ${canvasRect.left + (canvasRect.width * 10) / 100}px; width: ${
+        (canvasRect.width * 80) / 100
+      }px; height: ${(canvasRect.height * 80) / 100}px`"
+    >
+      <div class="row no-wrap justify-center">
+        <div class="column no-wrap q-gutter-md full-width">
+          <q-card
+            v-for="(result, index) in results"
+            :key="result?.participant?.id"
+            flat
+            :style="`outline: 2px solid ${result.color};`"
+            style="
+              border-radius: 24px !important;
+              backdrop-filter: blur(4px);
+              overflow: hidden;
+              background: rgba(255, 255, 255, 0.4);
+            "
+          >
+            <div
+              class="absolute-left"
+              style="height: 100%; border-radius: 0"
+              :style="`background: rgba(${Object.values(
+                colors.textToRgb(result.color)
+              ).join(',')}, 0.7); width: ${(result.score * 100) / maxScore}%`"
+            ></div>
+
+            <q-card-section class="row no-wrap items-center q-pa-md">
+              <q-btn
+                round
+                flat
+                style="border-radius: 50%; background: rgba(0, 0, 0, 0.2)"
+                class="q-mr-md"
+                size="8px"
+              >
+                {{ index + 1 }}
+              </q-btn>
+
+              <div class="text-semibold text-h7">
+                {{
+                  (JSON.parse(result.participant.user_data)?.avatar
+                    ? JSON.parse(result.participant.user_data)?.avatar + " "
+                    : "") + JSON.parse(result.participant.user_data).name
+                }}
+              </div>
+
+              <q-space />
+
+              <div class="q-ml-xl q-pl-xl">
+                {{ result.score }}
+                {{ $t("presentationRoom.leaderboard.p") }}
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import * as d3 from "d3";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useCanvasStore } from "stores/canvas";
 import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
+import { colors } from "quasar";
 
 /*
  * stores
@@ -38,9 +89,9 @@ const canvasStore = useCanvasStore();
 const { canvas, scale } = storeToRefs(canvasStore);
 
 /*
- * data
+ * results
  */
-const data = computed(() => {
+const results = computed(() => {
   const slideIndex = presentation.value.slides.findIndex(
     (item) => item.id === slide.id
   );
@@ -58,183 +109,41 @@ const data = computed(() => {
     const score = answer.score;
 
     if (scoresMap.has(participantId)) {
-      scoresMap.get(participantId).totalScore += score;
+      scoresMap.get(participantId).score += score;
     } else {
-      const participantUserData = answer.participant.user_data
-        ? JSON.parse(answer.participant.user_data)
-        : {};
-
       scoresMap.set(participantId, {
-        group:
-          (participantUserData.avatar ? participantUserData.avatar + " " : "") +
-          participantUserData.name,
-        value: score,
+        participant: answer.participant,
+        score: score,
+        color:
+          wordCloudTextColors[
+            Math.floor(Math.random() * wordCloudTextColors.length)
+          ],
       });
     }
   });
 
-  return Array.from(scoresMap.values());
+  return Array.from(scoresMap.values()).sort((a, b) => {
+    return b.score - a.score;
+  });
 });
 
-const color = computed(() => {
-  return averageBackgroundBrightness.value >=
-    backgroundBrightnessThreshold.value
-    ? "black"
-    : "white";
+const maxScore = computed(() => {
+  return results.value.reduce(
+    (max, obj) => (obj.score > max ? obj.score : max),
+    results.value[0].score
+  );
 });
 
-const barChart = ref();
-const svg = ref();
-
-const x = ref();
-const xAxis = ref();
-
-const y = ref();
-const yAxis = ref();
-
-const tooltip = ref();
-
+/*
+ * canvas size
+ */
 const canvasRect = ref(canvasStore.canvasRect());
-const margin = { top: 50, right: 100, bottom: 150, left: 100 };
-const width = computed(() => {
-  return (canvasRect.value.width * 80) / 100;
-});
-const height = computed(() => {
-  return (canvasRect.value.height * 40) / 100;
-});
-
-onMounted(() => {
-  setTimeout(() => {
-    canvasRect.value = canvasStore.canvasRect();
-
-    tooltip.value = d3
-      .select(barChart.value)
-      .append("div")
-      .style("opacity", 0)
-      .attr("class", "tooltip")
-      .style("position", "absolute")
-      .style("border-radius", "16px")
-      .style("padding", "8px 16px")
-      .style("background", "rgba(0, 0, 0, 0.5)")
-      .style("color", "white")
-      .style("backdrop-filter", "blur(4px)");
-
-    svg.value = d3
-      .select(barChart.value)
-      .append("svg")
-      .attr("width", width.value)
-      .attr("height", height.value)
-      .append("g")
-      .on("mouseover", (d) => {
-        tooltip.value.style("opacity", 1);
-        d.target.style.opacity = 0.85;
-      })
-      .on("mousemove", (d) => {
-        if (!d.target?.__data__?.value) {
-          tooltip.value.style("opacity", 0);
-          d.target
-            .querySelectorAll("rect")
-            .forEach((rect) => (rect.style.opacity = 1));
-          return;
-        }
-
-        tooltip.value
-          .html("Баллов: " + d.target.__data__.value)
-          .style("left", d.offsetX + "px")
-          .style("top", d.offsetY + "px");
-      })
-      .on("mouseleave", (d) => {
-        tooltip.value.style("opacity", 0);
-        d.target
-          .querySelectorAll("rect")
-          .forEach((rect) => (rect.style.opacity = 1));
-      });
-
-    x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
-    xAxis.value = svg.value
-      .append("g")
-      .attr("transform", `translate(0, ${height.value + 1})`);
-
-    y.value = d3.scaleLinear().range([height.value, 0]);
-    yAxis.value = svg.value.append("g").attr("class", "myYaxis");
-
-    update();
-  }, 500);
-
-  window.addEventListener("resize", onResize);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", onResize);
-});
-
-const update = () => {
-  x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
-  xAxis.value = svg.value
-    .select("g")
-    .attr("transform", `translate(0, ${height.value})`);
-
-  y.value = d3.scaleLinear().range([height.value, 0]);
-  yAxis.value = svg.value.select("g").attr("class", "myYaxis");
-
-  svg.value = d3
-    .select(barChart.value)
-    .select("svg")
-    .attr("width", width.value + margin.left + margin.right)
-    .attr("height", height.value + margin.top + margin.bottom)
-    .select("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
-
-  x.value.domain(data.value.map((d) => d.group));
-  xAxis.value.call(d3.axisBottom(x.value));
-
-  xAxis.value
-    .selectAll("text")
-    .style("font-size", "16px")
-    .style("fill", color.value)
-    .attr("transform", "translate(-10,0) rotate(-45)")
-    .style("text-anchor", "end");
-
-  y.value.domain([0, d3.max(data.value, (d) => d.value)]);
-  // yAxis.value.transition().duration(1000).call(d3.axisLeft(y));
-
-  svg.value
-    .selectAll("rect")
-    .data(data.value)
-    .join("rect")
-    .transition()
-    .duration(600)
-    .attr("x", (d) => x.value(d.group))
-    .attr("y", (d) => y.value(d.value))
-    .attr("width", x.value.bandwidth())
-    .attr("height", (d) => {
-      return d.value > 0 ? height.value - y.value(d.value) : 0;
-    })
-    .attr(
-      "fill",
-      () =>
-        wordCloudTextColors[
-          Math.floor(Math.random() * wordCloudTextColors.length)
-        ]
-    );
-};
-
-watch(
-  () => data.value,
-  () => {
-    if (data.value) {
-      update();
-    }
-  },
-  { deep: true }
-);
 
 watch(
   () => showRoomInvitationPanel.value,
   () => {
     setTimeout(() => {
       canvasRect.value = canvasStore.canvasRect();
-      update();
     }, 500);
   },
   { deep: true }
@@ -247,32 +156,32 @@ watch(
   }
 );
 
+onMounted(() => {
+  setTimeout(() => {
+    onResize();
+  }, 500);
+
+  window.addEventListener("resize", onResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", onResize);
+});
+
 const onResize = () => {
   canvasRect.value = canvasStore.canvasRect();
-  update();
 };
-
-watch(
-  () => averageBackgroundBrightness.value,
-  () => {
-    xAxis.value?.selectAll("text")?.style("fill", color.value);
-    xAxis.value?.selectAll("path")?.style("stroke", color.value);
-    xAxis.value?.selectAll("line")?.style("stroke", color.value);
-  }
-);
 </script>
 
 <style scoped lang="scss">
-.bar_chart {
+.leaderboard {
   position: fixed;
   z-index: 1;
+  transition: 0.6s;
+  overflow-y: scroll;
 }
 
-.bar_chart,
-.bar_chart div,
-svg,
-g,
-rect {
-  transition: 0.6s;
+.champion_cup {
+  width: 100px;
 }
 </style>

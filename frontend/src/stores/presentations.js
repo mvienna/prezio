@@ -569,7 +569,6 @@ export const usePresentationsStore = defineStore("presentations", {
       }
 
       // start before-quiz timeout
-      // startCountdown(timeout / 1000);
       this.room.is_submission_locked = true;
       await this.sendPresentationRoomUpdateEvent(
         undefined,
@@ -588,7 +587,6 @@ export const usePresentationsStore = defineStore("presentations", {
       // start the quiz
       setTimeout(() => {
         this.room.is_submission_locked = false;
-        // startCountdown(this.slideSettings.timeLimit);
 
         this.sendPresentationRoomUpdateEvent(
           undefined,

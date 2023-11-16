@@ -793,7 +793,7 @@ const handleSlideChange = async (direction) => {
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false, undefined, false);
 
-  handleCountdownOnSlideChange(direction);
+  handleCountdownOnSlideChange(undefined, direction);
 };
 
 const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {

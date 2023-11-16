@@ -109,7 +109,7 @@ const results = computed(() => {
     const score = answer.score;
 
     if (scoresMap.has(participantId)) {
-      scoresMap.get(participantId).totalScore += score;
+      scoresMap.get(participantId).score += score;
     } else {
       scoresMap.set(participantId, {
         participant: answer.participant,
