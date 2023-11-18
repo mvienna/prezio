@@ -1,7 +1,8 @@
 <template>
   <div>
     <Vue3Lottie
-      :animationData="confettiJSON"
+      v-if="results?.length"
+      :animation-data="confettiJSON"
       height="100vh"
       width="100vw"
       class="absolute"

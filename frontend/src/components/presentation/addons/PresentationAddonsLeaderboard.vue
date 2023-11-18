@@ -1,7 +1,8 @@
 <template>
   <div>
     <Vue3Lottie
-      :animationData="confettiJSON"
+      v-if="results?.length"
+      :animation-data="confettiJSON"
       :height="canvasRect.height"
       :width="canvasRect.width"
       class="fixed"
