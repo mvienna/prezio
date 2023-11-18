@@ -24,7 +24,10 @@
       class="q-pa-sm"
     >
       <div class="chat">
-        <div class="row no-wrap items-center justify-between q-ma-sm">
+        <div
+          class="row no-wrap items-center justify-between"
+          :class="$q.screen.lt.md ? 'q-mx-sm q-mb-sm q-mt-none' : 'q-ma-sm'"
+        >
           <div class="text-h7 text-semibold">
             {{ $t("presentationRoom.footer.chat.title") }}
           </div>
@@ -129,7 +132,10 @@
 
         <q-space />
 
-        <q-form class="row no-wrap q-gutter-sm" @submit="sendNewMessage()">
+        <q-form
+          class="row no-wrap q-gutter-sm chat__form"
+          @submit="sendNewMessage()"
+        >
           <q-input
             borderless
             v-model="newMessage"
@@ -301,6 +307,29 @@ const sendNewMessage = () => {
 ::v-deep(.q-field__control) {
   border-radius: 8px 8px 8px 16px;
   height: 42px;
+}
+
+@media screen and (max-width: 800px) {
+  ::v-deep(.q-field__control),
+  ::v-deep(.q-field__marginal) {
+    height: 32px;
+  }
+
+  .chat__form {
+    .q-btn {
+      min-height: 32px;
+      min-width: 32px;
+      font-size: 10px;
+    }
+  }
+
+  .chat {
+    height: 238px;
+  }
+
+  .chat__messages__item {
+    padding: 4px 8px !important;
+  }
 }
 
 ::v-deep(.q-field__native) {
