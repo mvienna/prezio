@@ -118,9 +118,11 @@ const rightDrawerTabs = computed(() => {
       name: "settings",
       icon: "r_view_in_ar",
       label: t("presentationLayout.rightDrawer.tabs.settings.title"),
-      hidden: ![...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(
-        slide.value?.type
-      ),
+      hidden: ![
+        ...SLIDE_TYPES_OF_QUIZ,
+        SLIDE_TYPES.WORD_CLOUD,
+        SLIDE_TYPES.LEADERBOARD,
+      ].includes(slide.value?.type),
     },
     {
       name: "layers",
@@ -156,11 +158,7 @@ watch(
   () => slide.value,
   () => {
     if (slide.value?.type) {
-      if (
-        [SLIDE_TYPES.CONTENT, SLIDE_TYPES.LEADERBOARD].includes(
-          slide.value.type
-        )
-      ) {
+      if ([SLIDE_TYPES.CONTENT].includes(slide.value.type)) {
         rightDrawerTab.value = rightDrawerTabs.value[0].name;
       } else {
         rightDrawerTab.value = rightDrawerTabs.value[1].name;
@@ -219,8 +217,10 @@ const handleChangingSlideType = async (type) => {
       ...layoutDefaultElementProps,
 
       id: "layout-title-top-addon",
-      text: t("presentationStudio.layouts.defaultTexts.title"),
-
+      text:
+        type === SLIDE_TYPES.LEADERBOARD
+          ? t("presentationStudio.layouts.defaultTexts.leaderboard")
+          : t("presentationStudio.layouts.defaultTexts.title"),
       color: "#313232",
       fontSize: "48px",
       fontWeight: "bold",

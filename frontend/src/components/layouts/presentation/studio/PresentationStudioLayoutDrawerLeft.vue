@@ -597,12 +597,21 @@ const prepareElementsForNewSlide = (type) => {
    * quiz
    * word cloud
    */
-  if ([...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(type)) {
+  if (
+    [
+      ...SLIDE_TYPES_OF_QUIZ,
+      SLIDE_TYPES.WORD_CLOUD,
+      SLIDE_TYPES.LEADERBOARD,
+    ].includes(type)
+  ) {
     const titleElement = {
       ...layoutDefaultElementProps,
 
       id: "layout-title-top-titleAndBody",
-      text: t("presentationStudio.layouts.defaultTexts.question"),
+      text:
+        type === SLIDE_TYPES.LEADERBOARD
+          ? t("presentationStudio.layouts.defaultTexts.leaderboard")
+          : t("presentationStudio.layouts.defaultTexts.question"),
       textAlign: "center",
 
       color: "#313232",
@@ -678,7 +687,7 @@ const handleAddingNewSlide = async (type) => {
       (nextSlide && nextSlide.type !== SLIDE_TYPES.LEADERBOARD)
     ) {
       await presentationsStore.addNewSlide(
-        undefined,
+        prepareElementsForNewSlide(SLIDE_TYPES.LEADERBOARD),
         SLIDE_TYPES.LEADERBOARD,
         false
       );

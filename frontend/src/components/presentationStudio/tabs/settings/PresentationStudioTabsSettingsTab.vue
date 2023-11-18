@@ -27,6 +27,7 @@
 
     <!-- time limit -->
     <PresentationStudioTabsSettingsTabOptionsTimeLimit
+      v-if="![SLIDE_TYPES.LEADERBOARD].includes(slide?.type)"
       @update-slide-settings="handleSlideSettingsUpdate()"
     />
 
@@ -47,7 +48,10 @@
       v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
     />
 
-    <q-separator class="q-mt-md" />
+    <q-separator
+      v-if="![SLIDE_TYPES.LEADERBOARD].includes(slide?.type)"
+      class="q-mt-md"
+    />
 
     <!-- filter profanity -->
     <PresentationStudioTabsSettingsTabOptionsFilterProfanity
@@ -60,7 +64,9 @@
     />
 
     <!-- apply to all questions -->
-    <PresentationStudioTabsSettingsTabApplyToAllQuestions />
+    <PresentationStudioTabsSettingsTabApplyToAllQuestions
+      v-if="![SLIDE_TYPES.LEADERBOARD].includes(slide?.type)"
+    />
   </div>
 </template>
 

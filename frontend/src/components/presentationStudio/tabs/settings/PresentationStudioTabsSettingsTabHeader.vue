@@ -3,16 +3,17 @@
     <!-- title -->
     <div class="row no-wrap items-center justify-between">
       <div class="text-semibold">
-        {{ $t("presentationLayout.rightDrawer.tabs.settings.question.title") }}
+        {{
+          slide?.type === SLIDE_TYPES.LEADERBOARD
+            ? $t("presentationLayout.rightDrawer.tabs.settings.slideTitle")
+            : $t("presentationLayout.rightDrawer.tabs.settings.question.title")
+        }}
       </div>
     </div>
 
     <!-- question -->
     <q-input
       v-model="question"
-      :placeholder="
-        $t('presentationLayout.rightDrawer.tabs.settings.question.placeholder')
-      "
       outlined
       dense
       class="q-mt-sm"
@@ -96,48 +97,50 @@
       </template>
     </q-input>
 
-    <!-- description -->
-    <q-expansion-item class="q-mt-sm text-grey-10">
-      <template #header>
-        <div class="row no-wrap items-center">
-          <div class="q-item__label">
-            {{
-              $t(
-                "presentationLayout.rightDrawer.tabs.settings.question.description.title"
-              )
-            }}
-          </div>
-
-          <q-icon name="r_info" class="q-ml-xs" color="grey-8">
-            <q-tooltip max-width="300px" class="text-center">
+    <template v-if="slide?.type !== SLIDE_TYPES.LEADERBOARD">
+      <!-- description -->
+      <q-expansion-item class="q-mt-sm text-grey-10">
+        <template #header>
+          <div class="row no-wrap items-center">
+            <div class="q-item__label">
               {{
                 $t(
-                  "presentationLayout.rightDrawer.tabs.settings.question.description.caption"
+                  "presentationLayout.rightDrawer.tabs.settings.question.description.title"
                 )
               }}
-            </q-tooltip>
-          </q-icon>
-        </div>
+            </div>
 
-        <q-space />
-      </template>
+            <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+              <q-tooltip max-width="300px" class="text-center">
+                {{
+                  $t(
+                    "presentationLayout.rightDrawer.tabs.settings.question.description.caption"
+                  )
+                }}
+              </q-tooltip>
+            </q-icon>
+          </div>
 
-      <q-input
-        v-model="slideSettings.description"
-        :placeholder="
-          $t(
-            'presentationLayout.rightDrawer.tabs.settings.question.description.placeholder'
-          )
-        "
-        outlined
-        dense
-        autogrow
-        class="q-mt-sm"
-        @update:model-value="$emit('updateSlideSettings')"
-      />
-    </q-expansion-item>
+          <q-space />
+        </template>
 
-    <q-separator class="q-my-md" />
+        <q-input
+          v-model="slideSettings.description"
+          :placeholder="
+            $t(
+              'presentationLayout.rightDrawer.tabs.settings.question.description.placeholder'
+            )
+          "
+          outlined
+          dense
+          autogrow
+          class="q-mt-sm"
+          @update:model-value="$emit('updateSlideSettings')"
+        />
+      </q-expansion-item>
+
+      <q-separator class="q-my-md" />
+    </template>
   </div>
 </template>
 
@@ -149,6 +152,7 @@ import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
+import { SLIDE_TYPES } from "../../../../constants/presentationStudio";
 
 /*
  * emits
@@ -170,7 +174,7 @@ const textStore = useCanvasTextStore();
 const { customization } = storeToRefs(textStore);
 
 const presentationsStore = usePresentationsStore();
-const { slideSettings } = storeToRefs(presentationsStore);
+const { slide, slideSettings } = storeToRefs(presentationsStore);
 
 /*
  * layout title (question)

@@ -266,7 +266,6 @@ export default {
 
           question: {
             title: "Your question",
-            placeholder: "Your question...",
 
             description: {
               title: "Detailed description",
@@ -275,6 +274,8 @@ export default {
               placeholder: "Your Question Description...",
             },
           },
+
+          slideTitle: "Your title",
 
           timeLimit: {
             title: "Time Limit",

@@ -229,6 +229,7 @@ export default {
         subtitle: "Click to add subtitle",
         body: "Click to add text",
         question: "Click to add question",
+        leaderboard: "Leaderboard",
       },
     },
   },
