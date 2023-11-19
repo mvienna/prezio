@@ -362,6 +362,7 @@ import {
 } from "src/constants/presentationStudio";
 import { useI18n } from "vue-i18n";
 import { generateUniqueId } from "src/helpers/generationUtils";
+import { includes } from "vuedraggable/dist/vuedraggable.common";
 
 /*
  * variables
@@ -657,6 +658,24 @@ const handleAddingNewSlide = async (type) => {
     slide.value.canvas_data = JSON.stringify(elements.value);
     presentationsStore.updateLocalSlide();
     presentationsStore.saveSlide(undefined, elements.value);
+  }
+
+  /*
+   * if the current slide is type of quiz and has a leaderboard after itself,
+   * start adding new slide type of quiz after that leaderboard
+   */
+  if (
+    SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
+    SLIDE_TYPES_OF_QUIZ.includes(type)
+  ) {
+    const newSlideIndex = presentation.value.slides.findIndex(
+      (item) => item.id === slide.value.id
+    );
+
+    const nextSlide = presentation.value.slides?.[newSlideIndex + 1];
+    if (nextSlide && nextSlide.type === SLIDE_TYPES.LEADERBOARD) {
+      await presentationsStore.setSlide(nextSlide);
+    }
   }
 
   /*
