@@ -12,8 +12,8 @@
     class="scroll--hidden"
     @submit.prevent="handleSubmittingAnswers()"
   >
-    <!-- waiting for quiz to start -->
     <transition-group appear enter-active-class="animated zoomIn">
+      <!-- waiting for quiz to start -->
       <div v-if="room && !room.is_quiz_started && room.is_submission_locked">
         <div
           class="text-center q-mb-md text-h7 text-semibold"
@@ -106,6 +106,11 @@
           </div>
 
           <div v-else-if="timeLeft !== -1">
+            <!-- question title -->
+            <div class="text-h6 text-semibold text-center q-mb-lg">
+              {{ layoutTitleElement?.text }}
+            </div>
+
             <div class="row no-wrap justify-center">
               <q-circular-progress
                 :value="
@@ -261,6 +266,57 @@
                       {{ participantAnswers[0].time_taken_to_answer }} сек
                     </q-tooltip>
                   </span>
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
+        </transition>
+
+        <transition appear enter-active-class="animated fadeIn">
+          <div
+            v-if="
+              !participantAnswers?.length &&
+              room.is_answers_revealed &&
+              room.is_submission_locked &&
+              timeLeft === -1
+            "
+            class="full-width row no-wrap justify-center q-py-md fixed-bottom bg-orange"
+          >
+            <q-card
+              flat
+              style="
+                background: rgba(0, 0, 0, 0.5);
+                border-radius: 24px !important;
+              "
+            >
+              <q-card-section
+                class="row no-wrap items-center q-gutter-md q-px-md q-py-sm"
+              >
+                <q-icon
+                  v-if="isAnsweredCorrectly"
+                  name="r_timer"
+                  color="white"
+                  size="36px"
+                />
+
+                <q-icon
+                  v-else
+                  name="icon-thumb-down-circular"
+                  color="white"
+                  size="36px"
+                  style="transform: rotate(180deg) scaleX(-1)"
+                />
+
+                <div class="text-h7 text-semibold text-white">Время вышло</div>
+
+                <div
+                  style="
+                    background: rgba(255, 255, 255, 0.2);
+                    border-radius: 24px;
+                  "
+                  class="q-px-md q-py-xs row items-center text-white"
+                >
+                  <span class="text-h7 text-semibold"> + 0 </span>
                 </div>
               </q-card-section>
             </q-card>
