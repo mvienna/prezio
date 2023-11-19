@@ -166,9 +166,7 @@
             <PresentationRoomParticipantActions v-else />
 
             <!-- ALL - room data (participants count, reactions, answers count) -->
-            <PresentationRoomHostData
-              :participants-count="participants?.length || 0"
-            />
+            <PresentationRoomHostData />
 
             <!-- HOST - controls (← / →) -->
             <PresentationRoomHostSlideControls
@@ -210,7 +208,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
+import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
 import { colors, QSpinnerIos, useQuasar } from "quasar";

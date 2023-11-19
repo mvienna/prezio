@@ -118,7 +118,7 @@ class PresentationController extends Controller
             return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
-        $presentation->load('slides', 'slides.template', 'slides.answers', 'slides.answers.participant', 'preview', 'room', 'settings');
+        $presentation->load('slides', 'slides.template', 'slides.answers', 'slides.answers.participant', 'preview', 'room', 'room.reactions', 'settings');
 
         if (!$presentation->settings) {
             PresentationSettings::create([

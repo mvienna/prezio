@@ -468,10 +468,6 @@ onBeforeMount(() => {
   document.addEventListener("keydown", handleKeyDownEvent);
 });
 
-onUnmounted(() => {
-  document.removeEventListener("keydown", handleKeyDownEvent);
-});
-
 /*
  * slides drag
  */

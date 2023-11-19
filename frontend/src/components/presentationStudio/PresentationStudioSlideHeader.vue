@@ -122,10 +122,6 @@ onBeforeMount(() => {
   window.addEventListener("resize", onResize);
 });
 
-onUnmounted(() => {
-  window.removeEventListener("resize", onResize);
-});
-
 const onResize = () => {
   canvasRect.value = canvasStore.canvasRect();
 };

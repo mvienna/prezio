@@ -1,9 +1,9 @@
 <template>
   <div class="row no-wrap items-center">
-    <div style="width: 30px; height: 30px">
+    <div :style="`width: ${size}px; height: ${size}px`">
       <svg
-        width="30"
-        height="30"
+        :width="size"
+        :height="size"
         viewBox="0 0 329 329"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -360,6 +360,7 @@ defineProps({
   stage: { type: Number },
   value: { type: Number },
   answersCount: { type: Number },
+  size: { type: String, default: "30" },
 });
 </script>
 

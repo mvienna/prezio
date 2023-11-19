@@ -47,6 +47,11 @@
       v-if="isCanvasReady && !isPresentationPreview"
     />
 
+    <!-- slide data (reactions, answers, participants online) -->
+    <PresentationStudioRoomData
+      v-if="isCanvasReady && !isPresentationPreview"
+    />
+
     <!-- context menu -->
     <transition
       appear
@@ -74,14 +79,7 @@
 </template>
 
 <script setup>
-import {
-  computed,
-  onBeforeMount,
-  onMounted,
-  onUnmounted,
-  ref,
-  watch,
-} from "vue";
+import { computed, onBeforeMount, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
@@ -116,7 +114,7 @@ import {
 } from "stores/canvas/helpers/select";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 import { useRouter } from "vue-router";
-import { colors, copyToClipboard, QSpinnerIos, useQuasar } from "quasar";
+import { colors, QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import {
@@ -132,6 +130,9 @@ import PresentationStudioElementsContextMenu from "components/presentationStudio
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
 import PresentationStudioSlideHeader from "components/presentationStudio/PresentationStudioSlideHeader.vue";
+import { useAuthStore } from "stores/auth";
+import Echo from "laravel-echo";
+import PresentationStudioRoomData from "components/presentationStudio/PresentationStudioRoomData.vue";
 
 /*
  * variables
@@ -150,6 +151,9 @@ const {
   presentation,
   isPresentationPreview,
   slide,
+  room,
+  isHost,
+  participants,
   averageBackgroundBrightness,
   backgroundBrightnessThreshold,
 } = storeToRefs(presentationsStore);
@@ -193,6 +197,9 @@ const textStore = useCanvasTextStore();
 const mediaStore = useCanvasMediaStore();
 
 const shapeStore = useCanvasShapeStore();
+
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
 /*
  * canvas setup
@@ -255,16 +262,16 @@ onMounted(async () => {
    */
   document.addEventListener("keydown", handleKeyDownEvent);
 
+  /*
+   * establish connection to room channels
+   */
+  connectToRoomChannels();
+
+  /*
+   * hide loader
+   */
   $q.loading.hide();
   isCanvasReady.value = true;
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", resizeCanvas);
-  document.removeEventListener("mousemove", handleCanvasMouseMove);
-  document.removeEventListener("mouseup", handleCanvasMouseUp);
-  document.removeEventListener("keydown", handleKeyDownEvent);
-  canvas.value.removeEventListener("wheel", handleWheelEvent);
 });
 
 const resizeCanvas = () => {
@@ -747,34 +754,28 @@ averageBackgroundBrightness.value = computed(() => {
   }
 
   // define canvas
-  const roomBackgroundCanvas = document.createElement("canvas");
-  const roomBackgroundCtx = roomBackgroundCanvas.getContext("2d");
-  roomBackgroundCanvas.width = element.width;
-  roomBackgroundCanvas.height = element.height;
+  const backgroundCanvas = document.createElement("canvas");
+  const backgroundCtx = backgroundCanvas.getContext("2d");
+  backgroundCanvas.width = element.width;
+  backgroundCanvas.height = element.height;
 
   // filters
-  roomBackgroundCtx.filter = `blur(${element.blur || 0}px) contrast(${
+  backgroundCtx.filter = `blur(${element.blur || 0}px) contrast(${
     element.contrast >= 0 ? element.contrast : 100
   }%) brightness(${
     element.brightness >= 0 ? element.brightness : 100
   }%) invert(${element.invert || 0}%) grayscale(${element.grayscale || 0}%)`;
 
   if (element.opacity >= 0) {
-    roomBackgroundCtx.globalAlpha = element.opacity / 100;
+    backgroundCtx.globalAlpha = element.opacity / 100;
   }
 
   // draw background
-  roomBackgroundCtx.drawImage(
-    element.image,
-    0,
-    0,
-    element.width,
-    element.height
-  );
+  backgroundCtx.drawImage(element.image, 0, 0, element.width, element.height);
 
   // compute average brightness
   let sumBrightness = 0;
-  const imageData = roomBackgroundCtx.getImageData(
+  const imageData = backgroundCtx.getImageData(
     0,
     0,
     element.width,
@@ -789,9 +790,65 @@ averageBackgroundBrightness.value = computed(() => {
     sumBrightness += brightness;
   }
 
-  roomBackgroundCanvas.remove();
+  backgroundCanvas.remove();
   return sumBrightness / (element.width * element.height);
 });
+
+/*
+ * webhooks
+ */
+const connectToRoomChannels = () => {
+  const channel = window.Echo.channel(
+    `public.room.${presentation.value.room.id}`
+  );
+
+  isHost.value = true;
+
+  window.Echo = new Echo({
+    ...window.Echo.options,
+    auth: {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "X-CSRF-Token": "CSRF_TOKEN",
+      },
+    },
+  });
+
+  window.Echo.join(`presence.room.${presentation.value.room.id}`)
+    .here((users) => {
+      participants.value = users.filter(
+        (item) => item.id !== user.value?.id && item.room_id
+      );
+    })
+    .joining((userJoined) => {
+      participants.value.push(userJoined);
+    })
+    .leaving((userLeft) => {
+      participants.value = participants.value.filter(
+        (item) => item.id !== userLeft?.id && item.room_id
+      );
+    });
+
+  /*
+   * listen for new reactions
+   */
+  channel.listen("PresentationRoomNewReactionEvent", (event) => {
+    presentation.value.room.reactions = event.reactions;
+  });
+
+  /*
+   * listen for new submitted answers
+   */
+  channel.listen("PresentationRoomAnswersFormSubmittedEvent", (event) => {
+    slide.value.answers = [...slide.value.answers, ...event.answers];
+    presentationsStore.updateLocalSlide();
+  });
+
+  /*
+   * listen for room termination
+   */
+  channel.listen("PresentationRoomTerminatedEvent", () => {});
+};
 </script>
 
 <style scoped lang="scss">

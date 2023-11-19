@@ -1,12 +1,12 @@
 <template>
   <div class="row no-wrap items-center">
     <div
-      style="width: 30px; height: 30px"
+      :style="`width: ${size}px; height: ${size}px`"
       @click="!disabled ? $emit('react') : ''"
     >
       <svg
-        width="30"
-        height="30"
+        :width="size"
+        :height="size"
         viewBox="0 0 256 256"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -117,6 +117,7 @@ defineProps({
   stage: { type: Number },
   value: { type: Number },
   disabled: { type: Boolean },
+  size: { type: String, default: "30" },
 });
 
 defineEmits(["react"]);

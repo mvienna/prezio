@@ -1,34 +1,39 @@
 <template>
   <div
-    class="room_data row no-wrap"
-    :class="`${
-      isHost ? 'room_data__host' : 'room_data__participant q-mt-md'
-    } text-${isHost ? 'white' : textColor}`"
+    ref="roomData"
+    style="position: fixed; z-index: 2"
+    :style="`left: ${
+      canvasRect?.left + canvasRect?.width - roomData?.offsetWidth - 16
+    }px; top: ${
+      canvasRect?.top + canvasRect?.height - roomData?.offsetHeight - 16
+    }px; background: ${
+      averageBackgroundBrightness >= backgroundBrightnessThreshold
+        ? 'rgba(0, 0, 0, 0.1)'
+        : 'rgba(255, 255, 255, 0.1)'
+    };`"
+    class="room_data row no-wrap items-center justify-center q-px-sm"
+    :class="`text-${
+      averageBackgroundBrightness >= backgroundBrightnessThreshold
+        ? 'black'
+        : 'white'
+    }`"
   >
     <!-- reactions -->
     <div class="row no-wrap q-gutter-md">
       <!-- like -->
       <PresentationRoomDataLike
-        v-if="!isHost || (isHost && room?.reactions?.like > 0)"
+        v-if="presentation?.room?.reactions?.like > 0"
         :stage="stage.like"
-        :value="room?.reactions?.like || 0"
-        :disabled="isHost"
-        @react="
-          presentationsStore.sendPresentationRoomReaction('like');
-          animate('like');
-        "
+        :value="presentation?.room?.reactions?.like || 0"
+        size="24"
       />
 
       <!-- love -->
       <PresentationRoomDataLove
-        v-if="!isHost || (isHost && room?.reactions?.love > 0)"
+        v-if="presentation?.room?.reactions?.love > 0"
         :stage="stage.love"
-        :disabled="isHost"
-        :value="room?.reactions?.love || 0"
-        @react="
-          presentationsStore.sendPresentationRoomReaction('love');
-          animate('love');
-        "
+        :value="presentation?.room?.reactions?.love || 0"
+        size="24"
       />
     </div>
 
@@ -40,14 +45,12 @@
       :stage="stage.pin"
       :answers-count="slide?.answers?.length || 0"
       :value="slide?.answers?.length"
+      size="24"
       class="q-ml-md"
     />
 
     <!-- participants count -->
-    <div
-      v-if="isHost"
-      class="room_data__participants_count row no-wrap items-center q-ml-md"
-    >
+    <div class="room_data__participants_count row no-wrap items-center q-ml-md">
       <div class="relative-position q-mr-xs">
         <q-icon name="r_person" color="grey" size="24px" />
         <div
@@ -65,37 +68,34 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import PresentationRoomDataLike from "components/presentationRoom/host/data/PresentationRoomHostDataLike.vue";
 import PresentationRoomDataLove from "components/presentationRoom/host/data/PresentationRoomHostDataLove.vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import PresentationRoomDataSubmissions from "components/presentationRoom/host/data/PresentationRoomHostDataSubmissions.vue";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
+import { useCanvasStore } from "stores/canvas";
 
 /*
  * stores
  */
 const presentationsStore = usePresentationsStore();
 const {
-  room,
   slide,
+  presentation,
   averageBackgroundBrightness,
   backgroundBrightnessThreshold,
-  isHost,
   participants,
 } = storeToRefs(presentationsStore);
 
-/*
- * text color
- */
-const textColor = computed(() => {
-  return !isHost.value && slide?.type !== SLIDE_TYPES.CONTENT
-    ? averageBackgroundBrightness.value >= backgroundBrightnessThreshold.value
-      ? "black"
-      : "white"
-    : "white";
-});
+const canvasStore = useCanvasStore();
+const { scale } = storeToRefs(canvasStore);
+
+const roomData = ref();
 
 /*
  * animation
@@ -131,14 +131,14 @@ const animate = (key) => {
 };
 
 watch(
-  () => room.value?.reactions?.like,
+  () => presentation.value?.room?.reactions?.like,
   () => {
     animate("like");
   }
 );
 
 watch(
-  () => room.value?.reactions?.love,
+  () => presentation.value?.room?.reactions?.love,
   () => {
     animate("love");
   }
@@ -150,30 +150,40 @@ watch(
     animate("pin");
   }
 );
+
+/*
+ * slide canvas element
+ */
+const canvasRect = ref(canvasStore.canvasRect());
+
+watch(
+  () => scale.value,
+  () => {
+    canvasRect.value = canvasStore.canvasRect();
+  }
+);
+
+/*
+ * on resize
+ */
+onBeforeMount(() => {
+  window.addEventListener("resize", onResize);
+});
+
+const onResize = () => {
+  canvasRect.value = canvasStore.canvasRect();
+};
 </script>
 
 <style scoped lang="scss">
 .room_data {
   color: $white;
   border-radius: 24px;
-  padding: 16px;
+  padding: 8px;
   z-index: 2;
-  height: 62px;
-  font-size: 1em;
+  height: 40px;
+  font-size: 0.8em;
   transition: 0.2s;
-
-  &.room_data__host {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    position: absolute;
-    right: 24px;
-    bottom: 24px;
-    transition: 0.2s;
-  }
-
-  &.room_data__participant {
-    justify-content: center;
-  }
 
   .room_data__participants_count {
     .room_data__participants_count__status {
@@ -187,18 +197,6 @@ watch(
     .room_data__participants_count__limit {
       font-size: 0.85em;
       opacity: 0.7;
-    }
-  }
-}
-
-@media screen and (max-width: 1023px) {
-  .room_data {
-    height: 50px;
-    font-size: 0.8em;
-
-    &.room_data__host {
-      right: 8px;
-      bottom: 8px;
     }
   }
 }

@@ -176,10 +176,6 @@ onMounted(() => {
   window.addEventListener("resize", onResize);
 });
 
-onUnmounted(() => {
-  window.removeEventListener("resize", onResize);
-});
-
 const update = () => {
   if (!svg.value) return;
 

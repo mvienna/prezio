@@ -209,10 +209,6 @@ onMounted(() => {
   window.addEventListener("resize", onResize);
 });
 
-onUnmounted(() => {
-  window.removeEventListener("resize", onResize);
-});
-
 watch(
   () => props.words,
   () => {

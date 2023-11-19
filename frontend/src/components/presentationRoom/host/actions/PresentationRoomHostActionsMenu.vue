@@ -167,10 +167,6 @@ onBeforeMount(() => {
   });
 });
 
-onUnmounted(() => {
-  document.removeEventListener("fullscreenchange", handleFullscreenChangeEvent);
-});
-
 const handleFullscreenChangeEvent = () => {
   isFullscreen.value = !!document.fullscreenElement;
 };
