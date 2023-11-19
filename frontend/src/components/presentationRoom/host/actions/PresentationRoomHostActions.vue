@@ -32,7 +32,9 @@
       <!-- finish quiz -->
       <PresentationRoomHostActionsFinishQuiz
         v-if="
-          SLIDE_TYPES_OF_QUIZ.includes(slide?.type) && room?.is_quiz_started
+          SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
+          room?.is_quiz_started &&
+          !room?.is_submission_locked
         "
       />
     </div>
