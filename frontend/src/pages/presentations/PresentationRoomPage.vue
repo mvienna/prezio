@@ -389,31 +389,53 @@ onMounted(async () => {
       showRoomInvitationPanel.value = true;
     }
 
-    if (
-      SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
-      !room.value.is_quiz_started
-    ) {
-      elements.value = elements.value.filter((element) =>
-        [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
-          element.mode
-        )
-      );
+    if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
+      if (
+        room.value.is_quiz_started &&
+        room.value.is_submission_locked &&
+        timeLeft.value > 5
+      ) {
+        elements.value = elements.value.filter((element) =>
+          [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+            element.mode
+          )
+        );
 
-      if (isHost.value) {
-        showRoomInvitationPanel.value = true;
+        if (
+          !presentation.value.settings.quiz_data ||
+          (presentation.value.settings.quiz_data &&
+            JSON.parse(presentation.value.settings.quiz_data).countdown)
+        ) {
+          setTimeout(async () => {
+            await canvasStore.setElementsFromSlide();
+            canvasStore.redrawCanvas(false, undefined, false);
+          }, (timeLeft.value - 5) * 1000);
+        }
       }
 
-      if (
-        (!presentation.value.settings.quiz_data ||
-          JSON.parse(presentation.value.settings.quiz_data).liveChat) &&
-        isAuthenticated.value &&
-        (isHost.value ||
-          (participant.value?.user_data &&
-            JSON.parse(participant.value.user_data)?.avatar))
-      ) {
-        setTimeout(() => {
-          showRoomChat.value = true;
-        }, 600);
+      if (!room.value.is_quiz_started) {
+        elements.value = elements.value.filter((element) =>
+          [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+            element.mode
+          )
+        );
+
+        if (isHost.value) {
+          showRoomInvitationPanel.value = true;
+        }
+
+        if (
+          (!presentation.value.settings.quiz_data ||
+            JSON.parse(presentation.value.settings.quiz_data).liveChat) &&
+          isAuthenticated.value &&
+          (isHost.value ||
+            (participant.value?.user_data &&
+              JSON.parse(participant.value.user_data)?.avatar))
+        ) {
+          setTimeout(() => {
+            showRoomChat.value = true;
+          }, 600);
+        }
       }
     }
 
@@ -498,10 +520,6 @@ onMounted(async () => {
    */
   $q.loading.hide();
   isLoaded.value = true;
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", resizeCanvas);
 });
 
 /*
@@ -606,16 +624,38 @@ const connectToRoomChannels = () => {
 
     await canvasStore.setElementsFromSlide();
 
-    // filter slide elements (leave only background & base fill) for awaiting participants view
-    if (
-      SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
-      !room.value.is_quiz_started
-    ) {
-      elements.value = elements.value.filter((element) =>
-        [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
-          element.mode
-        )
-      );
+    // leave only background & base fill for awaiting participants view
+    if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
+      if (!room.value.is_quiz_started) {
+        elements.value = elements.value.filter((element) =>
+          [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+            element.mode
+          )
+        );
+      }
+
+      if (
+        room.value.is_quiz_started &&
+        room.value.is_submission_locked &&
+        timeLeft.value > 5
+      ) {
+        elements.value = elements.value.filter((element) =>
+          [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+            element.mode
+          )
+        );
+
+        if (
+          !presentation.value.settings.quiz_data ||
+          (presentation.value.settings.quiz_data &&
+            JSON.parse(presentation.value.settings.quiz_data).countdown)
+        ) {
+          setTimeout(async () => {
+            await canvasStore.setElementsFromSlide();
+            canvasStore.redrawCanvas(false, undefined, false);
+          }, (timeLeft.value - 5) * 1000);
+        }
+      }
     }
 
     // redraw canvas
@@ -735,10 +775,6 @@ const connectToRoomChannels = () => {
  */
 onBeforeMount(() => {
   document.addEventListener("keydown", handleKeyDownEvent);
-});
-
-onUnmounted(() => {
-  document.removeEventListener("keydown", handleKeyDownEvent);
 });
 
 const handleKeyDownEvent = (event) => {
