@@ -150,7 +150,7 @@ const handleBackgroundMouseOver = (background) => {
     if (isHovered.value) {
       emit("previewBackground", background);
     }
-  }, 500);
+  }, 1000);
 };
 
 const handleBackgroundMouseLeave = () => {
