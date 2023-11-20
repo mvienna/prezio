@@ -9,9 +9,11 @@
     :style="`width: ${canvasRect?.width}px; left: ${canvasRect?.left}px; top: ${
       canvasRect?.top
     }px; background: ${
-      averageBackgroundBrightness >= backgroundBrightnessThreshold
-        ? 'rgba(0, 0, 0, 0.1)'
-        : 'rgba(255, 255, 255, 0.1)'
+      presentation?.settings?.show_room_invitation_panel || isHovered
+        ? averageBackgroundBrightness >= backgroundBrightnessThreshold
+          ? 'rgba(0, 0, 0, 0.1)'
+          : 'rgba(255, 255, 255, 0.1)'
+        : 'transparent'
     };`"
     class="row no-wrap items-center justify-center q-px-sm"
     :class="`text-${
@@ -19,6 +21,8 @@
         ? 'black'
         : 'white'
     }`"
+    @mouseover="isHovered = true"
+    @mouseleave="isHovered = false"
   >
     <transition
       appear
@@ -26,6 +30,7 @@
       leave-active-class="animated fadeOutUp"
     >
       <div
+        v-if="presentation?.settings?.show_room_invitation_panel || isHovered"
         class="row no-wrap items-center justify-center ellipsis"
         style="max-width: 70%"
       >
@@ -88,6 +93,11 @@ import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
+
+/*
+ * variables
+ */
+const isHovered = ref(false);
 
 /*
  * stores
