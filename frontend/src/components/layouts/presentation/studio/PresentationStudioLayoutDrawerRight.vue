@@ -132,7 +132,7 @@ const rightDrawerTabs = computed(() => {
       name: "layers",
       icon: "r_layers",
       label: t("presentationLayout.rightDrawer.tabs.layers.title"),
-      // hidden: slide.value?.type !== SLIDE_TYPES.CONTENT,
+      hidden: slide.value?.type !== SLIDE_TYPES.CONTENT,
     },
     {
       name: "design",
