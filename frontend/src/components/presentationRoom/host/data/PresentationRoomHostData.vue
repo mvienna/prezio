@@ -35,7 +35,9 @@
     <!-- answers count -->
     <PresentationRoomDataSubmissions
       v-if="
-        [...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(slide?.type)
+        [...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(
+          slide?.type
+        ) && isHost
       "
       :stage="stage.pin"
       :answers-count="slide?.answers?.length || 0"
