@@ -100,18 +100,22 @@ const slideAnswers = computed(() => {
 });
 
 const handleRemovingAnswer = (text) => {
-  const answer = slide.value?.answers?.find((item) => {
+  const answers = slide.value?.answers?.filter((item) => {
     return JSON.parse(item.answer_data).text === text;
   });
 
-  api
-    .delete(`/presentation/slide/${slide.value.id}/answer/${answer.id}`)
-    .then(() => {
-      slide.value.answers = slide.value.answers.filter(
-        (item) => item.id !== answer.id
-      );
-      presentationsStore.updateLocalSlide();
-    });
+  answers.forEach(async (answer) => {
+    api
+      .delete(`/presentation/slide/${slide.value.id}/answer/${answer.id}`)
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+
+  slide.value.answers = slide.value?.answers?.filter((item) => {
+    return JSON.parse(item.answer_data).text !== text;
+  });
+  presentationsStore.updateLocalSlide();
 };
 
 /*
