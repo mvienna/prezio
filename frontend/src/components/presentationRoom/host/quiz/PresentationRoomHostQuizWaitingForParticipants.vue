@@ -154,7 +154,7 @@ const generateWordCloud = () => {
     .map(([key, size]) => ({
       text: wordCloudSetup.word(key),
       size,
-      id: generateUniqueId(4, props.words),
+      id: generateUniqueId(4, words.value),
     }));
 
   const svg = d3
@@ -223,7 +223,7 @@ const updateWordCloud = () => {
     .map(([key, size]) => ({
       text: wordCloudSetup.word(key),
       size,
-      id: generateUniqueId(4, props.words),
+      id: generateUniqueId(4, words.value),
     }));
 
   const cloud = d3Cloud()
@@ -294,7 +294,6 @@ onMounted(() => {
 watch(
   () => participants.value,
   () => {
-    console.log(participants.value);
     updateWordCloud();
   },
   { deep: true }
