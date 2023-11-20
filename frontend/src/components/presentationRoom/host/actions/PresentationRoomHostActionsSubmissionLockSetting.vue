@@ -62,9 +62,10 @@ const toggleSubmissionLockSetting = () => {
     undefined,
     undefined,
     {
-      countdown: !room.value.is_submission_locked
-        ? slideSettings.value.timeLimit
-        : 0,
+      countdown:
+        !room.value.is_submission_locked && slideSettings.value.isLimitedTime
+          ? slideSettings.value.timeLimit
+          : 0,
       is_submission_locked: room.value.is_submission_locked,
     }
   );
