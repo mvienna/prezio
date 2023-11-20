@@ -71,7 +71,10 @@ import PresentationRoomDataLove from "components/presentationRoom/host/data/Pres
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import PresentationRoomDataSubmissions from "components/presentationRoom/host/data/PresentationRoomHostDataSubmissions.vue";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 
 /*
  * stores
