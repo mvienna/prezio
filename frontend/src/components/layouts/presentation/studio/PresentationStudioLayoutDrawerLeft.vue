@@ -362,7 +362,6 @@ import {
 } from "src/constants/presentationStudio";
 import { useI18n } from "vue-i18n";
 import { generateUniqueId } from "src/helpers/generationUtils";
-import { includes } from "vuedraggable/dist/vuedraggable.common";
 
 /*
  * variables

@@ -81,9 +81,13 @@ import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
-import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
+import {
+  ALIGNMENT,
+  SHAPES_OPTIONS,
+} from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
 import PresentationStudioTabsSettingsTab from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTab.vue";
+import { generateUniqueId } from "src/helpers/generationUtils";
 
 /*
  * variables
@@ -128,7 +132,7 @@ const rightDrawerTabs = computed(() => {
       name: "layers",
       icon: "r_layers",
       label: t("presentationLayout.rightDrawer.tabs.layers.title"),
-      hidden: slide.value?.type !== SLIDE_TYPES.CONTENT,
+      // hidden: slide.value?.type !== SLIDE_TYPES.CONTENT,
     },
     {
       name: "design",
@@ -171,63 +175,7 @@ watch(
  * change slide type
  */
 const handleChangingSlideType = async (type) => {
-  const newElements = elements.value.filter((element) =>
-    [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
-      element.mode
-    )
-  );
-
-  if (type !== SLIDE_TYPES.CONTENT) {
-    const layoutDefaultElementProps = {
-      mode: MODE_OPTIONS.value.text,
-      isVisible: true,
-      isLocked: false,
-      fontFamily: customization.value.font,
-      lineHeight: customization.value.lineHeight,
-      fontWeight: "normal",
-      textDecoration: "none",
-      fontStyle: "normal",
-      textAlign: ALIGNMENT.horizontal.center,
-      verticalAlign: ALIGNMENT.vertical.top,
-      rotationAngle: 0,
-
-      /*
-       * editable
-       */
-      id: "layout-",
-      text: "",
-
-      fontSize: "48px",
-      color: customization.value.color,
-
-      x: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100
-      ),
-      y: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100
-      ),
-
-      width: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 90) / 100
-      ),
-      height: canvasStore.computeAdjustedSize(30),
-    };
-
-    const titleElement = {
-      ...layoutDefaultElementProps,
-
-      id: "layout-title-top-addon",
-      text:
-        type === SLIDE_TYPES.LEADERBOARD
-          ? t("presentationStudio.layouts.defaultTexts.leaderboard")
-          : t("presentationStudio.layouts.defaultTexts.title"),
-      color: "#313232",
-      fontSize: "48px",
-      fontWeight: "bold",
-    };
-
-    newElements.push(titleElement);
-  }
+  const newElements = prepareElementsForNewSlide(type);
 
   slide.value = {
     ...slide.value,
@@ -240,6 +188,135 @@ const handleChangingSlideType = async (type) => {
 
   await canvasStore.setElementsFromSlide();
   canvasStore.redrawCanvas(false, undefined, false);
+};
+
+const prepareElementsForNewSlide = (type) => {
+  let preparedElements = [];
+
+  /*
+   * default elements
+   */
+  const layoutDefaultElementProps = {
+    mode: MODE_OPTIONS.value.text,
+    isVisible: true,
+    isLocked: false,
+    fontFamily: customization.value.font,
+    lineHeight: customization.value.lineHeight,
+    fontWeight: "normal",
+    textDecoration: "none",
+    fontStyle: "normal",
+    textAlign: ALIGNMENT.horizontal.left,
+    verticalAlign: ALIGNMENT.vertical.top,
+    rotationAngle: 0,
+
+    /*
+     * editable
+     */
+    id: "layout-",
+    text: "",
+
+    fontSize: "48px",
+    color: customization.value.color,
+
+    x: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 5) / 100
+    ),
+    y: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 5) / 100
+    ),
+
+    width: canvasStore.computeAdjustedSize(
+      (canvasStore.canvasRect().width * 90) / 100
+    ),
+    height: canvasStore.computeAdjustedSize(30),
+  };
+
+  /*
+   * element:
+   * content
+   */
+  if (type === SLIDE_TYPES.CONTENT) {
+    const titleElement = {
+      ...layoutDefaultElementProps,
+
+      id: "layout-title-top-titleAndBody",
+      text: t("presentationStudio.layouts.defaultTexts.title"),
+
+      color: "#313232",
+      fontSize: "48px",
+      fontWeight: "bold",
+    };
+
+    const bodyElement = {
+      ...layoutDefaultElementProps,
+
+      id: "layout-body",
+      text: t("presentationStudio.layouts.defaultTexts.body"),
+
+      fontSize: "16px",
+      color: "#808080",
+
+      y: titleElement.y + titleElement.height,
+
+      height: canvasStore.computeAdjustedSize(
+        (canvasStore.canvasRect().height * 65) / 100
+      ),
+    };
+
+    preparedElements = [titleElement, bodyElement];
+  }
+
+  /*
+   * quiz
+   * word cloud
+   */
+  if (
+    [
+      ...SLIDE_TYPES_OF_QUIZ,
+      SLIDE_TYPES.WORD_CLOUD,
+      SLIDE_TYPES.LEADERBOARD,
+    ].includes(type)
+  ) {
+    const titleElement = {
+      ...layoutDefaultElementProps,
+
+      id: "layout-title-top-titleAndBody",
+      text:
+        type === SLIDE_TYPES.LEADERBOARD
+          ? t("presentationStudio.layouts.defaultTexts.leaderboard")
+          : t("presentationStudio.layouts.defaultTexts.question"),
+      textAlign: "center",
+
+      color: "#313232",
+      fontSize: "48px",
+      fontWeight: "bold",
+    };
+
+    preparedElements = [titleElement];
+  }
+
+  /*
+   * add base fill
+   */
+  const baseFill = {
+    id: generateUniqueId(undefined, []),
+    mode: MODE_OPTIONS.value.baseFill,
+    isVisible: true,
+    isLocked: true,
+    type: SHAPES_OPTIONS.square,
+    x: 0,
+    y: 0,
+    width: 2560,
+    height: 1440,
+    rotationAngle: 0,
+    strokeColor: "#FFFFFF",
+    fillColor: "#FFFFFF",
+    lineWidth: "4px",
+  };
+
+  preparedElements.push(baseFill);
+
+  return preparedElements;
 };
 </script>
 
