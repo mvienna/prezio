@@ -90,6 +90,7 @@
                 >
                   {{
                     getParticipantUserData(item)?.name ||
+                    getParticipantUserData(item)?.[0]?.name ||
                     (!item.participant
                       ? room?.host?.name || (isHost ? user?.name : "")
                       : "")
