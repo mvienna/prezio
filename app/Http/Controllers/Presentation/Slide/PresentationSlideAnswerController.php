@@ -78,7 +78,7 @@ class PresentationSlideAnswerController extends Controller
         }
 
         $presentation->room?->messages()?->delete();
-        $presentation->room?->reactions()?->delete();
+//        $presentation->room?->reactions()?->delete();
         $presentation->room?->participants()?->delete();
 
         $presentation->room()?->update([
