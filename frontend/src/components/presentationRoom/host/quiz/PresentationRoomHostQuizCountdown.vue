@@ -124,7 +124,12 @@
 
             <!-- reveal answers -->
             <div
-              v-if="!room.is_answers_revealed"
+              v-if="
+                !room.is_answers_revealed &&
+                presentation?.settings?.quiz_data &&
+                JSON.parse(presentation.settings.quiz_data)
+                  ?.showAnswersManually === true
+              "
               class="row no-wrap justify-center q-mt-md"
             >
               <q-btn
@@ -196,12 +201,30 @@ const isAllParticipantsAnswered = ref(false);
 watch(
   () => timeLeft.value,
   () => {
+    // timeout
     if (
       timeLeft.value > 0 &&
       timeLeft.value <= 3 &&
       !room.value.is_submission_locked
     ) {
       isQuizComingToEnd.value = true;
+
+      // set "is answers revealed" prop to true if setting is turned on (default setting showAnswersManually: false)
+      room.value.is_answers_revealed =
+        !presentation.value?.settings?.quiz_data ||
+        (presentation.value?.settings?.quiz_data &&
+          JSON.parse(presentation.value.settings.quiz_data)
+            ?.showAnswersManually === false);
+
+      presentationsStore.sendPresentationRoomUpdateEvent(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          is_answers_revealed: room.value.is_answers_revealed,
+        }
+      );
 
       if (timeLeft.value === 1 && room.value.is_answers_revealed) {
         setTimeout(() => {
@@ -210,6 +233,7 @@ watch(
       }
     }
 
+    // clear
     if (timeLeft.value > 3) {
       isQuizComingToEnd.value = false;
     }
@@ -224,7 +248,12 @@ watch(
       isQuizComingToEnd.value = true;
       isAllParticipantsAnswered.value = true;
 
-      if (room.value.is_answers_revealed) {
+      if (
+        !presentation.value?.settings?.quiz_data ||
+        (presentation.value?.settings?.quiz_data &&
+          JSON.parse(presentation.value.settings.quiz_data)
+            ?.showAnswersManually === false)
+      ) {
         setTimeout(() => {
           isFinished.value = true;
         }, 3000);

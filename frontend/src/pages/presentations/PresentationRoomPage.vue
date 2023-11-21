@@ -621,13 +621,15 @@ const connectToRoomChannels = () => {
     const newSlide = await presentationsStore.fetchSlideData(
       room.value.slide_id
     );
-    slide.value = newSlide.data;
-    slideSettings.value = slide.value.settings_data
-      ? JSON.parse(slide.value.settings_data)
-      : {};
-    presentationsStore.updateLocalSlide();
+    if (newSlide) {
+      slide.value = newSlide.data;
+      slideSettings.value = slide.value.settings_data
+        ? JSON.parse(slide.value.settings_data)
+        : {};
+      presentationsStore.updateLocalSlide();
 
-    await canvasStore.setElementsFromSlide();
+      await canvasStore.setElementsFromSlide();
+    }
 
     // leave only background & base fill for awaiting participants view
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
@@ -708,28 +710,39 @@ const connectToRoomChannels = () => {
         room.value.countdown = 0;
         stopCountdown();
 
-        api
-          .post(
-            `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
-            {
-              message: "allParticipantsSubmittedAnswers",
-              type: "system",
-            }
-          )
-          .catch((error) => {
-            console.log(error);
-          });
+        // actually reveal answers after 2 seconds
+        setTimeout(() => {
+          // set "is answers revealed" prop to true if setting is turned on (default setting showAnswersManually: false)
+          room.value.is_answers_revealed =
+            !presentation.value?.settings?.quiz_data ||
+            (presentation.value?.settings?.quiz_data &&
+              JSON.parse(presentation.value.settings.quiz_data)
+                ?.showAnswersManually === false);
 
-        presentationsStore.sendPresentationRoomUpdateEvent(
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          {
-            countdown: room.value.countdown,
-            is_submission_locked: room.value.is_submission_locked,
-          }
-        );
+          api
+            .post(
+              `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
+              {
+                message: "allParticipantsSubmittedAnswers",
+                type: "system",
+              }
+            )
+            .catch((error) => {
+              console.log(error);
+            });
+
+          presentationsStore.sendPresentationRoomUpdateEvent(
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+              countdown: room.value.countdown,
+              is_submission_locked: room.value.is_submission_locked,
+              is_answers_revealed: room.value.is_answers_revealed,
+            }
+          );
+        }, 2000);
       }
     }
   });

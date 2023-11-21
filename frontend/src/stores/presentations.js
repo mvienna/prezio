@@ -548,13 +548,7 @@ export const usePresentationsStore = defineStore("presentations", {
 
     async handleQuizStart(slide_id = null) {
       this.room.is_quiz_started = true;
-
-      // set "is answers revealed" prop to true if setting is turned on (default setting showAnswersManually: false)
-      this.room.is_answers_revealed =
-        !this.presentation?.settings?.quiz_data ||
-        (this.presentation?.settings?.quiz_data &&
-          JSON.parse(this.presentation.settings.quiz_data)
-            ?.showAnswersManually === false);
+      this.room.is_answers_revealed = false;
 
       // initial countdown (question №n out of №n)
       let timeout = 5000;
