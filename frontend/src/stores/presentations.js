@@ -546,7 +546,7 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async handleQuizStart() {
+    async handleQuizStart(slide_id = null) {
       this.room.is_quiz_started = true;
 
       // set "is answers revealed" prop to true if setting is turned on (default setting showAnswersManually: false)
@@ -570,18 +570,22 @@ export const usePresentationsStore = defineStore("presentations", {
 
       // start before-quiz timeout
       this.room.is_submission_locked = true;
+      const data = {
+        is_quiz_started: this.room.is_quiz_started,
+        is_answers_revealed: this.room.is_answers_revealed,
+
+        is_submission_locked: this.room.is_submission_locked,
+        countdown: timeout / 1000,
+      };
+      if (slide_id) {
+        data.slide_id = slide_id;
+      }
       await this.sendPresentationRoomUpdateEvent(
         undefined,
         undefined,
         undefined,
         undefined,
-        {
-          is_quiz_started: this.room.is_quiz_started,
-          is_answers_revealed: this.room.is_answers_revealed,
-
-          is_submission_locked: this.room.is_submission_locked,
-          countdown: timeout / 1000,
-        }
+        data
       );
 
       // start the quiz
@@ -601,24 +605,30 @@ export const usePresentationsStore = defineStore("presentations", {
       }, timeout);
     },
 
-    handleQuizStop() {
+    handleQuizStop(slide_id = null) {
       this.room.is_submission_locked = true;
       this.room.is_quiz_started = false;
       this.room.is_answers_revealed = false;
 
       stopCountdown();
 
+      const data = {
+        countdown: 0,
+        is_submission_locked: this.room.is_submission_locked,
+        is_quiz_started: this.room.is_quiz_started,
+        is_answers_revealed: this.room.is_answers_revealed,
+      };
+
+      if (slide_id) {
+        data.slide_id = slide_id;
+      }
+
       this.sendPresentationRoomUpdateEvent(
         undefined,
         undefined,
         undefined,
         undefined,
-        {
-          countdown: 0,
-          is_submission_locked: this.room.is_submission_locked,
-          is_quiz_started: this.room.is_quiz_started,
-          is_answers_revealed: this.room.is_answers_revealed,
-        }
+        data
       );
     },
   },

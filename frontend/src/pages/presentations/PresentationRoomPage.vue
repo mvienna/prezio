@@ -126,7 +126,14 @@
               />
             </template>
 
-            <template v-if="!isHost && slide?.type !== SLIDE_TYPES.CONTENT">
+            <template
+              v-if="
+                !isHost &&
+                ![SLIDE_TYPES.CONTENT, SLIDE_TYPES.LEADERBOARD].includes(
+                  slide?.type
+                )
+              "
+            >
               <!-- PARTICIPANT - base info form (avatar & name, for quiz) -->
               <PresentationRoomParticipantFormsBaseInfo
                 v-if="
@@ -788,7 +795,7 @@ const handleKeyDownEvent = (event) => {
         SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
         !room.value.is_quiz_started
       ) {
-        presentationsStore.handleQuizStart();
+        presentationsStore.handleQuizStart(slide.value.id);
       } else {
         handleSlideChange("forward");
       }
@@ -800,7 +807,7 @@ const handleKeyDownEvent = (event) => {
         SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
         !room.value.is_quiz_started
       ) {
-        presentationsStore.handleQuizStart();
+        presentationsStore.handleQuizStart(slide.value.id);
       }
     }
   }
@@ -856,6 +863,7 @@ const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
           ? slideSettings.value.timeLimit
           : 0,
         is_submission_locked: room.value.is_submission_locked,
+        slide_id: slide.value.id,
       }
     );
 
@@ -867,10 +875,10 @@ const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
    */
   if (SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type)) {
     if (isOnLoad || direction === "backward") {
-      presentationsStore.handleQuizStop();
+      presentationsStore.handleQuizStop(slide.value.id);
     } else {
       if (room.value.is_quiz_started) {
-        presentationsStore.handleQuizStart();
+        presentationsStore.handleQuizStart(slide.value.id);
       }
     }
 
@@ -880,7 +888,7 @@ const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
   /*
    * other slide types
    */
-  presentationsStore.handleQuizStop();
+  presentationsStore.handleQuizStop(slide.value.id);
 };
 
 /*
