@@ -17,6 +17,7 @@
       outlined
       dense
       class="q-mt-sm"
+      debounce="500"
       @update:model-value="handleQuestionInput()"
     >
       <!-- alignment -->
@@ -135,6 +136,7 @@
           dense
           autogrow
           class="q-mt-sm"
+          debounce="1000"
           @update:model-value="$emit('updateSlideSettings')"
         />
       </q-expansion-item>
