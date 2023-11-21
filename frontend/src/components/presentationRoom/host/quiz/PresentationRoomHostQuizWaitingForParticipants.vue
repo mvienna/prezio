@@ -128,7 +128,7 @@ const height = computed(() => {
   return (canvasRect.value.height * 40) / 100;
 });
 
-const wordCloudSetup = {
+const settings = {
   size: (group) => group.length, // given a grouping of words, returns the size factor for that word
   word: (d) => d, // given an item of the data array, returns the word
   marginTop: 0,
@@ -138,6 +138,7 @@ const wordCloudSetup = {
   maxWords: 250,
   fontFamily: "sans-serif",
   fontScale: 20,
+  fontWeight: 600,
   padding: 5,
   rotate: () => ~~(Math.random() * 2) * 90,
   invalidation: null, // when this promise resolves, stop the simulation
@@ -148,11 +149,11 @@ const wordCloudSetup = {
  */
 const generateWordCloud = () => {
   const data = d3
-    .rollups(words.value, wordCloudSetup.size, (w) => w)
+    .rollups(words.value, settings.size, (w) => w)
     .sort(([, a], [, b]) => d3.descending(a, b))
-    .slice(0, wordCloudSetup.maxWords)
+    .slice(0, settings.maxWords)
     .map(([key, size]) => ({
-      text: wordCloudSetup.word(key),
+      text: settings.word(key),
       size,
       id: generateUniqueId(4, words.value),
     }));
@@ -161,7 +162,7 @@ const generateWordCloud = () => {
     .create("svg")
     .attr("viewBox", [0, 0, width.value, height.value])
     .attr("width", width.value)
-    .attr("font-family", wordCloudSetup.fontFamily)
+    .attr("font-family", settings.fontFamily)
     .attr("text-anchor", "middle")
     .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
 
@@ -169,24 +170,24 @@ const generateWordCloud = () => {
     .append("g")
     .attr(
       "transform",
-      `translate(${wordCloudSetup.marginLeft},${wordCloudSetup.marginTop})`
+      `translate(${settings.marginLeft},${settings.marginTop})`
     );
 
   const cloud = d3Cloud()
     .size([
-      width.value - wordCloudSetup.marginLeft - wordCloudSetup.marginRight,
-      height.value - wordCloudSetup.marginTop - wordCloudSetup.marginBottom,
+      width.value - settings.marginLeft - settings.marginRight,
+      height.value - settings.marginTop - settings.marginBottom,
     ])
     .words(data)
-    .padding(wordCloudSetup.padding)
-    .rotate(wordCloudSetup.rotate)
-    .font(wordCloudSetup.fontFamily)
-    .fontSize((d) => Math.sqrt(d.size) * wordCloudSetup.fontScale)
+    .padding(settings.padding)
+    .rotate(settings.rotate)
+    .font(settings.fontFamily)
+    .fontSize((d) => Math.sqrt(d.size) * settings.fontScale)
     .on("word", ({ size, x, y, rotate, text, id }) => {
       g.append("text")
         .attr("class", `word-cloud-text-${id}`)
         .attr("font-size", size)
-        .attr("font-weight", 500)
+        .attr("font-weight", settings.fontWeight)
         .attr("transform", `translate(${x},${y}) rotate(${rotate})`)
         .style(
           "fill",
@@ -199,8 +200,7 @@ const generateWordCloud = () => {
     });
 
   cloud.start();
-  wordCloudSetup.invalidation &&
-    wordCloudSetup.invalidation.then(() => cloud.stop());
+  settings.invalidation && settings.invalidation.then(() => cloud.stop());
   wordCloud.value.append(svg.node());
 };
 
@@ -217,25 +217,25 @@ const updateWordCloud = () => {
     .remove();
 
   const data = d3
-    .rollups(words.value, wordCloudSetup.size, (w) => w)
+    .rollups(words.value, settings.size, (w) => w)
     .sort(([, a], [, b]) => d3.descending(a, b))
-    .slice(0, wordCloudSetup.maxWords)
+    .slice(0, settings.maxWords)
     .map(([key, size]) => ({
-      text: wordCloudSetup.word(key),
+      text: settings.word(key),
       size,
       id: generateUniqueId(4, words.value),
     }));
 
   const cloud = d3Cloud()
     .size([
-      width.value - wordCloudSetup.marginLeft - wordCloudSetup.marginRight,
-      height.value - wordCloudSetup.marginTop - wordCloudSetup.marginBottom,
+      width.value - settings.marginLeft - settings.marginRight,
+      height.value - settings.marginTop - settings.marginBottom,
     ])
     .words(data)
-    .padding(wordCloudSetup.padding)
-    .rotate(wordCloudSetup.rotate)
-    .font(wordCloudSetup.fontFamily)
-    .fontSize((d) => Math.sqrt(d.size) * wordCloudSetup.fontScale)
+    .padding(settings.padding)
+    .rotate(settings.rotate)
+    .font(settings.fontFamily)
+    .fontSize((d) => Math.sqrt(d.size) * settings.fontScale)
     .on("word", ({ size, x, y, rotate, text, id }) => {
       const textElements = d3
         .select("svg")
@@ -275,8 +275,7 @@ const updateWordCloud = () => {
     });
 
   cloud.start();
-  wordCloudSetup.invalidation &&
-    wordCloudSetup.invalidation.then(() => cloud.stop());
+  settings.invalidation && settings.invalidation.then(() => cloud.stop());
 };
 
 /*
