@@ -70,7 +70,7 @@
                 :class="$q.screen.lt.lg ? 'q-pa-sm' : 'q-pa-md'"
               >
                 <div
-                  class="text-semibold ellipsis text-no-wrap q-mr-md"
+                  class="text-semibold ellipsis text-no-wrap"
                   style="font-size: 1em"
                 >
                   {{
