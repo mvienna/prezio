@@ -5,10 +5,19 @@ import {
   SHAPES_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import { usePresentationsStore } from "stores/presentations";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, lastChangedAt } = storeToRefs(presentationsStore);
+const {
+  presentation,
+  slide,
+  lastChangedAt,
+  averageBackgroundBrightness,
+  backgroundBrightnessThreshold,
+} = storeToRefs(presentationsStore);
 
 export const useCanvasStore = defineStore("canvas", {
   state: () => ({
@@ -485,7 +494,21 @@ export const useCanvasStore = defineStore("canvas", {
        * apply text customization
        */
       this.ctx.font = `${element.fontStyle} ${element.fontWeight} ${adjustedFontSize}px ${element.fontFamily}`;
-      this.ctx.fillStyle = element.color;
+      if (
+        [
+          ...SLIDE_TYPES_OF_QUIZ,
+          SLIDE_TYPES.LEADERBOARD,
+          SLIDE_TYPES.WORD_CLOUD,
+        ].includes(slide.value?.type)
+      ) {
+        this.ctx.fillStyle =
+          averageBackgroundBrightness.value >=
+          backgroundBrightnessThreshold.value
+            ? "#000000"
+            : "#FFFFFF";
+      } else {
+        this.ctx.fillStyle = element.color;
+      }
 
       /*
        * wrap text
