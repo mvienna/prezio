@@ -362,6 +362,7 @@ import {
 } from "src/constants/presentationStudio";
 import { useI18n } from "vue-i18n";
 import { generateUniqueId } from "src/helpers/generationUtils";
+import { computeAverageBrightness } from "src/helpers/colorUtils";
 
 /*
  * variables
@@ -750,60 +751,6 @@ watch(
 /*
  * slide preview avg. brightness generation
  */
-const computeSlidePreviewAverageBrightness = async (element) => {
-  if (!element.preview) return 255;
-
-  // define canvas
-  const roomBackgroundCanvas = document.createElement("canvas");
-  const roomBackgroundCtx = roomBackgroundCanvas.getContext("2d");
-  roomBackgroundCanvas.width = 2560;
-  roomBackgroundCanvas.height = 1440;
-
-  const image = new Image();
-  image.src = element.preview;
-
-  return await new Promise((resolve, reject) => {
-    image.onload = () => {
-      // draw background
-      roomBackgroundCtx.drawImage(
-        image,
-        0,
-        0,
-        roomBackgroundCanvas.width,
-        roomBackgroundCanvas.height
-      );
-
-      // compute average brightness
-      let sumBrightness = 0;
-      const imageData = roomBackgroundCtx.getImageData(
-        0,
-        0,
-        roomBackgroundCanvas.width,
-        roomBackgroundCanvas.height
-      ).data;
-
-      for (let i = 0; i < imageData.length; i += 4) {
-        const r = imageData[i];
-        const g = imageData[i + 1];
-        const b = imageData[i + 2];
-        const brightness = (r + g + b) / 3;
-        sumBrightness += brightness;
-      }
-
-      roomBackgroundCanvas.remove();
-      resolve(
-        sumBrightness /
-          (roomBackgroundCanvas.width * roomBackgroundCanvas.height)
-      );
-    };
-
-    image.onerror = (error) => {
-      console.log(error);
-      resolve(255);
-    };
-  });
-};
-
 const setSlidesPreviewAverageBrightness = () => {
   presentation.value.slides.forEach(async (item, index) => {
     if (
@@ -811,7 +758,11 @@ const setSlidesPreviewAverageBrightness = () => {
       !presentation.value.slides[index].previewAverageBrightness
     ) {
       presentation.value.slides[index].previewAverageBrightness =
-        await computeSlidePreviewAverageBrightness(item);
+        await computeAverageBrightness(
+          item.id === slide.value.id
+            ? JSON.parse(slide.value.canvas_data)
+            : JSON.parse(item.canvas_data)
+        );
     }
   });
 };

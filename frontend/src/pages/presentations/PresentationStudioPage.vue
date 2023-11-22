@@ -133,6 +133,7 @@ import PresentationStudioSlideHeader from "components/presentationStudio/Present
 import { useAuthStore } from "stores/auth";
 import Echo from "laravel-echo";
 import PresentationStudioRoomData from "components/presentationStudio/PresentationStudioRoomData.vue";
+import { computeAverageBrightness } from "src/helpers/colorUtils";
 
 /*
  * variables
@@ -728,71 +729,18 @@ watch(
 );
 
 /*
- * room background
+ * slide average background brightness
  */
-const slideBackground = computed(() => {
-  return elements.value?.find(
-    (element) => element.mode === MODE_OPTIONS.value.background
-  );
-});
-
-const slideBaseFill = computed(() => {
-  return elements.value?.find(
-    (element) => element.mode === MODE_OPTIONS.value.baseFill
-  );
-});
-
-averageBackgroundBrightness.value = computed(() => {
-  const element = slideBackground.value;
-  if (!element?.image?.nodeType) {
-    if (slideBaseFill.value?.fillColor) {
-      const rgb = colors.hexToRgb(slideBaseFill.value.fillColor);
-      return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
-    } else {
-      return 255;
-    }
-  }
-
-  // define canvas
-  const backgroundCanvas = document.createElement("canvas");
-  const backgroundCtx = backgroundCanvas.getContext("2d");
-  backgroundCanvas.width = element.width;
-  backgroundCanvas.height = element.height;
-
-  // filters
-  backgroundCtx.filter = `blur(${element.blur || 0}px) contrast(${
-    element.contrast >= 0 ? element.contrast : 100
-  }%) brightness(${
-    element.brightness >= 0 ? element.brightness : 100
-  }%) invert(${element.invert || 0}%) grayscale(${element.grayscale || 0}%)`;
-
-  if (element.opacity >= 0) {
-    backgroundCtx.globalAlpha = element.opacity / 100;
-  }
-
-  // draw background
-  backgroundCtx.drawImage(element.image, 0, 0, element.width, element.height);
-
-  // compute average brightness
-  let sumBrightness = 0;
-  const imageData = backgroundCtx.getImageData(
-    0,
-    0,
-    element.width,
-    element.height
-  ).data;
-
-  for (let i = 0; i < imageData.length; i += 4) {
-    const r = imageData[i];
-    const g = imageData[i + 1];
-    const b = imageData[i + 2];
-    const brightness = (r + g + b) / 3;
-    sumBrightness += brightness;
-  }
-
-  backgroundCanvas.remove();
-  return sumBrightness / (element.width * element.height);
-});
+watch(
+  () => slide.value,
+  async () => {
+    averageBackgroundBrightness.value = await computeAverageBrightness(
+      elements.value
+    );
+    await canvasStore.redrawCanvas(false);
+  },
+  { deep: true }
+);
 
 /*
  * webhooks

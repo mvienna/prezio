@@ -215,7 +215,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, ref } from "vue";
+import { computed, onBeforeMount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
 import { colors, QSpinnerIos, useQuasar } from "quasar";
@@ -250,6 +250,7 @@ import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import PresentationRoomParticipantActions from "components/presentationRoom/participant/actions/PresentationRoomParticipantActions.vue";
 import PresentationRoomParticipantLeaderboard from "components/presentationRoom/participant/PresentationRoomParticipantLeaderboard.vue";
 import { generateQrCode } from "src/helpers/qrUtils";
+import { computeAverageBrightness } from "src/helpers/colorUtils";
 
 /*
  * variables
@@ -972,69 +973,16 @@ const roomBackground = computed(() => {
   );
 });
 
-const roomBaseFill = computed(() => {
-  return elements.value?.find(
-    (element) => element.mode === MODE_OPTIONS.value.baseFill
-  );
-});
-
-averageBackgroundBrightness.value = computed(() => {
-  const element = roomBackground.value;
-  if (!element?.image?.nodeType) {
-    if (roomBaseFill.value?.fillColor) {
-      const rgb = colors.hexToRgb(roomBaseFill.value.fillColor);
-      return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
-    } else {
-      return 255;
-    }
-  }
-
-  // define canvas
-  const roomBackgroundCanvas = document.createElement("canvas");
-  const roomBackgroundCtx = roomBackgroundCanvas.getContext("2d");
-  roomBackgroundCanvas.width = element.width;
-  roomBackgroundCanvas.height = element.height;
-
-  // filters
-  roomBackgroundCtx.filter = `blur(${element.blur || 0}px) contrast(${
-    element.contrast >= 0 ? element.contrast : 100
-  }%) brightness(${
-    element.brightness >= 0 ? element.brightness : 100
-  }%) invert(${element.invert || 0}%) grayscale(${element.grayscale || 0}%)`;
-
-  if (element.opacity >= 0) {
-    roomBackgroundCtx.globalAlpha = element.opacity / 100;
-  }
-
-  // draw background
-  roomBackgroundCtx.drawImage(
-    element.image,
-    0,
-    0,
-    element.width,
-    element.height
-  );
-
-  // compute average brightness
-  let sumBrightness = 0;
-  const imageData = roomBackgroundCtx.getImageData(
-    0,
-    0,
-    element.width,
-    element.height
-  ).data;
-
-  for (let i = 0; i < imageData.length; i += 4) {
-    const r = imageData[i];
-    const g = imageData[i + 1];
-    const b = imageData[i + 2];
-    const brightness = (r + g + b) / 3;
-    sumBrightness += brightness;
-  }
-
-  roomBackgroundCanvas.remove();
-  return sumBrightness / (element.width * element.height);
-});
+watch(
+  () => slide.value,
+  async () => {
+    averageBackgroundBrightness.value = await computeAverageBrightness(
+      elements.value
+    );
+    await canvasStore.redrawCanvas(false);
+  },
+  { deep: true }
+);
 
 /*
  * qr

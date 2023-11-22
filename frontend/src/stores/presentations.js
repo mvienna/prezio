@@ -310,6 +310,8 @@ export const usePresentationsStore = defineStore("presentations", {
       this.isSavingError = false;
       this.isSaving = true;
 
+      slide.canvas_data = JSON.stringify(elements);
+
       return await api
         .patch(`/presentation/${this.presentation.id}/slide/${slide.id}`, {
           canvas_data: elements,
