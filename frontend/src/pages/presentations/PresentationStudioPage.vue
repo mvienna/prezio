@@ -239,6 +239,13 @@ onMounted(async () => {
     });
 
   /*
+   * compute background brightness
+   */
+  averageBackgroundBrightness.value = await computeAverageBrightness(
+    elements.value
+  );
+
+  /*
    * resize canvas
    */
   resizeCanvas();
