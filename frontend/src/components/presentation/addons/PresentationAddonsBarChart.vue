@@ -16,7 +16,7 @@
 import * as d3 from "d3";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useCanvasStore } from "stores/canvas";
 
 /*
@@ -46,6 +46,7 @@ const data = computed(() => {
         value: 0,
         participants: [],
         isCorrect: option.isCorrect,
+        image: "",
       };
     }
 
@@ -74,6 +75,7 @@ const data = computed(() => {
             : { avatar: "", name: "" }
         ),
       isCorrect: option.isCorrect,
+      image: option.image,
     };
   });
 });
@@ -259,6 +261,57 @@ const update = () => {
     .attr("fill", (d) => {
       return d.isCorrect ? "#21BA45" : "#EA5757";
     });
+
+  const imageHeight = 60;
+  svg.value
+    .selectAll("image")
+    .data(data.value)
+    .join("image")
+    .attr("x", (d) => x.value(d.group))
+    .attr("y", (d) => y.value(d.value) - imageHeight)
+    .attr("width", x.value.bandwidth())
+    .attr("height", imageHeight)
+    .attr("xlink:href", (d) => d.image);
+
+  // const imageHeight = 60;
+  // svg.value
+  //   .selectAll("image")
+  //   .data(data.value)
+  //   .join("image")
+  //   .attr("x", (d) => x.value(d.group))
+  //   .each(async function (d) {
+  //     const image = new Image();
+  //     image.src = d.image;
+  //
+  //     image.onload = () => {
+  //       const h =
+  //         (x.value.bandwidth() * image.naturalHeight) / image.naturalWidth;
+  //       const newY = y.value(d.value) - h / 2;
+  //
+  //       // Set the y attribute here
+  //       d3.select(this).attr("y", newY);
+  //     };
+  //
+  //     image.onerror = (err) => {
+  //       return y.value(d.value) - 60;
+  //     };
+  //   })
+  //   .attr("width", x.value.bandwidth())
+  //   .attr("xlink:href", (d) => {
+  //     svg.value
+  //       .append("defs")
+  //       .append("clipPath")
+  //       .attr("id", "imageClip")
+  //       .append("rect")
+  //       .attr("width", x.value.bandwidth())
+  //       .attr("height", imageHeight)
+  //       .attr("x", x.value(d.group))
+  //       .attr("y", y.value(d.value) - imageHeight)
+  //       .style("background", "#FFFFFF");
+  //
+  //     return d.image;
+  //   })
+  //   .attr("clip-path", "url(#imageClip)");
 };
 
 watch(

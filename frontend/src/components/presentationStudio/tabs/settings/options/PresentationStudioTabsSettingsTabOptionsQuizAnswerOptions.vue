@@ -64,9 +64,59 @@
             no-error-icon
           >
             <template #append>
-              <div class="text-caption">
+              <div class="text-caption q-mr-xs">
                 {{ 150 - element.value?.length }}
               </div>
+
+              <q-btn
+                v-if="element.image"
+                flat
+                icon="r_delete"
+                color="grey"
+                round
+                size="8px"
+                @click="element.image = null"
+                class="q-mr-xs"
+              />
+
+              <q-btn
+                flat
+                color="grey"
+                round
+                size="8px"
+                @click="showSelectAnswerImageDialog[index] = true"
+              >
+                <template #default>
+                  <q-icon v-if="!element.image" name="r_image" />
+
+                  <q-img
+                    v-else
+                    :src="element.image"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      aspect-ratio: 1;
+                      border-radius: 8px;
+                    "
+                  />
+                </template>
+              </q-btn>
+
+              <!-- select preview -->
+              <q-dialog v-model="showSelectAnswerImageDialog[index]">
+                <SelectMedia
+                  @cancel="showSelectAnswerImageDialog[index] = false"
+                  @select="
+                    (event) => {
+                      element.image =
+                        event?.preview_url ||
+                        event?.original_url ||
+                        event?.urls?.regular;
+                      showSelectAnswerImageDialog[index] = false;
+                    }
+                  "
+                />
+              </q-dialog>
             </template>
           </q-input>
 
@@ -268,6 +318,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import draggable from "vuedraggable/src/vuedraggable";
+import SelectMedia from "components/media/SelectMedia.vue";
 
 /*
  * emits
@@ -351,4 +402,9 @@ const handleEndDraggingAnswerOptions = () => {
 const handleLayersReorderAnswerOptions = async () => {
   handleEndDraggingAnswerOptions();
 };
+
+/*
+ * answers images
+ */
+const showSelectAnswerImageDialog = ref([]);
 </script>
