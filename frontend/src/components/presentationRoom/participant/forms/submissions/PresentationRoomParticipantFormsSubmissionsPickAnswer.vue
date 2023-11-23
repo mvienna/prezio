@@ -341,7 +341,7 @@
             }`"
             class="text-black"
           >
-            <q-card-section class="q-py-sm q-px-md">
+            <q-card-section class="q-py-sm q-pl-md q-pr-sm">
               <q-checkbox
                 v-model="answerOption.isSelected"
                 :class="
@@ -374,8 +374,19 @@
                   }
                 "
               >
-                <div class="q-ml-sm">
-                  {{ answerOption.value }}
+                <div class="q-pl-sm row no-wrap items-center">
+                  <div>
+                    {{ answerOption.value }}
+                  </div>
+
+                  <q-space />
+
+                  <div v-if="answerOption.image">
+                    <q-img
+                      :src="answerOption.image"
+                      style="width: 75px; height: 75px; border-radius: 4px"
+                    />
+                  </div>
                 </div>
               </q-checkbox>
             </q-card-section>
@@ -692,5 +703,9 @@ onBeforeMount(() => {
   100% {
     transform: scale(1) rotate(0);
   }
+}
+
+::v-deep(.q-checkbox__label) {
+  width: 100%;
 }
 </style>
