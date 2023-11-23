@@ -99,12 +99,12 @@ const yAxis = ref();
 const tooltip = ref();
 
 const canvasRect = ref(canvasStore.canvasRect());
-const margin = { top: 50, right: 100, bottom: 150, left: 100 };
+const margin = { top: 75, right: 100, bottom: 100, left: 100 };
 const width = computed(() => {
   return (canvasRect.value.width * 80) / 100;
 });
 const height = computed(() => {
-  return (canvasRect.value.height * 40) / 100;
+  return (canvasRect.value.height * 35) / 100;
 });
 
 onMounted(() => {
@@ -170,7 +170,7 @@ onMounted(() => {
       .attr("transform", `translate(0, ${height.value + 1})`);
 
     y.value = d3.scaleLinear().range([height.value, 0]);
-    yAxis.value = svg.value.append("g").attr("class", "myYaxis");
+    yAxis.value = svg.value.append("g");
 
     update();
   }, 500);
@@ -187,7 +187,7 @@ const update = () => {
     .attr("transform", `translate(0, ${height.value})`);
 
   y.value = d3.scaleLinear().range([height.value, 0]);
-  yAxis.value = svg.value.select("g").attr("class", "myYaxis");
+  yAxis.value = svg.value.select("g");
 
   svg.value = d3
     .select(barChart.value)
@@ -246,15 +246,21 @@ const update = () => {
   y.value.domain([0, d3.max(data.value, (d) => d.value)]);
   // yAxis.value.transition().duration(1000).call(d3.axisLeft(y));
 
+  const maxWidth = 75;
+  const barWidth = Math.min(maxWidth, x.value.bandwidth());
+
+  const xOffset =
+    (x.value.bandwidth() - Math.min(maxWidth, x.value.bandwidth())) / 2;
+
   svg.value
     .selectAll("rect")
     .data(data.value)
     .join("rect")
     .transition()
     .duration(600)
-    .attr("x", (d) => x.value(d.group))
+    .attr("x", (d) => x.value(d.group) + xOffset)
     .attr("y", (d) => y.value(d.value))
-    .attr("width", x.value.bandwidth())
+    .attr("width", barWidth)
     .attr("height", (d) => {
       return d.value > 0 ? height.value - y.value(d.value) : 0;
     })
@@ -262,56 +268,16 @@ const update = () => {
       return d.isCorrect ? "#21BA45" : "#EA5757";
     });
 
-  const imageHeight = 60;
   svg.value
     .selectAll("image")
     .data(data.value)
     .join("image")
-    .attr("x", (d) => x.value(d.group))
-    .attr("y", (d) => y.value(d.value) - imageHeight)
-    .attr("width", x.value.bandwidth())
-    .attr("height", imageHeight)
-    .attr("xlink:href", (d) => d.image);
-
-  // const imageHeight = 60;
-  // svg.value
-  //   .selectAll("image")
-  //   .data(data.value)
-  //   .join("image")
-  //   .attr("x", (d) => x.value(d.group))
-  //   .each(async function (d) {
-  //     const image = new Image();
-  //     image.src = d.image;
-  //
-  //     image.onload = () => {
-  //       const h =
-  //         (x.value.bandwidth() * image.naturalHeight) / image.naturalWidth;
-  //       const newY = y.value(d.value) - h / 2;
-  //
-  //       // Set the y attribute here
-  //       d3.select(this).attr("y", newY);
-  //     };
-  //
-  //     image.onerror = (err) => {
-  //       return y.value(d.value) - 60;
-  //     };
-  //   })
-  //   .attr("width", x.value.bandwidth())
-  //   .attr("xlink:href", (d) => {
-  //     svg.value
-  //       .append("defs")
-  //       .append("clipPath")
-  //       .attr("id", "imageClip")
-  //       .append("rect")
-  //       .attr("width", x.value.bandwidth())
-  //       .attr("height", imageHeight)
-  //       .attr("x", x.value(d.group))
-  //       .attr("y", y.value(d.value) - imageHeight)
-  //       .style("background", "#FFFFFF");
-  //
-  //     return d.image;
-  //   })
-  //   .attr("clip-path", "url(#imageClip)");
+    .attr("xlink:href", (d) => d.image)
+    .attr("width", barWidth)
+    .attr("height", barWidth)
+    .attr("x", (d) => x.value(d.group) + xOffset)
+    .attr("y", (d) => y.value(d.value) - barWidth)
+    .attr("preserveAspectRatio", "xMidYMid slice");
 };
 
 watch(
