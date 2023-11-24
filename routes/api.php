@@ -81,3 +81,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/presentation/{presentation}/room/{room}/submit-answers', [PresentationRoomController::class, 'submitAnswers']);
     Route::post('/presentation/{presentation}/room/{room}/message', [PresentationRoomController::class, 'submitChatMessage']);
 });
+
+Route::get('/debug-sentry', function () {
+    throw new Exception('My first Sentry error!');
+});
