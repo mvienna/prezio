@@ -207,7 +207,7 @@ const update = () => {
         word,
         line = [],
         lineNumber = 0,
-        lineHeight = 1.1, // ems
+        lineHeight = 1.1,
         y = text.attr("y"),
         dy = parseFloat(text.attr("dy")) || 0,
         tspan = text
@@ -243,7 +243,7 @@ const update = () => {
   xAxis.value.selectAll("path").style("stroke", color.value);
   xAxis.value.selectAll("line").style("stroke", color.value);
 
-  y.value.domain([0, d3.max(data.value, (d) => d.value)]);
+  // y.value.domain([0, d3.max(data.value, (d) => d.value)]);
   // yAxis.value.transition().duration(1000).call(d3.axisLeft(y));
 
   const maxWidth = 75;
