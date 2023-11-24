@@ -96,6 +96,7 @@ class PresentationController extends Controller
 
         // delete presentation rooms, participants data, reactions
         foreach ($presentation->rooms as $room) {
+            $room->messages()->delete();
             $room->participants()->delete();
             $room->reactions()->delete();
             $room->delete();
