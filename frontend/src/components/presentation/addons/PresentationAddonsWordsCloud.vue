@@ -78,7 +78,7 @@ const generateWordCloud = () => {
     .map(([key, size]) => ({
       text: settings.word(key),
       size,
-      id: settings.word(key).replace(/[^a-zA-Z]/g, ""),
+      id: settings.word(key).replace(/[^a-zA-Zа-яА-Я]/g, ""),
     }));
 
   const svg = d3
@@ -146,7 +146,7 @@ const updateWordCloud = () => {
     .map(([key, size]) => ({
       text: settings.word(key),
       size,
-      id: settings.word(key).replace(/[^a-zA-Z]/g, ""),
+      id: settings.word(key).replace(/[^a-zA-Zа-яА-Я]/g, ""),
     }));
 
   const cloud = d3Cloud()
