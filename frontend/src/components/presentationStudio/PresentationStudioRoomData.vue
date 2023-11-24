@@ -1,74 +1,72 @@
 <template>
-  <div
-    ref="roomData"
-    style="position: fixed; z-index: 2"
-    :style="`left: ${
-      canvasRect?.left + canvasRect?.width - roomData?.offsetWidth - 16
-    }px; top: ${
-      canvasRect?.top + canvasRect?.height - roomData?.offsetHeight - 16
-    }px; background: ${
-      averageBackgroundBrightness >= backgroundBrightnessThreshold
-        ? 'rgba(0, 0, 0, 0.1)'
-        : 'rgba(255, 255, 255, 0.1)'
-    };`"
-    class="room_data row no-wrap items-center justify-center q-px-sm"
-    :class="`text-${
-      averageBackgroundBrightness >= backgroundBrightnessThreshold
-        ? 'black'
-        : 'white'
-    }`"
-  >
-    <!-- reactions -->
-    <div class="row no-wrap q-gutter-md">
-      <!-- like -->
-      <PresentationRoomDataLike
-        v-if="presentation?.room?.reactions?.like > 0"
-        :stage="stage.like"
-        :value="presentation?.room?.reactions?.like || 0"
-        size="24"
-      />
+  <div class="row justify-end q-pr-md">
+    <div
+      :style="` background: ${
+        averageBackgroundBrightness >= backgroundBrightnessThreshold
+          ? 'rgba(0, 0, 0, 0.1)'
+          : 'rgba(255, 255, 255, 0.1)'
+      };`"
+      class="room_data row no-wrap items-center justify-center q-px-sm"
+      :class="`text-${
+        averageBackgroundBrightness >= backgroundBrightnessThreshold
+          ? 'black'
+          : 'white'
+      }`"
+    >
+      <!-- reactions -->
+      <div class="row no-wrap q-gutter-md">
+        <!-- like -->
+        <PresentationRoomDataLike
+          v-if="presentation?.room?.reactions?.like > 0"
+          :stage="stage.like"
+          :value="presentation?.room?.reactions?.like || 0"
+          size="24"
+        />
 
-      <!-- love -->
-      <PresentationRoomDataLove
-        v-if="presentation?.room?.reactions?.love > 0"
-        :stage="stage.love"
-        :value="presentation?.room?.reactions?.love || 0"
-        size="24"
-      />
-    </div>
-
-    <!-- answers count -->
-    <PresentationRoomDataSubmissions
-      v-if="
-        [...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(slide?.type)
-      "
-      :stage="stage.pin"
-      :answers-count="slide?.answers?.length || 0"
-      :value="slide?.answers?.length"
-      size="24"
-      class="q-ml-md"
-    />
-
-    <!-- participants count -->
-    <div class="room_data__participants_count row no-wrap items-center q-ml-md">
-      <div class="relative-position q-mr-xs">
-        <q-icon name="r_person" color="grey" size="24px" />
-        <div
-          class="room_data__participants_count__status absolute-bottom-right"
-          :class="participants?.length || 0 ? 'bg-green' : 'bg-white'"
-        ></div>
+        <!-- love -->
+        <PresentationRoomDataLove
+          v-if="presentation?.room?.reactions?.love > 0"
+          :stage="stage.love"
+          :value="presentation?.room?.reactions?.love || 0"
+          size="24"
+        />
       </div>
 
-      <div>
-        <span>{{ participants?.length || 0 }}</span>
-        <span class="room_data__participants_count__limit">/∞</span>
+      <!-- answers count -->
+      <PresentationRoomDataSubmissions
+        v-if="
+          [...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(slide?.type)
+        "
+        :stage="stage.pin"
+        :answers-count="slide?.answers?.length || 0"
+        :value="slide?.answers?.length"
+        size="24"
+        class="q-ml-md"
+      />
+
+      <!-- participants count -->
+      <div
+        class="room_data__participants_count row no-wrap items-center q-ml-md"
+      >
+        <div class="relative-position q-mr-xs">
+          <q-icon name="r_person" color="grey" size="24px" />
+          <div
+            class="room_data__participants_count__status absolute-bottom-right"
+            :class="participants?.length || 0 ? 'bg-green' : 'bg-white'"
+          ></div>
+        </div>
+
+        <div>
+          <span>{{ participants?.length || 0 }}</span>
+          <span class="room_data__participants_count__limit">/∞</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onBeforeMount, ref, watch } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import PresentationRoomDataLike from "components/presentationRoom/host/data/PresentationRoomHostDataLike.vue";
 import PresentationRoomDataLove from "components/presentationRoom/host/data/PresentationRoomHostDataLove.vue";
 import { usePresentationsStore } from "stores/presentations";
@@ -94,8 +92,6 @@ const {
 
 const canvasStore = useCanvasStore();
 const { scale } = storeToRefs(canvasStore);
-
-const roomData = ref();
 
 /*
  * animation
@@ -182,6 +178,7 @@ const onResize = () => {
   padding: 8px;
   z-index: 2;
   height: 40px;
+  margin-top: calc(-40px - 16px);
   font-size: 0.8em;
   transition: 0.2s;
 

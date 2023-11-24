@@ -30,7 +30,7 @@
         :to="isPresentationPreview ? '#presentationPreview' : 'body'"
       >
         <!-- INFO: to justify center vertically add classes: "column justify-center" -->
-        <div class="canvas__wrapper relative-position">
+        <div class="canvas__wrapper relative-position column no-wrap">
           <canvas
             ref="canvasRef"
             id="canvas"
@@ -38,17 +38,17 @@
             @mousedown="handleCanvasMouseDown"
             @click="handleCanvasClick"
           ></canvas>
+
+          <!-- slide data (reactions, answers, participants online) -->
+          <PresentationStudioRoomData
+            v-if="isCanvasReady && !isPresentationPreview"
+          />
         </div>
       </teleport>
     </div>
 
     <!-- slide header (invitation link, open sharing modal) -->
     <PresentationStudioSlideHeader
-      v-if="isCanvasReady && !isPresentationPreview"
-    />
-
-    <!-- slide data (reactions, answers, participants online) -->
-    <PresentationStudioRoomData
       v-if="isCanvasReady && !isPresentationPreview"
     />
 
@@ -819,8 +819,8 @@ const connectToRoomChannels = () => {
   padding: calc(68px + 24px) 24px 24px;
 
   .canvas__wrapper {
-    height: 100%;
-    aspect-ratio: 16/9;
+    //height: 100%;
+    //aspect-ratio: 16/9;
     max-width: 100%;
     z-index: 1;
 
