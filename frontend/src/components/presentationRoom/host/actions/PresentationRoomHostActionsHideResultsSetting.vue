@@ -55,9 +55,10 @@
           <div
             style="line-height: 24px"
             v-html="
-              $t('presentationRoom.footer.hideResults.dialog.description', 1, {
-                count: slide?.answers?.length || 0,
-              })
+              $t(
+                'presentationRoom.footer.hideResults.dialog.description',
+                getAnswersCountVariable()
+              )
             "
           ></div>
         </div>
@@ -98,5 +99,10 @@ const toggleResultsHiddenSetting = async () => {
   slideSettings.value.isResultsHidden = !slideSettings.value.isResultsHidden;
   await presentationsStore.updateLocalSlide();
   await presentationsStore.saveSlide(undefined, elements.value);
+};
+
+const getAnswersCountVariable = (variables = {}) => {
+  variables.count = slide.value?.answers?.length || 0;
+  return variables;
 };
 </script>
