@@ -134,7 +134,6 @@ const types = computed(() => {
       // },
       {
         name: SLIDE_TYPES.TYPE_ANSWER,
-        disable: true,
       },
       {
         name: SLIDE_TYPES.MATCH_PAIRS,

@@ -70,24 +70,20 @@
         <!-- 5s countdown -->
         <div
           v-else-if="
-            !isQuizComingToEnd && room.is_submission_locked && timeLeft !== -1
+            !isQuizComingToEnd && room.is_submission_locked && timeLeft >= 0
           "
         >
           <div class="row no-wrap justify-center">
             <q-circular-progress
-              :value="
-                timeLeftPercentage * 2 + 20 - 100 < 100
-                  ? timeLeftPercentage * 2 + 20 - 100
-                  : 100
-              "
+              :value="timeLeftPercentage * 2 - 100"
               size="64px"
               :thickness="1"
               :color="
-                timeLeftPercentage * 2 - 100 + 20 < 25
+                timeLeftPercentage * 2 - 100 < 25
                   ? 'positive'
-                  : timeLeftPercentage * 2 - 100 + 20 < 50
+                  : timeLeftPercentage * 2 - 100 < 50
                   ? 'yellow-10'
-                  : timeLeftPercentage * 2 - 100 + 20 < 75
+                  : timeLeftPercentage * 2 - 100 < 75
                   ? 'orange'
                   : 'red'
               "
@@ -107,13 +103,14 @@
         <!-- time's out -->
         <div v-else-if="isQuizComingToEnd">
           <div
-            v-if="timeLeft > 0 && timeLeft <= 3"
+            v-if="timeLeft >= 0 && timeLeft <= 3"
             class="text-center text-semibold text-h3 q-mt-md timeOutCountdownAnimation"
           >
-            {{ timeLeft }}
+            {{ Math.floor(timeLeft) + 1 }}
           </div>
 
           <q-intersection transition="scale" v-else>
+            <!-- all participants answered / time's up -->
             <div class="text-h3 text-center text-semibold">
               {{
                 isAllParticipantsAnswered
@@ -144,7 +141,7 @@
                   color: white;
                   backdrop-filter: blur(4px);
                 "
-                label="Показать ответы"
+                :label="$t('presentationRoom.quizCountdown.revealAnswers')"
                 @click="handleRevealAnswers()"
               />
             </div>
@@ -203,33 +200,31 @@ watch(
   () => {
     // timeout
     if (
-      timeLeft.value > 0 &&
+      timeLeft.value >= 0 &&
       timeLeft.value <= 3 &&
       !room.value.is_submission_locked
     ) {
       isQuizComingToEnd.value = true;
 
-      // set "is answers revealed" prop to true if setting is turned on (default setting showAnswersManually: false)
-      room.value.is_answers_revealed =
-        !presentation.value?.settings?.quiz_data ||
-        (presentation.value?.settings?.quiz_data &&
-          JSON.parse(presentation.value.settings.quiz_data)
-            ?.showAnswersManually === false);
-
-      presentationsStore.sendPresentationRoomUpdateEvent(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        {
-          is_answers_revealed: room.value.is_answers_revealed,
-        }
-      );
-
-      if (timeLeft.value === 1 && room.value.is_answers_revealed) {
+      if (timeLeft.value === 1.0) {
         setTimeout(() => {
+          presentationsStore.sendPresentationRoomUpdateEvent(
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+              // set "is answers revealed" prop to true if setting is turned on (default setting showAnswersManually: false)
+              is_answers_revealed:
+                !presentation.value?.settings?.quiz_data ||
+                (presentation.value?.settings?.quiz_data &&
+                  JSON.parse(presentation.value.settings.quiz_data)
+                    ?.showAnswersManually === false),
+            }
+          );
+
           isFinished.value = true;
-        }, 3000);
+        }, 4000);
       }
     }
 
@@ -278,7 +273,6 @@ watch(
  * reveal answers
  */
 const handleRevealAnswers = () => {
-  room.value.is_answers_revealed = true;
   isQuizComingToEnd.value = false;
   isFinished.value = true;
 
@@ -288,7 +282,7 @@ const handleRevealAnswers = () => {
     undefined,
     undefined,
     {
-      is_answers_revealed: room.value.is_answers_revealed,
+      is_answers_revealed: true,
     }
   );
 };

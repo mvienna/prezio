@@ -17,11 +17,23 @@
       @update-slide-settings="handleSlideSettingsUpdate()"
     />
 
-    <!-- quiz answer options -->
-    <PresentationStudioTabsSettingsTabOptionsQuizAnswerOptions
+    <!-- quiz - pick answer options -->
+    <PresentationStudioTabsSettingsTabOptionsQuizPickAnswerOptions
       v-if="
         [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
       "
+      @update-slide-settings="handleSlideSettingsUpdate()"
+    />
+
+    <!-- quiz - type answer options -->
+    <PresentationStudioTabsSettingsTabOptionsQuizTypeAnswerOptions
+      v-if="SLIDE_TYPES.TYPE_ANSWER === slide?.type"
+      @update-slide-settings="handleSlideSettingsUpdate()"
+    />
+
+    <!-- quiz scoring -->
+    <PresentationStudioTabsSettingsTabOptionsQuizScoring
+      v-if="SLIDE_TYPES_OF_QUIZ.includes(slide?.type)"
       @update-slide-settings="handleSlideSettingsUpdate()"
     />
 
@@ -33,9 +45,7 @@
 
     <!-- leaderboard -->
     <PresentationStudioTabsSettingsTabOptionsLeaderboard
-      v-if="
-        [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
-      "
+      v-if="SLIDE_TYPES_OF_QUIZ.includes(slide?.type)"
     />
 
     <!-- lock submission -->
@@ -84,13 +94,15 @@ import PresentationStudioTabsSettingsTabHeader from "components/presentationStud
 import PresentationStudioTabsSettingsTabApplyToAllQuestions from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTabApplyToAllQuestions.vue";
 import PresentationStudioTabsSettingsTabOptionsEntriesPerParticipant from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsEntriesPerParticipant.vue";
 import PresentationStudioTabsSettingsTabOptionsMultipleEntries from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsMultipleEntries.vue";
-import PresentationStudioTabsSettingsTabOptionsQuizAnswerOptions from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsQuizAnswerOptions.vue";
+import PresentationStudioTabsSettingsTabOptionsQuizPickAnswerOptions from "components/presentationStudio/tabs/settings/options/quiz/PresentationStudioTabsSettingsTabOptionsQuizPickAnswerOptions.vue";
 import PresentationStudioTabsSettingsTabOptionsTimeLimit from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsTimeLimit.vue";
 import PresentationStudioTabsSettingsTabOptionsLeaderboard from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsLeaderboard.vue";
 import PresentationStudioTabsSettingsTabOptionsLockSubmission from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsLockSubmission.vue";
 import PresentationStudioTabsSettingsTabOptionsHideResults from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsHideResults.vue";
 import PresentationStudioTabsSettingsTabOptionsFilterProfanity from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsFilterProfanity.vue";
 import PresentationStudioTabsSettingsTabOpenGeneralQuizSettings from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTabOpenGeneralQuizSettings.vue";
+import PresentationStudioTabsSettingsTabOptionsQuizScoring from "components/presentationStudio/tabs/settings/options/quiz/PresentationStudioTabsSettingsTabOptionsQuizScoring.vue";
+import PresentationStudioTabsSettingsTabOptionsQuizTypeAnswerOptions from "components/presentationStudio/tabs/settings/options/quiz/PresentationStudioTabsSettingsTabOptionsQuizTypeAnswerOptions.vue";
 
 /*
  * variables
@@ -119,11 +131,17 @@ const slideSettingsDefault = {
   isInitialSubmissionLocked: false,
   isResultsHidden: false,
 
-  // quiz
+  // quiz - pick answer
   answerOptions: [
     { value: "", isCorrect: false, isSelected: false },
     { value: "", isCorrect: false, isSelected: false },
   ],
+
+  // quiz - type answer
+  correctAnswer: { value: "" },
+  otherAcceptedAnswers: [],
+
+  // quiz - scoring
   points: {
     min: 0,
     max: 100,

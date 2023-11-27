@@ -27,13 +27,13 @@
         </div>
 
         <PresentationRoomQuizProgressBar
-          :participants-answers="participantAnswers"
+          :participants-answers="[participantAnswer]"
         />
 
         <!-- footer - result -->
         <transition appear enter-active-class="animated fadeIn">
           <PresentationRoomParticipantQuizFooter
-            v-if="participantAnswers?.length && room.is_answers_revealed"
+            v-if="participantAnswer && room.is_answers_revealed"
             :class="isAnsweredCorrectly ? 'bg-positive' : 'bg-negative'"
             score-tooltip
           >
@@ -66,18 +66,11 @@
 
             <template #score>
               +
-              {{
-                participantAnswers
-                  .map((answer) => answer.score)
-                  .reduce(
-                    (accumulator, currentValue) => accumulator + currentValue,
-                    0
-                  )
-              }}
+              {{ participantAnswer?.score }}
             </template>
 
             <template #score-tooltip>
-              {{ participantAnswers[0].time_taken_to_answer }}
+              {{ participantAnswer?.time_taken_to_answer }}
               {{ $t("presentationRoom.answers.results.sec") }}
             </template>
           </PresentationRoomParticipantQuizFooter>
@@ -87,7 +80,7 @@
         <transition appear enter-active-class="animated fadeIn">
           <PresentationRoomParticipantQuizFooter
             v-if="
-              !participantAnswers?.length &&
+              !participantAnswer &&
               room.is_answers_revealed &&
               room.is_submission_locked &&
               timeLeft === -1
@@ -107,74 +100,22 @@
         </transition>
 
         <!-- answer inputs -->
-        <div class="column no-wrap q-gutter-md">
-          <q-card
-            v-for="(answerOption, answerOptionIndex) in answerOptions"
-            :key="answerOptionIndex"
-            flat
-            :style="`border: 1px solid ${
-              answerOption.isSelected
-                ? (timeLeft !== -1 && !participantAnswers?.length) ||
-                  !room.is_answers_revealed
-                  ? 'var(--q-primary)'
-                  : answerOption.isCorrect
-                  ? 'var(--q-positive)'
-                  : 'var(--q-negative)'
-                : 'transparent'
-            }`"
-            class="text-black"
-          >
-            <q-card-section class="q-py-sm q-pl-md q-pr-sm">
-              <q-checkbox
-                v-model="answerOption.isSelected"
-                :class="
-                  !isAllowedToSelectMultipleAnswerOptions
-                    ? 'q-checkbox--round'
-                    : ''
-                "
-                class="full-width"
-                :color="
-                  (timeLeft !== -1 && !participantAnswers?.length) ||
-                  !room.is_answers_revealed
-                    ? 'primary'
-                    : answerOption.isCorrect
-                    ? 'positive'
-                    : 'negative'
-                "
-                :disable="timeLeft === -1 || participantAnswers?.length > 0"
-                @update:model-value="
-                  () => {
-                    if (!isAllowedToSelectMultipleAnswerOptions) {
-                      slideSettings.answerOptions =
-                        slideSettings.answerOptions.map((item, index) => {
-                          if (item.isSelected && index !== answerOptionIndex) {
-                            item.isSelected = false;
-                          }
-
-                          return item;
-                        });
-                    }
-                  }
-                "
-              >
-                <div class="q-pl-sm row no-wrap items-center">
-                  <div>
-                    {{ answerOption.value }}
-                  </div>
-
-                  <q-space />
-
-                  <div v-if="answerOption.image">
-                    <q-img
-                      :src="answerOption.image"
-                      style="width: 75px; height: 75px; border-radius: 4px"
-                    />
-                  </div>
-                </div>
-              </q-checkbox>
-            </q-card-section>
-          </q-card>
-        </div>
+        <q-input
+          v-model="answer"
+          outlined
+          hide-bottom-space
+          color="primary"
+          :placeholder="$t('presentationRoom.answers.placeholder')"
+          :maxlength="25"
+          :rules="answerRules"
+          reactive-rules
+        >
+          <template #append>
+            <div class="text-caption">
+              {{ 25 - (answer?.length || 0) }}
+            </div>
+          </template>
+        </q-input>
 
         <!-- submit -->
         <q-btn
@@ -182,12 +123,10 @@
           unelevated
           no-caps
           :disable="
-            !!room?.is_submission_locked ||
-            timeLeft === -1 ||
-            participantAnswers?.length > 0
+            !!room?.is_submission_locked || timeLeft === -1 || participantAnswer
           "
           :icon-right="
-            room?.is_submission_locked || participantAnswers?.length > 0
+            room?.is_submission_locked || participantAnswer
               ? 'r_lock'
               : 'r_done'
           "
@@ -198,14 +137,12 @@
           <template #default>
             <div class="q-mr-sm">
               {{
-                room?.is_submission_locked || participantAnswers?.length > 0
+                room?.is_submission_locked || participantAnswer
                   ? $t("presentationRoom.answers.submit.submissionIsLocked")
                   : $t("presentationRoom.answers.submit.title")
               }}
 
-              {{
-                timeLeft !== -1 && !participantAnswers?.length ? countdown : ""
-              }}
+              {{ timeLeft !== -1 && !participantAnswer ? countdown : "" }}
             </div>
           </template>
         </q-btn>
@@ -226,15 +163,15 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, ref, watch } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
 import { countdown, stopCountdown, timeLeft } from "src/helpers/countdown";
-import { shuffleArray } from "src/helpers/arrayUtils";
 import PresentationRoomParticipantQuizLayout from "components/presentationRoom/participant/quiz/PresentationRoomParticipantQuizLayout.vue";
 import PresentationRoomQuizProgressBar from "components/presentationRoom/participant/quiz/PresentationRoomQuizProgressBar.vue";
 import PresentationRoomParticipantQuizFooter from "components/presentationRoom/participant/quiz/PresentationRoomParticipantQuizFooter.vue";
+import { russianProfanityWords } from "src/constants/profanity";
 
 /*
  * stores
@@ -271,53 +208,39 @@ const layoutTitleElement = computed(() => {
 });
 
 /*
- * answer entries
+ * answer entry
  */
+const answer = ref();
+
 const handleSubmittingAnswers = () => {
-  presentationsStore.submitPresentationRoomAnswers(
-    slideSettings.value.answerOptions.filter((option) => option.isSelected)
-  );
+  presentationsStore.submitPresentationRoomAnswers([{ value: answer.value }]);
   stopCountdown();
 };
 
-const answerOptions = computed(() => {
-  return presentation.value.settings.quiz_data &&
-    JSON.parse(presentation.value.settings.quiz_data).shuffleAnswerOptions
-    ? shuffleArray(slideSettings.value.answerOptions)
-    : slideSettings.value.answerOptions;
-});
+/*
+ * answer rules (length & profanity)
+ */
+const answerRules = [
+  (val) =>
+    !val?.length ||
+    val?.length <= 25 ||
+    t("presentationRoom.answers.errors.invalidLength"),
+  (val) =>
+    (slideSettings.value?.filterProfanity
+      ? !russianProfanityWords.filter((word) => {
+          return val?.replaceAll(/\s/g, "")?.includes(word);
+        }).length
+      : true) || t("presentationRoom.answers.errors.profanity"),
+];
 
 /*
  * participant answers
  */
-const participantAnswers = computed(() => {
-  return slide.value.answers.filter(
+const participantAnswer = computed(() => {
+  return slide.value.answers.find(
     (answer) =>
       answer.participant_id === participant.value?.id &&
       answer.slide_type === slide.value?.type
-  );
-});
-
-watch(
-  () => participantAnswers.value,
-  () => {
-    slideSettings.value.answerOptions.map((option, index) => {
-      if (
-        participantAnswers.value
-          .map((answer) => JSON.parse(answer.answer_data)?.text)
-          .includes(option.value)
-      ) {
-        slideSettings.value.answerOptions[index].isSelected = true;
-      }
-    });
-  },
-  { deep: true }
-);
-
-const isAllowedToSelectMultipleAnswerOptions = computed(() => {
-  return (
-    slideSettings.value.answerOptions.filter((option) => option.isCorrect)
-      .length > 1
   );
 });
 
@@ -325,14 +248,10 @@ const isAllowedToSelectMultipleAnswerOptions = computed(() => {
  * submitted answers data
  */
 const isAnsweredCorrectly = computed(() => {
-  return (
-    participantAnswers.value?.filter((answer) =>
-      answerOptions.value
-        ?.filter((item) => !item.isCorrect)
-        ?.map((item) => item.value)
-        ?.includes(JSON.parse(answer.answer_data).text)
-    ).length === 0
-  );
+  return [
+    slideSettings.value.correctAnswer.value,
+    ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
+  ].includes(JSON.parse(participantAnswer.value.answer_data).text);
 });
 
 /*
@@ -340,7 +259,7 @@ const isAnsweredCorrectly = computed(() => {
  */
 const hasAlreadyAnswered = ref(false);
 onBeforeMount(() => {
-  if (participantAnswers.value.length) {
+  if (participantAnswer.value) {
     hasAlreadyAnswered.value = true;
   }
 });

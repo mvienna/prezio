@@ -31,7 +31,7 @@ class UpdatePresentationRoomCountdown extends Command
         for ($i = 0; $i < $seconds; $i++) {
             sleep(1);
 
-            $rooms = PresentationRoom::where('countdown', '=', 1)->get();
+            $rooms = PresentationRoom::where('countdown', '=', 0)->get();
             foreach ($rooms as $room) {
                 $room->update(['is_submission_locked' => true]);
                 event(new PresentationRoomUpdatedEvent($room));

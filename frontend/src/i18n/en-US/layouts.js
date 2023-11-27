@@ -320,7 +320,7 @@ export default {
             invalid: "Invalid value. Enter a number from 1 to 10",
           },
 
-          // quiz
+          // quiz answer options
           answerOptions: {
             title: "Answer Options",
             description: {
@@ -338,6 +338,27 @@ export default {
             maxLengthErrorMessage: "Maximum 150 characters",
           },
 
+          // quiz - type answer
+          typeAnswer: {
+            correctAnswer: {
+              title: "The correct answer",
+              description: "This answer will be revealed",
+
+              placeholder: "Enter the answer",
+            },
+
+            otherAcceptedAnswers: {
+              title: "Other accepted answers",
+              description: "These answers will be marked as correct",
+            },
+
+            answerOption: "Variant №",
+            addAnswerOption: "Add answer",
+
+            maxLengthErrorMessage: "Max 150 characters",
+          },
+
+          // scoring
           points: {
             title: "Points",
             description: "Select the point range for this question",

@@ -154,6 +154,7 @@ export default {
 
       timesup: "Time's up!",
       allParticipantsAnswered: "Everyone answered",
+      revealResults: "Reveal the results",
     },
 
     quiz: {
@@ -187,6 +188,13 @@ export default {
         "You've already answered this question. Please wait for the presenter to show the next slide.",
       thanksForParticipation: "Thank you for your participation",
       hasAlreadyAnswered: "You've already answered this question",
+
+      results: {
+        correct: "Correct!",
+        incorrect: "Incorrect!",
+        timesUp: "Time's up!",
+        sec: "sec",
+      },
     },
 
     leaderboard: {

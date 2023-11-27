@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { stopCountdown, timeLeft } from "src/helpers/countdown";
-import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 
 export const usePresentationsStore = defineStore("presentations", {
   state: () => ({
@@ -499,10 +502,25 @@ export const usePresentationsStore = defineStore("presentations", {
             let score = 0;
 
             for (const answer of answers) {
-              if (answer.isCorrect === false) {
-                return this.slideSettings.points.min;
-              } else if (answer.isCorrect === true) {
-                score += pointForCorrectAnswer;
+              if (SLIDE_TYPES.TYPE_ANSWER === this.slide?.type) {
+                const isCorrectAnswer = [
+                  this.slideSettings.correctAnswer.value,
+                  ...this.slideSettings.otherAcceptedAnswers.map(
+                    (item) => item.value
+                  ),
+                ].includes(answer.value);
+
+                if (!isCorrectAnswer) {
+                  return this.slideSettings.points.min;
+                } else {
+                  score += pointForCorrectAnswer;
+                }
+              } else {
+                if (answer.isCorrect === false) {
+                  return this.slideSettings.points.min;
+                } else if (answer.isCorrect === true) {
+                  score += pointForCorrectAnswer;
+                }
               }
             }
 
@@ -514,10 +532,25 @@ export const usePresentationsStore = defineStore("presentations", {
           // whole scoring
         } else {
           const computeScore = () => {
-            if (answers.some((option) => option.isCorrect === false)) {
-              return this.slideSettings.points.min;
+            if (SLIDE_TYPES.TYPE_ANSWER === this.slide?.type) {
+              const isCorrectAnswer = [
+                this.slideSettings.correctAnswer.value,
+                ...this.slideSettings.otherAcceptedAnswers.map(
+                  (item) => item.value
+                ),
+              ].includes(answers[0].value);
+
+              if (!isCorrectAnswer) {
+                return this.slideSettings.points.min;
+              } else {
+                return pointForCorrectAnswer;
+              }
             } else {
-              return pointForCorrectAnswer;
+              if (answers.some((option) => option.isCorrect === false)) {
+                return this.slideSettings.points.min;
+              } else {
+                return pointForCorrectAnswer;
+              }
             }
           };
 
@@ -549,9 +582,6 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     async handleQuizStart(slide_id = null) {
-      this.room.is_quiz_started = true;
-      this.room.is_answers_revealed = false;
-
       // initial countdown (question №n out of №n)
       let timeout = 5000;
 
@@ -565,12 +595,11 @@ export const usePresentationsStore = defineStore("presentations", {
       }
 
       // start before-quiz timeout
-      this.room.is_submission_locked = true;
       const data = {
-        is_quiz_started: this.room.is_quiz_started,
-        is_answers_revealed: this.room.is_answers_revealed,
+        is_quiz_started: true,
+        is_answers_revealed: false,
 
-        is_submission_locked: this.room.is_submission_locked,
+        is_submission_locked: true,
         countdown: timeout / 1000,
       };
       if (slide_id) {
@@ -586,15 +615,13 @@ export const usePresentationsStore = defineStore("presentations", {
 
       // start the quiz
       setTimeout(() => {
-        this.room.is_submission_locked = false;
-
         this.sendPresentationRoomUpdateEvent(
           undefined,
           undefined,
           undefined,
           undefined,
           {
-            is_submission_locked: this.room.is_submission_locked,
+            is_submission_locked: false,
             countdown: this.slideSettings.timeLimit,
           }
         );
@@ -602,17 +629,13 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     handleQuizStop(slide_id = null) {
-      this.room.is_submission_locked = true;
-      this.room.is_quiz_started = false;
-      this.room.is_answers_revealed = false;
-
       stopCountdown();
 
       const data = {
         countdown: 0,
-        is_submission_locked: this.room.is_submission_locked,
-        is_quiz_started: this.room.is_quiz_started,
-        is_answers_revealed: this.room.is_answers_revealed,
+        is_submission_locked: true,
+        is_quiz_started: false,
+        is_answers_revealed: false,
       };
 
       if (slide_id) {

@@ -38,46 +38,8 @@ const { canvas, scale } = storeToRefs(canvasStore);
 /*
  * data
  */
-const data = computed(() => {
-  return slideSettings.value.answerOptions?.map((option) => {
-    if (!slide.value?.answers) {
-      return {
-        group: "",
-        value: 0,
-        participants: [],
-        isCorrect: option.isCorrect,
-        image: "",
-      };
-    }
-
-    return {
-      group:
-        (!room.value || room.value?.is_answers_revealed
-          ? option.isCorrect
-            ? "✅" + " "
-            : "❌" + " "
-          : "") + option.value,
-      value:
-        !room.value || room.value?.is_answers_revealed
-          ? slide.value.answers.filter(
-              (answer) => JSON.parse(answer.answer_data)?.text === option.value
-            ).length
-          : 0,
-      participants: slide.value.answers
-        .filter(
-          (answer) =>
-            JSON.parse(answer.answer_data)?.text === option.value &&
-            answer.slide_type === slide.value?.type
-        )
-        .map((answer) =>
-          answer.participant?.user_data
-            ? JSON.parse(answer.participant.user_data)
-            : { avatar: "", name: "" }
-        ),
-      isCorrect: option.isCorrect,
-      image: option.image,
-    };
-  });
+const props = defineProps({
+  data: { type: Array },
 });
 
 const color = computed(() => {
@@ -147,11 +109,7 @@ onMounted(() => {
             "<b>Ответов: " +
               d.target.__data__.value +
               "</b></br><div>" +
-              d.target.__data__.participants
-                .map(
-                  (participant) => participant.avatar + " " + participant.name
-                )
-                .join(", ") +
+              d.target.__data__.tooltipData.join(", ") +
               "</div>"
           )
           .style("left", d.offsetX + "px")
@@ -172,13 +130,13 @@ onMounted(() => {
     y.value = d3.scaleLinear().range([height.value, 0]);
     yAxis.value = svg.value.append("g");
 
-    update();
+    update(true);
   }, 500);
 
   window.addEventListener("resize", onResize);
 });
 
-const update = () => {
+const update = (isOnLoad = false) => {
   if (!svg.value) return;
 
   x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
@@ -197,12 +155,12 @@ const update = () => {
     .select("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  x.value.domain(data.value.map((d) => d.group));
+  x.value.domain(props.data.map((d) => d.group));
   xAxis.value.call(d3.axisBottom(x.value));
 
   function wrap(text, width) {
     text.each(function () {
-      var text = d3.select(this),
+      let text = d3.select(this),
         words = text.text().split(/\s+/).reverse(),
         word,
         line = [],
@@ -243,7 +201,7 @@ const update = () => {
   xAxis.value.selectAll("path").style("stroke", color.value);
   xAxis.value.selectAll("line").style("stroke", color.value);
 
-  // y.value.domain([0, d3.max(data.value, (d) => d.value)]);
+  // y.value.domain([0, d3.max(props.data, (d) => d.value)]);
   // yAxis.value.transition().duration(1000).call(d3.axisLeft(y));
 
   const maxWidth = 75;
@@ -254,10 +212,10 @@ const update = () => {
 
   svg.value
     .selectAll("rect")
-    .data(data.value)
+    .data(props.data)
     .join("rect")
     .transition()
-    .duration(600)
+    .duration(isOnLoad ? 0 : 600)
     .attr("x", (d) => x.value(d.group) + xOffset)
     .attr("y", (d) => y.value(d.value))
     .attr("width", barWidth)
@@ -270,8 +228,10 @@ const update = () => {
 
   svg.value
     .selectAll("image")
-    .data(data.value)
+    .data(props.data)
     .join("image")
+    .transition()
+    .duration(isOnLoad ? 0 : 600)
     .attr("xlink:href", (d) => d.image)
     .attr("width", barWidth)
     .attr("height", barWidth)
@@ -281,9 +241,9 @@ const update = () => {
 };
 
 watch(
-  () => data.value,
+  () => props.data,
   () => {
-    if (data.value) {
+    if (props.data) {
       update();
     }
   },

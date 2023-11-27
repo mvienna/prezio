@@ -128,7 +128,6 @@ const form = ref({});
 const isNameError = ref(false);
 
 const defaultEmojis = [
-  "😀",
   "😁",
   "😃",
   "😄",
@@ -148,7 +147,6 @@ const defaultEmojis = [
   "🤐",
   "😝",
   "😜",
-  "😛",
   "😌",
   "😴",
   "🤤",
@@ -202,13 +200,11 @@ const handleEmojiSelection = (emoji) => {
  * submit
  */
 const submit = async () => {
-  console.log(form.value.name);
   if (!form.value.name?.length) {
     isNameError.value = true;
     return;
   }
 
-  console.log(participant.value?.user_data);
   const data = participant.value?.user_data
     ? JSON.parse(participant.value.user_data)
     : {};

@@ -97,12 +97,7 @@
 
             <!-- HOST - addons (word cloud, charts) -->
             <PresentationStudioAddons
-              v-if="
-                isHost &&
-                isLoaded &&
-                canvasStore.canvasRect()?.width > 0 &&
-                slide?.type !== SLIDE_TYPES.CONTENT
-              "
+              v-if="isHost && isLoaded && slide?.type !== SLIDE_TYPES.CONTENT"
             />
 
             <!-- HOST - quiz -->
@@ -110,7 +105,6 @@
               v-if="
                 isHost &&
                 isLoaded &&
-                canvasStore.canvasRect()?.width > 0 &&
                 SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
                 room
               "
@@ -121,9 +115,7 @@
               />
 
               <!-- HOST - quiz countdown  -->
-              <PresentationRoomHostQuizCountdown
-                v-if="room && room.is_quiz_started"
-              />
+              <PresentationRoomHostQuizCountdown v-if="room.is_quiz_started" />
             </template>
 
             <template
@@ -157,6 +149,11 @@
                       slide?.type
                     )
                   "
+                />
+
+                <!-- PARTICIPANT - submission form - type answer -->
+                <PresentationRoomParticipantFormsSubmissionsTypeAnswer
+                  v-if="!isHost && SLIDE_TYPES.TYPE_ANSWER === slide?.type"
                 />
               </template>
             </template>
@@ -218,7 +215,7 @@
 import { computed, onBeforeMount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
-import { colors, QSpinnerIos, useQuasar } from "quasar";
+import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
@@ -251,6 +248,7 @@ import PresentationRoomParticipantActions from "components/presentationRoom/part
 import PresentationRoomParticipantLeaderboard from "components/presentationRoom/participant/PresentationRoomParticipantLeaderboard.vue";
 import { generateQrCode } from "src/helpers/qrUtils";
 import { computeAverageBrightness } from "src/helpers/colorUtils";
+import PresentationRoomParticipantFormsSubmissionsTypeAnswer from "components/presentationRoom/participant/forms/submissions/PresentationRoomParticipantFormsSubmissionsTypeAnswer.vue";
 
 /*
  * variables
@@ -855,31 +853,40 @@ const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
   /*
    * slide type of wordcloud
    */
-  if (
-    slide.value?.type === SLIDE_TYPES.WORD_CLOUD &&
-    slideSettings.value &&
-    !slideSettings.value.isInitialSubmissionLocked
-  ) {
-    room.value.is_submission_locked = false;
-    if (!room.value.is_submission_locked && slideSettings.value.isLimitedTime) {
-      startCountdown(slideSettings.value.timeLimit);
+  if (slide.value?.type === SLIDE_TYPES.WORD_CLOUD && slideSettings.value) {
+    if (!slideSettings.value.isInitialSubmissionLocked) {
+      if (slideSettings.value.isLimitedTime) {
+        startCountdown(slideSettings.value.timeLimit);
+      }
+
+      presentationsStore.sendPresentationRoomUpdateEvent(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          countdown: slideSettings.value.isLimitedTime
+            ? slideSettings.value.timeLimit
+            : 0,
+          is_submission_locked: false,
+          slide_id: slide.value.id,
+        }
+      );
     } else {
       stopCountdown();
-    }
 
-    presentationsStore.sendPresentationRoomUpdateEvent(
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      {
-        countdown: !room.value.is_submission_locked
-          ? slideSettings.value.timeLimit
-          : 0,
-        is_submission_locked: room.value.is_submission_locked,
-        slide_id: slide.value.id,
-      }
-    );
+      presentationsStore.sendPresentationRoomUpdateEvent(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          countdown: 0,
+          is_submission_locked: true,
+          slide_id: slide.value.id,
+        }
+      );
+    }
 
     return;
   }
@@ -893,6 +900,8 @@ const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
     } else {
       if (room.value.is_quiz_started) {
         presentationsStore.handleQuizStart(slide.value.id);
+      } else {
+        presentationsStore.handleQuizStop(slide.value.id);
       }
     }
 

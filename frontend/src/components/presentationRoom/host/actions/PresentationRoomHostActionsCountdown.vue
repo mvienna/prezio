@@ -103,7 +103,7 @@ const setNewCountdownTime = async (n) => {
     undefined,
     {
       countdown: slideSettings.value.timeLimit,
-      is_submission_locked: room.value.is_submission_locked,
+      is_submission_locked: false,
     }
   );
 };

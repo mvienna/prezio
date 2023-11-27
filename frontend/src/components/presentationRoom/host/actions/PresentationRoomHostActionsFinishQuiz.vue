@@ -24,8 +24,8 @@ const { room, presentation } = storeToRefs(presentationsStore);
  * finish quiz
  */
 const finishQuiz = () => {
-  room.value.is_submission_locked = true;
-  room.value.is_answers_revealed =
+  const is_submission_locked = true;
+  const is_answers_revealed =
     !presentation.value?.settings?.quiz_data ||
     (presentation.value?.settings?.quiz_data &&
       JSON.parse(presentation.value.settings.quiz_data)?.showAnswersManually ===
@@ -37,8 +37,8 @@ const finishQuiz = () => {
     undefined,
     undefined,
     {
-      is_submission_locked: room.value.is_submission_locked,
-      is_answers_revealed: room.value.is_answers_revealed,
+      is_submission_locked: is_submission_locked,
+      is_answers_revealed: is_answers_revealed,
       countdown: 0,
     }
   );

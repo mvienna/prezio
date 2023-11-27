@@ -47,6 +47,11 @@
           (!room.is_submission_locked ||
             (room.is_submission_locked && timeLeft === -1))))
     "
+    :data="
+      [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
+        ? computeQuizPickAnswerBarChartData()
+        : computeQuizTypeAnswerBarChartData()
+    "
   />
 
   <!-- leaderboard -->
@@ -69,13 +74,16 @@ import { useCanvasStore } from "stores/canvas";
 import PresentationAddonsBarChart from "components/presentation/addons/PresentationAddonsBarChart.vue";
 import { timeLeft } from "src/helpers/countdown";
 import PresentationAddonsLeaderboard from "components/presentation/addons/PresentationAddonsLeaderboard.vue";
+import { useI18n } from "vue-i18n";
 
 /*
- * props
+ * variables
  */
 defineProps({
   hoveredElement: { type: Object },
 });
+
+const { t } = useI18n({ useScope: "global" });
 
 /*
  * stores
@@ -125,6 +133,101 @@ const tooltip = ref();
 const tooltipWidth = computed(() => {
   return tooltip.value?.offsetWidth;
 });
+
+const computeQuizPickAnswerBarChartData = () => {
+  return slideSettings.value.answerOptions?.map((option) => {
+    if (!slide.value?.answers) {
+      return {
+        group: "",
+        value: 0,
+        participants: [],
+        isCorrect: option.isCorrect,
+        image: "",
+      };
+    }
+
+    const answers = slide.value.answers.filter(
+      (answer) =>
+        JSON.parse(answer.answer_data)?.text === option.value &&
+        answer.slide_type === slide.value?.type
+    );
+
+    return {
+      group:
+        (!room.value || room.value?.is_answers_revealed
+          ? option.isCorrect
+            ? "✅ "
+            : "❌ "
+          : "") + option.value,
+      value:
+        !room.value || room.value?.is_answers_revealed ? answers.length : 0,
+      tooltipData: answers.map((answer) => {
+        if (answer.participant.user_data) {
+          const participantData = JSON.parse(answer.participant.user_data);
+          return `${participantData.avatar} ${participantData.name}`;
+        }
+      }),
+      isCorrect: option.isCorrect,
+      image: option.image,
+    };
+  });
+};
+
+const computeQuizTypeAnswerBarChartData = () => {
+  const correctAnswers = slide.value.answers.filter(
+    (answer) =>
+      answer.slide_type === slide.value?.type &&
+      [
+        slideSettings.value.correctAnswer.value,
+        ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
+      ].includes(JSON.parse(answer.answer_data)?.text)
+  );
+
+  const incorrectAnswers = slide.value.answers.filter(
+    (answer) =>
+      answer.slide_type === slide.value?.type &&
+      ![
+        slideSettings.value.correctAnswer.value,
+        ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
+      ].includes(JSON.parse(answer.answer_data)?.text)
+  );
+
+  return [
+    {
+      group:
+        !room.value || room.value?.is_answers_revealed
+          ? slideSettings.value.correctAnswer.value
+          : "",
+      value:
+        !room.value || room.value?.is_answers_revealed
+          ? correctAnswers.length
+          : 0,
+      tooltipData: correctAnswers.map((answer) => {
+        let participantName = "";
+
+        if (answer.participant.user_data) {
+          const participantData = JSON.parse(answer.participant.user_data);
+          participantName = `${participantData.avatar} ${participantData.name}`;
+        }
+
+        return `${participantName} - ${JSON.parse(answer.answer_data)?.text}`;
+      }),
+      isCorrect: true,
+    },
+
+    {
+      group: t("presentationRoom.quiz.typeAnswer.otherAnswers"),
+      value:
+        !room.value || room.value?.is_answers_revealed
+          ? incorrectAnswers.length
+          : 0,
+      tooltipData: incorrectAnswers.map(
+        (answer) => JSON.parse(answer.answer_data)?.text
+      ),
+      isCorrect: false,
+    },
+  ];
+};
 </script>
 
 <style scoped lang="scss">

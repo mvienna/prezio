@@ -320,7 +320,7 @@ export default {
             invalid: "Недопустимое значение. Введите число от 1 до 10",
           },
 
-          // quiz
+          // quiz answer options
           answerOptions: {
             title: "Варианты ответов",
             description: {
@@ -338,6 +338,28 @@ export default {
             maxLengthErrorMessage: "Максимум 150 символов",
           },
 
+          // quiz - type answer
+          typeAnswer: {
+            correctAnswer: {
+              title: "Правильный ответ",
+              description: "Этот ответ покажется по завершению времени",
+
+              placeholder: "Введите ответ",
+            },
+
+            otherAcceptedAnswers: {
+              title: "Другие приемлимые ответы",
+              description:
+                "Данные ответы входящие в этот список будут помечены как верные",
+            },
+
+            answerOption: "Вариант ответа №",
+            addAnswerOption: "Добавить вариант",
+
+            maxLengthErrorMessage: "Максимум 150 символов",
+          },
+
+          // scoring
           points: {
             title: "Баллы",
             description: "Выберите диапазон баллов для этого вопроса",

@@ -437,7 +437,10 @@ import { useRouter } from "vue-router";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import PresentationStudioLayoutHeaderShareDialog from "components/layouts/presentation/studio/PresentationStudioLayoutHeaderShareDialog.vue";
-import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 
 /*
  * variables
@@ -511,9 +514,15 @@ const handleStartPresenting = async () => {
           : {};
 
         if (
-          slideSettings?.answerOptions &&
-          !slideSettings.answerOptions.filter((option) => option.isCorrect)
-            .length
+          ([SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
+            slide.type
+          ) &&
+            slideSettings?.answerOptions &&
+            !slideSettings.answerOptions.filter((option) => option.isCorrect)
+              .length) ||
+          ([SLIDE_TYPES.TYPE_ANSWER].includes(slide.type) &&
+            slideSettings?.correctAnswer &&
+            !slideSettings.correctAnswer.value.length)
         ) {
           quizSlidesWithoutCorrectAnswers.value.push({
             index: slideIndex,

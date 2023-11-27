@@ -160,6 +160,7 @@ export default {
 
       timesup: "Время вышло",
       allParticipantsAnswered: "Все ответили",
+      revealResults: "Показать ответы",
     },
 
     quiz: {
@@ -194,6 +195,13 @@ export default {
         "Вы уже ответили на этот вопрос. Пожалуйста, подождите, пока ведущий покажет следующий слайд.",
       thanksForParticipation: "Благодарим за Ваше участие",
       hasAlreadyAnswered: "Вы уже ответили на данный вопрос",
+
+      results: {
+        correct: "Правильно!",
+        incorrect: "Неправильно!",
+        timesUp: "Время вышло!",
+        sec: "сек",
+      },
     },
 
     leaderboard: {

@@ -65,7 +65,6 @@ import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
-import { generateUniqueId } from "src/helpers/generationUtils";
 
 /*
  * stores
@@ -146,7 +145,7 @@ const generateWordCloud = () => {
     .map(([key, size]) => ({
       text: settings.word(key),
       size,
-      id: settings.word(key).replace(/[^a-zA-Z]/g, ""),
+      id: settings.word(key).replace(/[^a-zA-Zа-яА-Я]/g, ""),
     }));
 
   const svg = d3
@@ -214,7 +213,7 @@ const updateWordCloud = () => {
     .map(([key, size]) => ({
       text: settings.word(key),
       size,
-      id: settings.word(key).replace(/[^a-zA-Z]/g, ""),
+      id: settings.word(key).replace(/[^a-zA-Zа-яА-Я]/g, ""),
     }));
 
   const cloud = d3Cloud()

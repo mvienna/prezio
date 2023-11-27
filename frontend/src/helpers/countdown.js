@@ -10,13 +10,14 @@ const startCountdown = (seconds = 60) => {
   timeLeft.value = seconds;
 
   countdownInterval.value = setInterval(() => {
-    timeLeft.value--;
-    timeLeftPercentage.value = ((seconds - timeLeft.value) * 100) / seconds;
-
-    if (timeLeft.value === 0) {
+    if (timeLeft.value === 0.0) {
       stopCountdown();
+      return;
     }
-  }, 1000);
+
+    timeLeft.value = parseFloat((timeLeft.value - 0.1).toFixed(2));
+    timeLeftPercentage.value = ((seconds - timeLeft.value) * 100) / seconds;
+  }, 100);
 };
 
 const stopCountdown = () => {
@@ -28,8 +29,9 @@ const stopCountdown = () => {
 };
 
 const countdown = computed(() => {
-  const minutes = Math.floor(timeLeft.value / 60);
-  const seconds = timeLeft.value % 60;
+  const intTimeLeft = Math.floor(timeLeft.value);
+  const minutes = Math.floor(intTimeLeft / 60);
+  const seconds = intTimeLeft % 60;
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 });
 
