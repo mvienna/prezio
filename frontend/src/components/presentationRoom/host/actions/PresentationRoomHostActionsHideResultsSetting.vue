@@ -52,17 +52,14 @@
           class="text-black-4 q-mt-md row no-wrap justify-center"
           :class="$q.screen.lt.lg ? '' : 'text-h7'"
         >
-          <div style="line-height: 24px">
-            {{ $t("presentationRoom.footer.hideResults.dialog.description") }}
-          </div>
-
-          <q-btn
-            flat
-            class="text-white bg-black q-ml-sm"
-            round
-            style="font-size: 14px; min-height: 24px; min-width: 24px"
-            :label="slide?.answers?.length || 0"
-          />
+          <div
+            style="line-height: 24px"
+            v-html="
+              $t('presentationRoom.footer.hideResults.dialog.description', 1, {
+                count: slide?.answers?.length || 0,
+              })
+            "
+          ></div>
         </div>
 
         <q-btn

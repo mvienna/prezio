@@ -70,7 +70,8 @@ export default {
 
         dialog: {
           title: "Results are hidden",
-          description: `Received answers`,
+          description:
+            "Получено <span style='font-size: 14px; min-height: 24px; min-width: 24px; margin: 0 4px; border-radius: 8px; background: rgba(0, 0, 0, 0.7); padding: 4px 8px;'>{count}</span> ответов",
           toggle: "Show results",
         },
       },
@@ -112,12 +113,7 @@ export default {
     waitingForParticipants: {
       title: "Waiting for participants...",
       joined: {
-        title: {
-          participant: "Joined - ",
-          participants: "Joined - ",
-        },
-        participant: "participant",
-        participants: "participants",
+        title: "Joined - {count} participant(s)",
       },
       startQuiz: {
         title: "Start the Quiz!",
@@ -158,6 +154,12 @@ export default {
 
       timesup: "Time's up!",
       allParticipantsAnswered: "Everyone answered",
+    },
+
+    quiz: {
+      typeAnswer: {
+        otherAnswers: "Other answers",
+      },
     },
 
     isPrivate: {

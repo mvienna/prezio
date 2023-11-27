@@ -16,21 +16,11 @@
   >
     <div>{{ $t("presentationRoom.waitingForParticipants.title") }}</div>
 
-    <div v-if="participants.length" class="text-grey-4">
+    <div v-if="participants.length" style="opacity: 0.5">
       {{
-        $t(
-          `presentationRoom.waitingForParticipants.joined.title.${
-            participants.length === 1 ? "participant" : "participants"
-          }`
-        )
-      }}
-      {{ participants.length }}
-      {{
-        $t(
-          `presentationRoom.waitingForParticipants.joined.${
-            participants.length === 1 ? "participant" : "participants"
-          }`
-        )
+        $t("presentationRoom.waitingForParticipants.joined.title", 0, {
+          count: participants.length,
+        })
       }}
     </div>
   </div>

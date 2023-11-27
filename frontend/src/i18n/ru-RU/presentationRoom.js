@@ -74,7 +74,8 @@ export default {
 
         dialog: {
           title: "Результаты скрыты",
-          description: "Получено ответов ",
+          description:
+            "Получено <span style='font-size: 14px; min-height: 24px; min-width: 24px; margin: 0 4px; border-radius: 8px; background: rgba(0, 0, 0, 0.7); padding: 4px 8px;'>{count}</span> ответов",
           toggle: "Показать результаты",
         },
       },
@@ -116,12 +117,7 @@ export default {
     waitingForParticipants: {
       title: "Ждем участников...",
       joined: {
-        title: {
-          participant: "Подключился(ась) - ",
-          participants: "Подключилось - ",
-        },
-        participant: "участник",
-        participants: "участников",
+        title: "Подключилось(ся) - {count} участник(ов)",
       },
       startQuiz: {
         title: "Начать викторину!",
@@ -163,6 +159,12 @@ export default {
 
       timesup: "Время вышло",
       allParticipantsAnswered: "Все ответили",
+    },
+
+    quiz: {
+      typeAnswer: {
+        otherAnswers: "Другие ответы",
+      },
     },
 
     isPrivate: {
