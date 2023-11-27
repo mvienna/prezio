@@ -57,7 +57,7 @@ export const computeAverageBrightness = async (elements) => {
     return 255;
   }
 
-  function comp(image) {
+  function compute(image) {
     // define canvas
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -106,7 +106,7 @@ export const computeAverageBrightness = async (elements) => {
    * background image dom element exists
    */
   if (background?.image?.nodeType) {
-    return comp(background.image);
+    return compute(background.image);
 
     /*
      * background image src exists
@@ -117,7 +117,7 @@ export const computeAverageBrightness = async (elements) => {
 
     return await new Promise((resolve, reject) => {
       image.onload = () => {
-        resolve(comp(image));
+        resolve(compute(image));
       };
 
       image.onerror = (error) => {

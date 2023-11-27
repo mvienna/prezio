@@ -129,8 +129,8 @@
                   :src="`/assets/icons/temp/slideTypes/${element.type}.svg`"
                   style="width: 36px; height: 36px; background: transparent"
                   :style="
-                    element.previewAverageBrightness >= 128 ||
-                    !element.previewAverageBrightness
+                    element.previewAverageBrightness >=
+                    backgroundBrightnessThreshold
                       ? ''
                       : 'filter: invert(100%) grayscale(100%) brightness(200%);'
                   "
@@ -140,8 +140,8 @@
               <div
                 class="text-semibold text-accent text-center text-caption text-no-wrap"
                 :class="
-                  element.previewAverageBrightness >= 128 ||
-                  !element.previewAverageBrightness
+                  element.previewAverageBrightness >=
+                  backgroundBrightnessThreshold
                     ? 'text-accent'
                     : 'text-white'
                 "
@@ -162,8 +162,8 @@
                 flat
                 size="8px"
                 :color="
-                  element.previewAverageBrightness >= 128 ||
-                  !element.previewAverageBrightness
+                  element.previewAverageBrightness >=
+                  backgroundBrightnessThreshold
                     ? 'black'
                     : 'white'
                 "
@@ -343,7 +343,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import draggable from "vuedraggable/src/vuedraggable";
@@ -378,7 +378,8 @@ const showNewSlideTypeSelectionMenu = ref([false, false, false]);
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide } = storeToRefs(presentationsStore);
+const { presentation, slide, backgroundBrightnessThreshold } =
+  storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { elements, MODE_OPTIONS, canvas } = storeToRefs(canvasStore);
