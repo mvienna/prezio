@@ -18,9 +18,10 @@
 
     <div v-if="participants.length" style="opacity: 0.5">
       {{
-        $t("presentationRoom.waitingForParticipants.joined.title", 0, {
-          count: participants.length,
-        })
+        $t(
+          "presentationRoom.waitingForParticipants.joined.title",
+          participants?.length
+        )
       }}
     </div>
   </div>
