@@ -217,7 +217,9 @@ onMounted(() => {
 watch(
   () => props.words,
   () => {
-    updateWordCloud();
+    if (!d3.select("svg").select("g").empty() && props.words) {
+      updateWordCloud();
+    }
   }
 );
 

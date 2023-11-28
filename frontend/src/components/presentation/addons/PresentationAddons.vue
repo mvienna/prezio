@@ -29,10 +29,10 @@
   <PresentationStudioWordsCloud
     v-if="
       slide?.type === SLIDE_TYPES.WORD_CLOUD &&
-      slideAnswers?.length &&
+      wordCloudData?.length &&
       !slideSettings?.isResultsHidden
     "
-    :words="slideAnswers"
+    :words="wordCloudData"
     :style="isPresentationPreview ? 'z-index: 6001;' : ''"
     @remove-word="handleRemovingAnswer($event)"
   />
@@ -97,7 +97,7 @@ const { room, slide, slideSettings, isPresentationPreview, participants } =
 /*
  * slide answers
  */
-const slideAnswers = computed(() => {
+const wordCloudData = computed(() => {
   return (
     slide.value?.answers
       ?.filter((item) => item.slide_type === slide.value?.type)
