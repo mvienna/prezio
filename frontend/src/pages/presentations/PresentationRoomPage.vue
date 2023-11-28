@@ -854,7 +854,12 @@ const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
    * slide type of wordcloud
    */
   if (slide.value?.type === SLIDE_TYPES.WORD_CLOUD && slideSettings.value) {
-    if (!slideSettings.value.isInitialSubmissionLocked) {
+    if (
+      !slideSettings.value.isInitialSubmissionLocked &&
+      !slide.value.answers.filter(
+        (answer) => answer.slide_type === slide.value?.type
+      ).length
+    ) {
       if (slideSettings.value.isLimitedTime) {
         startCountdown(slideSettings.value.timeLimit);
       }
@@ -870,6 +875,7 @@ const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
             : 0,
           is_submission_locked: false,
           slide_id: slide.value.id,
+          is_quiz_started: false,
         }
       );
     } else {
@@ -884,6 +890,7 @@ const handleCountdownOnSlideChange = (isOnLoad = false, direction) => {
           countdown: 0,
           is_submission_locked: true,
           slide_id: slide.value.id,
+          is_quiz_started: false,
         }
       );
     }
