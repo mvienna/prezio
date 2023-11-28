@@ -15,7 +15,7 @@
         }
       }
     "
-    @mouseover="isHovered = true"
+    @mousemove="isHovered = true"
     @mouseleave="isHovered = false"
   >
     <!-- back to studio -->
