@@ -243,7 +243,7 @@ const update = (isOnLoad = false) => {
     .join("image")
     .filter((d) => d.image)
     .transition()
-    .duration(isOnLoad ? 0 : 200)
+    .duration(0)
     .attr("xlink:href", (d) => {
       console.log(d.image);
       return d.image;
