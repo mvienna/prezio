@@ -61,12 +61,19 @@ const yAxis = ref();
 const tooltip = ref();
 
 const canvasRect = ref(canvasStore.canvasRect());
-const margin = { top: 75, right: 100, bottom: 100, left: 100 };
+const margin = computed(() => {
+  return {
+    top: (canvasRect.value.height * 25) / 100,
+    right: (canvasRect.value.width * 10) / 100,
+    bottom: (canvasRect.value.height * 25) / 100,
+    left: (canvasRect.value.width * 10) / 100,
+  };
+});
 const width = computed(() => {
   return (canvasRect.value.width * 80) / 100;
 });
 const height = computed(() => {
-  return (canvasRect.value.height * 35) / 100;
+  return (canvasRect.value.height * 50) / 100;
 });
 
 onMounted(() => {
@@ -122,12 +129,7 @@ onMounted(() => {
           .forEach((rect) => (rect.style.opacity = 1));
       });
 
-    x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
-    xAxis.value = svg.value
-      .append("g")
-      .attr("transform", `translate(0, ${height.value + 1})`);
-
-    y.value = d3.scaleLinear().range([height.value, 0]);
+    xAxis.value = svg.value.append("g");
     yAxis.value = svg.value.append("g");
 
     update(true);
@@ -139,24 +141,34 @@ onMounted(() => {
 const update = (isOnLoad = false) => {
   if (!svg.value) return;
 
+  svg.value = d3
+    .select(barChart.value)
+    .select("svg")
+    .attr("width", width.value + margin.value.left + margin.value.right)
+    .attr("height", height.value + margin.value.top + margin.value.bottom)
+    .select("g")
+    .attr(
+      "transform",
+      `translate(${margin.value.left}, ${
+        margin.value.top + margin.value.bottom / 2
+      })`
+    );
+
+  svg.value.selectAll("image").remove();
+
   x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
   xAxis.value = svg.value
     .select("g")
     .attr("transform", `translate(0, ${height.value})`);
 
-  y.value = d3.scaleLinear().range([height.value, 0]);
-  yAxis.value = svg.value.select("g");
-
-  svg.value = d3
-    .select(barChart.value)
-    .select("svg")
-    .attr("width", width.value + margin.left + margin.right)
-    .attr("height", height.value + margin.top + margin.bottom)
-    .select("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
-
   x.value.domain(props.data.map((d) => d.group));
   xAxis.value.call(d3.axisBottom(x.value));
+
+  y.value = d3.scaleLinear().range([height.value, 0]);
+  const maxScore = d3.max(props.data, (d) => d.value);
+  if (maxScore > 0) {
+    y.value.domain([0, maxScore]);
+  }
 
   function wrap(text, width) {
     text.each(function () {
@@ -201,11 +213,8 @@ const update = (isOnLoad = false) => {
   xAxis.value.selectAll("path").style("stroke", color.value);
   xAxis.value.selectAll("line").style("stroke", color.value);
 
-  // y.value.domain([0, d3.max(props.data, (d) => d.value)]);
-  // yAxis.value.transition().duration(1000).call(d3.axisLeft(y));
-
   const maxWidth = 75;
-  const barWidth = Math.min(maxWidth, x.value.bandwidth());
+  const barSize = Math.min(maxWidth, x.value.bandwidth());
 
   const xOffset =
     (x.value.bandwidth() - Math.min(maxWidth, x.value.bandwidth())) / 2;
@@ -215,13 +224,15 @@ const update = (isOnLoad = false) => {
     .data(props.data)
     .join("rect")
     .transition()
-    .duration(isOnLoad ? 0 : 600)
+    .duration(isOnLoad ? 0 : 200)
     .attr("x", (d) => x.value(d.group) + xOffset)
     .attr("y", (d) => y.value(d.value))
-    .attr("width", barWidth)
+    .attr("width", barSize)
     .attr("height", (d) => {
       return d.value > 0 ? height.value - y.value(d.value) : 0;
     })
+    .attr("width", barSize)
+    .attr("height", (d) => (d.value > 0 ? height.value - y.value(d.value) : 0))
     .attr("fill", (d) => {
       return d.isCorrect ? "#21BA45" : "#EA5757";
     });
@@ -230,13 +241,19 @@ const update = (isOnLoad = false) => {
     .selectAll("image")
     .data(props.data)
     .join("image")
+    .filter((d) => d.image)
     .transition()
-    .duration(isOnLoad ? 0 : 600)
-    .attr("xlink:href", (d) => d.image)
-    .attr("width", barWidth)
-    .attr("height", barWidth)
+    .duration(isOnLoad ? 0 : 200)
+    .attr("xlink:href", (d) => {
+      console.log(d.image);
+      return d.image;
+    })
+    .attr("width", barSize)
+    .attr("height", barSize)
     .attr("x", (d) => x.value(d.group) + xOffset)
-    .attr("y", (d) => y.value(d.value) - barWidth)
+    .attr("y", (d) => {
+      return y.value(d.value) - barSize;
+    })
     .attr("preserveAspectRatio", "xMidYMid slice");
 };
 
