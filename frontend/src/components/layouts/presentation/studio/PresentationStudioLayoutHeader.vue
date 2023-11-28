@@ -562,9 +562,10 @@ const handleStartPresenting = async () => {
 const openPresentationRoom = () => {
   if (!presentation.value?.room?.token) return;
 
-  window.location =
+  router.push(
     clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
-    presentation.value?.room?.token;
+      presentation.value?.room?.token
+  );
 };
 
 const createPresentationRoom = async () => {
