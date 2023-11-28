@@ -29,15 +29,18 @@ class UpdatePresentationRoomCountdown extends Command
     {
         $seconds = 60;
         for ($i = 0; $i < $seconds; $i++) {
-            sleep(1);
+            // fetch rooms with countdown 1s to lock submission in a second
+            $rooms = PresentationRoom::where('countdown', 1)->get();
 
-            $rooms = PresentationRoom::where('countdown', '=', 0)->get();
+            // decrement countdown as one second has passed
+            PresentationRoom::where('countdown', '>', 0)->decrement('countdown');
+
+            // sleep for 1s and then lock submission for rooms that have just finished the countdown
+            sleep(1);
             foreach ($rooms as $room) {
                 $room->update(['is_submission_locked' => true]);
                 event(new PresentationRoomUpdatedEvent($room));
             }
-
-            PresentationRoom::where('countdown', '>', 0)->decrement('countdown');
         }
     }
 }
