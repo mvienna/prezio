@@ -206,7 +206,7 @@ watch(
     ) {
       isQuizComingToEnd.value = true;
 
-      if (timeLeft.value === 1.0) {
+      if (timeLeft.value === 1) {
         setTimeout(() => {
           presentationsStore.sendPresentationRoomUpdateEvent(
             undefined,
@@ -262,7 +262,6 @@ watch(
 // watch(
 //   () => slide.value,
 //   () => {
-//     console.log("update");
 //     isQuizComingToEnd.value = false;
 //     isFinished.value = false;
 //     isAllParticipantsAnswered.value = false;

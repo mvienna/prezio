@@ -24,6 +24,8 @@ export const usePresentationsStore = defineStore("presentations", {
     showShareDialog: false,
     showRoomChat: false,
 
+    quizStartCountdown: null,
+
     averageBackgroundBrightness: 0,
     backgroundBrightnessThreshold: 128,
 
@@ -582,6 +584,8 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     async handleQuizStart(slide_id = null) {
+      clearTimeout(this.quizStartCountdown);
+
       // initial countdown (question №n out of №n)
       let timeout = 5000;
 
@@ -608,27 +612,28 @@ export const usePresentationsStore = defineStore("presentations", {
       await this.sendPresentationRoomUpdateEvent(
         undefined,
         undefined,
-        undefined,
+        slide_id ? slide_id : undefined,
         undefined,
         data
       );
 
       // start the quiz
-      setTimeout(() => {
+      this.quizStartCountdown = setTimeout(() => {
         this.sendPresentationRoomUpdateEvent(
           undefined,
           undefined,
-          undefined,
+          slide_id ? slide_id : undefined,
           undefined,
           {
             is_submission_locked: false,
             countdown: this.slideSettings.timeLimit,
           }
         );
-      }, timeout);
+      }, timeout + 1000);
     },
 
-    handleQuizStop(slide_id = null) {
+    async handleQuizStop(slide_id = null) {
+      clearTimeout(this.quizStartCountdown);
       stopCountdown();
 
       const data = {
@@ -642,10 +647,10 @@ export const usePresentationsStore = defineStore("presentations", {
         data.slide_id = slide_id;
       }
 
-      this.sendPresentationRoomUpdateEvent(
+      return await this.sendPresentationRoomUpdateEvent(
         undefined,
         undefined,
-        undefined,
+        slide_id ? slide_id : undefined,
         undefined,
         data
       );
