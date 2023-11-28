@@ -228,32 +228,21 @@ const update = (isOnLoad = false) => {
     .attr("x", (d) => x.value(d.group) + xOffset)
     .attr("y", (d) => y.value(d.value))
     .attr("width", barSize)
-    .attr("height", (d) => {
-      return d.value > 0 ? height.value - y.value(d.value) : 0;
-    })
+    .attr("height", (d) => (d.value > 0 ? height.value - y.value(d.value) : 0))
     .attr("width", barSize)
     .attr("height", (d) => (d.value > 0 ? height.value - y.value(d.value) : 0))
-    .attr("fill", (d) => {
-      return d.isCorrect ? "#21BA45" : "#EA5757";
-    });
+    .attr("fill", (d) => (d.isCorrect ? "#21BA45" : "#EA5757"));
 
   svg.value
     .selectAll("image")
     .data(props.data)
     .join("image")
     .filter((d) => d.image)
-    .transition()
-    .duration(0)
-    .attr("xlink:href", (d) => {
-      console.log(d.image);
-      return d.image;
-    })
+    .attr("xlink:href", (d) => d.image)
     .attr("width", barSize)
     .attr("height", barSize)
     .attr("x", (d) => x.value(d.group) + xOffset)
-    .attr("y", (d) => {
-      return y.value(d.value) - barSize;
-    })
+    .attr("y", (d) => y.value(d.value) - barSize)
     .attr("preserveAspectRatio", "xMidYMid slice");
 };
 
