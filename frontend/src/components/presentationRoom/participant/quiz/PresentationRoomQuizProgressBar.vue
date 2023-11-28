@@ -18,39 +18,46 @@
         </div>
       </div>
 
-      <q-linear-progress
-        size="xl"
-        rounded
-        :value="
-          participantAnswers?.length
-            ? 1 - timeTakenToAnswerPercentage / 100
-            : 1 - timeLeftPercentage / 100
-        "
-        style="border: 1px solid rgba(255, 255, 255, 0.1)"
-        :color="
-          participantAnswers?.length
-            ? timeTakenToAnswerPercentage < 25
+      <div
+        class="relative-position bg-grey-2 rounded-borders"
+        style="width: 100%; height: 12px"
+      >
+        <div
+          style="height: 100%; transition: 1s"
+          class="absolute"
+          :style="`width: ${
+            100 -
+            (participantAnswers?.length
+              ? timeTakenToAnswerPercentage
+              : timeLeft !== -1
+              ? Math.round(timeLeftPercentage / 10) * 10
+              : 100)
+          }%`"
+          :class="`rounded-borders bg-${
+            participantAnswers?.length
+              ? timeTakenToAnswerPercentage < 25
+                ? 'positive'
+                : timeTakenToAnswerPercentage < 50
+                ? 'yellow-10'
+                : timeTakenToAnswerPercentage < 75
+                ? 'orange'
+                : 'red'
+              : timeLeftPercentage < 25
               ? 'positive'
-              : timeTakenToAnswerPercentage < 50
+              : timeLeftPercentage < 50
               ? 'yellow-10'
-              : timeTakenToAnswerPercentage < 75
+              : timeLeftPercentage < 75
               ? 'orange'
               : 'red'
-            : timeLeftPercentage < 25
-            ? 'positive'
-            : timeLeftPercentage < 50
-            ? 'yellow-10'
-            : timeLeftPercentage < 75
-            ? 'orange'
-            : 'red'
-        "
-      />
+          }`"
+        ></div>
+      </div>
     </div>
   </transition>
 </template>
 
 <script setup>
-import { timeLeftPercentage } from "src/helpers/countdown";
+import { timeLeft, timeLeftPercentage } from "src/helpers/countdown";
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
