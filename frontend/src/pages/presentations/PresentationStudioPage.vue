@@ -79,7 +79,14 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, ref, watch } from "vue";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useCanvasDrawingStore } from "stores/canvas/drawing";
@@ -280,6 +287,14 @@ onMounted(async () => {
    */
   $q.loading.hide();
   isCanvasReady.value = true;
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", resizeCanvas);
+  canvas.value.removeEventListener("wheel", handleWheelEvent);
+  document.removeEventListener("mousemove", handleCanvasMouseMove);
+  document.removeEventListener("mouseup", handleCanvasMouseUp);
+  document.removeEventListener("keydown", handleKeyDownEvent);
 });
 
 const resizeCanvas = () => {
