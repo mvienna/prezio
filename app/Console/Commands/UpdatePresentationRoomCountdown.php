@@ -20,24 +20,29 @@ class UpdatePresentationRoomCountdown extends Command
      *
      * @var string
      */
-    protected $description = "";
+    protected $description = "This command decrements all rooms countdown time each second and sends an event once the time's up";
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $seconds = 60;
+
         for ($i = 0; $i < $seconds; $i++) {
-            // fetch rooms with countdown 1s to lock submission in a second
-            $rooms = PresentationRoom::where('countdown', 1)->get();
-
-            // decrement countdown as one second has passed
-            PresentationRoom::where('countdown', '>', 0)->decrement('countdown');
-
-            // sleep for 1s and then lock submission for rooms that have just finished the countdown
+            $this->decrementCountdown();
             sleep(1);
-            foreach ($rooms as $room) {
+        }
+    }
+
+    private function decrementCountdown(): void
+    {
+        $rooms = PresentationRoom::where('countdown', '>', 0)->get();
+
+        foreach ($rooms as $room) {
+            $room->decrement('countdown');
+
+            if ($room->countdown === 0) {
                 $room->update(['is_submission_locked' => true]);
                 event(new PresentationRoomUpdatedEvent($room));
             }
