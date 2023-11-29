@@ -91,7 +91,6 @@ const { elements } = storeToRefs(canvasStore);
  */
 const setNewCountdownTime = async (n) => {
   slideSettings.value.timeLimit = n * multiplier;
-  startCountdown(slideSettings.value.timeLimit);
 
   await presentationsStore.updateLocalSlide();
   await presentationsStore.saveSlide(undefined, elements.value);

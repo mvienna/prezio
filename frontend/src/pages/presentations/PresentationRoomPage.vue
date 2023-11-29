@@ -650,14 +650,15 @@ const connectToRoomChannels = () => {
    * listen for new reactions
    */
   channel.listen("PresentationRoomNewReactionEvent", (event) => {
-    room.value.reactions = event.reactions;
+    if (room.value) {
+      room.value.reactions = event.reactions;
+    }
   });
 
   /*
    * listen for new chat messages
    */
   channel.listen("PresentationRoomNewChatMessageEvent", (event) => {
-    // add new message
     if (room.value.messages) {
       room.value.messages = [...room.value.messages, event.message];
     } else {
@@ -832,17 +833,13 @@ const handleRoomUpdateOnSlideChange = async (
    * slide type of word cloud
    */
   if (newSlide?.type === SLIDE_TYPES.WORD_CLOUD && slideSettings.value) {
+    clearTimeout(quizStartCountdown.value);
+
     if (
       !slideSettings.value.isInitialSubmissionLocked &&
       !newSlide.answers.filter((answer) => answer.slide_type === newSlide?.type)
         .length
     ) {
-      if (slideSettings.value.isLimitedTime) {
-        startCountdown(slideSettings.value.timeLimit);
-      }
-
-      clearTimeout(quizStartCountdown.value);
-
       return await presentationsStore.sendPresentationRoomUpdateEvent(
         undefined,
         undefined,
@@ -857,9 +854,6 @@ const handleRoomUpdateOnSlideChange = async (
         }
       );
     } else {
-      stopCountdown();
-      clearTimeout(quizStartCountdown.value);
-
       return await presentationsStore.sendPresentationRoomUpdateEvent(
         undefined,
         undefined,
