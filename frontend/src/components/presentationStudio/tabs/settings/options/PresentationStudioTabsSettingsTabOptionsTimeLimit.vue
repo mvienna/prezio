@@ -78,6 +78,12 @@
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { useI18n } from "vue-i18n";
+
+/*
+ * variables
+ */
+const { t } = useI18n({ useScope: "global" });
 
 /*
  * emits
