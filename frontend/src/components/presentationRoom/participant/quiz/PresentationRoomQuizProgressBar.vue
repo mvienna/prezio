@@ -6,7 +6,10 @@
   >
     <!-- progress bar -->
     <div class="q-pb-md">
-      <div class="row no-wrap justify-between q-mb-sm">
+      <div
+        v-if="slideSettings.points.min && slideSettings.points.max"
+        class="row no-wrap justify-between q-mb-sm"
+      >
         <div>
           {{ slideSettings.points.min }}
           {{ $t("presentationRoom.leaderboard.p") }}

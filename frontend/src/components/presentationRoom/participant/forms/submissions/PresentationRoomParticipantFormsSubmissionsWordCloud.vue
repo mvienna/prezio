@@ -47,22 +47,7 @@
         "
         class="q-pb-md"
       >
-        <q-linear-progress
-          size="xl"
-          rounded
-          :value="1 - timeLeftPercentage / 100"
-          :color="
-            timeLeftPercentage < 25
-              ? 'positive'
-              : timeLeftPercentage < 50
-              ? 'yellow-10'
-              : timeLeftPercentage < 75
-              ? 'orange'
-              : timeLeftPercentage < 100
-              ? 'red'
-              : 'white'
-          "
-        />
+        <PresentationRoomQuizProgressBar />
       </div>
     </transition>
 
@@ -188,6 +173,7 @@ import { useCanvasStore } from "stores/canvas";
 import { countdown, timeLeft, timeLeftPercentage } from "src/helpers/countdown";
 import { russianProfanityWords } from "src/constants/profanity";
 import { useI18n } from "vue-i18n";
+import PresentationRoomQuizProgressBar from "components/presentationRoom/participant/quiz/PresentationRoomQuizProgressBar.vue";
 
 /*
  * variables
