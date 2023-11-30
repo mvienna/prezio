@@ -17,6 +17,14 @@
     "
   >
     <div
+      v-if="isLoading.sendingRoomUpdatedEvent"
+      class="fixed-top-right q-pt-lg q-pr-lg"
+      style="z-index: 9999"
+    >
+      <q-spinner-ios color="white" size="sm" />
+    </div>
+
+    <div
       :style="
         !isHost && roomBackground && !presentation.is_private
           ? `backdrop-filter: blur(${roomBackground.blur || 0}px) contrast(${
@@ -282,6 +290,7 @@ const {
   averageBackgroundBrightness,
   showRoomChat,
   quizStartCountdown,
+  isLoading,
 } = storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
@@ -656,6 +665,8 @@ const connectToRoomChannels = () => {
 
     // redraw canvas
     canvasStore.redrawCanvas(false, undefined, false);
+
+    isLoading.value.sendingRoomUpdatedEvent = false;
   });
 
   /*

@@ -79,6 +79,8 @@ export const usePresentationsStore = defineStore("presentations", {
 
       creatingPresentation: false,
       creatingFolder: false,
+
+      sendingRoomUpdatedEvent: false,
     },
   }),
 
@@ -424,6 +426,8 @@ export const usePresentationsStore = defineStore("presentations", {
       data = null
     ) {
       if (!presentation_id || !room_id) return;
+
+      this.isLoading.sendingRoomUpdatedEvent = true;
 
       return await api
         .patch(`/presentation/${presentation_id}/room/${room_id}`, {
