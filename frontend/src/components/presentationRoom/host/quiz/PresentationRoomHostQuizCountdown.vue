@@ -233,29 +233,29 @@ watch(
       isQuizComingToEnd.value = false;
     }
 
-    // all participants submitted answers
-    if (
-      timeLeft.value === -1 &&
-      room.value.is_submission_locked &&
-      room.value.countdown === 0 &&
-      !isQuizComingToEnd.value
-    ) {
-      isQuizComingToEnd.value = true;
-      isAllParticipantsAnswered.value = true;
-
-      if (
-        !presentation.value?.settings?.quiz_data ||
-        (presentation.value?.settings?.quiz_data &&
-          JSON.parse(presentation.value.settings.quiz_data)
-            ?.showAnswersManually === false)
-      ) {
-        setTimeout(() => {
-          isFinished.value = true;
-        }, 3000);
-      } else {
-        isFinished.value = false;
-      }
-    }
+    // // all participants submitted answers
+    // if (
+    //   timeLeft.value === -1 &&
+    //   room.value.is_submission_locked &&
+    //   room.value.countdown === 0 &&
+    //   !isQuizComingToEnd.value
+    // ) {
+    //   isQuizComingToEnd.value = true;
+    //   isAllParticipantsAnswered.value = true;
+    //
+    //   if (
+    //     !presentation.value?.settings?.quiz_data ||
+    //     (presentation.value?.settings?.quiz_data &&
+    //       JSON.parse(presentation.value.settings.quiz_data)
+    //         ?.showAnswersManually === false)
+    //   ) {
+    //     setTimeout(() => {
+    //       isFinished.value = true;
+    //     }, 3000);
+    //   } else {
+    //     isFinished.value = false;
+    //   }
+    // }
   }
 );
 
