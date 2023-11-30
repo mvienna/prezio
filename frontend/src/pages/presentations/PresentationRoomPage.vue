@@ -120,10 +120,14 @@
               <!-- HOST - waiting for participants (word cloud) -->
               <PresentationRoomHostQuizWaitingForParticipants
                 v-if="!room.is_quiz_started"
+                :key="'word_cloud__participants__' + slide.id"
               />
 
               <!-- HOST - quiz countdown  -->
-              <PresentationRoomHostQuizCountdown v-if="room.is_quiz_started" />
+              <PresentationRoomHostQuizCountdown
+                v-if="room.is_quiz_started"
+                :key="'quiz_countdown__' + slide?.id"
+              />
             </template>
 
             <template
@@ -169,6 +173,7 @@
             <!-- PARTICIPANT - leaderboard -->
             <PresentationRoomParticipantLeaderboard
               v-if="!isHost && slide?.type === SLIDE_TYPES.LEADERBOARD"
+              :key="'leaderboard__' + slide?.id"
             />
 
             <!-- HOST - actions -->

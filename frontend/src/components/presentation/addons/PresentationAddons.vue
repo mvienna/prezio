@@ -32,6 +32,7 @@
       wordCloudData?.length &&
       !slideSettings?.isResultsHidden
     "
+    :key="'addons__word_cloud__' + slide?.id"
     :words="wordCloudData"
     :style="isPresentationPreview ? 'z-index: 6001;' : ''"
     @remove-word="handleRemovingAnswer($event)"
@@ -47,6 +48,7 @@
           (!room.is_submission_locked ||
             (room.is_submission_locked && timeLeft === -1))))
     "
+    :key="'addons__bar_chart__' + slide?.id"
     :data="
       [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
         ? computeQuizPickAnswerBarChartData()
@@ -57,6 +59,7 @@
   <!-- leaderboard -->
   <PresentationAddonsLeaderboard
     v-if="slide?.type === SLIDE_TYPES.LEADERBOARD"
+    :key="'addons__leaderboard__' + slide?.id"
   />
 </template>
 
