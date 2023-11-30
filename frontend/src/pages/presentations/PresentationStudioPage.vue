@@ -121,7 +121,7 @@ import {
 } from "stores/canvas/helpers/select";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 import { useRouter } from "vue-router";
-import { colors, QSpinnerIos, useQuasar } from "quasar";
+import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import {
@@ -754,14 +754,13 @@ watch(
  * slide average background brightness
  */
 watch(
-  () => slide.value,
+  () => elements.value,
   async () => {
     averageBackgroundBrightness.value = await computeAverageBrightness(
       elements.value
     );
     await canvasStore.redrawCanvas(false);
-  },
-  { deep: true }
+  }
 );
 
 /*

@@ -756,28 +756,23 @@ watch(
 /*
  * slide preview avg. brightness generation
  */
-const setSlidesPreviewAverageBrightness = () => {
-  presentation.value.slides.forEach(async (item, index) => {
-    if (
-      item.id === slide.value.id ||
-      !presentation.value.slides[index].previewAverageBrightness
-    ) {
-      presentation.value.slides[index].previewAverageBrightness =
-        await computeAverageBrightness(
-          item.id === slide.value.id
-            ? JSON.parse(slide.value.canvas_data)
-            : JSON.parse(item.canvas_data)
-        );
-    }
-  });
-};
-
 watch(
-  () => slide.value,
+  () => elements.value,
   () => {
-    setSlidesPreviewAverageBrightness();
-  },
-  { deep: true }
+    presentation.value.slides.forEach(async (item, index) => {
+      if (
+        item.id === slide.value.id ||
+        !presentation.value.slides[index].previewAverageBrightness
+      ) {
+        presentation.value.slides[index].previewAverageBrightness =
+          await computeAverageBrightness(
+            item.id === slide.value.id
+              ? JSON.parse(slide.value.canvas_data)
+              : JSON.parse(item.canvas_data)
+          );
+      }
+    });
+  }
 );
 </script>
 

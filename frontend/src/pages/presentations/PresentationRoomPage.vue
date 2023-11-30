@@ -1008,14 +1008,13 @@ const roomBackground = computed(() => {
 });
 
 watch(
-  () => slide.value,
+  () => elements.value,
   async () => {
     averageBackgroundBrightness.value = await computeAverageBrightness(
       elements.value
     );
     await canvasStore.redrawCanvas(false);
-  },
-  { deep: true }
+  }
 );
 
 /*
