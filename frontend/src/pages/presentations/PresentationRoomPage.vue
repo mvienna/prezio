@@ -605,18 +605,15 @@ const connectToRoomChannels = () => {
     await fetchRoomData();
 
     // on room token updated
-    if (event.room.token !== room.value.token) {
+    if (router.currentRoute.value.params.token !== room.value.token) {
       return await router.push(
         clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
-          event.room.token
+          room.value.token
       );
     }
 
     // presentation is private (lock for participants)
     if (!isHost.value && presentation.value?.is_private) return;
-
-    // update room data
-    room.value = event.room;
 
     // handle room countdown
     if (room.value.countdown > 0) {
