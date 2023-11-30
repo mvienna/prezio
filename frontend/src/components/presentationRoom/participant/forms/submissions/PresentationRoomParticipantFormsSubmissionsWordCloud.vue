@@ -132,7 +132,7 @@
           />
         </svg>
 
-        <div class="text-center" style="opacity: 0.7">
+        <div class="text-center" style="opacity: 0.5">
           {{ $t("presentationRoom.answers.answersSubmittedWait") }}
         </div>
       </div>
@@ -148,7 +148,7 @@
       <div
         v-if="room?.is_submission_locked"
         class="text-center q-mt-md"
-        style="opacity: 0.7"
+        style="opacity: 0.5"
       >
         {{ $t("presentationRoom.answers.waitForSubmissionToBeUnlocked") }}
       </div>
@@ -157,7 +157,7 @@
       <div
         v-else-if="slideSettings.isMultipleEntries"
         class="text-center q-mt-md"
-        style="opacity: 0.7"
+        style="opacity: 0.5"
       >
         {{ $t("presentationRoom.answers.multipleEntriesAvailable") }}
       </div>

@@ -24,7 +24,7 @@
         {{ $t("presentationRoom.waitingForQuizStart.title") }}
       </div>
 
-      <div class="text-center q-mt-md" style="opacity: 0.7">
+      <div class="text-center q-mt-md" style="opacity: 0.5">
         {{ $t("presentationRoom.waitingForQuizStart.description") }}
       </div>
     </div>

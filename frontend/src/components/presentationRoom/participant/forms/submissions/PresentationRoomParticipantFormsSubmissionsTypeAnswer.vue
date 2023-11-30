@@ -149,7 +149,8 @@
 
         <div
           v-if="timeLeft === -1 && room?.is_submission_locked"
-          class="text-center text-semibold text-grey q-mt-md"
+          class="text-center text-semibold q-mt-md"
+          style="opacity: 0.5"
         >
           {{
             hasAlreadyAnswered
