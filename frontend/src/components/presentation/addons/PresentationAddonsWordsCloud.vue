@@ -12,7 +12,14 @@
 <script setup>
 import * as d3 from "d3";
 import d3Cloud from "d3-cloud";
-import { computed, onBeforeMount, onMounted, ref, watch } from "vue";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
@@ -257,6 +264,14 @@ const handleWordsCloudClickEvent = (event) => {
     emit("removeWord", event.target.innerHTML);
   }
 };
+
+/*
+ * remove event listeners on unmounted
+ */
+onUnmounted(() => {
+  window.removeEventListener("resize", onResize);
+  document.removeEventListener("click", handleWordsCloudClickEvent);
+});
 </script>
 
 <style lang="scss">

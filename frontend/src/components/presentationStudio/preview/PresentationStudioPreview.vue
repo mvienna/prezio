@@ -150,6 +150,10 @@ onBeforeMount(() => {
   document.addEventListener("keydown", handleKeyDownEvent);
 });
 
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleKeyDownEvent);
+});
+
 const handleKeyDownEvent = (event) => {
   if (event.keyCode === 37) {
     event.preventDefault();

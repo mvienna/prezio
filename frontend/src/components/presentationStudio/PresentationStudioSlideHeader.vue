@@ -132,6 +132,10 @@ onBeforeMount(() => {
   window.addEventListener("resize", onResize);
 });
 
+onUnmounted(() => {
+  window.addEventListener("resize", onResize);
+});
+
 const onResize = () => {
   canvasRect.value = canvasStore.canvasRect();
 };

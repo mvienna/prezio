@@ -162,9 +162,11 @@ const toggleFullscreen = () => {
 };
 
 onBeforeMount(() => {
-  document.addEventListener("fullscreenchange", () => {
-    handleFullscreenChangeEvent();
-  });
+  document.addEventListener("fullscreenchange", handleFullscreenChangeEvent);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("fullscreenchange", handleFullscreenChangeEvent);
 });
 
 const handleFullscreenChangeEvent = () => {

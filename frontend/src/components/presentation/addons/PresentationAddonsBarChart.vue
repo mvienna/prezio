@@ -16,7 +16,7 @@
 import * as d3 from "d3";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useCanvasStore } from "stores/canvas";
 
 /*
@@ -136,6 +136,10 @@ onMounted(() => {
   }, 500);
 
   window.addEventListener("resize", onResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", onResize);
 });
 
 const update = (isOnLoad = false) => {

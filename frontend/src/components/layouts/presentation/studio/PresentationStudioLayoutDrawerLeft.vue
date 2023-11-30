@@ -343,7 +343,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, ref, watch } from "vue";
+import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import draggable from "vuedraggable/src/vuedraggable";
@@ -467,6 +467,10 @@ const handleSlideDeletion = async (item) => {
 
 onBeforeMount(() => {
   document.addEventListener("keydown", handleKeyDownEvent);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleKeyDownEvent);
 });
 
 /*

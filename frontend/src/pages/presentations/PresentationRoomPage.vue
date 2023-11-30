@@ -212,7 +212,14 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, ref, watch } from "vue";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
 import { QSpinnerIos, useQuasar } from "quasar";
@@ -504,6 +511,11 @@ onMounted(async () => {
    */
   $q.loading.hide();
   isLoaded.value = true;
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", resizeCanvas);
+  document.removeEventListener("keydown", handleKeyDownEvent);
 });
 
 /*
