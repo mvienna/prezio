@@ -366,12 +366,14 @@ onBeforeMount(() => {
   });
 });
 
-const fetchRoomData = async () => {
+const fetchRoomData = async (isOnLoad = true) => {
   return await api
     .get(`/room/${router.currentRoute.value.params.token}`)
     .then(async (response) => {
       room.value = response.data.room;
-      presentation.value = response.data.presentation;
+      if (isOnLoad) {
+        presentation.value = response.data.presentation;
+      }
     })
     .catch((error) => {
       $q.notify({
@@ -602,7 +604,7 @@ const connectToRoomChannels = () => {
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
     // fetch updated room data
-    await fetchRoomData();
+    await fetchRoomData(false);
 
     // on room token updated
     if (router.currentRoute.value.params.token !== room.value.token) {
