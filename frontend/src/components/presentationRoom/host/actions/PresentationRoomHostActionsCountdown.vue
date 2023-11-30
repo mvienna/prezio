@@ -90,18 +90,13 @@ const { elements } = storeToRefs(canvasStore);
  * set new countdown time
  */
 const setNewCountdownTime = async (n) => {
-  slideSettings.value.timeLimit = n * multiplier;
-
-  await presentationsStore.updateLocalSlide();
-  await presentationsStore.saveSlide(undefined, elements.value);
-
   await presentationsStore.sendPresentationRoomUpdateEvent(
     undefined,
     undefined,
     undefined,
     undefined,
     {
-      countdown: slideSettings.value.timeLimit,
+      countdown: n * multiplier,
       is_submission_locked: false,
     }
   );
