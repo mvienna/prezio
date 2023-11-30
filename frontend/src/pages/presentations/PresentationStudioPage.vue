@@ -803,6 +803,10 @@ const connectToRoomChannels = () => {
    * listen for new reactions
    */
   channel.listen("PresentationRoomNewReactionEvent", (event) => {
+    if (!presentation.value.room) {
+      presentation.value.room = {};
+    }
+
     presentation.value.room.reactions = event.reactions;
   });
 
