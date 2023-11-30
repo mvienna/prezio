@@ -73,7 +73,7 @@ const width = computed(() => {
   return (canvasRect.value.width * 80) / 100;
 });
 const height = computed(() => {
-  return (canvasRect.value.height * 50) / 100;
+  return (canvasRect.value.height * 30) / 100;
 });
 
 onMounted(() => {
