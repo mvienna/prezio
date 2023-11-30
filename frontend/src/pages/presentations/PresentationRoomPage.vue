@@ -425,11 +425,7 @@ onMounted(async () => {
 
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
       // leave only background & base fill
-      elements.value = elements.value.filter((element) =>
-        [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
-          element.mode
-        )
-      );
+      filterElements();
 
       // auto-show invitations panel
       if (isHost.value) {
@@ -627,13 +623,7 @@ const connectToRoomChannels = () => {
 
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
       // leave only background & base fill
-      if (!room.value.is_quiz_started) {
-        elements.value = elements.value.filter((element) =>
-          [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
-            element.mode
-          )
-        );
-      }
+      filterElements();
 
       // countdown before quiz - set timer to reveal
       if (
@@ -641,12 +631,6 @@ const connectToRoomChannels = () => {
         room.value.is_submission_locked &&
         timeLeft.value > 5
       ) {
-        elements.value = elements.value.filter((element) =>
-          [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
-            element.mode
-          )
-        );
-
         if (
           !presentation.value.settings.quiz_data ||
           (presentation.value.settings.quiz_data &&
@@ -1013,9 +997,19 @@ watch(
     averageBackgroundBrightness.value = await computeAverageBrightness(
       elements.value
     );
-    await canvasStore.redrawCanvas(false);
   }
 );
+
+/*
+ * leave only background & base fill
+ */
+const filterElements = () => {
+  elements.value = elements.value.filter((element) =>
+    [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+      element.mode
+    )
+  );
+};
 
 /*
  * qr

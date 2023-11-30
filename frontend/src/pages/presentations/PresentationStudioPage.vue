@@ -759,7 +759,6 @@ watch(
     averageBackgroundBrightness.value = await computeAverageBrightness(
       elements.value
     );
-    await canvasStore.redrawCanvas(false);
   }
 );
 
