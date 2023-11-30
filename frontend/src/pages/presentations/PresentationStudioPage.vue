@@ -295,6 +295,9 @@ onUnmounted(() => {
   document.removeEventListener("mousemove", handleCanvasMouseMove);
   document.removeEventListener("mouseup", handleCanvasMouseUp);
   document.removeEventListener("keydown", handleKeyDownEvent);
+
+  window.Echo.leave(`presence.room.${presentation.value.room.id}`);
+  window.Echo.leave(`public.room.${presentation.value.room.id}`);
 });
 
 const resizeCanvas = () => {
