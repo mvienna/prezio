@@ -322,11 +322,12 @@ const initCanvas = () => {
 };
 
 const initSlide = async () => {
-  slide.value =
+  const newSlide =
     presentation.value.slides.find((item) => item.id === room.value.slide_id) ||
     presentation.value.slides[0];
 
-  slideSettings.value = JSON.parse(slide.value.settings_data);
+  await presentationsStore.setSlide(newSlide);
+  presentationsStore.updateLocalSlide();
 
   await canvasStore.setElementsFromSlide();
   return true;
@@ -356,11 +357,8 @@ onBeforeMount(() => {
   });
 });
 
-onMounted(async () => {
-  /*
-   * fetch room data
-   */
-  await api
+const fetchRoomData = async () => {
+  return await api
     .get(`/room/${router.currentRoute.value.params.token}`)
     .then(async (response) => {
       room.value = response.data.room;
@@ -375,6 +373,13 @@ onMounted(async () => {
 
       window.location = ROUTE_PATHS.DASHBOARD;
     });
+};
+
+onMounted(async () => {
+  /*
+   * fetch room data
+   */
+  await fetchRoomData();
 
   /*
    * render slide
@@ -587,6 +592,9 @@ const connectToRoomChannels = () => {
    * listen for updates
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
+    // fetch updated room data
+    await fetchRoomData();
+
     // on room token updated
     if (event.room.token !== room.value.token) {
       return await router.push(
@@ -608,16 +616,8 @@ const connectToRoomChannels = () => {
       stopCountdown();
     }
 
-    // fetch & update fresh slide data
-    const newSlide = await presentationsStore.fetchSlideData(
-      room.value.slide_id
-    );
-    if (newSlide?.data) {
-      await presentationsStore.setSlide(newSlide.data);
-      presentationsStore.updateLocalSlide();
-
-      await canvasStore.setElementsFromSlide();
-    }
+    // init slide data
+    await initSlide();
 
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
       // leave only background & base fill

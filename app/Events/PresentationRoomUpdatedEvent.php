@@ -25,11 +25,4 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
     {
         return new Channel('public.room.'.$this->room->id);
     }
-
-    public function broadcastWith(): array
-    {
-        return [
-            'room' => $this->room
-        ];
-    }
 }
