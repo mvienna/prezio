@@ -14,15 +14,15 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public PresentationRoom $room;
+    public $room_id;
 
-    public function __construct(PresentationRoom $room)
+    public function __construct($room_id)
     {
-        $this->room = $room;
+        $this->room_id = $room_id;
     }
 
     public function broadcastOn(): Channel
     {
-        return new Channel('public.room.'.$this->room->id);
+        return new Channel('public.room.'.$this->room_id);
     }
 }

@@ -152,7 +152,7 @@ class PresentationRoomController extends Controller
         $room['host'] = User::find($room->presentation->user_id);
 
         if ($slide) {
-            event(new PresentationRoomUpdatedEvent($room));
+            event(new PresentationRoomUpdatedEvent($room->id));
         }
 
         return $this->successResponse();

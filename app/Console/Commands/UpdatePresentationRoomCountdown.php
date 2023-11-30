@@ -44,7 +44,7 @@ class UpdatePresentationRoomCountdown extends Command
 
             if ($room->countdown === 0) {
                 $room->update(['is_submission_locked' => true]);
-                event(new PresentationRoomUpdatedEvent($room));
+                event(new PresentationRoomUpdatedEvent($room->id));
             }
         }
     }

@@ -58,7 +58,7 @@ class PresentationSlideAnswerController extends Controller
         ]);
 
         if ($slide->presentation?->room) {
-            event(new PresentationRoomUpdatedEvent($slide->presentation->room));
+            event(new PresentationRoomUpdatedEvent($slide->presentation->room->id));
         }
 
         return $this->successResponse();
@@ -87,7 +87,7 @@ class PresentationSlideAnswerController extends Controller
         ]);
 
         if ($presentation?->room) {
-            event(new PresentationRoomUpdatedEvent($presentation->room));
+            event(new PresentationRoomUpdatedEvent($presentation->room->id));
         }
 
         return $this->successResponse();
