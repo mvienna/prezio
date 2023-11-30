@@ -135,6 +135,9 @@ const generateWordCloud = () => {
 };
 
 const updateWordCloud = () => {
+  if (!wordCloud.value) return;
+  if (d3.select("svg").empty()) return generateWordCloud();
+
   d3.select("svg")
     .select("g")
     .selectAll("text")
@@ -215,7 +218,9 @@ const updateWordCloud = () => {
 onMounted(() => {
   setTimeout(() => {
     canvasRect.value = canvasStore.canvasRect();
-    generateWordCloud();
+    if (wordCloud.value) {
+      generateWordCloud();
+    }
 
     window.addEventListener("resize", onResize);
   }, 500);
