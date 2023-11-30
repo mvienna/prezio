@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <!-- 5s timeout -->
+    <!-- before-quiz timeout-->
     <div
       v-else-if="
         room &&
@@ -39,6 +39,7 @@
       "
     >
       <transition-group appear enter-active-class="animated zoomIn">
+        <!-- question №n out of x -->
         <div
           v-if="
             timeLeft > 5 ||
@@ -92,6 +93,7 @@
           </div>
         </div>
 
+        <!-- 5s countdown -->
         <div v-else-if="timeLeft !== -1">
           <!-- question title -->
           <div class="text-h6 text-semibold text-center q-mb-lg">

@@ -24,7 +24,7 @@ export const usePresentationsStore = defineStore("presentations", {
     showShareDialog: false,
     showRoomChat: false,
 
-    quizStartCountdown: null,
+    beforeQuizTimeout: null,
 
     averageBackgroundBrightness: 0,
     backgroundBrightnessThreshold: 128,
@@ -587,9 +587,7 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async handleQuizStart(slide_id = null) {
-      clearTimeout(this.quizStartCountdown);
-
+    computeBeforeQuizTimeout() {
       // initial countdown (question №n out of №n)
       let timeout = 5000;
 
@@ -602,17 +600,24 @@ export const usePresentationsStore = defineStore("presentations", {
         timeout += 5000;
       }
 
-      // start before-quiz timeout
+      return timeout;
+    },
+
+    async handleQuizStart(slide_id = null) {
+      const timeout = this.computeBeforeQuizTimeout();
+
       const data = {
         is_quiz_started: true,
         is_answers_revealed: false,
 
         is_submission_locked: true,
-        countdown: timeout / 1000,
+        countdown: this.slideSettings.timeLimit + timeout / 1000,
       };
       if (slide_id) {
         data.slide_id = slide_id;
       }
+
+      clearTimeout(this.beforeQuizTimeout);
       await this.sendPresentationRoomUpdateEvent(
         undefined,
         undefined,
@@ -620,24 +625,9 @@ export const usePresentationsStore = defineStore("presentations", {
         undefined,
         data
       );
-
-      // start the quiz
-      this.quizStartCountdown = setTimeout(() => {
-        this.sendPresentationRoomUpdateEvent(
-          undefined,
-          undefined,
-          slide_id ? slide_id : undefined,
-          undefined,
-          {
-            is_submission_locked: false,
-            countdown: this.slideSettings.timeLimit,
-          }
-        );
-      }, timeout + 1000);
     },
 
     async handleQuizStop(slide_id = null) {
-      clearTimeout(this.quizStartCountdown);
       stopCountdown();
 
       const data = {
@@ -651,6 +641,7 @@ export const usePresentationsStore = defineStore("presentations", {
         data.slide_id = slide_id;
       }
 
+      clearTimeout(this.beforeQuizTimeout);
       return await this.sendPresentationRoomUpdateEvent(
         undefined,
         undefined,

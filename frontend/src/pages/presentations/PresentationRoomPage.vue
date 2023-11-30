@@ -294,7 +294,7 @@ const {
   showRoomInvitationPanel,
   averageBackgroundBrightness,
   showRoomChat,
-  quizStartCountdown,
+  beforeQuizTimeout,
   isLoading,
 } = storeToRefs(presentationsStore);
 
@@ -622,13 +622,6 @@ const connectToRoomChannels = () => {
     // presentation is private (lock for participants)
     if (!isHost.value && presentation.value?.is_private) return;
 
-    // handle room countdown
-    if (room.value.countdown > 0) {
-      startCountdown(room.value.countdown);
-    } else {
-      stopCountdown();
-    }
-
     // init slide data
     await initSlide();
 
@@ -670,6 +663,35 @@ const connectToRoomChannels = () => {
     // redraw canvas
     canvasStore.redrawCanvas(false, undefined, false);
 
+    // handle room countdown
+    if (room.value.countdown > 0) {
+      if (
+        SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
+        room.value.is_submission_locked
+      ) {
+        // before quiz timeout
+        const timeout = presentationsStore.computeBeforeQuizTimeout();
+        startCountdown(timeout / 1000);
+        beforeQuizTimeout.value = setTimeout(() => {
+          presentationsStore.sendPresentationRoomUpdateEvent(
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+              countdown: room.value.countdown - timeout / 1000,
+              is_submission_locked: false,
+            }
+          );
+        }, timeout);
+      } else {
+        startCountdown(room.value.countdown);
+      }
+    } else {
+      stopCountdown();
+    }
+
+    // hide loading state
     isLoading.value.sendingRoomUpdatedEvent = false;
   });
 
@@ -860,7 +882,7 @@ const handleRoomUpdateOnSlideChange = async (
    * slide type of word cloud
    */
   if (newSlide?.type === SLIDE_TYPES.WORD_CLOUD && slideSettings.value) {
-    clearTimeout(quizStartCountdown.value);
+    clearTimeout(beforeQuizTimeout.value);
 
     if (
       !slideSettings.value.isInitialSubmissionLocked &&
