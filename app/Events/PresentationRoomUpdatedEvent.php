@@ -14,15 +14,22 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $room_id;
+    public PresentationRoom $room;
 
-    public function __construct($room_id)
+    public function __construct(PresentationRoom $room) // TODO: pass updated slide data
     {
-        $this->room_id = $room_id;
+        $this->room = $room;
     }
 
     public function broadcastOn(): Channel
     {
-        return new Channel('public.room.'.$this->room_id);
+        return new Channel('public.room.'.$this->room->id);
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'data' => $this->room->toArray()
+        ];
     }
 }

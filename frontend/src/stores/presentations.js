@@ -431,9 +431,9 @@ export const usePresentationsStore = defineStore("presentations", {
 
       return await api
         .patch(`/presentation/${presentation_id}/room/${room_id}`, {
-          slide_id: slide_id,
-          token: token,
-          data: data,
+          slide_id,
+          token,
+          data,
         })
         .catch((error) => {
           throw {

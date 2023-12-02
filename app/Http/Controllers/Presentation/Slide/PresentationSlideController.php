@@ -59,7 +59,7 @@ class PresentationSlideController extends Controller
 
         $presentation->load('room');
         if ($presentation->room && $slide->id === $presentation->room->slide_id) {
-            event(new PresentationRoomUpdatedEvent($presentation->room->id));
+            event(new PresentationRoomUpdatedEvent($presentation->room)); // TODO: pass updated slide data
         }
 
         return $this->successResponse();

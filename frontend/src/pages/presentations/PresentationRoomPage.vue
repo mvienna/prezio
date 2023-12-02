@@ -371,14 +371,15 @@ onBeforeMount(() => {
   });
 });
 
-const fetchRoomData = async (isOnLoad = true) => {
-  return await api
+onMounted(async () => {
+  /*
+   * fetch room data
+   */
+  await api
     .get(`/room/${router.currentRoute.value.params.token}`)
     .then(async (response) => {
       room.value = response.data.room;
-      if (isOnLoad) {
-        presentation.value = response.data.presentation;
-      }
+      presentation.value = response.data.presentation;
     })
     .catch((error) => {
       $q.notify({
@@ -389,13 +390,6 @@ const fetchRoomData = async (isOnLoad = true) => {
 
       window.location = ROUTE_PATHS.DASHBOARD;
     });
-};
-
-onMounted(async () => {
-  /*
-   * fetch room data
-   */
-  await fetchRoomData();
 
   /*
    * render slide
@@ -605,7 +599,7 @@ const connectToRoomChannels = () => {
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
     // fetch updated room data
-    await fetchRoomData(false);
+    room.value = { ...room.value, ...event.data };
 
     // on room token updated
     if (router.currentRoute.value.params.token !== room.value.token) {
@@ -651,23 +645,27 @@ const connectToRoomChannels = () => {
     if (room.value.countdown > 0) {
       if (
         SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
+        room.value.is_quiz_started &&
         room.value.is_submission_locked
       ) {
         // before quiz timeout
         const timeout = presentationsStore.computeBeforeQuizTimeout();
         startCountdown(timeout / 1000);
-        beforeQuizTimeout.value = setTimeout(() => {
-          presentationsStore.updateRoom(
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            {
-              countdown: room.value.countdown - timeout / 1000,
-              is_submission_locked: false,
-            }
-          );
-        }, timeout);
+
+        if (isHost.value) {
+          beforeQuizTimeout.value = setTimeout(() => {
+            presentationsStore.updateRoom(
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              {
+                countdown: room.value.countdown - timeout / 1000,
+                is_submission_locked: false,
+              }
+            );
+          }, timeout);
+        }
       } else {
         startCountdown(room.value.countdown);
       }
