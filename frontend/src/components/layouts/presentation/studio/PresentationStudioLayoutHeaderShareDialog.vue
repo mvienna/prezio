@@ -71,7 +71,7 @@
                     @update:model-value="
                       () => {
                         presentationsStore
-                          .sendPresentationRoomUpdateEvent(
+                          .updateRoom(
                             presentation.id,
                             presentation.room.id,
                             null,

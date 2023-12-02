@@ -418,7 +418,7 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * ROOM
      */
-    async sendPresentationRoomUpdateEvent(
+    async updateRoom(
       presentation_id = this.presentation?.id,
       room_id = this.room?.id,
       slide_id = this.slide?.id,
@@ -618,7 +618,7 @@ export const usePresentationsStore = defineStore("presentations", {
       }
 
       clearTimeout(this.beforeQuizTimeout);
-      await this.sendPresentationRoomUpdateEvent(
+      await this.updateRoom(
         undefined,
         undefined,
         slide_id ? slide_id : undefined,
@@ -642,7 +642,7 @@ export const usePresentationsStore = defineStore("presentations", {
       }
 
       clearTimeout(this.beforeQuizTimeout);
-      return await this.sendPresentationRoomUpdateEvent(
+      return await this.updateRoom(
         undefined,
         undefined,
         slide_id ? slide_id : undefined,

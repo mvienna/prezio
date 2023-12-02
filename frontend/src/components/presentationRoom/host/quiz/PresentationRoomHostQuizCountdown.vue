@@ -208,7 +208,7 @@ watch(
 
       if (timeLeft.value === 1) {
         setTimeout(() => {
-          presentationsStore.sendPresentationRoomUpdateEvent(
+          presentationsStore.updateRoom(
             undefined,
             undefined,
             undefined,
@@ -266,15 +266,9 @@ const handleRevealAnswers = () => {
   isQuizComingToEnd.value = false;
   isFinished.value = true;
 
-  presentationsStore.sendPresentationRoomUpdateEvent(
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    {
-      is_answers_revealed: true,
-    }
-  );
+  presentationsStore.updateRoom(undefined, undefined, undefined, undefined, {
+    is_answers_revealed: true,
+  });
 };
 </script>
 

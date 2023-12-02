@@ -412,7 +412,7 @@ onMounted(async () => {
      * case: host started presenting in already existing room from the new slide he's chosen
      */
     if (isHost.value && slide.value.id !== room.value.slide_id) {
-      await presentationsStore.sendPresentationRoomUpdateEvent();
+      await presentationsStore.updateRoom();
     }
 
     // show room invitation panel if it's turned on in settings
@@ -657,7 +657,7 @@ const connectToRoomChannels = () => {
         const timeout = presentationsStore.computeBeforeQuizTimeout();
         startCountdown(timeout / 1000);
         beforeQuizTimeout.value = setTimeout(() => {
-          presentationsStore.sendPresentationRoomUpdateEvent(
+          presentationsStore.updateRoom(
             undefined,
             undefined,
             undefined,
@@ -742,7 +742,7 @@ const connectToRoomChannels = () => {
               console.log(error);
             });
 
-          presentationsStore.sendPresentationRoomUpdateEvent(
+          presentationsStore.updateRoom(
             undefined,
             undefined,
             undefined,
@@ -873,7 +873,7 @@ const handleRoomUpdateOnSlideChange = async (
       !newSlide.answers.filter((answer) => answer.slide_type === newSlide?.type)
         .length
     ) {
-      return await presentationsStore.sendPresentationRoomUpdateEvent(
+      return await presentationsStore.updateRoom(
         undefined,
         undefined,
         newSlide.id,
@@ -887,7 +887,7 @@ const handleRoomUpdateOnSlideChange = async (
         }
       );
     } else {
-      return await presentationsStore.sendPresentationRoomUpdateEvent(
+      return await presentationsStore.updateRoom(
         undefined,
         undefined,
         newSlide.id,

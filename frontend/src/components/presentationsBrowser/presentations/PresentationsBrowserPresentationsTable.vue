@@ -264,7 +264,7 @@
               @update:model-value="
                 () => {
                   presentationsStore
-                    .sendPresentationRoomUpdateEvent(
+                    .updateRoom(
                       props.row.id,
                       props.row.room.id,
                       null,

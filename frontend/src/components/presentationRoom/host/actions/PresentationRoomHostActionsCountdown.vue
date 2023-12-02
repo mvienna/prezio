@@ -90,7 +90,7 @@ const { elements } = storeToRefs(canvasStore);
  * set new countdown time
  */
 const setNewCountdownTime = async (n) => {
-  await presentationsStore.sendPresentationRoomUpdateEvent(
+  await presentationsStore.updateRoom(
     undefined,
     undefined,
     undefined,

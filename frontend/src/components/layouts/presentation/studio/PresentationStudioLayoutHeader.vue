@@ -551,7 +551,7 @@ const handleStartPresenting = async () => {
     await createPresentationRoom();
   }
 
-  await presentationsStore.sendPresentationRoomUpdateEvent(
+  await presentationsStore.updateRoom(
     undefined,
     presentation.value.room.id,
     startPresentingFromSlide.value.id

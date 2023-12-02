@@ -31,16 +31,10 @@ const finishQuiz = () => {
       JSON.parse(presentation.value.settings.quiz_data)?.showAnswersManually ===
         false);
 
-  presentationsStore.sendPresentationRoomUpdateEvent(
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    {
-      is_submission_locked: is_submission_locked,
-      is_answers_revealed: is_answers_revealed,
-      countdown: 0,
-    }
-  );
+  presentationsStore.updateRoom(undefined, undefined, undefined, undefined, {
+    is_submission_locked: is_submission_locked,
+    is_answers_revealed: is_answers_revealed,
+    countdown: 0,
+  });
 };
 </script>

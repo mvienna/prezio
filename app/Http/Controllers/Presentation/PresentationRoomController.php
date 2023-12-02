@@ -99,13 +99,14 @@ class PresentationRoomController extends Controller
 
         // slide
         $slide_id = $request->input('slide_id');
-        $slide = PresentationSlide::find($slide_id ?? $room->slide_id);
+        $slide = $slide_id ? PresentationSlide::find($slide_id) : null;
         if ($slide) {
             $props['slide_id'] = $slide->id;
         }
 
         // token
         if (!empty($request->token)) {
+            // validate length
             if (strlen($request->token) > 10) {
                 return $this->errorResponse(
                     trans('errors.room.invalidToken'),
@@ -114,6 +115,7 @@ class PresentationRoomController extends Controller
                 );
             }
 
+            // check for uniqueness
             $roomWithRequestToken = PresentationRoom::where('token', $request->token);
             if ($roomWithRequestToken->exists()) {
                 return $this->errorResponse(
@@ -126,7 +128,7 @@ class PresentationRoomController extends Controller
             $props['token'] = $request->token;
         }
 
-        // countdown
+        // quiz data
         if (isset($request->data)) {
             if (isset($request->data['is_quiz_started'])) {
                 $props['is_quiz_started'] = $request->data['is_quiz_started'];
@@ -147,13 +149,7 @@ class PresentationRoomController extends Controller
 
         // update
         $room->update($props);
-
-        $room->load('presentation', 'reactions', 'messages', 'messages.participant');
-        $room['host'] = User::find($room->presentation->user_id);
-
-        if ($slide) {
-            event(new PresentationRoomUpdatedEvent($room->id));
-        }
+        event(new PresentationRoomUpdatedEvent($room->id));
 
         return $this->successResponse();
     }
