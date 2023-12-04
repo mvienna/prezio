@@ -27,12 +27,12 @@ class UpdatePresentationRoomCountdown extends Command
      */
     public function handle(): void
     {
-        $seconds = 60;
+//        $seconds = 60;
 
-        for ($i = 0; $i < $seconds; $i++) {
+//        for ($i = 0; $i < $seconds; $i++) {
             $this->decrementCountdown();
             sleep(1);
-        }
+//        }
     }
 
     private function decrementCountdown(): void

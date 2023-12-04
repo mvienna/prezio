@@ -9,7 +9,7 @@ class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('app:update-presentation-room-countdown')->everyMinute();
+        $schedule->command('app:update-presentation-room-countdown')->everySecond();
     }
 
     protected function commands(): void
