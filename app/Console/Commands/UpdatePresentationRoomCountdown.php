@@ -31,7 +31,7 @@ class UpdatePresentationRoomCountdown extends Command
 
 //        for ($i = 0; $i < $seconds; $i++) {
             $this->decrementCountdown();
-            sleep(1);
+//            sleep(1);
 //        }
     }
 

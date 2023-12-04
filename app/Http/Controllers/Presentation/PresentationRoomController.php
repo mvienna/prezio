@@ -143,7 +143,17 @@ class PresentationRoomController extends Controller
             }
 
             if (isset($request->data['countdown'])) {
-                $props['countdown'] = $request->data['countdown'];
+                if (isset($request->data['sentAt'])) {
+                    $currentTime = Carbon::now();
+                    $sentAt = Carbon::parse($request->data['sentAt']);
+                    $timeDifferenceInSeconds = $currentTime->diffInSeconds($sentAt);
+
+                    $props['countdown'] = $request->data['countdown'] - $timeDifferenceInSeconds;
+
+                } else {
+                    $props['countdown'] = $request->data['countdown'];
+                }
+
                 $props['countdown_started_at'] = Carbon::now();
             }
         }
@@ -152,6 +162,7 @@ class PresentationRoomController extends Controller
         $room->update($props);
 
         if (!isset($request->data) || !isset($request->data['disableNotification'])) {
+            sleep(2);
             event(new PresentationRoomUpdatedEvent($room));
         }
 

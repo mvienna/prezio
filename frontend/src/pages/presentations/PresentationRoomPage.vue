@@ -667,26 +667,17 @@ const connectToRoomChannels = () => {
           }, timeout);
         }
       } else {
+        const now = new Date().toLocaleString("en-US", {
+          timeZone: "Europe/Moscow",
+        });
         const countdownDifference = date.getDateDiff(
-          new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" }),
+          now,
           new Date(room.value.countdown_started_at),
           "seconds"
         );
 
         const updatedCountdown = room.value.countdown + countdownDifference;
         startCountdown(updatedCountdown);
-
-        console.log(
-          "now: ",
-          new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" })
-        );
-        console.log(
-          "countdown started at: ",
-          new Date(room.value.countdown_started_at)
-        );
-        console.log("difference: ", countdownDifference);
-        console.log("initial countdown: ", room.value.countdown);
-        console.log("new countdown: ", updatedCountdown);
 
         if (isHost.value) {
           presentationsStore.updateRoom(
@@ -696,6 +687,7 @@ const connectToRoomChannels = () => {
             undefined,
             {
               countdown: updatedCountdown,
+              sentAt: now,
               disableNotification: true,
             }
           );
