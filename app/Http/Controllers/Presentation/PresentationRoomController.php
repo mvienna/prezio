@@ -144,12 +144,16 @@ class PresentationRoomController extends Controller
 
             if (isset($request->data['countdown'])) {
                 $props['countdown'] = $request->data['countdown'];
+                $props['countdown_started_at'] = Carbon::now();
             }
         }
 
         // update
         $room->update($props);
-        event(new PresentationRoomUpdatedEvent($room));
+
+        if (!isset($request->data) || !isset($request->data['disableNotification'])) {
+            event(new PresentationRoomUpdatedEvent($room));
+        }
 
         return $this->successResponse();
     }

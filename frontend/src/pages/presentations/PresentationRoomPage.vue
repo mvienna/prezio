@@ -235,7 +235,7 @@ import {
 } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
-import { QSpinnerIos, useQuasar } from "quasar";
+import { date, QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
@@ -667,7 +667,39 @@ const connectToRoomChannels = () => {
           }, timeout);
         }
       } else {
-        startCountdown(room.value.countdown);
+        const countdownDifference = date.getDateDiff(
+          new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" }),
+          new Date(room.value.countdown_started_at),
+          "seconds"
+        );
+
+        const updatedCountdown = room.value.countdown + countdownDifference;
+        startCountdown(updatedCountdown);
+
+        console.log(
+          "now: ",
+          new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" })
+        );
+        console.log(
+          "countdown started at: ",
+          new Date(room.value.countdown_started_at)
+        );
+        console.log("difference: ", countdownDifference);
+        console.log("initial countdown: ", room.value.countdown);
+        console.log("new countdown: ", updatedCountdown);
+
+        if (isHost.value) {
+          presentationsStore.updateRoom(
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+              countdown: updatedCountdown,
+              disableNotification: true,
+            }
+          );
+        }
       }
     } else {
       stopCountdown();
