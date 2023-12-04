@@ -162,7 +162,6 @@ class PresentationRoomController extends Controller
         $room->update($props);
 
         if (!isset($request->data) || !isset($request->data['disableNotification'])) {
-            sleep(2);
             event(new PresentationRoomUpdatedEvent($room));
         }
 
