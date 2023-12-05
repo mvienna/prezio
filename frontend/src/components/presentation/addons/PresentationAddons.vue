@@ -26,7 +26,7 @@
   </transition>
 
   <!-- words cloud -->
-  <PresentationStudioWordsCloud
+  <PresentationStudioWordCloud
     v-if="
       slide?.type === SLIDE_TYPES.WORD_CLOUD &&
       wordCloudData?.length &&
@@ -67,7 +67,7 @@
 import { computed, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import PresentationStudioWordsCloud from "components/presentation/addons/PresentationAddonsWordsCloud.vue";
+import PresentationStudioWordCloud from "components/presentation/addons/PresentationAddonsWordCloud.vue";
 import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
