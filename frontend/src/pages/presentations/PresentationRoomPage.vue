@@ -894,14 +894,18 @@ const handleRoomUpdateOnSlideChange = async (
   direction,
   newSlide = slide.value
 ) => {
+  const newSlideSettings = newSlide.settings_data
+    ? JSON.parse(newSlide.settings_data)
+    : {};
+
   /*
    * slide type of word cloud
    */
-  if (newSlide?.type === SLIDE_TYPES.WORD_CLOUD && slideSettings.value) {
+  if (newSlide?.type === SLIDE_TYPES.WORD_CLOUD && newSlideSettings) {
     clearTimeout(beforeQuizTimeout.value);
 
     if (
-      !slideSettings.value.isInitialSubmissionLocked &&
+      !newSlideSettings.isInitialSubmissionLocked &&
       !newSlide.answers.filter((answer) => answer.slide_type === newSlide?.type)
         .length
     ) {
@@ -911,8 +915,8 @@ const handleRoomUpdateOnSlideChange = async (
         newSlide.id,
         undefined,
         {
-          countdown: slideSettings.value.isLimitedTime
-            ? Number(slideSettings.value.timeLimit)
+          countdown: newSlideSettings.isLimitedTime
+            ? Number(newSlideSettings.timeLimit)
             : 0,
           is_submission_locked: false,
           is_quiz_started: false,
