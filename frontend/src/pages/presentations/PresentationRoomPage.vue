@@ -1048,6 +1048,24 @@ const filterElements = () => {
 };
 
 /*
+ * lock submissions locally when time's up
+ * while waiting for the actual event
+ */
+watch(
+  () => timeLeft.value,
+  () => {
+    if (
+      timeLeft.value === 0.0 &&
+      [...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(
+        slide.value?.type
+      )
+    ) {
+      room.value.is_submission_locked = true;
+    }
+  }
+);
+
+/*
  * qr
  */
 const qr = generateQrCode();
