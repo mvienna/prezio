@@ -148,6 +148,9 @@ class PresentationRoomController extends Controller
                     $sentAt = Carbon::parse($request->data['sentAt']);
                     $timeDifferenceInSeconds = $currentTime->diffInSeconds($sentAt);
 
+//                    $currentTime = Carbon::now();
+//                    $timeDifferenceInSeconds = ($currentTime->valueOf() - $request->data['sentAt']) / 1000;
+
                     $props['countdown'] = $request->data['countdown'] - $timeDifferenceInSeconds;
 
                 } else {
@@ -197,6 +200,10 @@ class PresentationRoomController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
+
+        if ($room->is_submission_locked) {
+            return $this->errorResponse(trans('errors.room.submissionIsLocked'));
+        }
 
         $answers = [];
         foreach ($request->answers as $answer) {
