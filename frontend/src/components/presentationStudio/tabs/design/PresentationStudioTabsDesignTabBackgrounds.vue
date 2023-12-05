@@ -40,8 +40,8 @@
         >
           <q-img
             :src="background.src"
-            @mouseover="handleBackgroundMouseOver(background)"
-            @mouseleave="handleBackgroundMouseLeave()"
+            @mouseover="handleBackgroundMouseOver(background, backgroundIndex)"
+            @mouseleave="handleBackgroundMouseLeave(backgroundIndex)"
           />
           <div class="text-center q-mt-xs text-semibold">
             {{ background.name || backgroundIndex + 1 }}
@@ -141,20 +141,20 @@ const filteredBackgrounds = computed(() => {
 /*
  * preview background on hover
  */
-const isHovered = ref(false);
+const isBackgroundsHovered = ref([]);
 
-const handleBackgroundMouseOver = (background) => {
-  isHovered.value = true;
+const handleBackgroundMouseOver = (background, backgroundIndex) => {
+  isBackgroundsHovered.value[backgroundIndex] = true;
 
   setTimeout(() => {
-    if (isHovered.value) {
+    if (isBackgroundsHovered.value[backgroundIndex]) {
       emit("previewBackground", background);
     }
-  }, 1000);
+  }, 500);
 };
 
-const handleBackgroundMouseLeave = () => {
-  isHovered.value = false;
+const handleBackgroundMouseLeave = (backgroundIndex) => {
+  isBackgroundsHovered.value[backgroundIndex] = false;
 
   // remove preview background
   elements.value = elements.value.filter(

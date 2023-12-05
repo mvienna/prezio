@@ -4,11 +4,7 @@
     <PresentationStudioTabsDesignTabBackgrounds
       :background-element="backgroundElement"
       @change-background="handleBackgroundChange($event)"
-      @preview-background="
-        backgroundElement?.imageSrc !== $event?.src
-          ? handleBackgroundChange($event, undefined, true)
-          : ''
-      "
+      @preview-background="handleBackgroundChange($event, undefined, true)"
     />
 
     <q-separator class="q-mb-lg" />
@@ -123,6 +119,7 @@ import PresentationStudioTabsDesignTabBaseFill from "components/presentationStud
 import PresentationStudioTabsDesignTabSelectedBackground from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabSelectedBackground.vue";
 import { usePresentationsStore } from "stores/presentations";
 import PresentationStudioTabsDesignTabText from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabText.vue";
+import { computeAverageBrightness } from "src/helpers/colorUtils";
 
 /*
  * variables
@@ -139,7 +136,8 @@ const mediaStore = useCanvasMediaStore();
 const shapeStore = useCanvasShapeStore();
 
 const presentationsStore = usePresentationsStore();
-const { presentation, slide } = storeToRefs(presentationsStore);
+const { presentation, slide, averageBackgroundBrightness } =
+  storeToRefs(presentationsStore);
 
 /*
  * background
@@ -227,7 +225,7 @@ const defaultBackgroundFilters = {
   grayscale: 0,
 };
 
-const changeBackgroundFilters = (backgroundFilters) => {
+const changeBackgroundFilters = async (backgroundFilters) => {
   const backgroundElementIndex = elements.value.findIndex(
     (element) => element.mode === MODE_OPTIONS.value.background
   );
@@ -242,7 +240,11 @@ const changeBackgroundFilters = (backgroundFilters) => {
     grayscale: backgroundFilters.grayscale,
   };
 
-  canvasStore.redrawCanvas();
+  averageBackgroundBrightness.value = await computeAverageBrightness(
+    elements.value
+  );
+
+  canvasStore.redrawCanvas(false);
 };
 
 /*

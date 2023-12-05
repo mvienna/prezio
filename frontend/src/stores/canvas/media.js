@@ -2,9 +2,14 @@ import { defineStore, storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generationUtils";
 import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
+import { computeAverageBrightness } from "src/helpers/colorUtils";
+import { usePresentationsStore } from "stores/presentations";
 
 const canvasStore = useCanvasStore();
 const { ctx, canvas, elements, MODE_OPTIONS } = storeToRefs(canvasStore);
+
+const presentationsStore = usePresentationsStore();
+const { averageBackgroundBrightness } = storeToRefs(presentationsStore);
 
 export const useCanvasMediaStore = defineStore("canvasMedia", {
   actions: {
@@ -37,7 +42,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         image.src = url;
       }
 
-      image.onload = () => {
+      image.onload = async () => {
         const newImageHeight = canvas.value.height * 0.5;
         const aspectRatio = image.width / image.height;
         const newImageWidth = newImageHeight * aspectRatio;
@@ -80,6 +85,17 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
             elements.value.length - (isBaseFillElementExists ? 1 : 0),
             0,
             imageData
+          );
+        }
+
+        if (
+          [
+            MODE_OPTIONS.value.backgroundPreview,
+            MODE_OPTIONS.value.background,
+          ].includes(mode)
+        ) {
+          averageBackgroundBrightness.value = await computeAverageBrightness(
+            elements.value
           );
         }
 

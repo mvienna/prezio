@@ -5,10 +5,15 @@ import {
   selectElement,
   updateSelectedElement,
 } from "stores/canvas/helpers/select";
+import { computeAverageBrightness } from "src/helpers/colorUtils";
+import { usePresentationsStore } from "stores/presentations";
 
 const canvasStore = useCanvasStore();
 const { canvas, MODE_OPTIONS, elements, selectedElement } =
   storeToRefs(canvasStore);
+
+const presentationsStore = usePresentationsStore();
+const { averageBackgroundBrightness } = storeToRefs(presentationsStore);
 
 export const useCanvasShapeStore = defineStore("canvasShape", {
   state: () => ({
@@ -26,7 +31,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
     /*
      * add shape
      */
-    addShape(
+    async addShape(
       type,
       x = null,
       y = null,
@@ -72,6 +77,12 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         elements.value.unshift(shape);
       } else {
         elements.value.push(shape);
+      }
+
+      if (mode === MODE_OPTIONS.value.baseFill) {
+        averageBackgroundBrightness.value = await computeAverageBrightness(
+          elements.value
+        );
       }
 
       if (isForceSelectCreatedElement) {

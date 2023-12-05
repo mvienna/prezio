@@ -31,9 +31,15 @@ export const wordCloudTextColors = [
 ];
 
 export const computeAverageBrightness = async (elements) => {
-  const background = elements?.find(
-    (element) => element.mode === MODE_OPTIONS.value.background
+  let background = elements?.find(
+    (element) => element.mode === MODE_OPTIONS.value.backgroundPreview
   );
+
+  if (!background) {
+    background = elements?.find(
+      (element) => element.mode === MODE_OPTIONS.value.background
+    );
+  }
 
   const baseFill = elements?.find(
     (element) => element.mode === MODE_OPTIONS.value.baseFill
