@@ -87,7 +87,7 @@ defineEmits(["cancel", "confirm"]);
 .q-card {
   width: 100%;
   max-width: 400px;
-  border-radius: 16px !important;
+  border-radius: 24px !important;
 }
 
 .q-btn {
