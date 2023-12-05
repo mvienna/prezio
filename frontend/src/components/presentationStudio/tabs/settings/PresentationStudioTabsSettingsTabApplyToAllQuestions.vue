@@ -153,7 +153,7 @@ const applySettingsToAllQuestions = () => {
 
   if (settingsToApplyToAllQuestions.value.isLimitedTime) {
     settingsToUpdate.isLimitedTime = slideSettings.value.isLimitedTime;
-    settingsToUpdate.timeLimit = slideSettings.value.timeLimit;
+    settingsToUpdate.timeLimit = Number(slideSettings.value.timeLimit);
   }
 
   if (slide.value?.type === SLIDE_TYPES.WORD_CLOUD) {

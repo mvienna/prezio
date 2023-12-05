@@ -491,10 +491,10 @@ export const usePresentationsStore = defineStore("presentations", {
         if (this.slideSettings.scoreDependsOnTime) {
           const pointsPerSecond =
             (this.slideSettings.points.max - this.slideSettings.points.min) /
-            this.slideSettings.timeLimit;
+            Number(this.slideSettings.timeLimit);
 
           const secondsTookToAnswer =
-            this.slideSettings.timeLimit - timeLeft.value;
+            Number(this.slideSettings.timeLimit) - timeLeft.value;
 
           pointForCorrectAnswer = Math.round(
             this.slideSettings.points.max -
@@ -577,7 +577,7 @@ export const usePresentationsStore = defineStore("presentations", {
                 ? totalScore / answers.length
                 : totalScore,
             time_taken_to_answer: this.slideSettings.isLimitedTime
-              ? this.slideSettings.timeLimit - timeLeft.value
+              ? Number(this.slideSettings.timeLimit) - timeLeft.value
               : null,
           }
         )
@@ -611,7 +611,7 @@ export const usePresentationsStore = defineStore("presentations", {
         is_answers_revealed: false,
 
         is_submission_locked: true,
-        countdown: this.slideSettings.timeLimit + timeout / 1000,
+        countdown: Number(this.slideSettings.timeLimit) + timeout / 1000,
       };
       if (slide_id) {
         data.slide_id = slide_id;

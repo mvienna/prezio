@@ -84,7 +84,7 @@ const { slideSettings } = storeToRefs(presentationsStore);
 const timeTakenToAnswerPercentage = computed(() => {
   return (
     (props.participantAnswers?.[0]?.time_taken_to_answer * 100) /
-    slideSettings.value?.timeLimit
+    Number(slideSettings.value?.timeLimit)
   );
 });
 </script>

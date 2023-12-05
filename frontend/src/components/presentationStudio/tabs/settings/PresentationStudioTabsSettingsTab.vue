@@ -179,7 +179,7 @@ watch(
  * update slide settings
  */
 const handleSlideSettingsUpdate = () => {
-  if (slideSettings.value.timeLimit > 1800) {
+  if (Number(slideSettings.value.timeLimit) > 1800) {
     slideSettings.value.timeLimit = 1800;
   }
 
