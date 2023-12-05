@@ -53,7 +53,15 @@
   </div>
 
   <!-- results hidden card -->
-  <div id="results_hidden_card"></div>
+  <transition
+    appear
+    enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut"
+  >
+    <PresentationRoomHostActionsResultsHiddenCard
+      v-if="slideSettings?.isResultsHidden"
+    />
+  </transition>
 
   <!-- quiz countdown -->
   <transition
@@ -92,6 +100,7 @@ import PresentationRoomHostActionsSubmissionLockSetting from "components/present
 import PresentationRoomHostActionsFinishQuiz from "components/presentationRoom/host/actions/PresentationRoomHostActionsFinishQuiz.vue";
 import PresentationRoomHostActionsCountdown from "components/presentationRoom/host/actions/PresentationRoomHostActionsCountdown.vue";
 import PresentationRoomActionsChat from "components/presentationRoom/PresentationRoomActionsChat.vue";
+import PresentationRoomHostActionsResultsHiddenCard from "components/presentationRoom/host/actions/PresentationRoomHostActionsResultsHiddenCard.vue";
 
 /*
  * stores
