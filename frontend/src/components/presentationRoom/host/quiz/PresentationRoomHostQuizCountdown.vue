@@ -141,7 +141,7 @@
                   color: white;
                   backdrop-filter: blur(4px);
                 "
-                :label="$t('presentationRoom.quizCountdown.revealAnswers')"
+                :label="$t('presentationRoom.quizCountdown.revealResults')"
                 @click="handleRevealAnswers()"
               />
             </div>
@@ -208,22 +208,26 @@ watch(
 
       if (timeLeft.value === 1) {
         setTimeout(() => {
-          presentationsStore.updateRoom(
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            {
-              // set "is answers revealed" prop to true if setting is turned on (default setting showAnswersManually: false)
-              is_answers_revealed:
-                !presentation.value?.settings?.quiz_data ||
-                (presentation.value?.settings?.quiz_data &&
-                  JSON.parse(presentation.value.settings.quiz_data)
-                    ?.showAnswersManually === false),
-            }
-          );
+          // set "is answers revealed" prop to true if setting is turned on (default setting showAnswersManually: false)
+          const is_answers_revealed =
+            !presentation.value?.settings?.quiz_data ||
+            (presentation.value?.settings?.quiz_data &&
+              JSON.parse(presentation.value.settings.quiz_data)
+                ?.showAnswersManually === false);
 
-          isFinished.value = true;
+          if (is_answers_revealed) {
+            presentationsStore.updateRoom(
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              {
+                is_answers_revealed,
+              }
+            );
+
+            isFinished.value = true;
+          }
         }, 4000);
       }
     }
