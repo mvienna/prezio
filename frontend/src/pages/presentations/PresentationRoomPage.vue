@@ -643,6 +643,24 @@ const connectToRoomChannels = () => {
 
     // handle room countdown
     if (room.value.countdown > 0) {
+      const nowDate = new Date().toLocaleString("en-US", {
+        timeZone: "Europe/Moscow",
+      });
+      const nowMs = new Date(nowDate).getTime();
+      const countdownDifference =
+        (nowMs - new Date(room.value.countdown_started_at).getTime()) / 1000;
+
+      // const now = new Date().toLocaleString("en-US", {
+      //   timeZone: "Europe/Moscow",
+      // });
+      // const countdownDifference = date.getDateDiff(
+      //   now,
+      //   new Date(room.value.countdown_started_at),
+      //   "seconds"
+      // );
+
+      const updatedCountdown = room.value.countdown + countdownDifference;
+
       if (
         SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
         room.value.is_quiz_started &&
@@ -660,23 +678,14 @@ const connectToRoomChannels = () => {
               undefined,
               undefined,
               {
-                countdown: room.value.countdown - timeout / 1000,
+                countdown: updatedCountdown,
                 is_submission_locked: false,
+                sentAt: nowDate,
               }
             );
           }, timeout);
         }
       } else {
-        const now = new Date().toLocaleString("en-US", {
-          timeZone: "Europe/Moscow",
-        });
-        const countdownDifference = date.getDateDiff(
-          now,
-          new Date(room.value.countdown_started_at),
-          "seconds"
-        );
-
-        const updatedCountdown = room.value.countdown + countdownDifference;
         startCountdown(updatedCountdown);
 
         if (isHost.value) {
@@ -686,8 +695,9 @@ const connectToRoomChannels = () => {
             undefined,
             undefined,
             {
-              countdown: updatedCountdown,
-              sentAt: now,
+              countdown: timeLeft.value,
+              // sentAt: nowMs,
+              sentAt: nowDate,
               disableNotification: true,
             }
           );
@@ -902,7 +912,7 @@ const handleRoomUpdateOnSlideChange = async (
         undefined,
         {
           countdown: slideSettings.value.isLimitedTime
-            ? slideSettings.value.timeLimit
+            ? Number(slideSettings.value.timeLimit)
             : 0,
           is_submission_locked: false,
           is_quiz_started: false,

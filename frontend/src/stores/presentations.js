@@ -427,7 +427,9 @@ export const usePresentationsStore = defineStore("presentations", {
     ) {
       if (!presentation_id || !room_id) return;
 
-      this.isLoading.sendingRoomUpdatedEvent = true;
+      if (!data?.disableNotification) {
+        this.isLoading.sendingRoomUpdatedEvent = true;
+      }
 
       return await api
         .patch(`/presentation/${presentation_id}/room/${room_id}`, {
