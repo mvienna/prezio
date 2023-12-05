@@ -13,6 +13,7 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
+import { timeLeft } from "src/helpers/countdown";
 
 /*
  * stores
@@ -24,17 +25,8 @@ const { room, presentation } = storeToRefs(presentationsStore);
  * finish quiz
  */
 const finishQuiz = () => {
-  const is_submission_locked = true;
-  const is_answers_revealed =
-    !presentation.value?.settings?.quiz_data ||
-    (presentation.value?.settings?.quiz_data &&
-      JSON.parse(presentation.value.settings.quiz_data)?.showAnswersManually ===
-        false);
-
   presentationsStore.updateRoom(undefined, undefined, undefined, undefined, {
-    is_submission_locked: is_submission_locked,
-    is_answers_revealed: is_answers_revealed,
-    countdown: 0,
+    countdown: 3,
   });
 };
 </script>

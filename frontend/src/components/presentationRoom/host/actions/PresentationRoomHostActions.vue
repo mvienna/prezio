@@ -34,7 +34,8 @@
         v-if="
           SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
           room?.is_quiz_started &&
-          !room?.is_submission_locked
+          !room?.is_submission_locked &&
+          timeLeft > 3.0
         "
       />
     </div>
