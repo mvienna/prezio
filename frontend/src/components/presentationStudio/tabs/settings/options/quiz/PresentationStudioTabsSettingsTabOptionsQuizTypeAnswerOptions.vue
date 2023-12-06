@@ -211,8 +211,7 @@ const isMaxScorePointsValid = (val) => {
 const handleAddingNewAnswerOption = () => {
   slideSettings.value.otherAcceptedAnswers.push({
     value: "",
-    isCorrect: false,
-    isSelected: false,
+    isCorrect: true,
   });
 };
 

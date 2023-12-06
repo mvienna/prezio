@@ -202,6 +202,13 @@ export default {
         timesUp: "Время вышло!",
         sec: "сек",
       },
+
+      correctAnswer: {
+        title: "Правильный ответ",
+      },
+      otherAcceptedAnswers: {
+        title: "Другие приемлимые ответы",
+      },
     },
 
     leaderboard: {

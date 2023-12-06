@@ -195,6 +195,13 @@ export default {
         timesUp: "Time's up!",
         sec: "sec",
       },
+
+      correctAnswer: {
+        title: "Correct answer",
+      },
+      otherAcceptedAnswers: {
+        title: "Other accepted answers",
+      },
     },
 
     leaderboard: {

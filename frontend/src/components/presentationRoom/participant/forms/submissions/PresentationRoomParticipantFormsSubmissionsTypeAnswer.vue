@@ -26,9 +26,132 @@
           {{ slideSettings.description }}
         </div>
 
+        <!-- progress bar (time left) -->
         <PresentationRoomQuizProgressBar
           :participants-answers="[participantAnswer]"
         />
+
+        <!-- answer input -->
+        <q-input
+          v-model="answer"
+          outlined
+          hide-bottom-space
+          color="primary"
+          :placeholder="$t('presentationRoom.answers.placeholder')"
+          :disable="
+            !!room?.is_submission_locked ||
+            timeLeft === -1 ||
+            !!participantAnswer
+          "
+          :maxlength="25"
+          :rules="answerRules"
+          reactive-rules
+          :class="isAnsweredCorrectly ? 'answer_input--correct' : ''"
+        >
+          <template #append>
+            <q-icon
+              v-if="isAnsweredCorrectly"
+              class="q-mr-sm"
+              name="r_done"
+              color="positive"
+              size="14px"
+            />
+
+            <div class="text-caption">
+              {{ 25 - (answer?.length || 0) }}
+            </div>
+          </template>
+        </q-input>
+
+        <!-- revealed results -->
+        <div v-if="timeLeft === -1 && room?.is_answers_revealed">
+          <!-- correct answer -->
+          <div v-if="!isAnsweredCorrectly" class="q-mt-lg">
+            <div class="row no-wrap items-center q-mb-sm">
+              {{ $t("presentationRoom.answers.correctAnswer.title") }}
+            </div>
+
+            <q-card flat bordered>
+              <q-card-section
+                class="q-pa-sm row no-wrap justify-between items-center"
+              >
+                <div>
+                  {{ slideSettings?.correctAnswer?.value }}
+                </div>
+
+                <q-icon color="positive" name="r_done" />
+              </q-card-section>
+            </q-card>
+          </div>
+
+          <!-- other accepted answers -->
+          <div class="row no-wrap items-center q-mb-sm q-mt-lg">
+            {{ $t("presentationRoom.answers.otherAcceptedAnswers.title") }}
+          </div>
+
+          <div class="column no-wrap q-gutter-md">
+            <q-card
+              v-for="(
+                otherAcceptedAnswer, otherAcceptedAnswerIndex
+              ) in slideSettings.otherAcceptedAnswers"
+              :key="otherAcceptedAnswerIndex"
+              flat
+              bordered
+            >
+              <q-card-section class="row no-wrap justify-between items-center">
+                <div>
+                  {{ otherAcceptedAnswer.value }}
+                </div>
+
+                <q-icon color="positive" name="r_done" />
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
+
+        <!-- submit -->
+        <q-btn
+          type="submit"
+          unelevated
+          no-caps
+          :disable="
+            !!room?.is_submission_locked ||
+            timeLeft === -1 ||
+            !!participantAnswer
+          "
+          :icon-right="
+            room?.is_submission_locked || !!participantAnswer
+              ? 'r_lock'
+              : 'r_done'
+          "
+          color="primary"
+          class="full-width q-py-md q-mt-md"
+          style="position: sticky; bottom: 0"
+        >
+          <template #default>
+            <div class="q-mr-sm">
+              {{
+                room?.is_submission_locked || !!participantAnswer
+                  ? $t("presentationRoom.answers.submit.submissionIsLocked")
+                  : $t("presentationRoom.answers.submit.title")
+              }}
+
+              {{ timeLeft !== -1 && !participantAnswer ? countdown : "" }}
+            </div>
+          </template>
+        </q-btn>
+
+        <div
+          v-if="timeLeft === -1 && room?.is_submission_locked"
+          class="text-center text-semibold q-mt-md"
+          style="opacity: 0.5"
+        >
+          {{
+            hasAlreadyAnswered
+              ? $t("presentationRoom.answers.hasAlreadyAnswered")
+              : $t("presentationRoom.answers.thanksForParticipation")
+          }}
+        </div>
 
         <!-- footer - result -->
         <transition appear enter-active-class="animated fadeIn">
@@ -98,68 +221,6 @@
             <template #score> + 0 </template>
           </PresentationRoomParticipantQuizFooter>
         </transition>
-
-        <!-- answer inputs -->
-        <q-input
-          v-model="answer"
-          outlined
-          hide-bottom-space
-          color="primary"
-          :placeholder="$t('presentationRoom.answers.placeholder')"
-          :maxlength="25"
-          :rules="answerRules"
-          reactive-rules
-        >
-          <template #append>
-            <div class="text-caption">
-              {{ 25 - (answer?.length || 0) }}
-            </div>
-          </template>
-        </q-input>
-
-        <!-- submit -->
-        <q-btn
-          type="submit"
-          unelevated
-          no-caps
-          :disable="
-            !!room?.is_submission_locked ||
-            timeLeft === -1 ||
-            participantAnswer?.length > 0
-          "
-          :icon-right="
-            room?.is_submission_locked || participantAnswer
-              ? 'r_lock'
-              : 'r_done'
-          "
-          color="primary"
-          class="full-width q-py-md q-mt-md"
-          style="position: sticky; bottom: 0"
-        >
-          <template #default>
-            <div class="q-mr-sm">
-              {{
-                room?.is_submission_locked || participantAnswer
-                  ? $t("presentationRoom.answers.submit.submissionIsLocked")
-                  : $t("presentationRoom.answers.submit.title")
-              }}
-
-              {{ timeLeft !== -1 && !participantAnswer ? countdown : "" }}
-            </div>
-          </template>
-        </q-btn>
-
-        <div
-          v-if="timeLeft === -1 && room?.is_submission_locked"
-          class="text-center text-semibold q-mt-md"
-          style="opacity: 0.5"
-        >
-          {{
-            hasAlreadyAnswered
-              ? $t("presentationRoom.answers.hasAlreadyAnswered")
-              : $t("presentationRoom.answers.thanksForParticipation")
-          }}
-        </div>
       </template>
     </PresentationRoomParticipantQuizLayout>
   </q-form>
@@ -251,6 +312,10 @@ const participantAnswer = computed(() => {
  * submitted answers data
  */
 const isAnsweredCorrectly = computed(() => {
+  if (!participantAnswer.value) {
+    return false;
+  }
+
   return [
     slideSettings.value.correctAnswer.value,
     ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
@@ -277,6 +342,12 @@ onBeforeMount(() => {
 .q-btn.disabled {
   opacity: 1 !important;
   background: $black !important;
+}
+
+::v-deep(.answer_input--correct) {
+  .q-field__control:before {
+    border-color: $positive !important;
+  }
 }
 
 /*

@@ -26,85 +26,10 @@
           {{ slideSettings.description }}
         </div>
 
+        <!-- progress bar (time left) -->
         <PresentationRoomQuizProgressBar
           :participants-answers="participantAnswers"
         />
-
-        <!-- footer - result -->
-        <transition appear enter-active-class="animated fadeIn">
-          <PresentationRoomParticipantQuizFooter
-            v-if="participantAnswers?.length && room.is_answers_revealed"
-            :class="isAnsweredCorrectly ? 'bg-positive' : 'bg-negative'"
-            score-tooltip
-          >
-            <template #icon>
-              <q-icon
-                v-if="isAnsweredCorrectly"
-                name="icon-olive-branches-award"
-                color="white"
-                size="36px"
-              />
-
-              <q-icon
-                v-else
-                name="icon-thumb-down-circular"
-                color="white"
-                size="36px"
-                style="transform: rotate(180deg) scaleX(-1)"
-              />
-            </template>
-
-            <template #message>
-              {{
-                $t(
-                  `presentationRoom.answers.results.${
-                    isAnsweredCorrectly ? "correct" : "incorrect"
-                  }`
-                )
-              }}
-            </template>
-
-            <template #score>
-              +
-              {{
-                participantAnswers
-                  .map((answer) => answer.score)
-                  .reduce(
-                    (accumulator, currentValue) => accumulator + currentValue,
-                    0
-                  )
-              }}
-            </template>
-
-            <template #score-tooltip>
-              {{ participantAnswers[0].time_taken_to_answer }}
-              {{ $t("presentationRoom.answers.results.sec") }}
-            </template>
-          </PresentationRoomParticipantQuizFooter>
-        </transition>
-
-        <!-- footer - time's up -->
-        <transition appear enter-active-class="animated fadeIn">
-          <PresentationRoomParticipantQuizFooter
-            v-if="
-              !participantAnswers?.length &&
-              room.is_answers_revealed &&
-              room.is_submission_locked &&
-              timeLeft === -1
-            "
-            class="bg-orange"
-          >
-            <template #icon>
-              <q-icon name="r_timer" color="white" size="36px" />
-            </template>
-
-            <template #message>
-              {{ $t("presentationRoom.answers.results.timesUp") }}
-            </template>
-
-            <template #score> + 0 </template>
-          </PresentationRoomParticipantQuizFooter>
-        </transition>
 
         <!-- answer inputs -->
         <div class="column no-wrap q-gutter-md">
@@ -221,6 +146,82 @@
               : $t("presentationRoom.answers.thanksForParticipation")
           }}
         </div>
+
+        <!-- footer - result -->
+        <transition appear enter-active-class="animated fadeIn">
+          <PresentationRoomParticipantQuizFooter
+            v-if="participantAnswers?.length && room.is_answers_revealed"
+            :class="isAnsweredCorrectly ? 'bg-positive' : 'bg-negative'"
+            score-tooltip
+          >
+            <template #icon>
+              <q-icon
+                v-if="isAnsweredCorrectly"
+                name="icon-olive-branches-award"
+                color="white"
+                size="36px"
+              />
+
+              <q-icon
+                v-else
+                name="icon-thumb-down-circular"
+                color="white"
+                size="36px"
+                style="transform: rotate(180deg) scaleX(-1)"
+              />
+            </template>
+
+            <template #message>
+              {{
+                $t(
+                  `presentationRoom.answers.results.${
+                    isAnsweredCorrectly ? "correct" : "incorrect"
+                  }`
+                )
+              }}
+            </template>
+
+            <template #score>
+              +
+              {{
+                participantAnswers
+                  .map((answer) => answer.score)
+                  .reduce(
+                    (accumulator, currentValue) => accumulator + currentValue,
+                    0
+                  )
+              }}
+            </template>
+
+            <template #score-tooltip>
+              {{ participantAnswers[0].time_taken_to_answer }}
+              {{ $t("presentationRoom.answers.results.sec") }}
+            </template>
+          </PresentationRoomParticipantQuizFooter>
+        </transition>
+
+        <!-- footer - time's up -->
+        <transition appear enter-active-class="animated fadeIn">
+          <PresentationRoomParticipantQuizFooter
+            v-if="
+              !participantAnswers?.length &&
+              room.is_answers_revealed &&
+              room.is_submission_locked &&
+              timeLeft === -1
+            "
+            class="bg-orange"
+          >
+            <template #icon>
+              <q-icon name="r_timer" color="white" size="36px" />
+            </template>
+
+            <template #message>
+              {{ $t("presentationRoom.answers.results.timesUp") }}
+            </template>
+
+            <template #score> + 0 </template>
+          </PresentationRoomParticipantQuizFooter>
+        </transition>
       </template>
     </PresentationRoomParticipantQuizLayout>
   </q-form>
