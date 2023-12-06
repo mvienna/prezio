@@ -310,7 +310,7 @@ export const usePresentationsStore = defineStore("presentations", {
         return await this.setSlide(response.data);
       }
 
-      return true;
+      return response.data;
     },
 
     async saveSlide(slide = this.slide, elements, newSlide) {

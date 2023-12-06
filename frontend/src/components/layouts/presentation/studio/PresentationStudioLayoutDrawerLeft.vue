@@ -706,11 +706,18 @@ const handleAddingNewSlide = async (type) => {
       !nextSlide ||
       (nextSlide && nextSlide.type !== SLIDE_TYPES.LEADERBOARD)
     ) {
-      await presentationsStore.addNewSlide(
+      const newSlide = await presentationsStore.addNewSlide(
         prepareElementsForNewSlide(SLIDE_TYPES.LEADERBOARD),
         SLIDE_TYPES.LEADERBOARD,
         false
       );
+
+      const newSlideIndex = presentation.value.slides.findIndex(
+        (item) => item.id === newSlide.id
+      );
+
+      presentation.value.slides[newSlideIndex].previewAverageBrightness =
+        await computeAverageBrightness(JSON.parse(newSlide.canvas_data));
     }
   }
 };
