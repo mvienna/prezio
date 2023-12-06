@@ -506,7 +506,7 @@ onMounted(async () => {
   /*
    * establish connection to room channels
    */
-  connectToRoomChannels();
+  await connectToRoomChannels();
 
   /*
    * countdown
@@ -532,11 +532,11 @@ onUnmounted(() => {
 /*
  * webhooks
  */
-const connectToRoomChannels = () => {
-  const channel = window.Echo.channel(`public.room.${room.value.id}`);
+const connectToRoomChannels = async () => {
+  const channel = await window.Echo.channel(`public.room.${room.value.id}`);
 
   if (participant.value || (user.value && isHost.value)) {
-    window.Echo = new Echo({
+    window.Echo = await new Echo({
       ...window.Echo.options,
       auth: {
         headers: {
