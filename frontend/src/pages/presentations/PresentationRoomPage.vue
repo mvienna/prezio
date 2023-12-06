@@ -598,6 +598,7 @@ const connectToRoomChannels = async () => {
    * listen for updates
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
+    console.log("room updated");
     // fetch updated room data
     room.value = { ...room.value, ...event.data };
 
@@ -736,7 +737,10 @@ const connectToRoomChannels = async () => {
    */
   channel.listen("PresentationRoomAnswersFormSubmittedEvent", (event) => {
     // add new answers
-    slide.value.answers = [...slide.value.answers, ...event.answers];
+    const idMap = new Map();
+    slide.value.answers = [...slide.value.answers, ...event.answers].filter(
+      (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1)
+    );
     presentationsStore.updateLocalSlide();
 
     // finish the quiz if all participants have answered

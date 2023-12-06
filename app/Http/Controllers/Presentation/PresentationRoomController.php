@@ -228,7 +228,7 @@ class PresentationRoomController extends Controller
     }
 
     /*
-     *  auth
+     * auth
      */
     public function login(Request $request): JsonResponse
     {
