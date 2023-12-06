@@ -123,7 +123,9 @@
           unelevated
           no-caps
           :disable="
-            !!room?.is_submission_locked || timeLeft === -1 || participantAnswer
+            !!room?.is_submission_locked ||
+            timeLeft === -1 ||
+            participantAnswer?.length > 0
           "
           :icon-right="
             room?.is_submission_locked || participantAnswer
