@@ -102,6 +102,9 @@ class PresentationRoomController extends Controller
         $slide = $slide_id ? PresentationSlide::find($slide_id) : null;
         if ($slide) {
             $props['slide_id'] = $slide->id;
+            $presentation->settings()->update([
+                'last_slide_id' => $slide->id
+            ]);
         }
 
         // token
