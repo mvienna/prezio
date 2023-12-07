@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="word_cloud"
-    :style="`left: ${
-      canvasRect.left + canvasRect.width / 2 - width / 2
-    }px; top: ${canvasRect.top + canvasRect.height / 2 - height / 2}px;`"
-  >
+  <div class="word_cloud" :style="`left: ${left}; top: ${top};`">
     <div ref="wordCloud"></div>
   </div>
 </template>
@@ -34,7 +29,6 @@ const emit = defineEmits(["removeWord"]);
  * stores
  */
 const canvasStore = useCanvasStore();
-const { canvas, scale } = storeToRefs(canvasStore);
 
 const presentationsStore = usePresentationsStore();
 const { showRoomInvitationPanel } = storeToRefs(presentationsStore);
@@ -47,24 +41,38 @@ const props = defineProps({
 });
 
 const wordCloud = ref();
+const isWordCloudGenerated = ref(false);
 
 const canvasRect = ref(canvasStore.canvasRect());
 
-const width = computed(() => {
-  return (canvasRect.value.width * 60) / 100;
+const width = ref(0);
+const height = ref(0);
+
+const left = computed(() => {
+  if (width.value > canvasRect.value.width && !showRoomInvitationPanel.value) {
+    return canvasRect.value.left;
+  }
+
+  return (
+    canvasRect.value.left + canvasRect.value.width / 2 - width.value / 2 + "px"
+  );
 });
 
-const height = computed(() => {
-  return (canvasRect.value.height * 40) / 100;
+const top = computed(() => {
+  return (
+    canvasRect.value.y +
+    canvasRect.value.height / 2 -
+    (width.value > canvasRect.value.width
+      ? d3.select(wordCloud.value).select("svg").node().getBoundingClientRect()
+          .height / 2
+      : height.value / 2) +
+    "px"
+  );
 });
 
 const settings = {
   size: (group) => group.length, // given a grouping of words, returns the size factor for that word
   word: (d) => d, // given an item of the data array, returns the word
-  marginTop: 0,
-  marginRight: 0,
-  marginBottom: 0,
-  marginLeft: 0,
   maxWords: 250,
   fontFamily: "sans-serif",
   fontScale: 20,
@@ -74,11 +82,8 @@ const settings = {
   invalidation: null, // when this promise resolves, stop the simulation
 };
 
-/*
- * generation
- */
-const generateWordCloud = () => {
-  const data = d3
+const data = computed(() => {
+  return d3
     .rollups(props.words, settings.size, (w) => w)
     .sort(([, a], [, b]) => d3.descending(a, b))
     .slice(0, settings.maxWords)
@@ -87,6 +92,60 @@ const generateWordCloud = () => {
       size,
       id: settings.word(key).replace(/[^a-zA-Zа-яА-Я]/g, ""),
     }));
+});
+
+/*
+ * hooks
+ */
+const resizeObserverCanvas = ref();
+const resizeObserverPage = ref();
+
+onMounted(() => {
+  const canvas = document.getElementById("canvas");
+  resizeObserverCanvas.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      canvasRect.value = canvasStore.canvasRect();
+    }
+  });
+  resizeObserverCanvas.value.observe(canvas);
+
+  const page = document.getElementsByClassName("q-page-container")[0];
+  resizeObserverPage.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      if (
+        window.screen.width > canvasStore.canvasRect().width &&
+        !showRoomInvitationPanel.value
+      ) {
+        canvasRect.value = canvasStore.canvasRect();
+      }
+    }
+  });
+  resizeObserverPage.value.observe(page);
+
+  setTimeout(() => {
+    width.value = (canvasRect.value.width * 80) / 100;
+    height.value = (canvasRect.value.height * 50) / 100;
+    generate();
+  }, 500);
+});
+
+onUnmounted(() => {
+  resizeObserverCanvas.value.disconnect();
+  resizeObserverPage.value.disconnect();
+});
+
+watch(
+  () => props.words,
+  () => {
+    update();
+  }
+);
+
+/*
+ * d3 cloud
+ */
+const generate = () => {
+  if (!wordCloud.value) return;
 
   const svg = d3
     .create("svg")
@@ -96,19 +155,11 @@ const generateWordCloud = () => {
     .attr("text-anchor", "middle")
     .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
 
-  const g = svg
-    .append("g")
-    .attr(
-      "transform",
-      `translate(${settings.marginLeft},${settings.marginTop})`
-    );
+  const g = svg.append("g").attr("transform", `translate(${0},${0})`);
 
   const cloud = d3Cloud()
-    .size([
-      width.value - settings.marginLeft - settings.marginRight,
-      height.value - settings.marginTop - settings.marginBottom,
-    ])
-    .words(data)
+    .size([width.value, height.value])
+    .words(data.value)
     .padding(settings.padding)
     .rotate(settings.rotate)
     .font(settings.fontFamily)
@@ -132,13 +183,15 @@ const generateWordCloud = () => {
   cloud.start();
   settings.invalidation && settings.invalidation.then(() => cloud.stop());
   wordCloud.value.append(svg.node());
+
+  isWordCloudGenerated.value = true;
 };
 
-const updateWordCloud = () => {
-  if (!wordCloud.value) return;
-  if (d3.select("svg").empty()) return generateWordCloud();
+const update = () => {
+  if (!isWordCloudGenerated.value) return generate();
 
-  d3.select("svg")
+  d3.select(wordCloud.value)
+    .select("svg")
     .select("g")
     .selectAll("text")
     .data([])
@@ -149,22 +202,9 @@ const updateWordCloud = () => {
     .attr("font-size", 1)
     .remove();
 
-  const data = d3
-    .rollups(props.words, settings.size, (w) => w)
-    .sort(([, a], [, b]) => d3.descending(a, b))
-    .slice(0, settings.maxWords)
-    .map(([key, size]) => ({
-      text: settings.word(key),
-      size,
-      id: settings.word(key).replace(/[^a-zA-Zа-яА-Я]/g, ""),
-    }));
-
   const cloud = d3Cloud()
-    .size([
-      width.value - settings.marginLeft - settings.marginRight,
-      height.value - settings.marginTop - settings.marginBottom,
-    ])
-    .words(data)
+    .size([width.value, height.value])
+    .words(data.value)
     .padding(settings.padding)
     .rotate(settings.rotate)
     .font(settings.fontFamily)
@@ -213,55 +253,14 @@ const updateWordCloud = () => {
 };
 
 /*
- * trigger words cloud generation
- */
-onMounted(() => {
-  setTimeout(() => {
-    canvasRect.value = canvasStore.canvasRect();
-    if (wordCloud.value) {
-      generateWordCloud();
-    }
-
-    window.addEventListener("resize", onResize);
-  }, 500);
-});
-
-watch(
-  () => props.words,
-  () => {
-    if (!d3.select("svg").select("g").empty() && props.words) {
-      updateWordCloud();
-    }
-  }
-);
-
-watch(
-  () => showRoomInvitationPanel.value,
-  () => {
-    setTimeout(() => {
-      onResize();
-    }, 500);
-  },
-  { deep: true }
-);
-
-watch(
-  () => scale.value,
-  () => {
-    onResize();
-  }
-);
-
-const onResize = () => {
-  canvasRect.value = canvasStore.canvasRect();
-  updateWordCloud();
-};
-
-/*
- * hover
+ * handle click on word event
  */
 onBeforeMount(() => {
   document.addEventListener("click", handleWordsCloudClickEvent);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("click", handleWordsCloudClickEvent);
 });
 
 const handleWordsCloudClickEvent = (event) => {
@@ -269,18 +268,9 @@ const handleWordsCloudClickEvent = (event) => {
     emit("removeWord", event.target.innerHTML);
   }
 };
-
-/*
- * remove event listeners on unmounted
- */
-onUnmounted(() => {
-  window.removeEventListener("resize", onResize);
-  document.removeEventListener("click", handleWordsCloudClickEvent);
-});
 </script>
 
 <style lang="scss">
-.word_cloud div,
 svg,
 g,
 text {
