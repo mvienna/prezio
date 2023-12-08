@@ -232,6 +232,10 @@ onMounted(() => {
       )
     ];
 
+  const participantData = participant.value
+    ? JSON.parse(participant.value.user_data)
+    : {};
+
   form.value = {
     name: `${adjective} ${noun}`,
     avatar: defaultEmojis[Math.floor(Math.random() * defaultEmojis.length)],
@@ -239,6 +243,7 @@ onMounted(() => {
       wordCloudTextColors[
         Math.floor(Math.random() * wordCloudTextColors.length)
       ],
+    ...participantData,
   };
 });
 
