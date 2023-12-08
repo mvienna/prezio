@@ -235,14 +235,11 @@ class PresentationRoomController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
-        $participant = PresentationRoomParticipant::find($request->participant_id);
-        if (!$participant) {
-            $participant = PresentationRoomParticipant::create([
-                'room_id' => $request->room_id,
-                'user_data' => $request->data
-            ]);
-        }
-
+        $participant = PresentationRoomParticipant::create([
+            'room_id' => $request->room_id,
+            'user_data' => $request->data,
+            'is_guest' => $request->is_guest
+        ]);
         $token = $participant->createToken('authToken')->plainTextToken;
 
         return $this->jsonResponse([

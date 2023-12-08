@@ -16,7 +16,6 @@ export const usePresentationsStore = defineStore("presentations", {
 
     participant: null,
     participants: [],
-    isGuest: false,
     isHost: false,
 
     showRoomInvitationPanel: false,
@@ -425,6 +424,7 @@ export const usePresentationsStore = defineStore("presentations", {
       token = null,
       data = null
     ) {
+      if (this.isLoading.sendingRoomUpdatedEvent) return;
       if (!presentation_id || !room_id) return;
 
       if (!data?.disableNotification) {
@@ -445,11 +445,12 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async loginRoom(data) {
+    async loginRoom(data, is_guest = false) {
       return await api
         .post(`/room/login`, {
           room_id: this.room?.id,
           data: JSON.stringify(data),
+          is_guest: is_guest,
         })
         .then((response) => {
           this.participant = response.data.participant;

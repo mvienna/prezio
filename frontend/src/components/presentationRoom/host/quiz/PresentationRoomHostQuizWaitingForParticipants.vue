@@ -1,11 +1,5 @@
 <template>
-  <!-- word could -->
-  <div
-    class="participants_word_cloud"
-    :style="`left: ${
-      canvasRect.left + canvasRect.width / 2 - width / 2
-    }px; top: ${canvasRect.top + canvasRect.height / 2 - height / 2}px;`"
-  >
+  <div class="word_cloud" :style="`left: ${left}; top: ${top};`">
     <div ref="wordCloud"></div>
   </div>
 
@@ -14,13 +8,15 @@
     class="waiting_for_participants__header text-no-wrap"
     :class="`text-${textColor}`"
   >
+    <!-- title -->
     <div>{{ $t("presentationRoom.waitingForParticipants.title") }}</div>
 
+    <!-- participants count -->
     <div v-if="participants.length" style="opacity: 0.5">
       {{
         $t(
           "presentationRoom.waitingForParticipants.joined.title",
-          participants?.length
+          authorizedParticipants?.length
         )
       }}
     </div>
@@ -28,6 +24,7 @@
 
   <!-- footer -->
   <div class="waiting_for_participants__footer" :class="`text-${textColor}`">
+    <!-- shortcut tip -->
     <div
       class="row no-wrap justify-center items-center q-mb-md"
       style="opacity: 0.75"
@@ -43,6 +40,7 @@
       />
     </div>
 
+    <!-- start the quiz -->
     <div class="row no-wrap justify-center items-center">
       <q-btn
         unelevated
@@ -60,11 +58,10 @@
 <script setup>
 import * as d3 from "d3";
 import d3Cloud from "d3-cloud";
-import { computed, onBeforeMount, onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
-import { wordCloudTextColors } from "src/helpers/colorUtils";
 
 /*
  * stores
@@ -97,57 +94,139 @@ const textColor = computed(() => {
  * data
  */
 const wordCloud = ref();
-
-const words = computed(() => {
-  return participants.value.map((user) => {
-    const user_data = JSON.parse(user.user_data);
-    return (
-      (user_data.avatar ? user_data.avatar + " " : "") +
-      (user_data.name || user_data[0].name)
-    );
-  });
-});
+const isWordCloudGenerated = ref(false);
 
 const canvasRect = ref(canvasStore.canvasRect());
 
-const width = computed(() => {
-  return (canvasRect.value.width * 60) / 100;
+const width = ref(0);
+const height = ref(0);
+
+const left = computed(() => {
+  if (width.value > canvasRect.value.width && !showRoomInvitationPanel.value) {
+    return canvasRect.value.left;
+  }
+
+  return (
+    canvasRect.value.left + canvasRect.value.width / 2 - width.value / 2 + "px"
+  );
 });
 
-const height = computed(() => {
-  return (canvasRect.value.height * 40) / 100;
+const top = computed(() => {
+  return (
+    canvasRect.value.y +
+    canvasRect.value.height / 2 -
+    (width.value > canvasRect.value.width
+      ? d3.select(wordCloud.value).select("svg").node().getBoundingClientRect()
+          .height / 2
+      : height.value / 2) +
+    "px"
+  );
 });
 
 const settings = {
   size: (group) => group.length, // given a grouping of words, returns the size factor for that word
   word: (d) => d, // given an item of the data array, returns the word
-  marginTop: 0,
-  marginRight: 0,
-  marginBottom: 0,
-  marginLeft: 0,
   maxWords: 250,
   fontFamily: "sans-serif",
   fontScale: 20,
   fontWeight: 600,
   padding: 5,
-  rotate: () => ~~(Math.random() * 2) * 90,
+  // rotate: () => ~~(Math.random() * 2) * 90,
+  rotate: 0,
   invalidation: null, // when this promise resolves, stop the simulation
 };
 
-/*
- * generation
- */
-const generateWordCloud = () => {
-  const data = d3
-    .rollups(words.value, settings.size, (w) => w)
+const authorizedParticipants = computed(() => {
+  return participants.value?.filter((user) => !user.is_guest);
+});
+
+const data = computed(() => {
+  const participantsData = authorizedParticipants.value?.map((user) => {
+    const user_data = JSON.parse(user.user_data);
+    return {
+      text: `${user_data.avatar} ${user_data.name}`,
+      color: user_data.color,
+    };
+  });
+
+  return d3
+    .rollups(
+      participantsData.map((item) => item.text),
+      settings.size,
+      (w) => w
+    )
     .sort(([, a], [, b]) => d3.descending(a, b))
     .slice(0, settings.maxWords)
     .map(([key, size]) => ({
       text: settings.word(key),
       size,
       id: settings.word(key).replace(/[^a-zA-Zа-яА-Я]/g, ""),
+      color: participantsData.find((item) => item.text === settings.word(key))
+        .color,
     }));
+});
 
+/*
+ * hooks
+ */
+const resizeObserverCanvas = ref();
+const resizeObserverPage = ref();
+
+onMounted(() => {
+  const canvas = document.getElementById("canvas");
+  resizeObserverCanvas.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      canvasRect.value = canvasStore.canvasRect();
+    }
+  });
+  resizeObserverCanvas.value.observe(canvas);
+
+  const page = document.getElementsByClassName("q-page-container")[0];
+  resizeObserverPage.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      if (
+        window.screen.width > canvasStore.canvasRect().width &&
+        !showRoomInvitationPanel.value
+      ) {
+        canvasRect.value = canvasStore.canvasRect();
+      }
+    }
+  });
+  resizeObserverPage.value.observe(page);
+
+  setTimeout(() => {
+    width.value = (canvasRect.value.width * 80) / 100;
+    height.value = (canvasRect.value.height * 50) / 100;
+    generate();
+  }, 500);
+});
+
+onUnmounted(() => {
+  resizeObserverCanvas.value.disconnect();
+  resizeObserverPage.value.disconnect();
+});
+
+watch(
+  () => authorizedParticipants.value,
+  (newValue, oldValue) => {
+    if (!oldValue?.length) {
+      generate();
+    } else {
+      update();
+    }
+  },
+  { deep: true }
+);
+
+/*
+ * d3 cloud
+ */
+const generate = () => {
+  if (!wordCloud.value) return;
+  console.log("b:", wordCloud.value);
+  d3.select(wordCloud.value).selectAll("svg").remove();
+
+  console.log("a:", wordCloud.value);
   const svg = d3
     .create("svg")
     .attr("viewBox", [0, 0, width.value, height.value])
@@ -156,49 +235,38 @@ const generateWordCloud = () => {
     .attr("text-anchor", "middle")
     .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
 
-  const g = svg
-    .append("g")
-    .attr(
-      "transform",
-      `translate(${settings.marginLeft},${settings.marginTop})`
-    );
+  const g = svg.append("g").attr("transform", `translate(${0},${0})`);
 
   const cloud = d3Cloud()
-    .size([
-      width.value - settings.marginLeft - settings.marginRight,
-      height.value - settings.marginTop - settings.marginBottom,
-    ])
-    .words(data)
+    .size([width.value, height.value])
+    .words(data.value)
     .padding(settings.padding)
     .rotate(settings.rotate)
     .font(settings.fontFamily)
     .fontSize((d) => Math.sqrt(d.size) * settings.fontScale)
-    .on("word", ({ size, x, y, rotate, text, id }) => {
+    .on("word", ({ size, x, y, rotate, text, id, color }) => {
       g.append("text")
         .attr("class", `word-cloud-text-${id}`)
         .attr("font-size", size)
         .attr("font-weight", settings.fontWeight)
         .attr("transform", `translate(${x},${y}) rotate(${rotate})`)
-        .style(
-          "fill",
-          () =>
-            wordCloudTextColors[
-              Math.floor(Math.random() * wordCloudTextColors.length)
-            ]
-        )
+        .style("fill", color)
+
         .text(text);
     });
 
   cloud.start();
   settings.invalidation && settings.invalidation.then(() => cloud.stop());
   wordCloud.value.append(svg.node());
+
+  isWordCloudGenerated.value = true;
 };
 
-const updateWordCloud = () => {
-  if (!wordCloud.value) return;
-  if (d3.select("svg").empty()) return generateWordCloud();
+const update = () => {
+  if (!isWordCloudGenerated.value) return generate();
 
-  d3.select("svg")
+  d3.select(wordCloud.value)
+    .select("svg")
     .select("g")
     .selectAll("text")
     .data([])
@@ -209,27 +277,14 @@ const updateWordCloud = () => {
     .attr("font-size", 1)
     .remove();
 
-  const data = d3
-    .rollups(words.value, settings.size, (w) => w)
-    .sort(([, a], [, b]) => d3.descending(a, b))
-    .slice(0, settings.maxWords)
-    .map(([key, size]) => ({
-      text: settings.word(key),
-      size,
-      id: settings.word(key).replace(/[^a-zA-Zа-яА-Я]/g, ""),
-    }));
-
   const cloud = d3Cloud()
-    .size([
-      width.value - settings.marginLeft - settings.marginRight,
-      height.value - settings.marginTop - settings.marginBottom,
-    ])
-    .words(data)
+    .size([width.value, height.value])
+    .words(data.value)
     .padding(settings.padding)
     .rotate(settings.rotate)
     .font(settings.fontFamily)
     .fontSize((d) => Math.sqrt(d.size) * settings.fontScale)
-    .on("word", ({ size, x, y, rotate, text, id }) => {
+    .on("word", ({ size, x, y, rotate, text, id, color }) => {
       const textElements = d3
         .select("svg")
         .select("g")
@@ -242,13 +297,8 @@ const updateWordCloud = () => {
         .attr("class", `word-cloud-text-${id}`)
         .attr("font-size", 0)
         .attr("transform", `translate(${x},${y}) rotate(${rotate})`)
-        .style(
-          "fill",
-          () =>
-            wordCloudTextColors[
-              Math.floor(Math.random() * wordCloudTextColors.length)
-            ]
-        )
+        .style("fill", color)
+
         .text(text);
 
       textElements
@@ -271,74 +321,16 @@ const updateWordCloud = () => {
   cloud.start();
   settings.invalidation && settings.invalidation.then(() => cloud.stop());
 };
-
-/*
- * trigger words cloud generation
- */
-onMounted(() => {
-  setTimeout(() => {
-    canvasRect.value = canvasStore.canvasRect();
-    if (wordCloud.value) {
-      generateWordCloud();
-    }
-
-    window.addEventListener("resize", onResize);
-  }, 500);
-});
-
-watch(
-  () => participants.value,
-  () => {
-    updateWordCloud();
-  },
-  { deep: true }
-);
-
-watch(
-  () => showRoomInvitationPanel.value,
-  () => {
-    setTimeout(() => {
-      onResize();
-    }, 500);
-  },
-  { deep: true }
-);
-
-watch(
-  () => scale.value,
-  () => {
-    onResize();
-  }
-);
-
-const onResize = () => {
-  canvasRect.value = canvasStore.canvasRect();
-  updateWordCloud();
-};
-
-/*
- * click on words
- */
-onBeforeMount(() => {
-  document.addEventListener("click", handleWordsCloudClickEvent);
-});
-
-const handleWordsCloudClickEvent = (event) => {
-  if (event.target.nodeName === "text") {
-  }
-};
 </script>
 
 <style lang="scss">
-.participants_word_cloud,
-.participants_word_cloud div,
 svg,
 g,
 text {
   transition: 0.6s;
 }
 
-.participants_word_cloud {
+.word_cloud {
   position: fixed;
   z-index: 1;
 

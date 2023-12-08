@@ -1,5 +1,5 @@
 <template>
-  <div class="container__wrapper">
+  <div class="container__wrapper q-mt-lg">
     <div
       class="container"
       :class="
@@ -9,6 +9,13 @@
       "
     >
       <q-form @submit.prevent="submit()">
+        <!-- logo -->
+        <div class="row justify-center q-mb-lg">
+          <div style="width: 96px">
+            <q-img :src="logo" style="height: 48px" fit="contain" />
+          </div>
+        </div>
+
         <!-- title -->
         <div class="form__title q-mb-md">
           {{ $t("presentationRoom.auth.form.title") }}
@@ -64,6 +71,39 @@
             <div class="text-caption text-grey">
               {{ 25 - (form.name?.length || 0) }}
             </div>
+
+            <!-- choose color-->
+            <q-btn
+              round
+              unelevated
+              color="white"
+              size="8px"
+              class="q-ml-sm"
+              style="background: white !important; border-radius: 50%"
+            >
+              <div>
+                <q-icon
+                  name="r_circle"
+                  :style="`color: ${form.color}`"
+                  size="20px"
+                />
+              </div>
+
+              <q-menu
+                anchor="bottom left"
+                self="top left"
+                transition-show="jump-down"
+                transition-hide="jump-up"
+                :offset="[0, 8]"
+              >
+                <q-color
+                  format-model="hex"
+                  no-header-tabs
+                  default-view="palette"
+                  v-model="form.color"
+                />
+              </q-menu>
+            </q-btn>
           </template>
         </q-input>
 
@@ -92,14 +132,15 @@ import { useRouter } from "vue-router";
 import EmojiPicker from "vue3-emoji-picker";
 import "vue3-emoji-picker/css";
 import { useI18n } from "vue-i18n";
-import { api } from "boot/axios";
+import { randomUsernames } from "src/constants/mock";
+import { wordCloudTextColors } from "src/helpers/colorUtils";
 
 /*
  * variables
  */
 const router = useRouter();
 
-const { t } = useI18n({ useScope: "global" });
+const { t, locale } = useI18n({ useScope: "global" });
 
 /*
  * stores
@@ -107,6 +148,7 @@ const { t } = useI18n({ useScope: "global" });
 const presentationsStore = usePresentationsStore();
 const {
   participant,
+  room,
   averageBackgroundBrightness,
   backgroundBrightnessThreshold,
 } = storeToRefs(presentationsStore);
@@ -123,6 +165,7 @@ const logo = computed(() => {
 
 /*
  * form
+ * default pre-set data (emoji, name, color)
  */
 const form = ref({});
 const isNameError = ref(false);
@@ -140,7 +183,6 @@ const defaultEmojis = [
   "🤩",
   "🤗",
   "🙂",
-  "☺️",
   "😚",
   "😶",
   "😏",
@@ -173,11 +215,30 @@ const defaultEmojis = [
 ];
 
 onMounted(() => {
-  const user_data = JSON.parse(participant.value.user_data);
+  const adjective =
+    randomUsernames.adjectives[locale.value === "ru-RU" ? "ru" : "en"][
+      Math.floor(
+        Math.random() *
+          randomUsernames.adjectives[locale.value === "ru-RU" ? "ru" : "en"]
+            .length
+      )
+    ];
+
+  const noun =
+    randomUsernames.nouns[locale.value === "ru-RU" ? "ru" : "en"][
+      Math.floor(
+        Math.random() *
+          randomUsernames.nouns[locale.value === "ru-RU" ? "ru" : "en"].length
+      )
+    ];
 
   form.value = {
-    name: user_data[0].name,
+    name: `${adjective} ${noun}`,
     avatar: defaultEmojis[Math.floor(Math.random() * defaultEmojis.length)],
+    color:
+      wordCloudTextColors[
+        Math.floor(Math.random() * wordCloudTextColors.length)
+      ],
   };
 });
 
@@ -205,24 +266,31 @@ const submit = async () => {
     return;
   }
 
-  const data = participant.value?.user_data
-    ? JSON.parse(participant.value.user_data)
-    : {};
+  await window.Echo.leave(`public.room.${room.value.id}`);
+  await window.Echo.leave(`presence.room.${room.value.id}`);
 
-  await api
-    .patch("/user/room", {
-      user_data: JSON.stringify({
-        ...data,
-        name: form.value.name,
-        avatar: form.value.avatar,
-      }),
-    })
-    .then(() => {
-      window.location.reload();
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  presentationsStore.loginRoom(form.value).catch((error) => {
+    console.log(error);
+  });
+
+  // const data = participant.value?.user_data
+  //   ? JSON.parse(participant.value.user_data)
+  //   : {};
+  //
+  // await api
+  //   .patch("/user/room", {
+  //     user_data: JSON.stringify({
+  //       ...data,
+  //       name: form.value.name,
+  //       avatar: form.value.avatar,
+  //     }),
+  //   })
+  //   .then(() => {
+  //     window.location.reload();
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
 };
 </script>
 

@@ -47,14 +47,34 @@
         class="container relative-position column no-wrap"
         :class="isHost ? 'justify-center' : ''"
       >
-        <!-- PARTICIPANT - auth form (collecting participants info) -->
-        <PresentationRoomParticipantFormsAuth
-          v-if="!isAuthenticated && isLoaded"
-        />
+        <template
+          v-if="
+            isLoaded &&
+            (!isAuthenticated || !isAllRequiredParticipantsInfoCollected)
+          "
+        >
+          <!-- PARTICIPANT - base info form (avatar & name, for quiz) -->
+          <PresentationRoomParticipantFormsBaseInfo
+            v-if="
+              participant?.is_guest && !isAllRequiredParticipantsInfoCollected
+            "
+          />
+
+          <!-- PARTICIPANT - auth form (collecting participants info) -->
+          <PresentationRoomParticipantFormsAuth
+            v-else-if="
+              presentation?.settings?.require_participants_info &&
+              !isAllRequiredParticipantsInfoCollected
+            "
+          />
+        </template>
 
         <!-- ALL - content -->
         <div
-          v-show="isAuthenticated && isLoaded"
+          v-show="
+            isLoaded &&
+            (isAuthenticated || isAllRequiredParticipantsInfoCollected)
+          "
           class="row no-wrap justify-center items-center"
           style="transition: 0.5s"
           :class="showRoomInvitationPanel || !isHost ? 'q-px-md' : ''"
@@ -138,36 +158,25 @@
                 )
               "
             >
-              <!-- PARTICIPANT - base info form (avatar & name, for quiz) -->
-              <PresentationRoomParticipantFormsBaseInfo
+              <!-- PARTICIPANT - submission form - word cloud -->
+              <PresentationRoomParticipantFormsSubmissionsWordCloud
+                v-if="!isHost && slide?.type === SLIDE_TYPES.WORD_CLOUD"
+              />
+
+              <!-- PARTICIPANT - submission form - pick answer -->
+              <PresentationRoomParticipantFormsSubmissionsPickAnswer
                 v-if="
-                  participant?.user_data
-                    ? !JSON.parse(participant.user_data).avatar
-                    : false
+                  !isHost &&
+                  [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
+                    slide?.type
+                  )
                 "
               />
 
-              <template v-else>
-                <!-- PARTICIPANT - submission form - word cloud -->
-                <PresentationRoomParticipantFormsSubmissionsWordCloud
-                  v-if="!isHost && slide?.type === SLIDE_TYPES.WORD_CLOUD"
-                />
-
-                <!-- PARTICIPANT - submission form - pick answer -->
-                <PresentationRoomParticipantFormsSubmissionsPickAnswer
-                  v-if="
-                    !isHost &&
-                    [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
-                      slide?.type
-                    )
-                  "
-                />
-
-                <!-- PARTICIPANT - submission form - type answer -->
-                <PresentationRoomParticipantFormsSubmissionsTypeAnswer
-                  v-if="!isHost && SLIDE_TYPES.TYPE_ANSWER === slide?.type"
-                />
-              </template>
+              <!-- PARTICIPANT - submission form - type answer -->
+              <PresentationRoomParticipantFormsSubmissionsTypeAnswer
+                v-if="!isHost && SLIDE_TYPES.TYPE_ANSWER === slide?.type"
+              />
             </template>
 
             <!-- PARTICIPANT - leaderboard -->
@@ -235,7 +244,7 @@ import {
 } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
-import { date, QSpinnerIos, useQuasar } from "quasar";
+import { QSpinnerIos, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
@@ -243,7 +252,6 @@ import { useCanvasStore } from "stores/canvas";
 import { useAuthStore } from "stores/auth";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import Echo from "laravel-echo";
-import { randomUsernames } from "src/constants/mock";
 import { useI18n } from "vue-i18n";
 import {
   SLIDE_TYPES,
@@ -276,7 +284,7 @@ import PresentationRoomParticipantFormsSubmissionsTypeAnswer from "components/pr
 const router = useRouter();
 const $q = useQuasar();
 
-const { t, locale } = useI18n({ useScope: "global" });
+const { t } = useI18n({ useScope: "global" });
 
 /*
  * stores
@@ -289,7 +297,6 @@ const {
   room,
   participants,
   participant,
-  isGuest,
   isHost,
   showRoomInvitationPanel,
   averageBackgroundBrightness,
@@ -315,13 +322,28 @@ isHost.value = computed(() => {
 });
 
 const isAuthenticated = computed(() => {
-  return (
-    isHost.value ||
-    !presentation.value?.settings?.require_participants_info ||
-    (presentation.value?.settings?.require_participants_info &&
-      participant.value &&
-      !isGuest.value)
-  );
+  return isHost.value || (participant.value && !participant.value.is_guest);
+});
+
+const isAllRequiredParticipantsInfoCollected = computed(() => {
+  if (!participant.value) return false;
+
+  if (!SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type)) {
+    return true;
+  } else {
+    if (participant.value?.is_guest) {
+      return false;
+    }
+  }
+
+  if (!presentation.value?.settings?.require_participants_info) {
+    return true;
+  }
+
+  // TODO: ensure all mandatory fields are filled
+  console.log(JSON.parse(participant.value.user_data));
+
+  return false;
 });
 
 /*
@@ -430,10 +452,7 @@ onMounted(async () => {
       if (
         (!presentation.value.settings.quiz_data ||
           JSON.parse(presentation.value.settings.quiz_data).liveChat) &&
-        isAuthenticated.value &&
-        (isHost.value ||
-          (participant.value?.user_data &&
-            JSON.parse(participant.value.user_data)?.avatar))
+        isAuthenticated.value
       ) {
         setTimeout(() => {
           showRoomChat.value = true;
@@ -474,47 +493,31 @@ onMounted(async () => {
     }
 
     // login as guest
-    if (
-      !participant.value &&
-      !presentation.value?.settings?.require_participants_info
-    ) {
-      isGuest.value = true;
-      const adjective =
-        randomUsernames.adjectives[locale.value === "ru-RU" ? "ru" : "en"][
-          Math.floor(
-            Math.random() *
-              randomUsernames.adjectives[locale.value === "ru-RU" ? "ru" : "en"]
-                .length
-          )
-        ];
-      const noun =
-        randomUsernames.nouns[locale.value === "ru-RU" ? "ru" : "en"][
-          Math.floor(
-            Math.random() *
-              randomUsernames.nouns[locale.value === "ru-RU" ? "ru" : "en"]
-                .length
-          )
-        ];
-      await presentationsStore.loginRoom([
+    if (!participant.value) {
+      await presentationsStore.loginRoom(
         {
-          name: `${adjective} ${noun}`,
+          name: t("presentationRoom.auth.guest"),
+          avatar: "👤",
         },
-      ]);
+        true
+      );
     }
   }
 
-  /*
-   * establish connection to room channels
-   */
-  await connectToRoomChannels();
+  if (isAuthenticated.value) {
+    /*
+     * establish connection to room channels
+     */
+    await connectToRoomChannels();
 
-  /*
-   * countdown
-   */
-  if (isHost.value) {
-    await handleRoomUpdateOnSlideChange(true);
-  } else if (room.value.countdown > 0) {
-    startCountdown(room.value.countdown);
+    /*
+     * countdown
+     */
+    if (isHost.value) {
+      await handleRoomUpdateOnSlideChange(true);
+    } else if (room.value.countdown > 0) {
+      startCountdown(room.value.countdown);
+    }
   }
 
   /*
@@ -523,6 +526,19 @@ onMounted(async () => {
   $q.loading.hide();
   isLoaded.value = true;
 });
+
+/*
+ * establish connection to room channels
+ * when user authenticates
+ */
+watch(
+  () => participant.value,
+  (newValue, oldValue) => {
+    if (oldValue?.id !== newValue?.id) {
+      connectToRoomChannels();
+    }
+  }
+);
 
 onUnmounted(() => {
   window.removeEventListener("resize", resizeCanvas);
@@ -598,7 +614,6 @@ const connectToRoomChannels = async () => {
    * listen for updates
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
-    console.log("room updated");
     // fetch updated room data
     room.value = { ...room.value, ...event.data };
 
@@ -726,7 +741,10 @@ const connectToRoomChannels = async () => {
    */
   channel.listen("PresentationRoomNewChatMessageEvent", (event) => {
     if (room.value.messages) {
-      room.value.messages = [...room.value.messages, event.message];
+      const idMap = new Map();
+      room.value.messages = [...room.value.messages, event.message].filter(
+        (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1)
+      );
     } else {
       room.value.messages = [event.message];
     }
