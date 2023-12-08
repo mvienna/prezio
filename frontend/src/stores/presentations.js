@@ -342,7 +342,7 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     async duplicateSlide(slide, elements) {
-      await this.addNewSlide(elements, slide.type);
+      return await this.addNewSlide(elements, slide.type);
     },
 
     async deleteSlide(slide) {
