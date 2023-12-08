@@ -78,6 +78,7 @@ const router = useRouter();
 const presentationsStore = usePresentationsStore();
 const {
   participant,
+  room,
   presentation,
   averageBackgroundBrightness,
   backgroundBrightnessThreshold,
@@ -141,7 +142,8 @@ const submit = async () => {
     data[field.name] = field.value;
   });
 
-  await presentationsStore.leaveChannels();
+  await window.Echo.leave(`public.room.${room.value.id}`);
+  await window.Echo.leave(`presence.room.${room.value.id}`);
 
   if (participant.value) {
     await api

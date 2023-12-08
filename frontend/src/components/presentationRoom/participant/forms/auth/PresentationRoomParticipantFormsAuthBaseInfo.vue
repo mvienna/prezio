@@ -266,7 +266,8 @@ const submit = async () => {
     return;
   }
 
-  await presentationsStore.leaveChannels();
+  await window.Echo.leave(`public.room.${room.value.id}`);
+  await window.Echo.leave(`presence.room.${room.value.id}`);
 
   presentationsStore.loginRoom(form.value).catch((error) => {
     console.log(error);

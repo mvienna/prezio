@@ -653,11 +653,5 @@ export const usePresentationsStore = defineStore("presentations", {
         data
       );
     },
-
-    async leaveChannels() {
-      await window.Echo.leave(`public.room.${this.room.id}`);
-      await window.Echo.leave(`presence.room.${this.room.id}`);
-      return true;
-    },
   },
 });
