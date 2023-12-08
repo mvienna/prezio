@@ -341,7 +341,7 @@ const isAllRequiredParticipantsInfoCollected = computed(() => {
   }
 
   // TODO: ensure all mandatory fields are filled
-  console.log(JSON.parse(participant.value.user_data));
+  // console.log(JSON.parse(participant.value.user_data));
 
   return false;
 });

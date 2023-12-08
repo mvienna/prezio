@@ -223,10 +223,8 @@ watch(
  */
 const generate = () => {
   if (!wordCloud.value) return;
-  console.log("b:", wordCloud.value);
   d3.select(wordCloud.value).selectAll("svg").remove();
 
-  console.log("a:", wordCloud.value);
   const svg = d3
     .create("svg")
     .attr("viewBox", [0, 0, width.value, height.value])
