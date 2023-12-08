@@ -739,8 +739,12 @@ const connectToRoomChannels = async () => {
    */
   channel.listen("PresentationRoomNewChatMessageEvent", (event) => {
     if (room.value.messages) {
+      // add new message
+      room.value.messages = [...room.value.messages, event.message];
+
+      // remove duplicates
       const idMap = new Map();
-      room.value.messages = [...room.value.messages, event.message].filter(
+      room.value.messages = room.value.messages.filter(
         (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1)
       );
     } else {
@@ -753,8 +757,11 @@ const connectToRoomChannels = async () => {
    */
   channel.listen("PresentationRoomAnswersFormSubmittedEvent", (event) => {
     // add new answers
+    slide.value.answers = [...slide.value.answers, ...event.answers];
+
+    // remove duplicates
     const idMap = new Map();
-    slide.value.answers = [...slide.value.answers, ...event.answers].filter(
+    slide.value.answers = slide.value.answers.filter(
       (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1)
     );
     presentationsStore.updateLocalSlide();
