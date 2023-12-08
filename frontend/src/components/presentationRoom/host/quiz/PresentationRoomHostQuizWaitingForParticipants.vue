@@ -140,7 +140,10 @@ const settings = {
 };
 
 const authorizedParticipants = computed(() => {
-  return participants.value?.filter((user) => !user.is_guest);
+  return participants.value?.filter((user) => {
+    const userData = user.user_data ? JSON.parse(user.user_data) : {};
+    return !user.is_guest && userData?.name?.length && userData?.avatar?.length;
+  });
 });
 
 const data = computed(() => {
