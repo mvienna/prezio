@@ -138,11 +138,6 @@ const tooltipWidth = computed(() => {
 });
 
 const computeQuizPickAnswerBarChartData = () => {
-  const idMap = new Map();
-  slide.value.answers = slide.value.answers.filter(
-    (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1)
-  );
-
   return slideSettings.value.answerOptions?.map((option) => {
     if (!slide.value?.answers) {
       return {
@@ -182,11 +177,6 @@ const computeQuizPickAnswerBarChartData = () => {
 };
 
 const computeQuizTypeAnswerBarChartData = () => {
-  const idMap = new Map();
-  slide.value.answers = slide.value.answers.filter(
-    (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1)
-  );
-
   const correctAnswers = slide.value.answers.filter(
     (answer) =>
       answer.slide_type === slide.value?.type &&
