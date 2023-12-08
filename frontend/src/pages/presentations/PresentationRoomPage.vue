@@ -532,7 +532,7 @@ onMounted(async () => {
  */
 watch(
   () => participant.value,
-  (newValue, oldValue) => {
+  () => {
     connectToRoomChannels();
   },
   { deep: true }
@@ -761,7 +761,9 @@ const connectToRoomChannels = async () => {
 
     // finish the quiz if all participants have answered
     if (isHost.value && SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
-      const participantsIds = participants.value.map((item) => item.id);
+      const participantsIds = participants.value
+        .filter((item) => !item.is_guest)
+        .map((item) => item.id);
       const participantsAnswers = slide.value.answers.filter(
         (answer) =>
           slide.value.type === answer.slide_type &&
