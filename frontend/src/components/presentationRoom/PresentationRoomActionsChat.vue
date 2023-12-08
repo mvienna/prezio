@@ -84,7 +84,7 @@
                   class="text-semibold q-mr-sm"
                   :style="`color: ${
                     item.participant
-                      ? participantColors?.[item.participant.id]
+                      ? getParticipantUserData(item)?.color
                       : 'white'
                   }`"
                 >
@@ -181,8 +181,7 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { wordCloudTextColors } from "src/helpers/colorUtils";
-import { onBeforeMount, ref, watch } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { api } from "boot/axios";
 import { date } from "quasar";
@@ -206,30 +205,6 @@ const { user } = storeToRefs(authStore);
 /*
  * prepare messages
  */
-watch(
-  () => room.value?.messages,
-  () => {
-    processMessages();
-  }
-);
-
-onBeforeMount(() => {
-  processMessages();
-});
-
-const participantColors = ref({});
-
-const processMessages = () => {
-  room.value?.messages?.map((message) => {
-    if (participantColors.value?.[message?.participant?.id]) return;
-
-    participantColors.value[message?.participant?.id] =
-      wordCloudTextColors[
-        Math.floor(Math.random() * wordCloudTextColors.length)
-      ];
-  });
-};
-
 const getParticipantUserData = (message) => {
   return message?.participant?.user_data
     ? JSON.parse(message?.participant?.user_data)

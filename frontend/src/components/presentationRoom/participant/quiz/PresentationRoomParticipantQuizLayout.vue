@@ -4,20 +4,9 @@
     <div v-if="room && !room.is_quiz_started && room.is_submission_locked">
       <div
         class="text-center q-mb-md text-h7 text-semibold"
-        :style="`color: ${
-          wordCloudTextColors[
-            Math.floor(Math.random() * wordCloudTextColors.length)
-          ]
-        }`"
+        :style="participantData ? `color: ${participantData.color}` : ''"
       >
-        {{
-          participant?.user_data
-            ? JSON.parse(participant.user_data).avatar + " "
-            : ""
-        }}
-        {{
-          participant?.user_data ? JSON.parse(participant.user_data).name : ""
-        }}
+        {{ participantData.avatar + " " + participantData.name }}
       </div>
 
       <div class="waiting_for_quiz_start__title">
@@ -137,12 +126,12 @@
 </template>
 
 <script setup>
-import { wordCloudTextColors } from "src/helpers/colorUtils";
 import { countdown, timeLeft, timeLeftPercentage } from "src/helpers/countdown";
 import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
 import { usePresentationsStore } from "stores/presentations";
+import { computed } from "vue";
 
 /*
  * variables
@@ -160,6 +149,15 @@ const { presentation, room, slide, slideSettings, participant } =
 
 const canvasStore = useCanvasStore();
 const { elements } = storeToRefs(canvasStore);
+
+/*
+ * participant data
+ */
+const participantData = computed(() => {
+  return participant.value?.user_data
+    ? JSON.parse(participant.value.user_data)
+    : {};
+});
 </script>
 
 <style scoped lang="scss">

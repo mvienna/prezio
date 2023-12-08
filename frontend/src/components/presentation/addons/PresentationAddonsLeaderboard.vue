@@ -61,7 +61,7 @@
                 class="absolute-left"
                 style="height: 100%; border-radius: 0"
                 :style="`background: rgba(${Object.values(
-                  colors.textToRgb(result.color)
+                  colors.textToRgb(result.participantData?.color || '#FFFFFF')
                 ).join(',')}, 0.7); width: ${(result.score * 100) / maxScore}%`"
               ></div>
 
@@ -74,9 +74,9 @@
                   style="font-size: 1em"
                 >
                   {{
-                    (JSON.parse(result.participant.user_data)?.avatar
-                      ? JSON.parse(result.participant.user_data)?.avatar + " "
-                      : "") + JSON.parse(result.participant.user_data).name
+                    result.participantData?.avatar +
+                    " " +
+                    result.participantData?.name
                   }}
                 </div>
               </q-card-section>
@@ -121,7 +121,6 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useCanvasStore } from "stores/canvas";
 import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
-import { wordCloudTextColors } from "src/helpers/colorUtils";
 import { colors } from "quasar";
 import { Vue3Lottie } from "vue3-lottie";
 import confettiJSON from "src/assets/animations/confetti.json";
@@ -167,11 +166,10 @@ const results = computed(() => {
     } else {
       scoresMap.set(participantId, {
         participant: answer.participant,
+        participantData: answer.participant?.user_data
+          ? JSON.parse(answer.participant.user_data)
+          : {},
         score: score,
-        color:
-          wordCloudTextColors[
-            Math.floor(Math.random() * wordCloudTextColors.length)
-          ],
       });
     }
   });
