@@ -1,5 +1,8 @@
 <template>
-  <div class="word_cloud" :style="`left: ${left}; top: ${top};`">
+  <div
+    class="waiting_for_participants__word_cloud"
+    :style="`left: ${left}; top: ${top};`"
+  >
     <div ref="wordCloud"></div>
   </div>
 
@@ -328,7 +331,7 @@ text {
   transition: 0.6s;
 }
 
-.word_cloud {
+.waiting_for_participants__word_cloud {
   position: fixed;
   z-index: 1;
 
