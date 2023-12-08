@@ -266,31 +266,11 @@ const submit = async () => {
     return;
   }
 
-  await window.Echo.leave(`public.room.${room.value.id}`);
-  await window.Echo.leave(`presence.room.${room.value.id}`);
+  await presentationsStore.leaveChannels();
 
   presentationsStore.loginRoom(form.value).catch((error) => {
     console.log(error);
   });
-
-  // const data = participant.value?.user_data
-  //   ? JSON.parse(participant.value.user_data)
-  //   : {};
-  //
-  // await api
-  //   .patch("/user/room", {
-  //     user_data: JSON.stringify({
-  //       ...data,
-  //       name: form.value.name,
-  //       avatar: form.value.avatar,
-  //     }),
-  //   })
-  //   .then(() => {
-  //     window.location.reload();
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
 };
 </script>
 
@@ -375,13 +355,12 @@ const submit = async () => {
     .container {
       max-width: 100%;
     }
-
-    form {
-      border: none;
-    }
   }
 }
 
+/*
+ * emojis
+ */
 ::v-deep(.v3-sticky) {
   font-size: 16px !important;
 }

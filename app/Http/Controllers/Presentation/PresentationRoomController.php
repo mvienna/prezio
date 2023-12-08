@@ -259,7 +259,8 @@ class PresentationRoomController extends Controller
         $participant = auth()->user();
 
         $participant->update([
-           'user_data' => $request->user_data
+            'user_data' => $request->data,
+            'is_guest' => false
         ]);
 
         return $this->jsonResponse($participant->toArray());

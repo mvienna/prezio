@@ -47,34 +47,21 @@
         class="container relative-position column no-wrap"
         :class="isHost ? 'justify-center' : ''"
       >
-        <template
-          v-if="
-            isLoaded &&
-            (!isAuthenticated || !isAllRequiredParticipantsInfoCollected)
-          "
-        >
-          <!-- PARTICIPANT - base info form (avatar & name, for quiz) -->
+        <template v-if="isLoaded && !isAuthenticated">
+          <!-- PARTICIPANT - base info (avatar & name) -->
           <PresentationRoomParticipantFormsBaseInfo
-            v-if="
-              participant?.is_guest && !isAllRequiredParticipantsInfoCollected
-            "
+            v-if="!isParticipantBaseInfoCollected"
           />
 
-          <!-- PARTICIPANT - auth form (collecting participants info) -->
-          <PresentationRoomParticipantFormsAuth
-            v-else-if="
-              presentation?.settings?.require_participants_info &&
-              !isAllRequiredParticipantsInfoCollected
-            "
+          <!-- PARTICIPANT - collect data -->
+          <PresentationRoomParticipantFormsAuthCollectData
+            v-else-if="!isParticipantRequiredInfoCollected"
           />
         </template>
 
         <!-- ALL - content -->
         <div
-          v-show="
-            isLoaded &&
-            (isAuthenticated || isAllRequiredParticipantsInfoCollected)
-          "
+          v-show="isLoaded && isAuthenticated"
           class="row no-wrap justify-center items-center"
           style="transition: 0.5s"
           :class="showRoomInvitationPanel || !isHost ? 'q-px-md' : ''"
@@ -259,8 +246,7 @@ import {
 } from "src/constants/presentationStudio";
 import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
 import { startCountdown, stopCountdown, timeLeft } from "src/helpers/countdown";
-import PresentationRoomParticipantFormsAuth from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsAuth.vue";
-import PresentationRoomParticipantFormsBaseInfo from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsBaseInfo.vue";
+import PresentationRoomParticipantFormsBaseInfo from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsAuthBaseInfo.vue";
 import PresentationRoomHostInvitationPanel from "components/presentationRoom/host/PresentationRoomHostInvitationPanel.vue";
 import PresentationRoomHostHeader from "components/presentationRoom/host/PresentationRoomHostHeader.vue";
 import PresentationRoomHostQuizWaitingForParticipants from "components/presentationRoom/host/quiz/PresentationRoomHostQuizWaitingForParticipants.vue";
@@ -277,6 +263,7 @@ import PresentationRoomParticipantLeaderboard from "components/presentationRoom/
 import { generateQrCode } from "src/helpers/qrUtils";
 import { computeAverageBrightness } from "src/helpers/colorUtils";
 import PresentationRoomParticipantFormsSubmissionsTypeAnswer from "components/presentationRoom/participant/forms/submissions/PresentationRoomParticipantFormsSubmissionsTypeAnswer.vue";
+import PresentationRoomParticipantFormsAuthCollectData from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsAuthCollectData.vue";
 
 /*
  * variables
@@ -322,28 +309,46 @@ isHost.value = computed(() => {
 });
 
 const isAuthenticated = computed(() => {
-  return isHost.value || (participant.value && !participant.value.is_guest);
+  return (
+    isHost.value ||
+    (participant.value &&
+      isParticipantRequiredInfoCollected.value &&
+      isParticipantBaseInfoCollected.value)
+  );
 });
 
-const isAllRequiredParticipantsInfoCollected = computed(() => {
-  if (!participant.value) return false;
+const isParticipantRequiredInfoCollected = computed(() => {
+  // require to fill in the data
+  if (presentation.value?.settings?.require_participants_info) {
+    const participantData = Object.keys(
+      JSON.parse(participant.value.user_data)
+    );
 
-  if (!SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type)) {
-    return true;
-  } else {
-    if (participant.value?.is_guest) {
-      return false;
-    }
+    const fields = JSON.parse(
+      presentation.value?.settings?.participants_info_form_fields_data
+    )
+      .filter((field) => field.isMandatory)
+      ?.map((field) => field.name);
+
+    // check if participant data has all the required fields filled
+    return fields.every((key) => participantData.includes(key));
   }
 
-  if (!presentation.value?.settings?.require_participants_info) {
-    return true;
+  return true;
+});
+
+const isParticipantBaseInfoCollected = computed(() => {
+  // require base info on slide type of quiz
+  // if participant hasn't done it yet (logged in as guest)
+  const participantData = Object.keys(JSON.parse(participant.value.user_data));
+  if (
+    SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
+    !["name", "avatar"].every((key) => participantData.includes(key))
+  ) {
+    return false;
   }
 
-  // TODO: ensure all mandatory fields are filled
-  // console.log(JSON.parse(participant.value.user_data));
-
-  return false;
+  return true;
 });
 
 /*
@@ -494,13 +499,7 @@ onMounted(async () => {
 
     // login as guest
     if (!participant.value) {
-      await presentationsStore.loginRoom(
-        {
-          name: t("presentationRoom.auth.guest"),
-          avatar: "👤",
-        },
-        true
-      );
+      await presentationsStore.loginRoom({}, true);
     }
   }
 
@@ -534,10 +533,9 @@ onMounted(async () => {
 watch(
   () => participant.value,
   (newValue, oldValue) => {
-    if (oldValue?.id !== newValue?.id) {
-      connectToRoomChannels();
-    }
-  }
+    connectToRoomChannels();
+  },
+  { deep: true }
 );
 
 onUnmounted(() => {
