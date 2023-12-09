@@ -105,6 +105,11 @@
 
             <!-- visibility button -->
             <q-btn
+              v-if="
+                ![MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
+                  element.mode
+                )
+              "
               :icon="element.isVisible ? 'r_visibility' : 'r_visibility_off'"
               flat
               round
@@ -155,6 +160,11 @@
 
             <!-- delete button -->
             <q-btn
+              v-if="
+                ![MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
+                  element.mode
+                )
+              "
               icon="r_delete"
               flat
               round
@@ -313,6 +323,8 @@ const handleLayersReorder = async () => {
     color: $white;
 
     .layer_handle--disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
     }
 
     .q-card__section {
