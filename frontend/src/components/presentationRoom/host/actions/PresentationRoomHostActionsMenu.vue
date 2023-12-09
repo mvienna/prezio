@@ -91,7 +91,9 @@
           :label="
             $t(
               `presentationRoom.footer.menu.informationPanel.${
-                showRoomInformationPanel ? 'hide' : 'show'
+                presentation?.settings?.show_joining_instructions_bar
+                  ? 'hide'
+                  : 'show'
               }`
             )
           "
@@ -102,7 +104,10 @@
           style="border-radius: 8px"
           :size="$q.screen.lt.md ? '0.8em' : '1em'"
           v-close-popup
-          @click="showRoomInformationPanel = !showRoomInformationPanel"
+          @click="
+            presentation.settings.show_joining_instructions_bar =
+              !presentation.settings.show_joining_instructions_bar
+          "
         />
 
         <!-- privacy toggle -->
@@ -141,12 +146,8 @@ import { onBeforeMount, onUnmounted, ref } from "vue";
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const {
-  presentation,
-  showRoomInvitationPanel,
-  showRoomInformationPanel,
-  room,
-} = storeToRefs(presentationsStore);
+const { presentation, showRoomInvitationPanel, room } =
+  storeToRefs(presentationsStore);
 
 /*
  * fullscreen

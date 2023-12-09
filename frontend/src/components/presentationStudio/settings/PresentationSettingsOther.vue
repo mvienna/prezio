@@ -2,18 +2,20 @@
   <div>
     <!-- show room invitation panel setting -->
     <div class="row no-wrap items-center q-pl-md text-semibold">
-      <q-icon name="r_qr_code" class="q-mr-md" color="primary" size="24px" />
+      <q-icon name="r_link" class="q-mr-md" color="primary" size="24px" />
 
       <div>
         {{
-          $t("presentationStudio.settings.other.showRoomInvitationPanel.title")
+          $t(
+            "presentationStudio.settings.other.showJoiningInstructionsBar.title"
+          )
         }}
       </div>
 
       <q-space />
 
       <q-toggle
-        v-model="presentation.settings.show_room_invitation_panel"
+        v-model="presentation.settings.show_joining_instructions_bar"
         color="primary"
         @update:model-value="presentationsStore.updatePresentation()"
       />
@@ -63,8 +65,8 @@ const { presentation } = storeToRefs(presentationsStore);
  * on load
  */
 onBeforeMount(() => {
-  presentation.value.settings.show_room_invitation_panel = Boolean(
-    presentation.value.settings.show_room_invitation_panel
+  presentation.value.settings.show_joining_instructions_bar = Boolean(
+    presentation.value.settings.show_joining_instructions_bar
   );
 });
 

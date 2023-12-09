@@ -59,7 +59,7 @@
               v-if="tab.name === tabs.language.name"
             />
 
-            <!-- others -->
+            <!-- other -->
             <PresentationSettingsOther v-if="tab.name === tabs.other.name" />
           </div>
         </q-expansion-item>

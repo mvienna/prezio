@@ -19,7 +19,6 @@ export const usePresentationsStore = defineStore("presentations", {
     isHost: false,
 
     showRoomInvitationPanel: false,
-    showRoomInformationPanel: true,
     showShareDialog: false,
     showRoomChat: false,
 

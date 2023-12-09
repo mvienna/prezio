@@ -232,8 +232,8 @@ export default {
       other: {
         title: "Другие настройки",
 
-        showRoomInvitationPanel: {
-          title: "Панель инструкций по присоединению",
+        showJoiningInstructionsBar: {
+          title: "Показать шапку с инструкций по присоединению",
         },
 
         reactions: {

@@ -436,14 +436,6 @@ onMounted(async () => {
       await presentationsStore.updateRoom();
     }
 
-    // show room invitation panel if it's turned on in settings
-    if (
-      presentation.value.settings.show_room_invitation_panel &&
-      isHost.value
-    ) {
-      showRoomInvitationPanel.value = true;
-    }
-
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
       // leave only background & base fill
       filterElements();

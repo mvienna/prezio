@@ -3,15 +3,18 @@
     v-if="isHost"
     class="cursor-pointer"
     :class="`${$q.screen.lt.lg ? 'q-pa-md' : 'q-pa-lg'} ${
-      showRoomInformationPanel || isHovered ? 'q-toolbar--appear' : ''
+      presentation?.settings?.show_joining_instructions_bar || isHovered
+        ? 'q-toolbar--appear'
+        : ''
     }`"
     @click="
       (event) => {
         if (
           ['DIV', 'IMG'].includes(event.target.nodeName) &&
-          (showRoomInformationPanel || isHovered)
+          (presentation?.settings?.show_joining_instructions_bar || isHovered)
         ) {
-          showRoomInvitationPanel = !showRoomInvitationPanel;
+          presentation.settings.show_joining_instructions_bar =
+            !presentation.settings.show_joining_instructions_bar;
         }
       }
     "
@@ -23,14 +26,18 @@
       class="row no-wrap q-gutter-sm"
       style="transition: 0.2s"
       :style="
-        !showRoomInformationPanel && !isHovered && !isMouseActive
+        !presentation?.settings?.show_joining_instructions_bar &&
+        !isHovered &&
+        !isMouseActive
           ? 'opacity: 0;'
           : ''
       "
     >
       <q-intersection
         transition="fade"
-        v-if="showRoomInformationPanel || isHovered"
+        v-if="
+          presentation?.settings?.show_joining_instructions_bar || isHovered
+        "
       >
         <q-btn
           flat
@@ -91,7 +98,9 @@
       leave-active-class="animated fadeOutUp"
     >
       <div
-        v-if="showRoomInformationPanel || isHovered"
+        v-if="
+          presentation?.settings?.show_joining_instructions_bar || isHovered
+        "
         class="row no-wrap items-center justify-center ellipsis"
         style="max-width: 70%"
       >
@@ -151,7 +160,7 @@
     <div :style="$q.screen.lt.sm ? 'min-width: 64px' : 'min-width: 96px'">
       <q-img
         :src="
-          showRoomInformationPanel || isHovered
+          presentation?.settings?.show_joining_instructions_bar || isHovered
             ? '/logo_white_with_title_white.png'
             : logo
         "
@@ -200,7 +209,6 @@ const {
   room,
   presentation,
   showRoomInvitationPanel,
-  showRoomInformationPanel,
   averageBackgroundBrightness,
   backgroundBrightnessThreshold,
   isHost,

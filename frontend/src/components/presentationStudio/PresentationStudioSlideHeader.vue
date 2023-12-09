@@ -9,7 +9,7 @@
     :style="`width: ${canvasRect?.width}px; left: ${canvasRect?.left}px; top: ${
       canvasRect?.top
     }px; background: ${
-      presentation?.settings?.show_room_invitation_panel || isHovered
+      presentation?.settings?.show_joining_instructions_bar || isHovered
         ? averageBackgroundBrightness >= backgroundBrightnessThreshold
           ? 'rgba(0, 0, 0, 0.1)'
           : 'rgba(255, 255, 255, 0.1)'
@@ -30,7 +30,9 @@
       leave-active-class="animated fadeOutUp"
     >
       <div
-        v-if="presentation?.settings?.show_room_invitation_panel || isHovered"
+        v-if="
+          presentation?.settings?.show_joining_instructions_bar || isHovered
+        "
         class="row no-wrap items-center justify-center ellipsis"
         style="max-width: 70%"
       >
