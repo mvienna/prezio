@@ -126,7 +126,7 @@ const handleRemovingAnswer = (text) => {
   slide.value.answers = slide.value?.answers?.filter((item) => {
     return JSON.parse(item.answer_data).text !== text;
   });
-  presentationsStore.updateLocalSlide();
+  presentationsStore.syncCurrentSlideWithPresentationSlides();
 };
 
 /*

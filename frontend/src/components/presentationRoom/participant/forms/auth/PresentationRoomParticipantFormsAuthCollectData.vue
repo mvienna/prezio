@@ -63,7 +63,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
 
@@ -99,7 +99,7 @@ const logo = computed(() => {
  */
 const fields = ref([]);
 
-onMounted(() => {
+const computeFields = () => {
   const participantData = participant.value
     ? JSON.parse(participant.value.user_data)
     : {};
@@ -125,7 +125,18 @@ onMounted(() => {
   });
 
   fields.value = [...participantFields, ...requiredFields];
+};
+
+onMounted(() => {
+  computeFields();
 });
+
+watch(
+  () => presentation.value?.settings?.participants_info_form_fields_data,
+  () => {
+    computeFields();
+  }
+);
 
 const isValid = computed(() => {
   return !fields.value.find(

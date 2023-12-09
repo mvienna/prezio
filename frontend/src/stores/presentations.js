@@ -377,7 +377,7 @@ export const usePresentationsStore = defineStore("presentations", {
       // save previous slide
       if (this.slide && elements && saveSlide) {
         this.slide.canvas_data = JSON.stringify(elements);
-        this.updateLocalSlide();
+        this.syncCurrentSlideWithPresentationSlides();
         this.saveSlide(undefined, elements, newSlide);
       }
 
@@ -406,7 +406,7 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    updateLocalSlide() {
+    syncCurrentSlideWithPresentationSlides() {
       const slideIndex = this.presentation.slides.findIndex(
         (item) => item.id === this.slide.id
       );

@@ -59,7 +59,7 @@ const handleAddingLeaderboardSlide = async () => {
     deselectElement();
 
     slide.value.canvas_data = JSON.stringify(elements.value);
-    presentationsStore.updateLocalSlide();
+    presentationsStore.syncCurrentSlideWithPresentationSlides();
     presentationsStore.saveSlide(undefined, elements.value);
   }
 

@@ -368,7 +368,7 @@ const initSlide = async () => {
     presentation.value.slides[0];
 
   await presentationsStore.setSlide(newSlide);
-  presentationsStore.updateLocalSlide();
+  presentationsStore.syncCurrentSlideWithPresentationSlides();
 
   await canvasStore.setElementsFromSlide();
   return true;
@@ -538,6 +538,33 @@ watch(
   { deep: true }
 );
 
+watch(
+  () => presentation.value,
+  (newValue, oldValue) => {
+    if (!newValue || !oldValue) return;
+    if (newValue.is_private === oldValue.is_private) return;
+
+    if (!presentation.value.is_private) {
+      // timeout is needed here because of v-if v-else condition in the template
+      setTimeout(async () => {
+        isLoaded.value = false;
+
+        initCanvas();
+        await initSlide();
+
+        resizeCanvas();
+        setTimeout(() => {
+          canvasStore.redrawCanvas(false, undefined, false);
+          isLoaded.value = true;
+        }, 100);
+        window.addEventListener("resize", resizeCanvas);
+      });
+    } else {
+      window.removeEventListener("resize", resizeCanvas);
+    }
+  }
+);
+
 onUnmounted(() => {
   window.removeEventListener("resize", resizeCanvas);
   document.removeEventListener("keydown", handleKeyDownEvent);
@@ -609,7 +636,7 @@ const connectToRoomChannels = async () => {
   }
 
   /*
-   * listen for updates
+   * listen for room updates
    */
   channel.listen("PresentationRoomUpdatedEvent", async (event) => {
     // fetch updated room data
@@ -622,38 +649,6 @@ const connectToRoomChannels = async () => {
           room.value.token
       );
     }
-
-    // presentation is private (lock for participants)
-    if (!isHost.value && presentation.value?.is_private) return;
-
-    // init slide data
-    await initSlide();
-
-    if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
-      // leave only background & base fill
-      filterElements();
-
-      // countdown before quiz - set timer to reveal
-      if (
-        room.value.is_quiz_started &&
-        room.value.is_submission_locked &&
-        timeLeft.value > 5
-      ) {
-        if (
-          !presentation.value.settings.quiz_data ||
-          (presentation.value.settings.quiz_data &&
-            JSON.parse(presentation.value.settings.quiz_data).countdown)
-        ) {
-          setTimeout(async () => {
-            await canvasStore.setElementsFromSlide();
-            canvasStore.redrawCanvas(false, undefined, false);
-          }, (timeLeft.value - 5) * 1000);
-        }
-      }
-    }
-
-    // redraw canvas
-    canvasStore.redrawCanvas(false, undefined, false);
 
     // handle room countdown
     if (room.value.countdown > 0) {
@@ -726,6 +721,54 @@ const connectToRoomChannels = async () => {
   });
 
   /*
+   * listen for presentation updates
+   */
+  channel.listen("PresentationUpdatedEvent", (event) => {
+    presentation.value = { ...presentation.value, ...event.data };
+  });
+
+  /*
+   * listen for slides updates
+   */
+  channel.listen("PresentationSlideUpdatedEvent", async (event) => {
+    const response = await presentationsStore.fetchSlideData(event.slide_id);
+
+    slide.value = response.data;
+    slideSettings.value = slide.value.settings_data
+      ? JSON.parse(slide.value.settings_data)
+      : {};
+
+    presentationsStore.syncCurrentSlideWithPresentationSlides();
+
+    await canvasStore.setElementsFromSlide();
+
+    if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
+      // leave only background & base fill
+      filterElements();
+
+      // // countdown before quiz - set timer to reveal
+      // if (
+      //   room.value.is_quiz_started &&
+      //   room.value.is_submission_locked &&
+      //   timeLeft.value > 5
+      // ) {
+      //   if (
+      //     !presentation.value.settings.quiz_data ||
+      //     (presentation.value.settings.quiz_data &&
+      //       JSON.parse(presentation.value.settings.quiz_data).countdown)
+      //   ) {
+      //     setTimeout(async () => {
+      //       await canvasStore.setElementsFromSlide();
+      //       canvasStore.redrawCanvas(false, undefined, false);
+      //     }, (timeLeft.value - 5) * 1000);
+      //   }
+      // }
+    }
+
+    canvasStore.redrawCanvas(false, undefined, false);
+  });
+
+  /*
    * listen for new reactions
    */
   channel.listen("PresentationRoomNewReactionEvent", (event) => {
@@ -764,7 +807,7 @@ const connectToRoomChannels = async () => {
     slide.value.answers = slide.value.answers.filter(
       (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1)
     );
-    presentationsStore.updateLocalSlide();
+    presentationsStore.syncCurrentSlideWithPresentationSlides();
 
     // finish the quiz if all participants have answered
     if (isHost.value && SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
@@ -815,33 +858,6 @@ const connectToRoomChannels = async () => {
             }
           );
         }, 2000);
-      }
-    }
-  });
-
-  /*
-   * listen for presentation privacy setting change
-   */
-  channel.listen("PresentationRoomPrivacyUpdatedEvent", async (event) => {
-    if (!isHost.value) {
-      presentation.value.is_private = event.is_private;
-
-      if (!presentation.value.is_private) {
-        setTimeout(async () => {
-          isLoaded.value = false;
-
-          initCanvas();
-          await initSlide();
-
-          resizeCanvas();
-          setTimeout(() => {
-            canvasStore.redrawCanvas(false, undefined, false);
-            isLoaded.value = true;
-          }, 100);
-          window.addEventListener("resize", resizeCanvas);
-        });
-      } else {
-        window.removeEventListener("resize", resizeCanvas);
       }
     }
   });

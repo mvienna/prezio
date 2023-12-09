@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Presentation\Slide;
 
-use App\Events\PresentationRoomUpdatedEvent;
+use App\Events\PresentationSlideUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Presentation\Presentation;
 use App\Models\Presentation\Room\PresentationRoom;
@@ -58,8 +58,8 @@ class PresentationSlideController extends Controller
         ]);
 
         $presentation->load('room');
-        if ($presentation->room && $slide->id === $presentation->room->slide_id) {
-            event(new PresentationRoomUpdatedEvent($presentation->room)); // TODO: pass updated slide data
+        if ($presentation->room?->slide_id === $slide->id) {
+            event(new PresentationSlideUpdatedEvent($presentation->room, $slide));
         }
 
         return $this->successResponse();

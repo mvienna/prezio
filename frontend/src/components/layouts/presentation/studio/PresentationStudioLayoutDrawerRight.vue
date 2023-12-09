@@ -183,7 +183,7 @@ const handleChangingSlideType = async (type) => {
     canvas_data: JSON.stringify(newElements),
     settings_data: null,
   };
-  presentationsStore.updateLocalSlide();
+  presentationsStore.syncCurrentSlideWithPresentationSlides();
   await presentationsStore.saveSlide(slide.value, newElements);
 
   await canvasStore.setElementsFromSlide();

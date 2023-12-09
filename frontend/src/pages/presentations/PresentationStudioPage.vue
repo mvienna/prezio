@@ -296,8 +296,10 @@ onUnmounted(() => {
   document.removeEventListener("mouseup", handleCanvasMouseUp);
   document.removeEventListener("keydown", handleKeyDownEvent);
 
-  window.Echo.leave(`presence.room.${presentation.value.room.id}`);
-  window.Echo.leave(`public.room.${presentation.value.room.id}`);
+  if (presentation.value?.room?.id) {
+    window.Echo.leave(`presence.room.${presentation.value.room.id}`);
+    window.Echo.leave(`public.room.${presentation.value.room.id}`);
+  }
 });
 
 const resizeCanvas = () => {
@@ -816,7 +818,7 @@ const connectToRoomChannels = () => {
    */
   channel.listen("PresentationRoomAnswersFormSubmittedEvent", (event) => {
     slide.value.answers = [...slide.value.answers, ...event.answers];
-    presentationsStore.updateLocalSlide();
+    presentationsStore.syncCurrentSlideWithPresentationSlides();
   });
 
   /*

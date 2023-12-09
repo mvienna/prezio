@@ -45,7 +45,7 @@ const { elements } = storeToRefs(canvasStore);
  */
 const toggleResultsHiddenSetting = async () => {
   slideSettings.value.isResultsHidden = !slideSettings.value.isResultsHidden;
-  await presentationsStore.updateLocalSlide();
+  await presentationsStore.syncCurrentSlideWithPresentationSlides();
   await presentationsStore.saveSlide(undefined, elements.value);
 };
 </script>

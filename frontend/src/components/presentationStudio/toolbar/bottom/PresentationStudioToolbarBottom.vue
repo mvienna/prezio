@@ -116,7 +116,7 @@ const handleResettingResults = () => {
       .delete(`/presentation/slide/${slide.value.id}/answers`)
       .then(() => {
         slide.value.answers = [];
-        presentationsStore.updateLocalSlide();
+        presentationsStore.syncCurrentSlideWithPresentationSlides();
       })
       .catch((error) => {
         console.log(error);

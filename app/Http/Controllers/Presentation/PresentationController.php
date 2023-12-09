@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Presentation;
 
-use App\Events\PresentationRoomPrivacyUpdatedEvent;
+use App\Events\PresentationUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Presentation\Slide\PresentationSlideController;
 use App\Models\Presentation\Presentation;
@@ -50,12 +50,6 @@ class PresentationController extends Controller
             return $this->errorResponse(trans('errors.accessDenied'), 403);
         }
 
-        // send event to room channel to inform about privacy setting change
-        $presentation->load('room');
-        if ($presentation->room && $presentation->is_private !== $request->is_private) {
-            event(new PresentationRoomPrivacyUpdatedEvent($presentation->room, $request->is_private));
-        }
-
         $presentation->update([
             'folder_id' => $request->folder_id,
             'name' => $request->name,
@@ -75,6 +69,12 @@ class PresentationController extends Controller
             'show_room_invitation_panel' => $request->settings['show_room_invitation_panel'],
             'available_reactions' => $request->settings['available_reactions'],
         ]);
+
+        // send event to room channel to inform about privacy setting change
+        $presentation->load('room', 'settings');
+        if ($presentation->room) {
+            event(new PresentationUpdatedEvent($presentation->room, $presentation));
+        }
 
         return $this->jsonResponse($presentation->toArray());
     }
@@ -97,8 +97,8 @@ class PresentationController extends Controller
         // delete presentation rooms, participants data, reactions
         foreach ($presentation->rooms as $room) {
             $room->messages()->delete();
-            $room->participants()->delete();
             $room->reactions()->delete();
+            $room->participants()->delete();
             $room->delete();
         }
 
@@ -113,12 +113,6 @@ class PresentationController extends Controller
 
     public function show(Presentation $presentation): JsonResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if ($presentation->user_id !== $user->id && !$user->isAdmin()) {
-            return $this->errorResponse(trans('errors.accessDenied'), 403);
-        }
-
         $presentation->load('slides', 'slides.template', 'slides.answers', 'slides.answers.participant', 'preview', 'room', 'room.reactions', 'settings');
 
         if (!$presentation->settings) {

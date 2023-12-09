@@ -183,6 +183,6 @@ const handleSlideSettingsUpdate = () => {
     slideSettings.value.timeLimit = 1800;
   }
 
-  presentationsStore.updateLocalSlide();
+  presentationsStore.syncCurrentSlideWithPresentationSlides();
 };
 </script>

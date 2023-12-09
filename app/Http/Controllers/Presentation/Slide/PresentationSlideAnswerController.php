@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Presentation\Slide;
 
 use App\Events\PresentationRoomUpdatedEvent;
+use App\Events\PresentationSlideUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Presentation\Presentation;
 use App\Models\Presentation\Slide\PresentationSlide;
@@ -57,8 +58,8 @@ class PresentationSlideAnswerController extends Controller
             'is_submission_locked' => true
         ]);
 
-        if ($slide->presentation?->room) {
-            event(new PresentationRoomUpdatedEvent($slide->presentation->room)); // TODO: pass updated slide data
+        if ($slide->presentation?->room?->slide_id === $slide->id) {
+            event(new PresentationSlideUpdatedEvent($slide->presentation->room, $slide));
         }
 
         return $this->successResponse();
@@ -75,19 +76,23 @@ class PresentationSlideAnswerController extends Controller
         $presentation->load('slides', 'room');
         foreach ($presentation->slides as $slide) {
             $slide->answers()->delete();
+
+            if ($presentation->room?->slide_id === $slide->id) {
+                event(new PresentationSlideUpdatedEvent($presentation->room, $slide));
+            }
         }
 
-        $presentation->room?->messages()?->delete();
-//        $presentation->room?->reactions()?->delete();
-        $presentation->room?->participants()?->delete();
+        if ($presentation->room) {
+            $presentation->room?->messages()?->delete();
+            $presentation->room?->reactions()?->delete();
 
-        $presentation->room()?->update([
-            'is_quiz_started' => false,
-            'is_submission_locked' => true
-        ]);
+            $presentation->room?->update([
+                'is_quiz_started' => false,
+                'is_submission_locked' => true,
+                'countdown' => 0
+            ]);
 
-        if ($presentation?->room) {
-            event(new PresentationRoomUpdatedEvent($presentation->room)); // TODO: pass updated slide data
+            event(new PresentationRoomUpdatedEvent($presentation->room));
         }
 
         return $this->successResponse();

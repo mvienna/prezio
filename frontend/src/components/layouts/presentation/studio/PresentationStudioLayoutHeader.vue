@@ -494,7 +494,7 @@ const handleStartPresenting = async () => {
     return;
   }
 
-  await presentationsStore.updateLocalSlide();
+  await presentationsStore.syncCurrentSlideWithPresentationSlides();
   await presentationsStore.saveSlide(slide.value, elements.value);
   await presentationsStore.updatePresentation();
 

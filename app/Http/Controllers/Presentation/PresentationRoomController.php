@@ -7,6 +7,7 @@ use App\Events\PresentationRoomNewChatMessageEvent;
 use App\Events\PresentationRoomNewReactionEvent;
 use App\Events\PresentationRoomTerminatedEvent;
 use App\Events\PresentationRoomUpdatedEvent;
+use App\Events\PresentationSlideUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Presentation\Presentation;
 use App\Models\Presentation\Room\PresentationRoom;
@@ -75,7 +76,7 @@ class PresentationRoomController extends Controller
         }
 
         $room->load('presentation', 'reactions', 'messages', 'messages.participant');
-        $room->presentation->load('slides', 'slides.answers', 'slides.answers.participant', 'preview', 'settings');
+        $room->presentation->load('slides', 'slides.answers', 'slides.answers.participant', 'preview', 'settings'); // TODO: remove slides payload
 
         if (!$room->reactions) {
             PresentationRoomReactions::create([
@@ -105,6 +106,8 @@ class PresentationRoomController extends Controller
             $presentation->settings()->update([
                 'last_slide_id' => $slide->id
             ]);
+
+            event(new PresentationSlideUpdatedEvent($presentation->room, $slide));
         }
 
         // token

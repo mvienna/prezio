@@ -253,7 +253,7 @@ export const useCanvasStore = defineStore("canvas", {
       }
       tempCanvas.remove();
 
-      presentationsStore.updateLocalSlide();
+      presentationsStore.syncCurrentSlideWithPresentationSlides();
     },
 
     renderSlidePreview() {

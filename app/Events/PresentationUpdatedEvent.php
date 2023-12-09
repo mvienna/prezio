@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Presentation\Presentation;
 use App\Models\Presentation\Room\PresentationRoom;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -9,17 +10,17 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PresentationRoomPrivacyUpdatedEvent implements ShouldBroadcast
+class PresentationUpdatedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public PresentationRoom $room;
-    public bool $is_private;
+    public Presentation $presentation;
 
-    public function __construct(PresentationRoom $room, bool $is_private)
+    public function __construct(PresentationRoom $room, Presentation $presentation)
     {
         $this->room = $room;
-        $this->is_private = $is_private;
+        $this->presentation = $presentation;
     }
 
     public function broadcastOn(): Channel
@@ -30,7 +31,7 @@ class PresentationRoomPrivacyUpdatedEvent implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'is_private' => $this->is_private,
+            'data' => $this->presentation->toArray(),
         ];
     }
 }

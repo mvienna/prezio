@@ -356,7 +356,7 @@ const handleCreatingNewTemplate = (data) => {
       templates.value.push(response.data);
 
       slide.value.template = response.data;
-      presentationsStore.updateLocalSlide();
+      presentationsStore.syncCurrentSlideWithPresentationSlides();
     })
     .catch((error) => {
       console.log(error);
@@ -390,7 +390,7 @@ const handleUpdatingTemplate = (data) => {
             is_private: response.data.is_private,
           };
           slide.value.template = response.data;
-          presentationsStore.updateLocalSlide();
+          presentationsStore.syncCurrentSlideWithPresentationSlides();
         }
 
         return item;
@@ -416,7 +416,7 @@ const handleTemplateDeletion = (template) => {
       );
 
       slide.value.template = null;
-      presentationsStore.updateLocalSlide();
+      presentationsStore.syncCurrentSlideWithPresentationSlides();
     })
     .catch((error) => {
       console.log(error);
