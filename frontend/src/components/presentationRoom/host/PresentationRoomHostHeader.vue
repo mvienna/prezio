@@ -13,8 +13,7 @@
           ['DIV', 'IMG'].includes(event.target.nodeName) &&
           (presentation?.settings?.show_joining_instructions_bar || isHovered)
         ) {
-          presentation.settings.show_joining_instructions_bar =
-            !presentation.settings.show_joining_instructions_bar;
+          showRoomInvitationPanel = !showRoomInvitationPanel;
         }
       }
     "
