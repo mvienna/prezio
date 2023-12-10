@@ -324,7 +324,7 @@ const handleRevealAnswers = () => {
 /*
  * timer icon animation
  */
-.timerAnimationAnimation {
+.timerAnimation {
   animation: timerAnimation 0.7s ease-in-out;
   animation-delay: 2s;
 }
