@@ -553,6 +553,7 @@ const handleStartPresenting = async () => {
 
   await presentationsStore.updateRoom(undefined, presentation.value.room.id, {
     slide_id: startPresentingFromSlide.value.id,
+    disableNotification: true,
   });
   openPresentationRoom();
 };

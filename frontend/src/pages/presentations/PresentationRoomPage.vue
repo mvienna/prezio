@@ -434,14 +434,6 @@ onMounted(async () => {
     initCanvas();
     await initSlide();
 
-    /*
-     * update slide
-     * case: host started presenting in already existing room from the new slide he's chosen
-     */
-    if (isHost.value && slide.value.id !== room.value.slide_id) {
-      await presentationsStore.updateRoom({ slide_id: slide.value.id });
-    }
-
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
       // leave only background & base fill
       filterElements();
