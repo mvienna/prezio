@@ -72,9 +72,7 @@
             </div>
 
             <q-card flat bordered>
-              <q-card-section
-                class="q-pa-sm row no-wrap justify-between items-center"
-              >
+              <q-card-section class="row no-wrap justify-between items-center">
                 <div>
                   {{ slideSettings?.correctAnswer?.value }}
                 </div>
@@ -329,6 +327,7 @@ const hasAlreadyAnswered = ref(false);
 onBeforeMount(() => {
   if (participantAnswer.value) {
     hasAlreadyAnswered.value = true;
+    answer.value = JSON.parse(participantAnswer.value.answer_data).text;
   }
 });
 </script>
