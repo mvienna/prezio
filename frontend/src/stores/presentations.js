@@ -281,34 +281,38 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     async addNewSlide(elements = null, type, selectNewSlide = true) {
-      const slideIndex = this.presentation.slides.findIndex(
-        (item) => item.id === this.slide.id
-      );
-      const insertAtIndex = slideIndex + 1;
+      return await new Promise(async (resolve, reject) => {
+        const slideIndex = this.presentation.slides.findIndex(
+          (item) => item.id === this.slide.id
+        );
+        const insertAtIndex = slideIndex + 1;
 
-      const response = await api
-        .post(`/presentation/${this.presentation.id}/slide`, {
-          canvas_data: JSON.stringify(elements),
-          order: insertAtIndex,
-          type: type,
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        const response = await api
+          .post(`/presentation/${this.presentation.id}/slide`, {
+            canvas_data: JSON.stringify(elements),
+            order: insertAtIndex,
+            type: type,
+          })
+          .catch((error) => {
+            console.log(error);
+          });
 
-      this.presentation.slides.splice(insertAtIndex, 0, response.data);
+        this.presentation.slides.splice(insertAtIndex, 0, response.data);
 
-      this.presentation.slides = this.presentation.slides.map((item, index) => {
-        item.order = index;
-        return item;
+        this.presentation.slides = this.presentation.slides.map(
+          (item, index) => {
+            item.order = index;
+            return item;
+          }
+        );
+        await this.updateSlidesOrder();
+
+        if (selectNewSlide) {
+          await this.setSlide(response.data);
+        }
+
+        resolve(response.data);
       });
-      await this.updateSlidesOrder();
-
-      if (selectNewSlide) {
-        return await this.setSlide(response.data);
-      }
-
-      return response.data;
     },
 
     async saveSlide(slide = this.slide, elements, newSlide) {

@@ -721,21 +721,24 @@ const handleAddingNewSlide = async (type) => {
   }
 };
 
-const handleDuplicatingSlide = async (slide) => {
-  const newSlide = await presentationsStore.duplicateSlide(
-    slide,
-    elements.value
-  );
-  await canvasStore.setElementsFromSlide();
+const handleDuplicatingSlide = (slide) => {
+  presentationsStore
+    .duplicateSlide(slide, elements.value)
+    .then(async (newSlide) => {
+      await canvasStore.setElementsFromSlide();
 
-  const newSlideIndex = presentation.value.slides.findIndex(
-    (item) => item.id === newSlide.id
-  );
-  presentation.value.slides[newSlideIndex].previewAverageBrightness =
-    await computeAverageBrightness(JSON.parse(newSlide.canvas_data));
+      const newSlideIndex = presentation.value.slides.findIndex(
+        (item) => item?.id === newSlide?.id
+      );
+      presentation.value.slides[newSlideIndex].previewAverageBrightness =
+        await computeAverageBrightness(JSON.parse(newSlide.canvas_data));
 
-  canvasStore.renderSlidePreview();
-  canvasStore.saveSlidePreview();
+      canvasStore.renderSlidePreview();
+      canvasStore.saveSlidePreview();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 /*
