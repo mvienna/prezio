@@ -64,7 +64,13 @@
           v-show="isLoaded && isAuthenticated"
           class="row no-wrap justify-center items-center"
           style="transition: 0.5s"
-          :class="showRoomInvitationPanel || !isHost ? 'q-px-md' : ''"
+          :class="
+            showRoomInvitationPanel ||
+            (!isHost &&
+              !(room && !room.is_quiz_started && room.is_submission_locked))
+              ? 'q-px-md'
+              : ''
+          "
         >
           <!-- HOST - invitation panel -->
           <transition
