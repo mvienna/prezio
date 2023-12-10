@@ -98,20 +98,25 @@ class PresentationRoomController extends Controller
     {
         $props = [];
 
-        // slide
-        $slide_id = $request->input('slide_id');
-        $slide = $slide_id ? PresentationSlide::find($slide_id) : null;
-        if ($slide) {
-            $props['slide_id'] = $slide->id;
-            $presentation->settings()->update([
-                'last_slide_id' => $slide->id
-            ]);
+        /*
+         * slide
+         */
+        if ($request->filled('slide_id') && $room->slide_id !== $request->input('slide_id')) {
+            $slide = PresentationSlide::find($request->input('slide_id'));
+            if ($slide) {
+                $props['slide_id'] = $slide->id;
+                $presentation->settings()->update([
+                    'last_slide_id' => $slide->id
+                ]);
 
-            event(new PresentationSlideUpdatedEvent($presentation->room, $slide));
+                event(new PresentationSlideUpdatedEvent($presentation->room, $slide));
+            }
         }
 
-        // token
-        if (!empty($request->token)) {
+        /*
+         * token
+         */
+        if ($request->filled('token')) {
             // validate length
             if (strlen($request->token) > 10) {
                 return $this->errorResponse(
@@ -122,7 +127,7 @@ class PresentationRoomController extends Controller
             }
 
             // check for uniqueness
-            $roomWithRequestToken = PresentationRoom::where('token', $request->token);
+            $roomWithRequestToken = PresentationRoom::where('token', $request->input('token'));
             if ($roomWithRequestToken->exists()) {
                 return $this->errorResponse(
                     trans('errors.room.tokenIsTaken'),
@@ -134,43 +139,41 @@ class PresentationRoomController extends Controller
             $props['token'] = $request->token;
         }
 
-        // quiz data
-        if (isset($request->data)) {
-            if (isset($request->data['is_quiz_started'])) {
-                $props['is_quiz_started'] = $request->data['is_quiz_started'];
-            }
-
-            if (isset($request->data['is_submission_locked'])) {
-                $props['is_submission_locked'] = $request->data['is_submission_locked'];
-            }
-
-            if (isset($request->data['is_answers_revealed'])) {
-                $props['is_answers_revealed'] = $request->data['is_answers_revealed'];
-            }
-
-            if (isset($request->data['countdown'])) {
-                if (isset($request->data['sentAt'])) {
-                    $currentTime = Carbon::now();
-                    $sentAt = Carbon::parse($request->data['sentAt']);
-                    $timeDifferenceInSeconds = $currentTime->diffInSeconds($sentAt);
-
-//                    $currentTime = Carbon::now();
-//                    $timeDifferenceInSeconds = ($currentTime->valueOf() - $request->data['sentAt']) / 1000;
-
-                    $props['countdown'] = $request->data['countdown'] - $timeDifferenceInSeconds;
-
-                } else {
-                    $props['countdown'] = $request->data['countdown'];
-                }
-
-                $props['countdown_started_at'] = Carbon::now();
-            }
+        /*
+         * quiz data
+         */
+        if ($request->filled('is_quiz_started')) {
+            $props['is_quiz_started'] = $request->input('is_quiz_started');
         }
 
-        // update
-        $room->update($props);
+        if ($request->filled('is_submission_locked')) {
+            $props['is_submission_locked'] = $request->input('is_submission_locked');
+        }
 
-        if (!isset($request->data) || !isset($request->data['disableNotification'])) {
+        if ($request->filled('is_answers_revealed')) {
+            $props['is_answers_revealed'] = $request->input('is_answers_revealed');
+        }
+
+        if ($request->filled('countdown')) {
+            if ($request->filled('sentAt')) {
+                $currentTime = Carbon::now();
+                $sentAt = Carbon::parse($request->input('sentAt'));
+                $timeDifferenceInSeconds = $currentTime->diffInSeconds($sentAt);
+                // $currentTime = Carbon::now();
+                // $timeDifferenceInSeconds = ($currentTime->valueOf() - $request->data['sentAt']) / 1000;
+                $props['countdown'] = $request->input('countdown') - $timeDifferenceInSeconds;
+            } else {
+                $props['countdown'] = $request->input('countdown');
+            }
+
+            $props['countdown_started_at'] = Carbon::now();
+        }
+
+        /*
+         * update
+         */
+        $room->update($props);
+        if (!$request->filled('disableNotification')) {
             event(new PresentationRoomUpdatedEvent($room));
         }
 
