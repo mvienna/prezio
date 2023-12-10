@@ -54,7 +54,7 @@
           style="border-radius: 50%; transition: 0.2s; min-width: 42px"
           @click="
             () => {
-              presentationsStore.handleQuizStop();
+              presentationsStore.handleQuizStop({});
             }
           "
         >

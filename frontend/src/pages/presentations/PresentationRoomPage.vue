@@ -433,7 +433,7 @@ onMounted(async () => {
      * case: host started presenting in already existing room from the new slide he's chosen
      */
     if (isHost.value && slide.value.id !== room.value.slide_id) {
-      await presentationsStore.updateRoom();
+      await presentationsStore.updateRoom({ slide_id: slide.value.id });
     }
 
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
@@ -662,8 +662,17 @@ const connectToRoomChannels = async () => {
 
       const updatedCountdown = room.value.countdown + countdownDifference;
 
+      // pre-fetch changed slide
+      let currentSlide = slide.value;
+      if (currentSlide.id !== room.value.slide_id) {
+        const response = await presentationsStore.fetchSlideData(
+          room.value.slide_id
+        );
+        currentSlide = response.data;
+      }
+
       if (
-        SLIDE_TYPES_OF_QUIZ.includes(slide.value.type) &&
+        SLIDE_TYPES_OF_QUIZ.includes(currentSlide.type) &&
         room.value.is_quiz_started &&
         room.value.is_submission_locked
       ) {
@@ -673,35 +682,23 @@ const connectToRoomChannels = async () => {
 
         if (isHost.value) {
           beforeQuizTimeout.value = setTimeout(() => {
-            presentationsStore.updateRoom(
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              {
-                countdown: updatedCountdown,
-                is_submission_locked: false,
-                sentAt: nowDate,
-              }
-            );
+            presentationsStore.updateRoom(undefined, undefined, {
+              countdown: updatedCountdown,
+              is_submission_locked: false,
+              sentAt: nowDate,
+            });
           }, timeout);
         }
       } else {
         startCountdown(updatedCountdown);
 
         if (isHost.value) {
-          presentationsStore.updateRoom(
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            {
-              countdown: timeLeft.value,
-              // sentAt: nowMs,
-              sentAt: nowDate,
-              disableNotification: true,
-            }
-          );
+          presentationsStore.updateRoom(undefined, undefined, {
+            countdown: timeLeft.value,
+            sentAt: nowDate,
+            // sentAt: nowMs,
+            disableNotification: true,
+          });
         }
       }
     } else {
@@ -838,17 +835,11 @@ const connectToRoomChannels = async () => {
               console.log(error);
             });
 
-          presentationsStore.updateRoom(
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            {
-              countdown: room.value.countdown,
-              is_submission_locked: room.value.is_submission_locked,
-              is_answers_revealed: room.value.is_answers_revealed,
-            }
-          );
+          presentationsStore.updateRoom(undefined, undefined, {
+            countdown: room.value.countdown,
+            is_submission_locked: room.value.is_submission_locked,
+            is_answers_revealed: room.value.is_answers_revealed,
+          });
         }, 2000);
       }
     }
@@ -888,7 +879,8 @@ const handleKeyDownEvent = (event) => {
         SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
         !room.value.is_quiz_started
       ) {
-        presentationsStore.handleQuizStart(slide.value.id);
+        // presentationsStore.handleQuizStart(slide.value.id);
+        presentationsStore.handleQuizStart();
       } else {
         handleSlideChange("forward");
       }
@@ -900,7 +892,8 @@ const handleKeyDownEvent = (event) => {
         SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
         !room.value.is_quiz_started
       ) {
-        presentationsStore.handleQuizStart(slide.value.id);
+        // presentationsStore.handleQuizStart(slide.value.id);
+        presentationsStore.handleQuizStart();
       }
     }
   }
@@ -946,31 +939,21 @@ const handleRoomUpdateOnSlideChange = async (
       !newSlide.answers.filter((answer) => answer.slide_type === newSlide?.type)
         .length
     ) {
-      return await presentationsStore.updateRoom(
-        undefined,
-        undefined,
-        newSlide.id,
-        undefined,
-        {
-          countdown: newSlideSettings.isLimitedTime
-            ? Number(newSlideSettings.timeLimit)
-            : 0,
-          is_submission_locked: false,
-          is_quiz_started: false,
-        }
-      );
+      return await presentationsStore.updateRoom(undefined, undefined, {
+        slide_id: newSlide.id,
+        countdown: newSlideSettings.isLimitedTime
+          ? Number(newSlideSettings.timeLimit)
+          : 0,
+        is_submission_locked: false,
+        is_quiz_started: isOnLoad ? false : room.value.is_quiz_started,
+      });
     } else {
-      return await presentationsStore.updateRoom(
-        undefined,
-        undefined,
-        newSlide.id,
-        undefined,
-        {
-          countdown: 0,
-          is_submission_locked: true,
-          is_quiz_started: false,
-        }
-      );
+      return await presentationsStore.updateRoom(undefined, undefined, {
+        slide_id: newSlide.id,
+        countdown: 0,
+        is_submission_locked: true,
+        is_quiz_started: isOnLoad ? false : room.value.is_quiz_started,
+      });
     }
   }
 
@@ -979,13 +962,18 @@ const handleRoomUpdateOnSlideChange = async (
    */
   if (SLIDE_TYPES_OF_QUIZ.includes(newSlide?.type)) {
     if (isOnLoad || direction === "backward") {
-      return await presentationsStore.handleQuizStop(newSlide.id);
+      return await presentationsStore.handleQuizStop({ slide_id: newSlide.id });
     } else {
       // continue quiz
       if (room.value.is_quiz_started) {
-        return await presentationsStore.handleQuizStart(newSlide.id);
+        return await presentationsStore.handleQuizStart(
+          newSlide.id,
+          newSlideSettings
+        );
       } else {
-        return await presentationsStore.handleQuizStop(newSlide.id);
+        return await presentationsStore.handleQuizStop({
+          slide_id: newSlide.id,
+        });
       }
     }
   }
@@ -993,7 +981,10 @@ const handleRoomUpdateOnSlideChange = async (
   /*
    * other slide types
    */
-  return await presentationsStore.handleQuizStop(newSlide.id);
+  return await presentationsStore.handleQuizStop({
+    is_quiz_started: isOnLoad ? false : room.value.is_quiz_started,
+    slide_id: newSlide.id,
+  });
 };
 
 /*

@@ -71,12 +71,9 @@
                     @update:model-value="
                       () => {
                         presentationsStore
-                          .updateRoom(
-                            presentation.id,
-                            presentation.room.id,
-                            null,
-                            presentation.room.token
-                          )
+                          .updateRoom(presentation.id, presentation.room.id, {
+                            token: presentation.room.token,
+                          })
                           .then(() => {
                             qrCodeElement = null;
                             handleQrCodeGeneration();

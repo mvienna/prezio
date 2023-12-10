@@ -419,23 +419,18 @@ export const usePresentationsStore = defineStore("presentations", {
     async updateRoom(
       presentation_id = this.presentation?.id,
       room_id = this.room?.id,
-      slide_id = this.slide?.id,
-      token = null,
-      data = null
+      data = {}
     ) {
-      if (this.isLoading.sendingRoomUpdatedEvent) return;
       if (!presentation_id || !room_id) return;
+      if (this.isLoading.sendingRoomUpdatedEvent && !data?.disableNotification)
+        return;
 
       if (!data?.disableNotification) {
         this.isLoading.sendingRoomUpdatedEvent = true;
       }
 
       return await api
-        .patch(`/presentation/${presentation_id}/room/${room_id}`, {
-          slide_id,
-          token,
-          data,
-        })
+        .patch(`/presentation/${presentation_id}/room/${room_id}`, data)
         .catch((error) => {
           throw {
             message: error.response.data.message,
@@ -605,7 +600,7 @@ export const usePresentationsStore = defineStore("presentations", {
       return timeout;
     },
 
-    async handleQuizStart(slide_id = null) {
+    async handleQuizStart(slide_id = null, slideSettings = this.slideSettings) {
       const timeout = this.computeBeforeQuizTimeout();
 
       const data = {
@@ -613,44 +608,33 @@ export const usePresentationsStore = defineStore("presentations", {
         is_answers_revealed: false,
 
         is_submission_locked: true,
-        countdown: Number(this.slideSettings.timeLimit) + timeout / 1000,
+        countdown: Number(slideSettings.timeLimit) + timeout / 1000,
       };
       if (slide_id) {
         data.slide_id = slide_id;
       }
 
       clearTimeout(this.beforeQuizTimeout);
-      await this.updateRoom(
-        undefined,
-        undefined,
-        slide_id ? slide_id : undefined,
-        undefined,
-        data
-      );
+      await this.updateRoom(undefined, undefined, data);
     },
 
-    async handleQuizStop(slide_id = null) {
+    async handleQuizStop({
+      countdown = 0,
+      is_submission_locked = true,
+      is_quiz_started = false,
+      is_answers_revealed = false,
+      slide_id = null,
+    }) {
       stopCountdown();
 
-      const data = {
-        countdown: 0,
-        is_submission_locked: true,
-        is_quiz_started: false,
-        is_answers_revealed: false,
-      };
-
-      if (slide_id) {
-        data.slide_id = slide_id;
-      }
-
       clearTimeout(this.beforeQuizTimeout);
-      return await this.updateRoom(
-        undefined,
-        undefined,
-        slide_id ? slide_id : undefined,
-        undefined,
-        data
-      );
+      return await this.updateRoom(undefined, undefined, {
+        countdown,
+        is_submission_locked,
+        is_quiz_started,
+        is_answers_revealed,
+        slide_id,
+      });
     },
   },
 });

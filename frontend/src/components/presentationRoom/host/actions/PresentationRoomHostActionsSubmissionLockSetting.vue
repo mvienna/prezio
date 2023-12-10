@@ -50,7 +50,7 @@ const { room, slideSettings } = storeToRefs(presentationsStore);
 const toggleSubmissionLockSetting = () => {
   const is_submission_locked = !room.value.is_submission_locked;
 
-  presentationsStore.updateRoom(undefined, undefined, undefined, undefined, {
+  presentationsStore.updateRoom(undefined, undefined, {
     countdown:
       !is_submission_locked && slideSettings.value.isLimitedTime
         ? Number(slideSettings.value.timeLimit)

@@ -264,12 +264,9 @@
               @update:model-value="
                 () => {
                   presentationsStore
-                    .updateRoom(
-                      props.row.id,
-                      props.row.room.id,
-                      null,
-                      props.row.room.token
-                    )
+                    .updateRoom(props.row.id, props.row.room.id, {
+                      token: props.row.room.token,
+                    })
                     .catch((error) => {
                       props.row.room.token = error.details.token;
 

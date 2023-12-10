@@ -216,15 +216,9 @@ watch(
                 ?.showAnswersManually === false);
 
           if (is_answers_revealed) {
-            presentationsStore.updateRoom(
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              {
-                is_answers_revealed,
-              }
-            );
+            presentationsStore.updateRoom(undefined, undefined, {
+              is_answers_revealed: true,
+            });
 
             isFinished.value = true;
           }
@@ -270,7 +264,7 @@ const handleRevealAnswers = () => {
   isQuizComingToEnd.value = false;
   isFinished.value = true;
 
-  presentationsStore.updateRoom(undefined, undefined, undefined, undefined, {
+  presentationsStore.updateRoom(undefined, undefined, {
     is_answers_revealed: true,
   });
 };

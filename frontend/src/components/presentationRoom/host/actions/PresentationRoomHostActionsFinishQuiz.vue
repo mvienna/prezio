@@ -25,7 +25,7 @@ const { room, presentation } = storeToRefs(presentationsStore);
  * finish quiz
  */
 const finishQuiz = () => {
-  presentationsStore.updateRoom(undefined, undefined, undefined, undefined, {
+  presentationsStore.updateRoom(undefined, undefined, {
     countdown: 3,
   });
 };
