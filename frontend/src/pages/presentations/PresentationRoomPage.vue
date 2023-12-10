@@ -71,7 +71,7 @@
                 room &&
                 !room.is_quiz_started &&
                 room.is_submission_locked &&
-                SLIDE_TYPES_OF_QUIZ.includes(slide.type)
+                SLIDE_TYPES_OF_QUIZ.includes(slide?.type)
               ))
               ? 'q-px-md'
               : ''
