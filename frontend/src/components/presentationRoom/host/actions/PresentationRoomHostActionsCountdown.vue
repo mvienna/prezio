@@ -63,11 +63,7 @@
 </template>
 
 <script setup>
-import {
-  countdown,
-  startCountdown,
-  timeLeftPercentage,
-} from "src/helpers/countdown";
+import { countdown, timeLeftPercentage } from "src/helpers/countdown";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { useCanvasStore } from "stores/canvas";

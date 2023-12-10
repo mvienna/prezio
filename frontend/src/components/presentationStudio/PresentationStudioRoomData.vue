@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
+import { onBeforeMount, onUnmounted, ref, watch } from "vue";
 import PresentationRoomDataLike from "components/presentationRoom/host/data/PresentationRoomHostDataLike.vue";
 import PresentationRoomDataLove from "components/presentationRoom/host/data/PresentationRoomHostDataLove.vue";
 import { usePresentationsStore } from "stores/presentations";

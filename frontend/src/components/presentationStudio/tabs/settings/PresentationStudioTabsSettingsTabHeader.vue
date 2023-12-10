@@ -154,7 +154,7 @@ import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
-import { SLIDE_TYPES } from "../../../../constants/presentationStudio";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
 /*
  * emits

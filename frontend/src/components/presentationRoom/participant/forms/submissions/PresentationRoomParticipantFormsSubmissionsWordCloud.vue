@@ -170,7 +170,7 @@ import { computed, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
-import { countdown, timeLeft, timeLeftPercentage } from "src/helpers/countdown";
+import { countdown, timeLeft } from "src/helpers/countdown";
 import { russianProfanityWords } from "src/constants/profanity";
 import { useI18n } from "vue-i18n";
 import PresentationRoomQuizProgressBar from "components/presentationRoom/participant/quiz/PresentationRoomQuizProgressBar.vue";

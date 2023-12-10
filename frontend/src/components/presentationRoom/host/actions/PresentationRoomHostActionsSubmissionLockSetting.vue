@@ -36,7 +36,6 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { startCountdown, stopCountdown } from "src/helpers/countdown";
 
 /*
  * stores

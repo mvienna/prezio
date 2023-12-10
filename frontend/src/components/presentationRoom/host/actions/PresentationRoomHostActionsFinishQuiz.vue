@@ -13,7 +13,6 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { timeLeft } from "src/helpers/countdown";
 
 /*
  * stores

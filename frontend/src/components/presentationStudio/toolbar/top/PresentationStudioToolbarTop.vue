@@ -186,8 +186,6 @@ import PresentationStudioToolbarTopLayouts from "components/presentationStudio/t
 import { useQuasar } from "quasar";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
-import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
-import { api } from "boot/axios";
 
 /*
  * variables
