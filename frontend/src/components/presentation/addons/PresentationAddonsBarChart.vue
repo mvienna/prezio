@@ -63,9 +63,9 @@ const tooltip = ref();
 const canvasRect = ref(canvasStore.canvasRect());
 const margin = computed(() => {
   return {
-    top: (canvasRect.value.height * 25) / 100,
+    top: (canvasRect.value.height * 15) / 100,
     right: (canvasRect.value.width * 10) / 100,
-    bottom: (canvasRect.value.height * 25) / 100,
+    bottom: (canvasRect.value.height * 30) / 100,
     left: (canvasRect.value.width * 10) / 100,
   };
 });
