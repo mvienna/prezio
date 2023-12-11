@@ -214,12 +214,8 @@ onUnmounted(() => {
 
 watch(
   () => authorizedParticipants.value,
-  (newValue, oldValue) => {
-    if (!oldValue?.length) {
-      generate();
-    } else {
-      update();
-    }
+  () => {
+    generate();
   },
   { deep: true }
 );
@@ -266,65 +262,65 @@ const generate = () => {
   isWordCloudGenerated.value = true;
 };
 
-const update = () => {
-  if (!isWordCloudGenerated.value) return generate();
-
-  d3.select(wordCloud.value)
-    .select("svg")
-    .select("g")
-    .selectAll("text")
-    .data([])
-    .exit()
-    .transition()
-    .duration(200)
-    .style("fill-opacity", 1e-6)
-    .attr("font-size", 1)
-    .remove();
-
-  const cloud = d3Cloud()
-    .size([width.value, height.value])
-    .words(data.value)
-    .padding(settings.padding)
-    .rotate(settings.rotate)
-    .font(settings.fontFamily)
-    .fontSize((d) => Math.sqrt(d.size) * settings.fontScale)
-    .on("word", ({ size, x, y, rotate, text, id, color }) => {
-      const textElements = d3
-        .select("svg")
-        .select("g")
-        .selectAll(`.word-cloud-text-${id}`)
-        .data([text]);
-
-      const enterText = textElements
-        .enter()
-        .append("text")
-        .attr("class", `word-cloud-text-${id}`)
-        .attr("font-size", 0)
-        .attr("transform", `translate(${x},${y}) rotate(${rotate})`)
-        .style("fill", color)
-
-        .text(text);
-
-      textElements
-        .merge(enterText)
-        .transition()
-        .duration(500)
-        .attr("font-size", size)
-        .attr("font-weight", settings.fontWeight)
-        .attr("transform", `translate(${x},${y}) rotate(${rotate})`);
-
-      textElements
-        .exit()
-        .transition()
-        .duration(200)
-        .style("fill-opacity", 1e-6)
-        .attr("font-size", 1)
-        .remove();
-    });
-
-  cloud.start();
-  settings.invalidation && settings.invalidation.then(() => cloud.stop());
-};
+// const update = () => {
+//   if (!isWordCloudGenerated.value) return generate();
+//
+//   d3.select(wordCloud.value)
+//     .select("svg")
+//     .select("g")
+//     .selectAll("text")
+//     .data([])
+//     .exit()
+//     .transition()
+//     .duration(200)
+//     .style("fill-opacity", 1e-6)
+//     .attr("font-size", 1)
+//     .remove();
+//
+//   const cloud = d3Cloud()
+//     .size([width.value, height.value])
+//     .words(data.value)
+//     .padding(settings.padding)
+//     .rotate(settings.rotate)
+//     .font(settings.fontFamily)
+//     .fontSize((d) => Math.sqrt(d.size) * settings.fontScale)
+//     .on("word", ({ size, x, y, rotate, text, id, color }) => {
+//       const textElements = d3
+//         .select("svg")
+//         .select("g")
+//         .selectAll(`.word-cloud-text-${id}`)
+//         .data([text]);
+//
+//       const enterText = textElements
+//         .enter()
+//         .append("text")
+//         .attr("class", `word-cloud-text-${id}`)
+//         .attr("font-size", 0)
+//         .attr("transform", `translate(${x},${y}) rotate(${rotate})`)
+//         .style("fill", color)
+//
+//         .text(text);
+//
+//       textElements
+//         .merge(enterText)
+//         .transition()
+//         .duration(500)
+//         .attr("font-size", size)
+//         .attr("font-weight", settings.fontWeight)
+//         .attr("transform", `translate(${x},${y}) rotate(${rotate})`);
+//
+//       textElements
+//         .exit()
+//         .transition()
+//         .duration(200)
+//         .style("fill-opacity", 1e-6)
+//         .attr("font-size", 1)
+//         .remove();
+//     });
+//
+//   cloud.start();
+//   settings.invalidation && settings.invalidation.then(() => cloud.stop());
+// };
 </script>
 
 <style lang="scss">
