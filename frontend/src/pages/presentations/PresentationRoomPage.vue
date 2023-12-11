@@ -221,7 +221,10 @@
                 "
                 confirm-btn-color="primary"
                 @cancel="showQuizInProgressWarning = false"
-                @confirm="handleSlideChange(slideChangeDirection)"
+                @confirm="
+                  room.is_quiz_started = false;
+                  handleSlideChange(slideChangeDirection);
+                "
               />
             </q-dialog>
           </div>
