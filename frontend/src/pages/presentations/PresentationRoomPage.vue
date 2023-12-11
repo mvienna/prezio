@@ -692,6 +692,17 @@ const connectToRoomChannels = async () => {
             });
           }, timeout);
         }
+
+        if (
+          (presentation.value.settings.quiz_data &&
+            JSON.parse(presentation.value.settings.quiz_data).countdown) ||
+          !presentation.value.settings.quiz_data
+        ) {
+          setTimeout(async () => {
+            await canvasStore.setElementsFromSlide(currentSlide.canvas_data);
+            canvasStore.redrawCanvas(false);
+          }, timeout / 2);
+        }
       } else {
         startCountdown(updatedCountdown);
 
@@ -703,6 +714,9 @@ const connectToRoomChannels = async () => {
             disableNotification: true,
           });
         }
+
+        await canvasStore.setElementsFromSlide(currentSlide.canvas_data);
+        canvasStore.redrawCanvas(false);
       }
     } else {
       stopCountdown();
@@ -737,24 +751,6 @@ const connectToRoomChannels = async () => {
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
       // leave only background & base fill
       filterElements();
-
-      // // countdown before quiz - set timer to reveal
-      // if (
-      //   room.value.is_quiz_started &&
-      //   room.value.is_submission_locked &&
-      //   timeLeft.value > 5
-      // ) {
-      //   if (
-      //     !presentation.value.settings.quiz_data ||
-      //     (presentation.value.settings.quiz_data &&
-      //       JSON.parse(presentation.value.settings.quiz_data).countdown)
-      //   ) {
-      //     setTimeout(async () => {
-      //       await canvasStore.setElementsFromSlide();
-      //       canvasStore.redrawCanvas(false, undefined, false);
-      //     }, (timeLeft.value - 5) * 1000);
-      //   }
-      // }
     }
 
     canvasStore.redrawCanvas(false, undefined, false);

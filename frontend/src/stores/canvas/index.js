@@ -194,8 +194,8 @@ export const useCanvasStore = defineStore("canvas", {
     /*
      * slide
      */
-    async setElementsFromSlide() {
-      this.elements = JSON.parse(slide.value.canvas_data) || [];
+    async setElementsFromSlide(canvas_data = slide.value.canvas_data) {
+      this.elements = JSON.parse(canvas_data) || [];
 
       const loadImage = (element) => {
         return new Promise(async (resolve, reject) => {
