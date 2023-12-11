@@ -170,6 +170,8 @@ const submit = async () => {
   } else {
     await presentationsStore.loginRoom(data);
   }
+
+  window.reload();
 };
 </script>
 

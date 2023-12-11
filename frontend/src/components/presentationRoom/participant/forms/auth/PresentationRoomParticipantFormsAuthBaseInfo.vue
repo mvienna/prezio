@@ -274,9 +274,11 @@ const submit = async () => {
   await window.Echo.leave(`public.room.${room.value.id}`);
   await window.Echo.leave(`presence.room.${room.value.id}`);
 
-  presentationsStore.loginRoom(form.value).catch((error) => {
+  await presentationsStore.loginRoom(form.value).catch((error) => {
     console.log(error);
   });
+
+  window.reload();
 };
 </script>
 
