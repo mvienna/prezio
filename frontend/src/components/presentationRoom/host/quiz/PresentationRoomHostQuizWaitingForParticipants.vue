@@ -201,7 +201,7 @@ onMounted(() => {
   resizeObserverPage.value.observe(page);
 
   setTimeout(() => {
-    if (isWordCloudGenerated.value) {
+    if (!isWordCloudGenerated.value) {
       generate();
     }
   }, 500);
