@@ -123,9 +123,9 @@ onMounted(() => {
   resizeObserverPage.value.observe(page);
 
   setTimeout(() => {
-    width.value = (canvasRect.value.width * 80) / 100;
-    height.value = (canvasRect.value.height * 50) / 100;
-    generate();
+    if (!isWordCloudGenerated.value) {
+      generate();
+    }
   }, 500);
 });
 
@@ -136,12 +136,9 @@ onUnmounted(() => {
 
 watch(
   () => props.words,
-  (newValue, oldValue) => {
-    if (!oldValue?.length) {
-      generate();
-    } else {
-      update();
-    }
+  () => {
+    if (!isWordCloudGenerated.value) return generate();
+    update();
   }
 );
 
@@ -150,6 +147,9 @@ watch(
  */
 const generate = () => {
   if (!wordCloud.value) return;
+
+  width.value = (canvasRect.value.width * 80) / 100;
+  height.value = (canvasRect.value.height * 50) / 100;
 
   const svg = d3
     .create("svg")
