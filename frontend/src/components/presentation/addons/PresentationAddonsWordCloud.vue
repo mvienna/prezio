@@ -136,8 +136,12 @@ onUnmounted(() => {
 
 watch(
   () => props.words,
-  () => {
-    update();
+  (newValue, oldValue) => {
+    if (!oldValue?.length) {
+      generate();
+    } else {
+      update();
+    }
   }
 );
 
