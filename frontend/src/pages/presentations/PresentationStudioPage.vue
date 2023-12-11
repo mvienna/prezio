@@ -410,8 +410,8 @@ const handleKeyDownEvent = (event) => {
 
   switch (mode.value) {
     /*
-     * turn off adding new text*text shortcuts (formatting)
-     *
+     * turn off adding new text
+     * text shortcuts (formatting)
      */
     case MODE_OPTIONS.value.text:
     case MODE_OPTIONS.value.textEditing:

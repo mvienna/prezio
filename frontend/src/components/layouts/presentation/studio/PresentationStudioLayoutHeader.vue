@@ -288,6 +288,7 @@
                 v-model="presentation.settings.is_fullscreen"
                 size="sm"
                 color="dark"
+                disable
               >
                 <template #default>
                   <div class="q-pl-xs text-dark">
@@ -543,9 +544,9 @@ const handleStartPresenting = async () => {
     }
   }
 
-  if (presentation.value.settings.is_fullscreen) {
-    await document.documentElement.requestFullscreen();
-  }
+  // if (presentation.value.settings.is_fullscreen) {
+  //   await document.documentElement.requestFullscreen();
+  // }
 
   if (!presentation.value?.room?.token) {
     await createPresentationRoom();
@@ -561,10 +562,9 @@ const handleStartPresenting = async () => {
 const openPresentationRoom = () => {
   if (!presentation.value?.room?.token) return;
 
-  router.push(
+  window.location =
     clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
-      presentation.value?.room?.token
-  );
+    presentation.value?.room?.token;
 };
 
 const createPresentationRoom = async () => {
