@@ -278,7 +278,7 @@ const submit = async () => {
     console.log(error);
   });
 
-  window.reload();
+  location.reload();
 };
 </script>
 

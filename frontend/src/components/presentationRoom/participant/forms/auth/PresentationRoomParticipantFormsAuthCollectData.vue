@@ -171,7 +171,7 @@ const submit = async () => {
     await presentationsStore.loginRoom(data);
   }
 
-  window.reload();
+  location.reload();
 };
 </script>
 
