@@ -207,9 +207,6 @@ class PresentationRoomController extends Controller
      */
     public function submitAnswers(Presentation $presentation, PresentationRoom $room, Request $request): JsonResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
-
         if ($room->is_submission_locked) {
             return $this->errorResponse(trans('errors.room.submissionIsLocked'));
         }
@@ -217,17 +214,18 @@ class PresentationRoomController extends Controller
         $answers = [];
         foreach ($request->answers as $answer) {
             $slide = PresentationSlide::find($request->slide_id);
+            $participant = PresentationRoomParticipant::find($request->input('participant_id'));
 
             $answer = PresentationSlideAnswer::create([
-                'participant_id' => $user->id,
+                'participant_id' => $participant->id,
                 'slide_id' => $slide->id,
                 'slide_type' => $slide->type,
                 'answer_data' => json_encode(['text' => $answer]),
-                'score' => $request->score,
-                'time_taken_to_answer' => $request->time_taken_to_answer
+                'score' => $request->input('score'),
+                'time_taken_to_answer' => $request->input('time_taken_to_answer')
             ]);
 
-            $answer['participant'] = $user->toArray();
+            $answer['participant'] = $participant->toArray();
             $answers[] = $answer;
         }
 

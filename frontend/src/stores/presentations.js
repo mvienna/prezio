@@ -580,6 +580,7 @@ export const usePresentationsStore = defineStore("presentations", {
             time_taken_to_answer: this.slideSettings.isLimitedTime
               ? Number(this.slideSettings.timeLimit) - timeLeft.value
               : null,
+            participant_id: this.participant.id,
           }
         )
         .catch((error) => {
