@@ -1,6 +1,7 @@
 import { colors } from "quasar";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
+import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
 
 const canvasStore = useCanvasStore();
 const { MODE_OPTIONS } = storeToRefs(canvasStore);
@@ -119,7 +120,14 @@ export const computeAverageBrightness = async (elements) => {
      */
   } else {
     const image = new Image();
-    image.src = background.imageSrc;
+
+    let base64;
+    if (background.imageSrc.includes("http")) {
+      base64 = await fetchAndConvertToBase64Image(background.imageSrc);
+      image.src = base64;
+    } else {
+      image.src = background.imageSrc;
+    }
 
     return await new Promise((resolve, reject) => {
       image.onload = () => {
