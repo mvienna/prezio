@@ -219,11 +219,8 @@ onUnmounted(() => {
 watch(
   () => authorizedParticipants.value,
   () => {
-    // if (!oldValue?.length) {
+    // TODO: restore update() and fix the whole word cloud disappearing on word deletion
     generate();
-    // } else {
-    //   update();
-    // }
   },
   { deep: true }
 );

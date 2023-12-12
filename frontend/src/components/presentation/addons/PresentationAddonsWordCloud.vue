@@ -140,12 +140,9 @@ onUnmounted(() => {
 
 watch(
   () => props.words,
-  (newValue, oldValue) => {
-    if (!oldValue?.length) {
-      generate();
-    } else {
-      update();
-    }
+  () => {
+    // TODO: restore update() and fix the whole word cloud disappearing on word deletion
+    generate();
   }
 );
 
@@ -153,7 +150,7 @@ watch(
  * d3 cloud
  */
 const generate = () => {
-  if (!wordCloud.value) return;
+  if (!wordCloud.value || !width.value || !height.value) return;
   d3.select(wordCloud.value).selectAll("svg").remove();
 
   const svg = d3
@@ -197,11 +194,9 @@ const generate = () => {
 };
 
 const update = () => {
-  if (!isWordCloudGenerated.value) return generate();
+  if (!isWordCloudGenerated.value) return;
 
   d3.select(wordCloud.value)
-    .select("svg")
-    .select("g")
     .selectAll("text")
     .data([])
     .exit()
