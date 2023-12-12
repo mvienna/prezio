@@ -186,6 +186,7 @@ export const useCanvasStore = defineStore("canvas", {
       this.canvas.style.transform = `scale(${newScale})`;
       this.scale = newScale;
 
+      // TODO: get rid of timeout
       setTimeout(() => {
         this.ctx.imageSmoothingEnabled = true;
       }, 200);

@@ -256,6 +256,7 @@ onMounted(async () => {
    * resize canvas
    */
   resizeCanvas();
+  // TODO: get rid of timeout by making canvasStore.redrawCanvas() async function (add promise)
   setTimeout(() => {
     canvasStore.redrawCanvas(false);
   }, 100);

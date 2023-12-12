@@ -105,6 +105,16 @@ onMounted(() => {
   resizeObserverCanvas.value = new ResizeObserver((entries) => {
     for (const entry of entries) {
       canvasRect.value = canvasStore.canvasRect();
+
+      if (
+        !isWordCloudGenerated.value &&
+        canvasRect.value.width > 0 &&
+        canvasRect.value.height > 0
+      ) {
+        width.value = (canvasRect.value.width * 80) / 100;
+        height.value = (canvasRect.value.height * 50) / 100;
+        generate();
+      }
     }
   });
   resizeObserverCanvas.value.observe(canvas);
@@ -121,12 +131,6 @@ onMounted(() => {
     }
   });
   resizeObserverPage.value.observe(page);
-
-  setTimeout(() => {
-    width.value = (canvasRect.value.width * 80) / 100;
-    height.value = (canvasRect.value.height * 50) / 100;
-    generate();
-  }, 500);
 });
 
 onUnmounted(() => {

@@ -3,11 +3,7 @@
     <div
       class="bar_chart"
       ref="barChart"
-      :style="`top: ${
-        canvasRect.top + canvasRect.height / 2 - height / 2 - margin.top
-      }px; left: ${
-        canvasRect.left + canvasRect.width / 2 - width / 2 - margin.left
-      }px;`"
+      :style="`top: ${top}; left: ${left};`"
     ></div>
   </div>
 </template>
@@ -50,17 +46,40 @@ const color = computed(() => {
 });
 
 const barChart = ref();
-const svg = ref();
+const isBarChartGenerated = ref(false);
 
+const svg = ref();
 const x = ref();
 const xAxis = ref();
-
 const y = ref();
 const yAxis = ref();
-
 const tooltip = ref();
 
 const canvasRect = ref(canvasStore.canvasRect());
+
+const width = ref(0);
+const height = ref(0);
+
+const left = computed(() => {
+  return (
+    canvasRect.value.left +
+    canvasRect.value.width / 2 -
+    width.value / 2 -
+    margin.value.left +
+    "px"
+  );
+});
+
+const top = computed(() => {
+  return (
+    canvasRect.value.top +
+    canvasRect.value.height / 2 -
+    height.value / 2 -
+    margin.value.top +
+    "px"
+  );
+});
+
 const margin = computed(() => {
   return {
     top: (canvasRect.value.height * 15) / 100,
@@ -69,81 +88,120 @@ const margin = computed(() => {
     left: (canvasRect.value.width * 10) / 100,
   };
 });
-const width = computed(() => {
-  return (canvasRect.value.width * 80) / 100;
-});
-const height = computed(() => {
-  return (canvasRect.value.height * 30) / 100;
-});
+
+/*
+ * hooks
+ */
+const resizeObserverCanvas = ref();
+const resizeObserverPage = ref();
 
 onMounted(() => {
-  setTimeout(() => {
-    canvasRect.value = canvasStore.canvasRect();
+  const canvas = document.getElementById("canvas");
+  resizeObserverCanvas.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      canvasRect.value = canvasStore.canvasRect();
 
-    tooltip.value = d3
-      .select(barChart.value)
-      .append("div")
-      .style("opacity", 0)
-      .attr("class", "tooltip")
-      .style("position", "absolute")
-      .style("border-radius", "16px")
-      .style("padding", "8px 16px")
-      .style("background", "rgba(0, 0, 0, 0.5)")
-      .style("color", "white")
-      .style("backdrop-filter", "blur(4px)");
+      width.value = (canvasRect.value.width * 80) / 100;
+      height.value = (canvasRect.value.height * 30) / 100;
 
-    svg.value = d3
-      .select(barChart.value)
-      .append("svg")
-      .attr("width", width.value)
-      .attr("height", height.value)
-      .append("g")
-      .on("mouseover", (d) => {
-        tooltip.value.style("opacity", 1);
-        d.target.style.opacity = 0.85;
-      })
-      .on("mousemove", (d) => {
-        if (!d.target?.__data__?.value) {
-          tooltip.value.style("opacity", 0);
-          d.target
-            .querySelectorAll("rect")
-            .forEach((rect) => (rect.style.opacity = 1));
-          return;
-        }
+      if (canvasRect.value.width > 0 && canvasRect.value.height > 0) {
+        update();
+      }
+    }
+  });
+  resizeObserverCanvas.value.observe(canvas);
 
-        tooltip.value
-          .html(
-            "<b>Ответов: " +
-              d.target.__data__.value +
-              "</b></br><div>" +
-              d.target.__data__.tooltipData.join(", ") +
-              "</div>"
-          )
-          .style("left", d.offsetX + "px")
-          .style("top", d.offsetY + "px");
-      })
-      .on("mouseleave", (d) => {
+  const page = document.getElementsByClassName("q-page-container")[0];
+  resizeObserverPage.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      if (
+        window.screen.width > canvasStore.canvasRect().width &&
+        !showRoomInvitationPanel.value
+      ) {
+        canvasRect.value = canvasStore.canvasRect();
+      }
+    }
+  });
+  resizeObserverPage.value.observe(page);
+});
+
+onUnmounted(() => {
+  resizeObserverCanvas.value.disconnect();
+  resizeObserverPage.value.disconnect();
+});
+
+watch(
+  () => props.data,
+  () => {
+    update();
+  }
+);
+
+/*
+ * d3 bar chart
+ */
+const generate = () => {
+  if (!barChart.value) return;
+  d3.select(barChart.value).selectAll("svg").remove();
+
+  tooltip.value = d3
+    .select(barChart.value)
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("border-radius", "16px")
+    .style("padding", "8px 16px")
+    .style("background", "rgba(0, 0, 0, 0.5)")
+    .style("color", "white")
+    .style("backdrop-filter", "blur(4px)");
+
+  svg.value = d3
+    .select(barChart.value)
+    .append("svg")
+    .attr("width", width.value)
+    .attr("height", height.value)
+    .append("g")
+    .on("mouseover", (d) => {
+      tooltip.value.style("opacity", 1);
+      d.target.style.opacity = 0.85;
+    })
+    .on("mousemove", (d) => {
+      if (!d.target?.__data__?.value) {
         tooltip.value.style("opacity", 0);
         d.target
           .querySelectorAll("rect")
           .forEach((rect) => (rect.style.opacity = 1));
-      });
+        return;
+      }
 
-    xAxis.value = svg.value.append("g");
-    yAxis.value = svg.value.append("g");
+      tooltip.value
+        .html(
+          "<b>Ответов: " +
+            d.target.__data__.value +
+            "</b></br><div>" +
+            d.target.__data__.tooltipData.join(", ") +
+            "</div>"
+        )
+        .style("left", d.offsetX + "px")
+        .style("top", d.offsetY + "px");
+    })
+    .on("mouseleave", (d) => {
+      tooltip.value.style("opacity", 0);
+      d.target
+        .querySelectorAll("rect")
+        .forEach((rect) => (rect.style.opacity = 1));
+    });
 
-    update(true);
-  }, 500);
+  xAxis.value = svg.value.append("g");
+  yAxis.value = svg.value.append("g");
 
-  window.addEventListener("resize", onResize);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", onResize);
-});
+  isBarChartGenerated.value = true;
+  update();
+};
 
 const update = (isOnLoad = false) => {
-  if (!svg.value) return;
+  if (!isBarChartGenerated.value) return generate();
 
   svg.value = d3
     .select(barChart.value)
@@ -248,39 +306,6 @@ const update = (isOnLoad = false) => {
     .attr("x", (d) => x.value(d.group) + xOffset)
     .attr("y", (d) => y.value(d.value) - barSize)
     .attr("preserveAspectRatio", "xMidYMid slice");
-};
-
-watch(
-  () => props.data,
-  () => {
-    if (props.data) {
-      update();
-    }
-  },
-  { deep: true }
-);
-
-watch(
-  () => showRoomInvitationPanel.value,
-  () => {
-    setTimeout(() => {
-      canvasRect.value = canvasStore.canvasRect();
-      update();
-    }, 500);
-  },
-  { deep: true }
-);
-
-watch(
-  () => scale.value,
-  () => {
-    onResize();
-  }
-);
-
-const onResize = () => {
-  canvasRect.value = canvasStore.canvasRect();
-  update();
 };
 
 watch(

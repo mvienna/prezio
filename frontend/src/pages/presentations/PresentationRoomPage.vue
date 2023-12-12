@@ -123,17 +123,12 @@
 
             <!-- HOST - addons (word cloud, charts) -->
             <PresentationStudioAddons
-              v-if="isHost && isLoaded && slide?.type !== SLIDE_TYPES.CONTENT"
+              v-if="isHost && slide?.type !== SLIDE_TYPES.CONTENT"
             />
 
             <!-- HOST - quiz -->
             <template
-              v-if="
-                isHost &&
-                isLoaded &&
-                SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
-                room
-              "
+              v-if="isHost && SLIDE_TYPES_OF_QUIZ.includes(slide?.type) && room"
             >
               <!-- HOST - waiting for participants (word cloud) -->
               <PresentationRoomHostQuizWaitingForParticipants
@@ -457,9 +452,10 @@ onMounted(async () => {
           JSON.parse(presentation.value.settings.quiz_data).liveChat) &&
         isAuthenticated.value
       ) {
+        const invitationPanelAnimationDuration = 6000;
         setTimeout(() => {
           showRoomChat.value = true;
-        }, 600);
+        }, invitationPanelAnimationDuration);
       }
     }
 
@@ -467,6 +463,7 @@ onMounted(async () => {
      * resize canvas
      */
     resizeCanvas();
+    // TODO: get rid of timeout by making canvasStore.redrawCanvas() async function (add promise)
     setTimeout(() => {
       canvasStore.redrawCanvas(false, undefined, false);
     }, 100);
@@ -551,6 +548,7 @@ watch(
         await initSlide();
 
         resizeCanvas();
+        // TODO: get rid of timeout by making canvasStore.redrawCanvas() async function (add promise)
         setTimeout(() => {
           canvasStore.redrawCanvas(false, undefined, false);
           isLoaded.value = true;

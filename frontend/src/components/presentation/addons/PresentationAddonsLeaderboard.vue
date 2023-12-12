@@ -191,38 +191,36 @@ const maxScore = computed(() => {
  */
 const canvasRect = ref(canvasStore.canvasRect());
 
-watch(
-  () => showRoomInvitationPanel.value,
-  () => {
-    setTimeout(() => {
-      canvasRect.value = canvasStore.canvasRect();
-    }, 500);
-  },
-  { deep: true }
-);
-
-watch(
-  () => scale.value,
-  () => {
-    onResize();
-  }
-);
+const resizeObserverCanvas = ref();
+const resizeObserverPage = ref();
 
 onMounted(() => {
-  setTimeout(() => {
-    onResize();
-  }, 500);
+  const canvas = document.getElementById("canvas");
+  resizeObserverCanvas.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      canvasRect.value = canvasStore.canvasRect();
+    }
+  });
+  resizeObserverCanvas.value.observe(canvas);
 
-  window.addEventListener("resize", onResize);
+  const page = document.getElementsByClassName("q-page-container")[0];
+  resizeObserverPage.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      if (
+        window.screen.width > canvasStore.canvasRect().width &&
+        !showRoomInvitationPanel.value
+      ) {
+        canvasRect.value = canvasStore.canvasRect();
+      }
+    }
+  });
+  resizeObserverPage.value.observe(page);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("resize", onResize);
+  resizeObserverCanvas.value.disconnect();
+  resizeObserverPage.value.disconnect();
 });
-
-const onResize = () => {
-  canvasRect.value = canvasStore.canvasRect();
-};
 </script>
 
 <style scoped lang="scss">
