@@ -194,10 +194,10 @@ const generate = () => {
     });
 
   xAxis.value = svg.value.append("g");
-  yAxis.value = svg.value.append("g");
+  // yAxis.value = svg.value.append("g");
 
   isBarChartGenerated.value = true;
-  update();
+  update(true);
 };
 
 const update = (isOnLoad = false) => {
@@ -269,13 +269,13 @@ const update = (isOnLoad = false) => {
 
   xAxis.value
     .selectAll("text")
-    .style("font-size", "16px")
+    .style("font-size", "22px")
     .style("fill", color.value)
     .call(wrap, x.value.bandwidth());
   xAxis.value.selectAll("path").style("stroke", color.value);
   xAxis.value.selectAll("line").style("stroke", color.value);
 
-  const maxWidth = 75;
+  const maxWidth = 100;
   const barSize = Math.min(maxWidth, x.value.bandwidth());
 
   const xOffset =
@@ -288,12 +288,25 @@ const update = (isOnLoad = false) => {
     .transition()
     .duration(isOnLoad ? 0 : 200)
     .attr("x", (d) => x.value(d.group) + xOffset)
-    .attr("y", (d) => y.value(d.value))
+    .attr("y", (d) => y.value(d.value) + 0.5)
     .attr("width", barSize)
     .attr("height", (d) => (d.value > 0 ? height.value - y.value(d.value) : 0))
     .attr("width", barSize)
     .attr("height", (d) => (d.value > 0 ? height.value - y.value(d.value) : 0))
-    .attr("fill", (d) => (d.isCorrect ? "#21BA45" : "#EA5757"));
+    .attr("fill", (d) => (d.isCorrect ? "#21BA45" : "#EA5757"))
+    .attr("stroke", color.value)
+    .attr("stroke-width", 1);
+
+  svg.value
+    .selectAll(".bar-text")
+    .data(props.data)
+    .join("text")
+    .attr("x", (d) => x.value(d.group) + xOffset + barSize / 2)
+    .attr("y", (d) => y.value(d.value) - 10 - (d.image ? 100 : 0)) // Adjust the y position as needed
+    .attr("text-anchor", "middle")
+    .style("font-size", "22px")
+    .style("fill", color.value)
+    .text((d) => d.value);
 
   svg.value
     .selectAll("image")
@@ -311,9 +324,7 @@ const update = (isOnLoad = false) => {
 watch(
   () => averageBackgroundBrightness.value,
   () => {
-    xAxis.value?.selectAll("text")?.style("fill", color.value);
-    xAxis.value?.selectAll("path")?.style("stroke", color.value);
-    xAxis.value?.selectAll("line")?.style("stroke", color.value);
+    update();
   }
 );
 </script>
@@ -322,13 +333,5 @@ watch(
 .bar_chart {
   position: fixed;
   z-index: 1;
-}
-
-.bar_chart,
-.bar_chart div,
-svg,
-g,
-rect {
-  transition: 0.6s;
 }
 </style>
