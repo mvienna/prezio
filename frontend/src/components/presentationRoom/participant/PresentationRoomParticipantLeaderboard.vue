@@ -10,10 +10,7 @@
       style="z-index: 0"
     />
 
-    <div
-      style="z-index: 2; overflow-y: scroll;"
-      class="scroll--hidden"
-    >
+    <div style="z-index: 2; overflow-y: scroll" class="scroll--hidden">
       <template v-if="results?.length">
         <div class="row justify-center">
           <q-img src="/assets/images/champion.svg" class="champion_cup" />
@@ -111,6 +108,11 @@
                       result.participantData?.avatar +
                       " " +
                       result.participantData?.name
+                    }}
+                    {{
+                      result?.participant?.id === participant?.id
+                        ? " " + $t("you")
+                        : ""
                     }}
                   </div>
                 </q-card-section>
