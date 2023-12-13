@@ -181,7 +181,7 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { api } from "boot/axios";
 import { date } from "quasar";
@@ -239,6 +239,19 @@ const sendNewMessage = () => {
       console.log(error);
     });
 };
+
+watch(
+  () => room.value.messages,
+  () => {
+    const messages = document.getElementsByClassName("chat__messages__item");
+
+    messages[messages.length - 1].scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
+  }
+);
 </script>
 
 <style scoped lang="scss">
