@@ -91,7 +91,7 @@ const isResetPresentation = ref(true);
 const handleResettingResults = () => {
   if (isResetPresentation.value) {
     api
-      .delete(`/presentation/${presentation.value.id}/answers`)
+      .delete(`/presentation/${presentation.value.id}/results`)
       .then(() => {
         presentation.value.slides = presentation.value.slides.map((item) => {
           item.answers = [];
@@ -113,7 +113,7 @@ const handleResettingResults = () => {
       });
   } else {
     api
-      .delete(`/presentation/slide/${slide.value.id}/answers`)
+      .delete(`/presentation/slide/${slide.value.id}/results`)
       .then(() => {
         slide.value.answers = [];
         presentationsStore.syncCurrentSlideWithPresentationSlides();
