@@ -299,23 +299,33 @@ const prepareElementsForNewSlide = (type) => {
   /*
    * add base fill
    */
-  const baseFill = {
-    id: generateUniqueId(undefined, []),
-    mode: MODE_OPTIONS.value.baseFill,
-    isVisible: true,
-    isLocked: true,
-    type: SHAPES_OPTIONS.square,
-    x: 0,
-    y: 0,
-    width: 2560,
-    height: 1440,
-    rotationAngle: 0,
-    strokeColor: "#FFFFFF",
-    fillColor: "#FFFFFF",
-    lineWidth: "4px",
-  };
+  if (slide.value) {
+    const designElements = elements.value.filter((element) =>
+      [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+        element.mode
+      )
+    );
 
-  preparedElements.push(baseFill);
+    preparedElements = [...preparedElements, ...designElements];
+  } else {
+    const baseFill = {
+      id: generateUniqueId(undefined, []),
+      mode: MODE_OPTIONS.value.baseFill,
+      isVisible: true,
+      isLocked: true,
+      type: SHAPES_OPTIONS.square,
+      x: 0,
+      y: 0,
+      width: 2560,
+      height: 1440,
+      rotationAngle: 0,
+      strokeColor: "#FFFFFF",
+      fillColor: "#FFFFFF",
+      lineWidth: "4px",
+    };
+
+    preparedElements.push(baseFill);
+  }
 
   return preparedElements;
 };
