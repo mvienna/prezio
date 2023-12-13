@@ -452,7 +452,7 @@ onMounted(async () => {
           JSON.parse(presentation.value.settings.quiz_data).liveChat) &&
         isAuthenticated.value
       ) {
-        const invitationPanelAnimationDuration = 6000;
+        const invitationPanelAnimationDuration = 600;
         setTimeout(() => {
           showRoomChat.value = true;
         }, invitationPanelAnimationDuration);
@@ -842,6 +842,13 @@ const connectToRoomChannels = async () => {
           });
         }, 2000);
       }
+    }
+  });
+
+  channel.listen("PresentationRoomParticipantsErasedEvent", () => {
+    if (participant.value) {
+      localStorage.removeItem("participantToken");
+      location.reload();
     }
   });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Presentation\Slide;
 
+use App\Events\PresentationRoomParticipantsErasedEvent;
 use App\Events\PresentationRoomUpdatedEvent;
 use App\Events\PresentationSlideUpdatedEvent;
 use App\Http\Controllers\Controller;
@@ -85,6 +86,7 @@ class PresentationSlideAnswerController extends Controller
         if ($presentation->room) {
             $presentation->room?->messages()?->delete();
             $presentation->room?->reactions()?->delete();
+            $presentation->room?->participants()?->delete();
 
             $presentation->room?->update([
                 'is_quiz_started' => false,
@@ -94,6 +96,7 @@ class PresentationSlideAnswerController extends Controller
 
             $presentation->room->load('messages', 'reactions');
             event(new PresentationRoomUpdatedEvent($presentation->room));
+            event(new PresentationRoomParticipantsErasedEvent($presentation->room));
         }
 
         return $this->successResponse();
