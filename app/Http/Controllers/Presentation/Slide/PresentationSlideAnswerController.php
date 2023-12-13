@@ -92,6 +92,7 @@ class PresentationSlideAnswerController extends Controller
                 'countdown' => 0
             ]);
 
+            $presentation->room->load('messages', 'reactions');
             event(new PresentationRoomUpdatedEvent($presentation->room));
         }
 
