@@ -11,8 +11,8 @@
     />
 
     <div
-      style="z-index: 2; overflow-y: scroll; height: calc(100vh - 96px)"
-      class="scroll--hidden q-pb-lg"
+      style="z-index: 2; overflow-y: scroll;"
+      class="scroll--hidden"
     >
       <template v-if="results?.length">
         <div class="row justify-center">
@@ -51,7 +51,7 @@
           </div>
         </div>
 
-        <div class="row no-wrap justify-center q-pa-lg">
+        <div class="row no-wrap justify-center q-px-lg q-pt-lg q-pb-sm">
           <div class="column no-wrap q-gutter-md full-width q-pt-md">
             <div
               v-for="(result, index) in results"
