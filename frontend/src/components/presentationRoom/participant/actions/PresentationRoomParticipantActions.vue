@@ -34,7 +34,7 @@ const { presentation, slide, room } = storeToRefs(presentationsStores);
 .room_actions {
   position: fixed;
   right: 24px;
-  bottom: 24px;
+  bottom: calc(40px + 24px);
   z-index: 1;
 
   .room_actions__card {
@@ -57,7 +57,6 @@ const { presentation, slide, room } = storeToRefs(presentationsStores);
 @media screen and (max-width: 1023px) {
   .room_actions {
     right: 8px;
-    bottom: 8px;
 
     .room_actions__card {
       height: 50px;
