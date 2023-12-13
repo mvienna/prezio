@@ -3,16 +3,16 @@
     <Vue3Lottie
       v-if="results?.length"
       :animation-data="confettiJSON"
-      :height="canvasRect.height"
+      :height="canvasRect.height * 65 / 100"
       :width="canvasRect.width"
-      class="fixed"
+      class="fixed "
       :scale="2"
       style="z-index: 1"
-      :style="`top: ${canvasRect.top}px; left: ${canvasRect.left}px;`"
+      :style="`top: ${canvasRect.top + (canvasRect.height * 20) / 100}px; left: ${canvasRect.left}px;`"
     />
 
     <div
-      class="leaderboard scroll--hidden q-pa-sm"
+      class="leaderboard scroll--hidden q-pa-sm "
       :style="`top: ${
         canvasRect.top + (canvasRect.height * 20) / 100
       }px; left: ${canvasRect.left + (canvasRect.width * 10) / 100}px; width: ${
