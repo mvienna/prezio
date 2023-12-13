@@ -175,6 +175,7 @@ watch(
  * change slide type
  */
 const handleChangingSlideType = async (type) => {
+  if (type === slide.value?.type) return;
   const newElements = prepareElementsForNewSlide(type);
 
   slide.value = {
