@@ -241,15 +241,18 @@ const sendNewMessage = () => {
 };
 
 watch(
-  () => room.value.messages,
+  () => room.value?.messages,
   () => {
     const messages = document.getElementsByClassName("chat__messages__item");
+    const lastMessage = messages?.[messages?.length - 1];
 
-    messages[messages.length - 1].scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-      inline: "nearest",
-    });
+    if (lastMessage) {
+      lastMessage.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
   }
 );
 </script>
