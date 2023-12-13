@@ -150,6 +150,12 @@ export default {
         },
       },
 
+      hasAlreadyAnswered: {
+        title: "Вы уже отвечали на этот вопрос",
+        description:
+          "Давайте подождем и посмотрим, каких результатов вы достигли",
+      },
+
       inProgressWarning: {
         title: "Викторина все еще идет",
         message:

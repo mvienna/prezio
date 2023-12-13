@@ -145,6 +145,11 @@ export default {
         },
       },
 
+      hasAlreadyAnswered: {
+        title: "You've already answered this question",
+        description: "Let's wait and see what results you've achieved",
+      },
+
       inProgressWarning: {
         title: "Quiz is in progress",
         message: "If you want to change the slide anyway, press the same key",

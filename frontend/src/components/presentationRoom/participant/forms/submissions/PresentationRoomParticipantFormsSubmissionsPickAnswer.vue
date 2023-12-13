@@ -14,6 +14,7 @@
   >
     <PresentationRoomParticipantQuizLayout
       :layout-title-element="layoutTitleElement"
+      :has-already-answered="hasAlreadyAnswered"
     >
       <template #default>
         <!-- question title -->

@@ -21,16 +21,38 @@
     <!-- before-quiz timeout-->
     <div
       v-else-if="
-        room &&
-        room.is_quiz_started &&
-        room.is_submission_locked &&
-        timeLeft !== -1
+        (room &&
+          room.is_quiz_started &&
+          room.is_submission_locked &&
+          timeLeft !== -1) ||
+        (hasAlreadyAnswered && !room.is_answers_revealed)
       "
     >
       <transition-group appear enter-active-class="animated zoomIn">
+        <!-- already answered -->
+        <div v-if="hasAlreadyAnswered">
+          <div class="row justify-center">
+            <q-avatar size="128px">
+              {{ participantData.avatar }}
+            </q-avatar>
+          </div>
+
+          <div class="text-h6 text-semibold text-center">
+            {{ $t("presentationRoom.quizCountdown.hasAlreadyAnswered.title") }}
+          </div>
+
+          <div class="text-center" style="opacity: 0.7">
+            {{
+              $t(
+                "presentationRoom.quizCountdown.hasAlreadyAnswered.description"
+              )
+            }}
+          </div>
+        </div>
+
         <!-- question №n out of x -->
         <div
-          v-if="
+          v-else-if="
             timeLeft > 5 ||
             (presentation.settings.quiz_data &&
               !JSON.parse(presentation.settings.quiz_data).countdown)
@@ -138,6 +160,7 @@ import { computed } from "vue";
  */
 defineProps({
   layoutTitleElement: { type: Object, default: null },
+  hasAlreadyAnswered: { type: Boolean },
 });
 
 /*
