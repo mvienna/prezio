@@ -217,7 +217,6 @@ const update = (isOnLoad = false) => {
     );
 
   svg.value.selectAll("image").remove();
-  svg.value.selectAll("text").remove();
 
   x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
   xAxis.value = svg.value
@@ -302,6 +301,7 @@ const update = (isOnLoad = false) => {
     .selectAll(".bar-text")
     .data(props.data)
     .join("text")
+    .attr("class", "bar-text")
     .attr("x", (d) => x.value(d.group) + xOffset + barSize / 2)
     .attr("y", (d) => y.value(d.value) - 10 - (d.image ? 100 : 0)) // Adjust the y position as needed
     .attr("text-anchor", "middle")
