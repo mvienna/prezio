@@ -217,6 +217,7 @@ const update = (isOnLoad = false) => {
     );
 
   svg.value.selectAll("image").remove();
+  svg.value.selectAll("text").remove();
 
   x.value = d3.scaleBand().range([0, width.value]).padding(0.2);
   xAxis.value = svg.value
