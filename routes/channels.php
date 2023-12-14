@@ -17,5 +17,9 @@ Broadcast::channel('public.room.{id}', function () {
 });
 
 Broadcast::channel('presence.room.{id}', function ($user) {
-    return $user;
+    if (auth()->check()) {
+        return $user;
+    } else {
+        return false;
+    }
 });
