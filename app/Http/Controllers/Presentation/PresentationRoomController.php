@@ -207,9 +207,9 @@ class PresentationRoomController extends Controller
      */
     public function submitAnswers(Presentation $presentation, PresentationRoom $room, Request $request): JsonResponse
     {
-        if ($room->is_submission_locked) {
-            return $this->errorResponse(trans('errors.room.submissionIsLocked'));
-        }
+//        if ($room->is_submission_locked) {
+//            return $this->errorResponse(trans('errors.room.submissionIsLocked'));
+//        }
 
         $answers = [];
         foreach ($request->answers as $answer) {
