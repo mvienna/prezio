@@ -66,11 +66,11 @@ export default async ({ app, router }) => {
 
   window.Pusher = Pusher;
   window.Echo = new Echo(
-    process.env.DEV
+    process.env.PUSHER_SCHEME === "http"
       ? { ...options, wsHost: process.env.PUSHER_HOST }
       : {
           ...options,
-          wssHost: `ws-${process.env.PUSHER_APP_CLUSTER}.pusher.com`,
+          wssHost: process.env.PUSHER_HOST,
         }
   );
 
