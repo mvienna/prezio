@@ -60,7 +60,7 @@ export default async ({ app, router }) => {
 
     enabledTransports: ["ws", "wss"],
 
-    wsHost: process.env.PUSHER_HOST,
+    // wsHost: process.env.PUSHER_HOST,
     wssHost: process.env.PUSHER_HOST,
 
     authEndpoint: process.env.PUSHER_APP_ENDPOINT,
