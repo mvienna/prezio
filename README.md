@@ -10,7 +10,7 @@ Stack:
 - [Laravel - The PHP Framework](https://laravel.com/)
 
 
-Helpful links:
+Project assets:
 - [Trello tasks](https://trello.com/b/uPN6x14I/prezio)
 - [Figma design](https://www.figma.com/file/1C8H55WvAZWarn3oSsQUzp/Prezio?type=design&mode=design)
 - [Doc](https://trello.com/c/8OE5yfdG/1-%D1%82%D0%B7)
@@ -19,7 +19,7 @@ Helpful links:
 
 ## Setting up
 
-> Don't forget to setup .env for your development environment
+> ‼️ Don't forget to setup .env for your development environment
 
 ### 🔒️ Backend
 
@@ -36,8 +36,12 @@ composer install
 
 php artisan key:gen
 
+# or use valet
 - php artisan serve
-- php artisan queue:listen
+
+- php artisan websockets:serve
+- php artisan schedule:word
+- php artisan queue:work
 ```
 
 ### 🌐 Frontend
