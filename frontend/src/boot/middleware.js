@@ -54,14 +54,14 @@ export default async ({ app, router }) => {
     wsPort: process.env.PUSHER_PORT || 80,
     wssPort: process.env.PUSHER_PORT || 443,
 
-    encrypted: process.env.PUSHER_SCHEME !== "http",
-    forceTLS: process.env.PUSHER_SCHEME !== "http",
-    disableStats: true,
+    // encrypted: process.env.PUSHER_SCHEME !== "http",
+    // forceTLS: process.env.PUSHER_SCHEME !== "http",
+    // disableStats: true,
 
     enabledTransports: ["ws", "wss"],
 
-    // wsHost: process.env.PUSHER_HOST,
-    wssHost: process.env.PUSHER_HOST,
+    wsHost: process.env.PUSHER_HOST,
+    // wssHost: process.env.PUSHER_HOST,
 
     authEndpoint: process.env.PUSHER_APP_ENDPOINT,
   };
