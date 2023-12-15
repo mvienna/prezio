@@ -54,25 +54,20 @@ export default async ({ app, router }) => {
     wsPort: process.env.PUSHER_PORT || 80,
     wssPort: process.env.PUSHER_PORT || 443,
 
-    encrypted: !process.env.DEV,
-    forceTLS: !process.env.DEV,
+    encrypted: process.env.PUSHER_SCHEME !== "http",
+    forceTLS: process.env.PUSHER_SCHEME !== "http",
     disableStats: true,
 
     enabledTransports: ["ws", "wss"],
-    disabledTransports: ["sockjs", "xhr_polling", "xhr_streaming"],
+
+    wsHost: process.env.PUSHER_HOST,
+    wssHost: process.env.PUSHER_HOST,
 
     authEndpoint: process.env.PUSHER_APP_ENDPOINT,
   };
 
   window.Pusher = Pusher;
-  window.Echo = new Echo(
-    process.env.PUSHER_SCHEME === "http"
-      ? { ...options, wsHost: process.env.PUSHER_HOST }
-      : {
-          ...options,
-          wssHost: process.env.PUSHER_HOST,
-        }
-  );
+  window.Echo = new Echo(options);
 
   /*
    * route middleware
