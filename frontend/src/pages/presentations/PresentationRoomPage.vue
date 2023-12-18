@@ -922,7 +922,19 @@ const handleSlideChange = async (direction) => {
   const quizInProgressWarning = warnAboutQuizInProgress(direction);
   if (!quizInProgressWarning) return;
 
-  // load new slide
+  // instant slide change (local)
+  slide.value = newSlide;
+  slideSettings.value = slide.value.settings_data
+    ? JSON.parse(slide.value.settings_data)
+    : {};
+  presentationsStore.syncCurrentSlideWithPresentationSlides();
+  await canvasStore.setElementsFromSlide();
+  if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
+    filterElements();
+  }
+  canvasStore.redrawCanvas(false, undefined, false);
+
+  // process slide change (update room data)
   await handleRoomUpdateOnSlideChange(undefined, direction, newSlide);
 };
 
