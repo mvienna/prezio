@@ -2,27 +2,29 @@ import { ref, computed } from "vue";
 
 const timeLeft = ref(-1);
 const timeLeftPercentage = ref();
-const countdownInterval = ref();
+let countdownWorker;
 
 const startCountdown = (seconds = 60) => {
   stopCountdown();
 
   timeLeft.value = seconds;
 
-  countdownInterval.value = setInterval(() => {
-    if (timeLeft.value === 0.0) {
+  countdownWorker = new Worker(new URL("./worker.js", import.meta.url));
+  countdownWorker.onmessage = (event) => {
+    if (event.data === "countdownComplete") {
       stopCountdown();
-      return;
+    } else {
+      timeLeft.value = event.data.timeLeft;
+      timeLeftPercentage.value = event.data.timeLeftPercentage;
     }
+  };
 
-    timeLeft.value = parseFloat((timeLeft.value - 0.1).toFixed(2));
-    timeLeftPercentage.value = ((seconds - timeLeft.value) * 100) / seconds;
-  }, 100);
+  countdownWorker.postMessage(seconds);
 };
 
 const stopCountdown = () => {
-  if (countdownInterval.value) {
-    clearInterval(countdownInterval.value);
+  if (countdownWorker) {
+    countdownWorker.terminate();
     timeLeft.value = -1;
     timeLeftPercentage.value = null;
   }
