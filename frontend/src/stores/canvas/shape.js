@@ -13,7 +13,7 @@ const { canvas, MODE_OPTIONS, elements, selectedElement } =
   storeToRefs(canvasStore);
 
 const presentationsStore = usePresentationsStore();
-const { averageBackgroundBrightness } = storeToRefs(presentationsStore);
+const { averageBackgroundBrightness, slide } = storeToRefs(presentationsStore);
 
 export const useCanvasShapeStore = defineStore("canvasShape", {
   state: () => ({
@@ -83,6 +83,9 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         averageBackgroundBrightness.value = await computeAverageBrightness(
           elements.value
         );
+        slide.value.previewAverageBrightness =
+          averageBackgroundBrightness.value;
+        presentationsStore.syncCurrentSlideWithPresentationSlides();
       }
 
       if (isForceSelectCreatedElement) {

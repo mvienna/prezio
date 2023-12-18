@@ -9,7 +9,7 @@ const canvasStore = useCanvasStore();
 const { ctx, canvas, elements, MODE_OPTIONS } = storeToRefs(canvasStore);
 
 const presentationsStore = usePresentationsStore();
-const { averageBackgroundBrightness } = storeToRefs(presentationsStore);
+const { averageBackgroundBrightness, slide } = storeToRefs(presentationsStore);
 
 export const useCanvasMediaStore = defineStore("canvasMedia", {
   actions: {
@@ -97,6 +97,9 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           averageBackgroundBrightness.value = await computeAverageBrightness(
             elements.value
           );
+          slide.value.previewAverageBrightness =
+            averageBackgroundBrightness.value;
+          presentationsStore.syncCurrentSlideWithPresentationSlides();
         }
 
         ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);

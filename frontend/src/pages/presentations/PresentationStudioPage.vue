@@ -248,9 +248,19 @@ onMounted(async () => {
   /*
    * compute background brightness
    */
-  averageBackgroundBrightness.value = await computeAverageBrightness(
-    elements.value
-  );
+  presentation.value.slides.forEach(async (item, index) => {
+    presentation.value.slides[index].previewAverageBrightness =
+      await computeAverageBrightness(
+        item.id === slide.value.id
+          ? JSON.parse(slide.value.canvas_data)
+          : JSON.parse(item.canvas_data)
+      );
+
+    if (item.id === slide.value.id) {
+      averageBackgroundBrightness.value =
+        presentation.value.slides[index].previewAverageBrightness;
+    }
+  });
 
   /*
    * resize canvas
@@ -765,6 +775,8 @@ watch(
     averageBackgroundBrightness.value = await computeAverageBrightness(
       elements.value
     );
+    slide.value.previewAverageBrightness = averageBackgroundBrightness.value;
+    presentationsStore.syncCurrentSlideWithPresentationSlides();
   }
 );
 

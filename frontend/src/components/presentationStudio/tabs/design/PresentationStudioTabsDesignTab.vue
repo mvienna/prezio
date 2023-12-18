@@ -120,6 +120,7 @@ import PresentationStudioTabsDesignTabSelectedBackground from "components/presen
 import { usePresentationsStore } from "stores/presentations";
 import PresentationStudioTabsDesignTabText from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabText.vue";
 import { computeAverageBrightness } from "src/helpers/colorUtils";
+import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
 
 /*
  * variables
@@ -148,7 +149,7 @@ const backgroundElement = computed(() => {
   );
 });
 
-const handleBackgroundChange = (
+const handleBackgroundChange = async (
   background,
   backgroundFilters = backgroundElement.value
     ? {
@@ -187,7 +188,14 @@ const handleBackgroundChange = (
     background?.src || background?.preview_url || background?.original_url;
 
   const image = new Image();
-  image.src = src;
+
+  let base64;
+  if (src.includes("http")) {
+    base64 = await fetchAndConvertToBase64Image(src);
+    image.src = base64;
+  } else {
+    image.src = src;
+  }
 
   image.onload = () => {
     const height = (canvas.value.width / image.width) * image.height;
@@ -243,6 +251,8 @@ const changeBackgroundFilters = async (backgroundFilters) => {
   averageBackgroundBrightness.value = await computeAverageBrightness(
     elements.value
   );
+  slide.value.previewAverageBrightness = averageBackgroundBrightness.value;
+  presentationsStore.syncCurrentSlideWithPresentationSlides();
 
   canvasStore.redrawCanvas(false);
 };

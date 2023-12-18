@@ -724,15 +724,8 @@ const handleAddingNewSlide = async (type) => {
 const handleDuplicatingSlide = (slide) => {
   presentationsStore
     .duplicateSlide(slide, elements.value)
-    .then(async (newSlide) => {
+    .then(async () => {
       await canvasStore.setElementsFromSlide();
-
-      const newSlideIndex = presentation.value.slides.findIndex(
-        (item) => item?.id === newSlide?.id
-      );
-      presentation.value.slides[newSlideIndex].previewAverageBrightness =
-        await computeAverageBrightness(JSON.parse(newSlide.canvas_data));
-
       canvasStore.renderSlidePreview();
       canvasStore.saveSlidePreview();
     })
@@ -769,28 +762,6 @@ watch(
         inline: "center",
       });
     }
-  }
-);
-
-/*
- * slide preview avg. brightness generation
- */
-watch(
-  () => elements.value,
-  () => {
-    presentation.value.slides.forEach(async (item, index) => {
-      if (
-        item.id === slide.value.id ||
-        !presentation.value.slides[index].previewAverageBrightness
-      ) {
-        presentation.value.slides[index].previewAverageBrightness =
-          await computeAverageBrightness(
-            item.id === slide.value.id
-              ? JSON.parse(slide.value.canvas_data)
-              : JSON.parse(item.canvas_data)
-          );
-      }
-    });
   }
 );
 </script>
