@@ -22,7 +22,7 @@
         no-header-tabs
         default-view="palette"
         v-model="shapeState.customization.value.strokeColor"
-        @update:model-value="shapeStore.applyStyles()"
+        @change="shapeStore.applyStyles()"
       />
 
       <div class="q-pa-sm">
@@ -71,7 +71,7 @@
         no-header-tabs
         default-view="palette"
         v-model="shapeState.customization.value.fillColor"
-        @update:model-value="shapeStore.applyStyles()"
+        @change="shapeStore.applyStyles()"
       />
 
       <div class="q-pa-sm">

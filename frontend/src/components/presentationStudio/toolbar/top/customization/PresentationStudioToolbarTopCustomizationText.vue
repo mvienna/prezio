@@ -241,7 +241,7 @@
         no-header-tabs
         default-view="palette"
         v-model="customization.color"
-        @update:model-value="textStore.applyStyles()"
+        @change="textStore.applyStyles()"
       />
     </q-menu>
 

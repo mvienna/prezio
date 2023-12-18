@@ -22,7 +22,7 @@
         no-header-tabs
         default-view="palette"
         v-model="drawingState.customization.value.color"
-        @update:model-value="drawingStore.applyStyles()"
+        @change="drawingStore.applyStyles()"
       />
     </q-menu>
 
