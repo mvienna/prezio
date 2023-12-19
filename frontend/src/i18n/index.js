@@ -1,16 +1,4 @@
 /*
- * en-US
- */
-import enIndex from "./en-US";
-import enAuth from "./en-US/auth";
-import enUser from "./en-US/user";
-import enMedia from "./en-US/media";
-import enLayouts from "./en-US/layouts";
-import enMyPresentations from "./en-US/myPresentations";
-import enPresentationStudio from "./en-US/presentationStudio";
-import enPresentationRoom from "./en-US/presentationRoom";
-
-/*
  * ru-RU
  */
 import ruIndex from "./ru-RU";
@@ -23,16 +11,6 @@ import ruPresentationStudio from "./ru-RU/presentationStudio";
 import ruPresentationRoom from "./ru-RU/presentationRoom";
 
 export default {
-  "en-US": {
-    ...enIndex,
-    ...enAuth,
-    ...enUser,
-    ...enMedia,
-    ...enLayouts,
-    ...enMyPresentations,
-    ...enPresentationStudio,
-    ...enPresentationRoom,
-  },
   "ru-RU": {
     ...ruIndex,
     ...ruAuth,
