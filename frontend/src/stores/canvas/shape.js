@@ -26,7 +26,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       lineWidth: "4px",
 
       shadowColor: "#000000",
-      shadowOpacity: 50,
+      shadowOpacity: 0,
       shadowBlur: 10,
       shadowOffsetX: 0,
       shadowOffsetY: 0,
