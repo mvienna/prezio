@@ -126,6 +126,8 @@ export default {
       duplicate: "Дублировать",
       delete: "Удалить",
 
+      replaceMedia: "Заменить фотографию",
+
       moveUp: "Переместить выше",
       moveToTheTop: "Переместить вверх",
 

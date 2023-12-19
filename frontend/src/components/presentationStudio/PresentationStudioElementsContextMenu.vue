@@ -106,6 +106,36 @@
 
         <q-separator v-if="elements.length > 1" class="q-my-sm" />
 
+        <!-- replace -->
+        <q-item
+          v-if="selectedElement.mode === MODE_OPTIONS.media"
+          class="items-center q-py-sm"
+          clickable
+          dense
+          @click="showSelectMediaDialog = true"
+        >
+          <q-icon name="r_image" class="q-mr-sm" size="xs" />
+          <div>
+            {{ $t("presentationStudio.elementsContextMenu.replaceMedia") }}
+          </div>
+        </q-item>
+
+        <q-dialog v-model="showSelectMediaDialog">
+          <SelectMedia
+            @cancel="showSelectMediaDialog = false"
+            @select="
+              handleImageReplace(
+                $event?.preview_url ||
+                  $event?.original_url ||
+                  $event?.urls?.regular
+              );
+              showSelectMediaDialog = false;
+            "
+          />
+        </q-dialog>
+
+        <q-separator v-if="elements.length > 1" class="q-my-sm" />
+
         <template v-if="selectedElementIndex !== 0">
           <!-- move up-->
           <q-item
@@ -239,7 +269,9 @@ import {
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import SelectMedia from "components/media/SelectMedia.vue";
+import { useCanvasMediaStore } from "stores/canvas/media";
 
 /*
  * variables
@@ -258,7 +290,10 @@ defineProps({
  * stores
  */
 const canvasStore = useCanvasStore();
-const { elements, selectedElementIndex } = storeToRefs(canvasStore);
+const { elements, MODE_OPTIONS, selectedElement, selectedElementIndex } =
+  storeToRefs(canvasStore);
+
+const mediaStore = useCanvasMediaStore();
 
 /*
  * shortcuts
@@ -270,6 +305,21 @@ const showShortcuts = computed(() => {
 const isMac = computed(() => {
   return $q.platform.is.platform === "mac";
 });
+
+/*
+ * replace image
+ */
+const showSelectMediaDialog = ref(false);
+const handleImageReplace = (url) => {
+  mediaStore.addImage(
+    url,
+    selectedElement.value.x,
+    selectedElement.value.y,
+    selectedElement.value.width,
+    selectedElement.value.height
+  );
+  deleteElement();
+};
 </script>
 
 <style scoped lang="scss">
