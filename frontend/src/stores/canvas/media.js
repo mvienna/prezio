@@ -26,6 +26,9 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
       shadowOffsetY: 0,
 
       opacity: 100,
+
+      borderColor: "#4971FF",
+      borderWidth: "2px",
     },
   }),
 
@@ -94,6 +97,8 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           shadowBlur: this.customization.shadowBlur,
           shadowOffsetX: this.customization.shadowOffsetX,
           shadowOffsetY: this.customization.shadowOffsetY,
+          borderColor: this.customization.borderColor,
+          borderWidth: this.customization.borderWidth,
         };
 
         if (layer === "top") {
@@ -145,6 +150,9 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
 
         selectedElement.value.opacity = this.customization.opacity;
 
+        selectedElement.value.borderColor = this.customization.borderColor;
+        selectedElement.value.borderWidth = this.customization.borderWidth;
+
         updateSelectedElement();
         canvasStore.redrawCanvas();
       }
@@ -159,6 +167,9 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         this.customization.shadowOffsetY = selectedElement.value.shadowOffsetY;
 
         this.customization.opacity = selectedElement.value.opacity;
+
+        this.customization.borderColor = selectedElement.value.borderColor;
+        this.customization.borderWidth = selectedElement.value.borderWidth;
       }
     },
   },

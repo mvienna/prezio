@@ -643,6 +643,9 @@ export const useCanvasStore = defineStore("canvas", {
 
       this.applyElementFilters(element);
 
+      this.ctx.strokeStyle = element.borderColor;
+      this.ctx.lineWidth = element.borderWidth;
+
       if (!element?.image?.nodeType) {
         const image = new Image();
         if (element.imageBase64) {
@@ -661,6 +664,13 @@ export const useCanvasStore = defineStore("canvas", {
             element.width,
             element.height
           );
+
+          this.ctx.strokeRect(
+            element.x - element.borderWidth / 2,
+            element.y - element.borderWidth / 2,
+            element.width + element.borderWidth,
+            element.height + element.borderWidth
+          );
         };
       } else {
         this.ctx.drawImage(
@@ -669,6 +679,13 @@ export const useCanvasStore = defineStore("canvas", {
           -element.height / 2,
           element.width,
           element.height
+        );
+
+        this.ctx.strokeRect(
+          -element.width / 2 - element.borderWidth / 2,
+          -element.height / 2 - element.borderWidth / 2,
+          element.width + element.borderWidth,
+          element.height + element.borderWidth
         );
       }
     },

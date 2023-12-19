@@ -51,7 +51,6 @@ export default {
         options: {
           shadow: {
             title: "Тень",
-            color: "Цвет тени",
             opacity: "Прозрачность тени",
             blur: "Размытие тени",
             offsetX: "Горизонтальный отступ тени",
@@ -60,6 +59,11 @@ export default {
 
           opacity: {
             title: "Прозрачность",
+          },
+
+          border: {
+            title: "Обводка",
+            width: "Толщина обводки",
           },
         },
       },

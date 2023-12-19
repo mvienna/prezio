@@ -93,6 +93,7 @@
     </q-tooltip>
   </q-btn>
 
+  <!-- opacity -->
   <q-btn flat round size="12px" icon="r_opacity">
     <q-menu
       anchor="bottom left"
@@ -102,7 +103,6 @@
       :offset="[0, 8]"
     >
       <div class="q-pt-sm q-pl-md q-pr-lg">
-        <!-- shadow opacity -->
         <div>
           <div class="text-caption text-grey">
             {{ $t("presentationStudio.toolbar.media.options.opacity.title") }}
@@ -125,13 +125,65 @@
       {{ $t("presentationStudio.toolbar.media.options.opacity.title") }}
     </q-tooltip>
   </q-btn>
+
+  <!-- border -->
+  <q-btn flat round size="12px" icon="r_border_outer">
+    <q-menu
+      anchor="bottom left"
+      self="top left"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      :offset="[0, 8]"
+    >
+      <!-- shadow color -->
+      <q-color
+        format-model="hex"
+        no-header-tabs
+        default-view="palette"
+        v-model="mediaState.customization.value.borderColor"
+        @change="mediaStore.applyStyles()"
+      />
+
+      <div class="q-pa-sm">
+        <div class="text-caption text-grey q-ml-sm">
+          {{ $t("presentationStudio.toolbar.media.options.border.width") }}
+        </div>
+
+        <!-- line width -->
+        <q-select
+          v-model="mediaState.customization.value.borderWidth"
+          :options="SHAPE_LINE_WIDTH_OPTIONS"
+          map-options
+          emit-value
+          borderless
+          color="dark"
+          dense
+          hide-dropdown-icon
+          class="q-pl-sm"
+          options-dense
+          @update:model-value="mediaStore.applyStyles()"
+        >
+          <template #prepend>
+            <q-icon
+              name="line_weight"
+              class="text-semibold text-dark"
+              size="20px"
+            />
+          </template>
+        </q-select>
+      </div>
+    </q-menu>
+
+    <q-tooltip :offset="[0, 4]">
+      {{ $t("presentationStudio.toolbar.media.options.border.title") }}
+    </q-tooltip>
+  </q-btn>
 </template>
 
 <script setup>
-import { SHAPE_LINE_WIDTH_OPTIONS } from "src/constants/canvas/canvasVariables";
-import { useCanvasShapeStore } from "stores/canvas/shape";
 import { storeToRefs } from "pinia";
 import { useCanvasMediaStore } from "stores/canvas/media";
+import { SHAPE_LINE_WIDTH_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * stores
