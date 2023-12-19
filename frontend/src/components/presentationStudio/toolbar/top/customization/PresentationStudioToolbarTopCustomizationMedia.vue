@@ -1,5 +1,5 @@
 <template>
-  <!-- color picker -->
+  <!-- shadow -->
   <q-btn flat round size="12px" icon="r_texture">
     <q-menu
       anchor="bottom left"
@@ -8,6 +8,7 @@
       transition-hide="jump-up"
       :offset="[0, 8]"
     >
+      <!-- shadow color -->
       <q-color
         format-model="hex"
         no-header-tabs

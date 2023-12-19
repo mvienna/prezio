@@ -641,7 +641,7 @@ export const useCanvasStore = defineStore("canvas", {
         element.y + element.height / 2
       );
 
-      this.applyImageFilters(element);
+      this.applyElementFilters(element);
 
       if (!element?.image?.nodeType) {
         const image = new Image();
@@ -673,7 +673,7 @@ export const useCanvasStore = defineStore("canvas", {
       }
     },
 
-    applyImageFilters(element) {
+    applyElementFilters(element) {
       this.ctx.filter = `blur(${element.blur || 0}px) contrast(${
         element.contrast >= 0 ? element.contrast : 100
       }%) brightness(${
@@ -702,6 +702,7 @@ export const useCanvasStore = defineStore("canvas", {
     renderShape(element) {
       this.ctx.strokeStyle = element.strokeColor || "rgba(255, 0, 0, 0)";
       this.ctx.lineWidth = element.lineWidth;
+      this.applyElementFilters(element);
       this.ctx.beginPath();
 
       switch (element.type) {

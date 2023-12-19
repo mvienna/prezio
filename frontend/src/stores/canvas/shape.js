@@ -24,6 +24,14 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       strokeColor: "#4971FF",
       fillColor: "#4971FF",
       lineWidth: "4px",
+
+      shadowColor: "#000000",
+      shadowOpacity: 50,
+      shadowBlur: 10,
+      shadowOffsetX: 0,
+      shadowOffsetY: 0,
+
+      opacity: 100,
     },
   }),
 
@@ -71,6 +79,12 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         strokeColor: strokeColor,
         fillColor: fillColor,
         lineWidth: lineWidth,
+        shadowColor: this.customization.shadowColor,
+        shadowOpacity: this.customization.shadowOpacity,
+        shadowBlur: this.customization.shadowBlur,
+        shadowOffsetX: this.customization.shadowOffsetX,
+        shadowOffsetY: this.customization.shadowOffsetY,
+        opacity: this.customization.opacity,
       };
 
       if (layer === "top") {
@@ -107,6 +121,14 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         selectedElement.value.fillColor = this.customization.fillColor;
         selectedElement.value.lineWidth = this.customization.lineWidth;
 
+        selectedElement.value.shadowColor = this.customization.shadowColor;
+        selectedElement.value.shadowOpacity = this.customization.shadowOpacity;
+        selectedElement.value.shadowBlur = this.customization.shadowBlur;
+        selectedElement.value.shadowOffsetX = this.customization.shadowOffsetX;
+        selectedElement.value.shadowOffsetY = this.customization.shadowOffsetY;
+
+        selectedElement.value.opacity = this.customization.opacity;
+
         updateSelectedElement();
         canvasStore.redrawCanvas();
       }
@@ -116,6 +138,14 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       this.customization.strokeColor = selectedElement.value.strokeColor;
       this.customization.fillColor = selectedElement.value.fillColor;
       this.customization.lineWidth = selectedElement.value.lineWidth;
+
+      this.customization.shadowColor = selectedElement.value.shadowColor;
+      this.customization.shadowOpacity = selectedElement.value.shadowOpacity;
+      this.customization.shadowBlur = selectedElement.value.shadowBlur;
+      this.customization.shadowOffsetX = selectedElement.value.shadowOffsetX;
+      this.customization.shadowOffsetY = selectedElement.value.shadowOffsetY;
+
+      this.customization.opacity = selectedElement.value.opacity;
     },
   },
 });
