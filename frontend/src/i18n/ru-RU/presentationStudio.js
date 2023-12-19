@@ -47,6 +47,21 @@ export default {
       // media
       media: {
         title: "Фотографии",
+
+        options: {
+          shadow: {
+            title: "Тень",
+            color: "Цвет тени",
+            opacity: "Прозрачность тени",
+            blur: "Размытие тени",
+            offsetX: "Горизонтальный отступ тени",
+            offsetY: "Вертикальный отступ тени",
+          },
+
+          opacity: {
+            title: "Прозрачность",
+          },
+        },
       },
 
       // emoji

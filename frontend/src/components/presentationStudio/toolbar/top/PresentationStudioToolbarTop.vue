@@ -1,11 +1,7 @@
 <template>
   <div class="presentation_toolbar__top bg-white q-pa-md row no-wrap">
     <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
-      <template
-        v-if="
-          mode && ![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode)
-        "
-      >
+      <template v-if="mode && ![MODE_OPTIONS.mediaEmoji].includes(mode)">
         <q-btn
           icon="r_close"
           unelevated
@@ -79,6 +75,11 @@
         <!-- shape customization -->
         <PresentationStudioToolbarTopCustomizationShape
           v-if="mode === MODE_OPTIONS.shape"
+        />
+
+        <!-- media customization -->
+        <PresentationStudioToolbarTopCustomizationMedia
+          v-if="mode === MODE_OPTIONS.media"
         />
       </div>
 
@@ -186,6 +187,8 @@ import PresentationStudioToolbarTopLayouts from "components/presentationStudio/t
 import { useQuasar } from "quasar";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
+import PresentationStudioToolbarTopCustomizationMedia from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationMedia.vue";
+import { useCanvasMediaStore } from "stores/canvas/media";
 
 /*
  * variables
@@ -209,6 +212,7 @@ const {
 const drawingStore = useCanvasDrawingStore();
 const textStore = useCanvasTextStore();
 const shapeStore = useCanvasShapeStore();
+const mediaStore = useCanvasMediaStore();
 
 const presentationsStore = usePresentationsStore();
 const { presentation, slide } = storeToRefs(presentationsStore);
@@ -238,6 +242,7 @@ const showCustomizationMenu = computed(() => {
       MODE_OPTIONS.value.text,
       MODE_OPTIONS.value.textEditing,
       MODE_OPTIONS.value.shape,
+      MODE_OPTIONS.value.media,
     ].includes(mode.value)
   );
 });
@@ -260,6 +265,10 @@ watch(
 
         case MODE_OPTIONS.value.shape:
           shapeStore.loadSelectedElementCustomization();
+          break;
+
+        case MODE_OPTIONS.value.media:
+          mediaStore.loadSelectedElementCustomization();
           break;
       }
     }

@@ -4,14 +4,31 @@ import { generateUniqueId } from "src/helpers/generationUtils";
 import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
 import { computeAverageBrightness } from "src/helpers/colorUtils";
 import { usePresentationsStore } from "stores/presentations";
+import { updateSelectedElement } from "stores/canvas/helpers/select";
 
 const canvasStore = useCanvasStore();
-const { ctx, canvas, elements, MODE_OPTIONS } = storeToRefs(canvasStore);
+const { ctx, canvas, elements, selectedElement, MODE_OPTIONS } =
+  storeToRefs(canvasStore);
 
 const presentationsStore = usePresentationsStore();
 const { averageBackgroundBrightness, slide } = storeToRefs(presentationsStore);
 
 export const useCanvasMediaStore = defineStore("canvasMedia", {
+  state: () => ({
+    /*
+     * customization
+     */
+    customization: {
+      shadowColor: "#000000",
+      shadowOpacity: 50,
+      shadowBlur: 10,
+      shadowOffsetX: 0,
+      shadowOffsetY: 0,
+
+      opacity: 100,
+    },
+  }),
+
   actions: {
     /*
      * add image
@@ -25,7 +42,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
       layer = "top",
       mode = MODE_OPTIONS.value.media,
       isLocked = false,
-      opacity = 100,
+      opacity = this.customization.opacity,
       blur = 0,
       contrast = 100,
       brightness = 100,
@@ -72,6 +89,11 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           brightness,
           invert,
           grayscale,
+          shadowColor: this.customization.shadowColor,
+          shadowOpacity: this.customization.shadowOpacity,
+          shadowBlur: this.customization.shadowBlur,
+          shadowOffsetX: this.customization.shadowOffsetX,
+          shadowOffsetY: this.customization.shadowOffsetY,
         };
 
         if (layer === "top") {
@@ -105,6 +127,39 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);
         canvasStore.redrawCanvas(mode !== MODE_OPTIONS.value.backgroundPreview);
       };
+    },
+
+    /*
+     * customization
+     */
+    applyStyles() {
+      if (
+        selectedElement.value &&
+        selectedElement.value.mode === MODE_OPTIONS.value.media
+      ) {
+        selectedElement.value.shadowColor = this.customization.shadowColor;
+        selectedElement.value.shadowOpacity = this.customization.shadowOpacity;
+        selectedElement.value.shadowBlur = this.customization.shadowBlur;
+        selectedElement.value.shadowOffsetX = this.customization.shadowOffsetX;
+        selectedElement.value.shadowOffsetY = this.customization.shadowOffsetY;
+
+        selectedElement.value.opacity = this.customization.opacity;
+
+        updateSelectedElement();
+        canvasStore.redrawCanvas();
+      }
+    },
+
+    loadSelectedElementCustomization() {
+      if (selectedElement.value.shadowColor) {
+        this.customization.shadowColor = selectedElement.value.shadowColor;
+        this.customization.shadowOpacity = selectedElement.value.shadowOpacity;
+        this.customization.shadowBlur = selectedElement.value.shadowBlur;
+        this.customization.shadowOffsetX = selectedElement.value.shadowOffsetX;
+        this.customization.shadowOffsetY = selectedElement.value.shadowOffsetY;
+
+        this.customization.opacity = selectedElement.value.opacity;
+      }
     },
   },
 });

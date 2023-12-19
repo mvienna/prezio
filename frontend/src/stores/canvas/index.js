@@ -9,6 +9,7 @@ import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
+import { colors } from "quasar";
 
 const presentationsStore = usePresentationsStore();
 const {
@@ -683,6 +684,15 @@ export const useCanvasStore = defineStore("canvas", {
 
       if (element.opacity >= 0) {
         this.ctx.globalAlpha = element.opacity / 100;
+      }
+
+      if (element.shadowColor) {
+        this.ctx.shadowOffsetX = element.shadowOffsetX;
+        this.ctx.shadowOffsetY = element.shadowOffsetY;
+        this.ctx.shadowBlur = element.shadowBlur;
+        this.ctx.shadowColor = `rgba(${Object.values(
+          colors.hexToRgb(element.shadowColor)
+        ).join(", ")}, ${element.shadowOpacity / 100})`;
       }
     },
 
