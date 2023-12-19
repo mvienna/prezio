@@ -594,7 +594,7 @@ const connectToRoomChannels = async () => {
       .joining((userJoined) => {
         participants.value.push(userJoined);
 
-        if (isHost.value) {
+        if (isHost.value && !userJoined.is_guest) {
           api
             .post(
               `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
@@ -614,7 +614,7 @@ const connectToRoomChannels = async () => {
           (item) => item.id !== userLeft?.id && item.room_id
         );
 
-        if (isHost.value) {
+        if (isHost.value && !userLeft.is_guest) {
           api
             .post(
               `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
