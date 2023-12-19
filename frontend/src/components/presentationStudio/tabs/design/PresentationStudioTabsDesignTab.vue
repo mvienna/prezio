@@ -307,31 +307,47 @@ const resetSlideDesign = () => {
  */
 const showApplyDesignToAllSlidesDialog = ref(false);
 
-const applyDesignToAllSlides = () => {
-  presentation.value.slides.map((item) => {
-    if (slide.id !== slide.value.id) {
-      item.canvas_data = item.canvas_data ? JSON.parse(item.canvas_data) : [];
+const applyDesignToAllSlides = async () => {
+  presentation.value.slides.map(async (item) => {
+    // extract elements, remove old background and base fill
+    item.canvas_data = item.canvas_data ? JSON.parse(item.canvas_data) : [];
+    item.canvas_data = item.canvas_data?.filter(
+      (element) =>
+        ![MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+          element.mode
+        )
+    );
 
-      item.canvas_data = item.canvas_data?.filter(
-        (element) =>
-          ![
-            MODE_OPTIONS.value.background,
-            MODE_OPTIONS.value.baseFill,
-          ].includes(element.mode)
-      );
-
-      if (backgroundElement.value) {
-        item.canvas_data.push(backgroundElement.value);
-      }
-
-      if (baseFillElement.value) {
-        item.canvas_data.push(baseFillElement.value);
-      }
-
-      item.canvas_data = JSON.stringify(item.canvas_data);
+    // add new background and base fill
+    if (backgroundElement.value) {
+      item.canvas_data.push(backgroundElement.value);
     }
+    if (baseFillElement.value) {
+      item.canvas_data.push(baseFillElement.value);
+    }
+
+    // compute avg. brightness
+    item.previewAverageBrightness = await computeAverageBrightness(
+      item.canvas_data
+    );
+
+    // prepare new canvas data
+    item.canvas_data = JSON.stringify(item.canvas_data);
+
+    // set new elements & render preview
+    await canvasStore.setElementsFromSlide(item.canvas_data);
+    item.preview = await canvasStore.saveSlidePreview(item.id);
+
+    // save slide
+    await presentationsStore.saveSlide(item, JSON.parse(item.canvas_data));
+
+    item.isLivePreview = false;
 
     return item;
   });
+
+  // redraw canvas & preview of the current slide
+  // await canvasStore.setElementsFromSlide();
+  // await canvasStore.redrawCanvas(false);
 };
 </script>
