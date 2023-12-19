@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Presentation;
 
-use App\Events\PresentationRoomAnswersFormSubmittedEvent;
+use App\Events\PresentationRoomAnswersSubmittedEvent;
+use App\Events\PresentationRoomAnswerUpdatedEvent;
 use App\Events\PresentationRoomNewChatMessageEvent;
 use App\Events\PresentationRoomNewReactionEvent;
 use App\Events\PresentationRoomTerminatedEvent;
@@ -211,11 +212,11 @@ class PresentationRoomController extends Controller
 //            return $this->errorResponse(trans('errors.room.submissionIsLocked'));
 //        }
 
+        $slide = PresentationSlide::find($request->slide_id);
+        $participant = PresentationRoomParticipant::find($request->input('participant_id'));
+
         $answers = [];
         foreach ($request->answers as $answer) {
-            $slide = PresentationSlide::find($request->slide_id);
-            $participant = PresentationRoomParticipant::find($request->input('participant_id'));
-
             $answer = PresentationSlideAnswer::create([
                 'participant_id' => $participant->id,
                 'slide_id' => $slide->id,
@@ -229,9 +230,28 @@ class PresentationRoomController extends Controller
             $answers[] = $answer;
         }
 
-        event(new PresentationRoomAnswersFormSubmittedEvent($room, $answers));
+        event(new PresentationRoomAnswersSubmittedEvent($room, $answers));
 
         return $this->jsonResponse($answers);
+    }
+
+    public function updateAnswer(Presentation $presentation, PresentationRoom $room, PresentationSlideAnswer $answer, Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($presentation->user_id !== $user->id && !$user?->isAdmin()) {
+            return $this->errorResponse(trans('errors.accessDenied'), 403);
+        }
+
+        $answer->update([
+            'answer_data' => $request->answer_data,
+            'score' => $request->score,
+        ]);
+
+        $answer->load('participant');
+        event(new PresentationRoomAnswerUpdatedEvent($room, $answer));
+
+        return $this->successResponse();
     }
 
     /*

@@ -787,7 +787,7 @@ const connectToRoomChannels = async () => {
   /*
    * listen for new submitted answers
    */
-  channel.listen("PresentationRoomAnswersFormSubmittedEvent", (event) => {
+  channel.listen("PresentationRoomAnswersSubmittedEvent", (event) => {
     // add new answers
     slide.value.answers = [...slide.value.answers, ...event.answers];
 
@@ -843,6 +843,13 @@ const connectToRoomChannels = async () => {
         }, 2000);
       }
     }
+  });
+
+  channel.listen("PresentationRoomAnswerUpdatedEvent", (event) => {
+    const answerIndex = slide.value.answers.findIndex(
+      (answer) => answer.id === event.data.id
+    );
+    slide.value.answers[answerIndex] = event.data;
   });
 
   channel.listen("PresentationRoomParticipantsErasedEvent", () => {

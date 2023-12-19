@@ -478,10 +478,11 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async submitPresentationRoomAnswers(answers) {
-      answers = answers.filter((answer) => answer?.value?.length);
-      if (!answers?.length) return;
-
+    computeScoreForAnswers(
+      answers,
+      secondsLeft = timeLeft.value,
+      isForceCorrect = false
+    ) {
       let totalScore = null;
 
       if (SLIDE_TYPES_OF_QUIZ.includes(this.slide?.type)) {
@@ -495,7 +496,7 @@ export const usePresentationsStore = defineStore("presentations", {
             Number(this.slideSettings.timeLimit);
 
           const secondsTookToAnswer =
-            Number(this.slideSettings.timeLimit) - timeLeft.value;
+            Number(this.slideSettings.timeLimit) - secondsLeft;
 
           pointForCorrectAnswer = Math.round(
             this.slideSettings.points.max -
@@ -517,16 +518,16 @@ export const usePresentationsStore = defineStore("presentations", {
                   ),
                 ].includes(answer.value);
 
-                if (!isCorrectAnswer) {
-                  return this.slideSettings.points.min;
-                } else {
+                if (isCorrectAnswer || isForceCorrect) {
                   score += pointForCorrectAnswer;
+                } else {
+                  return this.slideSettings.points.min;
                 }
               } else {
-                if (answer.isCorrect === false) {
-                  return this.slideSettings.points.min;
-                } else if (answer.isCorrect === true) {
+                if (answer.isCorrect === true || isForceCorrect) {
                   score += pointForCorrectAnswer;
+                } else if (answer.isCorrect === false) {
+                  return this.slideSettings.points.min;
                 }
               }
             }
@@ -547,16 +548,19 @@ export const usePresentationsStore = defineStore("presentations", {
                 ),
               ].includes(answers[0].value);
 
-              if (!isCorrectAnswer) {
-                return this.slideSettings.points.min;
-              } else {
+              if (isCorrectAnswer || isForceCorrect) {
                 return pointForCorrectAnswer;
+              } else {
+                return this.slideSettings.points.min;
               }
             } else {
-              if (answers.some((option) => option.isCorrect === false)) {
-                return this.slideSettings.points.min;
-              } else {
+              if (
+                !answers.some((option) => option.isCorrect === false) ||
+                isForceCorrect
+              ) {
                 return pointForCorrectAnswer;
+              } else {
+                return this.slideSettings.points.min;
               }
             }
           };
@@ -565,6 +569,16 @@ export const usePresentationsStore = defineStore("presentations", {
         }
       }
 
+      return answers.length > 1 && totalScore
+        ? totalScore / answers.length
+        : totalScore;
+    },
+
+    async submitPresentationRoomAnswers(answers) {
+      answers = answers.filter((answer) => answer?.value?.length);
+      if (!answers?.length) return;
+
+      const score = this.computeScoreForAnswers(answers);
       answers = answers.map((answer) => answer.value);
 
       return await api
@@ -572,11 +586,8 @@ export const usePresentationsStore = defineStore("presentations", {
           `/presentation/${this.presentation?.id}/room/${this.room?.id}/submit-answers`,
           {
             slide_id: this.slide?.id,
-            answers: answers,
-            score:
-              answers.length > 1 && totalScore
-                ? totalScore / answers.length
-                : totalScore,
+            answers,
+            score,
             time_taken_to_answer: this.slideSettings.isLimitedTime
               ? Number(this.slideSettings.timeLimit) - timeLeft.value
               : null,

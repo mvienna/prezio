@@ -315,10 +315,13 @@ const isAnsweredCorrectly = computed(() => {
     return false;
   }
 
-  return [
-    slideSettings.value.correctAnswer.value,
-    ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
-  ].includes(JSON.parse(participantAnswer.value.answer_data).text);
+  return (
+    [
+      slideSettings.value.correctAnswer.value,
+      ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
+    ].includes(JSON.parse(participantAnswer.value.answer_data).text) ||
+    JSON.parse(participantAnswer.value.answer_data).is_marked_as_correct
+  );
 });
 
 /*

@@ -829,9 +829,16 @@ const connectToRoomChannels = () => {
   /*
    * listen for new submitted answers
    */
-  channel.listen("PresentationRoomAnswersFormSubmittedEvent", (event) => {
+  channel.listen("PresentationRoomAnswersSubmittedEvent", (event) => {
     slide.value.answers = [...slide.value.answers, ...event.answers];
     presentationsStore.syncCurrentSlideWithPresentationSlides();
+  });
+
+  channel.listen("PresentationRoomAnswerUpdatedEvent", (event) => {
+    const answerIndex = slide.value.answers.findIndex(
+      (answer) => answer.id === event.data.id
+    );
+    slide.value.answers[answerIndex] = event.data;
   });
 
   /*

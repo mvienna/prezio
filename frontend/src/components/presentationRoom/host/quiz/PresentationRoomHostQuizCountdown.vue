@@ -149,7 +149,35 @@
         </div>
       </transition-group>
     </div>
+
+    <div
+      v-else-if="
+        slide?.type === SLIDE_TYPES.TYPE_ANSWER && otherAnswersToAccept?.length
+      "
+      :class="`text-${textColor}`"
+      class="quiz_countdown__finished"
+    >
+      <div class="row no-wrap justify-center items-center">
+        <q-btn
+          unelevated
+          no-caps
+          label="Примите больше ответов"
+          :class="$q.screen.lt.md ? 'q-px-lg' : 'q-px-xl'"
+          :style="$q.screen.lt.md ? 'height: 50px' : 'height: 62px'"
+          :size="$q.screen.lt.md ? '10px' : '14px'"
+          @click="showAcceptOtherAnswersDialog = true"
+        />
+      </div>
+    </div>
   </transition>
+
+  <!-- accept other answers dialog -->
+  <q-dialog v-model="showAcceptOtherAnswersDialog">
+    <PresentationRoomHostQuizCountdownAcceptOtherAnswers
+      :answers="otherAnswersToAccept"
+      @cancel="showAcceptOtherAnswersDialog = false"
+    />
+  </q-dialog>
 </template>
 
 <script setup>
@@ -158,7 +186,11 @@ import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { countdown, timeLeft, timeLeftPercentage } from "src/helpers/countdown";
-import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
+import PresentationRoomHostQuizCountdownAcceptOtherAnswers from "components/presentationRoom/host/quiz/PresentationRoomHostQuizCountdownAcceptOtherAnswers.vue";
 
 /*
  * stores
@@ -268,6 +300,36 @@ const handleRevealAnswers = () => {
     is_answers_revealed: true,
   });
 };
+
+/*
+ * accept other answers
+ * for type "type_answer"
+ */
+const showAcceptOtherAnswersDialog = ref(false);
+
+const otherAnswersToAccept = computed(() => {
+  if (slide.value?.type !== SLIDE_TYPES.TYPE_ANSWER) return [];
+
+  return slide.value.answers
+    .map((answer) => {
+      return {
+        ...answer,
+        answer_data: JSON.parse(answer.answer_data),
+        participant: {
+          ...answer.participant,
+          user_data: JSON.parse(answer.participant.user_data),
+        },
+      };
+    })
+    .filter(
+      (answer) =>
+        answer.slide_type === slide.value?.type &&
+        ![
+          slideSettings.value.correctAnswer.value,
+          ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
+        ].includes(answer.answer_data.text)
+    );
+});
 </script>
 
 <style lang="scss">
@@ -347,6 +409,30 @@ const handleRevealAnswers = () => {
   }
   100% {
     transform: scale(1) rotate(0);
+  }
+}
+
+/*
+ * finished footer
+ */
+.quiz_countdown__finished {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 0);
+
+  .q-btn {
+    border-radius: 24px;
+    background: rgba(0, 0, 0, 0.5);
+    color: $white;
+    backdrop-filter: blur(4px);
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .waiting_for_participants__footer {
+    bottom: 8px;
   }
 }
 </style>
