@@ -656,7 +656,10 @@ export const useCanvasStore = defineStore("canvas", {
         element.y + element.height / 2
       );
 
-      this.applyElementFilters(element);
+      this.applyElementFilters(
+        element,
+        element.mode !== this.MODE_OPTIONS.media
+      );
 
       this.ctx.strokeStyle = element.borderColor;
       this.ctx.lineWidth = element.borderWidth;
@@ -705,26 +708,35 @@ export const useCanvasStore = defineStore("canvas", {
       }
     },
 
-    applyElementFilters(element) {
-      this.ctx.filter = `blur(${element.blur || 0}px) contrast(${
-        element.contrast >= 0 ? element.contrast : 100
-      }%) brightness(${
-        element.brightness >= 0 ? element.brightness : 100
-      }%) invert(${element.invert || 0}%) grayscale(${
-        element.grayscale || 0
-      }%)`;
+    applyElementFilters(
+      element,
+      isGeneralFilters = true,
+      applyOpacityFilters = true,
+      applyShadowFilters = true
+    ) {
+      if (isGeneralFilters) {
+        this.ctx.filter = `blur(${element.blur || 0}px) contrast(${
+          element.contrast >= 0 ? element.contrast : 100
+        }%) brightness(${
+          element.brightness >= 0 ? element.brightness : 100
+        }%) invert(${element.invert || 0}%) grayscale(${
+          element.grayscale || 0
+        }%)`;
+      }
 
-      if (element.opacity >= 0) {
+      if (element.opacity >= 0 && applyOpacityFilters) {
         this.ctx.globalAlpha = element.opacity / 100;
       }
 
-      if (element.shadowColor) {
+      if (applyShadowFilters) {
         this.ctx.shadowOffsetX = element.shadowOffsetX;
         this.ctx.shadowOffsetY = element.shadowOffsetY;
         this.ctx.shadowBlur = element.shadowBlur;
-        this.ctx.shadowColor = `rgba(${Object.values(
-          colors.hexToRgb(element.shadowColor)
-        ).join(", ")}, ${element.shadowOpacity / 100})`;
+        this.ctx.shadowColor = `rgba(${
+          element.shadowColor
+            ? Object.values(colors.hexToRgb(element.shadowColor)).join(", ")
+            : "#000000"
+        }, ${element.shadowOpacity / 100})`;
       }
     },
 
@@ -735,7 +747,7 @@ export const useCanvasStore = defineStore("canvas", {
       this.ctx.strokeStyle = element.strokeColor || "rgba(255, 0, 0, 0)";
       this.ctx.lineWidth = element.lineWidth;
 
-      this.applyElementFilters(element);
+      this.applyElementFilters(element, false);
 
       this.ctx.lineJoin = "round";
       this.ctx.lineCap = "round";
