@@ -215,15 +215,6 @@ const defaultEmojis = [
 ];
 
 onMounted(() => {
-  const adjective =
-    randomUsernames.adjectives[locale.value === "ru-RU" ? "ru" : "en"][
-      Math.floor(
-        Math.random() *
-          randomUsernames.adjectives[locale.value === "ru-RU" ? "ru" : "en"]
-            .length
-      )
-    ];
-
   const noun =
     randomUsernames.nouns[locale.value === "ru-RU" ? "ru" : "en"][
       Math.floor(
@@ -237,7 +228,7 @@ onMounted(() => {
     : {};
 
   form.value = {
-    name: `${adjective} ${noun}`,
+    name: noun,
     avatar: defaultEmojis[Math.floor(Math.random() * defaultEmojis.length)],
     color:
       wordCloudTextColors[
