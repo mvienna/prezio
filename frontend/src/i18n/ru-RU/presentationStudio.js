@@ -53,8 +53,8 @@ export default {
             title: "Тень",
             opacity: "Прозрачность тени",
             blur: "Размытие тени",
-            offsetX: "Горизонтальный отступ тени",
-            offsetY: "Вертикальный отступ тени",
+            offsetX: "Отступ по X",
+            offsetY: "Отступ по Y",
           },
 
           opacity: {

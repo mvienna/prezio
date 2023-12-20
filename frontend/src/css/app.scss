@@ -249,6 +249,11 @@ a, .link {
  */
 .q-color-picker {
   box-shadow: none;
+  max-width: 200px;
+
+  .q-slider {
+    width: 100% !important;
+  }
 }
 
 .q-color-picker__footer .q-tab--inactive {
@@ -258,6 +263,8 @@ a, .link {
 
 .q-color-picker .q-tab--active {
   box-shadow: none;
+  background: $grey-2;
+  border-radius: 4px;
 }
 
 

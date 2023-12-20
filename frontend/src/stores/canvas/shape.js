@@ -23,6 +23,8 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
     customization: {
       strokeColor: "#4971FF",
       fillColor: "#4971FF",
+      fillColor2: "#bc49ff",
+      fillStyle: "solid",
       lineWidth: "4px",
 
       shadowColor: "#000000",
@@ -67,17 +69,19 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
 
       let shape = {
         id: generateUniqueId(undefined, elements.value),
-        mode: mode,
+        mode,
         isVisible: true,
-        isLocked: isLocked,
-        type: type,
+        isLocked,
+        type,
         x,
         y,
-        width: width,
-        height: height,
+        width,
+        height,
         rotationAngle: 0,
-        strokeColor: strokeColor,
-        fillColor: fillColor,
+        strokeColor,
+        fillColor,
+        fillColor2: this.customization.fillColor2,
+        fillStyle: this.customization.fillStyle,
         lineWidth: lineWidth,
         shadowColor: this.customization.shadowColor,
         shadowOpacity: this.customization.shadowOpacity,
@@ -119,6 +123,8 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       ) {
         selectedElement.value.strokeColor = this.customization.strokeColor;
         selectedElement.value.fillColor = this.customization.fillColor;
+        selectedElement.value.fillColor2 = this.customization.fillColor2;
+        selectedElement.value.fillStyle = this.customization.fillStyle;
         selectedElement.value.lineWidth = this.customization.lineWidth;
 
         selectedElement.value.shadowColor = this.customization.shadowColor;
@@ -135,17 +141,30 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
     },
 
     loadSelectedElementCustomization() {
-      this.customization.strokeColor = selectedElement.value.strokeColor;
-      this.customization.fillColor = selectedElement.value.fillColor;
-      this.customization.lineWidth = selectedElement.value.lineWidth;
+      this.customization.strokeColor =
+        selectedElement.value.strokeColor || this.customization.strokeColor;
+      this.customization.fillColor =
+        selectedElement.value.fillColor || this.customization.fillColor;
+      this.customization.fillColor2 =
+        selectedElement.value.fillColor2 || this.customization.fillColor2;
+      this.customization.fillStyle =
+        selectedElement.value.fillStyle || this.customization.fillStyle;
+      this.customization.lineWidth =
+        selectedElement.value.lineWidth || this.customization.lineWidth;
 
-      this.customization.shadowColor = selectedElement.value.shadowColor;
-      this.customization.shadowOpacity = selectedElement.value.shadowOpacity;
-      this.customization.shadowBlur = selectedElement.value.shadowBlur;
-      this.customization.shadowOffsetX = selectedElement.value.shadowOffsetX;
-      this.customization.shadowOffsetY = selectedElement.value.shadowOffsetY;
+      this.customization.shadowColor =
+        selectedElement.value.shadowColor || this.customization.shadowColor;
+      this.customization.shadowOpacity =
+        selectedElement.value.shadowOpacity || this.customization.shadowOpacity;
+      this.customization.shadowBlur =
+        selectedElement.value.shadowBlur || this.customization.shadowBlur;
+      this.customization.shadowOffsetX =
+        selectedElement.value.shadowOffsetX || this.customization.shadowOffsetX;
+      this.customization.shadowOffsetY =
+        selectedElement.value.shadowOffsetY || this.customization.shadowOffsetY;
 
-      this.customization.opacity = selectedElement.value.opacity;
+      this.customization.opacity =
+        selectedElement.value.opacity || this.customization.opacity;
     },
   },
 });
