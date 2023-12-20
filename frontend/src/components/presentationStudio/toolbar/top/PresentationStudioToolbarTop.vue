@@ -1,7 +1,13 @@
 <template>
   <div class="presentation_toolbar__top bg-white q-pa-md row no-wrap">
     <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
-      <template v-if="mode && ![MODE_OPTIONS.mediaEmoji].includes(mode)">
+      <template
+        v-if="
+          mode &&
+          (![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode) ||
+            (MODE_OPTIONS.media === mode && selectedElement))
+        "
+      >
         <q-btn
           icon="r_close"
           unelevated
