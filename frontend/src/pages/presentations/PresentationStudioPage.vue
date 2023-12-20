@@ -563,14 +563,7 @@ const handleCanvasMouseMove = (event) => {
 
   if (hoveredElement && hoveredElement?.id !== selectedElement.value?.id) {
     canvasStore.redrawCanvas(false);
-    canvasStore.drawBorder(
-      hoveredElement.x,
-      hoveredElement.y,
-      hoveredElement.width,
-      hoveredElement.height,
-      [],
-      false
-    );
+    canvasStore.renderBorderForElement(hoveredElement);
 
     lastElementHovered.value = hoveredElement;
   } else if (lastElementHovered.value) {

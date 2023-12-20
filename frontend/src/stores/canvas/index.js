@@ -446,7 +446,7 @@ export const useCanvasStore = defineStore("canvas", {
         (this.selectedElement.isVisible ||
           this.selectedElement.mode === this.MODE_OPTIONS.text)
       ) {
-        this.renderBorderForSelectedElement();
+        this.renderBorderForElement();
       }
 
       /*
@@ -927,27 +927,26 @@ export const useCanvasStore = defineStore("canvas", {
     /*
      * render border for selected element
      */
-    renderBorderForSelectedElement() {
+    renderBorderForElement(element = this.selectedElement) {
       this.ctx.save();
-      if (this.selectedElement.rotationAngle) {
-        const centerX = this.selectedElement.x + this.selectedElement.width / 2;
-        const centerY =
-          this.selectedElement.y + this.selectedElement.height / 2;
+      if (element.rotationAngle) {
+        const centerX = element.x + element.width / 2;
+        const centerY = element.y + element.height / 2;
         this.ctx.translate(centerX, centerY);
-        this.ctx.rotate((this.selectedElement.rotationAngle * Math.PI) / 180);
+        this.ctx.rotate((element.rotationAngle * Math.PI) / 180);
         this.ctx.translate(-centerX, -centerY);
       }
 
-      switch (this.selectedElement.mode) {
+      switch (element.mode) {
         /*
          * drawing
          */
         case this.MODE_OPTIONS.drawing:
           this.drawBorder(
-            this.selectedElement.x,
-            this.selectedElement.y,
-            this.selectedElement.width,
-            this.selectedElement.height,
+            element.x,
+            element.y,
+            element.width,
+            element.height,
             [],
             true
           );
@@ -958,10 +957,10 @@ export const useCanvasStore = defineStore("canvas", {
          */
         case this.MODE_OPTIONS.text:
           this.drawBorder(
-            this.selectedElement.x,
-            this.selectedElement.y,
-            this.selectedElement.width,
-            this.selectedElement.height,
+            element.x,
+            element.y,
+            element.width,
+            element.height,
             ["center-left", "center-right"],
             true
           );
@@ -972,13 +971,11 @@ export const useCanvasStore = defineStore("canvas", {
          */
         case this.MODE_OPTIONS.shape:
           this.drawBorder(
-            this.selectedElement.x,
-            this.selectedElement.y,
-            this.selectedElement.width,
-            this.selectedElement.height,
-            [SHAPES_OPTIONS.circle, SHAPES_OPTIONS.star].includes(
-              this.selectedElement.type
-            )
+            element.x,
+            element.y,
+            element.width,
+            element.height,
+            [SHAPES_OPTIONS.circle, SHAPES_OPTIONS.star].includes(element.type)
               ? ["top-left", "top-right", "bottom-right", "bottom-left"]
               : undefined,
             true
@@ -990,10 +987,10 @@ export const useCanvasStore = defineStore("canvas", {
          */
         default:
           this.drawBorder(
-            this.selectedElement.x,
-            this.selectedElement.y,
-            this.selectedElement.width,
-            this.selectedElement.height,
+            element.x,
+            element.y,
+            element.width,
+            element.height,
             undefined,
             true
           );

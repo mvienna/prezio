@@ -4,7 +4,7 @@ import { generateUniqueId } from "src/helpers/generationUtils";
 import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
 import { computeAverageBrightness } from "src/helpers/colorUtils";
 import { usePresentationsStore } from "stores/presentations";
-import { updateSelectedElement } from "stores/canvas/helpers/select";
+import { syncSelectedElementWithStoredElements } from "stores/canvas/helpers/select";
 
 const canvasStore = useCanvasStore();
 const { ctx, canvas, elements, selectedElement, MODE_OPTIONS } =
@@ -153,7 +153,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         selectedElement.value.borderColor = this.customization.borderColor;
         selectedElement.value.borderWidth = this.customization.borderWidth;
 
-        updateSelectedElement();
+        syncSelectedElementWithStoredElements();
         canvasStore.redrawCanvas();
       }
     },

@@ -4,6 +4,7 @@ import { useCanvasTextStore } from "stores/canvas/text";
 
 const canvasStore = useCanvasStore();
 const {
+  ctx,
   elements,
   mode,
   mouse,
@@ -19,146 +20,41 @@ export const getHoveredElement = () => {
   let hoveredElement = null;
   let hoveredElementIndex = -1;
 
-  let angle, centerX, centerY, rotatedMouseX, rotatedMouseY;
-
   const reversedElements = [...elements.value].reverse();
 
-  reversedElements.map((element, index) => {
+  reversedElements.forEach((element, index) => {
     if (element.isLocked) {
       return;
     }
 
-    // switch (element.mode) {
-    /*
-     * drawing
-     */
-    // case MODE_OPTIONS.value.drawing:
-    //   if (
-    //     mouse.value.x >= element.x &&
-    //     mouse.value.x <= element.x + element.width &&
-    //     mouse.value.y >= element.y &&
-    //     mouse.value.y <= element.y + element.height
-    //   ) {
-    //     hoveredElement = element;
-    //     hoveredElementIndex = elements.value.length - 1 - index;
-    //   }
-    //   break;
+    ctx.value.save();
 
-    // case MODE_OPTIONS.value.drawing:
-    //   angle = (element.rotationAngle * Math.PI) / 180;
-    //   centerX = element.x + element.width / 2;
-    //   centerY = element.y + element.height / 2;
-    //
-    //   // Rotate the mouse coordinates around the element's center
-    //   rotatedMouseX =
-    //       centerX +
-    //       Math.cos(angle) * (mouse.value.x - centerX) -
-    //       Math.sin(angle) * (mouse.value.y - centerY);
-    //   rotatedMouseY =
-    //       centerY +
-    //       Math.sin(angle) * (mouse.value.x - centerX) +
-    //       Math.cos(angle) * (mouse.value.y - centerY);
-    //
-    //   const minX = Math.min(...element.points.map((point) => point.x));
-    //   const maxX = Math.max(...element.points.map((point) => point.x));
-    //   const minY = Math.min(...element.points.map((point) => point.y));
-    //   const maxY = Math.max(...element.points.map((point) => point.y));
-    //
-    //   if (
-    //       rotatedMouseX >= minX &&
-    //       rotatedMouseX <= maxX &&
-    //       rotatedMouseY >= minY &&
-    //       rotatedMouseY <= maxY
-    //   ) {
-    //     hoveredElement = element;
-    //     hoveredElementIndex = elements.value.length - 1 - index;
-    //   }
-    //   break;
+    const centerX = element.x + element.width / 2;
+    const centerY = element.y + element.height / 2;
 
-    /*
-     * text
-     */
-    // case MODE_OPTIONS.value.text:
-    //   if (
-    //     Math.round(mouse.value.x) >= Math.round(element.x) &&
-    //     Math.round(mouse.value.x) <=
-    //       Math.round(
-    //         element.x + canvasStore.computeAdjustedSize(element.width)
-    //       ) &&
-    //     Math.round(mouse.value.y) >= Math.round(element.y) &&
-    //     Math.round(mouse.value.y) <=
-    //       Math.round(
-    //         element.y + canvasStore.computeAdjustedSize(element.height)
-    //       )
-    //   ) {
-    //     hoveredElement = element;
-    //     hoveredElementIndex = elements.value.length - 1 - index;
-    //   }
-    //   break;
+    ctx.value.translate(centerX, centerY);
+    ctx.value.rotate(((element.rotationAngle || 0) * Math.PI) / 180);
+    ctx.value.translate(-centerX, -centerY);
 
-    // case MODE_OPTIONS.value.text:
-    // const angle = (element.rotationAngle * Math.PI) / 180;
-    // const centerX =
-    //   element.x + canvasStore.computeAdjustedSize(element.width) / 2;
-    // const centerY =
-    //   element.y + canvasStore.computeAdjustedSize(element.height) / 2;
-    //
-    // // Rotate the mouse coordinates around the element's center
-    // const rotatedMouseX =
-    //   centerX +
-    //   Math.cos(angle) * (mouse.value.x - centerX) -
-    //   Math.sin(angle) * (mouse.value.y - centerY);
-    // const rotatedMouseY =
-    //   centerY +
-    //   Math.sin(angle) * (mouse.value.x - centerX) +
-    //   Math.cos(angle) * (mouse.value.y - centerY);
-    //
-    // if (
-    //   Math.round(rotatedMouseX) >= Math.round(element.x) &&
-    //   Math.round(rotatedMouseX) <=
-    //     Math.round(
-    //       element.x + canvasStore.computeAdjustedSize(element.width)
-    //     ) &&
-    //   Math.round(rotatedMouseY) >= Math.round(element.y) &&
-    //   Math.round(rotatedMouseY) <=
-    //     Math.round(element.y + canvasStore.computeAdjustedSize(element.height))
-    // ) {
-    //   hoveredElement = element;
-    //   hoveredElementIndex = elements.value.length - 1 - index;
-    // }
-    // break;
-
-    /*
-     * media
-     */
-    // case MODE_OPTIONS.value.media:
-    // case MODE_OPTIONS.value.mediaEmoji:
-    // case MODE_OPTIONS.value.shape:
-    angle = (element.rotationAngle * Math.PI) / 180;
-    centerX = element.x + element.width / 2;
-    centerY = element.y + element.height / 2;
-
-    // Rotate the mouse coordinates around the element's center
-    rotatedMouseX =
-      centerX +
-      Math.cos(angle) * (mouse.value.x - centerX) -
-      Math.sin(angle) * (mouse.value.y - centerY);
-    rotatedMouseY =
-      centerY +
-      Math.sin(angle) * (mouse.value.x - centerX) +
-      Math.cos(angle) * (mouse.value.y - centerY);
+    const inverseMatrix = ctx.value.getTransform().invertSelf();
+    const rotatedMouse = new DOMPoint(
+      mouse.value.x,
+      mouse.value.y
+    ).matrixTransform(inverseMatrix);
+    const rotatedMouseX = rotatedMouse.x;
+    const rotatedMouseY = rotatedMouse.y;
 
     if (
-      Math.round(rotatedMouseX) >= Math.round(element.x) &&
-      Math.round(rotatedMouseX) <= Math.round(element.x + element.width) &&
-      Math.round(rotatedMouseY) >= Math.round(element.y) &&
-      Math.round(rotatedMouseY) <= Math.round(element.y + element.height)
+      rotatedMouseX >= element.x &&
+      rotatedMouseX <= element.x + element.width &&
+      rotatedMouseY >= element.y &&
+      rotatedMouseY <= element.y + element.height
     ) {
       hoveredElement = element;
       hoveredElementIndex = elements.value.length - 1 - index;
     }
-    // break;
-    // }
+
+    ctx.value.restore();
   });
 
   return { hoveredElement, hoveredElementIndex };
@@ -247,12 +143,12 @@ export const deleteElement = (element = selectedElement.value) => {
     selectedElement.value = null;
     selectedElementIndex.value = -1;
 
-    updateSelectedElement();
+    syncSelectedElementWithStoredElements();
     deselectElement();
     canvasStore.redrawCanvas();
   }
 };
 
-export const updateSelectedElement = () => {
+export const syncSelectedElementWithStoredElements = () => {
   elements.value[selectedElementIndex.value] = selectedElement.value;
 };

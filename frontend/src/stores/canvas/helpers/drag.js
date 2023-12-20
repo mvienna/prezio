@@ -1,6 +1,6 @@
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
-import { updateSelectedElement } from "stores/canvas/helpers/select";
+import { syncSelectedElementWithStoredElements } from "stores/canvas/helpers/select";
 import { removeMagnet, useMagnet } from "stores/canvas/helpers/magnet";
 
 const canvasStore = useCanvasStore();
@@ -56,7 +56,7 @@ export const stopDragging = () => {
   ) {
     selectedElement.value.x = dragFrom.value.x;
     selectedElement.value.y = dragFrom.value.y;
-    updateSelectedElement();
+    syncSelectedElementWithStoredElements();
   }
 
   canvasStore.redrawCanvas();
@@ -103,6 +103,6 @@ export const moveElement = (newX, newY) => {
   dragStart.value.x = newX;
   dragStart.value.y = newY;
 
-  updateSelectedElement();
+  syncSelectedElementWithStoredElements();
   canvasStore.redrawCanvas(false);
 };

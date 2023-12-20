@@ -5,7 +5,7 @@ import { generateUniqueId } from "src/helpers/generationUtils";
 import {
   deselectElement,
   selectElement,
-  updateSelectedElement,
+  syncSelectedElementWithStoredElements,
 } from "stores/canvas/helpers/select";
 
 const {
@@ -78,7 +78,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
       if (!selectedElement.value) return;
 
       selectedElement.value.text = this.input.innerHTML;
-      updateSelectedElement();
+      syncSelectedElementWithStoredElements();
 
       canvasStore.redrawCanvas(false);
 
@@ -182,7 +182,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
        * remove text from canvas
        */
       selectedElement.value.isVisible = false;
-      updateSelectedElement();
+      syncSelectedElementWithStoredElements();
       canvasStore.redrawCanvas();
 
       /*
@@ -245,7 +245,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
           ...this.computeTextElementProps(x, y, element.id),
         };
         canvasStore.switchMode(MODE_OPTIONS.value.text);
-        updateSelectedElement();
+        syncSelectedElementWithStoredElements();
 
         canvasStore.redrawCanvas();
         this.removeTextInput();
@@ -453,7 +453,7 @@ export const useCanvasTextStore = defineStore("canvasText", {
           this.customization.formatting.verticalAlign;
 
         // update
-        updateSelectedElement();
+        syncSelectedElementWithStoredElements();
         canvasStore.redrawCanvas();
       }
     },

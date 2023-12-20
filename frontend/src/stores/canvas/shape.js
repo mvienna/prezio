@@ -3,7 +3,7 @@ import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generationUtils";
 import {
   selectElement,
-  updateSelectedElement,
+  syncSelectedElementWithStoredElements,
 } from "stores/canvas/helpers/select";
 import { computeAverageBrightness } from "src/helpers/colorUtils";
 import { usePresentationsStore } from "stores/presentations";
@@ -129,7 +129,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
 
         selectedElement.value.opacity = this.customization.opacity;
 
-        updateSelectedElement();
+        syncSelectedElementWithStoredElements();
         canvasStore.redrawCanvas();
       }
     },

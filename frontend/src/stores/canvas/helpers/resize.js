@@ -1,6 +1,6 @@
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
-import { updateSelectedElement } from "stores/canvas/helpers/select";
+import { syncSelectedElementWithStoredElements } from "stores/canvas/helpers/select";
 import { removeMagnet, useMagnet } from "stores/canvas/helpers/magnet";
 import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
@@ -438,7 +438,7 @@ export const resizeElement = (event) => {
     selectedElement.value.text = input.value.innerHTML;
   }
 
-  updateSelectedElement();
+  syncSelectedElementWithStoredElements();
   canvasStore.redrawCanvas(false);
 
   if (input.value) {

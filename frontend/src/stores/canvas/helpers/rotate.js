@@ -1,6 +1,6 @@
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
-import { updateSelectedElement } from "stores/canvas/helpers/select";
+import { syncSelectedElementWithStoredElements } from "stores/canvas/helpers/select";
 import { usePresentationsStore } from "stores/presentations";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 
@@ -102,6 +102,6 @@ export const rotateElement = () => {
 
   selectedElement.value.rotationAngle += rotationChange;
 
-  updateSelectedElement();
+  syncSelectedElementWithStoredElements();
   canvasStore.redrawCanvas(false);
 };
