@@ -734,7 +734,12 @@ export const useCanvasStore = defineStore("canvas", {
     renderShape(element) {
       this.ctx.strokeStyle = element.strokeColor || "rgba(255, 0, 0, 0)";
       this.ctx.lineWidth = element.lineWidth;
+
       this.applyElementFilters(element);
+
+      this.ctx.lineJoin = "round";
+      this.ctx.lineCap = "round";
+
       this.ctx.beginPath();
 
       switch (element.type) {
@@ -848,6 +853,7 @@ export const useCanvasStore = defineStore("canvas", {
           const arrowBaseY = element.y + element.height;
           const arrowTipX = element.x + element.width;
           const arrowTipY = element.y;
+
           const arrowHeadSize = element.width / 4;
 
           this.ctx.moveTo(arrowBaseX, arrowBaseY);
