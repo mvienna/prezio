@@ -346,7 +346,7 @@ const prepareElementsForNewSlide = (type) => {
 }
 
 ::v-deep(.q-tab--active) {
-  color: $dark;
+  color: $secondary;
 
   .q-tab__indicator {
     background: currentColor;
@@ -360,7 +360,7 @@ const prepareElementsForNewSlide = (type) => {
  */
 .drawer_header {
   position: sticky;
-  top: 0;
+  padding-top: 68px;
   z-index: 1;
 }
 </style>

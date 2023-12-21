@@ -206,7 +206,7 @@ const handlePresentationCardToggle = (presentation) => {
   &.presentation_card--active {
     .q-img {
       border: 1.5px solid $primary;
-      outline: 3px solid $blue-2;
+      outline: 3px solid $background;
     }
   }
 }

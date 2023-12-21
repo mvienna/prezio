@@ -3,20 +3,23 @@
     unelevated
     no-caps
     no-wrap
-    text-color="black"
-    class="text-semibold"
-    :class="isAvatarOnly ? 'q-pa-none' : 'q-pa-xs q-pl-md bg-blue-1'"
+    class="bg-accent"
+    text-color="primary"
+    size="12px"
+    :class="
+      isAvatarOnly ? 'q-pa-none round-borders' : 'q-pa-xs q-pl-md bg-blue-1'
+    "
     :round="isAvatarOnly"
   >
     <template #default>
       <div v-if="!isAvatarOnly" class="q-mr-md">
         {{ user.name }}
       </div>
+
       <UserAvatar
         :user="user"
         :size="isAvatarOnly ? '36px' : '30px'"
         color="primary"
-        style="border-radius: 8px"
       />
 
       <q-menu

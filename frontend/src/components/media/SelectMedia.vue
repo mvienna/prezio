@@ -522,7 +522,7 @@ const handleSearch = () => {
 }
 
 ::v-deep(.q-tab--active) {
-  color: $dark;
+  color: $secondary;
 
   .q-tab__indicator {
     background: currentColor;
@@ -580,12 +580,12 @@ const handleSearch = () => {
     outline: 3px solid transparent;
 
     &:hover {
-      outline: 3px solid $blue-2;
+      outline: 3px solid $background;
     }
 
     &.masonry__item--selected {
       border-color: $primary;
-      outline: 3px solid $blue-2;
+      outline: 3px solid $background;
     }
   }
 }

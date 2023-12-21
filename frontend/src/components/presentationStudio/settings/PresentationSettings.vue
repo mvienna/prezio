@@ -174,7 +174,7 @@ const tabs = {
     .q-item {
       background: $grey-1;
       color: $primary;
-      outline: 3px solid $blue-2;
+      outline: 3px solid $background;
     }
   }
 }

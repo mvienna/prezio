@@ -2,19 +2,23 @@
   <q-header class="bg-white q-pa-xs" elevated>
     <q-toolbar>
       <!-- logo -->
-      <q-btn
-        unelevated
-        round
-        :href="ROUTE_PATHS.PRESENTATIONS_BROWSER"
-        text-color="grey-5"
-        size="10px"
-      >
-        <template #default>
-          <q-img src="/favicon.ico" />
-        </template>
-      </q-btn>
+      <a :href="ROUTE_PATHS.PRESENTATIONS_BROWSER" class="link--no-decorations">
+        <div class="row no-wrap">
+          <q-img src="/favicon.ico" style="width: 30px" />
 
-      <div v-if="presentation" class="text-h6 text-semibold text-black q-ml-md">
+          <div class="q-ml-sm column">
+            <q-badge
+              class="bg-grey-secondary text-grey-5 text-xs"
+              label="BETA"
+            />
+          </div>
+        </div>
+      </a>
+
+      <div
+        v-if="presentation"
+        class="row items-center no-wrap text-h6 text-black q-ml-md"
+      >
         <!-- presentation name -->
         <span style="cursor: text">
           {{ presentation.name }}
@@ -38,13 +42,13 @@
 
         <!-- visibility -->
         <q-btn
-          text-color="dark"
+          text-color="black"
           flat
           no-caps
           no-wrap
           round
           size="12px"
-          class="q-ml-sm"
+          class="q-ml-md"
           :icon="presentation?.is_private ? 'r_visibility_off' : 'r_visibility'"
           @click="
             presentation.is_private = !presentation.is_private;
@@ -53,7 +57,7 @@
         />
       </div>
 
-      <q-separator vertical class="q-my-sm q-mx-sm" />
+      <q-separator vertical class="q-my-md q-mx-sm" />
 
       <!-- undo / redo -->
       <div class="row no-wrap items-center">
@@ -81,47 +85,54 @@
       <div v-if="presentation" class="row no-wrap items-center">
         <div class="row no-wrap q-gutter-xs">
           <!-- save -->
-          <q-btn
-            flat
-            no-caps
-            no-wrap
-            round
-            size="12px"
-            :loading="isSaving"
-            :color="isSavingError ? 'negative' : 'positive'"
-            :icon="isSavingError ? 'r_report' : 'r_check_circle'"
-            @click="
-              canvasStore.saveSlidePreview();
-              presentationsStore.saveSlide(undefined, elements);
-            "
-          >
-            <template v-slot:loading>
-              <q-spinner-ios color="grey-4" size="24px" />
-            </template>
+          <div class="row items-center">
+            <q-btn
+              flat
+              no-caps
+              no-wrap
+              round
+              class="round-borders"
+              size="12px"
+              :loading="isSaving"
+              :color="isSavingError ? 'negative' : 'positive'"
+              :icon="isSavingError ? 'r_report' : 'r_check_circle'"
+              @click="
+                canvasStore.saveSlidePreview();
+                presentationsStore.saveSlide(undefined, elements);
+              "
+            >
+              <template v-slot:loading>
+                <q-spinner-ios color="grey-4" size="24px" />
+              </template>
 
-            <q-tooltip>
-              {{
-                isSavingError
-                  ? $t("presentationLayout.errors.somethingWentWrong")
-                  : date.formatDate(
-                      lastSavedAt || new Date(presentation.updated_at),
-                      "DD.MM.YYYY HH:mm"
-                    )
-              }}
-            </q-tooltip>
-          </q-btn>
+              <q-tooltip>
+                {{
+                  isSavingError
+                    ? $t("presentationLayout.errors.somethingWentWrong")
+                    : date.formatDate(
+                        lastSavedAt || new Date(presentation.updated_at),
+                        "DD.MM.YYYY HH:mm"
+                      )
+                }}
+              </q-tooltip>
+            </q-btn>
+          </div>
 
           <!-- share -->
           <q-btn
-            color="dark"
+            color="black"
             flat
             no-caps
             no-wrap
-            round
-            size="12px"
-            icon="r_share"
+            size="14px"
+            class="q-px-sm"
             @click="showShareDialog = true"
-          />
+          >
+            <q-icon name="icon-upload" size="20px" />
+            <span class="q-ml-sm">{{
+              $t("presentationLayout.header.share.title")
+            }}</span>
+          </q-btn>
 
           <q-dialog v-model="showShareDialog">
             <PresentationStudioLayoutHeaderShareDialog
@@ -129,35 +140,47 @@
             />
           </q-dialog>
 
-          <!-- download -->
+          <!-- progress -->
           <q-btn
-            color="dark"
+            color="black"
+            flat
+            no-caps
+            no-wrap
+            disable
+            round
+            size="12px"
+            icon="r_query_stats"
+          />
+
+          <!-- settings -->
+          <q-btn
+            color="black"
+            flat
+            no-caps
+            no-wrap
+            round
+            size="12px"
+            icon="icon-page_info"
+            @click="showSettingsDialog = true"
+          />
+
+          <!-- info -->
+          <q-btn
+            color="black"
             flat
             no-caps
             no-wrap
             round
             disable
             size="12px"
-            icon="r_downloading"
-          />
-
-          <!-- settings -->
-          <q-btn
-            color="dark"
-            flat
-            no-caps
-            no-wrap
-            round
-            size="12px"
-            icon="r_settings"
-            @click="showSettingsDialog = true"
+            icon="r_help"
           />
 
           <q-dialog v-model="showSettingsDialog" position="right">
             <PresentationSettings
               @cancel="showSettingsDialog = false"
               class="q-mr-md"
-              style="height: calc(100vh - 24px - 66px - 24px); margin-top: 66px"
+              style="height: calc(100vh - 58px - 32px); margin-top: 48px"
             />
           </q-dialog>
         </div>
@@ -264,7 +287,7 @@
                       )
                     }}
                   </span>
-                  <q-badge color="dark" rounded class="text-grey-3 q-ml-xs">
+                  <q-badge color="black" rounded class="text-grey-3 q-ml-xs">
                     {{
                       $t("presentationLayout.header.present.withBackstage.beta")
                     }}
@@ -287,7 +310,7 @@
               <q-checkbox
                 v-model="presentation.settings.is_fullscreen"
                 size="sm"
-                color="dark"
+                color="black"
                 disable
               >
                 <template #default>
@@ -417,7 +440,7 @@
         </q-dialog>
 
         <!-- user -->
-        <UserMenu is-avatar-only class="q-ml-xs" />
+        <UserMenu is-avatar-only class="q-ml-sm" />
       </div>
     </q-toolbar>
   </q-header>

@@ -11,7 +11,7 @@
         <q-btn
           icon="r_close"
           unelevated
-          text-color="dark"
+          text-color="black"
           round
           size="12px"
           @click="$emit('switchMode', null)"
@@ -21,37 +21,35 @@
       </template>
 
       <template v-else>
-        <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
-          <q-btn
-            icon="r_space_dashboard"
-            unelevated
-            text-color="dark"
-            :class="showLayoutsMenu ? 'bg-grey-2' : ''"
-            round
-            size="12px"
+        <q-btn
+          v-if="slide?.type === SLIDE_TYPES.CONTENT"
+          icon="icon-space_dashboard"
+          unelevated
+          text-color="black"
+          :class="showLayoutsMenu ? 'bg-grey-2' : ''"
+          class="q-mr-sm"
+          round
+          size="12px"
+        >
+          <q-tooltip>
+            {{ $t("presentationStudio.toolbar.layouts.title") }}
+          </q-tooltip>
+
+          <!-- layouts -->
+          <q-menu
+            v-model="showLayoutsMenu"
+            anchor="top left"
+            self="bottom left"
+            transition-show="jump-down"
+            transition-hide="jump-up"
+            :offset="[0, 16]"
+            class="q-pa-md bg-white"
+            max-height="70vh"
+            style="width: 424px"
           >
-            <q-tooltip>
-              {{ $t("presentationStudio.toolbar.layouts.title") }}
-            </q-tooltip>
-
-            <!-- layouts -->
-            <q-menu
-              v-model="showLayoutsMenu"
-              anchor="top left"
-              self="bottom left"
-              transition-show="jump-down"
-              transition-hide="jump-up"
-              :offset="[0, 16]"
-              class="q-pa-md bg-white"
-              max-height="70vh"
-              style="width: 424px"
-            >
-              <PresentationStudioToolbarTopLayouts v-close-popup />
-            </q-menu>
-          </q-btn>
-
-          <q-separator vertical class="q-mx-sm" />
-        </template>
+            <PresentationStudioToolbarTopLayouts v-close-popup />
+          </q-menu>
+        </q-btn>
 
         <!-- modes -->
         <PresentationStudioToolbarTopModes
@@ -97,7 +95,7 @@
         <q-btn
           icon="r_paste"
           unelevated
-          text-color="dark"
+          text-color="black"
           size="12px"
           round
           @click="paste()"
@@ -124,7 +122,14 @@
       <q-space />
     </template>
 
+    <div class="row items-center q-mr-md">
+      <div class="text-sm" style="opacity: 0.1">
+        {{ Math.round(mouse.x) }}x{{ Math.round(mouse.y) }}
+      </div>
+    </div>
+
     <div class="row no-wrap">
+      <!-- zoom out -->
       <q-btn
         icon="r_zoom_out"
         round
@@ -137,6 +142,7 @@
         </q-tooltip>
       </q-btn>
 
+      <!-- current zoom -->
       <q-btn :label="`${Math.round(scale * 100)}%`" unelevated>
         <q-tooltip>
           {{ $t("presentationStudio.toolbar.zoom.select") }}
@@ -162,6 +168,7 @@
         </q-menu>
       </q-btn>
 
+      <!-- zoom in -->
       <q-btn
         icon="r_zoom_in"
         round
@@ -210,6 +217,7 @@ const {
   scale,
   ZOOM_OPTIONS,
   MODE_OPTIONS,
+  mouse,
   selectedElement,
   selectedElementIndex,
   copiedElement,
@@ -296,12 +304,12 @@ const isMac = computed(() => {
 <style scoped lang="scss">
 .presentation_toolbar__top {
   position: absolute;
-  z-index: 2;
+  z-index: 1001;
   top: 0;
   left: 0;
-  width: 100%;
+  width: calc(100% + 400px);
   height: 68px;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 6px 24px 0;
+  border-bottom: 1px solid $grey-secondary;
 }
 
 ::v-deep(.q-field--dense .q-field__marginal) {

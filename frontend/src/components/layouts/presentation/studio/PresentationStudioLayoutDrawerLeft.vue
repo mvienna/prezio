@@ -12,36 +12,57 @@
       class="bg-white q-px-md"
       style="position: sticky; top: -16px; z-index: 1"
     >
-      <div class="row no-wrap q-gutter-md justify-center">
-        <!-- new slide -->
-        <q-btn
-          color="primary"
-          icon="r_loupe"
-          no-caps
-          unelevated
-          :label="$t('presentationLayout.leftDrawer.newSlide')"
-          style="width: 100%"
+      <!-- new slide -->
+      <q-btn
+        color="primary"
+        icon="r_add"
+        no-caps
+        unelevated
+        :label="$t('presentationLayout.leftDrawer.newSlide')"
+        style="width: 100%"
+      >
+        <q-menu
+          v-model="showNewSlideTypeSelectionMenu[0]"
+          anchor="bottom left"
+          self="top left"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :offset="[0, 16]"
+          class="q-pa-md scroll--hidden bg-white"
+          max-height="75vh"
+          style="width: 399px; border-radius: 16px"
         >
-          <q-menu
-            v-model="showNewSlideTypeSelectionMenu[0]"
-            anchor="bottom left"
-            self="top left"
-            transition-show="jump-down"
-            transition-hide="jump-up"
-            :offset="[0, 16]"
-            class="q-pa-md scroll--hidden bg-white"
-            max-height="75vh"
-            style="width: 399px; border-radius: 16px"
-          >
-            <PresentationStudioTabsTypesTab
-              disable-layout-selection
-              :highlight-active-type="false"
-              v-close-popup
-              style="z-index: 2"
-              @select="handleAddingNewSlide($event)"
-            />
-          </q-menu>
-        </q-btn>
+          <PresentationStudioTabsTypesTab
+            disable-layout-selection
+            :highlight-active-type="false"
+            v-close-popup
+            style="z-index: 2"
+            @select="handleAddingNewSlide($event)"
+          />
+        </q-menu>
+      </q-btn>
+
+      <div class="relative-position q-mt-md">
+        <q-btn
+          unelevated
+          :label="$t('presentationLayout.leftDrawer.import')"
+          color="grey-secondary"
+          text-color="black"
+          no-caps
+          class="full-width"
+        />
+
+        <div
+          class="bg-purple absolute-top-right round-borders row items-center justify-center"
+          style="
+            margin-top: -8px;
+            margin-right: -8px;
+            height: 20px;
+            width: 20px;
+          "
+        >
+          <q-icon name="r_bolt" color="white" size="16px" />
+        </div>
       </div>
 
       <q-separator class="q-mt-md" />
@@ -785,8 +806,8 @@ watch(
 
   &.slide--hovered,
   &.slide--hoverable:hover {
-    border: 1.5px solid $blue-4;
-    outline: 1.5px solid $blue-4;
+    border: 1.5px solid $accent;
+    outline: 1.5px solid $accent;
   }
 
   &:active {
@@ -795,7 +816,7 @@ watch(
 
   &.slide--active {
     border: 1.5px solid $primary;
-    outline: 2.5px solid $blue-4;
+    outline: 2.5px solid $accent;
   }
 }
 

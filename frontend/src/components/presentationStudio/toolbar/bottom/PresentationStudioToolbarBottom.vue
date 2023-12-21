@@ -1,11 +1,6 @@
 <template>
-  <div
-    class="presentation_toolbar__bottom row no-wrap items-center justify-between"
-  >
-    <div style="opacity: 0.5">
-      <b>x:</b> {{ Math.round(mouse.x) }} <b>y:</b>
-      {{ Math.round(mouse.y) }}
-    </div>
+  <div class="presentation_toolbar__bottom row no-wrap items-center">
+    <q-space />
 
     <q-btn
       v-if="
@@ -77,8 +72,6 @@ const $q = useQuasar();
 /*
  * stores
  */
-const { mouse } = storeToRefs(useCanvasStore());
-
 const presentationsStore = usePresentationsStore();
 const { presentation, slide } = storeToRefs(presentationsStore);
 

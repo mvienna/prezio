@@ -45,7 +45,7 @@
       "
     >
       <template #prepend>
-        <q-icon name="r_keyboard_return" color="dark" class="q-mr-xs" />
+        <q-icon name="r_keyboard_return" color="black" class="q-mr-xs" />
       </template>
     </q-input>
   </div>

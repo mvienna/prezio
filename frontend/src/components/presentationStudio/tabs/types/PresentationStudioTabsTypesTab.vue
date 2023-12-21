@@ -12,10 +12,10 @@
         <q-icon
           :name="
             index === 0
-              ? 'r_check_circle'
+              ? 'r_emoji_objects'
               : index === 1
-              ? 'r_sms'
-              : 'r_space_dashboard'
+              ? 'r_quiz'
+              : 'r_leaderboard'
           "
           size="20px"
           color="primary"
@@ -200,7 +200,7 @@ const types = computed(() => {
   cursor: pointer;
   transition: 0.2s;
   border-radius: 8px;
-  border: 1.5px solid $secondary;
+  border: 1.5px solid $grey-primary;
   outline: 3px solid transparent;
 
   &:hover {
@@ -218,10 +218,10 @@ const types = computed(() => {
 
   &.q-item--active {
     border: 1.5px solid $primary;
-    background: $white !important;
+    background: $background !important;
 
     &:hover {
-      outline: 3px solid $blue-2 !important;
+      outline: 3px solid $accent !important;
     }
   }
 }

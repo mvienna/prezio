@@ -56,7 +56,7 @@
           "
         >
           <template #prepend>
-            <q-icon name="r_timer" color="dark" class="q-mr-xs" />
+            <q-icon name="r_timer" color="black" class="q-mr-xs" />
           </template>
 
           <template #append>

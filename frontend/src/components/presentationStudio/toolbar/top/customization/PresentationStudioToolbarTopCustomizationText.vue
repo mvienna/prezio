@@ -256,7 +256,7 @@
     :options="FONT_OPTIONS"
     emit-value
     borderless
-    color="dark"
+    color="black"
     dense
     options-dense
     class="text-no-wrap"

@@ -26,7 +26,7 @@
           flat
           round
           size="10px"
-          color="dark"
+          color="black"
           :icon="
             layoutTitle?.textAlign === 'left'
               ? 'r_format_align_left'

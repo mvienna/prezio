@@ -457,7 +457,7 @@ const handleTemplateDeletion = (template) => {
 
   &:hover {
     .q-img {
-      outline: 3px solid $blue-2;
+      outline: 3px solid $background;
     }
   }
 
@@ -466,7 +466,7 @@ const handleTemplateDeletion = (template) => {
 
     .q-img {
       border: 1.5px solid $primary;
-      outline: 3px solid $blue-2;
+      outline: 3px solid $background;
     }
   }
 }

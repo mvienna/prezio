@@ -159,7 +159,7 @@ const deleteFile = () => {
   outline: 4px solid $white;
 
   &:hover {
-    outline: 4px solid $blue-3;
+    outline: 4px solid $accent;
   }
 }
 

@@ -313,7 +313,7 @@ const handleLayersReorder = async () => {
 
   &.layer--active {
     border: 1.5px solid $primary;
-    outline: 3px solid $blue-2;
+    outline: 3px solid $background;
 
     color: $primary;
   }

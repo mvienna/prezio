@@ -38,7 +38,7 @@
     map-options
     emit-value
     borderless
-    color="dark"
+    color="black"
     hide-dropdown-icon
     dense
     class="q-px-sm"
@@ -66,7 +66,7 @@
     emit-value
     :option-label="(option) => $t(option.label)"
     borderless
-    color="dark"
+    color="black"
     hide-dropdown-icon
     dense
     options-dense

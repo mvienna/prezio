@@ -1,5 +1,5 @@
 <template>
-  <q-avatar color="primary" text-color="white">
+  <q-avatar text-color="primary">
     <!-- uploaded avatar -->
     <q-img
       v-if="user.avatar"
@@ -18,3 +18,9 @@ defineProps({
   user: { type: Object, default: null },
 });
 </script>
+
+<style scoped lang="scss">
+.q-avatar {
+  background: transparent !important;
+}
+</style>

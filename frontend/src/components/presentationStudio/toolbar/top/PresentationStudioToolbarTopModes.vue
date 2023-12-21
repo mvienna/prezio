@@ -4,7 +4,7 @@
     <q-btn
       icon="r_gesture"
       unelevated
-      text-color="dark"
+      text-color="black"
       round
       size="12px"
       :disable="disabled"
@@ -18,9 +18,9 @@
 
     <!-- text -->
     <q-btn
-      icon="r_text_fields"
+      icon="icon-insert_text"
       unelevated
-      text-color="dark"
+      text-color="black"
       round
       size="12px"
       :disable="disabled"
@@ -37,9 +37,9 @@
 
     <!-- image -->
     <q-btn
-      icon="r_image"
+      icon="o_add_photo_alternate"
       unelevated
-      text-color="dark"
+      text-color="black"
       round
       size="12px"
       :disable="disabled"
@@ -69,9 +69,9 @@
 
     <!-- emoji -->
     <q-btn
-      icon="r_add_reaction"
+      icon="icon-add_reaction"
       unelevated
-      text-color="dark"
+      text-color="black"
       round
       :disable="disabled"
       size="12px"
@@ -111,10 +111,10 @@
 
     <!-- shapes -->
     <q-btn
-      icon="r_shape_line"
+      icon="icon-shape_line"
       :class="mode === MODE_OPTIONS.shape ? 'bg-grey-1' : ''"
       unelevated
-      text-color="dark"
+      text-color="black"
       round
       :disable="disabled"
       size="12px"

@@ -156,7 +156,7 @@
           map-options
           emit-value
           borderless
-          color="dark"
+          color="black"
           dense
           hide-dropdown-icon
           class="q-pl-sm"
