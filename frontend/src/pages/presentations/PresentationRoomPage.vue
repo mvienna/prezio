@@ -664,6 +664,7 @@ const connectToRoomChannels = async () => {
       //   "seconds"
       // );
 
+      console.log(countdownDifference);
       const updatedCountdown = room.value.countdown + countdownDifference;
 
       // pre-fetch changed slide
@@ -704,7 +705,10 @@ const connectToRoomChannels = async () => {
           }, timeout / 2);
         }
       } else {
-        startCountdown(updatedCountdown);
+        const timeout = SLIDE_TYPES_OF_QUIZ.includes(currentSlide.type)
+          ? presentationsStore.computeBeforeQuizTimeout()
+          : 0;
+        startCountdown(updatedCountdown - timeout / 1000);
 
         if (isHost.value) {
           presentationsStore.updateRoom(undefined, undefined, {
