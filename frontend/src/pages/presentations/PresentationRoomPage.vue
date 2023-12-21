@@ -689,7 +689,6 @@ const connectToRoomChannels = async () => {
             presentationsStore.updateRoom(undefined, undefined, {
               countdown: updatedCountdown,
               is_submission_locked: false,
-              sentAt: nowDate,
             });
           }, timeout);
         }
@@ -710,8 +709,6 @@ const connectToRoomChannels = async () => {
         if (isHost.value) {
           presentationsStore.updateRoom(undefined, undefined, {
             countdown: timeLeft.value,
-            sentAt: nowDate,
-            // sentAt: nowMs,
             disableNotification: true,
           });
         }
@@ -836,7 +833,7 @@ const connectToRoomChannels = async () => {
             });
 
           presentationsStore.updateRoom(undefined, undefined, {
-            countdown: room.value.countdown,
+            countdown: 0,
             is_submission_locked: room.value.is_submission_locked,
             is_answers_revealed: room.value.is_answers_revealed,
           });

@@ -433,6 +433,12 @@ export const usePresentationsStore = defineStore("presentations", {
         this.isLoading.sendingRoomUpdatedEvent = true;
       }
 
+      if (data.countdown) {
+        data.sentAt = new Date().toLocaleString("en-US", {
+          timeZone: "Europe/Moscow",
+        });
+      }
+
       return await api
         .patch(`/presentation/${presentation_id}/room/${room_id}`, data)
         .catch((error) => {
