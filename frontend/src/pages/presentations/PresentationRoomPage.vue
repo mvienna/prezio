@@ -664,7 +664,6 @@ const connectToRoomChannels = async () => {
       //   "seconds"
       // );
 
-      console.log(countdownDifference);
       const updatedCountdown = room.value.countdown + countdownDifference;
 
       // pre-fetch changed slide
@@ -688,7 +687,7 @@ const connectToRoomChannels = async () => {
         if (isHost.value) {
           beforeQuizTimeout.value = setTimeout(() => {
             presentationsStore.updateRoom(undefined, undefined, {
-              countdown: updatedCountdown,
+              countdown: updatedCountdown - timeout / 1000,
               is_submission_locked: false,
             });
           }, timeout);
