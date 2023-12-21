@@ -102,8 +102,9 @@ class PresentationRoomController extends Controller
         /*
          * slide
          */
+        $slide = null;
         if ($request->filled('slide_id') && $room->slide_id !== $request->input('slide_id')) {
-            $slide = PresentationSlide::find($request->input('slide_id'));
+            $slide = PresentationSlide::select('id', 'type', 'settings_data')->find($request->input('slide_id'));
             if ($slide) {
                 $props['slide_id'] = $slide->id;
                 $presentation->settings()->update([
@@ -175,7 +176,7 @@ class PresentationRoomController extends Controller
          */
         $room->update($props);
         if (!$request->filled('disableNotification')) {
-            event(new PresentationRoomUpdatedEvent($room));
+            event(new PresentationRoomUpdatedEvent($room, $slide));
         }
 
         return $this->successResponse();
