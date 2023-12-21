@@ -350,14 +350,10 @@ const isParticipantBaseInfoCollected = computed(() => {
   // require base info on slide type of quiz
   // if participant hasn't done it yet (logged in as guest)
   const participantData = Object.keys(JSON.parse(participant.value.user_data));
-  if (
+  return !(
     SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
     !["name", "avatar"].every((key) => participantData.includes(key))
-  ) {
-    return false;
-  }
-
-  return true;
+  );
 });
 
 /*
@@ -655,6 +651,8 @@ const connectToRoomChannels = async () => {
       const countdownDifference =
         (nowMs - new Date(room.value.countdown_started_at).getTime()) / 1000;
 
+      console.log("DIFFERENCE: ", countdownDifference);
+
       // const now = new Date().toLocaleString("en-US", {
       //   timeZone: "Europe/Moscow",
       // });
@@ -703,6 +701,7 @@ const connectToRoomChannels = async () => {
         }
       } else {
         startCountdown(updatedCountdown);
+        console.log("TIMER: ", timeLeft.value);
 
         if (isHost.value) {
           presentationsStore.updateRoom(undefined, undefined, {

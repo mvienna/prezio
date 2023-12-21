@@ -123,7 +123,7 @@
     </template>
 
     <div class="row items-center q-mr-md">
-      <div class="text-sm" style="opacity: 0.1">
+      <div class="text-sm" style="opacity: 0.2">
         {{ Math.round(mouse.x) }}x{{ Math.round(mouse.y) }}
       </div>
     </div>
