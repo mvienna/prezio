@@ -336,7 +336,19 @@ const applyDesignToAllSlides = async () => {
 
     // set new elements & render preview
     await canvasStore.setElementsFromSlide(item.canvas_data);
-    item.preview = await canvasStore.saveSlidePreview(item.id);
+
+    await canvasStore.redrawCanvas(false, undefined, false);
+
+    const tempCanvas = document.createElement("canvas");
+    const tempCtx = tempCanvas.getContext("2d");
+
+    tempCanvas.width = 512;
+    tempCanvas.height = 288;
+
+    tempCtx.drawImage(canvas.value, 0, 0, tempCanvas.width, tempCanvas.height);
+
+    item.preview = tempCanvas.toDataURL("image/png");
+    tempCanvas.remove();
 
     // save slide
     await presentationsStore.saveSlide(item, JSON.parse(item.canvas_data));

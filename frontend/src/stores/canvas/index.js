@@ -242,35 +242,20 @@ export const useCanvasStore = defineStore("canvas", {
       }
     },
 
-    saveSlidePreview(slide_id = slide.value.id) {
-      return new Promise((resolve) => {
-        this.redrawCanvas(false, undefined, false);
+    saveSlidePreview() {
+      this.redrawCanvas(false, undefined, false);
 
-        const tempCanvas = document.createElement("canvas");
-        const tempCtx = tempCanvas.getContext("2d");
+      const tempCanvas = document.createElement("canvas");
+      const tempCtx = tempCanvas.getContext("2d");
+      tempCanvas.width = 512;
+      tempCanvas.height = 288;
+      tempCtx.drawImage(this.canvas, 0, 0, tempCanvas.width, tempCanvas.height);
+      if (slide.value) {
+        slide.value.preview = tempCanvas.toDataURL("image/png");
+      }
+      tempCanvas.remove();
 
-        tempCanvas.width = 512;
-        tempCanvas.height = 288;
-
-        tempCtx.drawImage(
-          this.canvas,
-          0,
-          0,
-          tempCanvas.width,
-          tempCanvas.height
-        );
-
-        const result = tempCanvas.toDataURL("image/png");
-
-        if (slide_id !== slide.value.id) {
-          slide.value.preview = result;
-          presentationsStore.syncCurrentSlideWithPresentationSlides();
-        }
-
-        tempCanvas.remove();
-
-        resolve(result);
-      });
+      presentationsStore.syncCurrentSlideWithPresentationSlides();
     },
 
     renderSlidePreview() {

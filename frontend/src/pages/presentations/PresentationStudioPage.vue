@@ -248,8 +248,7 @@ onMounted(async () => {
   /*
    * compute background brightness
    */
-  for (const item of presentation.value.slides) {
-    const index = presentation.value.slides.indexOf(item);
+  presentation.value.slides.map(async (item, index) => {
     presentation.value.slides[index].previewAverageBrightness =
       await computeAverageBrightness(
         item.id === slide.value.id
@@ -261,7 +260,7 @@ onMounted(async () => {
       averageBackgroundBrightness.value =
         presentation.value.slides[index].previewAverageBrightness;
     }
-  }
+  });
 
   /*
    * resize canvas
