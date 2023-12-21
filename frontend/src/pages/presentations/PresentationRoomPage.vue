@@ -705,10 +705,7 @@ const connectToRoomChannels = async () => {
           }, timeout / 2);
         }
       } else {
-        const timeout = SLIDE_TYPES_OF_QUIZ.includes(currentSlide.type)
-          ? presentationsStore.computeBeforeQuizTimeout()
-          : 0;
-        startCountdown(updatedCountdown - timeout / 1000);
+        startCountdown(updatedCountdown);
 
         if (isHost.value) {
           presentationsStore.updateRoom(undefined, undefined, {
