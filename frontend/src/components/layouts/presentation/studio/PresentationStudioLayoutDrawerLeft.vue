@@ -8,10 +8,7 @@
     class="bg-white q-py-md scroll--hidden"
   >
     <!-- header -->
-    <div
-      class="bg-white q-px-md"
-      style="position: sticky; top: -16px; z-index: 1"
-    >
+    <div class="bg-white q-px-md">
       <!-- new slide -->
       <q-btn
         color="primary"
@@ -163,7 +160,7 @@
                 :class="
                   element.previewAverageBrightness >=
                   backgroundBrightnessThreshold
-                    ? 'text-accent'
+                    ? 'text-grey-5'
                     : 'text-white'
                 "
               >
