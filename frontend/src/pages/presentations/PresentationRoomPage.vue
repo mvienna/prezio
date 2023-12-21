@@ -666,14 +666,9 @@ const connectToRoomChannels = async () => {
 
       const updatedCountdown = room.value.countdown + countdownDifference;
 
-      // pre-fetch changed slide
-      let currentSlide = slide.value;
-      if (currentSlide.id !== room.value.slide_id) {
-        const response = await presentationsStore.fetchSlideData(
-          room.value.slide_id
-        );
-        currentSlide = response.data;
-      }
+      const currentSlide = presentation.value.slides.find(
+        (item) => item.id === slide.value.id
+      );
 
       if (
         SLIDE_TYPES_OF_QUIZ.includes(currentSlide.type) &&
