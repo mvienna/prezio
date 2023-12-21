@@ -667,7 +667,7 @@ const connectToRoomChannels = async () => {
       const updatedCountdown = room.value.countdown + countdownDifference;
 
       const currentSlide = presentation.value.slides.find(
-        (item) => item.id === slide.value.id
+        (item) => item.id === room.value.slide_id
       );
 
       if (
