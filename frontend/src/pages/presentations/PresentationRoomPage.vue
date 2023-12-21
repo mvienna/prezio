@@ -927,16 +927,16 @@ const handleSlideChange = async (direction) => {
   if (!quizInProgressWarning) return;
 
   // instant slide change (local)
-  slide.value = newSlide;
-  slideSettings.value = slide.value.settings_data
-    ? JSON.parse(slide.value.settings_data)
-    : {};
-  presentationsStore.syncCurrentSlideWithPresentationSlides();
-  await canvasStore.setElementsFromSlide();
-  if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
-    filterElements();
-  }
-  canvasStore.redrawCanvas(false, undefined, false);
+  // slide.value = newSlide;
+  // slideSettings.value = slide.value.settings_data
+  //   ? JSON.parse(slide.value.settings_data)
+  //   : {};
+  // presentationsStore.syncCurrentSlideWithPresentationSlides();
+  // await canvasStore.setElementsFromSlide();
+  // if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
+  //   filterElements();
+  // }
+  // canvasStore.redrawCanvas(false, undefined, false);
 
   // process slide change (update room data)
   await handleRoomUpdateOnSlideChange(undefined, direction, newSlide);
