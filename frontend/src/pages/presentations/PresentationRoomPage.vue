@@ -678,7 +678,7 @@ const connectToRoomChannels = async () => {
         if (isHost.value) {
           beforeQuizTimeout.value = setTimeout(() => {
             presentationsStore.updateRoom(undefined, undefined, {
-              countdown: updatedCountdown - timeout / 1000,
+              countdown: updatedCountdown,
               sentAt: nowDate,
               is_submission_locked: false,
             });
