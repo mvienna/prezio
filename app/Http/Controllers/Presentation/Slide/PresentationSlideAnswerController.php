@@ -95,7 +95,7 @@ class PresentationSlideAnswerController extends Controller
             ]);
 
             $presentation->room->load('messages', 'reactions');
-            event(new PresentationRoomUpdatedEvent($presentation->room));
+            event(new PresentationRoomUpdatedEvent($presentation->room, null));
             event(new PresentationRoomParticipantsErasedEvent($presentation->room));
         }
 
