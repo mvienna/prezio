@@ -788,32 +788,31 @@ watch(
 .slide {
   outline: 3px solid transparent;
   transition: 0.2s;
-  border: 1.5px solid $grey-2;
+  border: 2px solid $grey-2;
   width: 160px;
   height: calc(160px * 9 / 16);
   border-radius: 8px;
+  overflow: hidden;
 
   canvas,
   .q-img {
     width: 100%;
     height: 100%;
-    border-radius: 8px;
     background: $white;
   }
 
   &.slide--hovered,
   &.slide--hoverable:hover {
-    border: 1.5px solid $accent;
-    outline: 1.5px solid $accent;
+    border: 2px solid $accent;
+    outline: 1px solid $accent;
   }
 
-  &:active {
-    transform: scale(0.975);
-  }
+  //&:active {
+  //  transform: scale(0.975);
+  //}
 
   &.slide--active {
-    border: 1.5px solid $primary;
-    outline: 2.5px solid $accent;
+    border: 2px solid $primary;
   }
 }
 

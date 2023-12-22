@@ -6,15 +6,7 @@
       border-radius: 8px 8px 0 0;
       z-index: 2;
     "
-    :style="`width: ${canvasRect?.width}px; left: ${canvasRect?.left}px; top: ${
-      canvasRect?.top
-    }px; background: ${
-      presentation?.settings?.show_joining_instructions_bar || isHovered
-        ? averageBackgroundBrightness >= backgroundBrightnessThreshold
-          ? 'rgba(0, 0, 0, 0.1)'
-          : 'rgba(255, 255, 255, 0.1)'
-        : 'transparent'
-    };`"
+    :style="`width: ${canvasRect?.width}px; left: ${canvasRect?.left}px; top: ${canvasRect?.top}px;`"
     class="row no-wrap items-center justify-center q-px-sm"
     :class="`text-${
       averageBackgroundBrightness >= backgroundBrightnessThreshold
@@ -26,15 +18,22 @@
   >
     <transition
       appear
-      enter-active-class="animated fadeInDown"
-      leave-active-class="animated fadeOutUp"
+      enter-active-class="animated flipInX"
+      leave-active-class="animated flipOutX"
     >
       <div
         v-if="
           presentation?.settings?.show_joining_instructions_bar || isHovered
         "
-        class="row no-wrap items-center justify-center ellipsis"
+        class="row no-wrap items-center justify-center ellipsis q-px-sm presentation_studio_slide_header__banner"
         style="max-width: 70%"
+        :style="`background: ${
+          presentation?.settings?.show_joining_instructions_bar || isHovered
+            ? averageBackgroundBrightness >= backgroundBrightnessThreshold
+              ? 'rgba(0, 0, 0, 0.1)'
+              : 'rgba(255, 255, 255, 0.1)'
+            : 'transparent'
+        };`"
       >
         <!-- link -->
         <div class="ellipsis cursor-pointer" @click="copyRoomLinkToClipboard()">
@@ -48,7 +47,7 @@
             </b>
           </span>
 
-          <q-tooltip :offset="[0, 0]">
+          <q-tooltip :offset="[0, 8]">
             {{
               $t(
                 `presentationRoom.header.roomLink.${
@@ -60,13 +59,9 @@
         </div>
 
         <!-- open share -->
-        <q-btn
-          flat
-          icon="r_edit"
-          :size="10 * scale + 'px'"
-          style="border-radius: 50%"
-          round
-          class="q-ml-sm"
+        <q-icon
+          name="r_edit"
+          class="q-ml-sm cursor-pointer q-pa-xs"
           @click="showShareDialog = true"
         />
       </div>
@@ -164,3 +159,11 @@ const copyRoomLinkToClipboard = () => {
   }, 3000);
 };
 </script>
+
+<style scoped lang="scss">
+.presentation_studio_slide_header__banner {
+  border-radius: 12px;
+  height: 24px;
+  font-size: 12px;
+}
+</style>

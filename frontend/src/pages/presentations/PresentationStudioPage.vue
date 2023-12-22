@@ -39,10 +39,13 @@
             @click="handleCanvasClick"
           ></canvas>
 
-          <!-- slide data (reactions, answers, participants online) -->
-          <PresentationStudioRoomData
-            v-if="isCanvasReady && !isPresentationPreview"
-          />
+          <template v-if="isCanvasReady && !isPresentationPreview">
+            <!-- slide data (reactions, answers, participants online) -->
+            <PresentationStudioRoomData />
+
+            <!-- actions (results) -->
+            <PresentationStudioRoomActions />
+          </template>
         </div>
       </teleport>
     </div>
@@ -141,6 +144,7 @@ import { useAuthStore } from "stores/auth";
 import Echo from "laravel-echo";
 import PresentationStudioRoomData from "components/presentationStudio/PresentationStudioRoomData.vue";
 import { computeAverageBrightness } from "src/helpers/colorUtils";
+import PresentationStudioRoomActions from "components/presentationStudio/toolbar/PresentationStudioRoomActions.vue";
 
 /*
  * variables

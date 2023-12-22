@@ -1,12 +1,7 @@
 <template>
-  <div class="row justify-end q-pr-md">
+  <div class="row justify-end q-pr-sm">
     <div
-      :style="` background: ${
-        averageBackgroundBrightness >= backgroundBrightnessThreshold
-          ? 'rgba(0, 0, 0, 0.1)'
-          : 'rgba(255, 255, 255, 0.1)'
-      };`"
-      class="room_data row no-wrap items-center justify-center q-px-sm"
+      class="room_data row no-wrap items-center justify-center"
       :class="`text-${
         averageBackgroundBrightness >= backgroundBrightnessThreshold
           ? 'black'
@@ -51,8 +46,8 @@
         <div class="relative-position q-mr-xs">
           <q-icon name="r_person" color="grey" size="24px" />
           <div
-            class="room_data__participants_count__status absolute-bottom-right"
-            :class="participants?.length || 0 ? 'bg-green' : 'bg-white'"
+            v-if="participants?.length || 0"
+            class="room_data__participants_count__status absolute-bottom-right bg-green"
           ></div>
         </div>
 
@@ -179,10 +174,10 @@ const onResize = () => {
 .room_data {
   color: $white;
   border-radius: 24px;
-  padding: 8px;
   z-index: 2;
-  height: 40px;
-  margin-top: calc(-40px - 16px);
+  height: 24px;
+  margin-top: calc(-24px - 16px);
+  margin-right: 8px;
   font-size: 0.8em;
   transition: 0.2s;
 
