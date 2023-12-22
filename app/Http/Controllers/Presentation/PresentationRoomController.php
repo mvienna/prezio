@@ -161,8 +161,6 @@ class PresentationRoomController extends Controller
                 $currentTime = Carbon::now();
                 $sentAt = Carbon::parse($request->input('sentAt'));
                 $timeDifferenceInSeconds = $currentTime->diffInSeconds($sentAt);
-                // $currentTime = Carbon::now();
-                // $timeDifferenceInSeconds = ($currentTime->valueOf() - $request->data['sentAt']) / 1000;
                 $props['countdown'] = $request->input('countdown') - $timeDifferenceInSeconds;
             } else {
                 $props['countdown'] = $request->input('countdown');

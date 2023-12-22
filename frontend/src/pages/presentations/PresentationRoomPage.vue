@@ -662,7 +662,9 @@ const connectToRoomChannels = async () => {
       //   "seconds"
       // );
 
-      const updatedCountdown = room.value.countdown + countdownDifference;
+      const updatedCountdown =
+        room.value.countdown +
+        (countdownDifference > 0 ? countdownDifference : 0);
 
       if (
         SLIDE_TYPES_OF_QUIZ.includes(event.slide?.type || slide.value.type) &&
@@ -677,6 +679,7 @@ const connectToRoomChannels = async () => {
           beforeQuizTimeout.value = setTimeout(() => {
             presentationsStore.updateRoom(undefined, undefined, {
               countdown: updatedCountdown - timeout / 1000,
+              sentAt: nowDate,
               is_submission_locked: false,
             });
           }, timeout);
@@ -706,6 +709,7 @@ const connectToRoomChannels = async () => {
         if (isHost.value) {
           presentationsStore.updateRoom(undefined, undefined, {
             countdown: timeLeft.value,
+            sentAt: nowDate,
             disableNotification: true,
           });
         }
