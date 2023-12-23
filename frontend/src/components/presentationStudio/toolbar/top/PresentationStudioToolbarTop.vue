@@ -135,6 +135,7 @@
         round
         size="12px"
         unelevated
+        disable
         @click="$emit('zoomOut')"
       >
         <q-tooltip>
@@ -143,7 +144,7 @@
       </q-btn>
 
       <!-- current zoom -->
-      <q-btn :label="`${Math.round(scale * 100)}%`" unelevated>
+      <q-btn :label="`${Math.round(scale * 100)}%`" unelevated disable>
         <q-tooltip>
           {{ $t("presentationStudio.toolbar.zoom.select") }}
         </q-tooltip>
@@ -174,6 +175,7 @@
         round
         size="12px"
         unelevated
+        disable
         @click="$emit('zoomIn')"
       >
         <q-tooltip>

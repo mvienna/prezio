@@ -854,12 +854,13 @@ const connectToRoomChannels = () => {
 
 .canvas__container {
   width: 100%;
-  height: calc(100% - 68px);
-  padding: calc(68px + 24px) 24px 24px;
+  height: calc(100% - 61px);
+  padding: calc(61px + 24px) 24px 24px;
+  overflow-y: hidden;
 
   .canvas__wrapper {
-    //height: 100%;
-    //aspect-ratio: 16/9;
+    max-height: calc(100% - 61px);
+    aspect-ratio: 16/9;
     max-width: 100%;
     z-index: 1;
 
