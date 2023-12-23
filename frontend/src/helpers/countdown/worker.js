@@ -5,7 +5,7 @@ onmessage = function (event) {
   let timeLeft = seconds;
 
   countdownInterval = setInterval(() => {
-    if (timeLeft === 0) {
+    if (timeLeft <= 0) {
       clearInterval(countdownInterval);
       postMessage("countdownComplete");
       return;
