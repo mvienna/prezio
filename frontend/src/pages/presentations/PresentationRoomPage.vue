@@ -653,6 +653,8 @@ const connectToRoomChannels = async () => {
         ((new Date(endTime) - new Date(startTime)) / 1000).toFixed(1)
       );
 
+      console.log("SERVER TIME REQUEST DELAY: ", roundTripTime);
+
       const countdownDifference =
         serverTimeResponse.data.time - room.value.countdown_started_at;
 
