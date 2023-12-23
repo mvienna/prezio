@@ -1,11 +1,11 @@
 import QRCodeStyling from "qr-code-styling";
 
 export const generateQrCode = (
-  width = 225,
-  height = 225,
+  width = 256,
+  height = 256,
   data = window.location.href,
   image = window.location.origin + "/logo_white.png",
-  backgroundColor = "#1F1F29",
+  backgroundColor = "#0A090B",
   color = "#FFFFFF"
 ) => {
   return new QRCodeStyling({
@@ -31,7 +31,7 @@ export const generateQrCode = (
     },
     imageOptions: {
       crossOrigin: "anonymous",
-      margin: 2,
+      margin: 5,
     },
   });
 };

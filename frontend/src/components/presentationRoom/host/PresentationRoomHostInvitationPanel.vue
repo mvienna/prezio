@@ -83,8 +83,8 @@ const url = window.location.host;
   border: 1.5px solid $grey-9;
   background: $black;
   border-radius: 12px;
-  min-width: 260px;
-  width: 260px;
+  min-width: 291px;
+  width: 291px;
 
   .room_invitation_panel__title {
     font-weight: 800;
