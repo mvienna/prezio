@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="relative-position">
+  <q-card flat class="select_media__card relative-position">
     <!-- toolbar -->
     <q-card-section class="q-card__toolbar_section q-pa-lg">
       <q-toolbar class="justify-between q-px-none">
@@ -37,7 +37,10 @@
     </q-card-section>
 
     <!-- content -->
-    <q-card-section class="q-pa-lg" style="height: calc(100% - 124px)">
+    <q-card-section
+      :class="tab === 'stock' ? 'q-px-lg q-py-none' : 'q-pa-lg'"
+      style="height: calc(100% - 124px)"
+    >
       <q-tab-panels v-model="tab" animated class="full-height">
         <!-- upload -->
         <q-tab-panel name="upload" class="q-pa-none column no-wrap full-height">
@@ -191,19 +194,18 @@
         <!-- stock -->
         <q-tab-panel name="stock" class="q-pa-none">
           <!-- search unsplash-->
-          <div class="q-px-md q-pt-md">
+          <div class="q-pt-lg">
             <q-input
               v-model="search"
-              outlined
               clearable
-              clear-icon="r_block"
-              debounce="300"
+              outlined
+              dense
+              clear-icon="r_backspace"
+              debounce="500"
               color="primary"
               :placeholder="$t('media.select.tabs.stock.search')"
               class="q-mb-lg"
-              @keydown="
-                (event) => (event.key === 'Enter' ? handleSearch() : '')
-              "
+              @update:model-value="handleSearch()"
             >
               <template #append>
                 <q-icon
@@ -218,22 +220,18 @@
           </div>
 
           <!-- results unsplash -->
-          <div
-            style="
-              max-height: calc(100vh - 24px * 2 - 124px - 24px - 72px - 200px);
-            "
-          >
+          <div>
             <q-infinite-scroll
               @load="stockImagesStore.fetchStockImages"
               :offset="500"
-              class="masonry q-pa-md"
+              class="masonry"
             >
               <q-card
                 v-for="item in stockImages"
                 :key="item.id"
+                class="masonry__item"
                 flat
                 bordered
-                class="masonry__item"
                 :class="
                   selectedFile?.id === item.id ? 'masonry__item--selected' : ''
                 "
@@ -245,7 +243,13 @@
                 "
               >
                 <!-- image -->
-                <q-img :src="item.urls.regular" :alt="item.alt_description" />
+                <img
+                  :src="item.urls.regular"
+                  :alt="item.alt_description"
+                  :style="`aspect-ratio: ${
+                    item.width / item.height
+                  }; width: 100%;`"
+                />
 
                 <!-- author -->
                 <q-tooltip
@@ -308,7 +312,7 @@
     >
       <q-card-section
         v-if="selectedFile"
-        class="q-card__submit_button_section q-px-lg q-pb-lg q-pt-none"
+        class="q-card__submit_button_section relative-position q-px-lg q-pb-lg q-pt-none"
       >
         <q-btn
           :label="$t('media.select.submit')"
@@ -316,10 +320,21 @@
           round
           no-caps
           class="full-width q-py-md"
+          style="z-index: 1"
           color="primary"
           unelevated
           @click="handleFileSelection()"
         />
+
+        <div
+          style="
+            width: 100%;
+            height: 80px;
+            z-index: 0;
+            background: linear-gradient(180deg, transparent, white);
+          "
+          class="absolute-bottom-left"
+        ></div>
       </q-card-section>
     </transition>
   </q-card>
@@ -484,7 +499,7 @@ const handleSearch = () => {
 </script>
 
 <style scoped lang="scss">
-.q-card {
+.select_media__card {
   width: 100%;
   max-width: 800px;
   height: 100%;
@@ -531,6 +546,15 @@ const handleSearch = () => {
   }
 }
 
+::v-deep(.q-panel) {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /*
  * file input
  */
@@ -572,20 +596,26 @@ const handleSearch = () => {
 
   .masonry__item {
     margin-bottom: 16px;
-    //display: inline-block;
     border-radius: 8px;
+    overflow: hidden;
     cursor: pointer;
     transition: 0.2s;
-    border-width: 1.5px;
+    border-width: 2px;
     outline: 3px solid transparent;
+    border-color: transparent;
+
+    img {
+      border-radius: 0;
+    }
 
     &:hover {
-      outline: 3px solid $background;
+      border-color: $accent;
+      outline: 1px solid $accent;
     }
 
     &.masonry__item--selected {
       border-color: $primary;
-      outline: 3px solid $background;
+      outline: 2px solid $accent;
     }
   }
 }
