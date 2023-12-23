@@ -1,21 +1,40 @@
 <template>
   <q-page
     :style="
-      !isHost
-        ? roomBackground && !presentation?.is_private
-          ? `background: linear-gradient(rgba(0, 0, 0, ${
-              isHost || (!isHost && slide?.type === SLIDE_TYPES.CONTENT)
-                ? '0.4'
-                : '0'
-            }), rgba(0, 0, 0, ${
-              isHost || (!isHost && slide?.type === SLIDE_TYPES.CONTENT)
-                ? '0.4'
-                : '0'
-            })), url(${roomBackground.imageSrc})`
-          : 'background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));'
-        : 'background: black;'
+      isHost
+        ? 'background: black;'
+        : roomBaseFill
+        ? `background: ${roomBaseFill.fillColor};`
+        : 'background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));'
     "
   >
+    <!-- background -->
+    <div
+      class="fixed-center full-height full-width"
+      style="
+        z-index: 0;
+        overflow: hidden;
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+        background-position-x: 50% !important;
+      "
+      :style="
+        !isHost
+          ? roomBackground
+            ? `background-image: url(${
+                roomBackground.imageSrc
+              }); filter: blur(${roomBackground.blur || 0}px) contrast(${
+                roomBackground.contrast >= 0 ? roomBackground.contrast : 100
+              }%) brightness(${
+                roomBackground.brightness >= 0 ? roomBackground.brightness : 100
+              }%) invert(${roomBackground.invert || 0}%) grayscale(${
+                roomBackground.grayscale || 0
+              }%); opacity: ${roomBackground.opacity / 100};`
+            : ''
+          : ''
+      "
+    ></div>
+
     <div
       v-if="isLoading.sendingRoomUpdatedEvent"
       class="fixed-top-right q-pt-lg q-pr-lg"
@@ -24,19 +43,7 @@
       <q-spinner-ios color="white" size="sm" />
     </div>
 
-    <div
-      :style="
-        !isHost && roomBackground && !presentation.is_private
-          ? `backdrop-filter: blur(${roomBackground.blur || 0}px) contrast(${
-              roomBackground.contrast >= 0 ? roomBackground.contrast : 100
-            }%) brightness(${
-              roomBackground.brightness >= 0 ? roomBackground.brightness : 100
-            }%) invert(${roomBackground.invert || 0}%) grayscale(${
-              roomBackground.grayscale || 0
-            }%) opacity(${roomBackground.opacity || 100}%)`
-          : ''
-      "
-    >
+    <div>
       <!-- PARTICIPANT - no access -->
       <PresentationRoomParticipantNoAccess
         v-if="presentation?.is_private && !isHost"
@@ -1089,6 +1096,12 @@ const clearIsMouseActiveTimeout = () => {
 const roomBackground = computed(() => {
   return elements.value?.find(
     (element) => element.mode === MODE_OPTIONS.value.background
+  );
+});
+
+const roomBaseFill = computed(() => {
+  return elements.value?.find(
+    (element) => element.mode === MODE_OPTIONS.value.baseFill
   );
 });
 
