@@ -644,23 +644,19 @@ const connectToRoomChannels = async () => {
 
     // handle room countdown
     if (room.value.countdown > 0) {
-      const nowDate = new Date().toLocaleString("en-US", {
-        timeZone: "Europe/Moscow",
-      });
-      const nowMs = new Date(nowDate).getTime();
+      const startTime = new Date().toISOString();
+
+      const serverTimeResponse = await api.get(`/server-time`);
+
+      const endTime = new Date().toISOString();
+      const roundTripTime = parseFloat(
+        ((new Date(endTime) - new Date(startTime)) / 1000).toFixed(1)
+      );
+
       const countdownDifference =
-        (nowMs - new Date(room.value.countdown_started_at).getTime()) / 1000;
+        serverTimeResponse.data.time - room.value.countdown_started_at;
 
       console.log("DIFFERENCE: ", countdownDifference);
-
-      // const now = new Date().toLocaleString("en-US", {
-      //   timeZone: "Europe/Moscow",
-      // });
-      // const countdownDifference = date.getDateDiff(
-      //   now,
-      //   new Date(room.value.countdown_started_at),
-      //   "seconds"
-      // );
 
       const updatedCountdown =
         room.value.countdown +
@@ -678,8 +674,8 @@ const connectToRoomChannels = async () => {
         if (isHost.value) {
           beforeQuizTimeout.value = setTimeout(() => {
             presentationsStore.updateRoom(undefined, undefined, {
-              countdown: updatedCountdown,
-              sentAt: nowDate,
+              countdown: updatedCountdown + roundTripTime,
+              sentAt: serverTimeResponse.data.time,
               is_submission_locked: false,
             });
           }, timeout);
@@ -708,8 +704,8 @@ const connectToRoomChannels = async () => {
 
         if (isHost.value) {
           presentationsStore.updateRoom(undefined, undefined, {
-            countdown: timeLeft.value,
-            sentAt: nowDate,
+            countdown: timeLeft.value + roundTripTime,
+            sentAt: serverTimeResponse.data.time,
             disableNotification: true,
           });
         }

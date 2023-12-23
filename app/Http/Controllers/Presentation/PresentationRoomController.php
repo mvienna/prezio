@@ -157,8 +157,9 @@ class PresentationRoomController extends Controller
         }
 
         if ($request->filled('countdown')) {
+            $currentTime = Carbon::now();
+
             if ($request->filled('sentAt')) {
-                $currentTime = Carbon::now();
                 $sentAt = Carbon::parse($request->input('sentAt'));
                 $timeDifferenceInSeconds = $currentTime->diffInSeconds($sentAt);
                 $props['countdown'] = $request->input('countdown') - $timeDifferenceInSeconds;
@@ -166,7 +167,7 @@ class PresentationRoomController extends Controller
                 $props['countdown'] = $request->input('countdown');
             }
 
-            $props['countdown_started_at'] = Carbon::now();
+            $props['countdown_started_at'] = $currentTime;
         }
 
         /*
@@ -178,6 +179,18 @@ class PresentationRoomController extends Controller
         }
 
         return $this->successResponse();
+    }
+
+    public function getServerTime(): JsonResponse
+    {
+        $currentTime = Carbon::now();
+
+        return $this->jsonResponse([
+            'time' => $currentTime->timestamp,
+            'timeZone' => config('app.timezone'),
+            'offset' => $currentTime->offset,
+            'DST' => $currentTime->isDST(),
+        ]);
     }
 
     /*

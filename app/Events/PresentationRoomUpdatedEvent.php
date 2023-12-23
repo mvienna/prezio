@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Models\Presentation\Room\PresentationRoom;
 use App\Models\Presentation\Slide\PresentationSlide;
+use Carbon\Carbon;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -31,7 +32,10 @@ class PresentationRoomUpdatedEvent implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'data' => $this->room->toArray(),
+            'data' => [
+                ...$this->room->toArray(),
+                'countdown_started_at' => Carbon::parse($this->room->countdown_started_at)->timestamp
+            ],
             'slide' => $this->slide?->toArray(),
         ];
     }

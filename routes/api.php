@@ -30,6 +30,11 @@ Route::get('/room/{token}', [PresentationRoomController::class, 'show']);
 Route::post('/room/login', [PresentationRoomController::class, 'login']);
 
 /*
+ * time
+ */
+Route::get('/server-time', [PresentationRoomController::class, 'getServerTime']);
+
+/*
  * authenticated
  */
 Route::middleware('auth:sanctum')->group(function () {
