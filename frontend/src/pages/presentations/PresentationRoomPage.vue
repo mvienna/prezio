@@ -676,7 +676,7 @@ const connectToRoomChannels = async () => {
         if (isHost.value) {
           beforeQuizTimeout.value = setTimeout(() => {
             presentationsStore.updateRoom(undefined, undefined, {
-              countdown: updatedCountdown,
+              countdown: updatedCountdown + roundTripTime,
               sentAt: serverTimeResponse.data.time,
               is_submission_locked: false,
             });
@@ -806,11 +806,19 @@ const connectToRoomChannels = async () => {
       const participantsIds = participants.value
         .filter((item) => !item.is_guest)
         .map((item) => item.id);
-      const participantsAnswers = slide.value.answers.filter(
-        (answer) =>
-          slide.value.type === answer.slide_type &&
-          participantsIds.includes(answer.participant_id)
-      );
+
+      const participantIdMap = new Map();
+      const participantsAnswers = slide.value.answers
+        .filter(
+          (answer) =>
+            slide.value.type === answer.slide_type &&
+            participantsIds.includes(answer.participant_id)
+        )
+        .filter(
+          (obj) =>
+            !participantIdMap.has(obj.participant_id) &&
+            participantIdMap.set(obj.participant_id, 1)
+        );
 
       if (participantsAnswers.length === participantsIds.length) {
         room.value.is_submission_locked = true;
@@ -1173,8 +1181,8 @@ canvas {
     opacity: 0;
   }
   100% {
-    min-width: 260px;
-    width: 260px;
+    min-width: 291px;
+    width: 291px;
     opacity: 1;
     transform: scale(1);
   }
@@ -1187,8 +1195,8 @@ canvas {
 
 @keyframes fadeOut {
   0% {
-    min-width: 260px;
-    width: 260px;
+    min-width: 291px;
+    width: 291px;
     opacity: 1;
     transform: scale(1);
   }
