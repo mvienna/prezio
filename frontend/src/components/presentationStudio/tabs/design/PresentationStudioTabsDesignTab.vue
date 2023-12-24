@@ -308,58 +308,68 @@ const resetSlideDesign = () => {
 const showApplyDesignToAllSlidesDialog = ref(false);
 
 const applyDesignToAllSlides = async () => {
-  presentation.value.slides.map(async (item) => {
-    // extract elements, remove old background and base fill
-    item.canvas_data = item.canvas_data ? JSON.parse(item.canvas_data) : [];
-    item.canvas_data = item.canvas_data?.filter(
-      (element) =>
-        ![MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
-          element.mode
-        )
-    );
+  await Promise.all(
+    presentation.value.slides.map(async (item) => {
+      // extract elements, remove old background and base fill
+      item.canvas_data = item.canvas_data ? JSON.parse(item.canvas_data) : [];
+      item.canvas_data = item.canvas_data?.filter(
+        (element) =>
+          ![
+            MODE_OPTIONS.value.background,
+            MODE_OPTIONS.value.baseFill,
+          ].includes(element.mode)
+      );
 
-    // add new background and base fill
-    if (backgroundElement.value) {
-      item.canvas_data.push(backgroundElement.value);
-    }
-    if (baseFillElement.value) {
-      item.canvas_data.push(baseFillElement.value);
-    }
+      // add new background and base fill
+      if (backgroundElement.value) {
+        item.canvas_data.push(backgroundElement.value);
+      }
+      if (baseFillElement.value) {
+        item.canvas_data.push(baseFillElement.value);
+      }
 
-    // compute avg. brightness
-    item.previewAverageBrightness = await computeAverageBrightness(
-      item.canvas_data
-    );
+      // compute avg. brightness
+      item.previewAverageBrightness = await computeAverageBrightness(
+        item.canvas_data
+      );
 
-    // prepare new canvas data
-    item.canvas_data = JSON.stringify(item.canvas_data);
+      // prepare new canvas data
+      item.canvas_data = JSON.stringify(item.canvas_data);
 
-    // set new elements & render preview
-    await canvasStore.setElementsFromSlide(item.canvas_data);
+      // set new elements & render preview
+      await canvasStore.setElementsFromSlide(item.canvas_data);
+      await canvasStore.redrawCanvas(false, undefined, false);
 
-    await canvasStore.redrawCanvas(false, undefined, false);
+      const tempCanvas = document.createElement("canvas");
+      const tempCtx = tempCanvas.getContext("2d");
 
-    const tempCanvas = document.createElement("canvas");
-    const tempCtx = tempCanvas.getContext("2d");
+      tempCanvas.width = 512;
+      tempCanvas.height = 288;
 
-    tempCanvas.width = 512;
-    tempCanvas.height = 288;
+      tempCtx.drawImage(
+        canvas.value,
+        0,
+        0,
+        tempCanvas.width,
+        tempCanvas.height
+      );
 
-    tempCtx.drawImage(canvas.value, 0, 0, tempCanvas.width, tempCanvas.height);
+      item.preview = tempCanvas.toDataURL("image/png");
+      tempCanvas.remove();
 
-    item.preview = tempCanvas.toDataURL("image/png");
-    tempCanvas.remove();
+      // save slide
+      await presentationsStore.saveSlide(
+        item,
+        JSON.parse(item.canvas_data),
+        slide.value
+      );
 
-    // save slide
-    await presentationsStore.saveSlide(item, JSON.parse(item.canvas_data));
-
-    item.isLivePreview = false;
-
-    return item;
-  });
+      item.isLivePreview = false;
+    })
+  );
 
   // redraw canvas & preview of the current slide
-  // await canvasStore.setElementsFromSlide();
-  // await canvasStore.redrawCanvas(false);
+  await canvasStore.setElementsFromSlide();
+  await canvasStore.redrawCanvas(false);
 };
 </script>
