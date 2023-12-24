@@ -137,7 +137,10 @@ import {
   paste,
 } from "stores/canvas/helpers/elementsContextMenuActions";
 import PresentationStudioElementsContextMenu from "components/presentationStudio/PresentationStudioElementsContextMenu.vue";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  SLIDE_TYPES,
+  SLIDE_TYPES_OF_QUIZ,
+} from "src/constants/presentationStudio";
 import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
 import PresentationStudioSlideHeader from "components/presentationStudio/PresentationStudioSlideHeader.vue";
 import { useAuthStore } from "stores/auth";
@@ -205,6 +208,7 @@ const drawingStore = useCanvasDrawingStore();
 const drawingState = storeToRefs(drawingStore);
 
 const textStore = useCanvasTextStore();
+const textState = storeToRefs(textStore);
 
 const mediaStore = useCanvasMediaStore();
 
@@ -685,6 +689,19 @@ const handleCanvasClick = (event) => {
         timesSelected.value = 0;
 
         if (mode.value === MODE_OPTIONS.value.textEditing) {
+          if (
+            [
+              ...SLIDE_TYPES_OF_QUIZ,
+              SLIDE_TYPES.LEADERBOARD,
+              SLIDE_TYPES.WORD_CLOUD,
+            ].includes(slide.value?.type)
+          ) {
+            textState.customization.value.color =
+              averageBackgroundBrightness.value >=
+              backgroundBrightnessThreshold.value
+                ? "#000000"
+                : "#FFFFFF";
+          }
           textStore.editText();
           return;
         }
