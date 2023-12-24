@@ -24,8 +24,12 @@ class PresentationSlideController extends Controller
         $slide = PresentationSlide::create([
             'presentation_id' => $presentation->id,
             'canvas_data' => $request->canvas_data,
+            'preview' => $request->preview,
             'order' => $request->order,
             'type' => $request->type,
+            'settings_data' => $request->settings_data,
+            'notes' => $request->notes,
+            'animation' => $request->animation,
         ]);
 
         $presentation->settings()->update([

@@ -59,31 +59,43 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /*
      * folder(s)
-     * presentation(s)
-     * slide(s)
-     * slide template(s)
-     * slide answer
-     * room
      */
     Route::resource('/folder', PresentationFolderController::class)->only(['store', 'update', 'destroy', 'show']);
     Route::get('/folders', [PresentationFolderController::class, 'get']);
 
+    /*
+     * presentation(s)
+     */
     Route::resource('/presentation', PresentationController::class)->only(['store', 'update', 'destroy', 'show']);
     Route::get('/presentations', [PresentationController::class, 'get']);
 
+    /*
+     * slide(s)
+     */
     Route::resource('/presentation/{presentation}/slide', PresentationSlideController::class)->only(['store', 'update', 'destroy', 'show']);
     Route::patch('/presentation/{presentation}/slides', [PresentationSlideController::class, 'updateSlides']);
 
+    /*
+     * slide template(s)
+     */
     Route::resource('/slide-template', PresentationSlideTemplateController::class)->only(['store', 'update', 'destroy']);
     Route::get('/slide-templates', [PresentationSlideTemplateController::class, 'get']);
 
+    /*
+     * answer(s) & results
+     */
     Route::resource('/presentation/slide/{slide}/answer', PresentationSlideAnswerController::class)->only(['store', 'destroy']);
+
     Route::delete('/presentation/slide/{slide}/results', [PresentationSlideAnswerController::class, 'resetSlideAnswers']);
     Route::delete('/presentation/{presentation}/results', [PresentationSlideAnswerController::class, 'resetPresentationAnswers']);
 
+    Route::post('/presentation/{presentation}/room/{room}/answers', [PresentationRoomController::class, 'submitAnswers']);
+    Route::patch('/presentation/{presentation}/room/{room}/answers/{answer}', [PresentationRoomController::class, 'updateAnswer']);
+
+    /*
+     * room
+     */
     Route::resource('/presentation/{presentation}/room', PresentationRoomController::class)->only(['store', 'update', 'destroy']);
     Route::post('/presentation/{presentation}/room/{room}/react', [PresentationRoomController::class, 'react']);
-    Route::post('/presentation/{presentation}/room/{room}/submit-answers', [PresentationRoomController::class, 'submitAnswers']);
-    Route::patch('/presentation/{presentation}/room/{room}/answers/{answer}', [PresentationRoomController::class, 'updateAnswer']);
     Route::post('/presentation/{presentation}/room/{room}/message', [PresentationRoomController::class, 'submitChatMessage']);
 });

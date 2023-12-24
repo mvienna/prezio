@@ -237,7 +237,7 @@
                     clickable
                     dense
                     v-close-popup
-                    @click="handleDuplicatingSlide(element)"
+                    @click="handleDuplicatingSlide()"
                   >
                     <q-icon name="r_dynamic_feed" size="16px" class="q-mr-sm" />
 
@@ -705,7 +705,11 @@ const handleAddingNewSlide = async (type) => {
   /*
    * add new slide
    */
-  await presentationsStore.addNewSlide(prepareElementsForNewSlide(type), type);
+  await presentationsStore.addNewSlide(
+    undefined,
+    prepareElementsForNewSlide(type),
+    type
+  );
   await canvasStore.setElementsFromSlide();
 
   canvasStore.renderSlidePreview();
@@ -725,6 +729,7 @@ const handleAddingNewSlide = async (type) => {
       (nextSlide && nextSlide.type !== SLIDE_TYPES.LEADERBOARD)
     ) {
       const newSlide = await presentationsStore.addNewSlide(
+        undefined,
         prepareElementsForNewSlide(SLIDE_TYPES.LEADERBOARD),
         SLIDE_TYPES.LEADERBOARD,
         false
@@ -739,9 +744,9 @@ const handleAddingNewSlide = async (type) => {
   }
 };
 
-const handleDuplicatingSlide = (slide) => {
+const handleDuplicatingSlide = () => {
   presentationsStore
-    .duplicateSlide(slide, elements.value)
+    .duplicateSlide(elements.value)
     .then(async () => {
       await canvasStore.setElementsFromSlide();
       canvasStore.renderSlidePreview();

@@ -280,7 +280,12 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async addNewSlide(elements = null, type, selectNewSlide = true) {
+    async addNewSlide(
+      slide = {},
+      elements = null,
+      type,
+      selectNewSlide = true
+    ) {
       return await new Promise(async (resolve, reject) => {
         const slideIndex = this.presentation.slides.findIndex(
           (item) => item.id === this.slide.id
@@ -290,8 +295,12 @@ export const usePresentationsStore = defineStore("presentations", {
         const response = await api
           .post(`/presentation/${this.presentation.id}/slide`, {
             canvas_data: JSON.stringify(elements),
+            preview: slide.preview,
             order: insertAtIndex,
             type: type,
+            settings_data: slide.settings_data,
+            notes: slide.notes,
+            animation: slide.animation,
           })
           .catch((error) => {
             console.log(error);
@@ -344,8 +353,8 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async duplicateSlide(slide, elements) {
-      return await this.addNewSlide(elements, slide.type);
+    async duplicateSlide(elements) {
+      return await this.addNewSlide(this.slide, elements, this.slide.type);
     },
 
     async deleteSlide(slide) {
@@ -583,7 +592,7 @@ export const usePresentationsStore = defineStore("presentations", {
 
       return await api
         .post(
-          `/presentation/${this.presentation?.id}/room/${this.room?.id}/submit-answers`,
+          `/presentation/${this.presentation?.id}/room/${this.room?.id}/answers`,
           {
             slide_id: this.slide?.id,
             answers,
