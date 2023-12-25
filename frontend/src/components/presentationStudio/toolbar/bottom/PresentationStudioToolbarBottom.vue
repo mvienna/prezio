@@ -7,6 +7,14 @@
       disable
       placeholder="Внесите свои заметки к слайду"
     />
+
+    <div class="text-caption text-grey absolute-bottom-right q-mr-sm q-mb-sm">
+      Заметки будут показаны в режиме
+      <span class="text-primary link"
+        >бекстейджа
+        <q-icon name="r_open_in_new" />
+      </span>
+    </div>
   </div>
 </template>
 

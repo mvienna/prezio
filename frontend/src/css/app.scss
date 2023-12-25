@@ -314,9 +314,10 @@ a, .link {
 .scroll--hidden {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-.scroll--hidden::-webkit-scrollbar {
-  display: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /*

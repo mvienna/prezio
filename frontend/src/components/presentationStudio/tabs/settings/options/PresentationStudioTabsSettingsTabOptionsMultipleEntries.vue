@@ -1,5 +1,7 @@
 <template>
-  <div class="row no-wrap items-center justify-between text-semibold q-mt-sm">
+  <div
+    class="row no-wrap items-center justify-between q-mt-sm q-pt-xs text-semibold"
+  >
     <span>
       {{
         $t("presentationLayout.rightDrawer.tabs.settings.multipleEntries.title")

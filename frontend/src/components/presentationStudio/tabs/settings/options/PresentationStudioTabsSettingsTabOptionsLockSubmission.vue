@@ -1,5 +1,5 @@
 <template>
-  <div class="row no-wrap items-center justify-between text-semibold">
+  <div class="row no-wrap items-center justify-between q-mt-xs text-semibold">
     <span>
       {{
         $t("presentationLayout.rightDrawer.tabs.settings.lockSubmission.title")

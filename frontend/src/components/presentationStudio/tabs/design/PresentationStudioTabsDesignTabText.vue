@@ -1,13 +1,13 @@
 <template>
-  <div class="text-grey">
-    {{
-      $t(
-        "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.title"
-      )
-    }}
-  </div>
+  <div>
+    <div class="text-grey q-mb-sm">
+      {{
+        $t(
+          "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.font.title"
+        )
+      }}
+    </div>
 
-  <div class="row no-wrap items-center q-gutter-md q-pt-sm">
     <!-- font -->
     <q-select
       v-model="customization.default.font"
@@ -16,6 +16,7 @@
       outlined
       color="primary"
       dense
+      options-dense
       style="width: 100%"
       class="text-no-wrap"
       @update:model-value="customization.font = customization.default.font"
@@ -33,54 +34,72 @@
       </q-tooltip>
     </q-select>
 
-    <!-- default text colors -->
-    <div
-      v-for="color in defaultTextColors"
-      :key="color"
-      class="text_color_box"
-      :class="color === customization.color ? 'text_color_box--active' : ''"
-      :style="`background: ${color};`"
-      @click="
-        customization.default.color = color;
-        customization.color = customization.default.color;
-      "
-    ></div>
+    <div class="text-grey q-mt-md q-mb-sm">
+      {{
+        $t(
+          "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.color.title"
+        )
+      }}
+    </div>
 
-    <q-separator vertical />
+    <div class="row no-wrap items-center q-gutter-sm">
+      <!-- default text colors -->
+      <div
+        v-for="color in defaultTextColors"
+        :key="color"
+        class="text_color_box"
+        :class="color === customization.color ? 'text_color_box--active' : ''"
+        :style="`background: ${color};`"
+        @click="
+          customization.default.color = color;
+          customization.color = customization.default.color;
+        "
+      ></div>
 
-    <!-- custom color -->
-    <div
-      class="text_color_box relative-position"
-      :style="`background: ${customization.default.color};`"
-      :class="
-        !defaultTextColors.includes(customization.default.color)
-          ? 'base_fill_color_box--active'
-          : ''
-      "
-    >
-      <q-icon
-        name="r_colorize"
-        class="absolute-center"
-        :style="`color: ${textColorOnAColoredBackground(
-          customization.default.color
-        )};`"
-      />
+      <q-separator vertical class="q-ml-md q-mr-sm" />
 
-      <q-menu
-        anchor="bottom left"
-        self="top left"
-        transition-show="jump-down"
-        transition-hide="jump-up"
-        :offset="[0, 8]"
+      <div>
+        {{
+          $t(
+            "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.color.set"
+          )
+        }}
+      </div>
+
+      <!-- custom color -->
+      <div
+        class="text_color_box relative-position"
+        :style="`background: ${customization.default.color};`"
+        :class="
+          !defaultTextColors.includes(customization.default.color)
+            ? 'base_fill_color_box--active'
+            : ''
+        "
       >
-        <q-color
-          format-model="hex"
-          no-header-tabs
-          default-view="palette"
-          v-model="customization.default.color"
-          @change="customization.color = customization.default.color"
+        <q-icon
+          name="r_colorize"
+          class="absolute-center"
+          :style="`color: ${textColorOnAColoredBackground(
+            customization.default.color
+          )};`"
         />
-      </q-menu>
+
+        <q-menu
+          anchor="bottom left"
+          self="top left"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :offset="[0, 8]"
+        >
+          <q-color
+            format-model="hex"
+            no-header-tabs
+            default-view="palette"
+            v-model="customization.default.color"
+            @change="customization.color = customization.default.color"
+          />
+        </q-menu>
+      </div>
     </div>
   </div>
 </template>
@@ -107,11 +126,11 @@ const defaultTextColors = ["#313132", "#FFFFFF"];
   min-width: 24px;
   height: 24px;
   border-radius: 8px;
-  outline: 2px solid $grey-2;
+  border: 2px solid $grey-secondary;
   transition: 0.2s;
 
   &.text_color_box--active {
-    outline: 2px solid $primary;
+    border: 2px solid $primary;
   }
 }
 </style>

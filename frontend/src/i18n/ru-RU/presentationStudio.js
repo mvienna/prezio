@@ -176,7 +176,7 @@ export default {
         },
         preview: {
           title: "Обложка",
-          select: "Выбрать",
+          select: "Загрузить изображение",
         },
       },
 
@@ -247,6 +247,9 @@ export default {
 
       language: {
         title: "Язык",
+        profanityFilter:
+          "Включить фильтр ненормативной лексики по умолчанию во всех ответах аудитории",
+        info: "Помогите нам улучшить переводы или фильтрацию ненормативной лексики, написав нам по адресу <a href='mailto:hello@prezio.ru'>hello@prezio.ru</a>",
       },
 
       leader: {

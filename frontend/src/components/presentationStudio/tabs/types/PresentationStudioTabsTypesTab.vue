@@ -47,7 +47,10 @@
             <q-img :src="`/assets/icons/temp/slideTypes/${type.name}.svg`" />
           </div>
 
-          <div class="text-center text-caption q-mt-sm ellipsis">
+          <div
+            class="text-center text-caption q-mt-sm"
+            style="line-height: 1.4; word-spacing: 104px"
+          >
             {{
               $t(
                 `presentationLayout.rightDrawer.tabs.types.options.${type.name}`
@@ -194,17 +197,17 @@ const types = computed(() => {
 }
 
 ::v-deep(.type) {
-  max-width: 117px;
+  max-width: 104px;
   width: 100%;
   display: inline-block;
   cursor: pointer;
   transition: 0.2s;
   border-radius: 8px;
-  border: 1.5px solid $grey-primary;
-  outline: 3px solid transparent;
+  border: 2px solid $grey-secondary;
+  outline: 2px solid transparent;
 
   &:hover {
-    outline: 3px solid $grey-12;
+    border: 2px solid $accent;
   }
 
   .q-img {
@@ -217,11 +220,11 @@ const types = computed(() => {
   }
 
   &.q-item--active {
-    border: 1.5px solid $primary;
+    border: 2px solid $primary;
     background: $background !important;
 
     &:hover {
-      outline: 3px solid $accent !important;
+      outline: 2px solid $accent !important;
     }
   }
 }

@@ -1,22 +1,28 @@
 <template>
-  <div>
-    <q-btn
-      outline
-      color="primary"
-      icon-right="r_quiz"
-      :label="
-        $t(
-          'presentationLayout.rightDrawer.tabs.settings.openGeneralQuizSettings.title'
-        )
-      "
-      no-caps
-      class="full-width q-py-sm q-mb-md q-mt-lg"
-      @click="
-        showSettingsDialog = true;
-        presentationSettingsTabsExpanded = [false, false, false, false, true];
-      "
-    />
-  </div>
+  <q-btn
+    unelevated
+    no-caps
+    outline
+    color="background"
+    text-color="primary"
+    style="width: calc(50% - 8px)"
+    @click="
+      showSettingsDialog = true;
+      presentationSettingsTabsExpanded = [false, false, false, false, true];
+    "
+  >
+    <div>
+      <q-icon name="r_quiz" size="32px" class="q-my-sm" />
+
+      <div class="text-center q-mb-sm" style="line-height: 1.4">
+        {{
+          $t(
+            "presentationLayout.rightDrawer.tabs.settings.openGeneralQuizSettings.title"
+          )
+        }}
+      </div>
+    </div>
+  </q-btn>
 </template>
 
 <script setup>

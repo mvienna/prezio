@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row no-wrap items-center text-semibold q-mb-sm">
+    <div class="row no-wrap items-center q-mb-sm text-semibold">
       {{
         $t("presentationLayout.rightDrawer.tabs.settings.answerOptions.title")
       }}
@@ -33,12 +33,12 @@
       @reordered="handleLayersReorderAnswerOptions"
     >
       <template #item="{ element, index }">
-        <div class="row no-wrap items-center q-gutter-sm">
+        <div class="row no-wrap items-center">
           <q-icon
             name="r_drag_indicator"
             color="grey"
             size="sm"
-            class="layer_handle cursor-pointer q-mr-sm"
+            class="layer_handle cursor-pointer q-mr-xs"
           />
 
           <q-input
@@ -46,6 +46,7 @@
             outlined
             dense
             style="width: 100%"
+            class="q-mx-sm"
             :placeholder="
               $t(
                 'presentationLayout.rightDrawer.tabs.settings.answerOptions.answerOption'
@@ -71,8 +72,8 @@
               <q-btn
                 v-if="element.image"
                 flat
-                icon="r_delete"
-                color="grey"
+                icon="r_delete_sweep"
+                color="red"
                 round
                 size="8px"
                 @click="element.image = null"
@@ -81,13 +82,13 @@
 
               <q-btn
                 flat
-                color="grey"
+                color="primary"
                 round
                 size="8px"
                 @click="showSelectAnswerImageDialog[index] = true"
               >
                 <template #default>
-                  <q-icon v-if="!element.image" name="r_image" />
+                  <q-icon v-if="!element.image" name="icon-image_add" />
 
                   <q-img
                     v-else
@@ -129,7 +130,7 @@
               "
               :color="element.isCorrect ? 'positive' : 'grey'"
               keep-color
-              style="font-size: 20px"
+              style="font-size: 16px"
               @mouseover="element.isHovered = true"
               @mouseleave="element.isHovered = false"
             >
@@ -144,14 +145,13 @@
 
             <q-btn
               flat
-              round
               color="grey"
-              style="border-radius: 50%"
+              icon="r_delete_sweep"
+              size="12px"
+              style="border-radius: 50%; width: 40px"
               :disable="slideSettings.answerOptions.length <= 2"
               @click="handleRemovingAnswerOption(index)"
-            >
-              <q-icon name="r_delete" size="22px" />
-            </q-btn>
+            />
           </div>
         </div>
       </template>
@@ -168,7 +168,7 @@
       "
       icon="r_add"
       no-caps
-      class="q-mt-md q-py-sm full-width"
+      class="q-mt-md full-width"
       color="primary"
       @click="handleAddingNewAnswerOption()"
     />

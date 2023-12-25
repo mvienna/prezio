@@ -11,7 +11,7 @@
     </q-banner>
 
     <!-- dismiss warning -->
-    <div class="row no-wrap items-center q-pl-md text-semibold">
+    <div class="row no-wrap items-center q-pl-md">
       <q-icon
         name="r_notification_important"
         class="q-mr-md"
@@ -35,7 +35,7 @@
     <q-separator class="q-my-md" />
 
     <!-- live chat -->
-    <div class="row no-wrap items-center q-pl-md text-semibold">
+    <div class="row no-wrap items-center q-pl-md">
       <q-icon name="r_forum" class="q-mr-md" color="primary" size="24px" />
 
       <div>
@@ -48,7 +48,7 @@
     </div>
 
     <!-- lobby music -->
-    <div class="row no-wrap items-center q-pl-md text-semibold">
+    <div class="row no-wrap items-center q-pl-md">
       <q-icon
         name="r_music_note"
         class="q-mr-md"
@@ -67,7 +67,7 @@
     </div>
 
     <!-- countdown -->
-    <div class="row no-wrap items-center q-pl-md text-semibold">
+    <div class="row no-wrap items-center q-pl-md">
       <q-icon name="r_av_timer" class="q-mr-md" color="primary" size="24px" />
 
       <div>
@@ -80,7 +80,7 @@
     </div>
 
     <!-- play as team -->
-    <div class="row no-wrap items-center q-pl-md text-semibold">
+    <div class="row no-wrap items-center q-pl-md">
       <q-icon
         name="r_diversity_1"
         class="q-mr-md"
@@ -99,7 +99,7 @@
     </div>
 
     <!-- shuffle answer options -->
-    <div class="row no-wrap items-center q-pl-md text-semibold">
+    <div class="row no-wrap items-center q-pl-md">
       <q-icon name="r_shuffle" class="q-mr-md" color="primary" size="24px" />
 
       <div>
@@ -114,7 +114,7 @@
     </div>
 
     <!-- show answers manually -->
-    <div class="row no-wrap items-center q-pl-md text-semibold">
+    <div class="row no-wrap items-center q-pl-md">
       <q-icon name="r_ads_click" class="q-mr-md" color="primary" size="24px" />
 
       <div>

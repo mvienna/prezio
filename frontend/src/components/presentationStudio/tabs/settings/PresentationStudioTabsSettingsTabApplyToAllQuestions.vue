@@ -2,17 +2,18 @@
   <div>
     <q-btn
       unelevated
-      color="primary"
-      icon-right="r_move_down"
       :label="
         $t(
           'presentationLayout.rightDrawer.tabs.settings.applyToAllQuestions.title'
         )
       "
-      no-caps
+      icon="r_move_down"
+      color="primary"
       class="full-width q-py-sm"
+      no-caps
       @click="showApplySettingsToAllQuestionsDialog = true"
-    />
+    >
+    </q-btn>
 
     <q-dialog v-model="showApplySettingsToAllQuestionsDialog">
       <ConfirmationDialog

@@ -1,32 +1,20 @@
 <template>
-  <div class="text-semibold q-mt-md">
-    <div>
-      {{ $t("presentationLayout.rightDrawer.tabs.settings.leaderboard.title") }}
+  <q-btn
+    no-caps
+    outline
+    color="background"
+    text-color="primary"
+    style="width: calc(50% - 8px)"
+    @click="handleAddingLeaderboardSlide()"
+  >
+    <q-icon name="r_insert_chart" size="32px" class="q-my-sm" />
 
-      <q-icon name="r_info" class="q-ml-xs" color="grey-8">
-        <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
-          {{
-            $t(
-              "presentationLayout.rightDrawer.tabs.settings.leaderboard.description"
-            )
-          }}
-        </q-tooltip>
-      </q-icon>
+    <div class="text-center q-mb-sm" style="line-height: 1.4">
+      {{
+        $t("presentationLayout.rightDrawer.tabs.settings.leaderboard.create")
+      }}
     </div>
-
-    <q-btn
-      no-caps
-      unelevated
-      color="grey-3"
-      text-color="black"
-      :label="
-        $t('presentationLayout.rightDrawer.tabs.settings.leaderboard.create')
-      "
-      icon="r_leaderboard"
-      class="q-mt-sm"
-      @click="handleAddingLeaderboardSlide()"
-    />
-  </div>
+  </q-btn>
 </template>
 
 <script setup>

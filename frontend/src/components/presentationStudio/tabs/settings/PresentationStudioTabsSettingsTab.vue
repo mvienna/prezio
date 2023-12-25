@@ -43,11 +43,6 @@
       @update-slide-settings="handleSlideSettingsUpdate()"
     />
 
-    <!-- leaderboard -->
-    <PresentationStudioTabsSettingsTabOptionsLeaderboard
-      v-if="SLIDE_TYPES_OF_QUIZ.includes(slide?.type)"
-    />
-
     <!-- lock submission -->
     <PresentationStudioTabsSettingsTabOptionsLockSubmission
       v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
@@ -58,25 +53,28 @@
       v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
     />
 
-    <q-separator
-      v-if="![SLIDE_TYPES.LEADERBOARD].includes(slide?.type)"
-      class="q-mt-md"
-    />
-
     <!-- filter profanity -->
-    <PresentationStudioTabsSettingsTabOptionsFilterProfanity
+    <PresentationStudioTabsSettingsTabOptionsOther
       v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
     />
 
-    <!-- open general quiz settings -->
-    <PresentationStudioTabsSettingsTabOpenGeneralQuizSettings
-      v-if="SLIDE_TYPES_OF_QUIZ.includes(slide?.type)"
-    />
+    <q-separator class="q-mb-lg q-mt-md" />
 
     <!-- apply to all questions -->
     <PresentationStudioTabsSettingsTabApplyToAllQuestions
       v-if="![SLIDE_TYPES.LEADERBOARD].includes(slide?.type)"
     />
+
+    <div
+      v-if="SLIDE_TYPES_OF_QUIZ.includes(slide?.type)"
+      class="row no-wrap q-gutter-md q-pt-md"
+    >
+      <!-- leaderboard -->
+      <PresentationStudioTabsSettingsTabOptionsLeaderboard />
+
+      <!-- open general quiz settings -->
+      <PresentationStudioTabsSettingsTabOpenGeneralQuizSettings />
+    </div>
   </div>
 </template>
 
@@ -99,7 +97,7 @@ import PresentationStudioTabsSettingsTabOptionsTimeLimit from "components/presen
 import PresentationStudioTabsSettingsTabOptionsLeaderboard from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsLeaderboard.vue";
 import PresentationStudioTabsSettingsTabOptionsLockSubmission from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsLockSubmission.vue";
 import PresentationStudioTabsSettingsTabOptionsHideResults from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsHideResults.vue";
-import PresentationStudioTabsSettingsTabOptionsFilterProfanity from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsFilterProfanity.vue";
+import PresentationStudioTabsSettingsTabOptionsOther from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionsOther.vue";
 import PresentationStudioTabsSettingsTabOpenGeneralQuizSettings from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTabOpenGeneralQuizSettings.vue";
 import PresentationStudioTabsSettingsTabOptionsQuizScoring from "components/presentationStudio/tabs/settings/options/quiz/PresentationStudioTabsSettingsTabOptionsQuizScoring.vue";
 import PresentationStudioTabsSettingsTabOptionsQuizTypeAnswerOptions from "components/presentationStudio/tabs/settings/options/quiz/PresentationStudioTabsSettingsTabOptionsQuizTypeAnswerOptions.vue";

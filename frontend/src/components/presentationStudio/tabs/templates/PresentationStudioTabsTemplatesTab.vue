@@ -1,5 +1,5 @@
 <template>
-  <div style="height: calc(100vh - 68px - 66px - 32px)" class="column no-wrap">
+  <div style="height: calc(100vh - 68px - 66px - 24px)" class="column no-wrap">
     <div class="text-grey">
       {{ $t("presentationLayout.rightDrawer.tabs.templates.categories.title") }}
     </div>
@@ -138,7 +138,6 @@
             'presentationLayout.rightDrawer.tabs.templates.createOrEdit.create'
           )
         "
-        icon-right="r_document_scanner"
         class="full-width q-py-sm"
         @click="showCreateTemplateDialog = true"
       />
@@ -178,7 +177,6 @@
               'presentationLayout.rightDrawer.tabs.templates.createOrEdit.edit'
             )
           "
-          icon-right="r_document_scanner"
           style="width: 100%"
           class="q-py-sm"
           @click="showEditTemplateDialog = true"
@@ -213,9 +211,10 @@
 
         <!-- delete template -->
         <q-btn
-          flat
+          outline
+          size="12px"
           color="red"
-          icon="r_delete"
+          icon="r_delete_sweep"
           class="q-py-sm"
           style="width: 40px"
           @click="handleTemplateDeletion(slide.template)"

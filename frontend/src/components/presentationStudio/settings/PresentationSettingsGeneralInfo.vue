@@ -40,22 +40,23 @@
         :label="
           $t('presentationStudio.settings.generalInformation.preview.select')
         "
-        icon-right="r_upload"
+        icon="icon-image_add"
         unelevated
-        text-color="primary"
+        color="primary"
         no-caps
-        class="q-py-sm full-width presentation_preview__upload_btn"
+        class="full-width presentation_preview__upload_btn"
         @click="showSelectPreviewDialog = true"
       />
 
       <!-- delete preview -->
       <q-btn
         v-if="presentation.preview"
-        icon="r_delete"
-        flat
-        round
+        icon="r_delete_sweep"
+        outline
+        size="12px"
         color="red"
-        class="q-py-sm q-ml-md"
+        class="q-ml-md"
+        style="width: 36px"
         @click="
           presentation.preview = null;
           presentation.preview_id = null;

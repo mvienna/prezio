@@ -253,19 +253,20 @@
       />
     </div>
 
-    <div class="row no-wrap q-pt-md">
-      <!-- open preview selection -->
+    <div class="row no-wrap q-mt-sm">
+      <!-- select media -->
       <q-btn
         :label="
           $t(
             'presentationLayout.rightDrawer.tabs.design.slideBackground.select.open'
           )
         "
-        icon-right="r_upload"
+        icon="icon-image_add"
         unelevated
-        text-color="primary"
         no-caps
-        class="q-py-sm full-width select_background__upload_btn"
+        no-wrap
+        style="width: 100%"
+        color="primary"
         @click="showSelectBackgroundDialog = true"
       />
 
@@ -285,11 +286,12 @@
       <!-- delete preview -->
       <q-btn
         v-if="backgroundElement"
-        icon="r_delete"
-        flat
-        round
+        icon="r_delete_sweep"
+        outline
         color="red"
-        class="q-py-sm q-ml-md"
+        style="width: 36px"
+        size="12px"
+        class="q-ml-md"
         @click="deleteElement(backgroundElement)"
       />
     </div>
@@ -346,9 +348,5 @@ onBeforeMount(() => {
   width: 100%;
   aspect-ratio: 16/9;
   border-radius: 8px;
-}
-
-.select_background__upload_btn {
-  border: 1.5px dashed $primary;
 }
 </style>

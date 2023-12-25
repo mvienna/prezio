@@ -1,25 +1,19 @@
 <template>
   <div>
     <!-- show room invitation panel setting -->
-    <div class="row no-wrap items-center q-pl-md text-semibold">
-      <q-icon name="r_link" class="q-mr-md" color="primary" size="24px" />
-
-      <div>
+    <q-checkbox
+      v-model="presentation.settings.show_joining_instructions_bar"
+      size="32px"
+      @update:model-value="presentationsStore.updatePresentation()"
+    >
+      <div class="q-ml-sm">
         {{
           $t(
             "presentationStudio.settings.other.showJoiningInstructionsBar.title"
           )
         }}
       </div>
-
-      <q-space />
-
-      <q-toggle
-        v-model="presentation.settings.show_joining_instructions_bar"
-        color="primary"
-        @update:model-value="presentationsStore.updatePresentation()"
-      />
-    </div>
+    </q-checkbox>
 
     <q-separator class="q-my-md" />
 

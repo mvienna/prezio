@@ -1,106 +1,134 @@
 <template>
-  <div>
-    <!-- backgrounds -->
-    <PresentationStudioTabsDesignTabBackgrounds
-      :background-element="backgroundElement"
-      @change-background="handleBackgroundChange($event)"
-      @preview-background="handleBackgroundChange($event, undefined, true)"
-    />
-
-    <q-separator class="q-mb-lg" />
-
-    <!-- base fill -->
-    <PresentationStudioTabsDesignTabBaseFill
-      :base-fill-element="baseFillElement"
-      @change-base-fill="handleBaseFillChange($event)"
-    />
-
-    <!-- selected background -->
-    <PresentationStudioTabsDesignTabSelectedBackground
-      :default-background-filters="defaultBackgroundFilters"
-      :background-element="backgroundElement"
-      @change-background-filters="changeBackgroundFilters($event)"
-      @change-background="
-        handleBackgroundChange($event.background, $event.backgroundFilters)
-      "
-    />
-
-    <q-separator class="q-my-lg" />
-
-    <!-- text -->
-    <PresentationStudioTabsDesignTabText />
-
-    <q-separator class="q-my-lg" />
-
-    <!-- apply design to all slides -->
-    <q-btn
-      unelevated
-      no-caps
-      color="primary"
-      icon-right="r_move_down"
-      class="full-width q-py-sm"
-      :label="
-        $t('presentationLayout.rightDrawer.tabs.design.applyToAllSlides.title')
-      "
-      @click="showApplyDesignToAllSlidesDialog = true"
-    />
-
-    <q-dialog v-model="showApplyDesignToAllSlidesDialog">
-      <ConfirmationDialog
-        icon="r_move_down"
-        icon-color="primary"
-        :title="
-          $t(
-            'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.confirmation.title'
-          )
-        "
-        :message="
-          $t(
-            'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.confirmation.message'
-          )
-        "
-        confirm-btn-color="primary"
-        @cancel="showApplyDesignToAllSlidesDialog = false"
-        @confirm="
-          applyDesignToAllSlides();
-          showApplyDesignToAllSlidesDialog = false;
-        "
+  <div class="column no-wrap">
+    <q-tabs
+      v-model="tab"
+      align="justify"
+      indicator-color="primary"
+      inline-label
+      dense
+      class="text-primary bg-background q-mb-md"
+    >
+      <q-tab
+        name="design"
+        :label="$t('presentationLayout.rightDrawer.tabs.design.tabs.design')"
+        no-caps
+        class="q-mr-xs"
       />
-    </q-dialog>
-
-    <!-- reset slide design -->
-    <q-btn
-      outline
-      no-caps
-      color="primary"
-      icon-right="r_restart_alt"
-      class="full-width q-py-sm q-mb-sm q-mt-md"
-      :label="$t('presentationLayout.rightDrawer.tabs.design.reset.title')"
-      @click="showResetDesignDialog = true"
-    />
-
-    <q-dialog v-model="showResetDesignDialog">
-      <ConfirmationDialog
-        icon="r_restart_alt"
-        icon-color="primary"
-        :title="
-          $t(
-            'presentationLayout.rightDrawer.tabs.design.reset.confirmation.title'
-          )
-        "
-        :message="
-          $t(
-            'presentationLayout.rightDrawer.tabs.design.reset.confirmation.message'
-          )
-        "
-        confirm-btn-color="primary"
-        @cancel="showResetDesignDialog = false"
-        @confirm="
-          resetSlideDesign();
-          showResetDesignDialog = false;
-        "
+      <q-tab
+        name="themes"
+        :label="$t('presentationLayout.rightDrawer.tabs.design.tabs.themes')"
+        no-caps
+        class="q-ml-xs"
       />
-    </q-dialog>
+    </q-tabs>
+
+    <q-tab-panels v-model="tab" animated>
+      <!-- design -->
+      <q-tab-panel name="design" class="q-pa-none" style="overflow-x: hidden">
+        <!-- base fill -->
+        <PresentationStudioTabsDesignTabBaseFill
+          :base-fill-element="baseFillElement"
+          @change-base-fill="handleBaseFillChange($event)"
+        />
+
+        <!-- selected background -->
+        <PresentationStudioTabsDesignTabSelectedBackground
+          :default-background-filters="defaultBackgroundFilters"
+          :background-element="backgroundElement"
+          @change-background-filters="changeBackgroundFilters($event)"
+          @change-background="
+            handleBackgroundChange($event.background, $event.backgroundFilters)
+          "
+        />
+
+        <q-separator class="q-my-lg" />
+
+        <!-- text -->
+        <PresentationStudioTabsDesignTabText />
+
+        <q-separator class="q-my-lg" />
+
+        <!-- apply design to all slides -->
+        <div class="row justify-center">
+          <q-btn
+            unelevated
+            no-caps
+            icon="r_move_down"
+            text-color="black"
+            class="bg-grey-secondary"
+            :label="
+              $t(
+                'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.title'
+              )
+            "
+            @click="showApplyDesignToAllSlidesDialog = true"
+          />
+        </div>
+
+        <q-dialog v-model="showApplyDesignToAllSlidesDialog">
+          <ConfirmationDialog
+            icon="r_move_down"
+            icon-color="primary"
+            :title="
+              $t(
+                'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.confirmation.title'
+              )
+            "
+            :message="
+              $t(
+                'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.confirmation.message'
+              )
+            "
+            confirm-btn-color="primary"
+            @cancel="showApplyDesignToAllSlidesDialog = false"
+            @confirm="
+              applyDesignToAllSlides();
+              showApplyDesignToAllSlidesDialog = false;
+            "
+          />
+        </q-dialog>
+
+        <!-- reset slide design -->
+        <div
+          class="text-center text-grey q-mt-sm q-mb-sm link"
+          @click="showResetDesignDialog = true"
+        >
+          {{ $t("presentationLayout.rightDrawer.tabs.design.reset.title") }}
+        </div>
+
+        <q-dialog v-model="showResetDesignDialog">
+          <ConfirmationDialog
+            icon="r_restart_alt"
+            icon-color="primary"
+            :title="
+              $t(
+                'presentationLayout.rightDrawer.tabs.design.reset.confirmation.title'
+              )
+            "
+            :message="
+              $t(
+                'presentationLayout.rightDrawer.tabs.design.reset.confirmation.message'
+              )
+            "
+            confirm-btn-color="primary"
+            @cancel="showResetDesignDialog = false"
+            @confirm="
+              resetSlideDesign();
+              showResetDesignDialog = false;
+            "
+          />
+        </q-dialog>
+      </q-tab-panel>
+
+      <!-- themes -->
+      <q-tab-panel name="themes" class="q-pa-none">
+        <PresentationStudioTabsDesignTabThemes
+          :background-element="backgroundElement"
+          @change-background="handleBackgroundChange($event)"
+          @preview-background="handleBackgroundChange($event, undefined, true)"
+        />
+      </q-tab-panel>
+    </q-tab-panels>
   </div>
 </template>
 
@@ -114,7 +142,7 @@ import { useCanvasMediaStore } from "stores/canvas/media";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
-import PresentationStudioTabsDesignTabBackgrounds from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabBackgrounds.vue";
+import PresentationStudioTabsDesignTabThemes from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabThemes.vue";
 import PresentationStudioTabsDesignTabBaseFill from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabBaseFill.vue";
 import PresentationStudioTabsDesignTabSelectedBackground from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTabSelectedBackground.vue";
 import { usePresentationsStore } from "stores/presentations";
@@ -139,6 +167,11 @@ const shapeStore = useCanvasShapeStore();
 const presentationsStore = usePresentationsStore();
 const { presentation, slide, averageBackgroundBrightness } =
   storeToRefs(presentationsStore);
+
+/*
+ * tabs
+ */
+const tab = ref("design");
 
 /*
  * background
@@ -373,3 +406,41 @@ const applyDesignToAllSlides = async () => {
   await canvasStore.redrawCanvas(false);
 };
 </script>
+
+<style scoped lang="scss">
+::v-deep(.q-tabs__content) {
+  padding: 8px;
+}
+
+::v-deep(.q-tabs) {
+  border-radius: 16px;
+}
+
+::v-deep(.q-tab) {
+  width: 50%;
+
+  .q-focus-helper {
+    border-radius: 8px;
+  }
+
+  &.q-tab--active {
+    color: white;
+    border: none;
+  }
+}
+
+::v-deep(.q-tab-panel) {
+  padding: 0;
+}
+
+::v-deep(.q-tab__content) {
+  z-index: 2;
+}
+
+::v-deep(.q-tab__indicator) {
+  background: $primary;
+  height: 100%;
+  z-index: 1;
+  border-radius: 8px;
+}
+</style>

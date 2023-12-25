@@ -18,6 +18,18 @@
       @update:model-value="presentationsStore.updatePresentation()"
     />
 
+    <q-checkbox v-model="temp" disable size="32px">
+      <div class="q-ml-sm">
+        {{ $t("presentationStudio.settings.language.profanityFilter") }}
+      </div>
+    </q-checkbox>
+
+    <div
+      class="text-grey text-caption q-mt-md q-ml-lg q-pl-md"
+      style="line-height: 1.4"
+      v-html="$t('presentationStudio.settings.language.info')"
+    ></div>
+
     <q-separator class="q-mt-lg q-mb-md" />
   </div>
 </template>
@@ -26,6 +38,9 @@
 import { LANGUAGES } from "src/constants/languages";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
+import { ref } from "vue";
+
+const temp = ref(true);
 
 /*
  * stores

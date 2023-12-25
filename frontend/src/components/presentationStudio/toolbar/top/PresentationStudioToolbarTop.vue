@@ -309,7 +309,7 @@ const isMac = computed(() => {
   z-index: 1001;
   top: 0;
   left: 0;
-  width: calc(100% + 400px);
+  width: calc(100% + 481px);
   height: 68px;
   border-bottom: 1px solid $grey-secondary;
 }

@@ -149,6 +149,11 @@ export default {
         design: {
           title: "Дизайн",
 
+          tabs: {
+            design: "Дизайн",
+            themes: "Темы",
+          },
+
           reset: {
             title: "Сбросить дизайн слайда",
             confirmation: {
@@ -170,8 +175,6 @@ export default {
            * slide background
            */
           slideBackground: {
-            title: "Фон слайда",
-
             categories: {
               prezio: "Prezio",
               gradients: "Градиенты",
@@ -183,7 +186,7 @@ export default {
 
             select: {
               title: "Выбранный фон слайда",
-              open: "Выбрать фон",
+              open: "Загрузить фотографию",
             },
 
             filters: {
@@ -211,7 +214,8 @@ export default {
            * slide text default customization
            */
           defaultTextCustomization: {
-            title: "Стандартные параметры текста",
+            font: { title: "Шрифт по умолчанию" },
+            color: { title: "Цвет текста по умолчанию", set: "Задать:" },
           },
         },
 
@@ -223,7 +227,7 @@ export default {
 
           options: {
             content: "Конент",
-            qr: "QR код",
+            qr: "QR",
             video: "Видео",
 
             /*
@@ -234,8 +238,8 @@ export default {
             pick_answer: "Выбор ответа",
             pick_image: "Выбор изображения",
             type_answer: "Ввод ответа",
-            match_pairs: "Совпадающие пары",
-            correct_order: "Правильный порядок",
+            match_pairs: "Сравнение ответов",
+            correct_order: "Сортировка ответов",
 
             leaderboard: "Таблица лидеров",
 
@@ -244,11 +248,11 @@ export default {
              */
             userAnswer: "Опросы",
 
-            poll: "Опрос",
+            poll: "Простой опрос",
             open_ended: "Открытый ответ",
             word_cloud: "Облако слов",
-            qna: "Вопрос - Ответ",
-            brain_storm: "Брейншторм",
+            qna: "Вопрос ответ",
+            brain_storm: "Мозговой штурм",
           },
 
           leaderboard: {
@@ -285,7 +289,7 @@ export default {
           },
 
           lockSubmission: {
-            title: "Заблокировать ответы в начале",
+            title: "Заблокировать отправку ответов в начале",
             description:
               "Заблокировать отправку ответов на этом слайде, чтобы представить его перед разрешением аудитории голосовать",
           },
@@ -394,11 +398,11 @@ export default {
             title: "Таблица лидеров",
             description:
               "После вопроса или в конце викторины можно показать слайд - таблицу лидеров, с результатами всей викторины",
-            create: "Создать после этого слайда",
+            create: "Добавить таблицу лидеров",
           },
 
           openGeneralQuizSettings: {
-            title: "Общие настройки игр и викторин",
+            title: "Открыть общие настройки",
           },
 
           filterProfanity: {

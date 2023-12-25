@@ -1,16 +1,21 @@
 <template>
   <div>
     <!-- toggle -->
-    <q-checkbox
-      v-model="form.requireParticipantsInfo"
-      :label="
-        $t(`presentationStudio.settings.collectParticipantsInfo.checkbox`)
-      "
-      class="text-semibold q-gutter-xs q-mb-md"
-      :class="form.requireParticipantsInfo ? 'text-primary' : ''"
-      @update:model-value="handleSave()"
-    >
-    </q-checkbox>
+    <div class="row no-wrap">
+      <q-checkbox
+        v-model="form.requireParticipantsInfo"
+        size="32px"
+        @update:model-value="handleSave()"
+        :class="form.requireParticipantsInfo ? 'text-primary' : ''"
+        class="q-mb-md text-semibold"
+      >
+        <div class="q-ml-sm">
+          {{
+            $t(`presentationStudio.settings.collectParticipantsInfo.checkbox`)
+          }}
+        </div>
+      </q-checkbox>
+    </div>
 
     <q-slide-transition>
       <div v-if="form.requireParticipantsInfo">
@@ -163,7 +168,7 @@
                 `presentationStudio.settings.collectParticipantsInfo.fields.add`
               )
             "
-            outline
+            unelevated
             no-caps
             color="primary"
             class="full-width"
@@ -172,15 +177,24 @@
 
           <q-btn
             v-if="isUnsavedChanges"
-            unelevated
+            outline
             color="primary"
             icon="r_done"
-            round
+            size="12px"
+            style="width: 36px"
             :disable="!isFieldsValid"
             @click="handleSave()"
           />
 
-          <q-btn v-else flat color="grey" icon="r_save" round disable />
+          <q-btn
+            v-else
+            outline
+            color="grey"
+            size="12px"
+            icon="r_done"
+            style="width: 36px"
+            disable
+          />
         </div>
       </div>
     </q-slide-transition>

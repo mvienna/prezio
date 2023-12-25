@@ -70,14 +70,14 @@
                 )
               "
               name="r_drag_indicator"
-              color="grey"
+              color="black"
               size="sm"
               class="layer_handle--disabled"
             />
             <q-icon
               v-else
               name="r_drag_indicator"
-              color="grey"
+              color="grey-primary"
               size="sm"
               class="layer_handle"
             />
@@ -323,7 +323,7 @@ const handleLayersReorder = async () => {
     color: $white;
 
     .layer_handle--disabled {
-      opacity: 0.3;
+      opacity: 0.5;
       cursor: not-allowed;
     }
 

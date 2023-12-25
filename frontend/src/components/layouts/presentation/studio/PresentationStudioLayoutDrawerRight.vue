@@ -3,67 +3,95 @@
     v-model="rightDrawerOpen"
     show-if-above
     side="right"
-    class="bg-white scroll--hidden"
-    :width="400"
+    class="bg-white scroll--hidden presentation_studio__layout__drawer_right"
+    :width="481"
     bordered
   >
-    <q-tabs
-      v-model="rightDrawerTab"
-      align="justify"
-      indicator-color="primary"
-      class="bg-white text-black text-white drawer_header"
-      inline-label
-    >
-      <q-tab
-        v-for="tab in rightDrawerTabs.filter((item) => !item.hidden)"
-        :key="tab.name"
-        :name="tab.name"
-        :disable="tab.disable"
-        no-caps
-        style="height: 68px"
+    <div style="padding-top: 68px; display: flex; height: 100%">
+      <!-- content -->
+      <q-tab-panels
+        v-model="rightDrawerTab"
+        animated
+        vertical
+        class="presentation_studio__layout__drawer_right__tab_panels"
       >
-        <div>
-          <q-icon :name="tab.icon" size="22px" />
-          <div class="text-caption q-mt-xs">{{ tab.label }}</div>
-        </div>
-      </q-tab>
-    </q-tabs>
+        <!-- type -->
+        <q-tab-panel
+          name="type"
+          class="presentation_studio__layout__drawer_right__tab_panel"
+        >
+          <PresentationStudioTabsTypesTab
+            @select="handleChangingSlideType($event)"
+          />
+        </q-tab-panel>
 
-    <q-tab-panels v-model="rightDrawerTab" animated>
-      <!-- type -->
-      <q-tab-panel name="type">
-        <PresentationStudioTabsTypesTab
-          @select="handleChangingSlideType($event)"
-        />
-      </q-tab-panel>
+        <!-- settings -->
+        <q-tab-panel
+          name="settings"
+          class="presentation_studio__layout__drawer_right__tab_panel"
+        >
+          <PresentationStudioTabsSettingsTab />
+        </q-tab-panel>
 
-      <!-- settings -->
-      <q-tab-panel name="settings">
-        <PresentationStudioTabsSettingsTab />
-      </q-tab-panel>
+        <!-- layers -->
+        <q-tab-panel
+          name="layers"
+          class="presentation_studio__layout__drawer_right__tab_panel"
+        >
+          <PresentationStudioTabsLayersManagementTab />
+        </q-tab-panel>
 
-      <!-- layers -->
-      <q-tab-panel name="layers">
-        <PresentationStudioTabsLayersManagementTab />
-      </q-tab-panel>
+        <!-- design -->
+        <q-tab-panel
+          name="design"
+          class="presentation_studio__layout__drawer_right__tab_panel"
+        >
+          <PresentationStudioTabsDesignTab />
+        </q-tab-panel>
 
-      <!-- design -->
-      <q-tab-panel name="design">
-        <PresentationStudioTabsDesignTab />
-      </q-tab-panel>
+        <!-- template -->
+        <q-tab-panel
+          name="template"
+          class="presentation_studio__layout__drawer_right__tab_panel"
+        >
+          <PresentationStudioTabsTemplatesTab />
+        </q-tab-panel>
 
-      <!-- template -->
-      <q-tab-panel name="template">
-        <PresentationStudioTabsTemplatesTab />
-      </q-tab-panel>
+        <!-- audio -->
+        <q-tab-panel
+          name="audio"
+          class="presentation_studio__layout__drawer_right__tab_panel"
+        >
+          <div class="text-h6 q-pb-md">
+            {{ $t("presentationLayout.rightDrawer.tabs.audio.title") }}
+          </div>
+        </q-tab-panel>
+      </q-tab-panels>
 
-      <!-- audio -->
-      <q-tab-panel name="audio">
-        <div class="text-h6 q-pb-md">
-          {{ $t("presentationLayout.rightDrawer.tabs.audio.title") }}
-        </div>
-      </q-tab-panel>
-    </q-tab-panels>
+      <!-- tabs -->
+      <q-tabs
+        v-model="rightDrawerTab"
+        align="justify"
+        class="bg-white text-black text-white q-pa-sm presentation_studio__layout__drawer_right__tabs"
+        inline-label
+        vertical
+      >
+        <q-tab
+          v-for="tab in rightDrawerTabs.filter((item) => !item.hidden)"
+          :key="tab.name"
+          :name="tab.name"
+          :disable="tab.disable"
+          no-caps
+          style="width: 80px; height: 60px"
+          class="presentation_studio__layout__drawer_right__tab"
+        >
+          <div>
+            <q-icon :name="tab.icon" size="22px" />
+            <div class="text-caption q-mt-xs">{{ tab.label }}</div>
+          </div>
+        </q-tab>
+      </q-tabs>
+    </div>
   </q-drawer>
 </template>
 
@@ -335,32 +363,49 @@ const prepareElementsForNewSlide = (type) => {
 /*
  * tabs
  */
-::v-deep(.q-tab) {
-  color: $grey-5;
-
-  .q-tab__indicator {
-    background: $grey-5;
-    opacity: 0.3;
-    height: 1px;
+::v-deep(.presentation_studio__layout__drawer_right) {
+  .presentation_studio__layout__drawer_right__tab_panels {
+    width: 384px;
   }
-}
 
-::v-deep(.q-tab--active) {
-  color: $secondary;
+  .presentation_studio__layout__drawer_right__tab_panel {
+    overflow-y: scroll;
 
-  .q-tab__indicator {
-    background: currentColor;
-    opacity: 1;
-    height: 2px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
-}
 
-/*
- * header
- */
-.drawer_header {
-  position: sticky;
-  padding-top: 68px;
-  z-index: 1;
+  .presentation_studio__layout__drawer_right__tabs {
+    border-left: 1px solid $grey-secondary;
+    height: 100%;
+  }
+
+  .presentation_studio__layout__drawer_right__tab {
+    color: $black;
+    border-radius: 8px !important;
+    overflow: hidden;
+    margin-bottom: 8px;
+    border: 2px solid transparent;
+
+    &:hover {
+      border: 2px solid $accent;
+      background: $background;
+    }
+
+    .q-tab__indicator,
+    .q-focus-helper {
+      display: none;
+    }
+
+    &.q-tab--active {
+      color: $secondary;
+      background: $background;
+      border: 2px solid $accent;
+    }
+  }
 }
 </style>

@@ -1,14 +1,7 @@
 <template>
   <div>
-    <!-- select background -->
-    <div class="text-grey">
-      {{
-        $t("presentationLayout.rightDrawer.tabs.design.slideBackground.title")
-      }}
-    </div>
-
     <!-- categories -->
-    <div class="q-gutter-sm q-mt-xs q-mb-md">
+    <div class="q-gutter-sm q-mb-md">
       <q-btn
         v-for="category in categories"
         :key="category.name"
@@ -25,27 +18,25 @@
     </div>
 
     <!-- backgrounds -->
-    <div class="q-pa-xs scroll-y scroll--hidden" style="max-height: 410px">
-      <div class="backgrounds_grid">
-        <div
-          v-for="(background, backgroundIndex) in filteredBackgrounds"
-          :key="backgroundIndex"
-          class="background"
-          :class="
-            backgroundElement?.imageSrc === background.src
-              ? 'background--active'
-              : ''
-          "
-          @click="$emit('changeBackground', background)"
-        >
-          <q-img
-            :src="background.src"
-            @mouseover="handleBackgroundMouseOver(background, backgroundIndex)"
-            @mouseleave="handleBackgroundMouseLeave(backgroundIndex)"
-          />
-          <div class="text-center q-mt-xs text-semibold">
-            {{ background.name || backgroundIndex + 1 }}
-          </div>
+    <div class="backgrounds_grid q-pa-xs">
+      <div
+        v-for="(background, backgroundIndex) in filteredBackgrounds"
+        :key="backgroundIndex"
+        class="background"
+        :class="
+          backgroundElement?.imageSrc === background.src
+            ? 'background--active'
+            : ''
+        "
+        @click="$emit('changeBackground', background)"
+      >
+        <q-img
+          :src="background.src"
+          @mouseover="handleBackgroundMouseOver(background, backgroundIndex)"
+          @mouseleave="handleBackgroundMouseLeave(backgroundIndex)"
+        />
+        <div class="text-center q-mt-xs text-caption">
+          {{ background.name || backgroundIndex + 1 }}
         </div>
       </div>
     </div>
@@ -180,7 +171,7 @@ const handleBackgroundMouseLeave = (backgroundIndex) => {
  */
 .backgrounds_grid {
   columns: 3;
-  gap: 16px;
+  gap: 8px;
 
   .item:nth-last-child(-n + 3) {
     margin-bottom: 0;
@@ -193,19 +184,19 @@ const handleBackgroundMouseLeave = (backgroundIndex) => {
   cursor: pointer;
   color: $grey;
   transition: 0.2s;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 
   .q-img {
     aspect-ratio: 16/9;
-    border-radius: 8px;
-    border: 1.5px solid $grey-2;
+    border-radius: 8px !important;
+    border: 2px solid $grey-secondary;
     outline: 3px solid transparent;
     transition: 0.2s;
   }
 
   &:hover {
     .q-img {
-      outline: 3px solid $background;
+      border: 2px solid $accent;
     }
   }
 
@@ -213,8 +204,8 @@ const handleBackgroundMouseLeave = (backgroundIndex) => {
     color: $black;
 
     .q-img {
-      border: 1.5px solid $primary;
-      outline: 3px solid $background;
+      border: 2px solid $primary;
+      outline: 2px solid $accent;
     }
   }
 }

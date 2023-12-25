@@ -152,10 +152,11 @@ const tabs = {
     .q-item {
       transition: 0.2s;
       border-radius: 8px;
-      outline: 3px solid transparent;
+      border: 2px solid transparent;
 
       &:hover {
         background: $grey-2;
+        border: 2px solid $accent;
       }
 
       .q-item__label {
@@ -172,9 +173,9 @@ const tabs = {
 ::v-deep(.q-expansion-item--active) {
   .q-expansion-item__container {
     .q-item {
-      background: $grey-1;
-      color: $primary;
-      outline: 3px solid $background;
+      background: $background;
+      color: $secondary;
+      border: 2px solid $accent;
     }
   }
 }

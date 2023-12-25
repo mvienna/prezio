@@ -27,7 +27,7 @@
           :offset="[0, 16]"
           class="q-pa-md scroll--hidden bg-white"
           max-height="75vh"
-          style="width: 399px; border-radius: 16px"
+          style="width: 360px; border-radius: 16px"
         >
           <PresentationStudioTabsTypesTab
             disable-layout-selection
@@ -39,6 +39,7 @@
         </q-menu>
       </q-btn>
 
+      <!-- import -->
       <div class="relative-position q-mt-md">
         <q-btn
           unelevated
@@ -46,6 +47,7 @@
           color="grey-secondary"
           text-color="black"
           no-caps
+          disable
           class="full-width"
         />
 
@@ -217,7 +219,7 @@
                       :offset="[24, 8]"
                       class="q-pa-md scroll--hidden bg-white"
                       max-height="75vh"
-                      style="width: 399px; border-radius: 16px"
+                      style="width: 360px; border-radius: 16px"
                     >
                       <PresentationStudioTabsTypesTab
                         disable-layout-selection
@@ -323,7 +325,7 @@
           :offset="[24, 0]"
           class="q-pa-md scroll--hidden bg-white"
           max-height="75vh"
-          style="width: 399px; border-radius: 16px"
+          style="width: 360px; border-radius: 16px"
         >
           <PresentationStudioTabsTypesTab
             disable-layout-selection

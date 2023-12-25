@@ -48,7 +48,7 @@
     </div>
 
     <!-- score depends on time -->
-    <div class="row no-wrap items-center justify-between text-semibold">
+    <div class="row no-wrap items-center text-semibold justify-between">
       <span>
         {{
           $t(
