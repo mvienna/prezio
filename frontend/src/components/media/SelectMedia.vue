@@ -1,7 +1,10 @@
 <template>
   <q-card flat class="select_media__card relative-position">
     <!-- toolbar -->
-    <q-card-section class="q-card__toolbar_section q-pa-lg">
+    <q-card-section
+      class="q-card__toolbar_section column no-wrap q-pa-lg"
+      style="height: 100%; max-height: 100%"
+    >
       <q-toolbar class="justify-between q-px-none">
         <!-- title -->
         <div class="text-h6 text-bold">{{ $t("media.select.title") }}</div>
@@ -18,254 +21,165 @@
 
       <!-- tabs -->
       <q-tabs
+        v-if="!selectedFile"
         v-model="tab"
+        dense
         align="justify"
-        indicator-color="primary"
-        class="bg-white text-black text-white"
+        indicator-color="secondary"
+        class="text-secondary bg-background"
         inline-label
       >
         <q-tab
-          v-for="tab in Object.values(tabs)"
+          v-for="(tab, tabIndex) in Object.values(tabs).filter(
+            (item) => item.name !== tabs.mine.name || media?.length
+          )"
           :key="tab.name"
           :name="tab.name"
           :label="tab.label"
           :disable="tab.disabled"
           :icon="tab.icon"
+          :class="`${tabIndex !== 0 ? 'q-ml-sm' : ''}`"
           no-caps
         />
       </q-tabs>
-    </q-card-section>
 
-    <!-- content -->
-    <q-card-section
-      :class="tab === 'stock' ? 'q-px-lg q-py-none' : 'q-pa-lg'"
-      style="height: calc(100% - 124px)"
-    >
-      <q-tab-panels v-model="tab" animated class="full-height">
-        <!-- upload -->
-        <q-tab-panel name="upload" class="q-pa-none column no-wrap full-height">
-          <template v-if="selectedFile">
-            <!-- uploaded file -->
-            <q-img
-              class="uploaded__file"
-              fill="contain"
-              :src="
-                selectedFile?.preview_url ||
-                selectedFile?.original_url ||
-                selectedFile?.urls?.regular
-              "
-              :alt="selectedFile?.filename || selectedFile?.alt_description"
-            />
+      <div
+        v-if="selectedFile"
+        class="q-py-lg"
+        style="height: calc(100% - 116px)"
+      >
+        <!-- uploaded file -->
+        <q-img
+          class="uploaded__file"
+          fill="contain"
+          :src="
+            selectedFile?.preview_url ||
+            selectedFile?.original_url ||
+            selectedFile?.urls?.regular
+          "
+          :alt="selectedFile?.filename || selectedFile?.alt_description"
+        />
 
-            <div class="absolute-right q-mr-lg q-mt-lg row no-wrap">
-              <!-- delete file -->
-              <q-btn
-                color="grey-5"
-                unelevated
-                icon="r_delete"
-                round
-                style="height: 24px"
-                class="q-mr-sm"
-                size="10px"
-                @click="deleteFile(selectedFile)"
-              />
-
-              <!-- reset file -->
-              <q-btn
-                color="grey-5"
-                unelevated
-                icon="r_close"
-                round
-                style="height: 24px"
-                size="10px"
-                @click="selectedFile = null"
-              />
-            </div>
-          </template>
-
-          <!-- upload illustration -->
-          <template v-else>
-            <q-space />
-
-            <div class="row justify-center">
-              <q-img src="/assets/images/upload.svg" width="300px" />
-            </div>
-
-            <div class="text-grey-5 text-center q-mt-md">
-              {{ $t("media.select.tabs.upload.description") }}
-            </div>
-          </template>
-
-          <q-space />
-
-          <!-- upload -->
+        <!-- actions -->
+        <div class="row no-wrap q-gutter-md q-pt-lg">
+          <!-- go back -->
           <q-btn
-            v-if="!selectedFile"
+            unelevated
+            :label="$t('media.select.goBack')"
+            icon="r_arrow_back"
             round
-            flat
             no-caps
-            class="full-width q-mt-lg"
-            :loading="isProcessing"
+            color="grey-2"
+            text-color="black"
+            style="width: 100%"
+            @click="selectedFile = null"
+          />
+
+          <!-- select -->
+          <q-btn
+            unelevated
+            :label="$t('media.select.submit')"
+            round
+            no-caps
+            color="primary"
+            style="width: 100%"
+            @click="handleFileSelection()"
+          />
+        </div>
+      </div>
+
+      <div
+        v-else
+        style="height: calc(100% - 102px)"
+        class="column no-wrap scroll-y scroll--hidden"
+      >
+        <!-- content -->
+        <q-tab-panels v-model="tab" animated style="height: 100%">
+          <!-- upload -->
+          <q-tab-panel
+            name="upload"
+            class="q-pa-none column justify-center no-wrap q-mt-lg"
+            style="height: calc(100% - 48px)"
           >
-            <template #default>
-              <form ref="form" class="full-width">
-                <input
-                  :id="fileInputId"
-                  type="file"
-                  accept="image/*"
-                  @change="uploadFile"
-                />
-                <label :for="fileInputId" class="full-width">
-                  <q-icon name="r_upload" size="sm" class="q-pr-sm" />
-                  {{ $t("user.profile.form.avatar.upload") }}
-                </label>
-              </form>
-            </template>
-          </q-btn>
-        </q-tab-panel>
-
-        <!-- mine -->
-        <q-tab-panel name="mine">
-          <!-- none -->
-          <div v-if="!media.length" class="column no-wrap full-height">
-            <q-space />
-
-            <div class="row justify-center">
-              <q-img src="/assets/images/upload.svg" width="300px" />
-            </div>
-
-            <div class="text-grey-5 text-center q-mt-md">
-              {{ $t("media.select.tabs.upload.description") }}
-            </div>
-
-            <q-space />
-          </div>
-
-          <!-- users files -->
-          <div v-else class="masonry">
-            <q-card
-              v-for="file in media"
-              :key="file.id"
-              flat
-              bordered
-              class="masonry__item"
-              :class="
-                selectedFile?.id === file.id ? 'masonry__item--selected' : ''
-              "
-              @click="selectedFile = selectedFile?.id === file.id ? null : file"
+            <div
+              id="drop-area"
+              class="column justify-center no-wrap"
+              @dragover="allowDrop"
+              @drop="dropHandler"
+              @dragenter="dragEnterHandler"
+              @dragleave="dragLeaveHandler"
             >
-              <!-- added from unsplash -->
-              <q-img
-                v-if="file?.origin === selectedStockImageOriginOptions.unsplash"
-                :src="file?.urls?.regular"
-                :alt="file?.alt_description"
-              />
-
-              <!-- uploaded from the computer -->
-              <q-img
-                v-else-if="file?.mime_type?.includes('image')"
-                :src="file?.preview_url || file?.original_url"
-                :alt="file?.preview_url || file?.original_url"
-              />
-
-              <!-- context menu -->
-              <q-menu
-                touch-position
-                context-menu
-                transition-show="jump-down"
-                transition-hide="jump-up"
-              >
-                <!-- delete file -->
-                <q-item
-                  class="text-red items-center"
-                  clickable
-                  @click="deleteFile(file)"
-                >
-                  <q-icon name="r_delete" class="q-mr-sm" size="xs" />
-                  <div>
-                    {{ $t("media.actions.delete.title") }}
-                  </div>
-                </q-item>
-              </q-menu>
-            </q-card>
-          </div>
-        </q-tab-panel>
-
-        <!-- stock -->
-        <q-tab-panel name="stock" class="q-pa-none">
-          <!-- search unsplash-->
-          <div class="q-pt-lg">
-            <q-input
-              v-model="search"
-              clearable
-              outlined
-              dense
-              clear-icon="r_backspace"
-              debounce="500"
-              color="primary"
-              :placeholder="$t('media.select.tabs.stock.search')"
-              class="q-mb-lg"
-              @update:model-value="handleSearch()"
-            >
-              <template #append>
-                <q-icon
-                  flat
+              <div class="row justify-center">
+                <q-btn
+                  unelevated
+                  icon="icon-upload"
                   round
-                  name="r_search"
-                  class="q-ml-md q-mr-sm cursor-pointer"
-                  @click="handleSearch()"
+                  size="16px"
+                  color="grey-2"
+                  text-color="grey"
+                  :loading="isProcessing"
                 />
-              </template>
-            </q-input>
-          </div>
+              </div>
 
-          <!-- results unsplash -->
-          <div>
-            <q-infinite-scroll
-              @load="stockImagesStore.fetchStockImages"
-              :offset="500"
-              class="masonry"
-            >
+              <div class="text-h7 q-mt-md row no-wrap justify-center">
+                <div>
+                  {{ $t("media.select.tabs.upload.dragAndDropFiles") }}
+                </div>
+
+                <div class="q-mx-xs">
+                  {{ $t("media.select.tabs.upload.or") }}
+                </div>
+
+                <form ref="form">
+                  <input
+                    :id="fileInputId"
+                    type="file"
+                    accept="image/*"
+                    @change="uploadFile"
+                  />
+                  <label :for="fileInputId" class="text-primary link">
+                    {{ $t("media.select.tabs.upload.browseFiles") }}
+                  </label>
+                </form>
+              </div>
+
+              <div class="text-grey q-mt-xs">
+                {{ $t("media.select.tabs.upload.description") }}
+              </div>
+            </div>
+          </q-tab-panel>
+
+          <!-- my uploads -->
+          <q-tab-panel name="mine" class="q-pa-none">
+            <div class="masonry q-py-lg">
               <q-card
-                v-for="item in stockImages"
-                :key="item.id"
-                class="masonry__item"
+                v-for="file in media"
+                :key="file.id"
                 flat
                 bordered
+                class="masonry__item"
                 :class="
-                  selectedFile?.id === item.id ? 'masonry__item--selected' : ''
+                  selectedFile?.id === file.id ? 'masonry__item--selected' : ''
                 "
                 @click="
-                  selectedFile =
-                    selectedFile?.id === item.id
-                      ? null
-                      : { ...item, origin: 'unsplash' }
+                  selectedFile = selectedFile?.id === file.id ? null : file
                 "
               >
-                <!-- image -->
+                <!-- added from unsplash -->
                 <img
-                  :src="item.urls.regular"
-                  :alt="item.alt_description"
-                  :style="`aspect-ratio: ${
-                    item.width / item.height
-                  }; width: 100%;`"
+                  v-if="
+                    file?.origin === selectedStockImageOriginOptions.unsplash
+                  "
+                  :src="file?.urls?.regular"
+                  :alt="file?.alt_description"
                 />
 
-                <!-- author -->
-                <q-tooltip
-                  anchor="bottom start"
-                  self="top start"
-                  class="row no-wrap items-center q-py-sm bg-white"
-                  style="border-radius: 20px; border: 1.5px solid #f2f2f2"
-                >
-                  <q-avatar size="24px" class="q-mr-sm">
-                    <q-img :src="item.user.profile_image.small" />
-                  </q-avatar>
-
-                  <div class="text-grey">
-                    {{ item.user.name }}
-                  </div>
-                </q-tooltip>
+                <!-- uploaded from the computer -->
+                <img
+                  v-else-if="file?.mime_type?.includes('image')"
+                  :src="file?.preview_url || file?.original_url"
+                  :alt="file?.preview_url || file?.original_url"
+                />
 
                 <!-- context menu -->
                 <q-menu
@@ -276,67 +190,132 @@
                 >
                   <!-- delete file -->
                   <q-item
-                    class="items-center"
-                    :href="item.links.html"
-                    target="_blank"
+                    class="text-red items-center"
+                    clickable
+                    @click="deleteFile(file)"
                   >
-                    <q-icon name="r_link" class="q-mr-sm" size="xs" />
+                    <q-icon name="r_delete" class="q-mr-sm" size="xs" />
                     <div>
-                      {{ $t("media.actions.open.title") }}
+                      {{ $t("media.actions.delete.title") }}
                     </div>
                   </q-item>
                 </q-menu>
               </q-card>
+            </div>
+          </q-tab-panel>
 
-              <template v-slot:loading>
-                <div class="row justify-center q-my-md">
-                  <q-spinner-ios size="40px" />
-                </div>
-              </template>
-            </q-infinite-scroll>
-          </div>
-        </q-tab-panel>
+          <!-- stock -->
+          <q-tab-panel name="stock" class="q-pa-none">
+            <!-- search on unsplash -->
+            <div class="q-py-lg">
+              <q-input
+                v-model="search"
+                clearable
+                outlined
+                dense
+                clear-icon="r_backspace"
+                debounce="500"
+                color="primary"
+                :placeholder="$t('media.select.tabs.stock.search')"
+                @update:model-value="handleSearch()"
+              >
+                <template #append>
+                  <q-icon
+                    flat
+                    round
+                    name="r_search"
+                    class="q-ml-md q-mr-sm cursor-pointer"
+                    @click="handleSearch()"
+                  />
+                </template>
+              </q-input>
+            </div>
 
-        <!-- gifs and stickers-->
-        <q-tab-panel name="r_gifs_and_stickers"> </q-tab-panel>
-      </q-tab-panels>
+            <!-- results unsplash -->
+            <div>
+              <q-infinite-scroll
+                @load="stockImagesStore.fetchStockImages"
+                :offset="500"
+                class="masonry"
+              >
+                <q-card
+                  v-for="item in stockImages"
+                  :key="item.id"
+                  class="masonry__item"
+                  flat
+                  bordered
+                  :class="
+                    selectedFile?.id === item.id
+                      ? 'masonry__item--selected'
+                      : ''
+                  "
+                  @click="
+                    selectedFile =
+                      selectedFile?.id === item.id
+                        ? null
+                        : { ...item, origin: 'unsplash' }
+                  "
+                >
+                  <!-- image -->
+                  <img
+                    :src="item.urls.regular"
+                    :alt="item.alt_description"
+                    :style="`aspect-ratio: ${
+                      item.width / item.height
+                    }; width: 100%;`"
+                  />
+
+                  <!-- author -->
+                  <q-tooltip
+                    anchor="bottom start"
+                    self="top start"
+                    class="row no-wrap items-center q-py-sm bg-white"
+                    style="border-radius: 20px; border: 1.5px solid #f2f2f2"
+                  >
+                    <q-avatar size="24px" class="q-mr-sm">
+                      <q-img :src="item.user.profile_image.small" />
+                    </q-avatar>
+
+                    <div class="text-grey">
+                      {{ item.user.name }}
+                    </div>
+                  </q-tooltip>
+
+                  <!-- context menu -->
+                  <q-menu
+                    touch-position
+                    context-menu
+                    transition-show="jump-down"
+                    transition-hide="jump-up"
+                  >
+                    <!-- delete file -->
+                    <q-item
+                      class="items-center"
+                      :href="item.links.html"
+                      target="_blank"
+                    >
+                      <q-icon name="r_link" class="q-mr-sm" size="xs" />
+                      <div>
+                        {{ $t("media.actions.open.title") }}
+                      </div>
+                    </q-item>
+                  </q-menu>
+                </q-card>
+
+                <template v-slot:loading>
+                  <div class="row justify-center q-my-md">
+                    <q-spinner-ios size="40px" />
+                  </div>
+                </template>
+              </q-infinite-scroll>
+            </div>
+          </q-tab-panel>
+
+          <!-- gifs and stickers-->
+          <q-tab-panel name="r_gifs_and_stickers"> </q-tab-panel>
+        </q-tab-panels>
+      </div>
     </q-card-section>
-
-    <q-space />
-
-    <!-- select -->
-    <transition
-      appear
-      enter-active-class="animated fadeInUp"
-      leave-active-class="animated fadeOutDown"
-    >
-      <q-card-section
-        v-if="selectedFile"
-        class="q-card__submit_button_section relative-position q-px-lg q-pb-lg q-pt-none"
-      >
-        <q-btn
-          :label="$t('media.select.submit')"
-          icon="r_done"
-          round
-          no-caps
-          class="full-width q-py-md"
-          style="z-index: 1"
-          color="primary"
-          unelevated
-          @click="handleFileSelection()"
-        />
-
-        <div
-          style="
-            width: 100%;
-            height: 80px;
-            z-index: 0;
-            background: linear-gradient(180deg, transparent, white);
-          "
-          class="absolute-bottom-left"
-        ></div>
-      </q-card-section>
-    </transition>
   </q-card>
 </template>
 
@@ -496,6 +475,39 @@ const handleSearch = () => {
   stockImages.value = [];
   stockImagesStore.fetchStockImages();
 };
+
+/*
+ * drag & drop area
+ */
+const allowDrop = (event) => {
+  event.preventDefault();
+};
+
+const dragEnterHandler = (event) => {
+  event.target.classList.add("hover");
+};
+
+const dragLeaveHandler = (event) => {
+  event.target.classList.remove("hover");
+};
+
+const dropHandler = (event) => {
+  event.preventDefault();
+  const dropArea = document.getElementById("drop-area");
+  dropArea.classList.remove("hover");
+
+  const files = event.dataTransfer.files;
+
+  if (files.length > 0) {
+    const file = files[0];
+    if (file.type.startsWith("image/")) {
+      // displayImage(file);
+      uploadFile({ target: { files } });
+    } else {
+      alert("Please drop an image file");
+    }
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -503,7 +515,7 @@ const handleSearch = () => {
   width: 100%;
   max-width: 800px;
   height: 100%;
-  max-height: 700px;
+  max-height: 600px;
   overflow-y: hidden;
   border-radius: 16px !important;
 }
@@ -516,34 +528,43 @@ const handleSearch = () => {
   z-index: 1;
 }
 
-.q-card__submit_button_section {
-  position: sticky;
-  bottom: 0;
-  //background: $white;
-}
-
 /*
  * tabs
  */
-::v-deep(.q-tab) {
-  color: $grey;
-  height: 50px;
+::v-deep(.q-tabs__content) {
+  padding: 8px;
+}
 
-  .q-tab__indicator {
-    background: $grey;
-    opacity: 0.3;
-    height: 1px;
+::v-deep(.q-tabs) {
+  border-radius: 16px;
+}
+
+::v-deep(.q-tab) {
+  width: 50%;
+
+  .q-focus-helper {
+    border-radius: 8px;
+  }
+
+  &.q-tab--active {
+    color: white;
+    border: none;
   }
 }
 
-::v-deep(.q-tab--active) {
-  color: $secondary;
+::v-deep(.q-tab-panel) {
+  padding: 0;
+}
 
-  .q-tab__indicator {
-    background: currentColor;
-    opacity: 1;
-    height: 2px;
-  }
+::v-deep(.q-tab__content) {
+  z-index: 2;
+}
+
+::v-deep(.q-tab__indicator) {
+  background: currentColor;
+  height: 100%;
+  z-index: 1;
+  border-radius: 8px;
 }
 
 ::v-deep(.q-panel) {
@@ -564,27 +585,12 @@ const handleSearch = () => {
   width: 0;
 }
 
-[type="file"] + label {
-  border-radius: 8px;
-  padding: 16px 24px;
-  text-align: center;
-  min-height: 40px;
-  font-weight: 600;
-  background: $primary;
-  color: $white;
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  transition: all 0.2s;
-  vertical-align: middle;
-}
-
 /*
  * uploaded
  */
 .uploaded__file {
-  height: calc(100% - 56px - 24px);
-  border-radius: 6px;
+  border-radius: 8px;
+  height: 100%;
 }
 
 /*
@@ -600,22 +606,23 @@ const handleSearch = () => {
     overflow: hidden;
     cursor: pointer;
     transition: 0.2s;
-    border-width: 2px;
-    outline: 3px solid transparent;
-    border-color: transparent;
+    border: 3px solid $grey-2;
 
     img {
       border-radius: 0;
+      transition: 0.2s;
     }
 
     &:hover {
-      border-color: $accent;
-      outline: 1px solid $accent;
+      border: 3px solid $accent;
+
+      img {
+        transform: scale(1.1);
+      }
     }
 
     &.masonry__item--selected {
-      border-color: $primary;
-      outline: 2px solid $accent;
+      border: 3px solid $accent;
     }
   }
 }
@@ -624,5 +631,19 @@ const handleSearch = () => {
   .masonry {
     columns: 1 150px;
   }
+}
+
+#drop-area {
+  border: 2px dashed $grey;
+  border-radius: 8px;
+  padding: 24px;
+  height: 100%;
+  text-align: center;
+  cursor: grab;
+  transition: 0.2s;
+}
+
+#drop-area.hover {
+  border-color: $primary;
 }
 </style>

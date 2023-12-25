@@ -2,10 +2,14 @@ export default {
   media: {
     select: {
       title: "Выбор изображения",
+
       tabs: {
         upload: {
           title: "Загрузка",
-          description: "Загрузите изображение с устройства",
+          description: "JPG, PNG or GIF - максимальный размер 10MB",
+          dragAndDropFiles: "Перетащите файлы",
+          or: "или",
+          browseFiles: "выберите файл",
         },
         mine: {
           title: "Мои картинки",
@@ -19,6 +23,8 @@ export default {
           title: "GIF и стикеры",
         },
       },
+
+      goBack: "Вернуться назад",
       submit: "Выбрать",
     },
 

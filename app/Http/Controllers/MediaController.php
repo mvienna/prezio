@@ -70,7 +70,8 @@ class MediaController extends Controller
         $media = Media::find($file_id);
 
         if ($media) {
-            $media->forceDelete();
+//            $media->forceDelete();
+            $media->delete();
             return $this->successResponse();
         }
 
