@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="q-pa-sm">
+  <q-card flat>
     <q-card-section class="q-pa-lg">
       <div class="row no-wrap items-center justify-between">
         <div class="text-h6 text-semibold">
@@ -44,7 +44,19 @@
         </div>
 
         <q-tab-panels v-model="tab" animated vertical style="width: 100%">
-          <q-tab-panel name="inviteAudience">
+          <q-tab-panel name="inviteAudience" class="q-py-none">
+            <div class="text-semibold">
+              {{ $t("presentationLayout.header.share.inviteAudience.title") }}
+            </div>
+
+            <div class="text-grey q-mt-sm">
+              {{
+                $t("presentationLayout.header.share.inviteAudience.description")
+              }}
+            </div>
+
+            <q-separator class="q-my-lg" />
+
             <!-- link -->
             <div class="text-semibold">
               {{
@@ -54,7 +66,7 @@
 
             <div class="q-pt-sm row no-wrap q-gutter-md">
               <div
-                class="bg-grey-2 q-py-sm q-px-md row no-wrap items-center"
+                class="bg-grey-2 q-px-md row no-wrap items-center"
                 style="width: 100%; border-radius: 8px"
               >
                 <span class="cursor-not-allowed text-grey-8">
@@ -107,9 +119,13 @@
 
                 <q-space />
 
-                <q-icon
-                  name="r_edit"
+                <q-btn
+                  round
+                  flat
+                  icon="r_edit"
                   color="primary"
+                  size="8px"
+                  style="width: 24px"
                   class="q-ml-sm cursor-pointer"
                   @click="() => $refs.qPopupEditProxy.show()"
                 />
@@ -117,11 +133,11 @@
 
               <div>
                 <q-btn
-                  outline
+                  unelevated
                   color="primary"
                   no-caps
                   no-wrap
-                  :icon-right="isRoomLinkCopied ? 'r_done' : 'r_copy'"
+                  :icon="isRoomLinkCopied ? 'r_done' : 'r_copy'"
                   :label="
                     $t(
                       'presentationLayout.header.share.inviteAudience.link.copy'
@@ -132,6 +148,14 @@
               </div>
             </div>
 
+            <div class="row no-wrap items-center q-my-lg justify-between">
+              <q-separator style="width: 42%" />
+              <div class="text-grey">
+                {{ $t("presentationLayout.header.share.inviteAudience.or") }}
+              </div>
+              <q-separator style="width: 42%" />
+            </div>
+
             <!-- qr -->
             <div class="text-semibold q-mt-lg">
               {{
@@ -139,19 +163,37 @@
               }}
             </div>
 
-            <div ref="qrCodeElement" class="q-mt-sm"></div>
+            <div class="row no-wrap q-mt-md">
+              <div ref="qrCodeElement" class="q-mr-md"></div>
 
-            <q-btn
-              outline
-              color="primary"
-              :label="
-                $t('presentationLayout.header.share.inviteAudience.qr.download')
-              "
-              no-caps
-              icon-right="r_download"
-              style="width: 150px"
-              @click="handleQrCodeDownload()"
-            />
+              <div>
+                <div class="text-grey">
+                  {{
+                    $t(
+                      "presentationLayout.header.share.inviteAudience.qr.description"
+                    )
+                  }}
+                </div>
+
+                <q-btn
+                  unelevated
+                  color="grey-2"
+                  no-caps
+                  style="width: 150px"
+                  class="q-mt-md"
+                  @click="handleQrCodeDownload()"
+                >
+                  <div class="text-black">
+                    <q-icon name="icon-download" />
+                    {{
+                      $t(
+                        "presentationLayout.header.share.inviteAudience.qr.download"
+                      )
+                    }}
+                  </div>
+                </q-btn>
+              </div>
+            </div>
           </q-tab-panel>
         </q-tab-panels>
       </div>
@@ -248,9 +290,9 @@ const handleQrCodeGeneration = () => {
     150,
     150,
     roomLink.value,
-    window.location.origin + "/logo.png",
+    window.location.origin + "/logo_secondary.png",
     "#FFFFFF",
-    "#000000"
+    "#113B98"
   );
   qrCode.value.append(qrCodeElement.value);
 };
@@ -264,14 +306,15 @@ const handleQrCodeGeneration = () => {
 }
 
 ::v-deep(.q-tab) {
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 8px;
   width: 100px;
   white-space: pre-wrap;
 
   &.q-tab--active {
     background: $background;
-    color: $primary;
+    color: $secondary;
+    border: 2px solid $secondary;
 
     .q-tab__content {
       div {

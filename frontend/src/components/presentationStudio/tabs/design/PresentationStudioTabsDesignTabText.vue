@@ -126,7 +126,7 @@ const defaultTextColors = ["#313132", "#FFFFFF"];
   min-width: 24px;
   height: 24px;
   border-radius: 8px;
-  border: 2px solid $grey-secondary;
+  border: 2px solid $grey-2;
   transition: 0.2s;
 
   &.text_color_box--active {

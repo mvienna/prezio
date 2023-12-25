@@ -311,7 +311,7 @@ const isMac = computed(() => {
   left: 0;
   width: calc(100% + 481px);
   height: 68px;
-  border-bottom: 1px solid $grey-secondary;
+  border-bottom: 1px solid $grey-2;
 }
 
 ::v-deep(.q-field--dense .q-field__marginal) {

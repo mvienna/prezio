@@ -175,7 +175,7 @@ const deleteFile = () => {
 
   .avatar__default {
     background: $grey-2;
-    color: $grey-5;
+    color: $grey;
     border-radius: 100%;
     padding: 20px;
     margin: 0 auto;

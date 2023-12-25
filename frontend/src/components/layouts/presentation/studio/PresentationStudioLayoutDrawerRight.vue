@@ -380,7 +380,7 @@ const prepareElementsForNewSlide = (type) => {
   }
 
   .presentation_studio__layout__drawer_right__tabs {
-    border-left: 1px solid $grey-secondary;
+    border-left: 1px solid $grey-2;
     height: 100%;
   }
 

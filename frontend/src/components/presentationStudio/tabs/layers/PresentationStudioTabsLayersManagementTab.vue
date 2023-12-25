@@ -77,7 +77,7 @@
             <q-icon
               v-else
               name="r_drag_indicator"
-              color="grey-primary"
+              color="grey"
               size="sm"
               class="layer_handle"
             />

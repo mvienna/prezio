@@ -7,10 +7,7 @@
           <q-img src="/favicon.ico" style="width: 30px" />
 
           <div class="q-ml-sm column">
-            <q-badge
-              class="bg-grey-secondary text-grey-5 text-xs"
-              label="BETA"
-            />
+            <q-badge class="bg-grey-2 text-grey-5 text-xs" label="BETA" />
           </div>
         </div>
       </a>

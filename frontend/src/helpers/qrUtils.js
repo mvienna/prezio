@@ -15,7 +15,7 @@ export const generateQrCode = (
     data: data,
     image: image,
     dotsOptions: {
-      type: "rounded",
+      type: "extra-rounded",
       // gradient: {
       //   type: "linear",
       //   rotation: Math.PI / 4,
@@ -30,6 +30,7 @@ export const generateQrCode = (
       color: backgroundColor,
     },
     imageOptions: {
+      imageSize: 0.6,
       crossOrigin: "anonymous",
       margin: 5,
     },

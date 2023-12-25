@@ -526,11 +526,11 @@ const handleSearch = () => {
  * tabs
  */
 ::v-deep(.q-tab) {
-  color: $grey-5;
+  color: $grey;
   height: 50px;
 
   .q-tab__indicator {
-    background: $grey-5;
+    background: $grey;
     opacity: 0.3;
     height: 1px;
   }

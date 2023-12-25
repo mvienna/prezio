@@ -844,7 +844,7 @@ const handleDeletingPresentations = async (presentations) => {
 
 .presentation__preview {
   border-radius: 6px;
-  outline: 1.5px solid $grey-3;
+  outline: 1.5px solid $grey-2;
   width: 100px;
   aspect-ratio: 16/9;
 }

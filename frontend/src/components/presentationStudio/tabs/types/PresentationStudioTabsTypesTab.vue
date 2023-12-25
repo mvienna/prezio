@@ -203,7 +203,7 @@ const types = computed(() => {
   cursor: pointer;
   transition: 0.2s;
   border-radius: 8px;
-  border: 2px solid $grey-secondary;
+  border: 2px solid $grey-2;
   outline: 2px solid transparent;
 
   &:hover {

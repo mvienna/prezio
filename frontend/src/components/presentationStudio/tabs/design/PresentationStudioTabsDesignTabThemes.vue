@@ -189,7 +189,7 @@ const handleBackgroundMouseLeave = (backgroundIndex) => {
   .q-img {
     aspect-ratio: 16/9;
     border-radius: 8px !important;
-    border: 2px solid $grey-secondary;
+    border: 2px solid $grey-2;
     outline: 3px solid transparent;
     transition: 0.2s;
   }

@@ -268,7 +268,7 @@ const handleQuestionInput = (textAlign = null) => {
 
 <style scoped lang="scss">
 ::v-deep(.q-btn-group) {
-  border: 1px solid $grey-5;
+  border: 1px solid $grey;
 }
 
 ::v-deep(.q-expansion-item) {

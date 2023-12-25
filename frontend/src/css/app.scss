@@ -17,10 +17,6 @@ html, body {
 /*
  * colors
  */
-.bg-grey-secondary {
-  background: $grey-secondary !important;
-}
-
 .bg-background {
   background: $background !important;
 }
@@ -103,11 +99,11 @@ a, .link {
 }
 
 .q-field__marginal {
-  color: $grey-5;
+  color: $grey;
 }
 
 .q-field__label {
-  color: $grey-5;
+  color: $grey;
 }
 
 /*

@@ -33,7 +33,7 @@ const note = ref();
   font-size: 12px;
   width: 100%;
   background: $white;
-  border-top: 1px solid $grey-secondary;
+  border-top: 1px solid $grey-2;
 
   ::v-deep(.q-textarea) {
     min-height: auto;

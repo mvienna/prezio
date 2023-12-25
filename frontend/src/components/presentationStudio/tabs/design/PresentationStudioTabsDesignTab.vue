@@ -55,7 +55,7 @@
             no-caps
             icon="r_move_down"
             text-color="black"
-            class="bg-grey-secondary"
+            class="bg-grey-2"
             :label="
               $t(
                 'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.title'
