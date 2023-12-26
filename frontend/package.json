@@ -23,7 +23,6 @@
     "d3-selection": "^3.0.0",
     "d3-transition": "^3.0.1",
     "dotenv": "^16.3.1",
-    "git-describe": "^4.1.1",
     "laravel-echo": "^1.15.3",
     "pinia": "^2.1.7",
     "pusher-js": "^8.3.0",

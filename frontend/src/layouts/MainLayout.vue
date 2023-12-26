@@ -125,13 +125,12 @@
 
           <q-space />
 
-          <div class="text-italic text-grey-5 text-right q-pr-sm q-py-sm">
-            beta
+          <div class="row justify-end">
             <q-chip
               color="grey-2"
               text-color="grey"
               dense
-              class="q-px-sm text-semibold"
+              class="q-px-sm text-caption"
               clickable
               @click="copyToClipboard(VERSION)"
             >
@@ -149,7 +148,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { useRouter } from "vue-router";
@@ -244,7 +243,10 @@ const handleRoomSearch = () => {
 /*
  * assembly version
  */
-const VERSION = process.env.VERSION?.substring(0, 7)?.replaceAll('"', "");
+
+const VERSION = computed(() => {
+  return process.env.VERSION;
+});
 </script>
 
 <style scoped lang="scss">
