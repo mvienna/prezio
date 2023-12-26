@@ -1,28 +1,38 @@
 <template>
   <q-btn
-    unelevated
+    flat
     no-caps
     no-wrap
-    class="bg-accent"
-    text-color="primary"
-    size="12px"
+    class="text-black"
     :class="
-      isAvatarOnly ? 'q-pa-none round-borders' : 'q-pa-xs q-pl-md bg-blue-1'
+      isAvatarOnly ? 'q-pa-none round-borders' : 'q-px-xs rounded-borders'
     "
+    :style="`border-radius: ${isAvatarOnly ? '50%' : '19px'};`"
     :round="isAvatarOnly"
   >
     <template #default>
-      <div v-if="!isAvatarOnly" class="q-mr-md">
-        {{ user.name }}
+      <div class="row no-wrap items-center">
+        <UserAvatar
+          :user="user"
+          :size="isAvatarOnly ? '36px' : '30px'"
+          color="primary"
+        />
+
+        <template v-if="!isAvatarOnly">
+          <div class="q-ml-sm">
+            {{ user.name }}
+          </div>
+
+          <q-icon
+            name="r_expand_less"
+            class="q-ml-xs"
+            :style="isMenuExpanded ? 'transform: rotate(180deg);' : ''"
+          />
+        </template>
       </div>
 
-      <UserAvatar
-        :user="user"
-        :size="isAvatarOnly ? '36px' : '30px'"
-        color="primary"
-      />
-
       <q-menu
+        v-model="isMenuExpanded"
         anchor="bottom right"
         self="top right"
         transition-show="jump-down"
@@ -90,6 +100,8 @@ defineProps({
   isAvatarOnly: { type: Boolean },
 });
 
+const isMenuExpanded = ref(false);
+
 /*
  * user
  */
@@ -126,7 +138,7 @@ const userMenuLinks = ref([
 </script>
 
 <style scoped lang="scss">
-.q-btn {
-  border-radius: 10px;
+.q-icon {
+  transition: 0.2s;
 }
 </style>

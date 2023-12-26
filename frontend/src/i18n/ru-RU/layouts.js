@@ -4,36 +4,8 @@ export default {
    */
   mainLayout: {
     header: {
-      search: "Найти презентацию",
-      goPro: "Перейти на Pro",
       userMenuLinks: {
         profile: "Профиль",
-        myPlan: "Мой план",
-        payments: "Платежи",
-        logout: "Выйти",
-      },
-      room: {
-        enterCode: "Введите код",
-        join: "Присоединиться",
-      },
-    },
-    drawer: {
-      links: {
-        myPresentations: "Мои презентации",
-        templates: "Шаблоны",
-        sharedWithMe: "Поделились со мной",
-        subscriptionPlans: "Тарифные планы",
-      },
-    },
-  },
-
-  /*
-   * user layout
-   */
-  userLayout: {
-    drawer: {
-      links: {
-        settings: "Настройки",
         myPlan: "Мой план",
         payments: "Платежи",
         logout: "Выйти",

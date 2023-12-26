@@ -57,7 +57,7 @@ const routes = [
    */
   {
     path: "/",
-    component: () => import("layouts/UserLayout.vue"),
+    component: () => import("layouts/MainLayout.vue"),
     children: [
       {
         path: ROUTE_PATHS.USER.PROFILE,
