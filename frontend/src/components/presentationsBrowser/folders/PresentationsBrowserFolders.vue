@@ -258,7 +258,7 @@ const showNewFolderDialog = ref(false);
     div:last-child {
       background: $primary;
       color: white;
-      border-radius: 6px;
+      border-radius: 8px;
     }
   }
 

@@ -215,14 +215,14 @@ const handleSlideChange = async (direction) => {
   position: relative;
   height: 12px;
   background: $grey-2;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .progress__bar__active {
   width: 100%;
   height: 12px;
   z-index: 1;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: 0.275s;
   animation-name: expand;
   position: relative;
@@ -251,7 +251,7 @@ const handleSlideChange = async (direction) => {
 .presentation_preview__slide__number {
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(4px);
-  border-radius: 6px;
+  border-radius: 8px;
   color: $grey-10;
 }
 

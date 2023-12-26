@@ -12,7 +12,7 @@
       flat
       separator="none"
       color="primary"
-      class="bg-grey-2"
+      class="bg-grey-3"
       @request="presentationsStore.fetchPresentations"
       @row-click="handlePresentationClick"
     >
@@ -843,7 +843,7 @@ const handleDeletingPresentations = async (presentations) => {
 }
 
 .presentation__preview {
-  border-radius: 6px;
+  border-radius: 8px;
   outline: 1.5px solid $grey-2;
   width: 100px;
   aspect-ratio: 16/9;

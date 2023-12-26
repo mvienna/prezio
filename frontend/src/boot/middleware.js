@@ -100,7 +100,11 @@ export default async ({ app, router }) => {
       }
 
       // redirect from unauthorized routes
-      if (allowedUnauthenticatedPaths.includes(to.path)) {
+      if (
+        allowedUnauthenticatedPaths
+          .filter((item) => item !== ROUTE_PATHS.AUTH.RESTORE_PASSWORD)
+          .includes(to.path)
+      ) {
         next(ROUTE_PATHS.INDEX);
         return;
       }

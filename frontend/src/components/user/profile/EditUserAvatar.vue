@@ -1,53 +1,65 @@
 <template>
-  <div>
+  <div class="form__avatar">
     <!-- avatar -->
     <div class="avatar">
-      <!-- uploaded avatar -->
-      <q-img
-        v-if="user.avatar"
+      <div
+        id="drop-area"
         class="avatar__file"
-        :src="user.avatar.preview_url || user.avatar.original_url"
-        :alt="user.name"
-      />
+        @dragover="allowDrop"
+        @drop="dropHandler"
+        @dragenter="dragEnterHandler"
+        @dragleave="dragLeaveHandler"
+      >
+        <!-- user avatar -->
+        <q-img
+          v-if="user.avatar"
+          :src="user.avatar.preview_url || user.avatar.original_url"
+          :alt="user.name"
+        />
 
-      <!-- default avatar -->
-      <q-icon v-else name="r_person" size="160px" class="avatar__default" />
+        <!-- default avatar -->
+        <q-icon v-else name="r_account_circle" size="36px" />
+      </div>
+    </div>
+
+    <div class="text-center text-caption text-grey q-mt-sm">
+      {{ $t("tooltips.maxUploadFileSize") }}
     </div>
 
     <!-- action buttons -->
     <div class="row q-gutter-md justify-center q-mt-sm">
       <!-- upload -->
-      <div>
-        <q-btn round flat no-caps>
-          <form ref="form">
-            <input
-              :id="fileInputId"
-              type="file"
-              accept="image/*"
-              @change="uploadFile"
-            />
-            <label :for="fileInputId">
-              <q-icon name="r_upload" size="sm" class="q-pr-sm" />
-              {{ $t("user.profile.form.avatar.upload") }}
-            </label>
-          </form>
-        </q-btn>
+      <q-btn outline no-wrap class="bg-white q-px-md" color="grey-4" no-caps>
+        <form ref="form">
+          <input
+            :id="fileInputId"
+            type="file"
+            accept="image/*"
+            @change="uploadFile"
+          />
 
-        <div class="text-center text-caption text-grey q-mt-xs">
-          {{ $t("tooltips.maxUploadFileSize") }}
-        </div>
-      </div>
+          <label :for="fileInputId" class="text-black row items-center no-wrap">
+            <q-icon name="icon-upload" size="sm" class="q-pr-sm" />
+            {{ $t("user.profile.form.avatar.upload") }}
+          </label>
+        </form>
+      </q-btn>
 
       <!-- delete -->
-      <div v-if="user.avatar">
-        <q-btn
-          icon="r_delete"
-          color="red"
-          flat
-          class="q-py-sm"
-          @click="deleteFile()"
-        />
-      </div>
+      <q-btn
+        v-if="user.avatar"
+        outline
+        no-wrap
+        class="bg-white q-px-md"
+        color="grey-4"
+        no-caps
+        @click="deleteFile()"
+      >
+        <q-icon name="r_delete_sweep" size="sm" class="text-red q-pr-sm" />
+        <span class="text-red">
+          {{ $t("user.profile.form.avatar.delete") }}
+        </span>
+      </q-btn>
     </div>
   </div>
 </template>
@@ -135,6 +147,41 @@ const deleteFile = () => {
       isLoading.value = false;
     });
 };
+
+/*
+ * drag & drop area
+ */
+const allowDrop = (event) => {
+  event.preventDefault();
+};
+
+const dragEnterHandler = (event) => {
+  const dropArea = document.getElementById("drop-area");
+  dropArea.classList.add("hover");
+};
+
+const dragLeaveHandler = (event) => {
+  const dropArea = document.getElementById("drop-area");
+  dropArea.classList.remove("hover");
+};
+
+const dropHandler = (event) => {
+  event.preventDefault();
+  const dropArea = document.getElementById("drop-area");
+  dropArea.classList.remove("hover");
+
+  const files = event.dataTransfer.files;
+
+  if (files.length > 0) {
+    const file = files[0];
+    if (file.type.startsWith("image/")) {
+      // displayImage(file);
+      uploadFile({ target: { files } });
+    } else {
+      alert("Please drop an image file");
+    }
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -142,25 +189,17 @@ const deleteFile = () => {
   height: 0;
   overflow: hidden;
   width: 0;
+  position: absolute;
 }
 
 [type="file"] + label {
-  border-radius: 8px;
-  padding: 8px 24px;
-  text-align: center;
-  font-weight: 600;
-  background: $primary;
-  color: $white;
   cursor: pointer;
-  display: inline-block;
-  position: relative;
-  transition: all 0.2s;
-  vertical-align: middle;
-  outline: 4px solid $white;
+}
 
-  &:hover {
-    outline: 4px solid $accent;
-  }
+.form__avatar {
+  background: $grey-3;
+  border-radius: 8px;
+  padding: 16px;
 }
 
 .avatar {
@@ -168,17 +207,23 @@ const deleteFile = () => {
   justify-content: center;
 
   .avatar__file {
-    width: 200px;
-    height: 200px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-  }
+    border: 4px solid transparent;
+    outline: 2px dashed $grey;
+    overflow: hidden;
+    transition: 0.2s;
+    cursor: grab;
 
-  .avatar__default {
-    background: $grey-2;
-    color: $grey;
-    border-radius: 100%;
-    padding: 20px;
-    margin: 0 auto;
+    &.hover {
+      outline: 2px dashed $primary;
+    }
+
+    .q-icon {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 </style>

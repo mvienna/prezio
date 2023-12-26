@@ -44,7 +44,7 @@
         <q-btn
           unelevated
           :label="$t('presentationLayout.leftDrawer.import')"
-          color="grey-secondary"
+          color="grey-2"
           text-color="black"
           no-caps
           disable

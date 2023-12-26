@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
-    public function user(Request $request): JsonResponse
+    public function show(Request $request): JsonResponse
     {
         $user = $request->user();
         $user['avatar'] = $user->getMedia('avatar')->sortByDesc('created_at')->first();
@@ -85,7 +85,10 @@ class AuthController extends Controller
         /*
          * delete all tokens, essentially logging the user out
          */
-        $request->user()->tokens()->delete();
+        $user = $request->user();
+        if ($user) {
+            $user->tokens()->delete();
+        }
 
         return $this->successResponse();
     }
@@ -117,6 +120,9 @@ class AuthController extends Controller
                 'max:255',
             ];
         }
+        if ($request->filled('phone')) {
+            $rules['phone'] = 'string|digits:10';
+        }
         if ($request->filled('password')) {
             $rules['password'] = 'required|string|min:6';
         }
@@ -129,5 +135,14 @@ class AuthController extends Controller
         $user->save();
 
         return $this->jsonResponse($user->toArray());
+    }
+
+    public function destroy(): JsonResponse
+    {
+        /** @var User $user */
+        $user = auth()->user();
+        User::find($user->id)->delete();
+
+        return $this->successResponse();
     }
 }

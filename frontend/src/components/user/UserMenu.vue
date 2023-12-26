@@ -7,7 +7,7 @@
     :class="
       isAvatarOnly ? 'q-pa-none round-borders' : 'q-px-xs rounded-borders'
     "
-    :style="`border-radius: ${isAvatarOnly ? '50%' : '19px'};`"
+    :style="`border-radius: ${isAvatarOnly ? '50%' : '19px 8px 8px 19px'};`"
     :round="isAvatarOnly"
   >
     <template #default>

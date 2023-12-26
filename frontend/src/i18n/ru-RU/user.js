@@ -4,8 +4,15 @@ export default {
      * profile
      */
     profile: {
-      title: "Профиль",
       save: "Сохранить",
+      deleteAccount: {
+        title: "Удалить аккаунт",
+        confirmation: {
+          title: "Удаление аккаунта",
+          message:
+            "Вы действительно хотите удалить свой аккаунт вместе со всеми данными?",
+        },
+      },
 
       verifyEmail: {
         title: "Подтвердите почту",
@@ -13,13 +20,39 @@ export default {
       },
 
       form: {
-        name: "Имя",
-        email: "Email",
-        currentPassword: "Старый пароль",
-        newPassword: "Новый пароль",
+        name: { label: "Ваше имя", placeholder: "Введите имя" },
+        phone: { label: "Телефон", placeholder: "+7" },
+        email: { label: "Email", placeholder: "Введите email адрес" },
+        preferredAppUsage: {
+          label: "Где вы планируете использовать Prezio?",
+          placeholder: "Выберите опцию",
+
+          options: {
+            business: "Бизнес",
+            education: "Обучение",
+            personal: "Личное",
+            other: "Другое",
+          },
+        },
+        currentPassword: {
+          label: "Текущий пароль",
+          placeholder: "Введите текущий пароль",
+
+          forgotPassword: {
+            title: "Забыли пароль?",
+            subtitle: "Вы можете восстановить его здесь",
+          },
+        },
+        newPassword: {
+          label: "Новый пароль",
+          placeholder: "Введите новый пароль",
+        },
+
         success: "Данные успешно обновлены",
         checkVerificationCode: "Проверить",
         resendVerificationCode: "Отправить повторно",
+
+        optional: "Необязательно",
 
         errors: {
           name: {
@@ -41,6 +74,7 @@ export default {
 
         avatar: {
           upload: "Загрузить",
+          delete: "Удалить",
           success: {
             upload: "Аватарка загружена успешно",
             delete: "Аватарка удалена успешно",

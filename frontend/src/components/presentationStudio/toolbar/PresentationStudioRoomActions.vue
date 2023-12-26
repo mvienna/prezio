@@ -146,10 +146,10 @@ const handleResettingResults = () => {
 .presentation_studio_room_actions {
   background: $background;
   outline: 2px solid $accent;
-  border-radius: 6px;
+  border-radius: 8px;
 
   .q-btn {
-    border-radius: 6px;
+    border-radius: 8px;
   }
 }
 </style>

@@ -290,9 +290,9 @@ const handleQrCodeGeneration = () => {
     150,
     150,
     roomLink.value,
-    window.location.origin + "/logo_secondary.png",
+    window.location.origin + "/logo.png",
     "#FFFFFF",
-    "#113B98"
+    "#0A090B"
   );
   qrCode.value.append(qrCodeElement.value);
 };

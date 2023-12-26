@@ -80,6 +80,15 @@ export const useAuthStore = defineStore("auth", {
     },
 
     /*
+     * delete
+     */
+    async delete() {
+      return await api.delete("/user").catch((error) => {
+        throw error;
+      });
+    },
+
+    /*
      * logout
      */
     async logout() {

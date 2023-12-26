@@ -483,7 +483,7 @@ onMounted(async () => {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       await api
-        .get("/user/room")
+        .get("/participant")
         .then((response) => {
           // don't authenticate participant that has token from another room
           if (response.data.room_id === room.value.id) {

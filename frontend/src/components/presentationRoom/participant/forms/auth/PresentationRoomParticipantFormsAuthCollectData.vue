@@ -158,7 +158,7 @@ const submit = async () => {
 
   if (participant.value) {
     await api
-      .patch("/user/room", {
+      .patch("/participant", {
         data: JSON.stringify(data),
       })
       .then((response) => {

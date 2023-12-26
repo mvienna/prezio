@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
 /*
  * restore password
@@ -41,13 +42,12 @@ Route::middleware('auth:sanctum')->group(function () {
     /*
      * user
      */
-    Route::get('/user', [AuthController::class, 'user']);
+    Route::get('/user', [AuthController::class, 'show']);
     Route::patch('/user', [AuthController::class, 'update']);
+    Route::delete('/user', [AuthController::class, 'destroy']);
 
-    Route::get('/user/room', [PresentationRoomController::class, 'getParticipantData']);
-    Route::patch('/user/room', [PresentationRoomController::class, 'updateParticipantData']);
-
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/participant', [PresentationRoomController::class, 'getParticipantData']);
+    Route::patch('/participant', [PresentationRoomController::class, 'updateParticipantData']);
 
     /*
      * media

@@ -1,27 +1,24 @@
 <template>
-  <q-page class="q-py-xl">
+  <q-page class="q-py-lg">
     <div class="container">
       <q-form @submit.prevent="submit()">
-        <!-- title -->
-        <div class="form__title">
-          <template v-if="isVerificationCodeSent">
+        <!-- verification code - title & description -->
+        <template v-if="isVerificationCodeSent">
+          <div class="text-h7 text-semibold text-center">
             {{ $t("user.profile.verifyEmail.title") }}
-          </template>
+          </div>
 
-          <template v-else>{{ $t("user.profile.title") }}</template>
-        </div>
+          <div class="text-center q-my-md">
+            {{ $t("user.profile.verifyEmail.description") }}
 
-        <!-- description -->
-        <div v-if="isVerificationCodeSent" class="form__description q-mt-md">
-          {{ $t("user.profile.verifyEmail.description") }}
+            <a :href="`mailto:${form.email}`">
+              {{ form.email }}
+            </a>
+          </div>
+        </template>
 
-          <a :href="`mailto:${form.email}`">
-            {{ form.email }}
-          </a>
-        </div>
-
-        <div class="column q-gutter-sm q-pt-lg">
-          <!-- verification code -->
+        <div class="column q-gutter-sm">
+          <!-- verification code - input -->
           <q-input
             v-if="isVerificationCodeSent"
             v-model="form.code"
@@ -42,109 +39,270 @@
             <!-- avatar -->
             <EditUserAvatar class="q-mb-lg" />
 
-            <!-- name -->
-            <q-input
-              v-model="form.name"
-              type="text"
-              no-error-icon
-              outlined
-              :label="$t('user.profile.form.name')"
-              :rules="[nameRule]"
-              lazy-rules
-            >
-              <template #prepend>
-                <q-icon name="r_account_circle" class="grey-2" />
-              </template>
-            </q-input>
+            <div class="row">
+              <!-- name -->
+              <div class="col-12 col-sm q-mr-md">
+                <div class="form__field__label">
+                  {{ $t("user.profile.form.name.label") }}
+                </div>
+
+                <q-input
+                  v-model="form.name"
+                  type="text"
+                  no-error-icon
+                  outlined
+                  dense
+                  :placeholder="$t('user.profile.form.name.placeholder')"
+                  :rules="[nameRule]"
+                  lazy-rules
+                />
+              </div>
+
+              <!-- phone -->
+              <div class="col-12 col-sm">
+                <div class="form__field__label row items-center">
+                  {{ $t("user.profile.form.phone.label") }}
+                  <q-space />
+
+                  <span class="text-grey text-weight-regular text-caption">
+                    {{ $t("user.profile.form.optional") }}
+                  </span>
+                </div>
+
+                <q-input
+                  v-model="form.phone"
+                  no-error-icon
+                  outlined
+                  dense
+                  unmasked-value
+                  mask="+7 (###) ### ## ##"
+                  :placeholder="$t('user.profile.form.phone.placeholder')"
+                  :error-message="errors.phone"
+                  :error="!!errors.phone"
+                />
+              </div>
+            </div>
 
             <!-- email -->
-            <q-input
-              v-model="form.email"
-              type="email"
-              outlined
-              no-error-icon
-              :label="$t('user.profile.form.email')"
-              :rules="[emailRule]"
-              lazy-rules
-            >
-              <template #prepend>
-                <q-icon name="r_mail" class="grey-2" />
-              </template>
-            </q-input>
+            <div>
+              <div class="form__field__label">
+                {{ $t("user.profile.form.email.label") }}
+              </div>
 
-            <!-- old password -->
-            <q-input
-              v-model="form.currentPassword"
-              :type="isPasswordVisible ? 'text' : 'password'"
-              outlined
-              no-error-icon
-              :label="$t('user.profile.form.currentPassword')"
-              :error-message="errors.password"
-              :error="!!errors.password"
-            >
-              <template #prepend>
-                <q-icon name="r_lock_open" class="grey-2" />
-              </template>
+              <q-input
+                v-model="form.email"
+                type="email"
+                outlined
+                dense
+                no-error-icon
+                :placeholder="$t('user.profile.form.email.placeholder')"
+                :rules="[emailRule]"
+                lazy-rules
+              />
+            </div>
 
-              <template #append>
-                <q-icon
-                  :name="
-                    isPasswordVisible ? 'r_visibility_off' : 'r_visibility'
-                  "
-                  class="grey-2 cursor-pointer"
-                  @click="isPasswordVisible = !isPasswordVisible"
-                />
-              </template>
-            </q-input>
+            <!-- preferred app use -->
+            <div class="q-mb-md">
+              <div class="form__field__label row items-center">
+                {{ $t("user.profile.form.preferredAppUsage.label") }}
+                <q-space />
+
+                <span class="text-grey text-weight-regular text-caption">
+                  {{ $t("user.profile.form.optional") }}
+                </span>
+              </div>
+
+              <q-select
+                v-model="form.preferred_app_usage"
+                outlined
+                dense
+                emit-value
+                options-dense
+                popup-content-class="q-pa-sm"
+                option-value="label"
+                dropdown-icon="r_expand_more"
+                :label-slot="!form.preferred_app_usage?.length"
+                :options="[
+                  {
+                    label: $t(
+                      'user.profile.form.preferredAppUsage.options.business'
+                    ),
+                    icon: 'r_business',
+                    color: 'primary',
+                  },
+                  {
+                    label: $t(
+                      'user.profile.form.preferredAppUsage.options.education'
+                    ),
+                    icon: 'r_school',
+                    color: 'purple',
+                  },
+                  {
+                    label: $t(
+                      'user.profile.form.preferredAppUsage.options.personal'
+                    ),
+                    icon: 'r_account_circle',
+                    color: 'orange',
+                  },
+                  {
+                    label: $t(
+                      'user.profile.form.preferredAppUsage.options.other'
+                    ),
+                    icon: 'r_more_horiz',
+                    color: 'grey',
+                  },
+                ]"
+              >
+                <template #label>
+                  {{ $t("user.profile.form.preferredAppUsage.placeholder") }}
+                </template>
+
+                <template v-slot:option="scope">
+                  <q-item
+                    v-bind="scope.itemProps"
+                    :class="`text-${scope.opt.color}`"
+                    class="row items-center"
+                  >
+                    <q-icon
+                      :name="scope.opt.icon"
+                      size="20px"
+                      class="q-mr-sm"
+                    />
+                    {{ scope.opt.label }}
+                  </q-item>
+                </template>
+              </q-select>
+            </div>
+
+            <!-- current password -->
+            <div>
+              <div class="form__field__label">
+                {{ $t("user.profile.form.currentPassword.label") }}
+              </div>
+
+              <q-input
+                v-model="form.currentPassword"
+                :type="isPasswordVisible ? 'text' : 'password'"
+                outlined
+                dense
+                no-error-icon
+                :placeholder="
+                  $t('user.profile.form.currentPassword.placeholder')
+                "
+                :error-message="errors.password"
+                :error="!!errors.password"
+              >
+                <template #append>
+                  <q-icon
+                    :name="
+                      isPasswordVisible ? 'r_visibility_off' : 'r_visibility'
+                    "
+                    class="grey-2 cursor-pointer"
+                    @click="isPasswordVisible = !isPasswordVisible"
+                  />
+                </template>
+              </q-input>
+
+              <!-- restore password -->
+              <div class="form__field__label q-mt-xs">
+                <div class="text-weight-regular">
+                  {{
+                    $t("user.profile.form.currentPassword.forgotPassword.title")
+                  }}
+                  <router-link
+                    :to="ROUTE_PATHS.AUTH.RESTORE_PASSWORD"
+                    class="text-primary link"
+                  >
+                    {{
+                      $t(
+                        "user.profile.form.currentPassword.forgotPassword.subtitle"
+                      )
+                    }}
+                  </router-link>
+                </div>
+              </div>
+            </div>
 
             <!-- new password -->
-            <q-input
-              v-if="form.currentPassword"
-              v-model="form.newPassword"
-              :type="isPasswordVisible ? 'text' : 'password'"
-              outlined
-              no-error-icon
-              :label="$t('user.profile.form.newPassword')"
-              :rules="[passwordRule]"
-              lazy-rules
-            >
-              <template #prepend>
-                <q-icon name="r_lock" class="grey-2" />
-              </template>
-            </q-input>
+            <div v-if="form.currentPassword" class="q-mt-md">
+              <div class="form__field__label">
+                {{ $t("user.profile.form.newPassword.label") }}
+              </div>
+
+              <q-input
+                v-model="form.newPassword"
+                :type="isPasswordVisible ? 'text' : 'password'"
+                outlined
+                dense
+                no-error-icon
+                :label="$t('user.profile.form.newPassword.placeholder')"
+                :rules="[passwordRule]"
+                lazy-rules
+              />
+            </div>
           </template>
         </div>
 
-        <!-- submit -->
-        <q-btn
-          color="primary"
-          unelevated
-          no-caps
-          type="submit"
-          icon-right="r_done"
-          :disable="!isVerificationCodeSent ? isNoChanges : false"
-          :loading="isLoading"
-          class="q-py-md q-mt-lg text-bold full-width"
-          :label="
-            isVerificationCodeSent
-              ? $t('user.profile.form.checkVerificationCode')
-              : $t('user.profile.save')
-          "
-        />
-
-        <div v-if="isVerificationCodeSent" class="text-center q-mt-md">
-          <div v-if="timeLeft !== -1" class="text-grey-5 cursor-not-allowed">
-            {{ countdown }}
-          </div>
-
-          <div
-            v-else
-            class="link"
-            :class="isLoading ? 'text-grey-5 cursor-not-allowed' : ''"
+        <div class="row items-center no-wrap q-mt-lg">
+          <!-- resend verification code -->
+          <q-btn
+            v-if="isVerificationCodeSent"
+            flat
+            no-caps
+            :disable="timeLeft !== -1"
+            color="grey"
+            style="padding: 0 12px"
+            :loading="loading.sendingVerificationCode"
+            :label="
+              timeLeft !== -1
+                ? countdown
+                : $t('user.profile.form.resendVerificationCode')
+            "
             @click="handleResendingVerificationCode()"
-          >
-            {{ $t("user.profile.form.resendVerificationCode") }}
-          </div>
+          />
+
+          <!-- delete account -->
+          <q-btn
+            v-else
+            flat
+            no-caps
+            color="grey"
+            style="padding: 0 12px"
+            :label="$t('user.profile.deleteAccount.title')"
+            @click="showAccountDeletionConfirmationDialog = true"
+          />
+
+          <q-dialog v-model="showAccountDeletionConfirmationDialog">
+            <ConfirmationDialog
+              icon="r_no_accounts"
+              icon-color="red"
+              :title="$t('user.profile.deleteAccount.confirmation.title')"
+              :message="$t('user.profile.deleteAccount.confirmation.message')"
+              confirm-btn-color="red"
+              cancel-btn-color="grey"
+              @cancel="showAccountDeletionConfirmationDialog = false"
+              @confirm="deleteAccount()"
+            >
+            </ConfirmationDialog>
+          </q-dialog>
+
+          <q-space />
+
+          <!-- submit -->
+          <q-btn
+            color="primary"
+            unelevated
+            no-caps
+            type="submit"
+            :disable="!isVerificationCodeSent ? isNoChanges : false"
+            :loading="loading.saving"
+            class="text-semibold"
+            :label="
+              isVerificationCodeSent
+                ? $t('user.profile.form.checkVerificationCode')
+                : $t('user.profile.save')
+            "
+          />
         </div>
       </q-form>
     </div>
@@ -164,34 +322,41 @@ import {
 } from "src/services/API/email";
 import EditUserAvatar from "components/user/profile/EditUserAvatar.vue";
 import { countdown, startCountdown, timeLeft } from "src/helpers/countdown";
+import { ROUTE_PATHS } from "src/constants/routes";
+import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 
 /*
  * variables
  */
-const { user } = storeToRefs(useAuthStore());
-const userStore = useAuthStore();
-
 const { t } = useI18n({ useScope: "global" });
 
 const $q = useQuasar();
+
+/*
+ * stores
+ */
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
 /*
  * form
  */
 const form = ref({
   name: "",
+  phone: "",
   email: "",
+  preferred_app_usage: "",
   currentPassword: "",
   newPassword: "",
   code: "",
 });
 
 const isPasswordVisible = ref(false);
-
 const isVerificationCodeSent = ref(false);
 
 const errors = ref({
   password: null,
+  phone: null,
   code: null,
 });
 
@@ -217,17 +382,22 @@ const isNoChanges = computed(() => {
   return !(form.value.currentPassword && form.value.newPassword);
 });
 
-const isLoading = ref(false);
-
-// load user's data into form
-onBeforeMount(() => {
-  loadUsersDataIntoForm();
+const loading = ref({
+  saving: false,
+  sendingVerificationCode: false,
 });
 
-const loadUsersDataIntoForm = () => {
+// set user's data
+onBeforeMount(() => {
+  setUsersData();
+});
+
+const setUsersData = () => {
   form.value = {
     name: user.value.name,
+    phone: user.value.phone,
     email: user.value.email,
+    preferred_app_usage: user.value.preferred_app_usage,
     currentPassword: null,
     newPassword: null,
   };
@@ -279,7 +449,7 @@ const codeRule = (value) => {
  */
 const submit = async () => {
   errors.value = {};
-  isLoading.value = true;
+  loading.value.saving = true;
 
   // check verification code if it's been sent
   if (isVerificationCodeSent.value) {
@@ -309,24 +479,24 @@ const handleSendingVerificationCode = async () => {
       console.log(error);
     })
     .finally(() => {
-      isLoading.value = false;
+      loading.value.saving = false;
     });
 };
 
 const handleResendingVerificationCode = async () => {
-  if (isLoading.value) {
+  if (loading.value.sendingVerificationCode) {
     return;
   }
 
-  isLoading.value = true;
+  loading.value.sendingVerificationCode = true;
   await handleSendingVerificationCode();
-  isLoading.value = false;
+  loading.value.sendingVerificationCode = false;
 };
 
 const handleCheckingVerificationCode = async () => {
   await checkVerificationCode(form.value.email, form.value.code, false).catch(
     (error) => {
-      isLoading.value = false;
+      loading.value.saving = false;
       errors.value.code = error;
       throw error;
     }
@@ -339,7 +509,9 @@ const handleCheckingVerificationCode = async () => {
 const handleUpdatingUserData = () => {
   let data = {
     name: form.value.name,
+    phone: form.value.phone,
     email: form.value.email,
+    preferred_app_usage: form.value.preferred_app_usage,
   };
 
   if (form.value.currentPassword?.length) {
@@ -359,13 +531,13 @@ const handleUpdatingUserData = () => {
        * update dev user's credentials
        */
       if (form.value.email !== user.value.email) {
-        userStore.setUserCredentialsForDev({
+        authStore.setUserCredentialsForDev({
           email: form.value.email,
         });
       }
 
       if (form.value.newPassword) {
-        userStore.setUserCredentialsForDev({
+        authStore.setUserCredentialsForDev({
           password: form.value.newPassword,
         });
       }
@@ -376,9 +548,11 @@ const handleUpdatingUserData = () => {
       user.value = {
         ...user.value,
         name: response.data.name,
+        phone: response.data.phone,
         email: response.data.email,
+        preferred_app_usage: response.data.preferred_app_usage,
       };
-      loadUsersDataIntoForm();
+      setUsersData();
 
       /*
        * success message
@@ -389,22 +563,39 @@ const handleUpdatingUserData = () => {
       });
     })
     .catch((error) => {
-      errors.value.password = error.response.data.message;
+      if (error.response.data.errors.phone) {
+        errors.value.phone = error.response.data.message;
+      }
+
+      if (error.response.data.errors.password) {
+        errors.value.password = error.response.data.message;
+      }
     })
     .finally(() => {
-      isLoading.value = false;
+      loading.value.saving = false;
       isVerificationCodeSent.value = false;
     });
+};
+
+/*
+ * delete account
+ */
+const showAccountDeletionConfirmationDialog = ref(false);
+
+const deleteAccount = async () => {
+  await authStore.delete();
+  await authStore.logout();
 };
 </script>
 
 <style scoped lang="scss">
 .container {
   background: $white;
-  max-width: 500px;
+  max-width: 520px;
   width: 100%;
-  padding: 36px;
+  padding: 24px;
   border-radius: 16px;
+  border: 2px solid $grey-2;
   margin: 0 auto;
 
   form {
@@ -414,17 +605,16 @@ const handleUpdatingUserData = () => {
       font-weight: 600;
     }
 
-    .form__description {
-      text-align: center;
-      font-size: 16px;
-      opacity: 0.8;
+    .form__field__label {
+      margin-bottom: 8px;
+      padding-left: 12px;
       font-weight: 500;
     }
   }
 }
 
 ::v-deep(.verification_code) {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 500;
 
   input {
