@@ -20,22 +20,12 @@
           class="row no-wrap items-center"
           @click="handleFolderSelect($event, folder)"
         >
-          <div class="row no-wrap justify-center relative-position q-mr-sm">
-            <!-- folder icon -->
-            <q-img
-              :src="`/assets/icons/folders/${getFolderIconName($q)}.png`"
-              fit="contain"
-              class="folder__icon"
-            />
-
-            <!-- folder privacy -->
-            <q-icon
-              v-if="folder.is_private"
-              name="r_visibility_off"
-              class="absolute-center"
-              style="margin-top: 2px; opacity: 0.5"
-            />
-          </div>
+          <!-- folder icon -->
+          <q-img
+            :src="`/assets/icons/folders/${getFolderIconName($q)}.png`"
+            fit="contain"
+            class="folder__icon q-mr-sm"
+          />
 
           <!-- folder name -->
           <div
@@ -69,34 +59,6 @@
               :offset="[0, 8]"
               class="q-pr-sm q-pb-sm column no-wrap q-gutter-sm"
             >
-              <!-- folder private -->
-              <q-item
-                class="items-center text-primary"
-                clickable
-                dense
-                @click="
-                  folder.is_private = !folder.is_private;
-                  presentationsStore.updateFolder(folder);
-                "
-              >
-                <q-icon
-                  :name="
-                    folder.is_private ? 'r_visibility_off' : 'r_visibility'
-                  "
-                  class="q-mr-sm"
-                  size="xs"
-                />
-                <div>
-                  {{
-                    $t(
-                      `presentationsBrowser.presentationItem.actions.folder.privacy.${
-                        folder.is_private ? "private" : "public"
-                      }`
-                    )
-                  }}
-                </div>
-              </q-item>
-
               <!-- delete folder -->
               <q-item
                 class="items-center text-red"

@@ -20,7 +20,6 @@ class PresentationFolderController extends Controller
             'user_id' => $user->id,
             'name' => $request->name,
             'description' => $request->description,
-            'is_private' => $request->is_private,
         ]);
 
         Presentation::whereIn('id', $request->presentations_ids)->update(['folder_id' => $folder->id]);
@@ -39,7 +38,6 @@ class PresentationFolderController extends Controller
         $folder->update([
             'name' => $request->name,
             'description' => $request->description,
-            'is_private' => $request->is_private,
         ]);
 
         return $this->jsonResponse($folder->toArray());

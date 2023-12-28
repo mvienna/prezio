@@ -105,7 +105,6 @@ export const usePresentationsStore = defineStore("presentations", {
         .post("/folder", {
           name: data.name,
           description: data.description,
-          is_private: data.is_private,
           presentations_ids: data.presentationsIds,
         })
         .then((response) => {
@@ -126,7 +125,6 @@ export const usePresentationsStore = defineStore("presentations", {
         .patch(`/folder/${folder.id}`, {
           name: folder.name,
           description: folder.description,
-          is_private: folder.is_private,
         })
         .catch((error) => {
           console.log(error);

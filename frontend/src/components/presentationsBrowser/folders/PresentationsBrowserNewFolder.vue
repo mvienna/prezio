@@ -11,36 +11,6 @@
         {{ $t("presentationsBrowser.newFolder.title") }}
       </div>
 
-      <!-- privacy -->
-      <div class="row justify-center q-mt-sm">
-        <q-checkbox
-          v-model="form.is_private"
-          :label="
-            $t(
-              `presentationsBrowser.newFolder.fields.privacy.${
-                form.is_private ? 'private' : 'public'
-              }.title`
-            )
-          "
-          checked-icon="r_visibility_off"
-          unchecked-icon="r_visibility"
-          indeterminate-icon="r_help"
-          class="text-primary text-semibold q-gutter-xs"
-        >
-          <q-tooltip class="text-center">
-            <div>
-              {{
-                $t(
-                  `presentationsBrowser.newFolder.fields.privacy.${
-                    form.is_private ? "private" : "public"
-                  }.description`
-                )
-              }}
-            </div>
-          </q-tooltip>
-        </q-checkbox>
-      </div>
-
       <q-form @submit.prevent="$emit('submit', form)">
         <!-- name -->
         <q-input
@@ -152,7 +122,6 @@ const props = defineProps({
 const form = ref({
   name: "",
   description: "",
-  is_private: true,
   presentationsIds: [],
 });
 
