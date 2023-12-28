@@ -31,7 +31,7 @@
           no-wrap
           round
           size="12px"
-          icon="r_notifications"
+          icon="o_notifications"
           class="q-mr-md round-borders"
         />
 
