@@ -6,7 +6,7 @@ import ruAuth from "./ru-RU/auth";
 import ruUser from "./ru-RU/user";
 import ruMedia from "./ru-RU/media";
 import ruLayouts from "./ru-RU/layouts";
-import ruMyPresentations from "./ru-RU/myPresentations";
+import ruPresentationsBrowser from "./ru-RU/presentationsBrowser";
 import ruPresentationStudio from "./ru-RU/presentationStudio";
 import ruPresentationRoom from "./ru-RU/presentationRoom";
 
@@ -17,7 +17,7 @@ export default {
     ...ruUser,
     ...ruMedia,
     ...ruLayouts,
-    ...ruMyPresentations,
+    ...ruPresentationsBrowser,
     ...ruPresentationStudio,
     ...ruPresentationRoom,
   },

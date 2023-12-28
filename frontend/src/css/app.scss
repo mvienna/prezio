@@ -5,6 +5,7 @@ body {
   background: $grey-3;
 }
 
+
 html, body {
   touch-action: manipulation;
   -ms-content-zooming: none;
@@ -12,6 +13,13 @@ html, body {
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /*
@@ -54,14 +62,19 @@ a, .link {
   color: $primary;
   text-decoration: none;
   cursor: pointer;
+  transition: .2s;
 
   &:hover {
     text-decoration: underline;
 
+    &.link--no-decorations {
+      text-decoration: none;
+      opacity: 0.7;
+    }
+
     &.q-item, &.q-btn {
       text-decoration: none;
     }
-
   }
 
   &.link--no-decorations {
@@ -69,8 +82,16 @@ a, .link {
   }
 }
 
+.text-no-decorations {
+  text-decoration: none !important;
+}
+
 .round-borders {
   border-radius: 50% !important;
+}
+
+.medium-rounded-borders {
+  border-radius: 16px !important;
 }
 
 /*
@@ -85,10 +106,6 @@ a, .link {
  */
 .q-btn, .q-btn-group {
   border-radius: 8px;
-}
-
-.q-btn--bordered {
-  border: 1.5px solid currentColor;
 }
 
 /*
@@ -252,7 +269,7 @@ a, .link {
  * card
  */
 .q-card {
-  border-radius: 8px !important;
+  border-radius: 8px;
 }
 
 /*

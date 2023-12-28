@@ -8,7 +8,7 @@
 
       <!-- title -->
       <div class="text-h6 text-bold text-center q-mt-lg">
-        {{ $t("myPresentations.newFolder.title") }}
+        {{ $t("presentationsBrowser.newFolder.title") }}
       </div>
 
       <!-- privacy -->
@@ -17,7 +17,7 @@
           v-model="form.is_private"
           :label="
             $t(
-              `myPresentations.newFolder.fields.privacy.${
+              `presentationsBrowser.newFolder.fields.privacy.${
                 form.is_private ? 'private' : 'public'
               }.title`
             )
@@ -31,7 +31,7 @@
             <div>
               {{
                 $t(
-                  `myPresentations.newFolder.fields.privacy.${
+                  `presentationsBrowser.newFolder.fields.privacy.${
                     form.is_private ? "private" : "public"
                   }.description`
                 )
@@ -45,7 +45,7 @@
         <!-- name -->
         <q-input
           v-model="form.name"
-          :label="$t('myPresentations.newFolder.fields.name')"
+          :label="$t('presentationsBrowser.newFolder.fields.name')"
           outlined
           autofocus
           color="primary"
@@ -58,7 +58,7 @@
         <!-- description -->
         <q-input
           v-model="form.description"
-          :label="$t('myPresentations.newFolder.fields.description')"
+          :label="$t('presentationsBrowser.newFolder.fields.description')"
           outlined
           autogrow
           class="q-mt-lg"
@@ -66,10 +66,10 @@
 
         <!-- presentations -->
         <div class="q-mt-lg text-h7 text-semibold q-mb-sm">
-          {{ $t("myPresentations.newFolder.fields.addPresentations") }}
+          {{ $t("presentationsBrowser.newFolder.fields.addPresentations") }}
         </div>
 
-        <div class="row no-wrap q-gutter-md scroll-x">
+        <div class="row no-wrap q-gutter-md scroll-x q-pb-md">
           <q-card
             v-for="presentation in presentations"
             :key="presentation.id"
@@ -103,7 +103,7 @@
           <q-btn
             outline
             no-caps
-            :label="$t('myPresentations.newFolder.cancel')"
+            :label="$t('presentationsBrowser.newFolder.cancel')"
             class="q-py-sm"
             style="width: 100%"
             color="primary"
@@ -115,7 +115,7 @@
             unelevated
             no-caps
             :loading="isLoading"
-            :label="$t('myPresentations.newFolder.create')"
+            :label="$t('presentationsBrowser.newFolder.create')"
             class="q-py-sm"
             style="width: 100%"
             color="primary"
@@ -144,7 +144,6 @@ const { t } = useI18n({ useScope: "global" });
 const props = defineProps({
   isLoading: { type: Boolean },
   presentations: { type: Array, default: null },
-  selectedPresentations: { type: Array, default: null },
 });
 
 /*
@@ -154,15 +153,13 @@ const form = ref({
   name: "",
   description: "",
   is_private: true,
-  presentationsIds: props.selectedPresentations.map(
-    (presentation) => presentation.id
-  ),
+  presentationsIds: [],
 });
 
 // name validation
 const nameRule = (value) => {
   if (!value) {
-    return t("myPresentations.newFolder.fields.errors.name.required");
+    return t("presentationsBrowser.newFolder.fields.errors.name.required");
   }
   return true;
 };
@@ -195,18 +192,24 @@ const handlePresentationCardToggle = (presentation) => {
   cursor: pointer;
 
   .q-img {
-    border: 1.5px solid $grey-2;
-    outline: 3px solid transparent;
+    border: 2px solid $grey-2;
+    outline: 2px solid transparent;
     transition: 0.2s;
     border-radius: 8px;
     width: 100%;
     height: 100%;
   }
 
+  &:hover {
+    .q-img {
+      border-color: $accent;
+    }
+  }
+
   &.presentation_card--active {
     .q-img {
-      border: 1.5px solid $primary;
-      outline: 3px solid $background;
+      border-color: $primary;
+      outline-color: $accent;
     }
   }
 }

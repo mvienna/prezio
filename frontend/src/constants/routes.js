@@ -1,6 +1,5 @@
 export const ROUTE_PATHS = {
   INDEX: "/",
-  DASHBOARD: "/dashboard",
 
   AUTH: {
     LOGIN: "/login",
@@ -14,11 +13,12 @@ export const ROUTE_PATHS = {
     USER_AGREEMENT: "/user-agreement",
   },
 
-  USER: {
-    PROFILE: "/user/profile",
+  PROFILE: {
+    INDEX: "/profile",
+    SUBSCRIPTION: "/profile/subscription",
   },
 
-  PRESENTATIONS_BROWSER: "/presentations",
+  PRESENTATIONS_BROWSER: "/dashboard",
   PRESENTATION_STUDIO: "/presentation/:presentation_id",
   PRESENTATION_ROOM: "/room/:token",
 };

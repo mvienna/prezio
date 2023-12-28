@@ -166,7 +166,7 @@ const form = ref({
 // name validation
 const nameRule = (value) => {
   if (!value) {
-    return t("myPresentations.newPresentation.errors.name.required");
+    return t("presentationsBrowser.newPresentation.errors.name.required");
   }
   return true;
 };

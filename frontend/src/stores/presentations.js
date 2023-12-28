@@ -40,13 +40,10 @@ export const usePresentationsStore = defineStore("presentations", {
       sortBy: "updated_at",
       descending: true,
       page: 1,
-      rowsPerPage: 10,
+      rowsPerPage: 8,
     },
     presentations: [],
-    selectedPresentations: [],
     search: "",
-
-    userHasPresentations: true,
 
     /*
      * presentation
@@ -114,8 +111,7 @@ export const usePresentationsStore = defineStore("presentations", {
         .then((response) => {
           this.folders.push(response.data);
           this.selectedFolder = response.data;
-
-          this.fetchPresentations();
+          this.fetchPresentations({ page: 1 }, true);
         })
         .catch((error) => {
           console.log(error);
@@ -141,16 +137,16 @@ export const usePresentationsStore = defineStore("presentations", {
     },
 
     async deleteFolder(folder) {
+      this.selectedFolder = -1;
+
       return await api
         .delete(`/folder/${folder.id}`)
         .then(() => {
           this.folders = this.folders.filter((item) => item.id !== folder.id);
 
-          if (this.selectedFolder?.id === folder.id) {
-            this.selectedFolder = null;
-          }
+          this.selectedFolder = null;
 
-          this.fetchPresentations();
+          this.fetchPresentations({ page: 1 }, true);
         })
         .catch((error) => {
           console.log(error.response.data.message);
@@ -160,41 +156,47 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * PRESENTATIONS API
      */
-    fetchPresentations(props = null) {
-      const { page, rowsPerPage, sortBy, descending } =
-        props?.pagination || this.pagination;
+    async fetchPresentations(pagination = {}, isResetData = false) {
+      this.pagination = {
+        ...this.pagination,
+        ...pagination,
+      };
 
-      const params = new URLSearchParams({
-        page: page,
-        limit: rowsPerPage,
-        descending: descending,
-        ...(sortBy || {}),
-
-        ...(this.selectedFolder ? { folder_id: this.selectedFolder.id } : {}),
-      });
+      let params = {
+        page: this.pagination.page,
+        limit: this.pagination.rowsPerPage,
+        descending: this.pagination.descending,
+      };
+      if (this.pagination.sortBy) {
+        params.sortBy = this.pagination.sortBy;
+      }
+      if (this.selectedFolder) {
+        params.folder_id = this.selectedFolder.id;
+      }
+      if (this.search?.length) {
+        params.search = this.search;
+      }
 
       this.isLoading.fetchingPresentations = true;
-      api
-        .get(`/presentations?${params}`)
-        .then((response) => {
-          this.presentations = response.data.rows;
-
-          this.userHasPresentations = response.data.userHasPresentations;
-
-          this.pagination = {
-            rowsNumber: response.data.total,
-            page: page,
-            rowsPerPage: rowsPerPage,
-            sortBy: sortBy,
-            descending: descending,
-          };
-        })
+      const response = await api
+        .get(`/presentations?${new URLSearchParams(params)}`)
         .catch((error) => {
           console.log(error);
-        })
-        .finally(() => {
-          this.isLoading.fetchingPresentations = false;
         });
+
+      if (isResetData) {
+        this.presentations = response.data.rows;
+      } else {
+        this.presentations = [...this.presentations, ...response.data.rows];
+      }
+
+      this.isLoading.fetchingPresentations = false;
+
+      if (response.data.rows.length < this.pagination.rowsPerPage) {
+        this.pagination.page = null;
+      }
+
+      return true;
     },
 
     /*

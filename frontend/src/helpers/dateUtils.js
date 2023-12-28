@@ -16,30 +16,30 @@ export const formatDateTime = (datetime) => {
 
       // just now
       if (minutesDifference <= 1) {
-        return "Just now";
+        return "Только что";
       }
 
       // less than and hour ago
-      return `${minutesDifference} minutes ago`;
+      return `${minutesDifference} минут назад`;
     }
 
     // less than 12 hours ago
     if (hoursDifference < 12) {
-      return `${hoursDifference} hour${hoursDifference > 1 ? "s" : ""} ago`;
+      return `${hoursDifference} час${hoursDifference > 1 ? "ов" : ""} назад`;
     }
 
     // less than 24 hours and more than 12 hours
-    return "Today";
+    return "Сегодня";
   }
 
   // yesterday
   if (daysDifference === 1) {
-    return "Yesterday";
+    return "Вчера";
   }
 
   // less than a week ago
   if (daysDifference <= 7) {
-    return `${daysDifference} day${daysDifference > 1 ? "s" : ""} ago`;
+    return `${daysDifference} ${daysDifference > 1 ? "дней" : "день"} назад`;
   }
 
   // more than a week ago

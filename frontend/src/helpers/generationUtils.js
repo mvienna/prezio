@@ -27,14 +27,16 @@ export const generateUniqueId = (length = 7, array = null) => {
 /*
  * folder icon
  */
-export const getFolderIconName = (id) => {
-  if (id % 4 === 1) {
-    return "folder";
-  } else if (id % 4 === 2) {
-    return "folder_red";
-  } else if (id % 4 === 3) {
-    return "folder_green";
-  } else if (id % 4 === 0) {
-    return "folder_pink";
+export const getFolderIconName = ($q) => {
+  if (
+    $q.platform.is.mac ||
+    $q.platform.is.ios ||
+    $q.platform.is.ipad ||
+    $q.platform.is.ipod ||
+    $q.platform.is.iphone
+  ) {
+    return "folder--apple";
   }
+
+  return "folder--windows";
 };

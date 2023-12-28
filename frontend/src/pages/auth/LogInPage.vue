@@ -178,7 +178,7 @@ const submit = async () => {
   store
     .login(form.value.email, form.value.password)
     .then(() => {
-      router.push(ROUTE_PATHS.DASHBOARD);
+      router.push(ROUTE_PATHS.INDEX);
     })
     .catch((error) => {
       invalidCredentialsError.value = error.response.data.message;

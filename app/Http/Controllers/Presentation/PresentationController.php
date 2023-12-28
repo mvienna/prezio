@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Presentation\Slide\PresentationSlideController;
 use App\Models\Presentation\Presentation;
 use App\Models\Presentation\PresentationSettings;
+use App\Models\Presentation\Room\PresentationRoomParticipant;
 use App\Models\Presentation\Slide\PresentationSlide;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -136,10 +137,10 @@ class PresentationController extends Controller
         $sortBy = $request->query('sortBy', 'updated_at');
         $descending = filter_var($request->query('descending', false), FILTER_VALIDATE_BOOLEAN);
 
+        $search = $request->query('search');
+
         $folder_id = $request->query('folder_id', null);
         $offset = ($page - 1) * $limit;
-
-        $userHasPresentations = Presentation::byUser()->count() > 0;
 
         /*
          * query
@@ -151,6 +152,11 @@ class PresentationController extends Controller
             ->with('preview', 'settings', 'room');
 
         $query = $query->where('folder_id', $folder_id);
+
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
         $totalFiltered = $query->count();
 
         $query = $descending ? $query->orderByDesc($sortBy) : $query->orderBy($sortBy);
@@ -167,17 +173,17 @@ class PresentationController extends Controller
             if (!isset($presentation['preview']) && isset($presentation['slides'][0])) {
                 $slide_id = $presentation['slides'][0]['id'];
                 $slide = PresentationSlide::select('preview')->find($slide_id);
-
                 if ($slide) {
                     $presentation['preview'] = $slide->preview;
                 }
+
+                $presentation['participants'] = PresentationRoomParticipant::where('room_id', $presentation['room']['id'])->select('id')->get()->toArray();
             }
         }
 
         return $this->jsonResponse([
             'rows' => $presentations,
             'total' => $totalFiltered,
-            'userHasPresentations' => $userHasPresentations
         ]);
     }
 }

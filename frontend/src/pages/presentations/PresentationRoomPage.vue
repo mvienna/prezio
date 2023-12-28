@@ -427,7 +427,7 @@ onMounted(async () => {
         icon: "r_crisis_alert",
       });
 
-      window.location = ROUTE_PATHS.DASHBOARD;
+      window.location = ROUTE_PATHS.INDEX;
     });
 
   /*
@@ -886,7 +886,7 @@ const connectToRoomChannels = async () => {
         clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
         presentation.value.id;
     } else {
-      window.location = ROUTE_PATHS.DASHBOARD;
+      window.location = ROUTE_PATHS.INDEX;
     }
   });
 };

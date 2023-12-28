@@ -1,18 +1,15 @@
 <template>
-  <div
-    class="fullscreen bg-primary text-white text-center q-pa-md flex flex-center"
-  >
+  <div class="fullscreen text-center text-secondary q-pa-md flex flex-center">
     <div>
-      <div style="font-size: 30vh">404</div>
+      <div style="font-size: 30vh; line-height: 1.2">404</div>
 
       <div class="text-h2" style="opacity: 0.4">Oops. Nothing here...</div>
 
       <q-btn
         class="q-mt-xl"
-        color="white"
-        text-color="primary"
+        color="secondary"
         unelevated
-        to="/"
+        :to="ROUTE_PATHS.INDEX"
         label="Go Home"
         no-caps
       />
@@ -20,10 +17,6 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "ErrorNotFound",
-});
+<script setup>
+import { ROUTE_PATHS } from "src/constants/routes";
 </script>

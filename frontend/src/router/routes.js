@@ -12,10 +12,6 @@ const routes = [
     children: [
       {
         path: ROUTE_PATHS.INDEX,
-        redirect: ROUTE_PATHS.DASHBOARD,
-      },
-      {
-        path: ROUTE_PATHS.DASHBOARD,
         redirect: ROUTE_PATHS.PRESENTATIONS_BROWSER,
       },
       {
@@ -60,7 +56,7 @@ const routes = [
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
-        path: ROUTE_PATHS.USER.PROFILE,
+        path: ROUTE_PATHS.PROFILE.INDEX,
         component: () => import("pages/user/ProfilePage.vue"),
       },
     ],

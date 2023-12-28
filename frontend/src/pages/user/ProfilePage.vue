@@ -266,7 +266,7 @@
             v-else
             flat
             no-caps
-            color="grey"
+            color="red"
             style="padding: 0 12px"
             :label="$t('user.profile.deleteAccount.title')"
             @click="showAccountDeletionConfirmationDialog = true"

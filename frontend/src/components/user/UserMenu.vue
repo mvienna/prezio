@@ -7,7 +7,7 @@
     :class="
       isAvatarOnly ? 'q-pa-none round-borders' : 'q-px-xs rounded-borders'
     "
-    :style="`border-radius: ${isAvatarOnly ? '50%' : '19px 8px 8px 19px'};`"
+    :style="`border-radius: ${isAvatarOnly ? '50%' : '19px'};`"
     :round="isAvatarOnly"
   >
     <template #default>
@@ -112,7 +112,7 @@ const userMenuLinks = ref([
     name: "profile",
     label: t("mainLayout.header.userMenuLinks.profile"),
     icon: "r_account_circle",
-    link: ROUTE_PATHS.USER.PROFILE,
+    link: ROUTE_PATHS.PROFILE.INDEX,
   },
   {
     name: "my_plan",

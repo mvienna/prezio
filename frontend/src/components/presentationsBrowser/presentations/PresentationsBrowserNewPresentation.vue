@@ -8,7 +8,7 @@
 
       <!-- title -->
       <div class="text-h6 text-bold text-center q-mt-lg">
-        {{ $t("myPresentations.newPresentation.title") }}
+        {{ $t("presentationsBrowser.newPresentation.title") }}
       </div>
 
       <!-- privacy -->
@@ -17,7 +17,7 @@
           v-model="form.is_private"
           :label="
             $t(
-              `myPresentations.newPresentation.fields.privacy.${
+              `presentationsBrowser.newPresentation.fields.privacy.${
                 form.is_private ? 'private' : 'public'
               }.title`
             )
@@ -31,7 +31,7 @@
             <div>
               {{
                 $t(
-                  `myPresentations.newPresentation.fields.privacy.${
+                  `presentationsBrowser.newPresentation.fields.privacy.${
                     form.is_private ? "private" : "public"
                   }.description`
                 )
@@ -45,7 +45,7 @@
         <!-- name -->
         <q-input
           v-model="form.name"
-          :label="$t('myPresentations.newPresentation.fields.name')"
+          :label="$t('presentationsBrowser.newPresentation.fields.name')"
           outlined
           autofocus
           color="primary"
@@ -58,7 +58,7 @@
         <!-- description -->
         <q-input
           v-model="form.description"
-          :label="$t('myPresentations.newPresentation.fields.description')"
+          :label="$t('presentationsBrowser.newPresentation.fields.description')"
           outlined
           autogrow
           class="q-mt-lg"
@@ -76,7 +76,7 @@
           color="primary"
           hide-dropdown-icon
           clearable
-          :label="$t('myPresentations.newPresentation.fields.folder')"
+          :label="$t('presentationsBrowser.newPresentation.fields.folder')"
           class="q-mt-lg"
         >
           <template #prepend>
@@ -93,7 +93,7 @@
           <q-btn
             outline
             no-caps
-            :label="$t('myPresentations.newPresentation.cancel')"
+            :label="$t('presentationsBrowser.newPresentation.cancel')"
             class="q-py-sm"
             style="width: 100%"
             color="primary"
@@ -105,7 +105,7 @@
             unelevated
             no-caps
             :loading="isLoading"
-            :label="$t('myPresentations.newPresentation.create')"
+            :label="$t('presentationsBrowser.newPresentation.create')"
             class="q-py-sm"
             style="width: 100%"
             color="primary"
@@ -147,7 +147,9 @@ const form = ref({
 // name validation
 const nameRule = (value) => {
   if (!value) {
-    return t("myPresentations.newPresentation.fields.errors.name.required");
+    return t(
+      "presentationsBrowser.newPresentation.fields.errors.name.required"
+    );
   }
   return true;
 };
