@@ -28,15 +28,15 @@ export const generateUniqueId = (length = 7, array = null) => {
  * folder icon
  */
 export const getFolderIconName = ($q) => {
-  if (
-    $q.platform.is.mac ||
-    $q.platform.is.ios ||
-    $q.platform.is.ipad ||
-    $q.platform.is.ipod ||
-    $q.platform.is.iphone
-  ) {
-    return "folder--apple";
-  }
+  // if (
+  //   $q.platform.is.mac ||
+  //   $q.platform.is.ios ||
+  //   $q.platform.is.ipad ||
+  //   $q.platform.is.ipod ||
+  //   $q.platform.is.iphone
+  // ) {
+  //   return "folder--apple";
+  // }
 
   return "folder--windows";
 };
