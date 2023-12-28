@@ -160,7 +160,7 @@
       <q-img
         :src="
           presentation?.settings?.show_joining_instructions_bar || isHovered
-            ? '/logo_white_with_title_white.png'
+            ? '/prezio--white.svg'
             : logo
         "
         style="height: 48px"
@@ -219,8 +219,8 @@ const {
 const logo = computed(() => {
   return averageBackgroundBrightness.value >=
     backgroundBrightnessThreshold.value
-    ? "/logo_with_title_black.png"
-    : "/logo_white_with_title_white.png";
+    ? "/prezio.svg"
+    : "/prezio--white.svg";
 });
 
 /*

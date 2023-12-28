@@ -90,8 +90,8 @@ const {
 const logo = computed(() => {
   return averageBackgroundBrightness.value >=
     backgroundBrightnessThreshold.value
-    ? "/logo_with_title_black.png"
-    : "/logo_white_with_title_white.png";
+    ? "/prezio.svg"
+    : "/prezio--white.svg";
 });
 
 /*

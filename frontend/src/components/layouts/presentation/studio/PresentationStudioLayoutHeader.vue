@@ -4,7 +4,7 @@
       <!-- logo -->
       <a :href="ROUTE_PATHS.PRESENTATIONS_BROWSER" class="link--no-decorations">
         <div class="row no-wrap">
-          <q-img src="/favicon.ico" style="width: 30px" />
+          <q-img src="/logo.svg" style="width: 30px" />
 
           <div class="q-ml-sm column">
             <q-badge class="bg-grey-2 text-grey-5 text-xs" label="BETA" />

@@ -110,7 +110,7 @@
       >
         <!-- template preview -->
         <div style="aspect-ratio: 16/9">
-          <q-img src="/favicon.ico" style="height: 100%" fit="contain" />
+          <q-img src="/logo.svg" style="height: 100%" fit="contain" />
         </div>
 
         <!-- template name -->

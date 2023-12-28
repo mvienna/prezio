@@ -3,11 +3,7 @@
     <!-- logo -->
     <div class="row justify-center q-pa-lg">
       <div style="width: 96px">
-        <q-img
-          src="/logo_with_title_black.png"
-          style="height: 48px"
-          fit="contain"
-        />
+        <q-img src="/prezio.svg" style="height: 48px" fit="contain" />
       </div>
     </div>
 

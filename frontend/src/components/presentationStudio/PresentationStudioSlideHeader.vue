@@ -75,8 +75,8 @@
       <q-img
         :src="
           averageBackgroundBrightness >= backgroundBrightnessThreshold
-            ? '/logo_with_title_black.png'
-            : '/logo_white_with_title_white.png'
+            ? '/prezio.svg'
+            : '/prezio--white.svg'
         "
         fit="contain"
       />

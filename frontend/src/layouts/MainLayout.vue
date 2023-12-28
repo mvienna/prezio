@@ -8,7 +8,7 @@
           class="link--no-decorations"
         >
           <div class="row no-wrap">
-            <img src="/logo_with_title_black.png" style="height: 32px" />
+            <img src="/prezio.svg" style="height: 32px" />
 
             <div class="q-ml-sm column">
               <q-badge
