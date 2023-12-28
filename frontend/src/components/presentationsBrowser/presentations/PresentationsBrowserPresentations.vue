@@ -116,7 +116,7 @@
         <q-intersection
           v-for="presentation in presentations"
           :key="presentation.id"
-          transition="scale"
+          transition="fade"
           once
           class="relative-position"
         >
@@ -156,8 +156,8 @@
               >
                 <transition
                   appear
-                  enter-active-class="animated zoomIn"
-                  leave-active-class="animated zoomOut"
+                  enter-active-class="animated fadeIn"
+                  leave-active-class="animated fadeOut"
                 >
                   <div
                     v-if="hoveredPresentationCardId === presentation.id"
