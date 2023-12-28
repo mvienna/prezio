@@ -27,8 +27,10 @@
     <div
       class="text-grey text-caption q-mt-md q-ml-lg q-pl-md"
       style="line-height: 1.4"
-      v-html="$t('presentationStudio.settings.language.info')"
-    ></div>
+    >
+      {{ $t("presentationStudio.settings.language.info") }}
+      <a href="mailto:hello@prezio.ru">hello@prezio.ru</a>
+    </div>
 
     <q-separator class="q-mt-lg q-mb-md" />
   </div>
