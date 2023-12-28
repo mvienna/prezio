@@ -132,8 +132,8 @@ class PresentationController extends Controller
         /*
          * pagination & other params
          */
-        $page = $request->query('page', 1);
-        $limit = $request->query('limit', 10);
+        $page = (int)$request->query('page', 1);
+        $limit = (int)$request->query('limit', 10);
         $sortBy = $request->query('sortBy', 'updated_at');
         $descending = filter_var($request->query('descending', false), FILTER_VALIDATE_BOOLEAN);
 
