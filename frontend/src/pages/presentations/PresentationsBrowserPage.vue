@@ -4,7 +4,7 @@
       <div class="row no-wrap items-center justify-between q-mb-lg">
         <!-- welcome -->
         <div>
-          <div class="text-h5 text-semibold">
+          <div class="text-h5 text-semibold" style="font-size: 1.75rem">
             {{ $t("presentationsBrowser.welcome.title", { name: user.name }) }}
           </div>
 
