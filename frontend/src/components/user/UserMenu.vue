@@ -26,7 +26,7 @@
           <q-icon
             name="r_expand_less"
             class="q-ml-xs"
-            :style="isMenuExpanded ? 'transform: rotate(180deg);' : ''"
+            :style="!isMenuExpanded ? 'transform: rotate(180deg);' : ''"
           />
         </template>
       </div>
