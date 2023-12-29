@@ -211,11 +211,11 @@
                   <div style="max-width: 194px" class="relative-position">
                     <div
                       class="text-semibold ellipsis"
-                      style="cursor: text"
+                      style="cursor: text; width: 194px"
                       :style="`opacity: ${
                         editingPresentationId === presentation.id ? '0' : ''
                       }`"
-                      @click="handlePresentationNameClick(presentation)"
+                      @click="handlePresentationNameClick($event, presentation)"
                     >
                       {{ presentation.name }}
                     </div>
@@ -224,7 +224,6 @@
                       v-show="editingPresentationId === presentation.id"
                       class="absolute bg-white text-semibold q-px-xs scroll-y scroll--hidden"
                       style="
-                        width: 194px;
                         max-height: 86px;
                         top: 0;
                         left: 0;
@@ -233,7 +232,7 @@
                       "
                       autofocus
                       contenteditable="true"
-                      :id="`presentation-${presentation.id}-name`"
+                      :id="`presentation-${presentation.id}-name-input`"
                     >
                       {{ presentation.name }}
                     </div>
@@ -286,7 +285,9 @@
                           clickable
                           dense
                           v-close-popup
-                          @click="handlePresentationNameClick(presentation)"
+                          @click="
+                            handlePresentationNameClick($event, presentation)
+                          "
                         >
                           <q-icon
                             name="r_edit"
@@ -648,16 +649,17 @@ watch(
 );
 
 /*
- *
+ * rename presentation
  */
 const editingPresentationId = ref();
 
-const handlePresentationNameClick = (presentation) => {
+const handlePresentationNameClick = (event, presentation) => {
   editingPresentationId.value = presentation.id;
 
   const element = document.getElementById(
-    `presentation-${presentation.id}-name`
+    `presentation-${presentation.id}-name-input`
   );
+  element.style.width = event.target.offsetWidth;
 
   setTimeout(() => {
     element.focus();
@@ -686,7 +688,7 @@ const handlePresentationNameClick = (presentation) => {
 
 const handlePresentationNameUpdate = (presentation) => {
   const element = document.getElementById(
-    `presentation-${presentation.id}-name`
+    `presentation-${presentation.id}-name-input`
   );
 
   presentation.name = element.innerText;
