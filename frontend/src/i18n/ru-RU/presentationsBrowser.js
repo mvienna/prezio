@@ -67,6 +67,7 @@ export default {
             },
           },
         },
+        rename: "Переименовать",
         edit: "Редактировать",
         launch: "Запустить",
         delete: {

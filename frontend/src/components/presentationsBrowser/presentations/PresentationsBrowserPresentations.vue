@@ -208,23 +208,35 @@
               <div class="row justify-between no-wrap">
                 <div>
                   <!-- title -->
-                  <div class="text-semibold">
-                    {{ presentation.name }}
-
-                    <q-popup-edit
-                      v-model="presentation.name"
-                      v-slot="scope"
-                      @update:model-value="
-                        presentationsStore.updatePresentation(presentation)
-                      "
+                  <div style="max-width: 194px" class="relative-position">
+                    <div
+                      class="text-semibold ellipsis"
+                      style="cursor: text"
+                      :style="`opacity: ${
+                        editingPresentationId === presentation.id ? '0' : ''
+                      }`"
+                      @click="handlePresentationNameClick(presentation)"
                     >
-                      <q-input
-                        v-model="scope.value"
-                        dense
-                        autofocus
-                        @keyup.enter="scope.set"
-                      />
-                    </q-popup-edit>
+                      {{ presentation.name }}
+                    </div>
+
+                    <div
+                      v-show="editingPresentationId === presentation.id"
+                      class="absolute bg-white text-semibold q-px-xs scroll-y scroll--hidden"
+                      style="
+                        width: 194px;
+                        max-height: 86px;
+                        top: 0;
+                        left: 0;
+                        z-index: 9999;
+                        margin-left: -4px;
+                      "
+                      autofocus
+                      contenteditable="true"
+                      :id="`presentation-${presentation.id}-name`"
+                    >
+                      {{ presentation.name }}
+                    </div>
                   </div>
 
                   <!-- updated at -->
@@ -268,6 +280,30 @@
                       <q-list
                         class="full-height column q-gutter-sm text-semibold"
                       >
+                        <!-- rename -->
+                        <q-item
+                          class="items-center justify-start q-px-md q-py-sm"
+                          clickable
+                          dense
+                          v-close-popup
+                          @click="handlePresentationNameClick(presentation)"
+                        >
+                          <q-icon
+                            name="r_edit"
+                            color="primary"
+                            size="16px"
+                            class="q-mr-md"
+                          />
+
+                          <div>
+                            {{
+                              $t(
+                                "presentationsBrowser.presentationItem.actions.rename"
+                              )
+                            }}
+                          </div>
+                        </q-item>
+
                         <!-- add to folder -->
                         <q-item
                           :disable="!folders.length"
@@ -610,6 +646,54 @@ watch(
     infiniteScroll.value.setIndex(1);
   }
 );
+
+/*
+ *
+ */
+const editingPresentationId = ref();
+
+const handlePresentationNameClick = (presentation) => {
+  editingPresentationId.value = presentation.id;
+
+  const element = document.getElementById(
+    `presentation-${presentation.id}-name`
+  );
+
+  setTimeout(() => {
+    element.focus();
+
+    // collapse the range to the end.
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+
+    // clear any existing selections.
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }, 100);
+
+  element.addEventListener("blur", () => {
+    handlePresentationNameUpdate(presentation);
+  });
+
+  element.addEventListener("keydown", (event) => {
+    if ((event.key === "Enter" && !event.shiftKey) || event.key === "Escape") {
+      element.blur();
+    }
+  });
+};
+
+const handlePresentationNameUpdate = (presentation) => {
+  const element = document.getElementById(
+    `presentation-${presentation.id}-name`
+  );
+
+  presentation.name = element.innerText;
+  presentationsStore.updatePresentation(presentation);
+
+  editingPresentationId.value = null;
+};
 </script>
 
 <style scoped lang="scss">
