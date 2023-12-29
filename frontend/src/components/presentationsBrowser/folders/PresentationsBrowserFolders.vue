@@ -28,11 +28,9 @@
           />
 
           <!-- folder name -->
-          <div
-            class="text-semibold text-center text-no-wrap ellipsis"
-            :title="folder.name"
-          >
-            {{ folder.name }}
+          <div class="relative-position">
+            <!--            <div class="text-semibold text-center text-no-wrap ellipsis">-->
+            <!--              {{ folder.name }}-->
 
             <!--              <q-popup-edit-->
             <!--                v-model="folder.name"-->
@@ -46,6 +44,21 @@
             <!--                  @keyup.enter="scope.set"-->
             <!--                />-->
             <!--              </q-popup-edit>-->
+            <!--            </div>-->
+
+            <div
+              class="text-semibold"
+              :class="{ ellipsis: editingFolderId !== folder.id }"
+              :title="folder.name"
+              :style="`${
+                editingFolderId === folder.id
+                  ? 'margin-left: -4px; padding: 0 4px; white-space: nowrap;'
+                  : 'max-width: 150px;'
+              }`"
+              :id="`folder-${folder.id}-name`"
+            >
+              {{ folder.name }}
+            </div>
           </div>
         </q-card-section>
 
@@ -59,6 +72,28 @@
               :offset="[0, 8]"
               class="q-pr-sm q-pb-sm column no-wrap q-gutter-sm"
             >
+              <!-- rename -->
+              <q-item
+                class="items-center justify-start q-px-md q-py-sm"
+                clickable
+                dense
+                v-close-popup
+                @click="handleFolderNameClick($event, folder)"
+              >
+                <q-icon
+                  name="r_edit"
+                  color="primary"
+                  size="16px"
+                  class="q-mr-md"
+                />
+
+                <div>
+                  {{
+                    $t("presentationsBrowser.presentationItem.actions.rename")
+                  }}
+                </div>
+              </q-item>
+
               <!-- delete folder -->
               <q-item
                 class="items-center text-red"
@@ -128,8 +163,55 @@ const { folders, selectedFolder, presentations, isLoading } =
 const showFolderDeletionConfirmationDialog = ref(false);
 
 const handleFolderSelect = (event, folder) => {
+  if (editingFolderId.value === folder.id) return;
   selectedFolder.value = folder;
   presentationsStore.fetchPresentations({ page: 1 }, true);
+};
+
+/*
+ * rename folder
+ */
+const editingFolderId = ref();
+
+const handleFolderNameClick = (event, folder) => {
+  editingFolderId.value = folder.id;
+
+  const element = document.getElementById(`folder-${folder.id}-name`);
+  element.contentEditable = true;
+
+  setTimeout(() => {
+    element.focus();
+
+    // collapse the range to the end.
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+
+    // clear any existing selections.
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }, 100);
+
+  element.addEventListener("blur", () => {
+    handleFolderNameUpdate(folder);
+  });
+
+  element.addEventListener("keydown", (event) => {
+    if ((event.key === "Enter" && !event.shiftKey) || event.key === "Escape") {
+      element.blur();
+    }
+  });
+};
+
+const handleFolderNameUpdate = (folder) => {
+  const element = document.getElementById(`folder-${folder.id}-name`);
+
+  folder.name = element.innerText;
+  presentationsStore.updateFolder(folder);
+
+  element.contentEditable = false;
+  editingFolderId.value = null;
 };
 </script>
 
@@ -138,7 +220,6 @@ const handleFolderSelect = (event, folder) => {
  * folders
  */
 .folder {
-  max-width: 300px;
   cursor: pointer;
   transition: 0.2s;
   border-radius: 8px;
