@@ -291,8 +291,8 @@
                         dense
                       >
                         <q-icon
-                          name="r_menu_open"
-                          size="16px"
+                          name="r_folder_special"
+                          size="1em"
                           class="q-mr-sm"
                         />
 
@@ -335,7 +335,7 @@
                                 :src="`/assets/icons/folders/${getFolderIconName(
                                   $q
                                 )}.png`"
-                                style="width: 24px"
+                                style="width: 1.75em; min-width: 1.75em"
                               />
 
                               <div class="ellipsis q-ml-sm text-no-wrap">
@@ -361,7 +361,7 @@
                           name="r_delete"
                           color="red"
                           size="16px"
-                          class="q-mr-md"
+                          class="q-mr-sm"
                         />
 
                         <div>
