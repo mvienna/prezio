@@ -87,7 +87,7 @@
         >
           <div>
             <q-icon :name="tab.icon" size="24px" />
-            <div class="q-mt-sm q-mb-xs" style="font-size: 13px">
+            <div class="q-mt-sm q-mb-xs">
               {{ tab.label }}
             </div>
           </div>

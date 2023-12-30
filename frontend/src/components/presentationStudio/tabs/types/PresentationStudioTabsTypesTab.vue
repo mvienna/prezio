@@ -49,7 +49,7 @@
 
           <div
             class="text-center q-mt-sm"
-            style="line-height: 1.4; word-spacing: 104px; font-size: 13px"
+            style="line-height: 1.4; word-spacing: 104px"
           >
             {{
               $t(
