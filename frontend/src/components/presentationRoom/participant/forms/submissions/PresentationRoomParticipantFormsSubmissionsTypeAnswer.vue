@@ -291,7 +291,7 @@ const answerRules = [
   (val) =>
     (slideSettings.value?.filterProfanity
       ? !russianProfanityWords.filter((word) => {
-          return val.toLowerCase() === word;
+          return val?.toLowerCase() === word;
         }).length
       : true) || t("presentationRoom.answers.errors.profanity"),
 ];
