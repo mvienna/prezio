@@ -37,12 +37,13 @@
       <q-color
         format-model="hex"
         no-header-tabs
+        style="width: 300px"
         default-view="palette"
         v-model="mediaState.customization.value.shadowColor"
         @change="mediaStore.applyStyles()"
       />
 
-      <div class="q-py-sm q-px-lg">
+      <div class="q-py-sm q-px-md">
         <!-- shadow opacity -->
         <div>
           <div class="text-caption text-grey">
@@ -110,6 +111,22 @@
             @change="mediaStore.applyStyles()"
           />
         </div>
+
+        <!-- remove shadow -->
+        <q-btn
+          v-if="mediaState.customization.value.shadowOpacity > 0"
+          flat
+          dense
+          icon="r_remove"
+          :label="$t('presentationStudio.toolbar.media.options.shadow.remove')"
+          color="grey"
+          class="full-width q-my-sm"
+          no-caps
+          @click="
+            mediaState.customization.value.shadowOpacity = 0;
+            mediaStore.applyStyles();
+          "
+        />
       </div>
     </q-menu>
 
@@ -196,6 +213,21 @@
             />
           </template>
         </q-select>
+
+        <q-btn
+          v-if="mediaState.customization.value.borderWidth !== '0px'"
+          flat
+          dense
+          icon="r_remove"
+          :label="$t('presentationStudio.toolbar.media.options.border.remove')"
+          color="grey"
+          class="full-width q-mt-sm"
+          no-caps
+          @click="
+            mediaState.customization.value.borderWidth = '0px';
+            mediaStore.applyStyles();
+          "
+        />
       </div>
     </q-menu>
 
@@ -241,6 +273,6 @@ const handleImageReplace = (url) => {
 
 <style scoped lang="scss">
 ::v-deep(.q-slider) {
-  width: 200px;
+  width: 168px;
 }
 </style>

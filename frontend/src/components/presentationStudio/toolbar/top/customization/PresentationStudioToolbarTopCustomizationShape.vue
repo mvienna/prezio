@@ -20,7 +20,6 @@
       <q-color
         format-model="rgba"
         no-header-tabs
-        no-header
         default-view="palette"
         v-model="shapeState.customization.value.strokeColor"
         @change="shapeStore.applyStyles()"
@@ -28,10 +27,11 @@
 
       <div class="q-pa-sm">
         <q-btn
-          icon="r_format_color_reset"
+          icon="r_remove"
           class="full-width"
-          color="red"
+          color="grey"
           flat
+          dense
           no-caps
           :label="
             $t('presentationStudio.toolbar.shape.options.removeStrokeColor')
@@ -151,7 +151,6 @@
         v-model="shapeState.customization.value.fillColor"
         format-model="rgba"
         no-header-tabs
-        no-header
         default-view="palette"
         style="border-radius: 0"
         @change="shapeStore.applyStyles()"
@@ -163,7 +162,6 @@
         v-model="shapeState.customization.value.fillColor2"
         format-model="rgba"
         no-header-tabs
-        no-header
         default-view="palette"
         style="border-radius: 0"
         @change="shapeStore.applyStyles()"
@@ -171,10 +169,11 @@
 
       <div class="q-pa-sm">
         <q-btn
-          icon="r_format_color_reset"
+          icon="r_remove"
           class="full-width"
-          color="red"
+          color="grey"
           flat
+          dense
           no-caps
           :label="
             $t('presentationStudio.toolbar.shape.options.removeFillColor')
@@ -301,6 +300,22 @@
             @change="shapeStore.applyStyles()"
           />
         </div>
+
+        <!-- remove shadow -->
+        <q-btn
+          v-if="shapeState.customization.value.shadowOpacity > 0"
+          flat
+          dense
+          icon="r_remove"
+          :label="$t('presentationStudio.toolbar.media.options.shadow.remove')"
+          color="grey"
+          class="full-width q-my-sm"
+          no-caps
+          @click="
+            shapeState.customization.value.shadowOpacity = 0;
+            shapeStore.applyStyles();
+          "
+        />
       </div>
     </q-menu>
 

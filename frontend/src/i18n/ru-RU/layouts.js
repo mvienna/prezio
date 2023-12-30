@@ -395,8 +395,6 @@ export default {
           title: "Шаблоны",
 
           categories: {
-            title: "Категория шаблонов",
-
             work: "Работа",
             school: "Школа",
             fun: "Веселые",

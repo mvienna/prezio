@@ -211,6 +211,7 @@
           style="z-index: 2"
           class="q-ml-sm"
           icon="r_play_arrow"
+          dropdown-icon="r_expand_more"
           @click="
             startPresentingFromSlide = slide;
             handleStartPresenting();
@@ -615,15 +616,20 @@ const createPresentationRoom = async () => {
 }
 
 .present_btn__menu__list {
-  .q-item:nth-child(1) {
-    border-radius: 8px 8px 0 0;
-  }
-  .q-item:nth-child(3),
-  .q-item:nth-child(5) {
-    border-radius: 0 0;
+  .q-item {
+    margin: 0;
   }
 
-  .q-item:nth-child(7) {
+  .q-item:nth-child(1) {
+    border-radius: 8px 8px 0 0;
+    padding: 16px;
+  }
+  .q-item:nth-child(3) {
+    border-radius: 0 0;
+    padding: 16px;
+  }
+
+  .q-item:nth-child(5) {
     border-radius: 0 0 8px 8px;
   }
 }

@@ -59,6 +59,7 @@ export default {
             blur: "Размытие тени",
             offsetX: "Отступ по X",
             offsetY: "Отступ по Y",
+            remove: "Убрать тень",
           },
 
           opacity: {
@@ -68,6 +69,7 @@ export default {
           border: {
             title: "Обводка",
             width: "Толщина обводки",
+            remove: "Убрать обводку",
           },
         },
       },

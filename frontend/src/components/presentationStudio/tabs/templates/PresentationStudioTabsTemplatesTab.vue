@@ -1,11 +1,7 @@
 <template>
   <div style="height: calc(100vh - 68px - 66px - 24px)" class="column no-wrap">
-    <div class="text-grey">
-      {{ $t("presentationLayout.rightDrawer.tabs.templates.categories.title") }}
-    </div>
-
     <!-- categories -->
-    <div class="q-gutter-sm q-mt-xs">
+    <div class="q-gutter-sm row justify-center">
       <q-btn
         v-for="category in categories"
         :key="category.name"
