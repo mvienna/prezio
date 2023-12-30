@@ -158,11 +158,11 @@
               </div>
 
               <div
-                class="text-semibold text-accent text-center text-caption text-no-wrap"
+                class="text-semibold text-center text-caption text-no-wrap"
                 :class="
                   element.previewAverageBrightness >=
                   backgroundBrightnessThreshold
-                    ? 'text-grey-5'
+                    ? 'text-grey-7'
                     : 'text-white'
                 "
               >
@@ -810,7 +810,6 @@ watch(
   &.slide--hovered,
   &.slide--hoverable:hover {
     border: 2px solid $accent;
-    outline: 1px solid $accent;
   }
 
   //&:active {
