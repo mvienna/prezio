@@ -84,10 +84,19 @@ export default {
         title: "Формы",
 
         options: {
-          strokeColor: "Цвет обводки",
-          removeStrokeColor: "Убрать обводку",
-          fillColor: "Цвет заливки",
-          removeFillColor: "Убрать заливку",
+          stroke: {
+            title: "Обводка",
+            width: "Размер обводки",
+            remove: "Убрать обводку",
+          },
+          fill: {
+            title: "Цвет заливки",
+            remove: "Убрать заливку",
+            style: {
+              solid: "Сплошной",
+              gradient: "Градиент",
+            },
+          },
           lineWidth: "Размер",
         },
       },

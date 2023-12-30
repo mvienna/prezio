@@ -1,55 +1,5 @@
 <template>
-  <!-- color picker -->
-  <q-btn flat round size="12px" class="relative-position">
-    <div>
-      <q-icon name="icon-mdi_border_color_top" class="absolute-center" />
-      <q-icon
-        name="icon-mdi_border_color_bottom"
-        :style="`color: ${shapeState.customization.value.strokeColor}`"
-        class="absolute-center"
-      />
-    </div>
-
-    <q-menu
-      anchor="bottom left"
-      self="top left"
-      transition-show="jump-down"
-      transition-hide="jump-up"
-      :offset="[0, 8]"
-    >
-      <q-color
-        format-model="rgba"
-        no-header-tabs
-        default-view="palette"
-        v-model="shapeState.customization.value.strokeColor"
-        @change="shapeStore.applyStyles()"
-      />
-
-      <div class="q-pa-sm">
-        <q-btn
-          icon="r_remove"
-          class="full-width"
-          color="grey"
-          flat
-          dense
-          no-caps
-          :label="
-            $t('presentationStudio.toolbar.shape.options.removeStrokeColor')
-          "
-          @click="
-            shapeState.customization.value.strokeColor = null;
-            shapeStore.applyStyles();
-          "
-        />
-      </div>
-    </q-menu>
-
-    <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.shape.options.strokeColor") }}
-    </q-tooltip>
-  </q-btn>
-
-  <!-- fill color picker -->
+  <!-- fill color -->
   <q-btn
     v-if="
       ![SHAPES_OPTIONS.arrow, SHAPES_OPTIONS.line].includes(
@@ -88,8 +38,22 @@
           shapeStore.applyStyles();
         "
       >
-        <q-tab name="solid" label="Solid" no-caps> </q-tab>
-        <q-tab name="gradient" label="Gradient" no-caps> </q-tab>
+        <q-tab
+          name="solid"
+          :label="
+            $t('presentationStudio.toolbar.shape.options.fill.style.solid')
+          "
+          no-caps
+        >
+        </q-tab>
+        <q-tab
+          name="gradient"
+          :label="
+            $t('presentationStudio.toolbar.shape.options.fill.style.gradient')
+          "
+          no-caps
+        >
+        </q-tab>
       </q-tabs>
 
       <div
@@ -175,9 +139,7 @@
           flat
           dense
           no-caps
-          :label="
-            $t('presentationStudio.toolbar.shape.options.removeFillColor')
-          "
+          :label="$t('presentationStudio.toolbar.shape.options.fill.remove')"
           @click="handleFillRemove()"
         />
       </div>
@@ -185,36 +147,86 @@
 
     <q-tooltip :offset="[0, 4]">
       <div>
-        {{ $t("presentationStudio.toolbar.shape.options.fillColor") }}
+        {{ $t("presentationStudio.toolbar.shape.options.fill.title") }}
       </div>
     </q-tooltip>
   </q-btn>
 
-  <!-- line width -->
-  <q-select
-    v-model="shapeState.customization.value.lineWidth"
-    :options="SHAPE_LINE_WIDTH_OPTIONS"
-    map-options
-    emit-value
-    borderless
-    color="black"
-    dense
-    hide-dropdown-icon
-    class="q-pl-sm"
-    options-dense
-    @update:model-value="shapeStore.applyStyles()"
-  >
-    <template #prepend>
-      <q-icon name="line_weight" class="text-semibold text-dark" size="20px" />
-    </template>
+  <!-- stroke -->
+  <q-btn flat round size="12px" icon="r_border_outer">
+    <q-menu
+      anchor="bottom left"
+      self="top left"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      :offset="[0, 8]"
+    >
+      <q-color
+        format-model="rgba"
+        no-header-tabs
+        default-view="palette"
+        v-model="shapeState.customization.value.strokeColor"
+        @change="shapeStore.applyStyles()"
+      />
+
+      <div class="q-pa-sm">
+        <div class="text-caption text-grey q-ml-sm">
+          {{ $t("presentationStudio.toolbar.shape.options.stroke.width") }}
+        </div>
+
+        <!-- line width -->
+        <q-select
+          v-model="shapeState.customization.value.lineWidth"
+          :options="SHAPE_LINE_WIDTH_OPTIONS"
+          map-options
+          emit-value
+          borderless
+          color="black"
+          dense
+          hide-dropdown-icon
+          class="q-pl-sm"
+          options-dense
+          @update:model-value="shapeStore.applyStyles()"
+        >
+          <template #prepend>
+            <q-icon
+              name="line_weight"
+              class="text-semibold text-dark"
+              size="20px"
+            />
+          </template>
+        </q-select>
+
+        <div
+          v-if="shapeState.customization.value.lineWidth !== '0px'"
+          class="q-pa-sm"
+        >
+          <q-btn
+            icon="r_remove"
+            class="full-width"
+            color="grey"
+            flat
+            dense
+            no-caps
+            :label="
+              $t('presentationStudio.toolbar.shape.options.stroke.remove')
+            "
+            @click="
+              shapeState.customization.value.lineWidth = '0px';
+              shapeStore.applyStyles();
+            "
+          />
+        </div>
+      </div>
+    </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.shape.options.lineWidth") }}
+      {{ $t("presentationStudio.toolbar.shape.options.stroke.title") }}
     </q-tooltip>
-  </q-select>
+  </q-btn>
 
   <!-- shadow -->
-  <q-btn flat round size="12px" icon="r_texture" class="q-ml-md">
+  <q-btn flat round size="12px" icon="r_texture" class="q-ml-sm">
     <q-menu
       anchor="bottom left"
       self="top left"
