@@ -69,7 +69,7 @@ const layoutDefaultElementProps = {
   id: "layout-",
   text: "",
 
-  fontSize: "48px",
+  fontSize: "68px",
   color: customization.value.color,
 
   x: canvasStore.computeAdjustedSize(
@@ -98,7 +98,7 @@ const layoutElements = {
     text: t("presentationStudio.layouts.defaultTexts.title"),
 
     color: "#313232",
-    fontSize: "48px",
+    fontSize: "68px",
     fontWeight: "bold",
     textAlign: ALIGNMENT.horizontal.left,
 
@@ -117,7 +117,7 @@ const layoutElements = {
     text: t("presentationStudio.layouts.defaultTexts.title"),
 
     color: "#313232",
-    fontSize: "48px",
+    fontSize: "68px",
     fontWeight: "bold",
     textAlign: ALIGNMENT.horizontal.center,
 
@@ -138,7 +138,7 @@ const layoutElements = {
     text: t("presentationStudio.layouts.defaultTexts.title"),
 
     color: "#313232",
-    fontSize: "48px",
+    fontSize: "68px",
     fontWeight: "bold",
     textAlign: ALIGNMENT.horizontal.center,
     verticalAlign: ALIGNMENT.vertical.bottom,
@@ -160,7 +160,7 @@ const layoutElements = {
     text: t("presentationStudio.layouts.defaultTexts.subtitle"),
 
     color: "#808080",
-    fontSize: "36px",
+    fontSize: "38px",
     textAlign: ALIGNMENT.horizontal.center,
 
     y: canvasStore.computeAdjustedSize(
@@ -177,7 +177,7 @@ const layoutElements = {
     id: "layout-body",
     text: t("presentationStudio.layouts.defaultTexts.body"),
 
-    fontSize: "16px",
+    fontSize: "38px",
     color: "#808080",
     textAlign: ALIGNMENT.horizontal.left,
 
@@ -195,7 +195,7 @@ const layoutElements = {
     id: "layout-body-left",
     text: t("presentationStudio.layouts.defaultTexts.body"),
 
-    fontSize: "16px",
+    fontSize: "38px",
     color: "#808080",
     textAlign: ALIGNMENT.horizontal.left,
 
@@ -216,7 +216,7 @@ const layoutElements = {
     id: "layout-body-right",
     text: t("presentationStudio.layouts.defaultTexts.body"),
 
-    fontSize: "16px",
+    fontSize: "38px",
     color: "#808080",
     textAlign: ALIGNMENT.horizontal.left,
 

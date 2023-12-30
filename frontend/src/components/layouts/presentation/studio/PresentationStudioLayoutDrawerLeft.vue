@@ -563,7 +563,7 @@ const prepareElementsForNewSlide = (type) => {
     id: "layout-",
     text: "",
 
-    fontSize: "48px",
+    fontSize: "68px",
     color: customization.value.color,
 
     x: canvasStore.computeAdjustedSize(
@@ -591,7 +591,7 @@ const prepareElementsForNewSlide = (type) => {
       text: t("presentationStudio.layouts.defaultTexts.title"),
 
       color: "#313232",
-      fontSize: "48px",
+      fontSize: "68px",
       fontWeight: "bold",
     };
 
@@ -601,7 +601,7 @@ const prepareElementsForNewSlide = (type) => {
       id: "layout-body",
       text: t("presentationStudio.layouts.defaultTexts.body"),
 
-      fontSize: "16px",
+      fontSize: "38px",
       color: "#808080",
 
       y: titleElement.y + titleElement.height,
@@ -636,7 +636,7 @@ const prepareElementsForNewSlide = (type) => {
       textAlign: "center",
 
       color: "#313232",
-      fontSize: "48px",
+      fontSize: "68px",
       fontWeight: "bold",
     };
 

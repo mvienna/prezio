@@ -223,7 +223,7 @@ const handleQuestionInput = (textAlign = null) => {
       id: "layout-",
       text: "",
 
-      fontSize: "48px",
+      fontSize: "68px",
       color: customization.value.color,
 
       x: canvasStore.computeAdjustedSize(
@@ -249,7 +249,7 @@ const handleQuestionInput = (textAlign = null) => {
       textAlign: "center",
 
       color: "#313232",
-      fontSize: "48px",
+      fontSize: "68px",
       fontWeight: "bold",
     };
 
