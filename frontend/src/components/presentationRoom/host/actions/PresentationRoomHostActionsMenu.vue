@@ -141,6 +141,8 @@ import { api } from "boot/axios";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, onUnmounted, ref } from "vue";
+import { clearRoutePathFromProps } from "src/helpers/routeUtils";
+import { ROUTE_PATHS } from "src/constants/routes";
 
 /*
  * stores
@@ -178,10 +180,13 @@ const handleFullscreenChangeEvent = () => {
  * terminate room
  */
 const terminateRoom = () => {
-  api
-    .delete(`/presentation/${presentation.value.id}/room/${room.value.id}`)
-    .catch((error) => {
-      console.log(error);
-    });
+  window.location =
+    clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
+    presentation.value?.id;
+  // api
+  //   .delete(`/presentation/${presentation.value.id}/room/${room.value.id}`)
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
 };
 </script>
