@@ -14,7 +14,7 @@
         </div>
 
         <!-- upgrade -->
-        <q-card flat class="bg-white medium-rounded-borders">
+        <q-card flat class="bg-white medium-rounded-borders shadow-2xs-soft">
           <q-card-section class="row no-wrap items-center q-gutter-md">
             <div class="round-borders bg-accent text-primary q-pa-md">
               <q-icon name="r_bolt" size="24px" />
@@ -50,6 +50,7 @@
           color="primary"
           no-caps
           icon="r_add"
+          class="q-py-3xs"
           :label="$t('presentationsBrowser.newPresentation.title')"
           @click="showNewPresentationDialog = true"
         />
@@ -70,20 +71,12 @@
           v-if="!selectedFolder"
           outline
           no-wrap
-          class="bg-white q-px-md"
-          color="grey-4"
+          class="bg-white q-py-3xs"
           no-caps
+          icon="r_create_new_folder"
+          :label="$t('presentationsBrowser.newFolder.title')"
           @click="showNewFolderDialog = true"
-        >
-          <q-icon
-            name="r_create_new_folder"
-            size="sm"
-            class="text-black q-pr-sm"
-          />
-          <span class="text-black">
-            {{ $t("presentationsBrowser.newFolder.title") }}
-          </span>
-        </q-btn>
+        />
 
         <!-- new folder form -->
         <q-dialog v-model="showNewFolderDialog">
@@ -99,18 +92,6 @@
             "
           />
         </q-dialog>
-
-        <!-- import presentation -->
-        <!--      <q-btn-->
-        <!--        outline-->
-        <!--        no-wrap-->
-        <!--        class="bg-white q-px-md"-->
-        <!--        color="grey-4"-->
-        <!--        no-caps-->
-        <!--        style="width: 40px"-->
-        <!--      >-->
-        <!--        <q-icon name="icon-upload" size="sm" class="text-black" />-->
-        <!--      </q-btn>-->
 
         <q-space />
 

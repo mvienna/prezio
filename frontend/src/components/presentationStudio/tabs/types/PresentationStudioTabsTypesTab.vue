@@ -7,7 +7,7 @@
     >
       <div
         class="bg-blue-1 q-py-sm q-px-md row no-wrap items-center"
-        style="border-radius: 8px"
+        style="border-radius: 6px"
       >
         <q-icon
           :name="
@@ -194,6 +194,10 @@ const types = computed(() => {
   .item:nth-last-child(-n + 3) {
     margin-bottom: 0;
   }
+}
+
+::v-deep(.q-item) {
+  margin: 0;
 }
 
 ::v-deep(.type) {

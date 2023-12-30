@@ -1,0 +1,46 @@
+.text-xs {
+  font-size: 8px;
+}
+
+.text-sm {
+  font-size: 12px;
+}
+
+.text-no-decorations {
+  text-decoration: none !important;
+}
+
+.text-semibold {
+  font-weight: 600;
+}
+
+.text-h7 {
+  font-size: 16px;
+}
+
+/*
+ * link
+ */
+a, .link {
+  color: $primary;
+  text-decoration: none;
+  cursor: pointer;
+  transition: .2s;
+
+  &:hover {
+    text-decoration: underline;
+
+    &.link--no-decorations {
+      text-decoration: none;
+      opacity: 0.7;
+    }
+
+    &.q-item, &.q-btn {
+      text-decoration: none;
+    }
+  }
+
+  &.link--no-decorations {
+    text-decoration: none;
+  }
+}

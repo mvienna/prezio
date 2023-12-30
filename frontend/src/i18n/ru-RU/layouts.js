@@ -6,8 +6,7 @@ export default {
     header: {
       userMenuLinks: {
         profile: "Профиль",
-        myPlan: "Мой план",
-        payments: "Платежи",
+        upgrade: "Обновить тариф",
         logout: "Выйти",
       },
     },

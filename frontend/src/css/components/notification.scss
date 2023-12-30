@@ -1,0 +1,16 @@
+.q-notification {
+  border-radius: 12px;
+  box-shadow: none;
+  border: 2px solid $grey-2;
+  background: $white;
+  color: $secondary !important;
+  font-weight: 600;
+  font-size: 12px;
+  height: 32px;
+}
+
+.q-notification__badge {
+  background: $secondary;
+  color: $white;
+  box-shadow: none;
+}

@@ -176,22 +176,18 @@
                 </div>
 
                 <q-btn
-                  unelevated
-                  color="grey-2"
+                  outline
                   no-caps
                   style="width: 150px"
                   class="q-mt-md"
+                  icon="icon-download"
+                  :label="
+                    $t(
+                      'presentationLayout.header.share.inviteAudience.qr.download'
+                    )
+                  "
                   @click="handleQrCodeDownload()"
-                >
-                  <div class="text-black">
-                    <q-icon name="icon-download" />
-                    {{
-                      $t(
-                        "presentationLayout.header.share.inviteAudience.qr.download"
-                      )
-                    }}
-                  </div>
-                </q-btn>
+                />
               </div>
             </div>
           </q-tab-panel>

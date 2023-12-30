@@ -161,7 +161,7 @@
         <q-btn
           unelevated
           no-caps
-          label="Примите больше ответов"
+          :label="$t('presentationRoom.quizCountdown.acceptMoreAnswers')"
           :class="$q.screen.lt.md ? 'q-px-lg' : 'q-px-xl'"
           :style="$q.screen.lt.md ? 'height: 50px' : 'height: 62px'"
           :size="$q.screen.lt.md ? '10px' : '14px'"

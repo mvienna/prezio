@@ -126,9 +126,9 @@
             @click="showShareDialog = true"
           >
             <q-icon name="icon-upload" size="20px" />
-            <span class="q-ml-sm">{{
-              $t("presentationLayout.header.share.title")
-            }}</span>
+            <span class="q-ml-sm">
+              {{ $t("presentationLayout.header.share.title") }}
+            </span>
           </q-btn>
 
           <q-dialog v-model="showShareDialog">
@@ -184,10 +184,10 @@
 
         <!-- preview -->
         <q-btn
-          color="primary"
           outline
           no-caps
           no-wrap
+          color="black"
           :label="$t('presentationLayout.header.preview')"
           class="text-semibold q-ml-sm"
           @click="isPresentationPreview = true"

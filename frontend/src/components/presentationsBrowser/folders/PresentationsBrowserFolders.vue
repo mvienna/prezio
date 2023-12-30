@@ -6,14 +6,15 @@
       {{ $t("presentationsBrowser.folderItem.title") }}
     </div>
 
-    <div class="row no-wrap q-gutter-md folders scroll-x">
+    <div class="row no-wrap q-gutter-md folders scroll-x q-pb-sm">
       <!-- folders -->
       <q-card
         v-for="folder in folders"
         :key="folder.id"
-        v-ripple
-        class="folder q-hoverable row no-wrap"
-        flat
+        class="folder row no-wrap shadow-2xs-soft shadow-2xs-soft--hoverable"
+        :style="
+          editingFolderId !== folder.id ? 'width: 275px;' : 'min-width: 275px;'
+        "
         bordered
       >
         <q-card-section
@@ -28,37 +29,19 @@
           />
 
           <!-- folder name -->
-          <div class="relative-position">
-            <!--            <div class="text-semibold text-center text-no-wrap ellipsis">-->
-            <!--              {{ folder.name }}-->
-
-            <!--              <q-popup-edit-->
-            <!--                v-model="folder.name"-->
-            <!--                v-slot="scope"-->
-            <!--                @update:model-value="presentationsStore.updateFolder(folder)"-->
-            <!--              >-->
-            <!--                <q-input-->
-            <!--                  v-model="scope.value"-->
-            <!--                  dense-->
-            <!--                  autofocus-->
-            <!--                  @keyup.enter="scope.set"-->
-            <!--                />-->
-            <!--              </q-popup-edit>-->
-            <!--            </div>-->
-
-            <div
-              class="text-semibold"
-              :class="{ ellipsis: editingFolderId !== folder.id }"
-              :title="folder.name"
-              :style="`${
-                editingFolderId === folder.id
-                  ? 'margin-left: -4px; padding: 0 4px; white-space: nowrap;'
-                  : 'max-width: 150px;'
-              }`"
-              :id="`folder-${folder.id}-name`"
-            >
-              {{ folder.name }}
-            </div>
+          <div
+            class="text-semibold"
+            :class="{ ellipsis: editingFolderId !== folder.id }"
+            :title="folder.name"
+            style="min-width: 140px"
+            :style="`${
+              editingFolderId === folder.id
+                ? 'padding: 0 4px; margin-left: -4px; margin-right: 4px; white-space: nowrap;'
+                : 'max-width: 140px;'
+            }`"
+            :id="`folder-${folder.id}-name`"
+          >
+            {{ folder.name }}
           </div>
         </q-card-section>
 
@@ -70,29 +53,24 @@
               transition-show="jump-down"
               transition-hide="jump-up"
               :offset="[0, 8]"
-              class="q-pr-sm q-pb-sm column no-wrap q-gutter-sm"
             >
               <!-- rename -->
               <q-item
-                class="items-center justify-start q-px-md q-py-sm"
+                class="items-center justify-start"
                 clickable
                 dense
                 v-close-popup
                 @click="handleFolderNameClick($event, folder)"
               >
-                <q-icon
-                  name="r_edit"
-                  color="primary"
-                  size="16px"
-                  class="q-mr-md"
-                />
-
+                <q-icon name="r_edit" size="16px" class="q-mr-sm" />
                 <div>
                   {{
                     $t("presentationsBrowser.presentationItem.actions.rename")
                   }}
                 </div>
               </q-item>
+
+              <q-separator class="q-my-sm" />
 
               <!-- delete folder -->
               <q-item
@@ -232,7 +210,6 @@ const handleFolderNameUpdate = (folder) => {
   }
 
   &:hover {
-    border-color: $accent;
   }
 
   .folder__icon {

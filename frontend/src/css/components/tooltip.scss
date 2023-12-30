@@ -1,0 +1,46 @@
+.q-tooltip {
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.8);
+  color: $white;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.q-tooltip--style {
+  overflow-x: visible;
+  overflow-y: visible;
+  &::before {
+    content: " ";
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    position: absolute;
+  }
+  &.arrow-top::before {
+    border-bottom-color: $black;
+    left: 50%;
+    top: -10px;
+    margin-left: -5px;
+  }
+  &.arrow-left::before {
+    border-right-color: $black;
+    top: 50%;
+    left: -10px;
+    margin-top: -5px;
+  }
+  &.arrow-right::before {
+    border-left-color: $black;
+    top: 50%;
+    right: -10px;
+    margin-top: -5px;
+  }
+  &.arrow-bottom::before {
+    border-top-color: $black;
+    left: 50%;
+    bottom: -10px;
+    margin-left: -5px;
+  }
+}

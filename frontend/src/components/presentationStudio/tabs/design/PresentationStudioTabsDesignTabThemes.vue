@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- categories -->
-    <div class="q-gutter-sm q-mb-md">
+    <div class="q-gutter-sm q-pa-sm justify-center row q-mb-md">
       <q-btn
         v-for="category in categories"
         :key="category.name"

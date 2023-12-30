@@ -168,6 +168,7 @@ export default {
       timesup: "Время вышло",
       allParticipantsAnswered: "Все ответили",
       revealResults: "Показать ответы",
+      acceptMoreAnswers: "Примите больше ответов",
     },
 
     quiz: {

@@ -38,46 +38,41 @@
         transition-show="jump-down"
         transition-hide="jump-up"
         :offset="[0, 8]"
-        class="q-pa-sm"
-        style="border-radius: 12px"
         fit
       >
-        <div class="column q-gutter-sm">
-          <q-item
-            v-for="item in userMenuLinks"
-            :key="item.name"
-            :to="item.link"
-            dense
-            :disable="item.disable"
-            class="items-center text-semibold justify-start rounded-borders q-px-lg q-py-sm"
-            :class="
-              item.name ===
-              userMenuLinks.find(
-                (link) => link.link === ROUTE_PATHS.AUTH.LOGOUT
-              ).name
-                ? 'text-red'
-                : 'text-primary'
-            "
-          >
-            <q-icon
-              :name="item.icon"
-              class="q-mr-sm text-semibold"
-              size="20px"
-            />
-            <div
-              :class="
-                item.name ===
-                userMenuLinks.find(
-                  (link) => link.link === ROUTE_PATHS.AUTH.LOGOUT
-                ).name
-                  ? 'text-red'
-                  : 'text-black'
-              "
-            >
-              {{ item.label }}
-            </div>
-          </q-item>
-        </div>
+        <!-- profile -->
+        <q-item
+          :to="ROUTE_PATHS.PROFILE.INDEX"
+          dense
+          class="items-center justify-start"
+        >
+          <q-icon name="icon-account" class="q-mr-sm" size="20px" />
+          <div>
+            {{ $t("mainLayout.header.userMenuLinks.profile") }}
+          </div>
+        </q-item>
+
+        <!-- upgrade -->
+        <q-item disable dense class="items-center justify-start">
+          <q-icon name="icon-bolt" class="q-mr-sm" size="20px" />
+          <div>
+            {{ $t("mainLayout.header.userMenuLinks.upgrade") }}
+          </div>
+        </q-item>
+
+        <q-separator class="q-my-sm" />
+
+        <!-- log out -->
+        <q-item
+          :to="ROUTE_PATHS.AUTH.LOGOUT"
+          dense
+          class="items-center justify-start text-red"
+        >
+          <q-icon name="icon-logout" class="q-mr-sm" size="20px" />
+          <div class="text-red">
+            {{ $t("mainLayout.header.userMenuLinks.logout") }}
+          </div>
+        </q-item>
       </q-menu>
     </template>
   </q-btn>
@@ -106,35 +101,6 @@ const isMenuExpanded = ref(false);
  * user
  */
 const { user } = storeToRefs(useAuthStore());
-
-const userMenuLinks = ref([
-  {
-    name: "profile",
-    label: t("mainLayout.header.userMenuLinks.profile"),
-    icon: "r_account_circle",
-    link: ROUTE_PATHS.PROFILE.INDEX,
-  },
-  {
-    name: "my_plan",
-    label: t("mainLayout.header.userMenuLinks.myPlan"),
-    icon: "r_track_changes",
-    link: "/",
-    disable: true,
-  },
-  {
-    name: "payments",
-    label: t("mainLayout.header.userMenuLinks.payments"),
-    icon: "r_wallet",
-    link: "/",
-    disable: true,
-  },
-  {
-    name: "logout",
-    label: t("mainLayout.header.userMenuLinks.logout"),
-    icon: "r_logout",
-    link: ROUTE_PATHS.AUTH.LOGOUT,
-  },
-]);
 </script>
 
 <style scoped lang="scss">

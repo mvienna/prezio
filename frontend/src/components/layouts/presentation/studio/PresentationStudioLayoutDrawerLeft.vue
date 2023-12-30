@@ -25,9 +25,9 @@
           transition-show="jump-down"
           transition-hide="jump-up"
           :offset="[0, 16]"
-          class="q-pa-md scroll--hidden bg-white"
-          max-height="75vh"
-          style="width: 360px; border-radius: 16px"
+          class="scroll--hidden bg-white q-pa-sm"
+          max-height="85vh"
+          style="width: 344px"
         >
           <PresentationStudioTabsTypesTab
             disable-layout-selection
@@ -195,8 +195,7 @@
                   transition-show="jump-down"
                   transition-hide="jump-up"
                   :offset="[0, 8]"
-                  class="q-pa-sm"
-                  style="width: 250px; border-radius: 16px"
+                  style="width: 250px"
                 >
                   <!-- new slide -->
                   <q-item
@@ -217,9 +216,9 @@
                       transition-show="jump-right"
                       transition-hide="jump-left"
                       :offset="[24, 8]"
-                      class="q-pa-md scroll--hidden bg-white"
-                      max-height="75vh"
-                      style="width: 360px; border-radius: 16px"
+                      class="q-pa-sm scroll--hidden bg-white"
+                      max-height="85vh"
+                      style="width: 344px"
                     >
                       <PresentationStudioTabsTypesTab
                         disable-layout-selection
@@ -323,9 +322,9 @@
           transition-show="jump-right"
           transition-hide="jump-left"
           :offset="[24, 0]"
-          class="q-pa-md scroll--hidden bg-white"
-          max-height="75vh"
-          style="width: 360px; border-radius: 16px"
+          class="q-pa-sm scroll--hidden bg-white"
+          max-height="85vh"
+          style="width: 344px"
         >
           <PresentationStudioTabsTypesTab
             disable-layout-selection

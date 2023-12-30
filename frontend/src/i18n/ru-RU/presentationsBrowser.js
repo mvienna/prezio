@@ -83,7 +83,6 @@ export default {
 
     folderItem: {
       title: "Мои папки",
-      goBack: "Вернуться назад",
     },
 
     /*

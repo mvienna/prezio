@@ -1,0 +1,28 @@
+.q-btn, .q-btn-group {
+  border-radius: 8px;
+
+  &.q-btn--outline {
+    box-shadow: 0 1.5px 4px -1px rgba(10, 9, 11, 0.07);
+
+    &:before {
+      border: 1px solid rgba(230, 230, 230, 1) !important;
+    }
+
+    &:hover {
+      &:before {
+        border: 1px solid rgba(220, 220, 222, 1) !important;
+      }
+    }
+  }
+
+  &:active {
+    &:before {
+      outline-offset: 1px;
+      outline: 2px solid rgba(220, 220, 222, 1) !important;
+    }
+  }
+}
+
+.q-btn--md {
+  //padding: 0.75rem 1rem;
+}

@@ -3,9 +3,14 @@
     <div class="row no-wrap">
       <!-- title -->
       <div v-if="selectedFolder" class="text-h6 text-semibold">
-        <span class="text-grey">
-          {{ $t("presentationsBrowser.presentationItem.title") }} /
+        <span
+          class="text-grey"
+          :class="{ link: selectedFolder }"
+          @click="handleFolderClose()"
+        >
+          {{ $t("presentationsBrowser.presentationItem.title") }}
         </span>
+        <span class="text-grey"> / </span>
         {{ selectedFolder.name }}
       </div>
 
@@ -16,85 +21,35 @@
       <q-space />
 
       <!-- sort -->
-      <q-btn
-        color="grey"
-        flat
-        icon="r_swap_vert"
-        dense
-        no-caps
-        class="q-pr-md q-pl-sm"
-        :label="$t('presentationsBrowser.sort.title')"
-      >
-        <q-menu
-          anchor="bottom right"
-          self="top right"
-          transition-show="jump-down"
-          transition-hide="jump-up"
-          :offset="[0, 8]"
-          class="q-pa-sm"
-          style="border-radius: 12px"
-        >
-          <q-list class="full-height column q-gutter-sm">
-            <!-- sort by -->
-            <q-select
-              v-model="pagination.sortBy"
-              :options="columns"
-              emit-value
-              map-options
-              option-value="value"
-              option-label="label"
-              outlined
-              dense
-              options-dense
-              @update:model-value="
-                presentationsStore.fetchPresentations({ page: 1 }, true)
-              "
-            />
-
-            <!-- sort direction -->
-            <q-btn
-              outline
-              dense
-              color="grey"
-              @click="
+      <div class="row no-wrap items-center q-gutter-sm">
+        <q-btn
+          v-for="column in columns"
+          flat
+          dense
+          no-caps
+          no-wrap
+          size="12px"
+          class="q-px-sm"
+          :key="column.value"
+          :label="column.label"
+          :icon="
+            pagination.sortBy === column.value
+              ? pagination.descending
+                ? 'r_south'
+                : 'r_north'
+              : 'r_remove'
+          "
+          @click="
+            () => {
+              if (pagination.sortBy === column.value) {
                 pagination.descending = !pagination.descending;
-                presentationsStore.fetchPresentations({ page: 1 }, true);
-              "
-              no-caps
-              class="q-py-sm q-px-md"
-            >
-              <q-icon
-                :name="pagination.descending ? 'r_south' : 'r_north'"
-                size="14px"
-                class="q-mr-sm"
-                color="black"
-              />
-              <span class="text-black">
-                {{
-                  $t(
-                    `presentationsBrowser.sort.direction.${
-                      pagination.descending ? "descending" : "ascending"
-                    }`
-                  )
-                }}
-              </span>
-            </q-btn>
-          </q-list>
-        </q-menu>
-      </q-btn>
-    </div>
-
-    <!-- selected folder path -->
-    <div
-      v-if="selectedFolder"
-      class="q-py-sm q-mt-md link link--no-decorations"
-      @click="handleFolderClose()"
-    >
-      <div class="row items-center no-wrap q-gutter-sm">
-        <q-icon name="r_west" color="grey" />
-        <div class="text-grey">
-          {{ $t("presentationsBrowser.folderItem.goBack") }}
-        </div>
+              } else {
+                pagination.sortBy = column.value;
+              }
+              presentationsStore.fetchPresentations({ page: 1 }, true);
+            }
+          "
+        />
       </div>
     </div>
 
@@ -119,6 +74,12 @@
           transition="fade"
           once
           class="relative-position"
+          :class="{
+            'shadow-xs-soft':
+              !presentation.preview?.preview_url &&
+              !presentation.preview?.original_url &&
+              !presentation.preview,
+          }"
         >
           <q-img
             :src="
@@ -136,24 +97,10 @@
           <q-card flat bordered class="presentations_grid__item">
             <div
               class="presentations_grid__item__preview"
-              :class="{
-                'presentations_grid__item__preview--active':
-                  hoveredPresentationCardId === presentation.id,
-              }"
               @mouseover="hoveredPresentationCardId = presentation.id"
               @mouseleave="hoveredPresentationCardId = null"
             >
-              <q-img
-                :src="
-                  presentation.preview?.preview_url ||
-                  presentation.preview?.original_url ||
-                  presentation.preview
-                "
-              />
-
-              <div
-                class="absolute-center column no-wrap justify-center q-px-xl"
-              >
+              <div class="relative-position">
                 <transition
                   appear
                   enter-active-class="animated fadeIn"
@@ -161,13 +108,34 @@
                 >
                   <div
                     v-if="hoveredPresentationCardId === presentation.id"
-                    class="column no-wrap q-gutter-sm"
-                  >
+                    class=""
+                  ></div>
+                </transition>
+
+                <q-img
+                  :src="
+                    presentation.preview?.preview_url ||
+                    presentation.preview?.original_url ||
+                    presentation.preview
+                  "
+                />
+              </div>
+
+              <transition
+                appear
+                enter-active-class="animated fadeIn"
+                leave-active-class="animated fadeOut"
+              >
+                <div
+                  v-if="hoveredPresentationCardId === presentation.id"
+                  class="presentations_grid__item__preview__overlay absolute-center column no-wrap justify-center q-px-xl"
+                >
+                  <div class="column no-wrap q-gutter-sm">
                     <!-- open in studio -->
                     <q-btn
                       unelevated
                       color="primary"
-                      icon="r_draw"
+                      icon="r_edit"
                       no-wrap
                       :href="
                         clearRoutePathFromProps(
@@ -200,8 +168,8 @@
                     >
                     </q-btn>
                   </div>
-                </transition>
-              </div>
+                </div>
+              </transition>
             </div>
 
             <q-card-section>
@@ -210,12 +178,21 @@
                   <!-- title -->
                   <div style="max-width: 194px" class="relative-position">
                     <div
-                      class="text-semibold ellipsis"
-                      style="cursor: text; width: 194px"
+                      class="text-semibold ellipsis cursor-pointer"
+                      style="width: 194px"
                       :style="`opacity: ${
                         editingPresentationId === presentation.id ? '0' : ''
                       }`"
-                      @click="handlePresentationNameClick($event, presentation)"
+                      @click="handlePresentationNameClick(presentation)"
+                      @dblclick="
+                        (event) => {
+                          event.preventDefault();
+                          handlePresentationNameDoubleClick(
+                            event,
+                            presentation
+                          );
+                        }
+                      "
                     >
                       {{ presentation.name }}
                     </div>
@@ -239,7 +216,7 @@
                   </div>
 
                   <!-- updated at -->
-                  <div class="text-grey q-mt-xs">
+                  <div class="text-grey text-sm q-mt-xs">
                     {{ formatDateTime(getUpdatedAtTitle(presentation)) }}
 
                     <q-tooltip
@@ -273,186 +250,161 @@
                       transition-show="jump-down"
                       transition-hide="jump-up"
                       :offset="[0, 8]"
-                      class="q-pa-sm"
-                      style="border-radius: 12px"
                     >
-                      <q-list
-                        class="full-height column q-gutter-sm text-semibold"
+                      <!-- rename -->
+                      <q-item
+                        class="items-center justify-start"
+                        clickable
+                        dense
+                        v-close-popup
+                        @click="
+                          handlePresentationNameDoubleClick(
+                            $event,
+                            presentation
+                          )
+                        "
                       >
-                        <!-- rename -->
-                        <q-item
-                          class="items-center justify-start q-px-md q-py-sm"
-                          clickable
-                          dense
-                          v-close-popup
-                          @click="
-                            handlePresentationNameClick($event, presentation)
-                          "
+                        <q-icon name="r_edit" size="16px" class="q-mr-sm" />
+
+                        <div>
+                          {{
+                            $t(
+                              "presentationsBrowser.presentationItem.actions.rename"
+                            )
+                          }}
+                        </div>
+                      </q-item>
+
+                      <!-- add to folder -->
+                      <q-item
+                        :disable="!folders.length"
+                        class="items-center justify-start"
+                        clickable
+                        dense
+                      >
+                        <q-icon
+                          name="r_menu_open"
+                          size="16px"
+                          class="q-mr-sm"
+                        />
+
+                        <div>
+                          {{
+                            $t(
+                              "presentationsBrowser.presentationItem.actions.folder.addToFolder"
+                            )
+                          }}
+                        </div>
+
+                        <!-- folders options -->
+                        <q-menu
+                          anchor="top left"
+                          self="top end"
+                          transition-show="jump-left"
+                          transition-hide="jump-right"
+                          :offset="[16, 8]"
+                          style="max-height: 304px"
                         >
-                          <q-icon
-                            name="r_edit"
-                            color="primary"
-                            size="16px"
-                            class="q-mr-md"
-                          />
-
-                          <div>
-                            {{
-                              $t(
-                                "presentationsBrowser.presentationItem.actions.rename"
+                          <q-item
+                            v-for="folder in folders"
+                            :key="folder.id"
+                            clickable
+                            dense
+                            :active="folder.id === presentation.folder_id"
+                            @click="
+                              handleMovingToFolderPresentations(
+                                presentation,
+                                folder
                               )
-                            }}
-                          </div>
-                        </q-item>
-
-                        <!-- add to folder -->
-                        <q-item
-                          :disable="!folders.length"
-                          class="items-center justify-start q-px-md q-py-sm"
-                          clickable
-                          dense
-                        >
-                          <q-icon
-                            name="r_menu_open"
-                            color="primary"
-                            size="16px"
-                            class="q-mr-md"
-                          />
-
-                          <div>
-                            {{
-                              $t(
-                                "presentationsBrowser.presentationItem.actions.folder.addToFolder"
-                              )
-                            }}
-                          </div>
-
-                          <!-- folders options -->
-                          <q-menu
-                            anchor="top left"
-                            self="top end"
-                            transition-show="jump-left"
-                            transition-hide="jump-right"
-                            :offset="[16, 8]"
-                            class="q-pa-sm"
-                            style="max-height: 304px"
+                            "
                           >
-                            <q-item
-                              v-for="folder in folders"
-                              :key="folder.id"
-                              clickable
-                              dense
-                              :active="folder.id === presentation.folder_id"
-                              @click="
-                                handleMovingToFolderPresentations(
-                                  presentation,
-                                  folder
-                                )
-                              "
+                            <div
+                              class="row no-wrap items-center"
+                              style="max-width: 200px"
                             >
-                              <div
-                                class="row no-wrap items-center"
-                                style="max-width: 200px"
-                              >
-                                <div
-                                  class="row no-wrap justify-center relative-position"
-                                >
-                                  <q-img
-                                    :src="`/assets/icons/folders/${getFolderIconName(
-                                      $q
-                                    )}.png`"
-                                    style="width: 24px"
-                                  />
+                              <q-img
+                                :src="`/assets/icons/folders/${getFolderIconName(
+                                  $q
+                                )}.png`"
+                                style="width: 24px"
+                              />
 
-                                  <!-- folder privacy -->
-                                  <q-icon
-                                    :name="
-                                      folder.is_private
-                                        ? 'r_visibility_off'
-                                        : 'r_visibility'
-                                    "
-                                    color="white"
-                                    size="10px"
-                                    class="absolute-center"
-                                    style="margin-top: 1px; opacity: 0.5"
-                                  />
-                                </div>
-
-                                <div class="ellipsis q-ml-sm text-no-wrap">
-                                  {{ folder.name }}
-                                </div>
+                              <div class="ellipsis q-ml-sm text-no-wrap">
+                                {{ folder.name }}
                               </div>
-                            </q-item>
-                          </q-menu>
-                        </q-item>
+                            </div>
+                          </q-item>
+                        </q-menu>
+                      </q-item>
 
-                        <!-- delete -->
-                        <q-item
-                          class="items-center justify-start q-px-md q-py-sm text-red"
-                          clickable
-                          dense
-                          @click="
-                            showPresentationDeletionConfirmationDialog = true
+                      <q-separator class="q-my-sm" />
+
+                      <!-- delete -->
+                      <q-item
+                        class="items-center justify-start text-red"
+                        clickable
+                        dense
+                        @click="
+                          showPresentationDeletionConfirmationDialog = true
+                        "
+                      >
+                        <q-icon
+                          name="r_delete"
+                          color="red"
+                          size="16px"
+                          class="q-mr-md"
+                        />
+
+                        <div>
+                          {{
+                            $t(
+                              "presentationsBrowser.presentationItem.actions.delete.title"
+                            )
+                          }}
+                        </div>
+                      </q-item>
+
+                      <q-dialog
+                        v-model="showPresentationDeletionConfirmationDialog"
+                      >
+                        <ConfirmationDialog
+                          icon="r_delete"
+                          icon-color="red"
+                          :title="
+                            $t(
+                              'presentationsBrowser.presentationItem.actions.delete.confirmation.title'
+                            )
                           "
-                        >
-                          <q-icon
-                            name="r_delete"
-                            color="red"
-                            size="16px"
-                            class="q-mr-md"
-                          />
-
-                          <div>
-                            {{
-                              $t(
-                                "presentationsBrowser.presentationItem.actions.delete.title"
-                              )
-                            }}
-                          </div>
-                        </q-item>
-
-                        <q-dialog
-                          v-model="showPresentationDeletionConfirmationDialog"
-                        >
-                          <ConfirmationDialog
-                            icon="r_delete"
-                            icon-color="red"
-                            :title="
-                              $t(
-                                'presentationsBrowser.presentationItem.actions.delete.confirmation.title'
-                              )
-                            "
-                            :message="
-                              $t(
-                                'presentationsBrowser.presentationItem.actions.delete.confirmation.message'
-                              )
-                            "
-                            confirm-btn-color="red"
-                            @cancel="
-                              showPresentationDeletionConfirmationDialog = false
-                            "
-                            @confirm="
-                              handleDeletingPresentation(presentation);
-                              showPresentationDeletionConfirmationDialog = false;
-                            "
-                          />
-                        </q-dialog>
-                      </q-list>
+                          :message="
+                            $t(
+                              'presentationsBrowser.presentationItem.actions.delete.confirmation.message'
+                            )
+                          "
+                          confirm-btn-color="red"
+                          @cancel="
+                            showPresentationDeletionConfirmationDialog = false
+                          "
+                          @confirm="
+                            handleDeletingPresentation(presentation);
+                            showPresentationDeletionConfirmationDialog = false;
+                          "
+                        />
+                      </q-dialog>
                     </q-menu>
                   </q-btn>
                 </div>
               </div>
 
               <!-- data -->
-              <div class="row no-wrap q-gutter-sm text-grey q-mt-sm">
+              <div class="row no-wrap text-grey q-mt-sm">
                 <!-- privacy -->
                 <q-btn
                   :color="presentation.is_private ? 'grey-2' : 'accent'"
-                  :text-color="presentation.is_private ? 'grey' : 'primary'"
+                  :text-color="presentation.is_private ? 'grey' : 'secondary'"
                   round
                   unelevated
-                  size="8px"
-                  class="round-borders"
+                  size="7px"
+                  class="round-borders q-mr-3xs"
                   @click="
                     presentation.is_private = !presentation.is_private;
                     presentationsStore.updatePresentation(presentation);
@@ -464,33 +416,45 @@
                         ? 'r_visibility_off'
                         : 'r_visibility'
                     "
-                    size="16px"
+                    size="14px"
                   />
                 </q-btn>
 
                 <!-- slides -->
-                <q-btn
-                  color="grey-2"
-                  text-color="grey"
-                  unelevated
-                  dense
-                  class="rounded-borders q-mr-xs q-px-sm"
-                  icon="r_layers"
-                  size="10px"
-                  :label="presentation.slides.length"
-                />
+                <div class="row no-wrap items-center q-mr-3xs">
+                  <q-btn
+                    color="grey-2"
+                    text-color="grey"
+                    unelevated
+                    round
+                    class="round-borders cursor-default q-mr-xs"
+                    size="7px"
+                  >
+                    <q-icon name="r_layers" size="14px" />
+                  </q-btn>
+
+                  <div class="text-grey text-sm">
+                    {{ presentation.slides.length }}
+                  </div>
+                </div>
 
                 <!-- participants -->
-                <q-btn
-                  color="grey-2"
-                  text-color="grey"
-                  unelevated
-                  dense
-                  class="rounded-borders q-mr-xs q-px-sm"
-                  icon="r_group"
-                  size="10px"
-                  :label="presentation.participants.length"
-                />
+                <div class="row no-wrap items-center">
+                  <q-btn
+                    color="grey-2"
+                    text-color="grey"
+                    unelevated
+                    round
+                    class="round-borders cursor-default q-mr-xs"
+                    size="7px"
+                  >
+                    <q-icon name="r_group" size="14px" />
+                  </q-btn>
+
+                  <div class="text-grey text-sm">
+                    {{ presentation.participants.length }}
+                  </div>
+                </div>
               </div>
             </q-card-section>
           </q-card>
@@ -653,7 +617,17 @@ watch(
  */
 const editingPresentationId = ref();
 
-const handlePresentationNameClick = (event, presentation) => {
+const handlePresentationNameClick = (presentation) => {
+  setTimeout(() => {
+    if (editingPresentationId.value === presentation?.id) return;
+    router.push(
+      clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
+        presentation?.id
+    );
+  }, 300);
+};
+
+const handlePresentationNameDoubleClick = (event, presentation) => {
   editingPresentationId.value = presentation.id;
 
   const element = document.getElementById(
@@ -716,10 +690,15 @@ const handlePresentationNameUpdate = (presentation) => {
         transition: 0.5s;
       }
 
-      &.presentations_grid__item__preview--active {
-        .q-img {
-          filter: brightness(50%);
-        }
+      .presentations_grid__item__preview__overlay {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          rgba(10, 9, 11, 0.8) 0%,
+          rgba(10, 9, 11, 0.4) 100%
+        );
+        z-index: 1;
       }
     }
   }
@@ -730,15 +709,17 @@ const handlePresentationNameUpdate = (presentation) => {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 60%;
-  height: 60%;
+  width: 100%;
+  margin-top: 2px;
+  height: 100%;
 
-  filter: blur(48px);
+  filter: blur(4px);
   transition: 0.5s;
+  border-radius: 8px;
+  opacity: 0.1;
 
   &.presentations_grid__item__shadow--active {
-    width: 80%;
-    height: 80%;
+    opacity: 0.2;
   }
 }
 </style>

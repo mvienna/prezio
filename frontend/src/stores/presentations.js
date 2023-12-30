@@ -109,8 +109,6 @@ export const usePresentationsStore = defineStore("presentations", {
         })
         .then((response) => {
           this.folders.push(response.data);
-          this.selectedFolder = response.data;
-          this.fetchPresentations({ page: 1 }, true);
         })
         .catch((error) => {
           console.log(error);
@@ -231,6 +229,7 @@ export const usePresentationsStore = defineStore("presentations", {
           settings: presentation.settings,
         })
         .then(() => {
+          presentation.updated_at = new Date();
           const presentationIndex = this.presentations?.findIndex(
             (item) => item.id === presentation.id
           );

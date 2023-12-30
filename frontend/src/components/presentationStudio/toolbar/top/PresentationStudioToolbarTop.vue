@@ -43,9 +43,9 @@
             transition-show="jump-down"
             transition-hide="jump-up"
             :offset="[0, 16]"
-            class="q-pa-md bg-white"
+            class="q-pa-sm bg-white"
             max-height="70vh"
-            style="width: 424px"
+            style="width: 408px"
           >
             <PresentationStudioToolbarTopLayouts v-close-popup />
           </q-menu>
@@ -123,7 +123,7 @@
     </template>
 
     <div class="row items-center q-mr-md">
-      <div class="text-sm" style="opacity: 0.2">
+      <div class="text-sm text-no-wrap" style="opacity: 0.2">
         {{ Math.round(mouse.x) }}x{{ Math.round(mouse.y) }}
       </div>
     </div>
