@@ -7,7 +7,7 @@
           <q-img src="/logo.svg" style="width: 30px" />
 
           <div class="q-ml-sm column">
-            <q-badge class="bg-grey-2 text-grey-5 text-xs" label="BETA" />
+            <q-badge class="bg-grey-2 text-grey-5 text-xs" :label="VERSION" />
           </div>
         </div>
       </a>
@@ -469,6 +469,10 @@ import {
  */
 const router = useRouter();
 const $q = useQuasar();
+
+const VERSION = computed(() => {
+  return process.env.VERSION;
+});
 
 /*
  * stores

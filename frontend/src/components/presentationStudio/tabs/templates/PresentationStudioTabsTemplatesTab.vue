@@ -1,7 +1,7 @@
 <template>
   <div style="height: calc(100vh - 68px - 66px - 24px)" class="column no-wrap">
     <!-- categories -->
-    <div class="q-gutter-sm row justify-center">
+    <div class="q-gutter-sm row">
       <q-btn
         v-for="category in categories"
         :key="category.name"

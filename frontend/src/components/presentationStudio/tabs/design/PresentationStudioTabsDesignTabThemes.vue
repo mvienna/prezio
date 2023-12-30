@@ -1,13 +1,15 @@
 <template>
   <div>
     <!-- categories -->
-    <div class="q-gutter-sm q-pa-sm justify-center row q-mb-md">
+    <div class="q-gutter-sm q-pa-sm row q-mb-md">
       <q-btn
         v-for="category in categories"
         :key="category.name"
         :label="category.label"
         :disable="category.disable"
-        color="primary"
+        :color="
+          selectedBackgroundsCategory === category.name ? 'primary' : 'grey-9'
+        "
         :outline="selectedBackgroundsCategory !== category.name"
         :unelevated="selectedBackgroundsCategory === category.name"
         no-caps

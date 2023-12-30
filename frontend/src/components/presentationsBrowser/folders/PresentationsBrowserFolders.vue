@@ -6,7 +6,7 @@
       {{ $t("presentationsBrowser.folderItem.title") }}
     </div>
 
-    <div class="row no-wrap q-gutter-md folders scroll-x q-pb-sm">
+    <div class="row q-gutter-md folders q-pb-sm">
       <!-- folders -->
       <q-card
         v-for="folder in folders"

@@ -1,53 +1,30 @@
 <template>
-  <q-card flat class="q-pa-sm">
-    <q-card-section class="q-pa-lg">
-      <!-- icon -->
-      <div class="row justify-center q-mt-md">
-        <q-icon name="r_co_present" color="primary" size="52px" />
-      </div>
+  <q-card flat>
+    <q-form @submit.prevent="$emit('submit', form)">
+      <q-card-section class="q-pa-lg">
+        <!-- icon -->
+        <q-btn
+          color="background"
+          text-color="primary"
+          unelevated
+          icon="icon-presentation"
+          round
+          size="1.15em"
+          class="q-mb-3xs"
+        />
 
-      <!-- title -->
-      <div class="text-h6 text-bold text-center q-mt-lg">
-        {{ $t("presentationsBrowser.newPresentation.title") }}
-      </div>
+        <!-- title -->
+        <div class="text-h7 text-semibold q-my-md">
+          {{ $t("presentationsBrowser.newPresentation.title") }}
+        </div>
 
-      <!-- privacy -->
-      <div class="row justify-center q-mt-sm">
-        <q-checkbox
-          v-model="form.is_private"
-          :label="
-            $t(
-              `presentationsBrowser.newPresentation.fields.privacy.${
-                form.is_private ? 'private' : 'public'
-              }.title`
-            )
-          "
-          checked-icon="r_visibility_off"
-          unchecked-icon="r_visibility"
-          indeterminate-icon="r_help"
-          class="text-primary text-semibold q-gutter-xs"
-        >
-          <q-tooltip class="text-center">
-            <div>
-              {{
-                $t(
-                  `presentationsBrowser.newPresentation.fields.privacy.${
-                    form.is_private ? "private" : "public"
-                  }.description`
-                )
-              }}
-            </div>
-          </q-tooltip>
-        </q-checkbox>
-      </div>
-
-      <q-form @submit.prevent="$emit('submit', form)">
         <!-- name -->
         <q-input
           v-model="form.name"
-          :label="$t('presentationsBrowser.newPresentation.fields.name')"
+          :placeholder="$t('presentationsBrowser.newPresentation.fields.name')"
           outlined
           autofocus
+          dense
           color="primary"
           class="q-mt-md"
           :rules="[nameRule]"
@@ -56,13 +33,16 @@
         />
 
         <!-- description -->
-        <q-input
-          v-model="form.description"
-          :label="$t('presentationsBrowser.newPresentation.fields.description')"
-          outlined
-          autogrow
-          class="q-mt-lg"
-        />
+        <!--        <q-input-->
+        <!--          v-model="form.description"-->
+        <!--          :placeholder="-->
+        <!--            $t('presentationsBrowser.newPresentation.fields.description')-->
+        <!--          "-->
+        <!--          outlined-->
+        <!--          dense-->
+        <!--          autogrow-->
+        <!--          class="q-mt-lg"-->
+        <!--        />-->
 
         <!-- folder -->
         <q-select
@@ -73,22 +53,82 @@
           option-label="name"
           option-value="id"
           outlined
-          color="primary"
+          dense
+          options-dense
           hide-dropdown-icon
           clearable
-          :label="$t('presentationsBrowser.newPresentation.fields.folder')"
           class="q-mt-lg"
         >
+          <template #selected v-if="!form.folder_id">
+            <div class="text-grey">
+              {{ $t("presentationsBrowser.newPresentation.fields.folder") }}
+            </div>
+          </template>
+
           <template #prepend>
-            <q-icon
-              name="r_folder"
-              class="text-semibold text-primary"
-              size="24px"
-            />
+            <q-icon name="icon-folder_move" class="text-semibold" size="24px" />
+          </template>
+
+          <template #option="scope">
+            <q-item v-bind="scope.itemProps" class="no-margin">
+              <q-img
+                :src="`/assets/icons/folders/${getFolderIconName($q)}.png`"
+                style="width: 1.75em; min-width: 1.75em"
+                class="q-mr-sm"
+              />
+
+              <div class="ellipsis">
+                {{ scope.opt.name }}
+              </div>
+            </q-item>
           </template>
         </q-select>
+      </q-card-section>
 
-        <div class="row no-wrap q-gutter-lg q-mt-sm">
+      <q-separator />
+
+      <!-- privacy -->
+      <q-card-section class="q-pa-lg">
+        <div class="text-grey-9 text-h7 q-mb-md">
+          {{ $t("presentationsBrowser.newPresentation.fields.privacy.title") }}
+        </div>
+
+        <q-card flat class="bg-grey-2">
+          <q-card-section class="row no-wrap items-center q-py-sm">
+            <q-icon
+              :name="form.is_private ? 'r_visibility_off' : 'r_visibility'"
+              class="q-mr-md"
+              size="1.5em"
+              color="grey"
+            />
+
+            <div>
+              <div>
+                {{
+                  $t(
+                    "presentationsBrowser.newPresentation.fields.privacy.private"
+                  )
+                }}
+              </div>
+              <div class="q-mt-xs text-grey text-sm">
+                {{
+                  $t(
+                    "presentationsBrowser.newPresentation.fields.privacy.description"
+                  )
+                }}
+              </div>
+            </div>
+
+            <q-space />
+
+            <!-- privacy -->
+            <q-toggle v-model="form.is_private" color="primary" />
+          </q-card-section>
+        </q-card>
+      </q-card-section>
+
+      <q-card-section class="q-px-lg q-pb-lg q-pt-none">
+        <div class="row no-wrap q-gutter-lg">
           <!-- cancel -->
           <q-btn
             outline
@@ -96,7 +136,7 @@
             :label="$t('presentationsBrowser.newPresentation.cancel')"
             class="q-py-sm"
             style="width: 100%"
-            color="primary"
+            color="grey"
             @click="$emit('cancel')"
           />
 
@@ -112,14 +152,15 @@
             type="submit"
           />
         </div>
-      </q-form>
-    </q-card-section>
+      </q-card-section>
+    </q-form>
   </q-card>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { getFolderIconName } from "src/helpers/generationUtils";
 
 /*
  * variables

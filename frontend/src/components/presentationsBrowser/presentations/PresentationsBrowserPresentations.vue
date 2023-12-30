@@ -291,7 +291,7 @@
                         dense
                       >
                         <q-icon
-                          name="r_folder_special"
+                          name="icon-folder_move"
                           size="1em"
                           class="q-mr-sm"
                         />

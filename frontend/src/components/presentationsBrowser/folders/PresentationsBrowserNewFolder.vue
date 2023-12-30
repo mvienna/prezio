@@ -1,74 +1,104 @@
 <template>
-  <q-card flat class="q-pa-sm">
-    <q-card-section class="q-pa-lg">
-      <!-- icon -->
-      <div class="row justify-center q-mt-md">
-        <q-icon name="r_create_new_folder" color="primary" size="52px" />
-      </div>
+  <q-card flat>
+    <q-form @submit.prevent="$emit('submit', form)">
+      <q-card-section class="q-pa-lg">
+        <!-- icon -->
+        <q-btn
+          color="background"
+          text-color="primary"
+          unelevated
+          icon="icon-folder_add"
+          round
+          size="1.15em"
+          class="q-mb-3xs"
+        />
 
-      <!-- title -->
-      <div class="text-h6 text-bold text-center q-mt-lg">
-        {{ $t("presentationsBrowser.newFolder.title") }}
-      </div>
+        <!-- title -->
+        <div class="text-h7 text-semibold q-my-md">
+          {{ $t("presentationsBrowser.newFolder.title") }}
+        </div>
 
-      <q-form @submit.prevent="$emit('submit', form)">
         <!-- name -->
         <q-input
           v-model="form.name"
-          :label="$t('presentationsBrowser.newFolder.fields.name')"
+          :placeholder="$t('presentationsBrowser.newFolder.fields.name')"
           outlined
+          dense
           autofocus
+          :maxlength="100"
           color="primary"
-          class="q-mt-md"
           :rules="[nameRule]"
           lazy-rules
+          no-error-icon
           hide-bottom-space
-        />
+        >
+          <template #append>
+            <div class="row items-center text-no-wrap text-caption">
+              {{ 100 - form.name?.length }}
+            </div>
+          </template>
+        </q-input>
 
         <!-- description -->
-        <q-input
-          v-model="form.description"
-          :label="$t('presentationsBrowser.newFolder.fields.description')"
-          outlined
-          autogrow
-          class="q-mt-lg"
-        />
+        <!--        <q-input-->
+        <!--          v-model="form.description"-->
+        <!--          :label="$t('presentationsBrowser.newFolder.fields.description')"-->
+        <!--          outlined-->
+        <!--          autogrow-->
+        <!--          class="q-mt-lg"-->
+        <!--        />-->
+      </q-card-section>
 
-        <!-- presentations -->
-        <div class="q-mt-lg text-h7 text-semibold q-mb-sm">
-          {{ $t("presentationsBrowser.newFolder.fields.addPresentations") }}
+      <q-separator />
+
+      <q-card-section class="q-pa-lg">
+        <!-- add presentations -->
+        <div class="text-h7 text-semibold q-mb-sm">
+          {{
+            $t("presentationsBrowser.newFolder.fields.addPresentations.title")
+          }}
         </div>
 
-        <div class="row no-wrap q-gutter-md scroll-x q-pb-md">
-          <q-card
-            v-for="presentation in presentations"
-            :key="presentation.id"
-            flat
-            class="presentation_card"
-            :class="
-              form.presentationsIds?.includes(presentation.id)
-                ? 'presentation_card--active'
-                : ''
+        <div class="text-grey-9">
+          {{
+            $t(
+              "presentationsBrowser.newFolder.fields.addPresentations.description"
+            )
+          }}
+        </div>
+      </q-card-section>
+
+      <div class="row no-wrap q-gutter-md scroll-x scroll--hidden q-px-lg">
+        <q-card
+          v-for="presentation in presentations"
+          :key="presentation.id"
+          flat
+          class="presentation_card"
+          :class="
+            form.presentationsIds?.includes(presentation.id)
+              ? 'presentation_card--active'
+              : ''
+          "
+          @click="handlePresentationCardToggle(presentation)"
+        >
+          <!-- presentation preview -->
+          <q-img
+            :src="
+              presentation.preview?.preview_url ||
+              presentation.preview?.original_url ||
+              presentation.preview
             "
-            @click="handlePresentationCardToggle(presentation)"
-          >
-            <!-- presentation preview -->
-            <q-img
-              :src="
-                presentation.preview?.preview_url ||
-                presentation.preview?.original_url ||
-                presentation.preview
-              "
-            />
+          />
 
-            <!-- presentation name -->
-            <div class="text-center ellipsis q-mt-sm text-grey">
-              {{ presentation.name }}
-            </div>
-          </q-card>
-        </div>
+          <!-- presentation name -->
+          <div class="text-center ellipsis q-mt-sm text-sm">
+            {{ presentation.name }}
+          </div>
+        </q-card>
+      </div>
 
-        <div class="row no-wrap q-gutter-lg q-mt-sm">
+      <q-card-section class="q-pa-lg">
+        <div class="row no-wrap q-gutter-lg">
           <!-- cancel -->
           <q-btn
             outline
@@ -76,7 +106,7 @@
             :label="$t('presentationsBrowser.newFolder.cancel')"
             class="q-py-sm"
             style="width: 100%"
-            color="primary"
+            color="grey"
             @click="$emit('cancel')"
           />
 
@@ -92,8 +122,8 @@
             type="submit"
           />
         </div>
-      </q-form>
-    </q-card-section>
+      </q-card-section>
+    </q-form>
   </q-card>
 </template>
 
@@ -178,7 +208,6 @@ const handlePresentationCardToggle = (presentation) => {
   &.presentation_card--active {
     .q-img {
       border-color: $primary;
-      outline-color: $accent;
     }
   }
 }

@@ -5,19 +5,27 @@
       class="q-card__toolbar_section column no-wrap q-pa-lg"
       style="height: 100%; max-height: 100%"
     >
-      <q-toolbar class="justify-between q-px-none">
+      <q-toolbar class="q-px-none">
         <!-- title -->
-        <div class="text-h6 text-bold">{{ $t("media.select.title") }}</div>
-
-        <!-- close -->
-        <q-btn
-          text-color="grey-5"
-          unelevated
-          icon="r_close"
-          round
-          @click="$emit('cancel')"
-        />
+        <div class="text-h6 text-center text-semibold">
+          {{ $t("media.select.title") }}
+        </div>
       </q-toolbar>
+
+      <!-- close -->
+      <div class="absolute-top-right q-mt-lg q-mr-lg">
+        <div>
+          <q-btn
+            text-color="grey"
+            unelevated
+            icon="r_close"
+            round
+            size="10px"
+            class="round-borders"
+            @click="$emit('cancel')"
+          />
+        </div>
+      </div>
 
       <!-- tabs -->
       <q-tabs
@@ -524,7 +532,6 @@ const dropHandler = (event) => {
   position: sticky;
   padding-bottom: 0;
   top: 0;
-  background: $white;
   z-index: 1;
 }
 

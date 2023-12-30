@@ -73,7 +73,7 @@
           no-wrap
           class="bg-white q-py-3xs"
           no-caps
-          icon="r_create_new_folder"
+          icon="icon-folder_add"
           :label="$t('presentationsBrowser.newFolder.title')"
           @click="showNewFolderDialog = true"
         />
