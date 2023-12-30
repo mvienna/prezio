@@ -12,9 +12,6 @@
         v-for="folder in folders"
         :key="folder.id"
         class="folder row no-wrap shadow-2xs-soft shadow-2xs-soft--hoverable"
-        :style="
-          editingFolderId !== folder.id ? 'width: 275px;' : 'min-width: 275px;'
-        "
         bordered
       >
         <q-card-section
@@ -30,14 +27,14 @@
 
           <!-- folder name -->
           <div
-            class="text-semibold"
+            class="text-semibold scroll--hidden"
             :class="{ ellipsis: editingFolderId !== folder.id }"
             :title="folder.name"
-            style="min-width: 140px"
+            style="min-width: 140px; max-width: 140px"
             :style="`${
               editingFolderId === folder.id
-                ? 'padding: 0 4px; margin-left: -4px; margin-right: 4px; white-space: nowrap;'
-                : 'max-width: 140px;'
+                ? 'padding: 0 4px; margin-left: -4px; margin-right: 4px; white-space: nowrap; overflow-x: scroll;'
+                : ''
             }`"
             :id="`folder-${folder.id}-name`"
           >
@@ -203,6 +200,9 @@ const handleFolderNameUpdate = (folder) => {
   border-radius: 8px;
   border-color: $grey-2;
   overflow: hidden;
+  width: 275px;
+  min-width: 275px;
+  max-width: 275px;
 
   .q-card__section {
     border-radius: 0;
