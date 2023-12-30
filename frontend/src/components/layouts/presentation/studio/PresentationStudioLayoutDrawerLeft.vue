@@ -3,7 +3,7 @@
     v-model="leftDrawerOpen"
     show-if-above
     side="left"
-    :width="220"
+    :width="200"
     bordered
     class="bg-white q-py-md scroll--hidden"
   >
@@ -795,8 +795,8 @@ watch(
   outline: 3px solid transparent;
   transition: 0.2s;
   border: 2px solid $grey-2;
-  width: 160px;
-  height: calc(160px * 9 / 16);
+  width: 140px;
+  height: calc(140px * 9 / 16);
   border-radius: 8px;
   overflow: hidden;
 

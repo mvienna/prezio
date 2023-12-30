@@ -82,12 +82,14 @@
           :name="tab.name"
           :disable="tab.disable"
           no-caps
-          style="width: 80px; height: 60px"
+          style="width: 93px; height: 68px"
           class="presentation_studio__layout__drawer_right__tab"
         >
           <div>
-            <q-icon :name="tab.icon" size="22px" />
-            <div class="text-caption q-mt-xs">{{ tab.label }}</div>
+            <q-icon :name="tab.icon" size="24px" />
+            <div class="q-mt-xs q-mb-xs">
+              {{ tab.label }}
+            </div>
           </div>
         </q-tab>
       </q-tabs>

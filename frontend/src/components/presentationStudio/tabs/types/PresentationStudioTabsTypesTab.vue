@@ -48,7 +48,7 @@
           </div>
 
           <div
-            class="text-center text-caption q-mt-sm"
+            class="text-center q-mt-sm"
             style="line-height: 1.4; word-spacing: 104px"
           >
             {{
