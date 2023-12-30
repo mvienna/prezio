@@ -15,6 +15,19 @@
       @click="deselectElement()"
     />
 
+    <!-- replace -->
+    <q-btn
+      v-if="selectedElement.mode === MODE_OPTIONS.media"
+      icon="r_find_replace"
+      color="grey"
+      class="q-px-sm"
+      flat
+      :label="$t('presentationStudio.elementsContextMenu.replaceMedia.short')"
+      size="10px"
+      no-caps
+      @click="showSelectMediaDialog = true"
+    />
+
     <!-- delete element -->
     <q-btn
       icon="r_delete"
@@ -35,12 +48,11 @@
         transition-show="jump-down"
         transition-hide="jump-up"
         :offset="[8, 8]"
-        class="q-pa-sm"
         style="width: 324px"
       >
         <!-- copy -->
         <q-item
-          class="items-center q-py-sm"
+          class="items-center"
           clickable
           dense
           @click="copy()"
@@ -62,7 +74,7 @@
 
         <!-- cut -->
         <q-item
-          class="items-center q-py-sm"
+          class="items-center"
           clickable
           dense
           @click="cut()"
@@ -84,7 +96,7 @@
 
         <!-- duplicate -->
         <q-item
-          class="items-center q-py-sm"
+          class="items-center"
           clickable
           dense
           @click="duplicate()"
@@ -109,37 +121,23 @@
         <!-- replace -->
         <q-item
           v-if="selectedElement.mode === MODE_OPTIONS.media"
-          class="items-center q-py-sm"
+          class="items-center"
           clickable
           dense
           @click="showSelectMediaDialog = true"
         >
           <q-icon name="r_image" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentationStudio.elementsContextMenu.replaceMedia") }}
+            {{ $t("presentationStudio.elementsContextMenu.replaceMedia.full") }}
           </div>
         </q-item>
-
-        <q-dialog v-model="showSelectMediaDialog">
-          <SelectMedia
-            @cancel="showSelectMediaDialog = false"
-            @select="
-              handleImageReplace(
-                $event?.preview_url ||
-                  $event?.original_url ||
-                  $event?.urls?.regular
-              );
-              showSelectMediaDialog = false;
-            "
-          />
-        </q-dialog>
 
         <q-separator v-if="elements.length > 1" class="q-my-sm" />
 
         <template v-if="selectedElementIndex !== 0">
           <!-- move up-->
           <q-item
-            class="items-center q-py-sm"
+            class="items-center"
             clickable
             dense
             v-close-popup
@@ -161,7 +159,7 @@
 
           <!-- move to the top-->
           <q-item
-            class="items-center q-py-sm"
+            class="items-center"
             clickable
             dense
             v-close-popup
@@ -186,7 +184,7 @@
         <template v-if="selectedElementIndex !== elements.length - 1">
           <!-- move down -->
           <q-item
-            class="items-center q-py-sm"
+            class="items-center"
             clickable
             dense
             v-close-popup
@@ -208,7 +206,7 @@
 
           <!-- move to the bottom -->
           <q-item
-            class="items-center q-py-sm"
+            class="items-center"
             clickable
             dense
             v-close-popup
@@ -234,7 +232,7 @@
 
         <!-- delete -->
         <q-item
-          class="items-center q-py-sm text-red"
+          class="items-center text-red"
           clickable
           dense
           v-close-popup
@@ -253,6 +251,18 @@
         </q-item>
       </q-menu>
     </q-btn>
+
+    <q-dialog v-model="showSelectMediaDialog">
+      <SelectMedia
+        @cancel="showSelectMediaDialog = false"
+        @select="
+          handleImageReplace(
+            $event?.preview_url || $event?.original_url || $event?.urls?.regular
+          );
+          showSelectMediaDialog = false;
+        "
+      />
+    </q-dialog>
   </q-card>
 </template>
 
