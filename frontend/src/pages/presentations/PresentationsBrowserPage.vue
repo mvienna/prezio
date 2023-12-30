@@ -8,7 +8,7 @@
             {{ $t("presentationsBrowser.welcome.title", { name: user.name }) }}
           </div>
 
-          <div class="text-grey q-mt-xs">
+          <div class="text-grey-9 q-mt-xs">
             {{ $t("presentationsBrowser.welcome.description") }}
           </div>
         </div>

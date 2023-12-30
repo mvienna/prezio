@@ -28,6 +28,7 @@
           dense
           no-caps
           no-wrap
+          color="grey-9"
           size="12px"
           class="q-px-sm"
           :key="column.value"
@@ -216,7 +217,7 @@
                   </div>
 
                   <!-- updated at -->
-                  <div class="text-grey text-sm q-mt-xs">
+                  <div class="text-grey-9 text-sm q-mt-xs">
                     {{ formatDateTime(getUpdatedAtTitle(presentation)) }}
 
                     <q-tooltip
