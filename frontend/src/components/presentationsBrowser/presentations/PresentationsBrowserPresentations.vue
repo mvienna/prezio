@@ -32,14 +32,6 @@
           size="12px"
           class="q-px-sm"
           :key="column.value"
-          :label="column.label"
-          :icon="
-            pagination.sortBy === column.value
-              ? pagination.descending
-                ? 'r_south'
-                : 'r_north'
-              : 'r_remove'
-          "
           @click="
             () => {
               if (pagination.sortBy === column.value) {
@@ -50,7 +42,21 @@
               presentationsStore.fetchPresentations({ page: 1 }, true);
             }
           "
-        />
+        >
+          <q-icon
+            :name="
+              pagination.sortBy === column.value
+                ? pagination.descending
+                  ? 'r_south'
+                  : 'r_north'
+                : 'r_remove'
+            "
+            size="1.2em"
+            class="q-mr-sm"
+            style="font-weight: 700"
+          />
+          {{ column.label }}
+        </q-btn>
       </div>
     </div>
 
