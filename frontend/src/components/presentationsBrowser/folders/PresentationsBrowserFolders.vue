@@ -182,6 +182,7 @@ const handleFolderNameClick = (event, folder) => {
 
 const handleFolderNameUpdate = (folder) => {
   const element = document.getElementById(`folder-${folder.id}-name`);
+  element.scrollLeft = 0;
 
   folder.name = element.innerText;
   presentationsStore.updateFolder(folder);
