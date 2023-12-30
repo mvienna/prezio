@@ -49,6 +49,10 @@ export default {
         title: "Фотографии",
 
         options: {
+          replaceMedia: {
+            title: "Заменить",
+          },
+
           shadow: {
             title: "Тень",
             opacity: "Прозрачность тени",
@@ -148,10 +152,7 @@ export default {
       duplicate: "Дублировать",
       delete: "Удалить",
 
-      replaceMedia: {
-        full: "Заменить фотографию",
-        short: "Заменить",
-      },
+      replaceMedia: "Заменить фотографию",
 
       moveUp: "Переместить выше",
       moveToTheTop: "Переместить вверх",

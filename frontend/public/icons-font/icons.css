@@ -1,7 +1,7 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.woff?42629c6214e3181bba8c85eec0d142f5") format("woff"),
-url("./icons.woff2?42629c6214e3181bba8c85eec0d142f5") format("woff2");
+    src: url("./icons.woff?2dfafb1476441cbdea500978a44d0340") format("woff"),
+url("./icons.woff2?2dfafb1476441cbdea500978a44d0340") format("woff2");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -36,51 +36,54 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
 .icon-image_add:before {
     content: "\f107";
 }
-.icon-insert_text:before {
+.icon-image_edit:before {
     content: "\f108";
 }
-.icon-logout:before {
+.icon-insert_text:before {
     content: "\f109";
 }
-.icon-mdi_border_color_bottom:before {
+.icon-logout:before {
     content: "\f10a";
 }
-.icon-mdi_border_color_top:before {
+.icon-mdi_border_color_bottom:before {
     content: "\f10b";
 }
-.icon-mdi_format_color_bottom:before {
+.icon-mdi_border_color_top:before {
     content: "\f10c";
 }
-.icon-mdi_format_color_fill_bottom:before {
+.icon-mdi_format_color_bottom:before {
     content: "\f10d";
 }
-.icon-mdi_format_color_fill_top:before {
+.icon-mdi_format_color_fill_bottom:before {
     content: "\f10e";
 }
-.icon-mdi_format_color_top:before {
+.icon-mdi_format_color_fill_top:before {
     content: "\f10f";
 }
-.icon-olive-branches-award:before {
+.icon-mdi_format_color_top:before {
     content: "\f110";
 }
-.icon-page_info:before {
+.icon-olive-branches-award:before {
     content: "\f111";
 }
-.icon-presentation:before {
+.icon-page_info:before {
     content: "\f112";
 }
-.icon-shape_line:before {
+.icon-presentation:before {
     content: "\f113";
 }
-.icon-space_dashboard:before {
+.icon-shape_line:before {
     content: "\f114";
 }
-.icon-thumb-down-circular:before {
+.icon-space_dashboard:before {
     content: "\f115";
 }
-.icon-unsplash:before {
+.icon-thumb-down-circular:before {
     content: "\f116";
 }
-.icon-upload:before {
+.icon-unsplash:before {
     content: "\f117";
+}
+.icon-upload:before {
+    content: "\f118";
 }

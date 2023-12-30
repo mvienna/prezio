@@ -1,4 +1,29 @@
 <template>
+  <!-- replace image -->
+  <q-btn
+    flat
+    round
+    size="12px"
+    icon="icon-image_edit"
+    @click="showSelectMediaDialog = true"
+  >
+    <q-tooltip :offset="[0, 4]">
+      {{ $t("presentationStudio.toolbar.media.options.replaceMedia.title") }}
+    </q-tooltip>
+  </q-btn>
+
+  <q-dialog v-model="showSelectMediaDialog">
+    <SelectMedia
+      @cancel="showSelectMediaDialog = false"
+      @select="
+        handleImageReplace(
+          $event?.preview_url || $event?.original_url || $event?.urls?.regular
+        );
+        showSelectMediaDialog = false;
+      "
+    />
+  </q-dialog>
+
   <!-- shadow -->
   <q-btn flat round size="12px" icon="r_texture">
     <q-menu
@@ -184,12 +209,34 @@
 import { storeToRefs } from "pinia";
 import { useCanvasMediaStore } from "stores/canvas/media";
 import { SHAPE_LINE_WIDTH_OPTIONS } from "src/constants/canvas/canvasVariables";
+import SelectMedia from "components/media/SelectMedia.vue";
+import { ref } from "vue";
+import { useCanvasStore } from "stores/canvas";
+import { deleteElement } from "stores/canvas/helpers/select";
 
 /*
  * stores
  */
 const mediaStore = useCanvasMediaStore();
 const mediaState = storeToRefs(mediaStore);
+
+const canvasStore = useCanvasStore();
+const { selectedElement } = storeToRefs(canvasStore);
+
+/*
+ * replace image
+ */
+const showSelectMediaDialog = ref(false);
+const handleImageReplace = (url) => {
+  mediaStore.addImage(
+    url,
+    selectedElement.value.x,
+    selectedElement.value.y,
+    selectedElement.value.width,
+    selectedElement.value.height
+  );
+  deleteElement();
+};
 </script>
 
 <style scoped lang="scss">

@@ -15,19 +15,6 @@
       @click="deselectElement()"
     />
 
-    <!-- replace -->
-    <q-btn
-      v-if="selectedElement.mode === MODE_OPTIONS.media"
-      icon="r_find_replace"
-      color="grey"
-      class="q-px-sm"
-      flat
-      :label="$t('presentationStudio.elementsContextMenu.replaceMedia.short')"
-      size="10px"
-      no-caps
-      @click="showSelectMediaDialog = true"
-    />
-
     <!-- delete element -->
     <q-btn
       icon="r_delete"
@@ -126,11 +113,25 @@
           dense
           @click="showSelectMediaDialog = true"
         >
-          <q-icon name="r_image" class="q-mr-sm" size="xs" />
+          <q-icon name="icon-image_edit" class="q-mr-sm" size="xs" />
           <div>
-            {{ $t("presentationStudio.elementsContextMenu.replaceMedia.full") }}
+            {{ $t("presentationStudio.elementsContextMenu.replaceMedia") }}
           </div>
         </q-item>
+
+        <q-dialog v-model="showSelectMediaDialog">
+          <SelectMedia
+            @cancel="showSelectMediaDialog = false"
+            @select="
+              handleImageReplace(
+                $event?.preview_url ||
+                  $event?.original_url ||
+                  $event?.urls?.regular
+              );
+              showSelectMediaDialog = false;
+            "
+          />
+        </q-dialog>
 
         <q-separator v-if="elements.length > 1" class="q-my-sm" />
 
@@ -251,18 +252,6 @@
         </q-item>
       </q-menu>
     </q-btn>
-
-    <q-dialog v-model="showSelectMediaDialog">
-      <SelectMedia
-        @cancel="showSelectMediaDialog = false"
-        @select="
-          handleImageReplace(
-            $event?.preview_url || $event?.original_url || $event?.urls?.regular
-          );
-          showSelectMediaDialog = false;
-        "
-      />
-    </q-dialog>
   </q-card>
 </template>
 
