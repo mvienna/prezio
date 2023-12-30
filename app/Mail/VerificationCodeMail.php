@@ -26,7 +26,7 @@ class VerificationCodeMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Verification Code')
+        return $this->subject(trans('emails.verificationCode.title'))
             ->view('emails.verificationCode')
             ->with([
                 'verificationCode' => $this->verificationCode,

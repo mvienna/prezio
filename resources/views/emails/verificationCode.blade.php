@@ -3,27 +3,26 @@
     <head>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
             body {
                 font-family: 'Inter', sans-serif;
-                background: #F4F6F8;
+                background: #F8F8F8;
                 margin: 48px 8px;
             }
+
             .logo {
-                margin-bottom: 48px;
-                display: flex;
-                justify-content: center;
+                margin: 0 auto;
+                width: 120px;
             }
-            .logo img {
-                width: 140px;
-            }
+
             .container {
+                background-color: #FFFFFF;
                 max-width: 360px;
                 width: 100%;
+                padding: 24px;
+                border-radius: 16px;
+                border: 2px solid #F1F1F1;
                 margin: 0 auto;
-                padding: 48px;
-                background-color: #FFFFFF;
-                border-radius: 8px;
-                border: 1.5px solid rgba(19, 18, 58, 0.3);
             }
             @media screen and (max-width: 500px) {
                 body {
@@ -31,44 +30,50 @@
                 }
                 .container {
                     max-width: 100%;
-                    padding: 24px;
-                    border-radius: 8px;
                     border: none;
                 }
             }
+
             .header {
-                text-align: center;
-                font-size: 2em;
-                font-weight: bold;
-                margin: 0;
+                font-size: 1.5em;
+                margin-top: 0.5em;
+                color: #0A090B;
+                font-weight: 600;
             }
+
             .verification-code {
                 font-size: 2em;
-                font-weight: bold;
+                font-weight: 600;
                 text-align: center;
                 letter-spacing: 8px;
-                padding-bottom: 8px;
-                color: #007bff;
+                background: #F1F1F1;
+                color: #1751D0;
+                border-radius: 8px;
+                padding: 0.5em;
+                margin: 1em 0;
             }
+
             .instructions {
-                font-size: 16px;
-                opacity: 0.8;
+                font-size: 1em;
+                color: #0A090B;
             }
             .footer {
-                opacity: 0.6;
+                color: #A3A2A6;
+                margin-top: 1em;
             }
         </style>
     </head>
     <body>
-        <div class="logo">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo">
-        </div>
 
         <div class="container">
-            <p class="header">{{ trans('emails.verificationCode.title') }}</p>
-            <p class="verification-code">{{ $verificationCode }}</p>
-            <p class="instructions">{{ trans('emails.verificationCode.instruction') }}</p>
-            <p class="footer">{{ trans('emails.verificationCode.footer') }}</p>
+            <a href="{{ env('FRONTEND_APP_URL') }}">
+                <img class="logo" src="{{ asset('images/logo.png') }}" alt="Logo">
+            </a>
+
+            <div class="header">{{ trans('emails.verificationCode.title') }}</div>
+            <div class="verification-code">{{ $verificationCode }}</div>
+            <div class="instructions">{{ trans('emails.verificationCode.instruction') }}</div>
+            <div class="footer">{{ trans('emails.verificationCode.footer') }}</div>
     </div>
     </body>
 </html>
