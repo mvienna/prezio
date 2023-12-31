@@ -81,44 +81,18 @@
           transition="fade"
           once
           class="relative-position"
-          :class="{
-            'shadow-xs-soft':
-              !presentation.preview?.preview_url &&
-              !presentation.preview?.original_url &&
-              !presentation.preview,
-          }"
         >
-          <q-img
-            :src="
-              presentation.preview?.preview_url ||
-              presentation.preview?.original_url ||
-              presentation.preview
-            "
-            class="presentations_grid__item__shadow"
-            :class="{
-              'presentations_grid__item__shadow--active':
-                hoveredPresentationCardId === presentation.id,
-            }"
-          />
-
-          <q-card flat bordered class="presentations_grid__item">
+          <q-card
+            flat
+            bordered
+            class="presentations_grid__item shadow-2xs-soft shadow-2xs-soft--hoverable"
+          >
             <div
               class="presentations_grid__item__preview"
               @mouseover="hoveredPresentationCardId = presentation.id"
               @mouseleave="hoveredPresentationCardId = null"
             >
               <div class="relative-position">
-                <transition
-                  appear
-                  enter-active-class="animated fadeIn"
-                  leave-active-class="animated fadeOut"
-                >
-                  <div
-                    v-if="hoveredPresentationCardId === presentation.id"
-                    class=""
-                  ></div>
-                </transition>
-
                 <q-img
                   :src="
                     presentation.preview?.preview_url ||
@@ -710,25 +684,6 @@ const handlePresentationNameUpdate = (presentation) => {
         z-index: 1;
       }
     }
-  }
-}
-
-.presentations_grid__item__shadow {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  margin-top: 2px;
-  height: 100%;
-
-  filter: blur(4px);
-  transition: 0.5s;
-  border-radius: 8px;
-  opacity: 0.1;
-
-  &.presentations_grid__item__shadow--active {
-    opacity: 0.2;
   }
 }
 </style>
