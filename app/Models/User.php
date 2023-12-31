@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\TruncateStrings;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +14,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class User extends Authenticatable implements HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, SoftDeletes, TruncateStrings;
 
     /**
      * The attributes that are mass assignable.
@@ -40,6 +41,12 @@ class User extends Authenticatable implements HasMedia
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+    ];
+
+    protected array $truncateStrings = [
+        'name' => 255,
+        'email' => 255,
+        'phone' => 255,
     ];
 
     public function isAdmin(): bool
