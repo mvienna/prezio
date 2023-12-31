@@ -7,7 +7,11 @@
           <q-img src="/logo.svg" style="width: 30px" />
 
           <div class="q-ml-sm column">
-            <q-badge class="bg-grey-2 text-grey-5 text-xs" :label="VERSION" />
+            <q-badge
+              class="bg-grey-2 text-grey-7"
+              style="font-size: 10px; margin-top: 3px"
+              :label="VERSION"
+            />
           </div>
         </div>
       </a>
@@ -189,7 +193,7 @@
           no-wrap
           color="black"
           :label="$t('presentationLayout.header.preview')"
-          class="text-semibold q-ml-sm"
+          class="q-ml-sm"
           @click="isPresentationPreview = true"
         />
 

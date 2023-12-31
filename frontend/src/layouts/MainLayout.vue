@@ -12,9 +12,9 @@
 
             <div class="q-ml-sm column">
               <q-badge
-                class="bg-grey-2 text-grey-5 text-xs"
+                class="bg-grey-2 text-grey-7"
+                style="font-size: 10px; margin-top: 3px"
                 :label="VERSION"
-                @click="copyToClipboard(VERSION)"
               />
             </div>
           </div>
