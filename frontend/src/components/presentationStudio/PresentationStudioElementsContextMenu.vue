@@ -103,7 +103,12 @@
           </div>
         </q-item>
 
-        <q-separator v-if="elements.length > 1" class="q-my-sm" />
+        <q-separator
+          v-if="
+            elements.length > 1 && selectedElement.mode === MODE_OPTIONS.media
+          "
+          class="q-my-sm"
+        />
 
         <!-- replace -->
         <q-item
