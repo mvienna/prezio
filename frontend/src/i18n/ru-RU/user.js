@@ -70,6 +70,9 @@ export default {
             required: "Требуется ввести код",
             invalid: "Неверный код",
           },
+          phone: {
+            invalid: "Неверный номер телефона",
+          },
         },
 
         avatar: {

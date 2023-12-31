@@ -99,6 +99,19 @@ class AuthController extends Controller
         $user = auth()->user();
 
         /*
+         * check email
+         */
+        if ($request->checkEmail) {
+            $email = $request->input('email');
+
+            if (User::where('email', $email)->exists()) {
+                return $this->errorResponse(trans('errors.email.alreadyExists'), 422);
+            } else {
+                return $this->successResponse();
+            }
+        }
+
+        /*
          * check old password
          */
         if ($request->filled('currentPassword') && !Hash::check($request->currentPassword, $user->password)) {

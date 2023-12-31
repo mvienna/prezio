@@ -12,7 +12,8 @@ return [
         'invalidCode' => 'Неверный код',
     ],
     'email' => [
-        'missingDevRecipientEmail' => 'Создайте переменную электронной почты MAIL_DEV_RECIPIENT в файле .env'
+        'missingDevRecipientEmail' => 'Создайте переменную электронной почты MAIL_DEV_RECIPIENT в файле .env',
+        'alreadyExists' => 'Данный e-mail уже занят'
     ],
     'media' => [
         'fileNotFound' => 'Файл не найден',

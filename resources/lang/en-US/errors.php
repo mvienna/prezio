@@ -12,7 +12,8 @@ return [
         'invalidCode' => 'Invalid code',
     ],
     'email' => [
-        'missingDevRecipientEmail' => 'Set MAIL_DEV_RECIPIENT email variable in the .env file'
+        'missingDevRecipientEmail' => 'Set MAIL_DEV_RECIPIENT email variable in the .env file',
+        'alreadyExists' => 'This e-mail has already been taken'
     ],
     'media' => [
         'fileNotFound' => 'File not found',
