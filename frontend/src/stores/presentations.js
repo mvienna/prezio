@@ -110,6 +110,9 @@ export const usePresentationsStore = defineStore("presentations", {
         })
         .then((response) => {
           this.folders.push(response.data);
+          this.presentations = this.presentations.filter(
+            (item) => !data.presentationsIds.includes(item.id)
+          );
         })
         .catch((error) => {
           console.log(error);
@@ -154,11 +157,18 @@ export const usePresentationsStore = defineStore("presentations", {
      * PRESENTATIONS API
      */
     async fetchPresentations(pagination = {}, isResetData = false) {
+      // reset data
+      if (isResetData) {
+        this.presentations = [];
+      }
+
+      // pagination
       this.pagination = {
         ...this.pagination,
         ...pagination,
       };
 
+      // query
       let params = {
         page: this.pagination.page,
         limit: this.pagination.rowsPerPage,
@@ -181,11 +191,7 @@ export const usePresentationsStore = defineStore("presentations", {
           console.log(error);
         });
 
-      if (isResetData) {
-        this.presentations = response.data.rows;
-      } else {
-        this.presentations = [...this.presentations, ...response.data.rows];
-      }
+      this.presentations = [...this.presentations, ...response.data.rows];
 
       this.isLoading.fetchingPresentations = false;
 
