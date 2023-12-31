@@ -1,5 +1,13 @@
 <template>
-  <div class="presentation_toolbar__top bg-white q-pa-md row no-wrap">
+  <div
+    class="presentation_toolbar__top bg-white row no-wrap"
+    style="padding: 9.5px 16px"
+    :style="
+      isRightSidebarPanelExpanded
+        ? 'width: calc(100% + 471px);'
+        : 'width: calc(100% + 110px);'
+    "
+  >
     <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
       <template
         v-if="
@@ -231,7 +239,8 @@ const shapeStore = useCanvasShapeStore();
 const mediaStore = useCanvasMediaStore();
 
 const presentationsStore = usePresentationsStore();
-const { presentation, slide } = storeToRefs(presentationsStore);
+const { presentation, slide, isRightSidebarPanelExpanded } =
+  storeToRefs(presentationsStore);
 
 /*
  * emits
@@ -309,8 +318,7 @@ const isMac = computed(() => {
   z-index: 1001;
   top: 0;
   left: 0;
-  width: calc(100% + 481px);
-  height: 68px;
+  height: 55px;
   border-bottom: 1px solid $grey-2;
 }
 

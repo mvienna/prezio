@@ -4,12 +4,13 @@
     show-if-above
     side="right"
     class="bg-white scroll--hidden presentation_studio__layout__drawer_right"
-    :width="481"
+    :width="isRightSidebarPanelExpanded ? 471 : 110"
     bordered
   >
-    <div style="padding-top: 68px; display: flex; height: 100%">
+    <div style="padding-top: 55px; display: flex; height: 100%">
       <!-- content -->
       <q-tab-panels
+        v-if="isRightSidebarPanelExpanded"
         v-model="rightDrawerTab"
         animated
         vertical
@@ -69,30 +70,58 @@
       </q-tab-panels>
 
       <!-- tabs -->
-      <q-tabs
-        v-model="rightDrawerTab"
-        align="justify"
-        class="bg-white text-black text-white q-pa-sm presentation_studio__layout__drawer_right__tabs"
-        inline-label
-        vertical
-      >
-        <q-tab
-          v-for="tab in rightDrawerTabs.filter((item) => !item.hidden)"
-          :key="tab.name"
-          :name="tab.name"
-          :disable="tab.disable"
-          no-caps
-          style="width: 93px; height: 68px"
-          class="presentation_studio__layout__drawer_right__tab"
+      <div class="column no-wrap jutify-between">
+        <q-tabs
+          v-model="rightDrawerTab"
+          align="justify"
+          class="bg-white text-black text-white q-pa-sm presentation_studio__layout__drawer_right__tabs"
+          inline-label
+          vertical
         >
-          <div>
-            <q-icon :name="tab.icon" size="24px" />
-            <div class="q-mt-sm q-mb-xs">
-              {{ tab.label }}
+          <q-tab
+            v-for="tab in rightDrawerTabs.filter((item) => !item.hidden)"
+            :key="tab.name"
+            :name="tab.name"
+            :disable="tab.disable"
+            no-caps
+            style="width: 93px; height: 68px"
+            class="presentation_studio__layout__drawer_right__tab"
+          >
+            <div>
+              <q-icon :name="tab.icon" size="24px" />
+              <div class="q-mt-sm q-mb-xs">
+                {{ tab.label }}
+              </div>
             </div>
-          </div>
-        </q-tab>
-      </q-tabs>
+          </q-tab>
+        </q-tabs>
+
+        <div class="row justify-center">
+          <q-btn
+            :icon="
+              isRightSidebarPanelExpanded
+                ? 'r_keyboard_double_arrow_right'
+                : 'r_keyboard_double_arrow_left'
+            "
+            flat
+            color="grey"
+            round
+            size="1.25em"
+            class="q-ma-sm round-borders"
+            @click="isRightSidebarPanelExpanded = !isRightSidebarPanelExpanded"
+          >
+            <q-tooltip :offset="[0, 8]">
+              {{
+                $t(
+                  `presentationLayout.rightDrawer.panel.${
+                    isRightSidebarPanelExpanded ? "hide" : "expand"
+                  }`
+                )
+              }}
+            </q-tooltip>
+          </q-btn>
+        </div>
+      </div>
     </div>
   </q-drawer>
 </template>
@@ -130,7 +159,8 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide } = storeToRefs(presentationsStore);
+const { presentation, slide, isRightSidebarPanelExpanded } =
+  storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
 const { elements, MODE_OPTIONS } = storeToRefs(canvasStore);
@@ -368,6 +398,7 @@ const prepareElementsForNewSlide = (type) => {
 ::v-deep(.presentation_studio__layout__drawer_right) {
   .presentation_studio__layout__drawer_right__tab_panels {
     width: 384px;
+    border-right: 1px solid $grey-2;
   }
 
   .presentation_studio__layout__drawer_right__tab_panel {
@@ -382,7 +413,6 @@ const prepareElementsForNewSlide = (type) => {
   }
 
   .presentation_studio__layout__drawer_right__tabs {
-    border-left: 1px solid $grey-2;
     height: 100%;
   }
 

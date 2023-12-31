@@ -53,6 +53,7 @@ export const usePresentationsStore = defineStore("presentations", {
     slideSettings: null,
 
     isPresentationPreview: false,
+    isRightSidebarPanelExpanded: true,
 
     showSettingsDialog: false,
     presentationSettingsTabsExpanded: [],

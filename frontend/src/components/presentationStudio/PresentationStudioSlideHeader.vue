@@ -86,7 +86,14 @@
 
 <script setup>
 import { copyToClipboard } from "quasar";
-import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
@@ -115,12 +122,31 @@ const {
  */
 const canvasRect = ref(canvasStore.canvasRect());
 
-watch(
-  () => scale.value,
-  () => {
-    canvasRect.value = canvasStore.canvasRect();
-  }
-);
+const resizeObserverCanvas = ref();
+const resizeObserverPage = ref();
+
+onMounted(() => {
+  const canvas = document.getElementById("canvas");
+  resizeObserverCanvas.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      canvasRect.value = canvasStore.canvasRect();
+    }
+  });
+  resizeObserverCanvas.value.observe(canvas);
+
+  const page = document.getElementsByClassName("q-page-container")[0];
+  resizeObserverPage.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      canvasRect.value = canvasStore.canvasRect();
+    }
+  });
+  resizeObserverPage.value.observe(page);
+});
+
+onUnmounted(() => {
+  resizeObserverCanvas.value.disconnect();
+  resizeObserverPage.value.disconnect();
+});
 
 /*
  * on resize

@@ -88,6 +88,11 @@ export default {
     },
 
     rightDrawer: {
+      panel: {
+        hide: "Скрыть панель",
+        expand: "Раскрыть нанель",
+      },
+
       tabs: {
         /*
          * layers
