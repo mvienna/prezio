@@ -30,15 +30,22 @@
             class="text-semibold scroll--hidden"
             :class="{ ellipsis: editingFolderId !== folder.id }"
             :title="folder.name"
-            style="min-width: 140px; max-width: 140px"
             :style="`${
               editingFolderId === folder.id
-                ? 'padding: 0 4px; margin-left: -4px; margin-right: 4px; white-space: nowrap; overflow-x: scroll;'
-                : ''
+                ? 'padding: 0 4px; margin-left: -4px; margin-right: 4px; white-space: nowrap; overflow-x: scroll; min-width: 140px; max-width: 140px;'
+                : 'min-width: 165px; max-width: 165px;'
             }`"
             :id="`folder-${folder.id}-name`"
           >
             {{ folder.name }}
+          </div>
+
+          <div
+            v-if="editingFolderId === folder.id"
+            class="text-grey text-caption text-center"
+            style="width: calc(25px + 8px); margin-right: -8px"
+          >
+            {{ charactersLeft }}
           </div>
         </q-card-section>
 
@@ -121,7 +128,7 @@
 
 <script setup>
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { getFolderIconName } from "src/helpers/generationUtils";
@@ -149,11 +156,14 @@ const handleFolderSelect = (event, folder) => {
  */
 const editingFolderId = ref();
 
+const charactersLeft = ref();
+
 const handleFolderNameClick = (event, folder) => {
   editingFolderId.value = folder.id;
 
   const element = document.getElementById(`folder-${folder.id}-name`);
   element.contentEditable = true;
+  charactersLeft.value = 100 - element.innerHTML.length;
 
   setTimeout(() => {
     element.focus();
@@ -177,6 +187,14 @@ const handleFolderNameClick = (event, folder) => {
     if ((event.key === "Enter" && !event.shiftKey) || event.key === "Escape") {
       element.blur();
     }
+
+    if (element.innerHTML.length > 100) {
+      element.classList.add("text-negative");
+    } else {
+      element.classList.remove("text-negative");
+    }
+
+    charactersLeft.value = 100 - element.innerHTML.length;
   });
 };
 
@@ -184,6 +202,29 @@ const handleFolderNameUpdate = (folder) => {
   const element = document.getElementById(`folder-${folder.id}-name`);
   element.scrollLeft = 0;
 
+  function truncateString(inputString, maxLength) {
+    if (inputString.length <= maxLength) {
+      return inputString;
+    }
+
+    const words = inputString.split(" ");
+
+    let truncatedWords = [];
+    let currentLength = 0;
+
+    for (const word of words) {
+      if (currentLength + word.length + truncatedWords.length > maxLength) {
+        break;
+      }
+
+      truncatedWords.push(word);
+      currentLength += word.length;
+    }
+
+    return truncatedWords.join(" ");
+  }
+
+  // folder.name = truncateString(element.innerText, 100);
   folder.name = element.innerText;
   presentationsStore.updateFolder(folder);
 
@@ -202,9 +243,9 @@ const handleFolderNameUpdate = (folder) => {
   border-radius: 8px;
   border-color: $grey-2;
   overflow: hidden;
-  width: 275px;
-  min-width: 275px;
-  max-width: 275px;
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
 
   .q-card__section {
     border-radius: 0;
