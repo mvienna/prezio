@@ -3,21 +3,23 @@
     <q-tabs
       v-model="tab"
       align="justify"
-      indicator-color="primary"
+      indicator-color="grey-2"
       inline-label
       dense
-      class="text-primary bg-background q-mb-md"
+      class="text-black q-mb-md"
     >
       <q-tab
         name="design"
         :label="$t('presentationLayout.rightDrawer.tabs.design.tabs.design')"
         no-caps
+        :ripple="false"
         class="q-mr-xs"
       />
       <q-tab
         name="themes"
         :label="$t('presentationLayout.rightDrawer.tabs.design.tabs.themes')"
         no-caps
+        :ripple="false"
         class="q-ml-xs"
       />
     </q-tabs>
@@ -408,29 +410,16 @@ const applyDesignToAllSlides = async () => {
 </script>
 
 <style scoped lang="scss">
-::v-deep(.q-tabs__content) {
-  padding: 8px;
-}
-
-::v-deep(.q-tabs) {
-  border-radius: 16px;
-}
-
 ::v-deep(.q-tab) {
   width: 50%;
-
-  .q-focus-helper {
-    border-radius: 8px;
-  }
+  border-radius: 8px;
+  border: 2px solid $grey-2;
 
   &.q-tab--active {
-    color: white;
-    border: none;
+    .q-tab__label {
+      font-weight: 600;
+    }
   }
-}
-
-::v-deep(.q-tab-panel) {
-  padding: 0;
 }
 
 ::v-deep(.q-tab__content) {
@@ -438,9 +427,10 @@ const applyDesignToAllSlides = async () => {
 }
 
 ::v-deep(.q-tab__indicator) {
-  background: $primary;
+  background: currentColor;
   height: 100%;
   z-index: 1;
-  border-radius: 8px;
+
+  transition: none !important;
 }
 </style>

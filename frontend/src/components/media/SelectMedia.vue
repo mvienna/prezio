@@ -33,8 +33,8 @@
         v-model="tab"
         dense
         align="justify"
-        indicator-color="secondary"
-        class="text-secondary bg-background"
+        indicator-color="grey-2"
+        class="text-black q-mb-lg"
         inline-label
       >
         <q-tab
@@ -46,17 +46,18 @@
           :label="tab.label"
           :disable="tab.disabled"
           :icon="tab.icon"
+          :ripple="false"
           :class="`${tabIndex !== 0 ? 'q-ml-sm' : ''}`"
           no-caps
         />
       </q-tabs>
 
+      <!-- selected file -->
       <div
         v-if="selectedFile"
         class="q-py-lg"
         style="height: calc(100% - 116px)"
       >
-        <!-- uploaded file -->
         <q-img
           class="uploaded__file"
           fill="contain"
@@ -102,12 +103,12 @@
         class="column no-wrap scroll-y scroll--hidden"
       >
         <!-- content -->
-        <q-tab-panels v-model="tab" animated style="height: 100%">
+        <q-tab-panels v-model="tab" style="height: 100%">
           <!-- upload -->
           <q-tab-panel
             name="upload"
-            class="q-pa-none column justify-center no-wrap q-mt-lg"
-            style="height: calc(100% - 48px)"
+            class="q-pa-none column justify-center no-wrap"
+            style="height: calc(100% - 24px)"
           >
             <div
               id="drop-area"
@@ -159,7 +160,7 @@
 
           <!-- my uploads -->
           <q-tab-panel name="mine" class="q-pa-none">
-            <div class="masonry q-py-lg">
+            <div class="masonry q-pb-lg">
               <q-card
                 v-for="file in media"
                 :key="file.id"
@@ -215,7 +216,7 @@
           <!-- stock -->
           <q-tab-panel name="stock" class="q-pa-none">
             <!-- search on unsplash -->
-            <div class="q-py-lg">
+            <div class="q-pb-lg">
               <q-input
                 v-model="search"
                 clearable
@@ -538,29 +539,16 @@ const dropHandler = (event) => {
 /*
  * tabs
  */
-::v-deep(.q-tabs__content) {
-  padding: 8px;
-}
-
-::v-deep(.q-tabs) {
-  border-radius: 16px;
-}
-
 ::v-deep(.q-tab) {
   width: 50%;
-
-  .q-focus-helper {
-    border-radius: 8px;
-  }
+  border-radius: 8px;
+  border: 2px solid $grey-2;
 
   &.q-tab--active {
-    color: white;
-    border: none;
+    .q-tab__label {
+      font-weight: 600;
+    }
   }
-}
-
-::v-deep(.q-tab-panel) {
-  padding: 0;
 }
 
 ::v-deep(.q-tab__content) {
@@ -571,7 +559,8 @@ const dropHandler = (event) => {
   background: currentColor;
   height: 100%;
   z-index: 1;
-  border-radius: 8px;
+
+  transition: none !important;
 }
 
 ::v-deep(.q-panel) {
