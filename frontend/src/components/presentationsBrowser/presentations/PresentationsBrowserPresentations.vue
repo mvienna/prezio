@@ -231,7 +231,6 @@
                       transition-show="jump-down"
                       transition-hide="jump-up"
                       :offset="[0, 8]"
-                      class="q-py-sm"
                     >
                       <!-- rename -->
                       <q-item
@@ -286,7 +285,6 @@
                           transition-hide="jump-right"
                           :offset="[16, 8]"
                           style="max-height: 304px"
-                          class="q-py-sm"
                         >
                           <q-item
                             v-for="folder in folders"

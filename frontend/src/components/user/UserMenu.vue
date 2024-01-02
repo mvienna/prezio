@@ -39,7 +39,6 @@
         transition-hide="jump-up"
         :offset="[0, 8]"
         fit
-        class="q-py-sm"
       >
         <!-- profile -->
         <q-item

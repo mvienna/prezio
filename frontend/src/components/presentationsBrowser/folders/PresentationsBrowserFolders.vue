@@ -57,7 +57,6 @@
               transition-show="jump-down"
               transition-hide="jump-up"
               :offset="[0, 8]"
-              class="q-py-sm"
             >
               <!-- rename -->
               <q-item
