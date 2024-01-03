@@ -108,7 +108,7 @@ const baseFillColors = [
   cursor: pointer;
   width: 24px;
   height: 24px;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 2px solid $grey-2;
   transition: 0.2s;
 
