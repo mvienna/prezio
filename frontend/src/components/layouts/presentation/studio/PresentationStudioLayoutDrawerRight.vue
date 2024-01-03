@@ -8,65 +8,95 @@
     bordered
   >
     <div style="padding-top: 55px; display: flex; height: 100%">
-      <!-- content -->
-      <q-tab-panels
+      <div
         v-if="isDrawerRightPanelExpanded"
-        v-model="drawerRightTab"
-        vertical
-        class="presentation_studio__layout__drawer_right__tab_panels"
+        class="presentation_studio__layout__drawer_right__content"
       >
-        <!-- type -->
-        <q-tab-panel
-          name="type"
-          class="presentation_studio__layout__drawer_right__tab_panel"
-        >
-          <PresentationStudioTabsTypesTab
-            @select="handleChangingSlideType($event)"
-          />
-        </q-tab-panel>
+        <div>
+          <div
+            class="row no-wrap items-center justify-between"
+            style="padding: 10.5px 18px"
+          >
+            <div class="text-h7">
+              {{
+                drawerRightTabs.find((tab) => tab.name === drawerRightTab).title
+              }}
+            </div>
 
-        <!-- settings -->
-        <q-tab-panel
-          name="settings"
-          class="presentation_studio__layout__drawer_right__tab_panel"
-        >
-          <PresentationStudioTabsSettingsTab />
-        </q-tab-panel>
-
-        <!-- layers -->
-        <q-tab-panel
-          name="layers"
-          class="presentation_studio__layout__drawer_right__tab_panel"
-        >
-          <PresentationStudioTabsLayersManagementTab />
-        </q-tab-panel>
-
-        <!-- design -->
-        <q-tab-panel
-          name="design"
-          class="presentation_studio__layout__drawer_right__tab_panel"
-        >
-          <PresentationStudioTabsDesignTab />
-        </q-tab-panel>
-
-        <!-- template -->
-        <q-tab-panel
-          name="template"
-          class="presentation_studio__layout__drawer_right__tab_panel"
-        >
-          <PresentationStudioTabsTemplatesTab />
-        </q-tab-panel>
-
-        <!-- audio -->
-        <q-tab-panel
-          name="audio"
-          class="presentation_studio__layout__drawer_right__tab_panel"
-        >
-          <div class="text-h6 q-pb-md">
-            {{ $t("presentationLayout.rightDrawer.tabs.audio.title") }}
+            <q-btn
+              round
+              flat
+              icon="r_close"
+              class="round-borders"
+              size="10px"
+              @click="
+                isDrawerRightPanelExpanded = false;
+                handleTabSelect();
+              "
+            />
           </div>
-        </q-tab-panel>
-      </q-tab-panels>
+
+          <q-separator />
+        </div>
+
+        <!-- content -->
+        <q-tab-panels v-model="drawerRightTab" vertical>
+          <!-- type -->
+          <q-tab-panel
+            name="type"
+            class="presentation_studio__layout__drawer_right__tab_panel"
+          >
+            <PresentationStudioTabsTypesTab
+              @select="
+                handleChangingSlideType($event);
+                handleTabSelect();
+              "
+            />
+          </q-tab-panel>
+
+          <!-- settings -->
+          <q-tab-panel
+            name="settings"
+            class="presentation_studio__layout__drawer_right__tab_panel"
+          >
+            <PresentationStudioTabsSettingsTab />
+          </q-tab-panel>
+
+          <!-- layers -->
+          <q-tab-panel
+            name="layers"
+            class="presentation_studio__layout__drawer_right__tab_panel"
+          >
+            <PresentationStudioTabsLayersManagementTab />
+          </q-tab-panel>
+
+          <!-- design -->
+          <q-tab-panel
+            name="design"
+            class="presentation_studio__layout__drawer_right__tab_panel"
+          >
+            <PresentationStudioTabsDesignTab />
+          </q-tab-panel>
+
+          <!-- template -->
+          <q-tab-panel
+            name="template"
+            class="presentation_studio__layout__drawer_right__tab_panel"
+          >
+            <PresentationStudioTabsTemplatesTab />
+          </q-tab-panel>
+
+          <!-- audio -->
+          <q-tab-panel
+            name="audio"
+            class="presentation_studio__layout__drawer_right__tab_panel"
+          >
+            <div class="text-h6 q-pb-md">
+              {{ $t("presentationLayout.rightDrawer.tabs.audio.title") }}
+            </div>
+          </q-tab-panel>
+        </q-tab-panels>
+      </div>
 
       <!-- tabs -->
       <div class="column no-wrap jutify-between">
@@ -76,6 +106,7 @@
           class="bg-white text-black text-white q-pa-sm presentation_studio__layout__drawer_right__tabs"
           inline-label
           vertical
+          @update:model-value="isDrawerRightPanelExpanded = true"
         >
           <q-tab
             v-for="tab in drawerRightTabs.filter((item) => !item.hidden)"
@@ -95,6 +126,7 @@
           </q-tab>
         </q-tabs>
 
+        <!-- toggle drawer button -->
         <div class="row justify-center">
           <q-btn
             :icon="
@@ -107,7 +139,10 @@
             round
             size="1.25em"
             class="q-ma-sm round-borders"
-            @click="isDrawerRightPanelExpanded = !isDrawerRightPanelExpanded"
+            @click="
+              isDrawerRightPanelExpanded = !isDrawerRightPanelExpanded;
+              handleTabSelect();
+            "
           >
             <q-tooltip :offset="[0, 8]">
               {{
@@ -176,12 +211,14 @@ const drawerRightTabs = computed(() => {
     {
       name: PRESENTATION_TABS.TYPE,
       icon: "r_extension",
-      label: t("presentationLayout.rightDrawer.tabs.types.title"),
+      label: t("presentationLayout.rightDrawer.tabs.types.label"),
+      title: t("presentationLayout.rightDrawer.tabs.types.title"),
     },
     {
       name: PRESENTATION_TABS.SETTINGS,
       icon: "r_view_in_ar",
-      label: t("presentationLayout.rightDrawer.tabs.settings.title"),
+      label: t("presentationLayout.rightDrawer.tabs.settings.label"),
+      title: t("presentationLayout.rightDrawer.tabs.settings.title"),
       hidden: ![
         ...SLIDE_TYPES_OF_QUIZ,
         SLIDE_TYPES.WORD_CLOUD,
@@ -191,24 +228,28 @@ const drawerRightTabs = computed(() => {
     {
       name: PRESENTATION_TABS.LAYERS,
       icon: "r_layers",
-      label: t("presentationLayout.rightDrawer.tabs.layers.title"),
+      label: t("presentationLayout.rightDrawer.tabs.layers.label"),
+      title: t("presentationLayout.rightDrawer.tabs.layers.title"),
       hidden: slide.value?.type !== SLIDE_TYPES.CONTENT,
     },
     {
       name: PRESENTATION_TABS.DESIGN,
       icon: "r_format_paint",
-      label: t("presentationLayout.rightDrawer.tabs.design.title"),
+      label: t("presentationLayout.rightDrawer.tabs.design.label"),
+      title: t("presentationLayout.rightDrawer.tabs.design.title"),
     },
     {
       name: PRESENTATION_TABS.TEMPLATE,
       icon: "r_grid_view",
-      label: t("presentationLayout.rightDrawer.tabs.templates.title"),
+      label: t("presentationLayout.rightDrawer.tabs.templates.label"),
+      title: t("presentationLayout.rightDrawer.tabs.templates.title"),
       hidden: slide.value?.type !== SLIDE_TYPES.CONTENT,
     },
     {
       name: PRESENTATION_TABS.AUDIO,
       icon: "r_graphic_eq",
-      label: t("presentationLayout.rightDrawer.tabs.audio.title"),
+      label: t("presentationLayout.rightDrawer.tabs.audio.label"),
+      title: t("presentationLayout.rightDrawer.tabs.audio.title"),
       disable: true,
     },
   ];
@@ -403,7 +444,7 @@ const prepareElementsForNewSlide = (type) => {
  * tabs
  */
 ::v-deep(.presentation_studio__layout__drawer_right) {
-  .presentation_studio__layout__drawer_right__tab_panels {
+  .presentation_studio__layout__drawer_right__content {
     width: 384px;
     border-right: 1px solid $grey-2;
   }

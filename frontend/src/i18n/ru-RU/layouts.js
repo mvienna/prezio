@@ -99,7 +99,9 @@ export default {
          * layers
          */
         layers: {
-          title: "Слои",
+          label: "Слои",
+          title: "Определите приоритет обьектов",
+
           layer: {
             title: "Слой",
             visibility: {
@@ -112,6 +114,7 @@ export default {
             },
             delete: "Удалить",
           },
+
           names: {
             drawing: "Линия",
             text: "Текст",
@@ -128,7 +131,8 @@ export default {
          * design
          */
         design: {
-          title: "Дизайн",
+          label: "Дизайн",
+          title: "Настройте дизайн слайда",
 
           tabs: {
             design: "Дизайн",
@@ -201,7 +205,9 @@ export default {
          * types
          */
         types: {
-          title: "Типы",
+          label: "Типы",
+          title: "Выберите тип слайда",
+
           availableSoon: "Скоро будет доступно",
 
           options: {
@@ -243,7 +249,9 @@ export default {
          * settings
          */
         settings: {
-          title: "Настройки",
+          label: "Настройки",
+          title: "Настройте вопрос",
+
           appliedToAllQuestionsSuccessfully:
             "Настройки применены ко всем слайдам типа «Игры & Викторины» и «Опросы» успешно",
 
@@ -395,7 +403,8 @@ export default {
          * templates
          */
         templates: {
-          title: "Шаблоны",
+          label: "Шаблоны",
+          title: "Выберите шаблон слайда",
 
           categories: {
             work: "Работа",
@@ -451,7 +460,8 @@ export default {
          * audio
          */
         audio: {
-          title: "Аудио",
+          label: "Аудио",
+          title: "Выберите сопутствующее аудио-сопровождение",
         },
       },
     },
