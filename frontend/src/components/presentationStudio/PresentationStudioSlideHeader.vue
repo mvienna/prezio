@@ -190,6 +190,6 @@ const copyRoomLinkToClipboard = () => {
 .presentation_studio_slide_header__banner {
   border-radius: 12px;
   height: 24px;
-  font-size: 12px;
+  font-size: 0.8rem;
 }
 </style>
