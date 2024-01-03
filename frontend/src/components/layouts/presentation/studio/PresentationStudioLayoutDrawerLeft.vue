@@ -25,9 +25,9 @@
           transition-show="jump-down"
           transition-hide="jump-up"
           :offset="[0, 16]"
-          class="scroll--hidden bg-white q-pa-sm"
+          class="scroll--hidden bg-white"
           max-height="85vh"
-          style="width: 344px"
+          style="width: 344px; padding: 16px"
         >
           <PresentationStudioTabsTypesTab
             disable-layout-selection
@@ -216,9 +216,9 @@
                       transition-show="jump-right"
                       transition-hide="jump-left"
                       :offset="[24, 8]"
-                      class="q-pa-sm scroll--hidden bg-white"
+                      class="scroll--hidden bg-white"
                       max-height="85vh"
-                      style="width: 344px"
+                      style="width: 344px; padding: 16px"
                     >
                       <PresentationStudioTabsTypesTab
                         disable-layout-selection
@@ -322,9 +322,9 @@
           transition-show="jump-right"
           transition-hide="jump-left"
           :offset="[24, 0]"
-          class="q-pa-sm scroll--hidden bg-white"
+          class="scroll--hidden bg-white"
           max-height="85vh"
-          style="width: 344px"
+          style="width: 344px; padding: 16px"
         >
           <PresentationStudioTabsTypesTab
             disable-layout-selection
@@ -797,7 +797,7 @@ watch(
   border: 2px solid $grey-2;
   width: 140px;
   height: calc(140px * 9 / 16);
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
 
   canvas,

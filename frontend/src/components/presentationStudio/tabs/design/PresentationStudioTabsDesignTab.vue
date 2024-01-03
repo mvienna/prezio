@@ -24,7 +24,7 @@
       />
     </q-tabs>
 
-    <q-tab-panels v-model="tab" animated>
+    <q-tab-panels v-model="tab">
       <!-- design -->
       <q-tab-panel name="design" class="q-pa-none" style="overflow-x: hidden">
         <!-- base fill -->
@@ -412,7 +412,7 @@ const applyDesignToAllSlides = async () => {
 <style scoped lang="scss">
 ::v-deep(.q-tab) {
   width: 50%;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 2px solid $grey-2;
 
   &.q-tab--active {

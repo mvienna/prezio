@@ -541,7 +541,7 @@ const dropHandler = (event) => {
  */
 ::v-deep(.q-tab) {
   width: 50%;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 2px solid $grey-2;
 
   &.q-tab--active {
@@ -585,7 +585,7 @@ const dropHandler = (event) => {
  * uploaded
  */
 .uploaded__file {
-  border-radius: 8px;
+  border-radius: 6px;
   height: 100%;
 }
 
@@ -631,7 +631,7 @@ const dropHandler = (event) => {
 
 #drop-area {
   border: 2px dashed $grey;
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 24px;
   height: 100%;
   text-align: center;

@@ -64,12 +64,18 @@
             }}
           </div>
 
+          <!-- leaderboard tip to unlock -->
           <q-tooltip
             v-if="type.name === SLIDE_TYPES.LEADERBOARD && type.disable"
           >
             {{
               $t("presentationLayout.rightDrawer.tabs.types.leaderboard.tip")
             }}
+          </q-tooltip>
+
+          <!-- available soon -->
+          <q-tooltip v-else-if="type.disable">
+            {{ $t("presentationLayout.rightDrawer.tabs.types.availableSoon") }}
           </q-tooltip>
         </q-item>
       </div>
@@ -212,7 +218,7 @@ const types = computed(() => {
   display: inline-block;
   cursor: pointer;
   transition: 0.2s;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 2px solid $grey-2;
   outline: 2px solid transparent;
 

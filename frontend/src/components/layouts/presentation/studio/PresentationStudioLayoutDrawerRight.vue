@@ -12,7 +12,6 @@
       <q-tab-panels
         v-if="isRightSidebarPanelExpanded"
         v-model="rightDrawerTab"
-        animated
         vertical
         class="presentation_studio__layout__drawer_right__tab_panels"
       >
@@ -418,7 +417,7 @@ const prepareElementsForNewSlide = (type) => {
 
   .presentation_studio__layout__drawer_right__tab {
     color: $black;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     overflow: hidden;
     margin-bottom: 8px;
     border: 2px solid transparent;

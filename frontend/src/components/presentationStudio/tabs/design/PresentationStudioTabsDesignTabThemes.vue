@@ -13,7 +13,7 @@
         :outline="selectedBackgroundsCategory !== category.name"
         :unelevated="selectedBackgroundsCategory === category.name"
         no-caps
-        size="12px"
+        size="13px"
         style="padding: 0 8px; min-height: 28px"
         @click="selectedBackgroundsCategory = category.name"
       />
@@ -91,33 +91,11 @@ const categories = {
       "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.gradients"
     ),
   },
-  minimalism: {
-    name: "minimalism",
+  stock: {
+    name: "stock",
     label: t(
-      "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.minimalism"
+      "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.stock"
     ),
-    disable: true,
-  },
-  office: {
-    name: "office",
-    label: t(
-      "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.office"
-    ),
-    disable: true,
-  },
-  architecture: {
-    name: "architecture",
-    label: t(
-      "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.architecture"
-    ),
-    disable: true,
-  },
-  futuristic: {
-    name: "futuristic",
-    label: t(
-      "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.futuristic"
-    ),
-    disable: true,
   },
 };
 const selectedBackgroundsCategory = ref(categories.prezio.name);
@@ -190,7 +168,7 @@ const handleBackgroundMouseLeave = (backgroundIndex) => {
 
   .q-img {
     aspect-ratio: 16/9;
-    border-radius: 8px !important;
+    border-radius: 6px;
     border: 2px solid $grey-2;
     outline: 3px solid transparent;
     transition: 0.2s;

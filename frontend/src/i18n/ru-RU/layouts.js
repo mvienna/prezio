@@ -91,7 +91,7 @@ export default {
     rightDrawer: {
       panel: {
         hide: "Скрыть панель",
-        expand: "Раскрыть нанель",
+        expand: "Раскрыть панель",
       },
 
       tabs: {
@@ -159,10 +159,7 @@ export default {
             categories: {
               prezio: "Prezio",
               gradients: "Градиенты",
-              minimalism: "Минимализм",
-              office: "Оффис",
-              architecture: "Архитектура",
-              futuristic: "Футуристичные",
+              stock: "Стоковые",
             },
 
             select: {
@@ -205,6 +202,7 @@ export default {
          */
         types: {
           title: "Типы",
+          availableSoon: "Скоро будет доступно",
 
           options: {
             content: "Конент",
@@ -315,7 +313,7 @@ export default {
                 "Прикрепите фотографии в качестве вариантов ответов, из которых участники будут выбирать. Дополнительно, вы можете добавить к ним надписи",
             },
 
-            answerOption: "Вариант ответа №",
+            answerOption: "Вариант №",
             addAnswerOption: "Добавить вариант",
 
             tickTheCorrectAnswerOption: "Пометить правильный ответ",

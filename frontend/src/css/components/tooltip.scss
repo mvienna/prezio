@@ -1,9 +1,9 @@
 .q-tooltip {
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.05);
-  background: rgba(0, 0, 0, 0.8);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   color: $white;
-  border-radius: 8px;
-  padding: 8px;
 }
 
 .q-tooltip--style {
