@@ -193,7 +193,7 @@
           no-wrap
           color="black"
           :label="$t('presentationLayout.header.preview')"
-          class="q-ml-sm"
+          class="q-ml-sm q-btn--md"
           @click="isPresentationPreview = true"
         />
 
@@ -213,7 +213,7 @@
           :menu-offset="[0, 8]"
           content-class="shadow"
           style="z-index: 2"
-          class="q-ml-sm"
+          class="q-ml-sm q-btn-group--md"
           icon="r_play_arrow"
           dropdown-icon="r_expand_more"
           @click="
