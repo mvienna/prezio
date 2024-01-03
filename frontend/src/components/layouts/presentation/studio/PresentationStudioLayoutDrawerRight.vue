@@ -106,7 +106,6 @@
           class="bg-white text-black text-white q-pa-sm presentation_studio__layout__drawer_right__tabs"
           inline-label
           vertical
-          @update:model-value="isDrawerRightPanelExpanded = true"
         >
           <q-tab
             v-for="tab in drawerRightTabs.filter((item) => !item.hidden)"
@@ -116,6 +115,7 @@
             no-caps
             style="width: 93px; height: 68px"
             class="presentation_studio__layout__drawer_right__tab"
+            @click="isDrawerRightPanelExpanded = true"
           >
             <div>
               <q-icon :name="tab.icon" size="24px" />
@@ -125,36 +125,6 @@
             </div>
           </q-tab>
         </q-tabs>
-
-        <!-- toggle drawer button -->
-        <div class="row justify-center">
-          <q-btn
-            :icon="
-              isDrawerRightPanelExpanded
-                ? 'r_keyboard_double_arrow_right'
-                : 'r_keyboard_double_arrow_left'
-            "
-            flat
-            color="grey"
-            round
-            size="1.25em"
-            class="q-ma-sm round-borders"
-            @click="
-              isDrawerRightPanelExpanded = !isDrawerRightPanelExpanded;
-              handleTabSelect();
-            "
-          >
-            <q-tooltip :offset="[0, 8]">
-              {{
-                $t(
-                  `presentationLayout.rightDrawer.panel.${
-                    isDrawerRightPanelExpanded ? "hide" : "expand"
-                  }`
-                )
-              }}
-            </q-tooltip>
-          </q-btn>
-        </div>
       </div>
     </div>
   </q-drawer>
