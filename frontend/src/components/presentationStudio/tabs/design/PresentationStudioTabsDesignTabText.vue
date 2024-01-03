@@ -29,6 +29,16 @@
         />
       </template>
 
+      <template #option="scope">
+        <q-item v-bind="scope.itemProps">
+          <q-item-section>
+            <q-item-label :style="`font-family: ${scope.opt}`">{{
+              scope.opt
+            }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </template>
+
       <q-tooltip :offset="[0, 4]">
         {{ $t("presentationStudio.toolbar.text.options.font") }}
       </q-tooltip>
@@ -72,7 +82,7 @@
         :style="`background: ${customization.default.color};`"
         :class="
           !defaultTextColors.includes(customization.default.color)
-            ? 'base_fill_color_box--active'
+            ? 'text_color_box--active'
             : ''
         "
       >
@@ -125,7 +135,7 @@ const defaultTextColors = ["#313132", "#FFFFFF"];
   width: 24px;
   min-width: 24px;
   height: 24px;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 2px solid $grey-2;
   transition: 0.2s;
 
