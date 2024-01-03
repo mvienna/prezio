@@ -12,7 +12,7 @@
         :outline="selectedTemplateCategory !== category.name"
         :unelevated="selectedTemplateCategory === category.name"
         no-caps
-        size="12px"
+        size="13px"
         style="padding: 0 12px; min-height: 28px"
         @click="selectedTemplateCategory = category.name"
       />
