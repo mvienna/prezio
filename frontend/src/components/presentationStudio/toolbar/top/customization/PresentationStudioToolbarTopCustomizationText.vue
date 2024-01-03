@@ -299,15 +299,14 @@
     </q-tooltip>
   </q-input>
 
-  <q-space />
+  <q-separator vertical class="q-ml-md" />
 
   <!-- clear formatting -->
   <q-btn
-    icon="r_restart_alt"
+    icon="r_format_clear"
     flat
     round
     size="12px"
-    color="grey"
     @click="textStore.clearFormatting()"
   >
     <q-tooltip :offset="[0, 4]">

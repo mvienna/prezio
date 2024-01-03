@@ -307,6 +307,8 @@ export const useCanvasTextStore = defineStore("canvasText", {
       };
 
       this.fontSizeNumber = parseFloat(this.customization.fontSize);
+
+      this.applyStyles();
     },
 
     computeTextElementProps(
