@@ -141,6 +141,11 @@ export default {
           titleOnly: "Только заголовок",
         },
       },
+
+      // change background
+      changeBackground: {
+        title: "Заменить задний фон",
+      },
     },
 
     /*

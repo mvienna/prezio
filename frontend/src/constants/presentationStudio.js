@@ -32,3 +32,12 @@ export const SLIDE_TYPES_OF_QUIZ = [
   SLIDE_TYPES.PICK_IMAGE,
   SLIDE_TYPES.TYPE_ANSWER,
 ];
+
+export const PRESENTATION_TABS = {
+  TYPE: "type",
+  SETTINGS: "settings",
+  LAYERS: "layers",
+  DESIGN: "design",
+  TEMPLATE: "template",
+  AUDIO: "audio",
+};

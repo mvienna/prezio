@@ -283,7 +283,8 @@
     type="number"
     color="primary"
     dense
-    style="width: 70px; min-width: 70px; max-width: 70px"
+    outlined
+    style="width: 94px; min-width: 94px; max-width: 94px"
     @update:model-value="
       () => {
         customization.fontSize = fontSizeNumber + 'px';

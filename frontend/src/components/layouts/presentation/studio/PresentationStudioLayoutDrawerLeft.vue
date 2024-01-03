@@ -27,7 +27,7 @@
           :offset="[0, 16]"
           class="scroll--hidden bg-white"
           max-height="85vh"
-          style="width: 344px; padding: 16px"
+          style="width: 360px; padding: 16px"
         >
           <PresentationStudioTabsTypesTab
             disable-layout-selection
@@ -54,13 +54,13 @@
         <div
           class="bg-purple absolute-top-right round-borders row items-center justify-center"
           style="
-            margin-top: -8px;
-            margin-right: -8px;
-            height: 20px;
-            width: 20px;
+            margin-top: -6px;
+            margin-right: -6px;
+            height: 16px;
+            width: 16px;
           "
         >
-          <q-icon name="r_bolt" color="white" size="16px" />
+          <q-icon name="r_bolt" color="white" size="14px" />
         </div>
       </div>
 
@@ -218,7 +218,7 @@
                       :offset="[24, 8]"
                       class="scroll--hidden bg-white"
                       max-height="85vh"
-                      style="width: 344px; padding: 16px"
+                      style="width: 360px; padding: 16px"
                     >
                       <PresentationStudioTabsTypesTab
                         disable-layout-selection
@@ -324,7 +324,7 @@
           :offset="[24, 0]"
           class="scroll--hidden bg-white"
           max-height="85vh"
-          style="width: 344px; padding: 16px"
+          style="width: 360px; padding: 16px"
         >
           <PresentationStudioTabsTypesTab
             disable-layout-selection

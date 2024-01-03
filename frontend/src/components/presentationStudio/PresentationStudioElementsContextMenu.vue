@@ -7,7 +7,7 @@
   >
     <!-- deselect element -->
     <q-btn
-      icon="r_done"
+      icon="r_close"
       round
       flat
       size="10px"
@@ -35,7 +35,7 @@
         transition-show="jump-down"
         transition-hide="jump-up"
         :offset="[8, 8]"
-        style="width: 324px"
+        style="width: 300px"
       >
         <!-- copy -->
         <q-item
@@ -252,6 +252,8 @@
           <q-space />
 
           <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
+            <div v-if="isMac">⌘</div>
+            <div v-else>Ctrl</div>
             <div>⌫</div>
           </div>
         </q-item>

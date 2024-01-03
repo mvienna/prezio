@@ -13,13 +13,6 @@
         border: 1px solid rgba(220, 220, 222, 1) !important;
       }
     }
-
-    &:active {
-      &:before {
-        outline-offset: 1px;
-        outline: 2px solid rgba(220, 220, 222, 1) !important;
-      }
-    }
   }
 }
 

@@ -3,7 +3,7 @@
     class="presentation_toolbar__top bg-white row no-wrap"
     style="padding: 9.5px 16px"
     :style="
-      isRightSidebarPanelExpanded
+      isDrawerRightPanelExpanded
         ? 'width: calc(100% + 471px);'
         : 'width: calc(100% + 110px);'
     "
@@ -26,37 +26,69 @@
         />
 
         <q-separator vertical class="q-mx-sm" />
+
+        <!-- selected item actions -->
+        <template v-if="copiedElement">
+          <!-- deselect line button -->
+          <q-btn
+            icon="r_paste"
+            unelevated
+            text-color="black"
+            size="12px"
+            round
+            @click="paste()"
+          >
+            <q-tooltip>
+              <div class="text-center">
+                {{ $t("presentationStudio.elementsContextMenu.paste") }}
+              </div>
+
+              <div
+                v-if="showShortcuts"
+                class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
+              >
+                <div v-if="isMac">⌘</div>
+                <div v-else>Ctrl</div>
+                <div>V</div>
+              </div>
+            </q-tooltip>
+          </q-btn>
+
+          <q-separator vertical class="q-mx-sm" />
+        </template>
       </template>
 
       <template v-else>
-        <q-btn
-          v-if="slide?.type === SLIDE_TYPES.CONTENT"
-          icon="icon-space_dashboard"
-          unelevated
-          text-color="black"
-          :class="showLayoutsMenu ? 'bg-grey-2' : ''"
-          class="q-mr-sm"
-          round
-          size="12px"
-        >
-          <q-tooltip>
-            {{ $t("presentationStudio.toolbar.layouts.placeholder") }}
-          </q-tooltip>
-
-          <!-- layouts -->
-          <q-menu
-            v-model="showLayoutsMenu"
-            anchor="top left"
-            self="bottom left"
-            transition-show="jump-down"
-            transition-hide="jump-up"
-            :offset="[0, 16]"
-            class="q-pa-sm bg-white scroll--hidden"
-            style="width: 384px; max-height: 100%"
+        <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
+          <q-btn
+            icon="icon-space_dashboard"
+            unelevated
+            text-color="black"
+            :class="showLayoutsMenu ? 'bg-grey-2' : ''"
+            round
+            size="12px"
           >
-            <PresentationStudioToolbarTopLayouts v-close-popup />
-          </q-menu>
-        </q-btn>
+            <q-tooltip>
+              {{ $t("presentationStudio.toolbar.layouts.placeholder") }}
+            </q-tooltip>
+
+            <!-- layouts -->
+            <q-menu
+              v-model="showLayoutsMenu"
+              anchor="top left"
+              self="bottom left"
+              transition-show="jump-down"
+              transition-hide="jump-up"
+              :offset="[0, 16]"
+              class="q-pa-sm bg-white scroll--hidden"
+              style="width: 384px; max-height: 100%"
+            >
+              <PresentationStudioToolbarTopLayouts v-close-popup />
+            </q-menu>
+          </q-btn>
+
+          <q-separator vertical class="q-mx-sm" />
+        </template>
 
         <!-- modes -->
         <PresentationStudioToolbarTopModes
@@ -94,35 +126,37 @@
         />
       </div>
 
-      <q-space />
+      <!-- open design tab & choose wallpaper dialog -->
+      <template
+        v-if="
+          slide?.type === SLIDE_TYPES.CONTENT &&
+          !(
+            mode &&
+            (![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode) ||
+              (MODE_OPTIONS.media === mode && selectedElement))
+          )
+        "
+      >
+        <q-separator vertical class="q-mx-sm" />
 
-      <!-- selected item actions -->
-      <template v-if="copiedElement">
-        <!-- deselect line button -->
         <q-btn
-          icon="r_paste"
+          icon="r_wallpaper"
           unelevated
           text-color="black"
-          size="12px"
           round
-          @click="paste()"
+          size="12px"
+          @click="
+            drawerRightTab = PRESENTATION_TABS.DESIGN;
+            showSelectBackgroundDialog = true;
+          "
         >
           <q-tooltip>
-            <div class="text-center">
-              {{ $t("presentationStudio.elementsContextMenu.paste") }}
-            </div>
-
-            <div
-              v-if="showShortcuts"
-              class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-            >
-              <div v-if="isMac">⌘</div>
-              <div v-else>Ctrl</div>
-              <div>V</div>
-            </div>
+            {{ $t("presentationStudio.toolbar.changeBackground.title") }}
           </q-tooltip>
         </q-btn>
       </template>
+
+      <q-space />
     </template>
 
     <template v-else>
@@ -207,7 +241,10 @@ import PresentationStudioToolbarTopCustomizationShape from "components/presentat
 import PresentationStudioToolbarTopModes from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopModes.vue";
 import PresentationStudioToolbarTopLayouts from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopLayouts.vue";
 import { useQuasar } from "quasar";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  PRESENTATION_TABS,
+  SLIDE_TYPES,
+} from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
 import PresentationStudioToolbarTopCustomizationMedia from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationMedia.vue";
 import { useCanvasMediaStore } from "stores/canvas/media";
@@ -238,8 +275,13 @@ const shapeStore = useCanvasShapeStore();
 const mediaStore = useCanvasMediaStore();
 
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, isRightSidebarPanelExpanded } =
-  storeToRefs(presentationsStore);
+const {
+  presentation,
+  slide,
+  isDrawerRightPanelExpanded,
+  drawerRightTab,
+  showSelectBackgroundDialog,
+} = storeToRefs(presentationsStore);
 
 /*
  * emits

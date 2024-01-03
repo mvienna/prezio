@@ -358,6 +358,15 @@ const handleKeyDownEvent = (event) => {
     }
 
     if (selectedElement.value) {
+      // delete selected element
+      if (event.key === "Delete" || event.key === "Backspace") {
+        if (mode.value === MODE_OPTIONS.value.textEditing) return;
+        if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
+
+        event.preventDefault();
+        deleteElement();
+      }
+
       // copy element
       if (event.key === "c") {
         event.preventDefault();
@@ -409,15 +418,6 @@ const handleKeyDownEvent = (event) => {
   }
 
   if (selectedElement.value) {
-    // delete selected element
-    if (event.key === "Delete" || event.key === "Backspace") {
-      if (mode.value === MODE_OPTIONS.value.textEditing) return;
-      if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
-
-      event.preventDefault();
-      deleteElement();
-    }
-
     // deselect
     if (event.key === "Escape" || event.key === "Enter") {
       if (mode.value === MODE_OPTIONS.value.textEditing) return;

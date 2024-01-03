@@ -4,14 +4,14 @@
     show-if-above
     side="right"
     class="bg-white scroll--hidden presentation_studio__layout__drawer_right"
-    :width="isRightSidebarPanelExpanded ? 471 : 110"
+    :width="isDrawerRightPanelExpanded ? 471 : 110"
     bordered
   >
     <div style="padding-top: 55px; display: flex; height: 100%">
       <!-- content -->
       <q-tab-panels
-        v-if="isRightSidebarPanelExpanded"
-        v-model="rightDrawerTab"
+        v-if="isDrawerRightPanelExpanded"
+        v-model="drawerRightTab"
         vertical
         class="presentation_studio__layout__drawer_right__tab_panels"
       >
@@ -71,14 +71,14 @@
       <!-- tabs -->
       <div class="column no-wrap jutify-between">
         <q-tabs
-          v-model="rightDrawerTab"
+          v-model="drawerRightTab"
           align="justify"
           class="bg-white text-black text-white q-pa-sm presentation_studio__layout__drawer_right__tabs"
           inline-label
           vertical
         >
           <q-tab
-            v-for="tab in rightDrawerTabs.filter((item) => !item.hidden)"
+            v-for="tab in drawerRightTabs.filter((item) => !item.hidden)"
             :key="tab.name"
             :name="tab.name"
             :disable="tab.disable"
@@ -98,7 +98,7 @@
         <div class="row justify-center">
           <q-btn
             :icon="
-              isRightSidebarPanelExpanded
+              isDrawerRightPanelExpanded
                 ? 'r_keyboard_double_arrow_right'
                 : 'r_keyboard_double_arrow_left'
             "
@@ -107,13 +107,13 @@
             round
             size="1.25em"
             class="q-ma-sm round-borders"
-            @click="isRightSidebarPanelExpanded = !isRightSidebarPanelExpanded"
+            @click="isDrawerRightPanelExpanded = !isDrawerRightPanelExpanded"
           >
             <q-tooltip :offset="[0, 8]">
               {{
                 $t(
                   `presentationLayout.rightDrawer.panel.${
-                    isRightSidebarPanelExpanded ? "hide" : "expand"
+                    isDrawerRightPanelExpanded ? "hide" : "expand"
                   }`
                 )
               }}
@@ -126,7 +126,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
@@ -136,6 +136,7 @@ import PresentationStudioTabsTemplatesTab from "components/presentationStudio/ta
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
 import { useCanvasStore } from "stores/canvas";
 import {
+  PRESENTATION_TABS,
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
@@ -158,7 +159,7 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, isRightSidebarPanelExpanded } =
+const { presentation, slide, drawerRightTab, isDrawerRightPanelExpanded } =
   storeToRefs(presentationsStore);
 
 const canvasStore = useCanvasStore();
@@ -170,15 +171,15 @@ const { customization } = storeToRefs(textStore);
 /*
  * tabs
  */
-const rightDrawerTabs = computed(() => {
+const drawerRightTabs = computed(() => {
   return [
     {
-      name: "type",
+      name: PRESENTATION_TABS.TYPE,
       icon: "r_extension",
       label: t("presentationLayout.rightDrawer.tabs.types.title"),
     },
     {
-      name: "settings",
+      name: PRESENTATION_TABS.SETTINGS,
       icon: "r_view_in_ar",
       label: t("presentationLayout.rightDrawer.tabs.settings.title"),
       hidden: ![
@@ -188,47 +189,54 @@ const rightDrawerTabs = computed(() => {
       ].includes(slide.value?.type),
     },
     {
-      name: "layers",
+      name: PRESENTATION_TABS.LAYERS,
       icon: "r_layers",
       label: t("presentationLayout.rightDrawer.tabs.layers.title"),
       hidden: slide.value?.type !== SLIDE_TYPES.CONTENT,
     },
     {
-      name: "design",
+      name: PRESENTATION_TABS.DESIGN,
       icon: "r_format_paint",
       label: t("presentationLayout.rightDrawer.tabs.design.title"),
     },
     {
-      name: "template",
+      name: PRESENTATION_TABS.TEMPLATE,
       icon: "r_grid_view",
       label: t("presentationLayout.rightDrawer.tabs.templates.title"),
       hidden: slide.value?.type !== SLIDE_TYPES.CONTENT,
     },
     {
-      name: "audio",
+      name: PRESENTATION_TABS.AUDIO,
       icon: "r_graphic_eq",
       label: t("presentationLayout.rightDrawer.tabs.audio.title"),
       disable: true,
     },
   ];
 });
-const rightDrawerTab = ref(rightDrawerTabs.value[0].name);
 
 /*
- * handle slide change
+ * handle tab selection
  */
 watch(
   () => slide.value,
   () => {
-    if (slide.value?.type) {
-      if ([SLIDE_TYPES.CONTENT].includes(slide.value.type)) {
-        rightDrawerTab.value = rightDrawerTabs.value[0].name;
-      } else {
-        rightDrawerTab.value = rightDrawerTabs.value[1].name;
-      }
-    }
+    handleTabSelect();
   }
 );
+
+onBeforeMount(() => {
+  handleTabSelect();
+});
+
+const handleTabSelect = () => {
+  if (slide.value?.type) {
+    if ([SLIDE_TYPES.CONTENT].includes(slide.value.type)) {
+      drawerRightTab.value = drawerRightTabs.value[0].name;
+    } else {
+      drawerRightTab.value = drawerRightTabs.value[1].name;
+    }
+  }
+};
 
 /*
  * change slide type

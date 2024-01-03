@@ -1,15 +1,16 @@
 .q-menu {
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 0 0 1px rgba(10, 9, 11, 0.05),
               0 6px 16px 0 rgba(10, 9, 11, 0.08) !important;
   padding-top: 8px;
   padding-bottom: 8px;
 
   .q-item {
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 8px;
     margin-left: 8px;
     margin-right: 8px;
+    font-size: 13px;
 
     .q-icon {
       font-size: 1.25em !important;

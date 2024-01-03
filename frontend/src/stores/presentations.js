@@ -34,7 +34,7 @@ export const usePresentationsStore = defineStore("presentations", {
     selectedFolder: null,
 
     /*
-     * presentations
+     * browser
      */
     pagination: {
       sortBy: "updated_at",
@@ -53,7 +53,10 @@ export const usePresentationsStore = defineStore("presentations", {
     slideSettings: null,
 
     isPresentationPreview: false,
-    isRightSidebarPanelExpanded: true,
+
+    drawerRightTab: "type",
+    isDrawerRightPanelExpanded: true,
+    showSelectBackgroundDialog: false,
 
     showSettingsDialog: false,
     presentationSettingsTabsExpanded: [],

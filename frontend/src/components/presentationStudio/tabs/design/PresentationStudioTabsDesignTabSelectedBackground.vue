@@ -302,6 +302,14 @@
 import { deleteElement } from "stores/canvas/helpers/select";
 import SelectMedia from "components/media/SelectMedia.vue";
 import { onBeforeMount, ref } from "vue";
+import { usePresentationsStore } from "stores/presentations";
+import { storeToRefs } from "pinia";
+
+/*
+ * stores
+ */
+const presentationsStore = usePresentationsStore();
+const { showSelectBackgroundDialog } = storeToRefs(presentationsStore);
 
 /*
  * props
@@ -315,11 +323,6 @@ const props = defineProps({
  * emits
  */
 defineEmits(["changeBackgroundFilters", "changeBackground"]);
-
-/*
- * select background
- */
-const showSelectBackgroundDialog = ref(false);
 
 /*
  * background filters
