@@ -223,8 +223,8 @@ const handleFolderNameUpdate = (folder) => {
     return truncatedWords.join(" ");
   }
 
-  // folder.name = truncateString(element.innerText, 100);
-  folder.name = element.innerText;
+  folder.name = truncateString(element.innerText, 100);
+  // folder.name = element.innerText;
   presentationsStore.updateFolder(folder);
 
   element.contentEditable = false;
