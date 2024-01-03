@@ -95,6 +95,7 @@
           :disabled="slide?.type !== SLIDE_TYPES.CONTENT"
           @switch-mode="$emit('switchMode', $event)"
           @add-image="$emit('addImage', $event)"
+          @add-emoji="$emit('addEmoji', $event)"
           @add-shape="$emit('addShape', $event)"
         />
       </template>

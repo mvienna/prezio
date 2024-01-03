@@ -51,7 +51,7 @@ export const useCanvasStore = defineStore("canvas", {
       text: "text",
       textEditing: "textEditing",
       media: "media",
-      mediaEmoji: "mediaEmojis",
+      mediaEmoji: "mediaEmoji",
       shape: "shape",
       background: "background",
       backgroundPreview: "backgroundPreview",

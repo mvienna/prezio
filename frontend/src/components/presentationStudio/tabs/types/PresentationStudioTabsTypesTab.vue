@@ -11,11 +11,7 @@
       >
         <q-icon
           :name="
-            index === 0
-              ? 'r_emoji_objects'
-              : index === 1
-              ? 'r_quiz'
-              : 'r_leaderboard'
+            index === 0 ? 'r_emoji_objects' : index === 1 ? 'r_quiz' : 'r_flaky'
           "
           size="20px"
           color="primary"

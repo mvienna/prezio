@@ -119,7 +119,7 @@ export default {
             drawing: "Линия",
             text: "Текст",
             media: "Фотография",
-            mediaEmoji: "Эмоджи",
+            mediaEmoji: "Эмодзи",
             shape: "Форма",
             background: "Фон",
             backgroundPreview: "Фон (предпросмотр)",

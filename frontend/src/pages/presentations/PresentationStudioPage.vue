@@ -6,6 +6,17 @@
       @deselect="selectedElement ? deselectElement() : ''"
       @delete="selectedElement ? deleteElement() : ''"
       @add-image="mediaStore.addImage($event)"
+      @add-emoji="
+        mediaStore.addImage(
+          $event,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          MODE_OPTIONS.mediaEmoji
+        )
+      "
       @add-shape="shapeStore.addShape($event)"
       @zoom="canvasStore.handleZoom(null, mouse.x, mouse.y, $event)"
       @zoomIn="

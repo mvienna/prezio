@@ -6,7 +6,7 @@
       :component-data="{
         tag: 'ul',
         type: 'transition-group',
-        class: 'column no-wrap q-gutter-md',
+        class: 'column no-wrap q-gutter-sm',
       }"
       v-bind="layersDraggingOptions"
       item-key="id"
@@ -36,10 +36,10 @@
                 element.mode
               )
             "
-            class="layer__background"
+            class="layer--background__image"
             :style="`${
               element.mode === MODE_OPTIONS.background
-                ? `background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(${
+                ? `background: url(${
                     elements.find(
                       (item) => item.mode === MODE_OPTIONS.background
                     ).imageSrc
@@ -60,7 +60,7 @@
           ></div>
 
           <q-card-section
-            class="row no-wrap items-center q-py-none relative-position"
+            class="row no-wrap items-center q-py-none q-px-sm relative-position"
           >
             <!-- drag handle -->
             <q-icon
@@ -71,20 +71,44 @@
               "
               name="r_drag_indicator"
               color="black"
-              size="sm"
+              size="1.25rem"
               class="layer_handle--disabled"
             />
             <q-icon
               v-else
               name="r_drag_indicator"
-              color="grey"
-              size="sm"
+              color="black"
+              size="1.25rem"
               class="layer_handle"
+            />
+
+            <!-- layer mode icon -->
+            <q-icon
+              v-if="
+                ![MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
+                  element.mode
+                )
+              "
+              :name="
+                element.mode === MODE_OPTIONS.drawing
+                  ? 'r_gesture'
+                  : element.mode === MODE_OPTIONS.text
+                  ? 'icon-insert_text'
+                  : element.mode === MODE_OPTIONS.media
+                  ? 'o_add_photo_alternate'
+                  : element.mode === MODE_OPTIONS.mediaEmoji
+                  ? 'icon-add_reaction'
+                  : element.mode === MODE_OPTIONS.shape
+                  ? 'icon-shape_line'
+                  : ''
+              "
+              size="1.25rem"
+              class="q-ml-sm"
             />
 
             <!-- layer name -->
             <span
-              class="text-semibold q-pl-md q-py-sm q-my-xs"
+              class="text-semibold q-ml-sm q-py-xs"
               :style="
                 element.mode === MODE_OPTIONS.baseFill
                   ? `color: ${textColorOnAColoredBackground(
@@ -113,15 +137,15 @@
               :icon="element.isVisible ? 'r_visibility' : 'r_visibility_off'"
               flat
               round
-              color="grey"
               size="10px"
-              class="q-ml-sm"
+              class="round-borders q-ml-xs"
+              color="black"
               @click="
                 element.isVisible = !element.isVisible;
                 canvasStore.redrawCanvas();
               "
             >
-              <q-tooltip>
+              <q-tooltip :offset="[0, 4]">
                 {{
                   $t(
                     `presentationLayout.rightDrawer.tabs.layers.layer.visibility.${
@@ -142,12 +166,12 @@
               :icon="element.isLocked ? 'r_lock' : 'r_lock_open'"
               flat
               round
-              color="grey"
               size="10px"
-              class="q-ml-sm"
+              class="round-borders q-ml-xs"
+              color="black"
               @click="element.isLocked = !element.isLocked"
             >
-              <q-tooltip>
+              <q-tooltip :offset="[0, 4]">
                 {{
                   $t(
                     `presentationLayout.rightDrawer.tabs.layers.layer.lock.${
@@ -168,12 +192,12 @@
               icon="r_delete"
               flat
               round
-              color="red"
               size="10px"
-              class="q-ml-sm"
+              class="round-borders q-ml-xs"
+              color="black"
               @click="deleteElement(element)"
             >
-              <q-tooltip>
+              <q-tooltip :offset="[0, 4]">
                 {{
                   $t("presentationLayout.rightDrawer.tabs.layers.layer.delete")
                 }}
@@ -292,10 +316,14 @@ const handleLayersReorder = async () => {
 
 <style scoped lang="scss">
 .layer {
-  background: $grey-2;
-  border: 1.5px solid transparent;
-  outline: 3px solid transparent;
+  border-radius: 6px;
   transition: 0.2s;
+  outline: 2px solid $grey-1;
+  overflow: hidden;
+
+  &:hover {
+    outline-color: $accent;
+  }
 
   span {
     width: 100%;
@@ -312,10 +340,9 @@ const handleLayersReorder = async () => {
   }
 
   &.layer--active {
-    border: 1.5px solid $primary;
-    outline: 3px solid $background;
-
     color: $primary;
+    background: $background;
+    outline-color: $primary;
   }
 
   &.layer--background {
@@ -331,14 +358,14 @@ const handleLayersReorder = async () => {
       background-size: cover !important;
       background-repeat: no-repeat !important;
     }
-  }
-}
 
-.layer__background {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  border-radius: 8px !important;
-  background-size: cover !important;
+    .layer--background__image {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border-radius: 0;
+      background-size: cover !important;
+    }
+  }
 }
 </style>

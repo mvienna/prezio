@@ -99,7 +99,7 @@
             size="16px"
             class="q-pa-sm"
             v-close-popup
-            @click="$emit('addImage', emoji.src)"
+            @click="$emit('addEmoji', emoji.src)"
           >
             <template #default>
               <q-img :src="emoji.src" />
@@ -177,7 +177,7 @@ defineProps({
 /*
  * emits
  */
-defineEmits(["switchMode", "addImage", "addShape"]);
+defineEmits(["switchMode", "addImage", "addEmoji", "addShape"]);
 
 /*
  * stores
