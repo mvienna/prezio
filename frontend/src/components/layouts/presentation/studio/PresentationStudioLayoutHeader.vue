@@ -244,7 +244,7 @@
               </q-item-section>
             </q-item>
 
-            <q-separator />
+            <q-separator class="q-my-sm" />
 
             <!-- present from beginning -->
             <template v-if="slideIndex > 0">
@@ -275,7 +275,7 @@
                 </q-item-section>
               </q-item>
 
-              <q-separator />
+              <q-separator class="q-my-sm" />
             </template>
 
             <!-- present with backstage -->
@@ -305,7 +305,7 @@
               </q-item-section>
             </q-item>
 
-            <q-separator />
+            <q-separator class="q-my-sm" />
 
             <!-- fullscreen -->
             <q-item class="q-pl-sm">
@@ -624,21 +624,10 @@ const createPresentationRoom = async () => {
 }
 
 .present_btn__menu__list {
-  .q-item {
-    margin: 0;
-  }
-
-  .q-item:nth-child(1) {
-    border-radius: 8px 8px 0 0;
-    padding: 16px;
-  }
-  .q-item:nth-child(3) {
-    border-radius: 0 0;
-    padding: 16px;
-  }
-
-  .q-item:nth-child(5) {
-    border-radius: 0 0 8px 8px;
+  .q-item:last-child {
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: 36px;
   }
 }
 

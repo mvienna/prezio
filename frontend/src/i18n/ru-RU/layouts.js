@@ -32,6 +32,7 @@ export default {
         withBackstage: {
           title: "Презентовать с бэкстейджем",
           description: "Расширенный контроль над презентацией",
+          beta: "Beta",
         },
 
         fullscreen: "Полноэкранный режим",
