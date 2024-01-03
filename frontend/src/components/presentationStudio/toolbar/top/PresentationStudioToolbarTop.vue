@@ -166,7 +166,7 @@
 
     <div class="row items-center q-mr-md">
       <div class="text-sm text-no-wrap" style="opacity: 0.2">
-        {{ Math.round(mouse.x) }}x{{ Math.round(mouse.y) }}
+        x: {{ Math.round(mouse.x) }} y:{{ Math.round(mouse.y) }}
       </div>
     </div>
 

@@ -17,6 +17,7 @@ export const useStockImagesStore = defineStore("stockImages", {
   actions: {
     async fetchStockImages(index = null, done = null) {
       const isSearching = this.search && this.search?.trim()?.length;
+      this.pagination.page = index;
 
       const request = isSearching
         ? "https://api.unsplash.com/search/photos?" +
@@ -41,15 +42,15 @@ export const useStockImagesStore = defineStore("stockImages", {
           return response.json();
         })
         .then((response) => {
-          this.stockImages = this.stockImages.concat(
-            isSearching ? response.results : response
-          );
+          this.stockImages = [
+            ...this.stockImages,
+            ...(isSearching ? response.results : response),
+          ];
         })
         .catch((error) => {
           console.log(error);
         });
 
-      this.pagination.page++;
       if (done) {
         done();
       }

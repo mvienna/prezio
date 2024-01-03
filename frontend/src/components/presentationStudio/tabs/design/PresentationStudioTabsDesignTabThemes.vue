@@ -1,44 +1,35 @@
 <template>
-  <div>
-    <!-- categories -->
-    <div class="q-gutter-sm row q-mb-md">
-      <q-btn
-        v-for="category in categories"
-        :key="category.name"
-        :label="category.label"
-        :disable="category.disable"
-        :color="
-          selectedBackgroundsCategory === category.name ? 'primary' : 'grey-9'
-        "
-        :outline="selectedBackgroundsCategory !== category.name"
-        :unelevated="selectedBackgroundsCategory === category.name"
-        no-caps
-        size="13px"
-        style="padding: 0 8px; min-height: 28px"
-        @click="selectedBackgroundsCategory = category.name"
-      />
-    </div>
+  <div class="q-pa-md">
+    <div v-for="category in categories" :key="category.name" class="q-mb-lg">
+      <div class="q-mb-sm rounded-borders text-grey-9">
+        {{ category.label }}
+      </div>
 
-    <!-- backgrounds -->
-    <div class="backgrounds_grid q-pa-xs">
-      <div
-        v-for="(background, backgroundIndex) in filteredBackgrounds"
-        :key="backgroundIndex"
-        class="background"
-        :class="
-          backgroundElement?.imageSrc === background.src
-            ? 'background--active'
-            : ''
-        "
-        @click="$emit('changeBackground', background)"
-      >
-        <q-img
-          :src="background.src"
-          @mouseover="handleBackgroundMouseOver(background, backgroundIndex)"
-          @mouseleave="handleBackgroundMouseLeave(backgroundIndex)"
-        />
-        <div class="text-center q-mt-xs text-caption">
-          {{ background.name || backgroundIndex + 1 }}
+      <div class="themes_grid">
+        <div
+          v-for="(theme, themeIndex) in THEMES.filter(
+            (item) => item.group === category.name
+          )"
+          :key="themeIndex"
+          class="theme relative-position"
+          :class="
+            backgroundElement?.imageSrc === theme.src
+              ? 'theme--active shadow--primary'
+              : ''
+          "
+          @click="$emit('changeBackground', theme)"
+        >
+          <q-img
+            :src="theme.src"
+            @mouseover="handleBackgroundMouseOver(theme, themeIndex)"
+            @mouseleave="handleBackgroundMouseLeave(themeIndex)"
+          />
+          <div
+            class="text-center absolute-bottom-right q-mb-xs q-mr-sm text-h5"
+            :style="`font-family: ${theme.font}; color: ${theme.color}`"
+          >
+            Aa
+          </div>
         </div>
       </div>
     </div>
@@ -46,8 +37,8 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
-import { backgrounds } from "src/constants/assets/backgrounds";
+import { ref } from "vue";
+import { THEMES } from "src/constants/assets/themes";
 import { useI18n } from "vue-i18n";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
@@ -91,41 +82,31 @@ const categories = {
       "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.gradients"
     ),
   },
-  stock: {
-    name: "stock",
-    label: t(
-      "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.stock"
-    ),
-  },
+  // stock: {
+  //   name: "stock",
+  //   label: t(
+  //     "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.stock"
+  //   ),
+  // },
 };
-const selectedBackgroundsCategory = ref(categories.prezio.name);
-
-/*
- * backgrounds
- */
-const filteredBackgrounds = computed(() => {
-  return backgrounds.filter(
-    (background) => background.group === selectedBackgroundsCategory.value
-  );
-});
 
 /*
  * preview background on hover
  */
-const isBackgroundsHovered = ref([]);
+const isThemesHovered = ref([]);
 
-const handleBackgroundMouseOver = (background, backgroundIndex) => {
-  isBackgroundsHovered.value[backgroundIndex] = true;
+const handleBackgroundMouseOver = (theme, themeIndex) => {
+  isThemesHovered.value[themeIndex] = true;
 
   setTimeout(() => {
-    if (isBackgroundsHovered.value[backgroundIndex]) {
-      emit("previewBackground", background);
+    if (isThemesHovered.value[themeIndex]) {
+      emit("previewBackground", theme);
     }
   }, 500);
 };
 
-const handleBackgroundMouseLeave = (backgroundIndex) => {
-  isBackgroundsHovered.value[backgroundIndex] = false;
+const handleBackgroundMouseLeave = (themeIndex) => {
+  isThemesHovered.value[themeIndex] = false;
 
   // remove preview background
   elements.value = elements.value.filter(
@@ -133,11 +114,11 @@ const handleBackgroundMouseLeave = (backgroundIndex) => {
   );
 
   // un-hide active background
-  const backgroundElementIndex = elements.value.findIndex(
+  const themeElementIndex = elements.value.findIndex(
     (element) => element.mode === MODE_OPTIONS.value.background
   );
-  if (backgroundElementIndex !== -1) {
-    elements.value[backgroundElementIndex].isVisible = true;
+  if (themeElementIndex !== -1) {
+    elements.value[themeElementIndex].isVisible = true;
   }
 
   // redraw canvas
@@ -149,8 +130,9 @@ const handleBackgroundMouseLeave = (backgroundIndex) => {
 /*
  * background options
  */
-.backgrounds_grid {
-  columns: 3;
+.themes_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 
   .item:nth-last-child(-n + 3) {
@@ -158,35 +140,26 @@ const handleBackgroundMouseLeave = (backgroundIndex) => {
   }
 }
 
-.background {
+.theme {
   width: 100%;
   display: inline-block;
   cursor: pointer;
-  color: $grey;
   transition: 0.2s;
-  margin-bottom: 8px;
+  border-radius: 6px !important;
+  overflow: hidden;
+  border: 1px solid $grey-2;
 
   .q-img {
     aspect-ratio: 16/9;
-    border-radius: 6px;
-    border: 2px solid $grey-2;
-    outline: 3px solid transparent;
     transition: 0.2s;
   }
 
   &:hover {
-    .q-img {
-      border: 2px solid $accent;
-    }
+    border-color: $accent;
   }
 
-  &.background--active {
-    color: $black;
-
-    .q-img {
-      border: 2px solid $primary;
-      outline: 2px solid $accent;
-    }
+  &.theme--active {
+    border-color: $primary;
   }
 }
 </style>

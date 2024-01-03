@@ -1,4 +1,4 @@
-export const backgrounds = [
+export const THEMES = [
   /*
    * prezio
    */
@@ -6,27 +6,43 @@ export const backgrounds = [
     name: "Business",
     group: "prezio",
     src: "/assets/backgrounds/prezio/business.jpg",
+    font: "Arial",
+    color: "white",
   },
   {
     name: "Clouds",
     group: "prezio",
     src: "/assets/backgrounds/prezio/clouds.jpg",
+    font: "Arial",
+    color: "black",
   },
   {
     name: "Flowers",
     group: "prezio",
     src: "/assets/backgrounds/prezio/flowers.jpg",
+    font: "Arial",
+    color: "black",
   },
   {
     name: "Night",
     group: "prezio",
     src: "/assets/backgrounds/prezio/night.jpg",
+    font: "Arial",
+    color: "white",
   },
-  { name: "Quiz", group: "prezio", src: "/assets/backgrounds/prezio/quiz.jpg" },
+  {
+    name: "Quiz",
+    group: "prezio",
+    src: "/assets/backgrounds/prezio/quiz.jpg",
+    font: "Arial",
+    color: "black",
+  },
   {
     name: "Space",
     group: "prezio",
     src: "/assets/backgrounds/prezio/space.jpg",
+    font: "Arial",
+    color: "white",
   },
 
   /*
@@ -100,6 +116,7 @@ export const backgrounds = [
   {
     group: "gradients",
     src: "/assets/backgrounds/gradients/17.png",
+    color: "white",
   },
   {
     group: "gradients",
@@ -162,6 +179,7 @@ export const backgrounds = [
   {
     group: "gradients",
     src: "/assets/backgrounds/gradients/32.png",
+    color: "white",
   },
   {
     group: "gradients",
@@ -174,6 +192,7 @@ export const backgrounds = [
   {
     group: "gradients",
     src: "/assets/backgrounds/gradients/35.png",
+    color: "white",
   },
   {
     group: "gradients",
@@ -215,6 +234,7 @@ export const backgrounds = [
   {
     group: "gradients",
     src: "/assets/backgrounds/gradients/55.png",
+    color: "white",
   },
   {
     group: "gradients",
@@ -223,6 +243,7 @@ export const backgrounds = [
   {
     group: "gradients",
     src: "/assets/backgrounds/gradients/57.png",
+    color: "white",
   },
   {
     group: "gradients",

@@ -10,7 +10,7 @@
     <div style="padding-top: 55px; display: flex; height: 100%">
       <div
         v-if="isDrawerRightPanelExpanded"
-        class="presentation_studio__layout__drawer_right__content"
+        class="presentation_studio__layout__drawer_right__content scroll--hidden"
       >
         <div>
           <div
@@ -73,7 +73,7 @@
           <!-- design -->
           <q-tab-panel
             name="design"
-            class="presentation_studio__layout__drawer_right__tab_panel"
+            class="presentation_studio__layout__drawer_right__tab_panel q-pa-none"
           >
             <PresentationStudioTabsDesignTab />
           </q-tab-panel>
@@ -99,7 +99,7 @@
       </div>
 
       <!-- tabs -->
-      <div class="column no-wrap jutify-between">
+      <div class="column no-wrap justify-between">
         <q-tabs
           v-model="drawerRightTab"
           align="justify"
@@ -416,6 +416,7 @@ const prepareElementsForNewSlide = (type) => {
 ::v-deep(.presentation_studio__layout__drawer_right) {
   .presentation_studio__layout__drawer_right__content {
     width: 384px;
+    overflow-y: scroll;
     border-right: 1px solid $grey-2;
   }
 
@@ -439,10 +440,10 @@ const prepareElementsForNewSlide = (type) => {
     border-radius: 6px !important;
     overflow: hidden;
     margin-bottom: 8px;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
 
     &:hover {
-      border: 2px solid $accent;
+      border: 1px solid $accent;
       background: $background;
     }
 
@@ -454,7 +455,7 @@ const prepareElementsForNewSlide = (type) => {
     &.q-tab--active {
       color: $secondary;
       background: $background;
-      border: 2px solid $accent;
+      border: 1px solid $accent;
     }
   }
 }

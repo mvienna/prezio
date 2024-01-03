@@ -794,7 +794,7 @@ watch(
 .slide {
   outline: 3px solid transparent;
   transition: 0.2s;
-  border: 2px solid $grey-2;
+  border: 1px solid $grey-2;
   width: 140px;
   height: calc(140px * 9 / 16);
   border-radius: 6px;
@@ -809,7 +809,7 @@ watch(
 
   &.slide--hovered,
   &.slide--hoverable:hover {
-    border: 2px solid $accent;
+    border: 1px solid $accent;
   }
 
   //&:active {
@@ -817,7 +817,7 @@ watch(
   //}
 
   &.slide--active {
-    border: 2px solid $primary;
+    border: 1px solid $primary;
   }
 }
 

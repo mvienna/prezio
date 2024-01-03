@@ -416,15 +416,15 @@ const handleFillRemove = () => {
       border-radius: 4px;
       margin: 0 auto;
       cursor: pointer;
-      border: 2px solid $grey-2;
+      border: 1px solid $grey-2;
 
       &.gradient__anchor__color--active {
-        border: 2px solid $white;
+        border: 1px solid $white;
         outline: 2px solid $primary;
       }
 
       &.gradient__anchor__color--error {
-        border: 2px solid $white;
+        border: 1px solid $white;
         outline: 2px solid $red;
       }
     }

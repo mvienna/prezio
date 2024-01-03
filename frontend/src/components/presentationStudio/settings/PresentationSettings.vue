@@ -152,11 +152,11 @@ const tabs = {
     .q-item {
       transition: 0.2s;
       border-radius: 8px;
-      border: 2px solid transparent;
+      border: 1px solid transparent;
 
       &:hover {
         background: $grey-2;
-        border: 2px solid $accent;
+        border: 1px solid $accent;
       }
 
       .q-item__label {
@@ -175,7 +175,7 @@ const tabs = {
     .q-item {
       background: $background;
       color: $secondary;
-      border: 2px solid $accent;
+      border: 1px solid $accent;
     }
   }
 }

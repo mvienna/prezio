@@ -215,11 +215,11 @@ const types = computed(() => {
   cursor: pointer;
   transition: 0.2s;
   border-radius: 6px;
-  border: 2px solid $grey-2;
+  border: 1px solid $grey-2;
   outline: 2px solid transparent;
 
   &:hover {
-    border: 2px solid $accent;
+    border: 1px solid $accent;
   }
 
   .q-img {
@@ -232,7 +232,7 @@ const types = computed(() => {
   }
 
   &.q-item--active {
-    border: 2px solid $primary;
+    border: 1px solid $primary;
     background: $background !important;
 
     &:hover {

@@ -135,7 +135,7 @@ export default {
           title: "Настройте дизайн слайда",
 
           tabs: {
-            design: "Дизайн",
+            design: "Дизайн слайда",
             themes: "Темы",
           },
 
@@ -168,7 +168,7 @@ export default {
 
             select: {
               title: "Выбранный фон слайда",
-              open: "Загрузить фотографию",
+              open: "Загрузить",
             },
 
             filters: {

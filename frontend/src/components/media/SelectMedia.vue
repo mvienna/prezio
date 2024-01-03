@@ -5,7 +5,7 @@
       class="q-card__toolbar_section column no-wrap q-pa-lg"
       style="height: 100%; max-height: 100%"
     >
-      <q-toolbar class="q-px-none">
+      <q-toolbar class="q-pa-none q-mb-sm" style="min-height: 0">
         <!-- title -->
         <div class="text-h6 text-center text-semibold">
           {{ $t("media.select.title") }}
@@ -31,23 +31,18 @@
       <q-tabs
         v-if="!selectedFile"
         v-model="tab"
-        dense
         align="justify"
-        indicator-color="grey-2"
-        class="text-black q-mb-lg"
+        class="text-black"
         inline-label
       >
         <q-tab
-          v-for="(tab, tabIndex) in Object.values(tabs).filter(
-            (item) => item.name !== tabs.mine.name || media?.length
-          )"
+          v-for="tab in tabs"
           :key="tab.name"
           :name="tab.name"
           :label="tab.label"
           :disable="tab.disabled"
           :icon="tab.icon"
           :ripple="false"
-          :class="`${tabIndex !== 0 ? 'q-ml-sm' : ''}`"
           no-caps
         />
       </q-tabs>
@@ -99,7 +94,7 @@
 
       <div
         v-else
-        style="height: calc(100% - 102px)"
+        style="height: calc(100% - 68px)"
         class="column no-wrap scroll-y scroll--hidden"
       >
         <!-- content -->
@@ -107,8 +102,7 @@
           <!-- upload -->
           <q-tab-panel
             name="upload"
-            class="q-pa-none column justify-center no-wrap"
-            style="height: calc(100% - 24px)"
+            class="q-pa-none column justify-center no-wrap q-py-lg"
           >
             <div
               id="drop-area"
@@ -160,7 +154,7 @@
 
           <!-- my uploads -->
           <q-tab-panel name="mine" class="q-pa-none">
-            <div class="masonry q-pb-lg">
+            <div class="masonry q-py-lg">
               <q-card
                 v-for="file in media"
                 :key="file.id"
@@ -216,7 +210,7 @@
           <!-- stock -->
           <q-tab-panel name="stock" class="q-pa-none">
             <!-- search on unsplash -->
-            <div class="q-pb-lg">
+            <div class="q-py-lg">
               <q-input
                 v-model="search"
                 clearable
@@ -244,7 +238,7 @@
             <div>
               <q-infinite-scroll
                 @load="stockImagesStore.fetchStockImages"
-                :offset="500"
+                :offset="1000"
                 class="masonry"
               >
                 <q-card
@@ -278,14 +272,15 @@
                   <q-tooltip
                     anchor="bottom start"
                     self="top start"
-                    class="row no-wrap items-center q-py-sm bg-white"
-                    style="border-radius: 20px; border: 1.5px solid #f2f2f2"
+                    class="row no-wrap items-center bg-white q-pa-xs q-pr-sm"
+                    style="border-radius: 20px; border: 1px solid #f2f2f2"
+                    :offset="[0, 8]"
                   >
-                    <q-avatar size="24px" class="q-mr-sm">
+                    <q-avatar size="20px" class="q-mr-sm">
                       <q-img :src="item.user.profile_image.small" />
                     </q-avatar>
 
-                    <div class="text-grey">
+                    <div class="text-grey text-caption">
                       {{ item.user.name }}
                     </div>
                   </q-tooltip>
@@ -329,7 +324,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { api } from "boot/axios";
 import { storeToRefs } from "pinia";
@@ -356,31 +351,6 @@ const stockImagesStore = useStockImagesStore();
 const { stockImages, search } = storeToRefs(stockImagesStore);
 
 /*
- * tabs
- */
-const tabs = {
-  upload: {
-    name: "upload",
-    label: t("media.select.tabs.upload.title"),
-  },
-  mine: {
-    name: "mine",
-    label: t("media.select.tabs.mine.title"),
-  },
-  stock: {
-    name: "stock",
-    label: t("media.select.tabs.stock.title"),
-    icon: "icon-unsplash",
-  },
-  gifsAndStickers: {
-    name: "gifs_and_stickers",
-    label: t("media.select.tabs.gifsAndStickers.title"),
-    disabled: true,
-  },
-};
-const tab = ref("upload");
-
-/*
  * fetch users media
  */
 const media = ref([]);
@@ -395,6 +365,34 @@ onBeforeMount(() => {
       console.log(error);
     });
 });
+
+/*
+ * tabs
+ */
+const tabs = computed(() => {
+  return {
+    upload: {
+      name: "upload",
+      label: t("media.select.tabs.upload.title"),
+    },
+    mine: {
+      name: "mine",
+      label: t("media.select.tabs.mine.title"),
+      disabled: !media.value?.length,
+    },
+    stock: {
+      name: "stock",
+      label: t("media.select.tabs.stock.title"),
+      icon: "icon-unsplash",
+    },
+    gifsAndStickers: {
+      name: "gifs_and_stickers",
+      label: t("media.select.tabs.gifsAndStickers.title"),
+      disabled: true,
+    },
+  };
+});
+const tab = ref("upload");
 
 /*
  * select file
@@ -540,27 +538,11 @@ const dropHandler = (event) => {
  * tabs
  */
 ::v-deep(.q-tab) {
-  width: 50%;
-  border-radius: 6px;
-  border: 2px solid $grey-2;
+  border-bottom: 1px solid $grey-2;
 
   &.q-tab--active {
-    .q-tab__label {
-      font-weight: 600;
-    }
+    border-bottom: none;
   }
-}
-
-::v-deep(.q-tab__content) {
-  z-index: 2;
-}
-
-::v-deep(.q-tab__indicator) {
-  background: currentColor;
-  height: 100%;
-  z-index: 1;
-
-  transition: none !important;
 }
 
 ::v-deep(.q-panel) {
@@ -593,7 +575,7 @@ const dropHandler = (event) => {
  * masorny grid
  */
 .masonry {
-  columns: 3 200px;
+  columns: 4 100px;
   column-gap: 16px;
 
   .masonry__item {
@@ -602,7 +584,7 @@ const dropHandler = (event) => {
     overflow: hidden;
     cursor: pointer;
     transition: 0.2s;
-    border: 3px solid $grey-2;
+    border: 1px solid $grey-2;
 
     img {
       border-radius: 0;
@@ -610,15 +592,11 @@ const dropHandler = (event) => {
     }
 
     &:hover {
-      border: 3px solid $accent;
-
-      img {
-        transform: scale(1.1);
-      }
+      border-color: $accent;
     }
 
     &.masonry__item--selected {
-      border: 3px solid $accent;
+      border-color: $accent;
     }
   }
 }
@@ -630,7 +608,7 @@ const dropHandler = (event) => {
 }
 
 #drop-area {
-  border: 2px dashed $grey;
+  border: 1px dashed $grey;
   border-radius: 6px;
   padding: 24px;
   height: 100%;

@@ -265,7 +265,7 @@
         unelevated
         no-caps
         no-wrap
-        style="width: 100%"
+        :style="`${backgroundElement?.imageSrc ? 'width: 100%;' : ''}`"
         color="primary"
         @click="showSelectBackgroundDialog = true"
       />
@@ -288,7 +288,6 @@
         v-if="backgroundElement"
         icon="r_delete_sweep"
         outline
-        color="red"
         style="width: 36px"
         size="12px"
         class="q-ml-md"

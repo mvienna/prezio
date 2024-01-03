@@ -637,7 +637,7 @@ const deleteAccount = async () => {
   width: 100%;
   padding: 24px;
   border-radius: 16px;
-  border: 2px solid $grey-2;
+  border: 1px solid $grey-2;
   margin: 0 auto;
 
   form {

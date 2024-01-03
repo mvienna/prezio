@@ -3,10 +3,9 @@
     <q-tabs
       v-model="tab"
       align="justify"
-      indicator-color="grey-2"
       inline-label
       dense
-      class="text-black q-mb-md"
+      class="q-mx-md q-mt-md q-mb-xs"
     >
       <q-tab
         name="design"
@@ -26,7 +25,7 @@
 
     <q-tab-panels v-model="tab">
       <!-- design -->
-      <q-tab-panel name="design" class="q-pa-none" style="overflow-x: hidden">
+      <q-tab-panel name="design" class="q-pa-md" style="overflow-x: hidden">
         <!-- base fill -->
         <PresentationStudioTabsDesignTabBaseFill
           :base-fill-element="baseFillElement"
@@ -55,7 +54,7 @@
           <q-btn
             unelevated
             no-caps
-            icon="r_move_down"
+            icon="r_copy_all"
             text-color="black"
             class="bg-grey-2"
             :label="
@@ -69,7 +68,7 @@
 
         <q-dialog v-model="showApplyDesignToAllSlidesDialog">
           <ConfirmationDialog
-            icon="r_move_down"
+            icon="r_copy_all"
             icon-color="primary"
             :title="
               $t(
@@ -92,7 +91,7 @@
 
         <!-- reset slide design -->
         <div
-          class="text-center text-grey q-mt-sm q-mb-sm link"
+          class="text-center text-grey-9 q-mt-sm q-mb-sm link"
           @click="showResetDesignDialog = true"
         >
           {{ $t("presentationLayout.rightDrawer.tabs.design.reset.title") }}
@@ -410,14 +409,21 @@ const applyDesignToAllSlides = async () => {
 </script>
 
 <style scoped lang="scss">
+::v-deep(.q-tabs) {
+  outline: 1px solid $grey-2;
+  padding: 4px;
+  border-radius: 6px;
+}
+
 ::v-deep(.q-tab) {
   width: 50%;
   border-radius: 6px;
-  border: 2px solid $grey-2;
+  overflow: hidden;
 
   &.q-tab--active {
     .q-tab__label {
       font-weight: 600;
+      color: $secondary;
     }
   }
 }
@@ -427,7 +433,7 @@ const applyDesignToAllSlides = async () => {
 }
 
 ::v-deep(.q-tab__indicator) {
-  background: currentColor;
+  background: $blue-1;
   height: 100%;
   z-index: 1;
 

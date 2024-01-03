@@ -21,7 +21,7 @@
                 width: 100%;
                 padding: 24px;
                 border-radius: 16px;
-                border: 2px solid #F1F1F1;
+                border: 1px solid #F1F1F1;
                 margin: 0 auto;
             }
             @media screen and (max-width: 500px) {

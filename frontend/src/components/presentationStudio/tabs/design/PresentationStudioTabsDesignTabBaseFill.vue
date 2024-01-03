@@ -109,11 +109,11 @@ const baseFillColors = [
   width: 24px;
   height: 24px;
   border-radius: 6px;
-  border: 2px solid $grey-2;
+  border: 1px solid $grey-2;
   transition: 0.2s;
 
   &.base_fill_color_box--active {
-    border: 2px solid $primary;
+    border: 1px solid $primary;
   }
 }
 </style>

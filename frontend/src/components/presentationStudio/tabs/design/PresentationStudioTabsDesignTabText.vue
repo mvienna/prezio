@@ -68,7 +68,7 @@
 
       <q-separator vertical class="q-ml-md q-mr-sm" />
 
-      <div>
+      <div class="text-sm-plus">
         {{
           $t(
             "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.color.set"
@@ -136,11 +136,11 @@ const defaultTextColors = ["#313132", "#FFFFFF"];
   min-width: 24px;
   height: 24px;
   border-radius: 6px;
-  border: 2px solid $grey-2;
+  border: 1px solid $grey-2;
   transition: 0.2s;
 
   &.text_color_box--active {
-    border: 2px solid $primary;
+    border: 1px solid $primary;
   }
 }
 </style>

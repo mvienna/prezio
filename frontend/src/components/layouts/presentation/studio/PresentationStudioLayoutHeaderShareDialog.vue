@@ -310,7 +310,7 @@ const handleQrCodeGeneration = () => {
   &.q-tab--active {
     background: $background;
     color: $secondary;
-    border: 2px solid $secondary;
+    border: 1px solid $secondary;
 
     .q-tab__content {
       div {
