@@ -129,14 +129,15 @@ export default {
 
       // layouts
       layouts: {
-        title: "Макет",
+        title: "Выберите макет слайда",
+        placeholder: "Макет",
 
         options: {
-          blank: "Пустой слайд",
+          blank: "Пустой",
           titleSlide: "Титульный слайд",
           title: "Заголовок сверху",
           titleAndBody: "Заголовок и обьект",
-          titleAndTwoColumns: "Заголовок и два обьекта",
+          titleAndTwoColumns: "Заголовок и 2 обьекта",
           titleOnly: "Только заголовок",
         },
       },

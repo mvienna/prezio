@@ -40,7 +40,7 @@
           size="12px"
         >
           <q-tooltip>
-            {{ $t("presentationStudio.toolbar.layouts.title") }}
+            {{ $t("presentationStudio.toolbar.layouts.placeholder") }}
           </q-tooltip>
 
           <!-- layouts -->
@@ -51,9 +51,8 @@
             transition-show="jump-down"
             transition-hide="jump-up"
             :offset="[0, 16]"
-            class="q-pa-sm bg-white"
-            max-height="70vh"
-            style="width: 408px"
+            class="q-pa-sm bg-white scroll--hidden"
+            style="width: 384px; max-height: 100%"
           >
             <PresentationStudioToolbarTopLayouts v-close-popup />
           </q-menu>

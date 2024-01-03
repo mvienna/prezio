@@ -146,7 +146,7 @@
             >
               <div class="row justify-center">
                 <q-img
-                  :src="`/assets/icons/temp/slideTypes/${element.type}.svg`"
+                  :src="`/assets/icons/slide/types/${element.type}.svg`"
                   style="width: 36px; height: 36px; background: transparent"
                   :style="
                     element.previewAverageBrightness >=

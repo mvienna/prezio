@@ -1,27 +1,45 @@
 <template>
-  <div class="row q-gutter-md">
-    <div
-      v-for="layout in layouts"
-      :key="layout.name"
-      class="layout"
-      :class="
-        layout.name !== 'blank' &&
-        layout.elements.every((item1) => {
-          return elements.some((item2) => item1.id === item2.id);
-        })
-          ? 'layout--active'
-          : ''
-      "
-      v-close-popup
-      @click="handleLayoutSelection(layout)"
-    >
-      <div class="row no-wrap justify-center">
-        <q-img :src="`/assets/icons/temp/slideLayouts/${layout.name}.svg`" />
-      </div>
+  <div class="q-pa-sm">
+    <div class="text-grey q-mb-md">
+      {{ $t("presentationStudio.toolbar.layouts.title") }}
+    </div>
 
-      <div class="text-center text-caption q-mt-sm ellipsis">
-        {{ layout.label }}
-      </div>
+    <div class="layouts_wrapper">
+      <q-card
+        v-for="layout in layouts"
+        :key="layout.name"
+        class="layout"
+        flat
+        :class="
+          layout.name !== 'blank' &&
+          layout.elements.every((item1) => {
+            return elements.some((item2) => item1.id === item2.id);
+          })
+            ? 'layout--active'
+            : ''
+        "
+        v-close-popup
+        @click="handleLayoutSelection(layout)"
+      >
+        <q-card-section class="q-pa-sm">
+          <div class="row no-wrap justify-center">
+            <q-img
+              :src="`/assets/icons/slide/layouts/${layout.name}${
+                layout.name !== 'blank' &&
+                layout.elements.every((item1) => {
+                  return elements.some((item2) => item1.id === item2.id);
+                })
+                  ? '--active'
+                  : ''
+              }.svg`"
+            />
+          </div>
+
+          <div class="text-center text-sm-plus q-mt-sm">
+            {{ layout.label }}
+          </div>
+        </q-card-section>
+      </q-card>
     </div>
   </div>
 </template>
@@ -320,30 +338,37 @@ const handleLayoutSelection = (layout) => {
 </script>
 
 <style scoped lang="scss">
-.layout {
-  width: 120px;
-  cursor: pointer;
-  border-radius: 16px;
-  transition: 0.2s;
+.layouts_wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 
-  .q-img {
-    transition: 0.4s;
-  }
-
-  &:hover {
-    .q-img {
-      filter: brightness(200%) invert(100%);
-    }
-  }
-
-  &.layout--active {
-    color: $black;
-    .text-caption {
-      font-weight: 600;
-    }
+  .layout {
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s;
+    outline: 2px solid transparent;
 
     .q-img {
-      filter: brightness(200%) invert(100%);
+      transition: 0.4s;
+    }
+
+    &:hover {
+      background: #f5f8fd;
+      outline: 2px solid $accent;
+    }
+
+    &.layout--active {
+      color: $secondary;
+      background: #f5f8fd;
+
+      .text-caption {
+        font-weight: 600;
+      }
+
+      .q-img {
+        //filter: brightness(200%);
+      }
     }
   }
 }

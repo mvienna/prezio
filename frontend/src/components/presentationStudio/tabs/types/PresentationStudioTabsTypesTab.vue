@@ -44,11 +44,17 @@
           @click="$emit('select', type.name)"
         >
           <div class="row justify-center">
-            <q-img :src="`/assets/icons/temp/slideTypes/${type.name}.svg`" />
+            <q-img
+              :src="`/assets/icons/slide/types/${type.name}${
+                highlightActiveType && type.name === slide?.type
+                  ? '--active'
+                  : ''
+              }.svg`"
+            />
           </div>
 
           <div
-            class="text-center q-mt-sm"
+            class="text-center q-mt-sm text-sm-plus"
             style="line-height: 1.4; word-spacing: 104px"
           >
             {{
