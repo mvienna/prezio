@@ -32,18 +32,19 @@
       transition-show="jump-down"
       transition-hide="jump-up"
       :offset="[0, 8]"
+      class="no-padding"
     >
       <!-- shadow color -->
       <q-color
         format-model="hex"
         no-header-tabs
-        style="width: 300px"
+        style="min-width: 216px"
         default-view="palette"
         v-model="mediaState.customization.value.shadowColor"
         @change="mediaStore.applyStyles()"
       />
 
-      <div class="q-py-sm q-px-md">
+      <div class="q-py-sm q-px-lg">
         <!-- shadow opacity -->
         <div>
           <div class="text-caption text-grey">
@@ -176,6 +177,7 @@
       transition-show="jump-down"
       transition-hide="jump-up"
       :offset="[0, 8]"
+      class="no-padding"
     >
       <!-- shadow color -->
       <q-color

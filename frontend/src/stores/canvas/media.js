@@ -29,6 +29,19 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
 
       borderColor: "#1751D0",
       borderWidth: "2px",
+
+      default: {
+        shadowColor: "#000000",
+        shadowOpacity: 0,
+        shadowBlur: 10,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0,
+
+        opacity: 100,
+
+        borderColor: "#1751D0",
+        borderWidth: "2px",
+      },
     },
   }),
 
@@ -45,7 +58,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
       layer = "top",
       mode = MODE_OPTIONS.value.media,
       isLocked = false,
-      opacity = this.customization.opacity,
+      opacity = this.customization.default.opacity,
       blur = 0,
       contrast = 100,
       brightness = 100,
@@ -92,13 +105,13 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           brightness,
           invert,
           grayscale,
-          shadowColor: this.customization.shadowColor,
-          shadowOpacity: this.customization.shadowOpacity,
-          shadowBlur: this.customization.shadowBlur,
-          shadowOffsetX: this.customization.shadowOffsetX,
-          shadowOffsetY: this.customization.shadowOffsetY,
-          borderColor: this.customization.borderColor,
-          borderWidth: this.customization.borderWidth,
+          shadowColor: this.customization.default.shadowColor,
+          shadowOpacity: this.customization.default.shadowOpacity,
+          shadowBlur: this.customization.default.shadowBlur,
+          shadowOffsetX: this.customization.default.shadowOffsetX,
+          shadowOffsetY: this.customization.default.shadowOffsetY,
+          borderColor: this.customization.default.borderColor,
+          borderWidth: this.customization.default.borderWidth,
         };
 
         if (layer === "top") {
@@ -159,18 +172,31 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
     },
 
     loadSelectedElementCustomization() {
-      if (selectedElement.value.shadowColor) {
-        this.customization.shadowColor = selectedElement.value.shadowColor;
-        this.customization.shadowOpacity = selectedElement.value.shadowOpacity;
-        this.customization.shadowBlur = selectedElement.value.shadowBlur;
-        this.customization.shadowOffsetX = selectedElement.value.shadowOffsetX;
-        this.customization.shadowOffsetY = selectedElement.value.shadowOffsetY;
+      this.customization.shadowColor =
+        selectedElement.value.shadowColor ||
+        this.customization.default.shadowColor;
+      this.customization.shadowOpacity =
+        selectedElement.value.shadowOpacity ||
+        this.customization.default.shadowOpacity;
+      this.customization.shadowBlur =
+        selectedElement.value.shadowBlur ||
+        this.customization.default.shadowBlur;
+      this.customization.shadowOffsetX =
+        selectedElement.value.shadowOffsetX ||
+        this.customization.default.shadowOffsetX;
+      this.customization.shadowOffsetY =
+        selectedElement.value.shadowOffsetY ||
+        this.customization.default.shadowOffsetY;
 
-        this.customization.opacity = selectedElement.value.opacity;
+      this.customization.opacity =
+        selectedElement.value.opacity || this.customization.default.opacity;
 
-        this.customization.borderColor = selectedElement.value.borderColor;
-        this.customization.borderWidth = selectedElement.value.borderWidth;
-      }
+      this.customization.borderColor =
+        selectedElement.value.borderColor ||
+        this.customization.default.borderColor;
+      this.customization.borderWidth =
+        selectedElement.value.borderWidth ||
+        this.customization.default.borderWidth;
     },
   },
 });

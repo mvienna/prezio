@@ -22,7 +22,10 @@
           text-color="black"
           round
           size="12px"
-          @click="$emit('switchMode', null)"
+          @click="
+            $emit('switchMode', null);
+            deselectElement();
+          "
         />
 
         <q-separator vertical class="q-mx-sm" />
@@ -249,6 +252,7 @@ import {
 import { usePresentationsStore } from "stores/presentations";
 import PresentationStudioToolbarTopCustomizationMedia from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationMedia.vue";
 import { useCanvasMediaStore } from "stores/canvas/media";
+import { deselectElement } from "stores/canvas/helpers/select";
 
 /*
  * variables
