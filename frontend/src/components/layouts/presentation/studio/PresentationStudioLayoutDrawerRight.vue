@@ -186,7 +186,7 @@ const drawerRightTabs = computed(() => {
     },
     {
       name: PRESENTATION_TABS.SETTINGS,
-      icon: "r_view_in_ar",
+      icon: "r_tune",
       label: t("presentationLayout.rightDrawer.tabs.settings.label"),
       title: t("presentationLayout.rightDrawer.tabs.settings.title"),
       hidden: ![

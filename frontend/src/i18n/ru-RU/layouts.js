@@ -249,9 +249,8 @@ export default {
          * settings
          */
         settings: {
-          label: "Настройки",
+          label: "Контент",
           title: "Настройте вопрос",
-          groupTitle: "",
 
           groups: {
             submission: "Настройки ответов",
