@@ -93,7 +93,7 @@ const selectedBaseFillColor = ref(defaultBaseFillColor);
 const baseFillColors = [
   "#FFFFFF",
   "#000000",
-  "#4971FF",
+  "#1751D0",
   "#DB4437",
   "#F4B400",
   "#0F9D58",

@@ -20,7 +20,7 @@ export const generateQrCode = (
       //   type: "linear",
       //   rotation: Math.PI / 4,
       //   colorStops: [
-      //     { offset: 0, color: "#4971FF" },
+      //     { offset: 0, color: "#1751D0" },
       //     { offset: 1, color: "#4647DA" },
       //   ],
       // },

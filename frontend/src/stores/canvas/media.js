@@ -27,7 +27,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
 
       opacity: 100,
 
-      borderColor: "#4971FF",
+      borderColor: "#1751D0",
       borderWidth: "2px",
     },
   }),
