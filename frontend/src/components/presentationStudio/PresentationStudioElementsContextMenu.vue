@@ -252,8 +252,6 @@
           <q-space />
 
           <div v-if="showShortcuts" class="shortcut row no-wrap q-gutter-xs">
-            <div v-if="isMac">⌘</div>
-            <div v-else>Ctrl</div>
             <div>⌫</div>
           </div>
         </q-item>
