@@ -8,6 +8,24 @@
         : 'background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));'
     "
   >
+    <!-- websockets connection interrupted -->
+    <WebSocketsConnectionInterrupted
+      v-if="!isConnectedToWebSockets"
+      @reconnect="connectToRoomChannels()"
+    />
+
+    <!-- TODO: REMOVE THIS BUTTON ↓ ↓ ↓ -->
+    <q-btn
+      v-if="isConnectedToWebSockets"
+      push
+      label="Отсоединиться от WebSocket"
+      color="red"
+      no-caps
+      style="position: fixed; bottom: 16px; left: 16px; z-index: 2000"
+      @click="disconnect()"
+    />
+    <!-- TODO: REMOVE THIS BUTTON ↑ ↑ ↑ -->
+
     <!-- background -->
     <div
       class="fixed-center full-height full-width"
@@ -280,6 +298,7 @@ import { generateQrCode } from "src/helpers/qrUtils";
 import { computeAverageBrightness } from "src/helpers/colorUtils";
 import PresentationRoomParticipantFormsSubmissionsTypeAnswer from "components/presentationRoom/participant/forms/submissions/PresentationRoomParticipantFormsSubmissionsTypeAnswer.vue";
 import PresentationRoomParticipantFormsAuthCollectData from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsAuthCollectData.vue";
+import WebSocketsConnectionInterrupted from "components/WebSocketsConnectionInterrupted.vue";
 
 /*
  * variables
@@ -572,6 +591,14 @@ onUnmounted(() => {
 /*
  * webhooks
  */
+// TODO: REMOVE THIS FUNCTION ↓ ↓ ↓
+const disconnect = () => {
+  window.Echo.connector.disconnect();
+};
+// TODO: REMOVE THIS FUNCTION ↑ ↑ ↑
+
+const isConnectedToWebSockets = ref(true);
+
 const connectToRoomChannels = async () => {
   const channel = await window.Echo.channel(`public.room.${room.value.id}`);
 
@@ -633,6 +660,22 @@ const connectToRoomChannels = async () => {
         }
       });
   }
+
+  window.Echo.connector.pusher.connection.bind("connected", () => {
+    isConnectedToWebSockets.value = true;
+
+    // TODO: REMOVE THIS COMMENT ↓ ↓ ↓
+    console.log("connected");
+    // TODO: REMOVE THIS COMMENT ↑ ↑ ↑
+  });
+
+  window.Echo.connector.pusher.connection.bind("disconnected", () => {
+    isConnectedToWebSockets.value = false;
+
+    // TODO: REMOVE THIS COMMENT ↓ ↓ ↓
+    console.log("disconnected");
+    // TODO: REMOVE THIS COMMENT ↑ ↑ ↑
+  });
 
   /*
    * listen for room updates

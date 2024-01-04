@@ -1,5 +1,11 @@
 <template>
   <q-page>
+    <!-- websockets connection interrupted -->
+    <WebSocketsConnectionInterrupted
+      v-if="!isConnectedToWebSockets"
+      @reconnect="connectToRoomChannels()"
+    />
+
     <!-- top toolbar -->
     <PresentationStudioToolbarTop
       @switch-mode="canvasStore.switchMode($event)"
@@ -164,6 +170,7 @@ import Echo from "laravel-echo";
 import PresentationStudioRoomData from "components/presentationStudio/PresentationStudioRoomData.vue";
 import { computeAverageBrightness } from "src/helpers/colorUtils";
 import PresentationStudioRoomActions from "components/presentationStudio/toolbar/PresentationStudioRoomActions.vue";
+import WebSocketsConnectionInterrupted from "components/WebSocketsConnectionInterrupted.vue";
 
 /*
  * variables
@@ -813,6 +820,8 @@ watch(
 /*
  * webhooks
  */
+const isConnectedToWebSockets = ref(true);
+
 const connectToRoomChannels = () => {
   const channel = window.Echo.channel(
     `public.room.${presentation.value.room.id}`
@@ -844,6 +853,14 @@ const connectToRoomChannels = () => {
         (item) => item.id !== userLeft?.id && item.room_id
       );
     });
+
+  window.Echo.connector.pusher.connection.bind("connected", () => {
+    isConnectedToWebSockets.value = true;
+  });
+
+  window.Echo.connector.pusher.connection.bind("disconnected", () => {
+    isConnectedToWebSockets.value = false;
+  });
 
   /*
    * listen for new reactions

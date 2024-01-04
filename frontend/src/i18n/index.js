@@ -9,6 +9,7 @@ import ruLayouts from "./ru-RU/layouts";
 import ruPresentationsBrowser from "./ru-RU/presentationsBrowser";
 import ruPresentationStudio from "./ru-RU/presentationStudio";
 import ruPresentationRoom from "./ru-RU/presentationRoom";
+import ruWebSockets from "./ru-RU/websockets";
 
 export default {
   "ru-RU": {
@@ -20,5 +21,6 @@ export default {
     ...ruPresentationsBrowser,
     ...ruPresentationStudio,
     ...ruPresentationRoom,
+    ...ruWebSockets,
   },
 };
