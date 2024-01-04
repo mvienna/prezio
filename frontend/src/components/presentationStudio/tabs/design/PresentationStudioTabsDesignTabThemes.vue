@@ -1,6 +1,6 @@
 <template>
-  <div class="q-pa-md">
-    <div v-for="category in categories" :key="category.name" class="q-mb-lg">
+  <div class="q-pa-md column no-wrap q-gutter-lg">
+    <div v-for="category in categories" :key="category.name">
       <div class="q-mb-sm rounded-borders text-grey-9">
         {{ category.label }}
       </div>
@@ -24,9 +24,23 @@
             @mouseover="handleBackgroundMouseOver(theme, themeIndex)"
             @mouseleave="handleBackgroundMouseLeave(themeIndex)"
           />
+
+          <div
+            class="text-center absolute-bottom-left q-mb-sm q-ml-sm text-sm"
+            :style="`font-family: ${theme.font || 'Arial'}; color: ${
+              theme.color || 'white'
+            }`"
+          >
+            {{
+              theme.name || category.label.slice(0, -1) + " " + (themeIndex + 1)
+            }}
+          </div>
+
           <div
             class="text-center absolute-bottom-right q-mb-xs q-mr-sm text-h5"
-            :style="`font-family: ${theme.font}; color: ${theme.color}`"
+            :style="`font-family: ${theme.font || 'Arial'}; color: ${
+              theme.color || 'white'
+            }`"
           >
             Aa
           </div>
@@ -133,7 +147,7 @@ const handleBackgroundMouseLeave = (themeIndex) => {
 .themes_grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 16px;
 
   .item:nth-last-child(-n + 3) {
     margin-bottom: 0;
