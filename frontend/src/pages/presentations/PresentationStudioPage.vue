@@ -34,6 +34,11 @@
     <!-- canvas -->
     <div
       class="canvas__container row justify-center"
+      :style="`height: calc(100%${
+        presentation?.slides?.filter((slide) => slide?.answers?.length).length
+          ? ' - 61px'
+          : ''
+      });`"
       @click="handleClickOutsideOfCanvas"
     >
       <teleport
@@ -882,7 +887,6 @@ const connectToRoomChannels = () => {
 
 .canvas__container {
   width: 100%;
-  height: calc(100% - 61px);
   padding: calc(61px + 24px) 24px 24px;
   overflow-y: hidden;
 
