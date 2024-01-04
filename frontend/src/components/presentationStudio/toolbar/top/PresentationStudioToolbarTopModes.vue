@@ -8,7 +8,6 @@
       round
       size="12px"
       :disable="disabled"
-      :class="mode === MODE_OPTIONS.drawing ? 'bg-grey-1' : ''"
       @click="$emit('switchMode', MODE_OPTIONS.drawing)"
     >
       <q-tooltip>
@@ -24,11 +23,7 @@
       round
       size="12px"
       :disable="disabled"
-      :class="mode === MODE_OPTIONS.text ? 'bg-grey-1' : ''"
-      @click="
-        $emit('switchMode', MODE_OPTIONS.text);
-        textStore.addNewText(undefined, t);
-      "
+      @click="textStore.addNewText(undefined, t)"
     >
       <q-tooltip>
         {{ $t("presentationStudio.toolbar.text.title") }}
@@ -109,7 +104,6 @@
     <!-- shapes -->
     <q-btn
       icon="icon-shape_line"
-      :class="mode === MODE_OPTIONS.shape ? 'bg-grey-1' : ''"
       unelevated
       text-color="black"
       round

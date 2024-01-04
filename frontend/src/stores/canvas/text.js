@@ -158,10 +158,10 @@ export const useCanvasTextStore = defineStore("canvasText", {
         this.computeTextElementProps(mouse.value.x, mouse.value.y)
       );
 
-      canvasStore.switchMode(MODE_OPTIONS.value.textEditing);
       this.removeTextInput();
 
       selectElement(elements.value[0]);
+      canvasStore.switchMode(MODE_OPTIONS.value.textEditing);
       this.editText();
 
       /*
