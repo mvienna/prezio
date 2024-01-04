@@ -34,6 +34,22 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       shadowOffsetY: 0,
 
       opacity: 100,
+
+      default: {
+        strokeColor: "#1751D0",
+        fillColor: "#1751D0",
+        fillColor2: "#bc49ff",
+        fillStyle: "solid",
+        lineWidth: "0px",
+
+        shadowColor: "#000000",
+        shadowOpacity: 0,
+        shadowBlur: 10,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0,
+
+        opacity: 100,
+      },
     },
   }),
 
@@ -50,9 +66,9 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       layer = "top",
       mode = MODE_OPTIONS.value.shape,
       isLocked = false,
-      strokeColor = this.customization.strokeColor,
-      fillColor = this.customization.fillColor,
-      lineWidth = this.customization.lineWidth,
+      strokeColor = this.customization.default.strokeColor,
+      fillColor = this.customization.default.fillColor,
+      lineWidth = this.customization.default.lineWidth,
       isForceSelectCreatedElement = true
     ) {
       width =
@@ -80,15 +96,15 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         rotationAngle: 0,
         strokeColor,
         fillColor,
-        fillColor2: this.customization.fillColor2,
-        fillStyle: this.customization.fillStyle,
+        fillColor2: this.customization.default.fillColor2,
+        fillStyle: this.customization.default.fillStyle,
         lineWidth: lineWidth,
-        shadowColor: this.customization.shadowColor,
-        shadowOpacity: this.customization.shadowOpacity,
-        shadowBlur: this.customization.shadowBlur,
-        shadowOffsetX: this.customization.shadowOffsetX,
-        shadowOffsetY: this.customization.shadowOffsetY,
-        opacity: this.customization.opacity,
+        shadowColor: this.customization.default.shadowColor,
+        shadowOpacity: this.customization.default.shadowOpacity,
+        shadowBlur: this.customization.default.shadowBlur,
+        shadowOffsetX: this.customization.default.shadowOffsetX,
+        shadowOffsetY: this.customization.default.shadowOffsetY,
+        opacity: this.customization.default.opacity,
       };
 
       if (layer === "top") {
@@ -142,29 +158,36 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
 
     loadSelectedElementCustomization() {
       this.customization.strokeColor =
-        selectedElement.value.strokeColor || this.customization.strokeColor;
+        selectedElement.value.strokeColor ||
+        this.customization.default.strokeColor;
       this.customization.fillColor =
-        selectedElement.value.fillColor || this.customization.fillColor;
+        selectedElement.value.fillColor || this.customization.default.fillColor;
       this.customization.fillColor2 =
-        selectedElement.value.fillColor2 || this.customization.fillColor2;
+        selectedElement.value.fillColor2 ||
+        this.customization.default.fillColor2;
       this.customization.fillStyle =
-        selectedElement.value.fillStyle || this.customization.fillStyle;
+        selectedElement.value.fillStyle || this.customization.default.fillStyle;
       this.customization.lineWidth =
-        selectedElement.value.lineWidth || this.customization.lineWidth;
+        selectedElement.value.lineWidth || this.customization.default.lineWidth;
 
       this.customization.shadowColor =
-        selectedElement.value.shadowColor || this.customization.shadowColor;
+        selectedElement.value.shadowColor ||
+        this.customization.default.shadowColor;
       this.customization.shadowOpacity =
-        selectedElement.value.shadowOpacity || this.customization.shadowOpacity;
+        selectedElement.value.shadowOpacity ||
+        this.customization.default.shadowOpacity;
       this.customization.shadowBlur =
-        selectedElement.value.shadowBlur || this.customization.shadowBlur;
+        selectedElement.value.shadowBlur ||
+        this.customization.default.shadowBlur;
       this.customization.shadowOffsetX =
-        selectedElement.value.shadowOffsetX || this.customization.shadowOffsetX;
+        selectedElement.value.shadowOffsetX ||
+        this.customization.default.shadowOffsetX;
       this.customization.shadowOffsetY =
-        selectedElement.value.shadowOffsetY || this.customization.shadowOffsetY;
+        selectedElement.value.shadowOffsetY ||
+        this.customization.default.shadowOffsetY;
 
       this.customization.opacity =
-        selectedElement.value.opacity || this.customization.opacity;
+        selectedElement.value.opacity || this.customization.default.opacity;
     },
   },
 });
