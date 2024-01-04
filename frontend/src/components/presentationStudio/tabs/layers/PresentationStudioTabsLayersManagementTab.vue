@@ -320,9 +320,6 @@ const handleEndDragging = () => {
 const handleLayersReorder = async () => {
   handleEndDragging();
 
-  // re-select element after updating elements (otherwise index might be lost)
-  selectElement(selectedElement.value);
-
   // redraw canvas with updated layers
   canvasStore.redrawCanvas();
 };
