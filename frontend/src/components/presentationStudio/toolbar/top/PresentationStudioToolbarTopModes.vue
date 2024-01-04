@@ -43,10 +43,7 @@
       round
       size="12px"
       :disable="disabled"
-      @click="
-        $emit('switchMode', MODE_OPTIONS.media);
-        showSelectMediaDialog = true;
-      "
+      @click="showSelectMediaDialog = true"
     >
       <q-tooltip>
         {{ $t("presentationStudio.toolbar.media.title") }}

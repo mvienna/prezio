@@ -290,6 +290,7 @@ const {
 defineEmits([
   "switchMode",
   "addImage",
+  "addEmoji",
   "addShape",
   "zoomIn",
   "zoomOut",
