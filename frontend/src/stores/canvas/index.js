@@ -76,9 +76,8 @@ export const useCanvasStore = defineStore("canvas", {
     selectedElementIndex: -1,
 
     selectedElementBorder: {
-      borderWidth: 2,
-      borderColor: "#4971FF",
-      outlineColor: "#D7E0FF",
+      borderWidth: 1,
+      borderColor: "#1751D0",
     },
 
     selectedElementRotationHandle: {
@@ -901,7 +900,7 @@ export const useCanvasStore = defineStore("canvas", {
       this.ctx.save();
 
       this.magnet.connectionLines.forEach((connectionLine) => {
-        this.ctx.strokeStyle = "#4971FF";
+        this.ctx.strokeStyle = "#1751D0";
         this.ctx.lineWidth = this.computeAdjustedSize(1);
 
         const fromX = connectionLine.from.x;
@@ -1014,26 +1013,6 @@ export const useCanvasStore = defineStore("canvas", {
         this.selectedElementBorder.borderWidth
       );
 
-      const padding = 4;
-
-      this.ctx.strokeStyle = this.selectedElementBorder.outlineColor;
-      this.ctx.lineWidth = borderWidth;
-      this.ctx.lineJoin = "round";
-      this.ctx.lineCap = "round";
-      this.ctx.strokeRect(
-        x - padding,
-        y - padding,
-        width + padding * 2,
-        height + padding * 2
-      );
-
-      this.ctx.strokeRect(
-        x + padding,
-        y + padding,
-        width - padding * 2,
-        height - padding * 2
-      );
-
       this.ctx.strokeStyle = this.selectedElementBorder.borderColor;
       this.ctx.lineWidth = borderWidth;
       this.ctx.strokeRect(x, y, width, height);
@@ -1043,12 +1022,43 @@ export const useCanvasStore = defineStore("canvas", {
        */
       if (slide.value?.type !== SLIDE_TYPES.CONTENT) return;
 
+      const handleSize = borderWidth * 8;
+
+      /*
+       * rotation handle
+       */
+      if (drawRotationHandle) {
+        const rotationHandleX = x + width / 2 - borderWidth / 2;
+        const rotationHandleY = y + height;
+
+        const connectorLineHeight = this.computeAdjustedSize(
+          this.selectedElementRotationHandle.height
+        );
+
+        this.ctx.lineWidth = borderWidth / 2;
+        this.ctx.strokeRect(
+          rotationHandleX,
+          rotationHandleY,
+          borderWidth,
+          connectorLineHeight
+        );
+
+        this.ctx.lineWidth = borderWidth;
+        this.ctx.beginPath();
+        this.ctx.arc(
+          x + width / 2,
+          y + height + handleSize / 2 + connectorLineHeight + borderWidth * 2,
+          this.computeAdjustedSize(this.selectedElementRotationHandle.radius),
+          0,
+          2 * Math.PI
+        );
+        this.ctx.stroke();
+      }
+
       /*
        * resize handles
        */
       if (RESIZE_HANDLES_OPTIONS.length) {
-        const handleSize = borderWidth * 4;
-
         RESIZE_HANDLES_OPTIONS.forEach((handle) => {
           const { minX, minY } = this.computeResizeHandlePosition(
             handle,
@@ -1059,47 +1069,12 @@ export const useCanvasStore = defineStore("canvas", {
             handleSize
           );
 
-          this.ctx.fillStyle = this.selectedElementBorder.outlineColor;
-          this.ctx.fillRect(
-            minX - padding,
-            minY - padding,
-            handleSize + padding * 2,
-            handleSize + padding * 2
-          );
-
-          this.ctx.fillStyle = this.selectedElementBorder.borderColor;
+          this.ctx.fillStyle = "white";
           this.ctx.fillRect(minX, minY, handleSize, handleSize);
+
+          this.ctx.strokeStyle = this.selectedElementBorder.borderColor;
+          this.ctx.strokeRect(minX, minY, handleSize, handleSize);
         });
-      }
-
-      /*
-       * rotation handle
-       */
-      if (drawRotationHandle) {
-        const rotationHandleWidth = borderWidth / 2;
-
-        const rotationHandleX =
-          x + width / 2 - borderWidth - rotationHandleWidth / 2;
-        const rotationHandleY = y + height;
-
-        this.ctx.lineWidth = borderWidth / 2;
-        this.ctx.strokeRect(
-          rotationHandleX,
-          rotationHandleY,
-          rotationHandleWidth,
-          this.computeAdjustedSize(this.selectedElementRotationHandle.height)
-        );
-
-        this.ctx.beginPath();
-        this.ctx.arc(
-          rotationHandleX + rotationHandleWidth / 2,
-          rotationHandleY +
-            this.computeAdjustedSize(this.selectedElementRotationHandle.height),
-          this.computeAdjustedSize(this.selectedElementRotationHandle.radius),
-          0,
-          2 * Math.PI
-        );
-        this.ctx.fill();
       }
 
       this.ctx.beginPath();
@@ -1145,7 +1120,7 @@ export const useCanvasStore = defineStore("canvas", {
          * center top
          */
         case this.RESIZE_HANDLES_OPTIONS.centerTop:
-          minX = x + width / 2 - handleSize / 2 - handleSize / 3;
+          minX = x + width / 2 - handleSize / 2;
           minY = y - handleSize / 2;
           break;
 
@@ -1153,7 +1128,7 @@ export const useCanvasStore = defineStore("canvas", {
          * center bottom
          */
         case this.RESIZE_HANDLES_OPTIONS.centerBottom:
-          minX = x + width / 2 - handleSize / 2 - handleSize / 3;
+          minX = x + width / 2 - handleSize / 2;
           minY = y + height - handleSize / 2;
           break;
 

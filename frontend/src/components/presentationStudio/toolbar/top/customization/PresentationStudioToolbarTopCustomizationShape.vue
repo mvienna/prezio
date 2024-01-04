@@ -161,6 +161,7 @@
       transition-show="jump-down"
       transition-hide="jump-up"
       :offset="[0, 8]"
+      class="no-padding"
     >
       <q-color
         format-model="rgba"
@@ -235,6 +236,7 @@
       transition-hide="jump-up"
       :offset="[0, 8]"
       style="overflow-x: hidden"
+      class="no-padding"
     >
       <!-- shadow color -->
       <q-color
