@@ -1,20 +1,19 @@
 <template>
-  <q-btn
-    no-caps
-    outline
-    color="background"
-    text-color="primary"
-    style="width: calc(50% - 8px)"
-    @click="handleAddingLeaderboardSlide()"
+  <PresentationStudioTabsSettingsTabOptionLayout
+    icon="icon-leaderboard"
+    :label="
+      $t('presentationLayout.rightDrawer.tabs.settings.leaderboard.title')
+    "
+    :tooltip="
+      $t('presentationLayout.rightDrawer.tabs.settings.leaderboard.description')
+    "
   >
-    <q-icon name="r_insert_chart" size="32px" class="q-my-sm" />
-
-    <div class="text-center q-mb-sm" style="line-height: 1.4">
+    <div class="link text-primary" @click="handleAddingLeaderboardSlide()">
       {{
         $t("presentationLayout.rightDrawer.tabs.settings.leaderboard.create")
       }}
     </div>
-  </q-btn>
+  </PresentationStudioTabsSettingsTabOptionLayout>
 </template>
 
 <script setup>
@@ -23,6 +22,7 @@ import { storeToRefs } from "pinia";
 import { deselectElement } from "stores/canvas/helpers/select";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { useCanvasStore } from "stores/canvas";
+import PresentationStudioTabsSettingsTabOptionLayout from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionLayout.vue";
 
 /*
  * emits

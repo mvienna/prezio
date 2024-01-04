@@ -5,19 +5,7 @@
       @update-slide-settings="handleSlideSettingsUpdate()"
     />
 
-    <!-- entries per participant -->
-    <PresentationStudioTabsSettingsTabOptionsEntriesPerParticipant
-      v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
-      @update-slide-settings="handleSlideSettingsUpdate()"
-    />
-
-    <!-- multiple entries -->
-    <PresentationStudioTabsSettingsTabOptionsMultipleEntries
-      v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
-      @update-slide-settings="handleSlideSettingsUpdate()"
-    />
-
-    <!-- quiz - pick answer options -->
+    <!-- ANSWER OPTIONS (quiz) -->
     <PresentationStudioTabsSettingsTabOptionsQuizPickAnswerOptions
       v-if="
         [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
@@ -25,56 +13,81 @@
       @update-slide-settings="handleSlideSettingsUpdate()"
     />
 
-    <!-- quiz - type answer options -->
     <PresentationStudioTabsSettingsTabOptionsQuizTypeAnswerOptions
-      v-if="SLIDE_TYPES.TYPE_ANSWER === slide?.type"
+      v-else-if="slide?.type === SLIDE_TYPES.TYPE_ANSWER"
       @update-slide-settings="handleSlideSettingsUpdate()"
     />
 
-    <!-- quiz scoring -->
-    <PresentationStudioTabsSettingsTabOptionsQuizScoring
-      v-if="SLIDE_TYPES_OF_QUIZ.includes(slide?.type)"
-      @update-slide-settings="handleSlideSettingsUpdate()"
-    />
+    <!-- SCORING (quiz) -->
+    <template v-if="SLIDE_TYPES_OF_QUIZ.includes(slide?.type)">
+      <div class="q-mt-lg q-mb-sm text-semibold">
+        {{ $t("presentationLayout.rightDrawer.tabs.settings.groups.scoring") }}
+      </div>
 
-    <!-- time limit -->
-    <PresentationStudioTabsSettingsTabOptionsTimeLimit
-      v-if="![SLIDE_TYPES.LEADERBOARD].includes(slide?.type)"
-      @update-slide-settings="handleSlideSettingsUpdate()"
-    />
+      <PresentationStudioTabsSettingsTabOptionsQuizScoring
+        @update-slide-settings="handleSlideSettingsUpdate()"
+      />
+    </template>
 
-    <!-- lock submission -->
-    <PresentationStudioTabsSettingsTabOptionsLockSubmission
-      v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
-    />
+    <!-- SUBMISSION SETTINGS -->
+    <template v-if="![SLIDE_TYPES.LEADERBOARD].includes(slide?.type)">
+      <div class="q-mt-lg q-mb-sm text-semibold">
+        {{
+          $t("presentationLayout.rightDrawer.tabs.settings.groups.submission")
+        }}
+      </div>
 
-    <!-- hide results -->
-    <PresentationStudioTabsSettingsTabOptionsHideResults
-      v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
-    />
+      <div class="column no-wrap q-gutter-sm">
+        <template v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD">
+          <!-- entries per participant -->
+          <PresentationStudioTabsSettingsTabOptionsEntriesPerParticipant
+            @update-slide-settings="handleSlideSettingsUpdate()"
+          />
 
-    <!-- filter profanity -->
-    <PresentationStudioTabsSettingsTabOptionsOther
-      v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD"
-    />
+          <!-- multiple entries -->
+          <PresentationStudioTabsSettingsTabOptionsMultipleEntries
+            @update-slide-settings="handleSlideSettingsUpdate()"
+          />
 
-    <q-separator class="q-mb-lg q-mt-md" />
+          <!-- lock submission -->
+          <PresentationStudioTabsSettingsTabOptionsLockSubmission
+            @update-slide-settings="handleSlideSettingsUpdate()"
+          />
+
+          <!-- hide results -->
+          <PresentationStudioTabsSettingsTabOptionsHideResults
+            @update-slide-settings="handleSlideSettingsUpdate()"
+          />
+
+          <!-- filter profanity -->
+          <PresentationStudioTabsSettingsTabOptionsOther
+            @update-slide-settings="handleSlideSettingsUpdate()"
+          />
+        </template>
+
+        <!-- time limit -->
+        <PresentationStudioTabsSettingsTabOptionsTimeLimit
+          @update-slide-settings="handleSlideSettingsUpdate()"
+        />
+      </div>
+    </template>
+
+    <div v-if="SLIDE_TYPES_OF_QUIZ.includes(slide?.type)">
+      <div class="q-mt-lg q-mb-md text-semibold">
+        {{ $t("presentationLayout.rightDrawer.tabs.settings.groups.other") }}
+      </div>
+
+      <!-- leaderboard -->
+      <PresentationStudioTabsSettingsTabOptionsLeaderboard class="q-mb-md" />
+
+      <!-- open general quiz settings -->
+      <PresentationStudioTabsSettingsTabOpenGeneralQuizSettings />
+    </div>
 
     <!-- apply to all questions -->
     <PresentationStudioTabsSettingsTabApplyToAllQuestions
       v-if="![SLIDE_TYPES.LEADERBOARD].includes(slide?.type)"
     />
-
-    <div
-      v-if="SLIDE_TYPES_OF_QUIZ.includes(slide?.type)"
-      class="row no-wrap q-gutter-md q-pt-md"
-    >
-      <!-- leaderboard -->
-      <PresentationStudioTabsSettingsTabOptionsLeaderboard />
-
-      <!-- open general quiz settings -->
-      <PresentationStudioTabsSettingsTabOpenGeneralQuizSettings />
-    </div>
   </div>
 </template>
 
@@ -101,6 +114,7 @@ import PresentationStudioTabsSettingsTabOptionsOther from "components/presentati
 import PresentationStudioTabsSettingsTabOpenGeneralQuizSettings from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTabOpenGeneralQuizSettings.vue";
 import PresentationStudioTabsSettingsTabOptionsQuizScoring from "components/presentationStudio/tabs/settings/options/quiz/PresentationStudioTabsSettingsTabOptionsQuizScoring.vue";
 import PresentationStudioTabsSettingsTabOptionsQuizTypeAnswerOptions from "components/presentationStudio/tabs/settings/options/quiz/PresentationStudioTabsSettingsTabOptionsQuizTypeAnswerOptions.vue";
+import PresentationStudioTabsSettingsTabOptionLayout from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionLayout.vue";
 
 /*
  * variables

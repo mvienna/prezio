@@ -1,35 +1,26 @@
 <template>
-  <div>
-    <div class="row no-wrap items-center justify-between text-semibold q-pb-xs">
-      <span>
-        {{
-          $t(
-            "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.title"
-          )
-        }}
-
-        <q-icon name="r_info" class="q-ml-xs" color="grey-8">
-          <q-tooltip class="text-center" max-width="200px" :offset="[0, 8]">
-            {{
-              $t(
-                "presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.description"
-              )
-            }}
-          </q-tooltip>
-        </q-icon>
-      </span>
-    </div>
-
+  <PresentationStudioTabsSettingsTabOptionLayout
+    icon="r_group"
+    :label="
+      $t(
+        'presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.title'
+      )
+    "
+    :tooltip="
+      $t(
+        'presentationLayout.rightDrawer.tabs.settings.entriesPerParticipant.description'
+      )
+    "
+  >
     <q-input
       v-model="slideSettings.entriesPerParticipant"
       type="number"
-      class="q-mt-sm"
       outlined
       dense
       :min="1"
       :max="10"
       placeholder="1"
-      style="width: 160px"
+      style="width: 87px"
       hide-bottom-space
       :rules="entriesPerParticipantRules"
       @update:model-value="
@@ -43,17 +34,14 @@
           }
         }
       "
-    >
-      <template #prepend>
-        <q-icon name="r_keyboard_return" color="black" class="q-mr-xs" />
-      </template>
-    </q-input>
-  </div>
+    />
+  </PresentationStudioTabsSettingsTabOptionLayout>
 </template>
 
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
+import PresentationStudioTabsSettingsTabOptionLayout from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionLayout.vue";
 
 /*
  * emits

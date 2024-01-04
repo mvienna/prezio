@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="row justify-center q-mt-lg q-mb-sm">
     <q-btn
       unelevated
       :label="
@@ -7,9 +7,9 @@
           'presentationLayout.rightDrawer.tabs.settings.applyToAllQuestions.title'
         )
       "
-      icon="r_move_down"
-      color="primary"
-      class="full-width q-py-sm"
+      icon="r_copy_all"
+      color="grey-2"
+      text-color="black"
       no-caps
       @click="showApplySettingsToAllQuestionsDialog = true"
     >

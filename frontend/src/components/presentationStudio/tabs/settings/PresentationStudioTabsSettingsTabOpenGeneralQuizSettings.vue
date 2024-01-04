@@ -1,33 +1,32 @@
 <template>
-  <q-btn
-    unelevated
-    no-caps
-    outline
-    color="background"
-    text-color="primary"
-    style="width: calc(50% - 8px)"
-    @click="
-      showSettingsDialog = true;
-      presentationSettingsTabsExpanded = [false, false, false, false, true];
+  <PresentationStudioTabsSettingsTabOptionLayout
+    icon="icon-page_info"
+    :label="
+      $t(
+        'presentationLayout.rightDrawer.tabs.settings.openGeneralQuizSettings.title'
+      )
     "
   >
-    <div>
-      <q-icon name="r_quiz" size="32px" class="q-my-sm" />
-
-      <div class="text-center q-mb-sm" style="line-height: 1.4">
-        {{
-          $t(
-            "presentationLayout.rightDrawer.tabs.settings.openGeneralQuizSettings.title"
-          )
-        }}
-      </div>
+    <div
+      class="link text-primary"
+      @click="
+        showSettingsDialog = true;
+        presentationSettingsTabsExpanded = [false, false, false, false, true];
+      "
+    >
+      {{
+        $t(
+          "presentationLayout.rightDrawer.tabs.settings.openGeneralQuizSettings.open"
+        )
+      }}
     </div>
-  </q-btn>
+  </PresentationStudioTabsSettingsTabOptionLayout>
 </template>
 
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
+import PresentationStudioTabsSettingsTabOptionLayout from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionLayout.vue";
 
 /*
  * emits

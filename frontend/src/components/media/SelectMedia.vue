@@ -48,11 +48,7 @@
       </q-tabs>
 
       <!-- selected file -->
-      <div
-        v-if="selectedFile"
-        class="q-py-lg"
-        style="height: calc(100% - 116px)"
-      >
+      <div v-if="selectedFile" style="height: calc(100% - 130px)">
         <q-img
           class="uploaded__file"
           fill="contain"

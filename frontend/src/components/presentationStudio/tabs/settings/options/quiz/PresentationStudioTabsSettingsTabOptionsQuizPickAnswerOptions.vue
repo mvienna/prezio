@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div class="row no-wrap items-center q-mb-sm text-semibold">
+    <!-- title -->
+    <div class="q-mb-sm text-semibold">
       {{
-        $t("presentationLayout.rightDrawer.tabs.settings.answerOptions.title")
+        $t("presentationLayout.rightDrawer.tabs.settings.groups.answerOptions")
       }}
 
       <q-icon name="r_info" class="q-ml-xs" color="grey-8">
@@ -38,7 +39,7 @@
             name="r_drag_indicator"
             color="grey"
             size="sm"
-            class="layer_handle cursor-pointer q-mr-xs"
+            class="layer_handle cursor-pointer"
           />
 
           <q-input
@@ -47,6 +48,8 @@
             dense
             style="width: 100%"
             class="q-mx-sm"
+            debounce="1000"
+            @update:model-value="$emit('updateSlideSettings')"
             :placeholder="
               $t(
                 'presentationLayout.rightDrawer.tabs.settings.answerOptions.answerOption'
@@ -65,7 +68,7 @@
             no-error-icon
           >
             <template #append>
-              <div class="text-caption q-mr-xs">
+              <div class="text-sm q-mr-xs">
                 {{ 150 - element.value?.length }}
               </div>
 
@@ -82,13 +85,17 @@
 
               <q-btn
                 flat
-                color="primary"
+                color="grey-9"
                 round
                 size="8px"
                 @click="showSelectAnswerImageDialog[index] = true"
               >
                 <template #default>
-                  <q-icon v-if="!element.image" name="icon-image_add" />
+                  <q-icon
+                    v-if="!element.image"
+                    name="icon-image_add"
+                    size="16px"
+                  />
 
                   <q-img
                     v-else
@@ -124,15 +131,10 @@
           <div class="row no-wrap">
             <q-checkbox
               v-model="element.isCorrect"
-              checked-icon="r_check_circle"
-              :unchecked-icon="
-                element.isHovered ? 'o_check_circle' : 'o_circle'
-              "
+              size="32px"
+              @update:model-value="$emit('updateSlideSettings')"
               :color="element.isCorrect ? 'positive' : 'grey'"
               keep-color
-              style="font-size: 16px"
-              @mouseover="element.isHovered = true"
-              @mouseleave="element.isHovered = false"
             >
               <q-tooltip>
                 {{
@@ -148,7 +150,7 @@
               color="grey"
               icon="r_delete_sweep"
               size="12px"
-              style="border-radius: 50%; width: 40px"
+              style="border-radius: 50%; width: 32px"
               :disable="slideSettings.answerOptions.length <= 2"
               @click="handleRemovingAnswerOption(index)"
             />
@@ -158,20 +160,22 @@
     </draggable>
 
     <!-- add answer option -->
-    <q-btn
-      v-if="slideSettings.answerOptions?.length < 8"
-      unelevated
-      :label="
-        $t(
-          'presentationLayout.rightDrawer.tabs.settings.answerOptions.addAnswerOption'
-        )
-      "
-      icon="r_add"
-      no-caps
-      class="q-mt-md full-width"
-      color="primary"
-      @click="handleAddingNewAnswerOption()"
-    />
+    <div class="q-mt-md" style="margin-left: 32px">
+      <q-btn
+        v-if="slideSettings.answerOptions?.length < 8"
+        unelevated
+        :label="
+          $t(
+            'presentationLayout.rightDrawer.tabs.settings.answerOptions.addAnswerOption'
+          )
+        "
+        icon="r_add"
+        no-caps
+        color="grey-2"
+        text-color="black"
+        @click="handleAddingNewAnswerOption()"
+      />
+    </div>
   </div>
 </template>
 
@@ -192,37 +196,6 @@ defineEmits(["updateSlideSettings"]);
  */
 const presentationsStore = usePresentationsStore();
 const { slideSettings, slide } = storeToRefs(presentationsStore);
-
-/*
- * rules
- */
-const isScorePointsValid = (val) => {
-  return val >= 0 && val <= 1000;
-};
-
-const minScorePointsRules = [
-  (val) =>
-    isScorePointsValid(val) ||
-    t("presentationLayout.rightDrawer.tabs.settings.points.errors.invalid"),
-  (val) =>
-    isMinScorePointsValid(val) ||
-    t("presentationLayout.rightDrawer.tabs.settings.points.errors.invalidMin"),
-];
-const isMinScorePointsValid = (val) => {
-  return val <= slideSettings.value.points.max;
-};
-
-const maxScorePointsRules = [
-  (val) =>
-    isScorePointsValid(val) ||
-    t("presentationLayout.rightDrawer.tabs.settings.points.errors.invalid"),
-  (val) =>
-    isMaxScorePointsValid(val) ||
-    t("presentationLayout.rightDrawer.tabs.settings.points.errors.invalidMax"),
-];
-const isMaxScorePointsValid = (val) => {
-  return val >= slideSettings.value.points.min;
-};
 
 /*
  * answer options (add / remove)

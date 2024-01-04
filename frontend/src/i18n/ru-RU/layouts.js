@@ -251,28 +251,36 @@ export default {
         settings: {
           label: "Настройки",
           title: "Настройте вопрос",
+          groupTitle: "",
+
+          groups: {
+            submission: "Настройки ответов",
+            answerOptions: "Варианты ответов",
+            scoring: "Начисление баллов",
+            other: "Другое",
+          },
 
           appliedToAllQuestionsSuccessfully:
             "Настройки применены ко всем слайдам типа «Игры & Викторины» и «Опросы» успешно",
 
-          question: {
-            title: "Ваш вопрос",
+          info: {
+            question: "Введите вопрос",
+            title: "Введите заголовок",
 
             description: {
-              title: "Подробное описание",
+              title: "Описание",
+              label: "Подробное описание",
               caption:
                 "Более подробное описание будет показано на устройствах вашей аудитории. Вы также можете показать это во время презентации, наведя курсор на название вашего вопроса",
-              placeholder: "Ваше описание вопроса...",
+              placeholder: "Введите описание",
             },
           },
-
-          slideTitle: "Ваш заголовок",
 
           timeLimit: {
             title: "Лимит по времени",
             description: "Время за которое участники должны успеть ответить",
             invalid: "Недопустимое значение. Введите число от 5 до 1800",
-            seconds: "Секунд",
+            seconds: "сек.",
           },
 
           lockSubmission: {
@@ -305,7 +313,7 @@ export default {
           },
 
           entriesPerParticipant: {
-            title: "Вариантов ответа на участника",
+            title: "Ответов на участника",
             description:
               "Один ответ может состоять из нескольких слов. Вы можете увеличить этот лимит до 10",
             invalid: "Недопустимое значение. Введите число от 1 до 10",
@@ -322,7 +330,7 @@ export default {
             },
 
             answerOption: "Вариант №",
-            addAnswerOption: "Добавить вариант",
+            addAnswerOption: "Добавить",
 
             tickTheCorrectAnswerOption: "Пометить правильный ответ",
 
@@ -345,14 +353,13 @@ export default {
             },
 
             answerOption: "Вариант ответа №",
-            addAnswerOption: "Добавить вариант",
+            addAnswerOption: "Добавить",
 
             maxLengthErrorMessage: "Максимум 150 символов",
           },
 
           // scoring
           points: {
-            title: "Баллы",
             description: "Выберите диапазон баллов для этого вопроса",
 
             min: "Мин.",
@@ -385,11 +392,12 @@ export default {
             title: "Таблица лидеров",
             description:
               "После вопроса или в конце викторины можно показать слайд - таблицу лидеров, с результатами всей викторины",
-            create: "Добавить таблицу лидеров",
+            create: "Добавить",
           },
 
           openGeneralQuizSettings: {
-            title: "Открыть общие настройки",
+            title: "Общие настройки",
+            open: "Открыть",
           },
 
           filterProfanity: {

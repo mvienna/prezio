@@ -1,14 +1,15 @@
 <template>
   <div>
     <!-- title -->
-    <div class="row no-wrap items-center justify-between">
-      <div class="text-semibold">
+    <div class="row no-wrap items-center">
+      <div>
         {{
           slide?.type === SLIDE_TYPES.LEADERBOARD
-            ? $t("presentationLayout.rightDrawer.tabs.settings.slideTitle")
-            : $t("presentationLayout.rightDrawer.tabs.settings.question.title")
+            ? $t("presentationLayout.rightDrawer.tabs.settings.info.title")
+            : $t("presentationLayout.rightDrawer.tabs.settings.info.question")
         }}
       </div>
+      <q-icon name="r_help" color="grey" class="q-ml-sm" />
     </div>
 
     <!-- question -->
@@ -20,8 +21,11 @@
       debounce="500"
       @update:model-value="handleQuestionInput()"
     >
-      <!-- alignment -->
       <template #append>
+        <!-- length -->
+        <div class="text-sm q-mr-xs">{{ 250 - question?.length }}</div>
+
+        <!-- alignment -->
         <q-btn
           flat
           round
@@ -91,58 +95,58 @@
           </q-menu>
         </q-btn>
       </template>
-
-      <!-- add image -->
-      <template #after>
-        <q-btn icon="r_image" round outline disable />
-      </template>
     </q-input>
 
-    <template v-if="slide?.type !== SLIDE_TYPES.LEADERBOARD">
-      <!-- description -->
-      <q-expansion-item class="q-mt-sm text-grey-10">
-        <template #header>
-          <div class="row no-wrap items-center">
-            <div class="q-item__label">
-              {{
-                $t(
-                  "presentationLayout.rightDrawer.tabs.settings.question.description.title"
-                )
-              }}
-            </div>
-
-            <q-icon name="r_info" class="q-ml-xs" color="grey-8">
-              <q-tooltip max-width="300px" class="text-center">
-                {{
-                  $t(
-                    "presentationLayout.rightDrawer.tabs.settings.question.description.caption"
-                  )
-                }}
-              </q-tooltip>
-            </q-icon>
+    <!-- description -->
+    <q-expansion-item
+      v-if="slide?.type !== SLIDE_TYPES.LEADERBOARD"
+      class="q-mt-md q-mb-lg text-primary"
+    >
+      <template #header>
+        <div class="row no-wrap items-center">
+          <div class="q-item__label link">
+            {{
+              $t(
+                "presentationLayout.rightDrawer.tabs.settings.info.description.label"
+              )
+            }}
           </div>
+        </div>
 
-          <q-space />
-        </template>
+        <q-space />
+      </template>
 
-        <q-input
-          v-model="slideSettings.description"
-          :placeholder="
-            $t(
-              'presentationLayout.rightDrawer.tabs.settings.question.description.placeholder'
-            )
-          "
-          outlined
-          dense
-          autogrow
-          class="q-mt-sm"
-          debounce="1000"
-          @update:model-value="$emit('updateSlideSettings')"
-        />
-      </q-expansion-item>
+      <div class="text-black q-mt-sm">
+        {{
+          $t(
+            "presentationLayout.rightDrawer.tabs.settings.info.description.title"
+          )
+        }}
+      </div>
+      <div class="text-grey text-caption q-mt-xs">
+        {{
+          $t(
+            "presentationLayout.rightDrawer.tabs.settings.info.description.caption"
+          )
+        }}
+      </div>
 
-      <q-separator class="q-my-md" />
-    </template>
+      <q-input
+        v-model="slideSettings.description"
+        :placeholder="
+          $t(
+            'presentationLayout.rightDrawer.tabs.settings.info.description.placeholder'
+          )
+        "
+        outlined
+        dense
+        autogrow
+        :rows="4"
+        class="q-mt-md"
+        debounce="1000"
+        @update:model-value="$emit('updateSlideSettings')"
+      />
+    </q-expansion-item>
   </div>
 </template>
 
@@ -274,7 +278,7 @@ const handleQuestionInput = (textAlign = null) => {
 ::v-deep(.q-expansion-item) {
   .q-item {
     padding: 0 0;
-    min-height: 36px;
+    min-height: 24px;
 
     &:hover {
       .q-item__label {
@@ -286,5 +290,10 @@ const handleQuestionInput = (textAlign = null) => {
       display: none;
     }
   }
+}
+
+::v-deep(.q-textarea .q-field__control),
+::v-deep(.q-textarea .q-field__native) {
+  min-height: 100px !important;
 }
 </style>

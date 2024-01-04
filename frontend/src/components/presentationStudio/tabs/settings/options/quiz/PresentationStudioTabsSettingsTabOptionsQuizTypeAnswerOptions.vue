@@ -1,7 +1,6 @@
 <template>
   <div>
-    <!-- correct answer -->
-    <div class="row no-wrap items-center text-semibold q-mb-sm">
+    <div class="q-mb-sm text-semibold">
       {{
         $t(
           "presentationLayout.rightDrawer.tabs.settings.typeAnswer.correctAnswer.title"
@@ -19,6 +18,7 @@
       </q-icon>
     </div>
 
+    <!-- correct answer -->
     <div>
       <q-input
         v-model="slideSettings.correctAnswer.value"
@@ -40,6 +40,8 @@
         ]"
         hide-bottom-space
         no-error-icon
+        debounce="1000"
+        @update:model-value="$emit('updateSlideSettings')"
       >
         <template #append>
           <div class="text-caption q-mr-xs">
@@ -84,12 +86,12 @@
       @reordered="handleLayersReorderOtherAcceptedAnswers"
     >
       <template #item="{ element, index }">
-        <div class="row no-wrap items-center q-gutter-sm">
+        <div class="row no-wrap items-center">
           <q-icon
             name="r_drag_indicator"
             color="grey"
             size="sm"
-            class="layer_handle cursor-pointer q-mr-sm"
+            class="layer_handle cursor-pointer"
           />
 
           <q-input
@@ -97,6 +99,9 @@
             outlined
             dense
             style="width: 100%"
+            class="q-mx-sm"
+            debounce="1000"
+            @update:model-value="$emit('updateSlideSettings')"
             :placeholder="
               $t(
                 'presentationLayout.rightDrawer.tabs.settings.typeAnswer.answerOption'
@@ -121,39 +126,40 @@
             </template>
           </q-input>
 
-          <div class="row no-wrap">
-            <q-btn
-              flat
-              round
-              color="grey"
-              style="border-radius: 50%"
-              @click="handleRemovingAnswerOption(index)"
-            >
-              <q-icon name="r_delete" size="22px" />
-            </q-btn>
-          </div>
+          <q-btn
+            flat
+            color="grey"
+            icon="r_delete_sweep"
+            size="12px"
+            style="border-radius: 50%; width: 32px"
+            @click="handleRemovingAnswerOption(index)"
+          />
         </div>
       </template>
     </draggable>
 
     <!-- add answer option -->
-    <q-btn
-      v-if="slideSettings.otherAcceptedAnswers?.length < 8"
-      unelevated
-      :label="
-        $t(
-          'presentationLayout.rightDrawer.tabs.settings.typeAnswer.addAnswerOption'
-        )
-      "
-      icon="r_add"
-      no-caps
-      class="q-py-sm full-width"
+    <div
       :class="
         slideSettings.otherAcceptedAnswers?.length ? 'q-mt-md' : 'q-mt-sm'
       "
-      color="primary"
-      @click="handleAddingNewAnswerOption()"
-    />
+      style="margin-left: 32px"
+    >
+      <q-btn
+        v-if="slideSettings.otherAcceptedAnswers?.length < 8"
+        unelevated
+        :label="
+          $t(
+            'presentationLayout.rightDrawer.tabs.settings.typeAnswer.addAnswerOption'
+          )
+        "
+        icon="r_add"
+        no-caps
+        color="grey-2"
+        text-color="black"
+        @click="handleAddingNewAnswerOption()"
+      />
+    </div>
   </div>
 </template>
 
