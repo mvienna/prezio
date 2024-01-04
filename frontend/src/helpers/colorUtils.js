@@ -6,7 +6,10 @@ import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
 const canvasStore = useCanvasStore();
 const { MODE_OPTIONS } = storeToRefs(canvasStore);
 
-export const textColorOnAColoredBackground = (backgroundColor) => {
+export const textColorOnAColoredBackground = (
+  backgroundColor,
+  isReturnHex = true
+) => {
   backgroundColor = colors.hexToRgb(backgroundColor);
 
   const brightness =
@@ -14,6 +17,10 @@ export const textColorOnAColoredBackground = (backgroundColor) => {
       backgroundColor.g * 587 +
       backgroundColor.b * 114) /
     1000;
+
+  if (!isReturnHex) {
+    return brightness > 128 ? "black" : "white";
+  }
 
   return colors.getPaletteColor(brightness > 128 ? "black" : "white");
 };

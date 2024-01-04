@@ -70,9 +70,15 @@
                 )
               "
               name="r_drag_indicator"
-              color="black"
+              :color="
+                element.mode === MODE_OPTIONS.background
+                  ? averageBackgroundBrightness > backgroundBrightnessThreshold
+                    ? 'black'
+                    : 'white'
+                  : textColorOnAColoredBackground(element.fillColor, false)
+              "
               size="1.25rem"
-              class="layer_handle--disabled"
+              class="cursor-not-allowed"
             />
             <q-icon
               v-else
@@ -114,6 +120,13 @@
                   ? `color: ${textColorOnAColoredBackground(
                       element.fillColor
                     )};`
+                  : ''
+              "
+              :class="
+                element.mode === MODE_OPTIONS.background
+                  ? averageBackgroundBrightness > backgroundBrightnessThreshold
+                    ? 'text-black'
+                    : 'text-white'
                   : ''
               "
               @click="!element.isLocked ? selectElement(element) : ''"
@@ -281,7 +294,8 @@ const canvasStore = useCanvasStore();
 const { elements, selectedElement, MODE_OPTIONS } = storeToRefs(canvasStore);
 
 const presentationsStore = usePresentationsStore();
-const { slide } = storeToRefs(presentationsStore);
+const { slide, averageBackgroundBrightness, backgroundBrightnessThreshold } =
+  storeToRefs(presentationsStore);
 
 /*
  * drag
@@ -348,11 +362,6 @@ const handleLayersReorder = async () => {
   &.layer--background {
     cursor: default !important;
     color: $white;
-
-    .layer_handle--disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
 
     .q-card__section {
       background-size: cover !important;
