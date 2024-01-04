@@ -888,7 +888,9 @@ export const useCanvasStore = defineStore("canvas", {
           break;
       }
 
-      this.ctx.stroke();
+      if (element.lineWidth !== "0px") {
+        this.ctx.stroke();
+      }
       this.ctx.closePath();
       this.ctx.beginPath();
     },
