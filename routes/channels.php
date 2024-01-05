@@ -20,6 +20,6 @@ Broadcast::channel('presence.room.{id}', function ($user) {
     if (auth()->check()) {
         return $user;
     } else {
-        abort(401, 'Unauthorized');
+        return false;
     }
 });

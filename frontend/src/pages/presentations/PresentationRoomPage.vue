@@ -603,6 +603,17 @@ const connectToRoomChannels = async () => {
   const channel = await window.Echo.channel(`public.room.${room.value.id}`);
 
   if (participant.value || (user.value && isHost.value)) {
+    console.log({
+      ...window.Echo.options,
+      auth: {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            isHost.value ? "token" : "participantToken"
+          )}`,
+          "X-CSRF-Token": "CSRF_TOKEN",
+        },
+      },
+    });
     window.Echo = await new Echo({
       ...window.Echo.options,
       auth: {
