@@ -14,18 +14,6 @@
       @reconnect="connectToRoomChannels()"
     />
 
-    <!-- TODO: REMOVE THIS BUTTON ↓ ↓ ↓ -->
-    <q-btn
-      v-if="isConnectedToWebSockets"
-      push
-      label="Отсоединиться от WebSocket"
-      color="red"
-      no-caps
-      style="position: fixed; bottom: 16px; left: 16px; z-index: 2000"
-      @click="disconnect()"
-    />
-    <!-- TODO: REMOVE THIS BUTTON ↑ ↑ ↑ -->
-
     <!-- background -->
     <div
       class="fixed-center full-height full-width"
@@ -591,12 +579,6 @@ onUnmounted(() => {
 /*
  * webhooks
  */
-// TODO: REMOVE THIS FUNCTION ↓ ↓ ↓
-const disconnect = () => {
-  window.Echo.connector.disconnect();
-};
-// TODO: REMOVE THIS FUNCTION ↑ ↑ ↑
-
 const isConnectedToWebSockets = ref(true);
 
 const connectToRoomChannels = async () => {
@@ -674,18 +656,10 @@ const connectToRoomChannels = async () => {
 
   window.Echo.connector.pusher.connection.bind("connected", () => {
     isConnectedToWebSockets.value = true;
-
-    // TODO: REMOVE THIS COMMENT ↓ ↓ ↓
-    console.log("connected");
-    // TODO: REMOVE THIS COMMENT ↑ ↑ ↑
   });
 
   window.Echo.connector.pusher.connection.bind("disconnected", () => {
     isConnectedToWebSockets.value = false;
-
-    // TODO: REMOVE THIS COMMENT ↓ ↓ ↓
-    console.log("disconnected");
-    // TODO: REMOVE THIS COMMENT ↑ ↑ ↑
   });
 
   /*
