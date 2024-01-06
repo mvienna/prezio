@@ -8,28 +8,29 @@
                 font-family: 'Inter', sans-serif;
                 background: #F8F8F8;
                 margin: 48px 8px;
+                font-size: 14px;
             }
 
             .logo {
                 margin: 0 auto;
-                width: 120px;
+                width: 100px;
             }
 
             .container {
                 background-color: #FFFFFF;
-                max-width: 360px;
+                max-width: 410px;
                 width: 100%;
                 padding: 24px;
                 border-radius: 16px;
                 border: 1px solid #F1F1F1;
                 margin: 0 auto;
             }
-            @media screen and (max-width: 500px) {
+            @media screen and (max-width: 442px) {
                 body {
                     background: #FFFFFF;
                 }
                 .container {
-                    max-width: 100%;
+                    max-width: 100%
                     border: none;
                 }
             }

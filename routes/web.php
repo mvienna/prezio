@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('/preview-verification-email', function () {
-//    return new VerificationCodeMail(1234);
-//});
+Route::get('/preview-verification-email', function () {
+    return new VerificationCodeMail(1234);
+});

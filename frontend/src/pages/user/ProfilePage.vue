@@ -5,7 +5,7 @@
         <q-card>
           <q-card-section class="q-pa-lg">
             <q-form @submit.prevent="submit()">
-              <div class="absolute-top-right q-mt-lg q-mr-lg">
+              <div class="absolute-top-right">
                 <q-btn
                   flat
                   color="grey"
@@ -17,11 +17,11 @@
                 />
               </div>
 
-              <div class="text-h7 text-semibold text-center">
+              <div class="text-h6 text-semibold text-center">
                 {{ $t("user.profile.verifyEmail.title") }}
               </div>
 
-              <div class="text-center q-my-md">
+              <div class="text-center q-mt-md">
                 {{ $t("user.profile.verifyEmail.description") }}
 
                 <a :href="`mailto:${form.email}`">
@@ -38,22 +38,27 @@
                 unmasked-value
                 no-error-icon
                 autofocus
-                class="verification_code"
+                class="verification_code q-mt-lg"
                 :rules="[codeRule]"
                 lazy-rules
+                hide-bottom-space
                 :error-message="errors.code"
                 :error="!!errors.code"
               />
+
+              <div class="text-sm q-ml-3xs q-mt-sm text-grey">
+                {{ $t("user.profile.verifyEmail.warning") }}
+              </div>
 
               <div class="row items-center no-wrap q-mt-lg">
                 <!-- resend verification code -->
                 <q-btn
                   v-if="isVerificationCodeSent"
-                  flat
+                  outline
                   no-caps
                   :disable="timeLeft !== -1 || loading.verificationCode"
                   color="grey"
-                  style="padding: 0 12px"
+                  class="full-width q-py-sm"
                   :label="
                     timeLeft !== -1
                       ? countdown
@@ -62,16 +67,16 @@
                   @click="handleSendingVerificationCode()"
                 />
 
-                <q-space />
+                <q-space class="q-mr-lg" />
 
                 <!-- submit -->
                 <q-btn
                   color="primary"
                   unelevated
                   no-caps
+                  class="full-width q-py-sm"
                   type="submit"
                   :loading="loading.verificationCode"
-                  class="text-semibold"
                   :label="$t('user.profile.form.checkVerificationCode')"
                 />
               </div>
@@ -374,7 +379,7 @@ const form = ref({
 });
 
 const isPasswordVisible = ref(false);
-const isVerificationCodeSent = ref(false);
+const isVerificationCodeSent = ref(true);
 
 const errors = ref({
   password: null,
@@ -510,7 +515,7 @@ const handleSendingVerificationCode = async () => {
   await sendVerificationCode(form.value.email, true)
     .then(() => {
       isVerificationCodeSent.value = true;
-      startCountdown(10 || process.env.SECONDS_UNTIL_RESEND_CODE);
+      startCountdown(process.env.SECONDS_UNTIL_RESEND_CODE);
     })
     .catch((error) => {
       console.log(error);

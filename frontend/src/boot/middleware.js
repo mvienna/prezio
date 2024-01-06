@@ -68,7 +68,6 @@ export default async ({ app, router }) => {
 
   window.Pusher = Pusher;
   window.Echo = new Echo(options);
-  console.log("middleware: ", options);
 
   /*
    * route middleware
