@@ -19,7 +19,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
 /*
- * restore password
+ * email verification
  */
 Route::post('/email/verification-code/send', [VerificationController::class, 'sendVerificationCode']);
 Route::post('/email/verification-code/check', [VerificationController::class, 'checkVerificationCode']);

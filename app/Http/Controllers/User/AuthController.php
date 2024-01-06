@@ -118,6 +118,10 @@ class AuthController extends Controller
             return $this->errorResponse(trans('errors.auth.invalidPassword'), 422);
         }
 
+        if ($request->checkPassword) {
+            return $this->successResponse();
+        }
+
         /*
          * validate
          */

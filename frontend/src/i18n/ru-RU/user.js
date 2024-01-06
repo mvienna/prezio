@@ -14,12 +14,6 @@ export default {
         },
       },
 
-      verifyEmail: {
-        title: "Подтвердите почту",
-        description: "Введите код из письма, которое было отправлено на",
-        warning: "* Если письмо не пришло, проверьте папку спама",
-      },
-
       form: {
         name: { label: "Ваше имя", placeholder: "Введите имя" },
         phone: { label: "Телефон", placeholder: "+7" },
@@ -35,7 +29,24 @@ export default {
             other: "Другое",
           },
         },
-        currentPassword: {
+        newPassword: {
+          label: "Новый пароль",
+          placeholder: "Введите новый пароль",
+        },
+
+        emailVerification: {
+          title: "Подтвердите почту",
+          description: "Введите код из письма, которое было отправлено на",
+          warning: "* Если письмо не пришло, проверьте папку спама",
+
+          submit: "Проверить",
+          resend: "Отправить повторно",
+        },
+
+        passwordVerification: {
+          title: "Подтвердите паролем",
+          description: "Подтвердите действие своим текущим паролем",
+
           label: "Текущий пароль",
           placeholder: "Введите текущий пароль",
 
@@ -43,15 +54,11 @@ export default {
             title: "Забыли пароль?",
             subtitle: "Вы можете восстановить его здесь",
           },
-        },
-        newPassword: {
-          label: "Новый пароль",
-          placeholder: "Введите новый пароль",
+
+          submit: "Подтвердить",
         },
 
         success: "Данные успешно обновлены",
-        checkVerificationCode: "Проверить",
-        resendVerificationCode: "Отправить повторно",
 
         optional: "Необязательно",
 
