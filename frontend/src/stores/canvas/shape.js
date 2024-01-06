@@ -25,7 +25,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       fillColor: "#1751D0",
       fillColor2: "#bc49ff",
       fillStyle: "solid",
-      lineWidth: "0px",
+      lineWidth: "1px",
 
       shadowColor: "#000000",
       shadowOpacity: 0,
@@ -40,7 +40,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         fillColor: "#1751D0",
         fillColor2: "#bc49ff",
         fillStyle: "solid",
-        lineWidth: "0px",
+        lineWidth: "1px",
 
         shadowColor: "#000000",
         shadowOpacity: 0,
