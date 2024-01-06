@@ -114,7 +114,6 @@
       <q-color
         v-if="colorInput === 1"
         v-model="shapeState.customization.value.fillColor"
-        format-model="rgba"
         no-header-tabs
         default-view="palette"
         style="border-radius: 0"
@@ -125,7 +124,6 @@
       <q-color
         v-if="colorInput === 2"
         v-model="shapeState.customization.value.fillColor2"
-        format-model="rgba"
         no-header-tabs
         default-view="palette"
         style="border-radius: 0"
@@ -164,7 +162,6 @@
       class="no-padding"
     >
       <q-color
-        format-model="rgba"
         no-header-tabs
         default-view="palette"
         v-model="shapeState.customization.value.strokeColor"
