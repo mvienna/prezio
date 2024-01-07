@@ -898,13 +898,19 @@ const connectToRoomChannels = () => {
  * chaport
  */
 onUnmounted(() => {
-  document.getElementsByClassName("chaport-container")[0].style.display =
-    "none";
+  const chaport = document.getElementsByClassName("chaport-container")?.[0];
+
+  if (chaport) {
+    chaport.style.display = "none";
+  }
 });
 
 onMounted(() => {
-  document.getElementsByClassName("chaport-container")[0].style.display =
-    "block";
+  const chaport = document.getElementsByClassName("chaport-container")?.[0];
+
+  if (chaport) {
+    chaport.style.display = "block";
+  }
 });
 </script>
 
