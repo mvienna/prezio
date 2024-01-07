@@ -604,10 +604,11 @@ const prepareElementsForNewSlide = (type) => {
       fontSize: "38px",
       color: "#808080",
 
-      y: titleElement.y + titleElement.height,
-
-      height: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 65) / 100
+      y: canvasStore.computeAdjustedSize(
+        (canvasStore.canvasRect().width * 5) / 100 + 48
+      ),
+      width: canvasStore.computeAdjustedSize(
+        (canvasStore.canvasRect().width * 45) / 100
       ),
     };
 
@@ -792,7 +793,6 @@ watch(
 
 <style scoped lang="scss">
 .slide {
-  outline: 3px solid transparent;
   transition: 0.2s;
   border: 1px solid $grey-2;
   width: 140px;
