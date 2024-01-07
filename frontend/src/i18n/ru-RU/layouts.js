@@ -9,6 +9,10 @@ export default {
         upgrade: "Обновить тариф",
         logout: "Выйти",
       },
+
+      feedbackForm: {
+        title: "Обратная связь",
+      },
     },
   },
 

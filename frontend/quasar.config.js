@@ -60,6 +60,8 @@ module.exports = configure(function (ctx) {
         PUSHER_PORT: env.PUSHER_PORT,
         PUSHER_SCHEME: env.PUSHER_SCHEME,
 
+        FEEDBACK_FORM_URL: env.FEEDBACK_FORM_URL,
+
         baseURL: env.APP_URL,
       },
 
