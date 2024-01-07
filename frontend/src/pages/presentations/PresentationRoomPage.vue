@@ -1164,6 +1164,19 @@ watch(
  * qr
  */
 const qr = generateQrCode();
+
+/*
+ * chaport
+ */
+onUnmounted(() => {
+  document.getElementsByClassName("chaport-container")[0].style.display =
+    "none";
+});
+
+onMounted(() => {
+  document.getElementsByClassName("chaport-container")[0].style.display =
+    "block";
+});
 </script>
 
 <style scoped lang="scss">
