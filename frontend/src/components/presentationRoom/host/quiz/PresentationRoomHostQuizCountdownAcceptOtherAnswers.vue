@@ -4,24 +4,22 @@
       <div class="text-h6">Другие ответы</div>
       <q-btn
         flat
-        color="white"
+        color="grey"
         round
-        size="12px"
+        size="10px"
         icon="r_close"
-        style="border-radius: 50%"
+        class="round-borders"
         @click="$emit('cancel')"
       />
     </div>
 
     <q-card-section>
       <q-card
-        v-for="answer in answers"
+        v-for="(answer, index) in answers"
         :key="answer.id"
         flat
         bordered
-        :style="`background: rgba(${Object.values(
-          colors.hexToRgb(answer.participant.user_data.color)
-        ).join(', ')}, 0.1);`"
+        class="bg-transparent"
         :class="
           answer.answer_data.is_marked_as_correct
             ? 'border-positive'
@@ -40,28 +38,24 @@
 
             <div class="text-semibold ellipsis">
               Ответ:
-              <span
-                :class="
-                  answer.answer_data.is_marked_as_correct
-                    ? 'text-positive'
-                    : 'text-negative'
-                "
-                class="text-weight-regular"
-              >
+              <span class="text-weight-regular">
                 {{ answer.answer_data.text }}
               </span>
             </div>
           </div>
 
           <q-btn
-            icon="r_done"
-            :color="
-              answer.answer_data.is_marked_as_correct ? 'positive' : 'grey'
+            :icon="
+              answer.answer_data.is_marked_as_correct
+                ? 'r_check_circle'
+                : 'o_circle'
             "
+            color="primary"
             flat
             round
-            class="q-ml-md"
-            @click="acceptAnswer(answer)"
+            class="q-ml-md round-borders"
+            :loading="isLoading[index]"
+            @click="acceptAnswer(answer, index)"
           >
             <q-tooltip>
               {{
@@ -78,8 +72,8 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { colors } from "quasar";
 import { api } from "boot/axios";
+import { ref } from "vue";
 
 /*
  * stores
@@ -89,18 +83,25 @@ const { presentation, room, slide, slideSettings } =
   storeToRefs(presentationsStore);
 
 /*
- * props & emits
+ * emits
+ */
+defineEmits(["cancel"]);
+
+/*
+ * variables
  */
 defineProps({
   answers: { type: Array },
 });
 
-defineEmits(["cancel"]);
+const isLoading = ref([]);
 
 /*
  * accept answer
  */
-const acceptAnswer = (answer) => {
+const acceptAnswer = (answer, index) => {
+  isLoading.value[index] = true;
+
   const score = presentationsStore.computeScoreForAnswers(
     [{ value: answer.answer_data.text }],
     slideSettings.value.timeLimit - answer.time_taken_to_answer,
@@ -120,18 +121,23 @@ const acceptAnswer = (answer) => {
     )
     .catch((error) => {
       console.log(error);
+    })
+    .finally(() => {
+      isLoading.value[index] = false;
     });
 };
 </script>
 
 <style scoped lang="scss">
 .accept_other_answers {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(4px);
   color: $white;
   border-radius: 16px !important;
   max-width: 80%;
-  border-color: rgba(255, 255, 255, 0.6);
+
+  > .q-card {
+  }
 
   > .q-card__section {
     display: grid;
