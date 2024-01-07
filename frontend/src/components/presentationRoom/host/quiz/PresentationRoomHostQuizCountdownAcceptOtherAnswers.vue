@@ -54,7 +54,7 @@
             flat
             round
             class="q-ml-md round-borders"
-            :loading="isLoading[index]"
+            :loading="isLoadingAnswerIndex === index"
             @click="acceptAnswer(answer, index)"
           >
             <q-tooltip>
@@ -73,7 +73,7 @@
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { api } from "boot/axios";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 /*
  * stores
@@ -90,17 +90,24 @@ defineEmits(["cancel"]);
 /*
  * variables
  */
-defineProps({
+const props = defineProps({
   answers: { type: Array },
 });
 
-const isLoading = ref([]);
+const isLoadingAnswerIndex = ref();
+
+watch(
+  () => props.answers,
+  () => {
+    isLoadingAnswerIndex.value = null;
+  }
+);
 
 /*
  * accept answer
  */
 const acceptAnswer = (answer, index) => {
-  isLoading.value[index] = true;
+  isLoadingAnswerIndex.value = index;
 
   const score = presentationsStore.computeScoreForAnswers(
     [{ value: answer.answer_data.text }],
@@ -121,9 +128,6 @@ const acceptAnswer = (answer, index) => {
     )
     .catch((error) => {
       console.log(error);
-    })
-    .finally(() => {
-      isLoading.value[index] = false;
     });
 };
 </script>
