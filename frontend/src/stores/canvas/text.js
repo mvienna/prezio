@@ -250,7 +250,6 @@ export const useCanvasTextStore = defineStore("canvasText", {
         canvasStore.redrawCanvas();
         this.removeTextInput();
         deselectElement();
-        this.clearFormatting();
       };
 
       /*

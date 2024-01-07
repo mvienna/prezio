@@ -235,6 +235,7 @@
       transition-show="jump-down"
       transition-hide="jump-up"
       :offset="[0, 8]"
+      class="no-padding"
     >
       <q-color
         format-model="hex"

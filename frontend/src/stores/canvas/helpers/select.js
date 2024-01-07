@@ -122,10 +122,6 @@ export const doubleSelectElement = () => {
 
 export const deselectElement = () => {
   if (selectedElement.value) {
-    if (selectedElement.value.mode === MODE_OPTIONS.value.text) {
-      textStore.clearFormatting();
-    }
-
     selectedElement.value = null;
     selectedElementIndex.value = -1;
   }
