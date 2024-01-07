@@ -216,7 +216,7 @@ const types = computed(() => {
   transition: 0.2s;
   border-radius: 6px;
   border: 1px solid $grey-2;
-  outline: 2px solid transparent;
+  outline: 1px solid transparent;
 
   &:hover {
     border: 1px solid $accent;
@@ -236,7 +236,7 @@ const types = computed(() => {
     background: $background !important;
 
     &:hover {
-      outline: 2px solid $accent !important;
+      outline-color: $accent !important;
     }
   }
 }

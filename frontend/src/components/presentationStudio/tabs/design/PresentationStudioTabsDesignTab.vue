@@ -410,7 +410,6 @@ const applyDesignToAllSlides = async () => {
 
 <style scoped lang="scss">
 ::v-deep(.q-tabs) {
-  outline: 1px solid $grey-2;
   padding: 4px;
   border-radius: 6px;
 }

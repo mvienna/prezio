@@ -192,7 +192,6 @@ const handlePresentationCardToggle = (presentation) => {
 
   .q-img {
     border: 1px solid $grey-2;
-    outline: 2px solid transparent;
     transition: 0.2s;
     border-radius: 8px;
     width: 100%;

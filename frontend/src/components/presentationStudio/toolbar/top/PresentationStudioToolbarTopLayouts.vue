@@ -347,15 +347,15 @@ const handleLayoutSelection = (layout) => {
     cursor: pointer;
     border-radius: 6px;
     transition: 0.2s;
-    outline: 2px solid transparent;
+    outline: 1px solid transparent;
 
     .q-img {
       transition: 0.4s;
     }
 
     &:hover {
-      background: #f5f8fd;
-      outline: 2px solid $accent;
+      background: $background;
+      outline-color: $accent;
     }
 
     &.layout--active {

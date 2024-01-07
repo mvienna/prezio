@@ -329,7 +329,7 @@ const handleLayersReorder = async () => {
 .layer {
   border-radius: 6px;
   transition: 0.2s;
-  outline: 2px solid $grey-1;
+  outline: 1px solid $grey-1;
   overflow: hidden;
 
   &:hover {
