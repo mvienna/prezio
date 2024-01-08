@@ -4,19 +4,13 @@
     no-caps
     no-wrap
     class="text-black"
-    :class="
-      isAvatarOnly ? 'q-pa-none round-borders' : 'q-px-xs rounded-borders'
-    "
+    :class="isAvatarOnly ? 'q-pa-none round-borders' : 'q-px-xs rounded-sm'"
     :style="`border-radius: ${isAvatarOnly ? '50%' : '19px'};`"
     :round="isAvatarOnly"
   >
     <template #default>
       <div class="row no-wrap items-center">
-        <UserAvatar
-          :user="user"
-          :size="isAvatarOnly ? '36px' : '30px'"
-          color="primary"
-        />
+        <UserAvatar :user="user" :size="isAvatarOnly ? '36px' : '30px'" />
 
         <template v-if="!isAvatarOnly">
           <div class="q-ml-sm">

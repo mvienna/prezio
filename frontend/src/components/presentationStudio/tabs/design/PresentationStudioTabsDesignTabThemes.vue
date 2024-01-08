@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md column no-wrap q-gutter-lg">
     <div v-for="category in categories" :key="category.name">
-      <div class="q-mb-sm rounded-borders text-grey-9">
+      <div class="q-mb-sm rounded-sm text-grey-9">
         {{ category.label }}
       </div>
 

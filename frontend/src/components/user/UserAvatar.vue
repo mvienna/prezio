@@ -1,5 +1,5 @@
 <template>
-  <q-avatar text-color="primary">
+  <q-avatar text-color="black">
     <!-- uploaded avatar -->
     <q-img
       v-if="user.avatar"

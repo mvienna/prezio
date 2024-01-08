@@ -22,7 +22,7 @@
       </div>
 
       <div
-        class="relative-position bg-grey-2 rounded-borders"
+        class="relative-position bg-grey-2 rounded-sm"
         style="width: 100%; height: 12px"
       >
         <div
@@ -36,7 +36,7 @@
               ? Math.round(timeLeftPercentage / 10) * 10
               : 100)
           }%`"
-          :class="`rounded-borders bg-${
+          :class="`rounded-sm bg-${
             participantAnswers?.length
               ? timeTakenToAnswerPercentage < 25
                 ? 'positive'

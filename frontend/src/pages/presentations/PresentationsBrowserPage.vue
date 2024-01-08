@@ -14,13 +14,16 @@
         </div>
 
         <!-- upgrade -->
-        <q-card flat class="bg-white medium-rounded-borders shadow-2xs-soft">
-          <q-card-section class="row no-wrap items-center q-gutter-md">
-            <div class="round-borders bg-accent text-primary q-pa-md">
+        <q-card flat class="bg-white shadow-xs-hard rounded-3xs">
+          <q-card-section class="row no-wrap items-center">
+            <div
+              class="round-borders bg-background text-primary row items-center justify-center"
+              style="width: 46px; height: 46px"
+            >
               <q-icon name="r_bolt" size="24px" />
             </div>
 
-            <div>
+            <div class="q-mx-md q-px-xs">
               <div class="text-semibold">
                 {{ $t("presentationsBrowser.upgrade.title") }}
               </div>
@@ -49,11 +52,14 @@
           unelevated
           color="primary"
           no-caps
-          icon="r_add"
           class="q-py-3xs"
-          :label="$t('presentationsBrowser.newPresentation.title')"
           @click="showNewPresentationDialog = true"
-        />
+        >
+          <q-icon name="r_add" class="q-mr-md" />
+          <div class="text-h7">
+            {{ $t("presentationsBrowser.newPresentation.title") }}
+          </div>
+        </q-btn>
 
         <!-- new presentation form -->
         <q-dialog v-model="showNewPresentationDialog">
@@ -73,10 +79,13 @@
           no-wrap
           class="bg-white q-py-3xs"
           no-caps
-          icon="icon-folder_add"
-          :label="$t('presentationsBrowser.newFolder.title')"
           @click="showNewFolderDialog = true"
-        />
+        >
+          <q-icon name="icon-folder_add" class="q-mr-md" />
+          <div class="text-h7">
+            {{ $t("presentationsBrowser.newFolder.title") }}
+          </div>
+        </q-btn>
 
         <!-- new folder form -->
         <q-dialog v-model="showNewFolderDialog">
