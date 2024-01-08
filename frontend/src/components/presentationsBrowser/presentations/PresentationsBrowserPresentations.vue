@@ -182,7 +182,8 @@
                       v-show="editingPresentationId === presentation.id"
                       class="absolute bg-white text-semibold q-px-xs scroll-y scroll--hidden"
                       style="
-                        max-height: 86px;
+                        max-height: 42px;
+                        width: 194px;
                         top: 0;
                         left: 0;
                         z-index: 9999;
@@ -638,6 +639,19 @@ const handlePresentationNameDoubleClick = (event, presentation) => {
     if ((event.key === "Enter" && !event.shiftKey) || event.key === "Escape") {
       element.blur();
     }
+  });
+
+  element.addEventListener("paste", (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const clipboardData = event.clipboardData || window.clipboardData;
+    const pastedData = clipboardData
+      .getData("Text")
+      .replace(/\n/g, " ")
+      .replace(/\r/g, "");
+
+    document.execCommand("insertText", false, pastedData);
   });
 };
 
