@@ -20,3 +20,9 @@
 <script setup>
 import { ROUTE_PATHS } from "src/constants/routes";
 </script>
+
+<style lang="scss">
+.chaport-container {
+  display: none;
+}
+</style>

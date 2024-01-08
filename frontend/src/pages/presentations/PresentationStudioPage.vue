@@ -893,25 +893,6 @@ const connectToRoomChannels = () => {
    */
   channel.listen("PresentationRoomTerminatedEvent", () => {});
 };
-
-/*
- * chaport
- */
-onUnmounted(() => {
-  const chaport = document.getElementsByClassName("chaport-container")?.[0];
-
-  if (chaport) {
-    chaport.style.display = "none";
-  }
-});
-
-onMounted(() => {
-  const chaport = document.getElementsByClassName("chaport-container")?.[0];
-
-  if (chaport) {
-    chaport.style.display = "block";
-  }
-});
 </script>
 
 <style scoped lang="scss">
@@ -979,5 +960,11 @@ onMounted(() => {
 // rotate
 .cursor-alias {
   cursor: alias;
+}
+</style>
+
+<style lang="scss">
+.chaport-container {
+  display: block;
 }
 </style>

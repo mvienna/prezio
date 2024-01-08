@@ -128,7 +128,7 @@
 <script setup>
 import { useAuthStore } from "stores/auth";
 import { storeToRefs } from "pinia";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import PresentationsBrowserFolders from "components/presentationsBrowser/folders/PresentationsBrowserFolders.vue";
 import PresentationsBrowserPresentations from "components/presentationsBrowser/presentations/PresentationsBrowserPresentations.vue";
 import PresentationBrowserNewFolder from "components/presentationsBrowser/folders/PresentationsBrowserNewFolder.vue";
@@ -181,5 +181,11 @@ const showNewFolderDialog = ref(false);
 .container {
   max-width: 1200px;
   padding: 48px 16px;
+}
+</style>
+
+<style lang="scss">
+.chaport-container {
+  display: block;
 }
 </style>

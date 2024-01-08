@@ -1164,25 +1164,6 @@ watch(
  * qr
  */
 const qr = generateQrCode();
-
-/*
- * chaport
- */
-onUnmounted(() => {
-  const chaport = document.getElementsByClassName("chaport-container")?.[0];
-
-  if (chaport) {
-    chaport.style.display = "none";
-  }
-});
-
-onMounted(() => {
-  const chaport = document.getElementsByClassName("chaport-container")?.[0];
-
-  if (chaport) {
-    chaport.style.display = "block";
-  }
-});
 </script>
 
 <style scoped lang="scss">
@@ -1258,5 +1239,11 @@ canvas {
     opacity: 0;
     transform: scale(0);
   }
+}
+</style>
+
+<style lang="scss">
+.chaport-container {
+  display: none;
 }
 </style>

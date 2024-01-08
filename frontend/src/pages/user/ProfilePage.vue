@@ -508,3 +508,9 @@ const deleteAccount = async () => {
   }
 }
 </style>
+
+<style lang="scss">
+.chaport-container {
+  display: none;
+}
+</style>
