@@ -30,7 +30,7 @@
                     background: #FFFFFF;
                 }
                 .container {
-                    max-width: 100%
+                    max-width: 100%;
                     border: none;
                 }
             }
@@ -68,7 +68,7 @@
 
         <div class="container">
             <a href="{{ env('FRONTEND_APP_URL') }}">
-                <img class="logo" src="{{ asset('images/logo.png') }}" alt="Logo">
+                <img class="logo" src="{{ asset('images/logo.png') }}" alt="Prezio Logo" style="width: 100px; height: auto;">
             </a>
 
             <div class="header">{{ trans('emails.verificationCode.title') }}</div>
