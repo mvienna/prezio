@@ -44,7 +44,7 @@
         <q-item
           :to="ROUTE_PATHS.PROFILE.INDEX"
           dense
-          class="items-center justify-start"
+          class="items-center justify-start text-black"
         >
           <q-icon name="icon-account" class="q-mr-sm" size="20px" />
           <div>
@@ -53,7 +53,12 @@
         </q-item>
 
         <!-- upgrade -->
-        <q-item disable dense class="items-center justify-start">
+        <q-item
+          :to="ROUTE_PATHS.PROFILE.SUBSCRIPTION"
+          dense
+          disable
+          class="items-center justify-start"
+        >
           <q-icon name="icon-bolt" class="q-mr-sm" size="20px" />
           <div>
             {{ $t("mainLayout.header.userMenuLinks.upgrade") }}
