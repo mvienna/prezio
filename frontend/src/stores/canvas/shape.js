@@ -25,7 +25,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       fillColor: "#1751D0",
       fillColor2: "#bc49ff",
       fillStyle: "solid",
-      lineWidth: "1px",
+      lineWidth: "16px",
 
       shadowColor: "#000000",
       shadowOpacity: 0,
@@ -40,7 +40,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         fillColor: "#1751D0",
         fillColor2: "#bc49ff",
         fillStyle: "solid",
-        lineWidth: "1px",
+        lineWidth: "16px",
 
         shadowColor: "#000000",
         shadowOpacity: 0,
@@ -83,6 +83,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       x = typeof x === "number" ? x : (canvas.value.width - width) / 2;
       y = typeof y === "number" ? y : (canvas.value.height - height) / 2;
 
+      console.log(lineWidth);
       let shape = {
         id: generateUniqueId(undefined, elements.value),
         mode,
@@ -98,7 +99,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         fillColor,
         fillColor2: this.customization.default.fillColor2,
         fillStyle: this.customization.default.fillStyle,
-        lineWidth: lineWidth,
+        lineWidth,
         shadowColor: this.customization.default.shadowColor,
         shadowOpacity: this.customization.default.shadowOpacity,
         shadowBlur: this.customization.default.shadowBlur,

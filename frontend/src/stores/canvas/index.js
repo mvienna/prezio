@@ -729,7 +729,7 @@ export const useCanvasStore = defineStore("canvas", {
      */
     renderShape(element) {
       this.ctx.strokeStyle = element.strokeColor || "rgba(255, 0, 0, 0)";
-      this.ctx.lineWidth = element.lineWidth;
+      this.ctx.lineWidth = parseFloat(element.lineWidth);
       this.ctx.lineJoin = "round";
       this.ctx.lineCap = "round";
       this.applyElementFilters(element, false);
@@ -842,9 +842,9 @@ export const useCanvasStore = defineStore("canvas", {
          */
         case SHAPES_OPTIONS.line:
           const x1 = element.x;
-          const y1 = element.y + element.height;
+          const y1 = element.y + element.height / 2;
           const x2 = element.x + element.width;
-          const y2 = element.y;
+          const y2 = y1;
 
           this.ctx.moveTo(x1, y1);
           this.ctx.lineTo(x2, y2);
@@ -856,9 +856,9 @@ export const useCanvasStore = defineStore("canvas", {
          */
         case SHAPES_OPTIONS.arrow:
           const arrowBaseX = element.x;
-          const arrowBaseY = element.y + element.height;
+          const arrowBaseY = element.y + element.height / 2;
           const arrowTipX = element.x + element.width;
-          const arrowTipY = element.y;
+          const arrowTipY = arrowBaseY;
 
           const arrowHeadSize = element.width / 4;
 
