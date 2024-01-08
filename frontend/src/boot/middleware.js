@@ -72,6 +72,12 @@ export default async ({ app, router }) => {
   /*
    * route middleware
    */
+  router.onError((error, to) => {
+    if (error.message.includes("Failed to fetch dynamically imported module")) {
+      window.location = to.fullPath;
+    }
+  });
+
   router.beforeEach(async (to, from, next) => {
     /*
      * not authenticated
