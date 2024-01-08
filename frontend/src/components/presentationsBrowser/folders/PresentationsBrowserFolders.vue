@@ -186,7 +186,9 @@ const handleFolderNameClick = (event, folder) => {
     if ((event.key === "Enter" && !event.shiftKey) || event.key === "Escape") {
       element.blur();
     }
+  });
 
+  element.addEventListener("input", (event) => {
     if (element.innerHTML.length > 100) {
       element.classList.add("text-negative");
     } else {
@@ -237,11 +239,11 @@ const handleFolderNameUpdate = (folder) => {
   }
 
   folder.name = truncateString(element.innerText, 100).trim();
-  // folder.name = element.innerText;
-  presentationsStore.updateFolder(folder);
 
   element.contentEditable = false;
   editingFolderId.value = null;
+
+  presentationsStore.updateFolder(folder);
 };
 </script>
 

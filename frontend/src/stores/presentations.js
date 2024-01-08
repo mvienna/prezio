@@ -131,6 +131,12 @@ export const usePresentationsStore = defineStore("presentations", {
           name: folder.name,
           description: folder.description,
         })
+        .then((response) => {
+          const folderIndex = this.folders.findIndex(
+            (item) => item.id === folder.id
+          );
+          this.folders[folderIndex] = response.data;
+        })
         .catch((error) => {
           console.log(error);
         })
