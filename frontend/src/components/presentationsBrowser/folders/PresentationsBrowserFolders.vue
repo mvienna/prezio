@@ -195,6 +195,19 @@ const handleFolderNameClick = (event, folder) => {
 
     charactersLeft.value = 100 - element.innerHTML.length;
   });
+
+  element.addEventListener("paste", (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const clipboardData = event.clipboardData || window.clipboardData;
+    const pastedData = clipboardData
+      .getData("Text")
+      .replace(/\n/g, " ")
+      .replace(/\r/g, "");
+
+    document.execCommand("insertText", false, pastedData);
+  });
 };
 
 const handleFolderNameUpdate = (folder) => {
@@ -223,7 +236,7 @@ const handleFolderNameUpdate = (folder) => {
     return truncatedWords.join(" ");
   }
 
-  folder.name = truncateString(element.innerText, 100);
+  folder.name = truncateString(element.innerText, 100).trim();
   // folder.name = element.innerText;
   presentationsStore.updateFolder(folder);
 
