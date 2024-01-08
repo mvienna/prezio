@@ -7,9 +7,9 @@ trait TruncateStrings {
     {
         static::saving(function ($model) {
             foreach ($model->getTruncateStrings() as $column => $maxLength) {
-            if (is_string($model->$column) && strlen($model->$column) > $maxLength) {
-                $model->$column = substr($model->$column, 0, $maxLength);
-            }
+                if (is_string($model->$column) && mb_strlen($model->$column, 'UTF-8') > $maxLength) {
+                    $model->$column = mb_substr($model->$column, 0, $maxLength, 'UTF-8');
+                }
             }
         });
     }
