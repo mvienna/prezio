@@ -6,12 +6,12 @@
       {{ $t("presentationsBrowser.folderItem.title") }}
     </div>
 
-    <div class="row q-gutter-md folders q-pb-sm">
+    <div class="folders_grid q-pb-sm">
       <!-- folders -->
       <q-card
         v-for="folder in folders"
         :key="folder.id"
-        class="folder row no-wrap shadow-2xs-soft shadow-2xs-soft--hoverable"
+        class="folders_grid__item row no-wrap shadow-2xs-soft shadow-2xs-soft--hoverable"
         bordered
       >
         <q-card-section
@@ -32,8 +32,8 @@
             :title="folder.name"
             :style="`${
               editingFolderId === folder.id
-                ? 'padding: 0 4px; margin-left: -4px; margin-right: 4px; white-space: nowrap; overflow-x: scroll; min-width: 140px; max-width: 140px;'
-                : 'min-width: 165px; max-width: 165px;'
+                ? 'padding: 0 4px; margin-left: -4px; margin-right: 4px; white-space: nowrap; overflow-x: scroll; min-width: 120px; max-width: 120px;'
+                : 'min-width: 145px; max-width: 145px;'
             }`"
             :id="`folder-${folder.id}-name`"
           >
@@ -251,30 +251,31 @@ const handleFolderNameUpdate = (folder) => {
 /*
  * folders
  */
-.folder {
-  cursor: pointer;
-  transition: 0.2s;
-  border-radius: 8px;
-  border-color: $grey-2;
-  overflow: hidden;
-  width: 300px;
-  min-width: 300px;
-  max-width: 300px;
+.folders_grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
 
-  .q-card__section {
-    border-radius: 0;
-    padding: 12px;
-  }
+  .folders_grid__item {
+    cursor: pointer;
+    transition: 0.2s;
+    border-radius: 8px;
+    border-color: $grey-2;
+    overflow: hidden;
+    width: 100%;
 
-  &:hover {
-  }
+    .q-card__section {
+      border-radius: 0;
+      padding: 12px;
+    }
 
-  .folder__icon {
-    width: 50px;
-  }
+    .folder__icon {
+      width: 50px;
+    }
 
-  .folder__name {
-    line-height: 50px;
+    .folder__name {
+      line-height: 50px;
+    }
   }
 }
 
