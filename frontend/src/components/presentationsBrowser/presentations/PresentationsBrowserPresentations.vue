@@ -1,6 +1,9 @@
 <template>
   <div class="q-mt-lg">
-    <div class="row no-wrap">
+    <div
+      class="no-wrap"
+      :class="$q.screen.lt.md ? 'column q-gutter-sm' : 'row'"
+    >
       <!-- title -->
       <div v-if="selectedFolder" class="text-h6 text-semibold">
         <span
@@ -21,7 +24,7 @@
       <q-space />
 
       <!-- sort -->
-      <div class="row no-wrap items-center q-gutter-sm">
+      <div class="row no-wrap items-center scroll-x scroll--hidden">
         <q-btn
           v-for="column in columns"
           flat
@@ -30,7 +33,7 @@
           no-wrap
           color="grey-9"
           size="12px"
-          class="q-px-sm"
+          class="q-px-sm q-mr-sm"
           :key="column.value"
           @click="
             () => {
@@ -81,6 +84,7 @@
           transition="fade"
           once
           class="relative-position"
+          style="max-width: 100%; overflow: hidden"
         >
           <q-card
             flat
@@ -155,14 +159,19 @@
 
             <q-card-section>
               <div class="row justify-between no-wrap">
-                <div>
+                <div style="max-width: calc(100% - 36px - 16px)">
                   <!-- title -->
-                  <div style="max-width: 194px" class="relative-position">
+                  <div class="relative-position">
                     <div
-                      class="text-semibold ellipsis cursor-pointer"
-                      style="width: 194px"
-                      :style="`opacity: ${
-                        editingPresentationId === presentation.id ? '0' : ''
+                      class="text-semibold cursor-pointer scroll--hidden"
+                      :class="{
+                        ellipsis: editingPresentationId !== presentation.id,
+                      }"
+                      style="width: 100%"
+                      :style="`${
+                        editingPresentationId === presentation.id
+                          ? 'padding: 0 4px; margin-left: -4px; margin-right: 4px; white-space: nowrap; overflow-x: scroll; '
+                          : ''
                       }`"
                       @click="handlePresentationNameClick(presentation)"
                       @dblclick="
@@ -174,24 +183,7 @@
                           );
                         }
                       "
-                    >
-                      {{ presentation.name }}
-                    </div>
-
-                    <div
-                      v-show="editingPresentationId === presentation.id"
-                      class="absolute bg-white text-semibold q-px-xs scroll-y scroll--hidden"
-                      style="
-                        max-height: 42px;
-                        width: 194px;
-                        top: 0;
-                        left: 0;
-                        z-index: 9999;
-                        margin-left: -4px;
-                      "
-                      autofocus
-                      contenteditable="true"
-                      :id="`presentation-${presentation.id}-name-input`"
+                      :id="`presentation-${presentation.id}-name`"
                     >
                       {{ presentation.name }}
                     </div>
@@ -613,9 +605,9 @@ const handlePresentationNameDoubleClick = (event, presentation) => {
   editingPresentationId.value = presentation.id;
 
   const element = document.getElementById(
-    `presentation-${presentation.id}-name-input`
+    `presentation-${presentation.id}-name`
   );
-  element.style.width = event.target.offsetWidth;
+  element.contentEditable = true;
 
   setTimeout(() => {
     element.focus();
@@ -629,6 +621,8 @@ const handlePresentationNameDoubleClick = (event, presentation) => {
     const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
+
+    element.scrollLeft = element.scrollWidth;
   }, 100);
 
   element.addEventListener("blur", () => {
@@ -655,14 +649,16 @@ const handlePresentationNameDoubleClick = (event, presentation) => {
   });
 };
 
-const handlePresentationNameUpdate = (presentation) => {
+const handlePresentationNameUpdate = async (presentation) => {
   const element = document.getElementById(
-    `presentation-${presentation.id}-name-input`
+    `presentation-${presentation.id}-name`
   );
 
   presentation.name = element.innerText;
-  presentationsStore.updatePresentation(presentation);
 
+  await presentationsStore.updatePresentation(presentation);
+
+  element.contentEditable = false;
   editingPresentationId.value = null;
 };
 </script>
@@ -672,6 +668,18 @@ const handlePresentationNameUpdate = (presentation) => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
+
+  @media screen and (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: 600px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 
   .presentations_grid__item {
     overflow: hidden;

@@ -1,7 +1,10 @@
 <template>
   <q-page>
     <div class="container">
-      <div class="row no-wrap items-center justify-between q-mb-lg">
+      <div
+        class="no-wrap justify-between q-mb-lg"
+        :class="$q.screen.lt.md ? 'column q-gutter-md' : 'row items-center'"
+      >
         <!-- welcome -->
         <div>
           <div class="text-h5 text-semibold" style="font-size: 1.75rem">
@@ -18,7 +21,7 @@
           <q-card-section class="row no-wrap items-center">
             <div
               class="round-borders bg-background text-primary row items-center justify-center"
-              style="width: 46px; height: 46px"
+              style="min-width: 46px; width: 46px; height: 46px"
             >
               <q-icon name="r_bolt" size="24px" />
             </div>
@@ -31,6 +34,8 @@
                 {{ $t("presentationsBrowser.upgrade.description") }}
               </div>
             </div>
+
+            <q-space />
 
             <div>
               <q-btn
@@ -46,61 +51,71 @@
       </div>
 
       <!-- actions -->
-      <div class="row no-wrap q-gutter-md">
-        <!-- new presentation -->
-        <q-btn
-          unelevated
-          color="primary"
-          no-caps
-          class="q-py-3xs"
-          @click="showNewPresentationDialog = true"
-        >
-          <q-icon name="r_add" class="q-mr-md" />
-          <div class="text-h7">
-            {{ $t("presentationsBrowser.newPresentation.title") }}
-          </div>
-        </q-btn>
+      <div
+        class="no-wrap"
+        :class="$q.screen.lt.md ? 'column' : 'row items-center'"
+      >
+        <div class="row no-wrap">
+          <!-- new presentation -->
+          <q-btn
+            unelevated
+            color="primary"
+            no-caps
+            class="q-mr-md"
+            :class="$q.screen.lt.md ? 'q-py-sm' : 'q-py-3xs'"
+            @click="showNewPresentationDialog = true"
+          >
+            <q-icon name="r_add" />
+            <div
+              :class="$q.screen.lt.md ? 'q-ml-sm' : 'q-ml-3xs q-mr-xs text-h7'"
+            >
+              {{ $t("presentationsBrowser.newPresentation.title") }}
+            </div>
+          </q-btn>
 
-        <!-- new presentation form -->
-        <q-dialog v-model="showNewPresentationDialog">
-          <PresentationBrowserNewPresentation
-            :folders="folders"
-            :selected-folder="selectedFolder"
-            :is-loading="isLoading.creatingPresentation"
-            @cancel="showNewPresentationDialog = false"
-            @submit="handleCreatingNewPresentation($event)"
-          />
-        </q-dialog>
+          <!-- new presentation form -->
+          <q-dialog v-model="showNewPresentationDialog">
+            <PresentationBrowserNewPresentation
+              :folders="folders"
+              :selected-folder="selectedFolder"
+              :is-loading="isLoading.creatingPresentation"
+              @cancel="showNewPresentationDialog = false"
+              @submit="handleCreatingNewPresentation($event)"
+            />
+          </q-dialog>
 
-        <!-- new folder -->
-        <q-btn
-          v-if="!selectedFolder"
-          outline
-          no-wrap
-          class="bg-white q-py-3xs"
-          no-caps
-          @click="showNewFolderDialog = true"
-        >
-          <q-icon name="icon-folder_add" class="q-mr-md" />
-          <div class="text-h7">
-            {{ $t("presentationsBrowser.newFolder.title") }}
-          </div>
-        </q-btn>
+          <!-- new folder -->
+          <q-btn
+            v-if="!selectedFolder"
+            outline
+            no-wrap
+            class="bg-white q-mr-md"
+            :class="$q.screen.lt.md ? 'q-py-sm' : 'q-py-3xs'"
+            :round="$q.screen.lt.md"
+            no-caps
+            @click="showNewFolderDialog = true"
+          >
+            <q-icon name="icon-folder_add" />
+            <div v-if="!$q.screen.lt.md" class="text-h7 q-ml-md">
+              {{ $t("presentationsBrowser.newFolder.title") }}
+            </div>
+          </q-btn>
 
-        <!-- new folder form -->
-        <q-dialog v-model="showNewFolderDialog">
-          <PresentationBrowserNewFolder
-            :presentations="
-              presentations.filter((presentation) => !presentation.folder_id)
-            "
-            :is-loading="isLoading.creatingFolder"
-            @cancel="showNewFolderDialog = false"
-            @submit="
-              presentationsStore.createNewFolder($event);
-              showNewFolderDialog = false;
-            "
-          />
-        </q-dialog>
+          <!-- new folder form -->
+          <q-dialog v-model="showNewFolderDialog">
+            <PresentationBrowserNewFolder
+              :presentations="
+                presentations.filter((presentation) => !presentation.folder_id)
+              "
+              :is-loading="isLoading.creatingFolder"
+              @cancel="showNewFolderDialog = false"
+              @submit="
+                presentationsStore.createNewFolder($event);
+                showNewFolderDialog = false;
+              "
+            />
+          </q-dialog>
+        </div>
 
         <q-space />
 
@@ -111,6 +126,7 @@
           dense
           bg-color="white"
           style="width: 290px"
+          :class="$q.screen.lt.md ? 'full-width q-mt-lg' : ''"
           :placeholder="$t('presentationsBrowser.search.placeholder')"
           debounce="500"
           clearable

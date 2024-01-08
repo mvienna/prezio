@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header class="bg-white q-pa-sm">
+    <q-header class="bg-white q-pa-sm" bordered>
       <q-toolbar>
         <!-- logo -->
         <a
@@ -8,7 +8,10 @@
           class="link--no-decorations"
         >
           <div class="row no-wrap">
-            <img src="/prezio.svg" style="height: 32px" />
+            <img
+              :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"
+              style="height: 32px"
+            />
 
             <div class="q-ml-sm column">
               <q-badge
@@ -30,8 +33,12 @@
           no-caps
           text-color="black"
           icon="o_reviews"
-          :label="$t('mainLayout.header.feedbackForm.title')"
+          :label="
+            !$q.screen.lt.sm ? $t('mainLayout.header.feedbackForm.title') : ''
+          "
+          :round="$q.screen.lt.sm"
         />
+
         <q-separator vertical class="q-my-sm q-mx-md" />
 
         <!-- notifications -->

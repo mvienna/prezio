@@ -13,9 +13,11 @@
         :key="folder.id"
         class="folders_grid__item row no-wrap shadow-2xs-soft shadow-2xs-soft--hoverable"
         bordered
+        style="max-width: 100%"
       >
         <q-card-section
           class="row no-wrap items-center"
+          style="width: calc(100% - 36px - 16px)"
           @click="handleFolderSelect($event, folder)"
         >
           <!-- folder icon -->
@@ -30,10 +32,11 @@
             class="text-semibold scroll--hidden"
             :class="{ ellipsis: editingFolderId !== folder.id }"
             :title="folder.name"
+            style="width: 100%"
             :style="`${
               editingFolderId === folder.id
-                ? 'padding: 0 4px; margin-left: -4px; margin-right: 4px; white-space: nowrap; overflow-x: scroll; min-width: 120px; max-width: 120px;'
-                : 'min-width: 145px; max-width: 145px;'
+                ? 'padding: 0 4px; margin-left: -4px; margin-right: 4px; white-space: nowrap; overflow-x: scroll; '
+                : ''
             }`"
             :id="`folder-${folder.id}-name`"
           >
@@ -162,6 +165,7 @@ const handleFolderNameClick = (event, folder) => {
 
   const element = document.getElementById(`folder-${folder.id}-name`);
   element.contentEditable = true;
+
   charactersLeft.value = 100 - element.innerHTML.length;
 
   setTimeout(() => {
@@ -176,6 +180,8 @@ const handleFolderNameClick = (event, folder) => {
     const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
+
+    element.scrollLeft = element.scrollWidth;
   }, 100);
 
   element.addEventListener("blur", () => {
@@ -270,12 +276,22 @@ const handleFolderNameUpdate = (folder) => {
     }
 
     .folder__icon {
-      width: 50px;
+      width: 36px;
+      min-width: 36px;
+      max-width: 36px;
     }
 
     .folder__name {
       line-height: 50px;
     }
+  }
+
+  @media screen and (max-width: 700px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: 520px) {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
 
