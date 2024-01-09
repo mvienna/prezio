@@ -4,7 +4,11 @@
     class="q-mt-lg"
     :class="$q.screen.lt.lg ? 'fixed-top-center' : 'fixed-top-left q-ml-lg'"
   >
-    <q-img src="/prezio.svg" style="width: 120px" />
+    <q-img
+      src="/prezio.svg"
+      style="width: 120px; min-width: 120px"
+      fit="contain"
+    />
   </div>
 
   <div class="container__wrapper">
