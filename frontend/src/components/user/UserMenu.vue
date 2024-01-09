@@ -4,7 +4,7 @@
     no-caps
     no-wrap
     class="text-black"
-    :class="isAvatarOnly ? 'q-pa-none round-borders' : 'q-px-xs rounded-sm'"
+    :class="isAvatarOnly ? 'q-pa-none round-borders' : 'q-px-xs rounded-lg'"
     :style="`border-radius: ${isAvatarOnly ? '50%' : '19px'};`"
     :round="isAvatarOnly"
   >

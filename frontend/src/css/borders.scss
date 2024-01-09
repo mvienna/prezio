@@ -2,6 +2,10 @@
   border-radius: 50% !important;
 }
 
+.rounded-lg {
+  border-radius: 24px !important;
+}
+
 .rounded-md {
   border-radius: 16px !important;
 }
@@ -12,4 +16,12 @@
 
 .rounded-sm {
   border-radius: 8px !important;
+}
+
+.rounded-xs {
+  border-radius: 4px !important;
+}
+
+.rounded-none {
+  border-radius: 0 !important;
 }

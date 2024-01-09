@@ -32,14 +32,17 @@
           flat
           no-caps
           text-color="black"
-          icon="o_reviews"
-          :label="
-            !$q.screen.lt.sm ? $t('mainLayout.header.feedbackForm.title') : ''
-          "
+          :class="$q.screen.lt.sm ? 'q-mr-sm round-borders' : ''"
+          :size="$q.screen.lt.sm ? '12px' : ''"
           :round="$q.screen.lt.sm"
-        />
+        >
+          <q-icon size="20px" name="o_reviews" />
+          <div v-if="!$q.screen.lt.sm" class="q-ml-sm">
+            {{ $t("mainLayout.header.feedbackForm.title") }}
+          </div>
+        </q-btn>
 
-        <q-separator vertical class="q-my-sm q-mx-md" />
+        <q-separator v-if="!$q.screen.lt.sm" vertical class="q-my-sm q-mx-md" />
 
         <!-- notifications -->
         <q-btn
@@ -55,7 +58,7 @@
         />
 
         <!-- user menu -->
-        <UserMenu />
+        <UserMenu :is-avatar-only="$q.screen.lt.md" />
       </q-toolbar>
     </q-header>
 
