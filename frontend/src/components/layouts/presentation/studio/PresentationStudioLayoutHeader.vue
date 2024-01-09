@@ -21,7 +21,7 @@
         class="row items-center no-wrap text-h6 text-black q-ml-md"
       >
         <!-- presentation name -->
-        <span style="cursor: text">
+        <span style="cursor: text; max-width: 300px" class="ellipsis">
           {{ presentation.name }}
 
           <q-popup-edit
