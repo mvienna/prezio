@@ -1,132 +1,164 @@
 <template>
-  <div class="container__wrapper">
-    <div class="container">
-      <!-- logo -->
-      <div class="container__logo q-pb-xl">
-        <q-img src="/prezio.svg" />
-      </div>
+  <!-- logo -->
+  <div
+    class="q-mt-lg"
+    :class="$q.screen.lt.lg ? 'fixed-top-center' : 'fixed-top-left q-ml-lg'"
+  >
+    <q-img src="/prezio.svg" style="width: 120px" />
+  </div>
 
+  <div class="container__wrapper">
+    <!-- left -->
+    <div class="container">
       <q-form @submit.prevent="submit()">
         <!-- title -->
-        <div class="form__title">
+        <div class="text-h5 text-semibold">
           {{ $t(`auth.restorePassword.titles.${step}`) }}
         </div>
 
-        <!-- description -->
-        <div class="form__description q-mt-md">
+        <!-- sub-title -->
+        <div class="text-grey-9 q-mt-sm q-mb-lg">
           {{ $t(`auth.restorePassword.descriptions.${step}`) }}
 
-          <a v-if="step === STEPS.code" :href="`mailto:${form.email}`">
+          <a
+            v-if="step === STEPS.emailVerification"
+            :href="`mailto:${form.email}`"
+          >
             {{ form.email }}
           </a>
         </div>
 
-        <div class="column q-gutter-lg q-pt-lg">
-          <!-- email -->
-          <q-input
-            v-if="step === STEPS.email"
-            v-model="form.email"
-            type="email"
-            outlined
-            no-error-icon
-            :label="$t('auth.restorePassword.form.email')"
-            :rules="[emailRule]"
-            lazy-rules
-            autofocus
-            :error-message="errors.email"
-            :error="!!errors.email"
-          >
-            <template #prepend>
-              <q-icon name="r_mail" class="grey-2" />
-            </template>
-          </q-input>
+        <!-- email -->
+        <q-input
+          v-if="step === STEPS.formEmail"
+          v-model="form.email"
+          type="email"
+          outlined
+          no-error-icon
+          :label="$t('auth.restorePassword.form.email')"
+          :rules="[emailRule]"
+          lazy-rules
+          autofocus
+          dense
+          hide-bottom-space
+          :error-message="errors.email"
+          :error="!!errors.email"
+        />
 
-          <!-- verification code -->
-          <q-input
-            v-if="step === STEPS.code"
-            v-model="form.code"
-            mask="#-#-#-#"
-            outlined
-            placeholder="0-0-0-0"
-            unmasked-value
-            no-error-icon
-            autofocus
-            class="verification_code"
-            :rules="[codeRule]"
-            lazy-rules
-            :error-message="errors.code"
-            :error="!!errors.code"
-          />
+        <!-- verification code -->
+        <q-input
+          v-if="step === STEPS.emailVerification"
+          v-model="form.code"
+          mask="#-#-#-#"
+          outlined
+          placeholder="0-0-0-0"
+          unmasked-value
+          no-error-icon
+          autofocus
+          dense
+          hide-bottom-space
+          class="verification_code"
+          :rules="[codeRule]"
+          lazy-rules
+          :error-message="errors.code"
+          :error="!!errors.code"
+        >
+          <template #append>
+            <div class="row items-center text-caption">
+              <div
+                v-if="timeLeft !== -1"
+                class="text-grey-5 cursor-not-allowed"
+              >
+                {{ countdown }}
+              </div>
 
-          <!-- password -->
-          <q-input
-            v-if="step === STEPS.password"
-            v-model="form.password"
-            :type="isPasswordVisible ? 'text' : 'password'"
-            outlined
-            autofocus
-            no-error-icon
-            :label="$t('auth.login.form.password')"
-            :rules="[passwordRule]"
-            lazy-rules
-          >
-            <template #prepend>
-              <q-icon name="r_lock" class="grey-2" />
-            </template>
+              <div
+                v-else
+                class="link"
+                :class="
+                  isLoading ? 'text-grey-5 cursor-not-allowed' : 'text-primary'
+                "
+                @click="handleResendingVerificationCode()"
+              >
+                {{ $t("auth.restorePassword.form.resendVerificationCode") }}
+              </div>
+            </div>
+          </template>
+        </q-input>
 
-            <template #append>
-              <q-icon
-                :name="isPasswordVisible ? 'r_visibility_off' : 'r_visibility'"
-                class="grey-2 cursor-pointer"
-                @click="isPasswordVisible = !isPasswordVisible"
-              />
-            </template>
-          </q-input>
+        <!-- password -->
+        <q-input
+          v-if="step === STEPS.formNewPassword"
+          v-model="form.password"
+          :type="isPasswordVisible ? 'text' : 'password'"
+          outlined
+          dense
+          autofocus
+          no-error-icon
+          hide-bottom-space
+          :label="$t('auth.login.form.password')"
+          :rules="[passwordRule]"
+          lazy-rules
+        >
+          <template #append>
+            <q-btn
+              flat
+              round
+              :icon="isPasswordVisible ? 'r_visibility_off' : 'r_visibility'"
+              color="grey"
+              class="round-borders"
+              size="8px"
+              @click="isPasswordVisible = !isPasswordVisible"
+            />
+          </template>
+        </q-input>
 
-          <DoneCheckmark v-if="step === STEPS.login" class="q-py-sm" />
+        <div>
+          <DoneCheckmark v-if="step === STEPS.proceed" class="q-py-sm" />
+        </div>
 
-          <!-- submit -->
+        <!-- submit -->
+        <div class="q-mt-md q-pt-xs">
           <q-btn
             color="primary"
             unelevated
             no-caps
             type="submit"
             :loading="isLoading"
-            class="q-py-md text-bold"
+            align="left"
+            class="q-py-sm full-width"
             :label="
-              step === STEPS.email
+              step === STEPS.formEmail
                 ? $t('auth.restorePassword.form.sendEmail')
-                : step === STEPS.code
+                : step === STEPS.emailVerification
                 ? $t('auth.restorePassword.form.checkVerificationCode')
-                : step === STEPS.password
+                : step === STEPS.formNewPassword
                 ? $t('auth.restorePassword.form.resetPassword')
-                : $t('auth.restorePassword.form.login')
+                : $t('auth.restorePassword.form.proceed')
             "
           />
         </div>
 
-        <div v-if="step === STEPS.code" class="form__sub_action q-mt-lg">
-          <div v-if="timeLeft !== -1" class="text-grey-5 cursor-not-allowed">
-            {{ countdown }}
-          </div>
-
-          <div
-            v-else
-            class="link"
-            :class="isLoading ? 'text-grey-5 cursor-not-allowed' : ''"
-            @click="handleResendingVerificationCode()"
-          >
-            {{ $t("auth.restorePassword.form.resendVerificationCode") }}
-          </div>
-        </div>
-
         <!-- login -->
-        <div v-else-if="step !== STEPS.login" class="form__sub_action q-mt-lg">
-          <router-link :to="ROUTE_PATHS.AUTH.LOGIN">
+        <div class="text-center text-weight-medium q-mt-lg">
+          {{ $t("auth.restorePassword.form.rememberPassword") }}
+
+          <router-link :to="ROUTE_PATHS.AUTH.LOGIN" class="link text-primary">
             {{ $t("auth.restorePassword.form.login") }}
           </router-link>
         </div>
       </q-form>
+    </div>
+
+    <!-- right -->
+    <div
+      v-if="!$q.screen.lt.lg"
+      class="full-width full-height row justify-center items-center q-px-xl"
+      style="
+        background: linear-gradient(203.08deg, #5fa5ff 2.22%, #135dbc 96.08%);
+      "
+    >
+      <q-img src="/assets/images/forgotPassword.svg" style="width: 50%" />
     </div>
   </div>
 </template>
@@ -143,21 +175,30 @@ import { api } from "boot/axios";
 import DoneCheckmark from "components/animations/DoneCheckmark.vue";
 import { useRouter } from "vue-router";
 import { countdown, startCountdown, timeLeft } from "src/helpers/countdown";
+import { useAuthStore } from "stores/auth";
 
+/*
+ * variables
+ */
 const { t } = useI18n({ useScope: "global" });
 
 const router = useRouter();
 
 /*
+ * stores
+ */
+const authStore = useAuthStore();
+
+/*
  * steps
  */
 const STEPS = {
-  email: "email",
-  code: "code",
-  password: "password",
-  login: "login",
+  formEmail: "email",
+  emailVerification: "code",
+  formNewPassword: "password",
+  proceed: "login",
 };
-const step = ref(STEPS.email);
+const step = ref(STEPS.formEmail);
 
 /*
  * form
@@ -220,22 +261,22 @@ const submit = async () => {
   errors.value = {};
 
   // send verification code
-  if (step.value === STEPS.email) {
+  if (step.value === STEPS.formEmail) {
     await handleSendingVerificationCode();
   }
 
   // check verification code
-  else if (step.value === STEPS.code) {
+  else if (step.value === STEPS.emailVerification) {
     await handleCheckingVerificationCode();
   }
 
   // update password
-  else if (step.value === STEPS.password) {
+  else if (step.value === STEPS.formNewPassword) {
     await handleUpdatingPassword();
   }
 
   // login
-  else if (step.value === STEPS.login) {
+  else if (step.value === STEPS.proceed) {
     await router.push(ROUTE_PATHS.AUTH.LOGIN);
   }
 
@@ -248,7 +289,7 @@ const submit = async () => {
 const handleSendingVerificationCode = async () => {
   await sendVerificationCode(form.value.email)
     .then(() => {
-      step.value = STEPS.code;
+      step.value = STEPS.emailVerification;
       startCountdown(process.env.SECONDS_UNTIL_RESEND_CODE);
     })
     .catch((error) => {
@@ -274,7 +315,7 @@ const handleCheckingVerificationCode = async () => {
         "Authorization"
       ] = `Bearer ${response.data.token}`;
 
-      step.value = STEPS.password;
+      step.value = STEPS.formNewPassword;
     })
     .catch((error) => {
       errors.value.code = error;
@@ -290,91 +331,43 @@ const handleUpdatingPassword = async () => {
       password: form.value.password,
     })
     .then(() => {
-      step.value = STEPS.login;
+      authStore.setUserCredentialsForDev({
+        password: form.value.password,
+      });
+
+      authStore.login(form.value.email, form.value.password);
+
+      step.value = STEPS.proceed;
+
+      setTimeout(() => {
+        router.push(ROUTE_PATHS.INDEX);
+      }, 5000);
     });
 };
 </script>
 
 <style scoped lang="scss">
 .container__wrapper {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   justify-content: center;
   align-items: center;
   width: 100vw;
+  height: 100svh;
+
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 
   .container {
-    max-width: 600px;
+    max-width: 460px;
     width: 100%;
   }
-
-  .container__logo {
-    width: 140px;
-    margin: 0 auto;
-  }
-
-  form {
-    padding: 48px;
-    background: $white;
-    border-radius: 16px;
-    box-shadow: rgba(73, 112, 255, 0.1) 0 8px 24px;
-
-    .form__title {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .form__description {
-      text-align: center;
-      font-size: 16px;
-      opacity: 0.8;
-      font-weight: 500;
-    }
-
-    .form__disclaimer {
-      text-align: center;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 8px 0;
-    }
-
-    .form__sub_action {
-      text-align: center;
-      font-weight: 600;
-
-      a {
-        color: $primary;
-      }
-    }
-  }
 }
+</style>
 
-@media screen and (max-width: 600px) {
-  .container__wrapper {
-    .container {
-      max-width: 100%;
-    }
-
-    form {
-      border: none;
-    }
-  }
-}
-
-@media screen and (max-width: 470px) {
-  .container__wrapper {
-    form {
-      padding: 24px;
-    }
-  }
-}
-
-::v-deep(.verification_code) {
-  font-size: 20px;
-  font-weight: 500;
-
-  input {
-    text-align: center;
-  }
+<style lang="scss">
+.chaport-container {
+  display: none;
 }
 </style>

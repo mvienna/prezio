@@ -1,116 +1,112 @@
 <template>
-  <div class="container__wrapper">
-    <div class="container">
-      <!-- logo -->
-      <div class="container__logo q-pb-xl">
-        <q-img src="/prezio.svg" />
-      </div>
+  <!-- logo -->
+  <div
+    class="q-mt-lg"
+    :class="$q.screen.lt.lg ? 'fixed-top-center' : 'fixed-top-left q-ml-lg'"
+  >
+    <q-img src="/prezio.svg" style="width: 120px" />
+  </div>
 
+  <div class="container__wrapper">
+    <!-- left -->
+    <div class="container">
       <q-form @submit.prevent="submit()">
         <!-- title -->
-        <div class="form__title">{{ $t("auth.login.title") }}</div>
-
-        <!-- google -->
-        <q-btn
-          outline
-          color="primary"
-          no-caps
-          class="full-width q-py-md text-bold q-mt-lg"
-        >
-          <template #default>
-            <q-img
-              src="/assets/icons/google.svg"
-              style="width: 24px"
-              class="q-mr-md"
-            />
-            <span>
-              {{ $t("auth.login.google") }}
-            </span>
-          </template>
-        </q-btn>
-
-        <!-- or -->
-        <div class="q-py-lg text-center text-grey-5">
-          {{ $t("auth.login.or") }}
+        <div class="text-h5 text-semibold">
+          {{ $t("auth.login.title") }}
         </div>
 
-        <div class="column q-gutter-md">
-          <!-- email -->
-          <q-input
-            v-model="form.email"
-            type="email"
-            outlined
-            no-error-icon
-            :label="$t('auth.login.form.email')"
-            :rules="[emailRule]"
-            lazy-rules
-            :error="!!invalidCredentialsError"
+        <!-- sub-title -->
+        <div class="text-grey-9 q-mt-sm q-mb-lg">
+          {{ $t("auth.login.subtitle") }}
+        </div>
+
+        <!-- email -->
+        <q-input
+          v-model="form.email"
+          type="email"
+          dense
+          outlined
+          no-error-icon
+          :placeholder="$t('auth.login.form.email')"
+          :rules="[emailRule]"
+          lazy-rules
+          hide-bottom-space
+          :error="!!invalidCredentialsError"
+        />
+
+        <!-- password -->
+        <q-input
+          v-model="form.password"
+          :type="isPasswordVisible ? 'text' : 'password'"
+          outlined
+          dense
+          no-error-icon
+          :placeholder="$t('auth.login.form.password')"
+          :rules="[passwordRule]"
+          lazy-rules
+          hide-bottom-space
+          class="q-mt-md"
+          :error-message="invalidCredentialsError"
+          :error="!!invalidCredentialsError"
+        >
+          <template #append>
+            <q-btn
+              flat
+              round
+              :icon="isPasswordVisible ? 'r_visibility_off' : 'r_visibility'"
+              color="grey"
+              class="round-borders"
+              size="8px"
+              @click="isPasswordVisible = !isPasswordVisible"
+            />
+          </template>
+        </q-input>
+
+        <!-- forgot password -->
+        <div class="row justify-end q-mt-sm text-weight-medium">
+          <router-link
+            :to="ROUTE_PATHS.AUTH.RESTORE_PASSWORD"
+            class="link text-primary"
           >
-            <template #prepend>
-              <q-icon name="r_mail" class="grey-2" />
-            </template>
-          </q-input>
+            {{ $t("auth.login.form.forgotPassword") }}
+          </router-link>
+        </div>
 
-          <!-- password -->
-          <div>
-            <q-input
-              v-model="form.password"
-              :type="isPasswordVisible ? 'text' : 'password'"
-              outlined
-              no-error-icon
-              :label="$t('auth.login.form.password')"
-              :rules="[passwordRule]"
-              lazy-rules
-              :error-message="invalidCredentialsError"
-              :error="!!invalidCredentialsError"
-            >
-              <template #prepend>
-                <q-icon name="r_lock" class="grey-2" />
-              </template>
-
-              <template #append>
-                <q-icon
-                  :name="
-                    isPasswordVisible ? 'r_visibility_off' : 'r_visibility'
-                  "
-                  class="grey-2 cursor-pointer"
-                  @click="isPasswordVisible = !isPasswordVisible"
-                />
-              </template>
-            </q-input>
-
-            <!-- forgot password -->
-            <div class="row justify-end q-mt-sm">
-              <router-link
-                :to="ROUTE_PATHS.AUTH.RESTORE_PASSWORD"
-                class="form__password__forgot_password"
-              >
-                {{ $t("auth.login.form.forgotPassword") }}
-              </router-link>
-            </div>
-          </div>
-
-          <!-- submit -->
+        <!-- submit -->
+        <div class="q-mt-md q-pt-xs">
           <q-btn
             color="primary"
             unelevated
             no-caps
             type="submit"
             :loading="isLoading"
-            class="q-py-md text-bold"
+            align="left"
+            class="q-py-sm full-width"
             :label="$t('auth.login.form.submit')"
           />
         </div>
 
         <!-- signup-->
-        <div class="form__signup q-mt-lg">
+        <div class="text-center text-weight-medium q-mt-lg">
           {{ $t("auth.login.form.newUser") }}
 
-          <router-link :to="ROUTE_PATHS.AUTH.SIGNUP">
+          <router-link :to="ROUTE_PATHS.AUTH.SIGNUP" class="link text-primary">
             {{ $t("auth.login.form.register") }}
           </router-link>
         </div>
       </q-form>
+    </div>
+
+    <!-- right -->
+    <div
+      v-if="!$q.screen.lt.lg"
+      class="full-width full-height row justify-center items-center q-px-xl"
+      style="
+        background: linear-gradient(203.08deg, #5fa5ff 2.22%, #135dbc 96.08%);
+      "
+    >
+      <q-img src="/assets/images/class.svg" style="width: 50%" />
     </div>
   </div>
 </template>
@@ -191,72 +187,26 @@ const submit = async () => {
 
 <style scoped lang="scss">
 .container__wrapper {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   justify-content: center;
   align-items: center;
   width: 100vw;
+  height: 100svh;
+
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 
   .container {
-    max-width: 600px;
+    max-width: 460px;
     width: 100%;
   }
-
-  .container__logo {
-    width: 140px;
-    margin: 0 auto;
-  }
-
-  form {
-    padding: 48px;
-    background: $white;
-    border-radius: 16px;
-    box-shadow: rgba(73, 112, 255, 0.1) 0 8px 24px;
-
-    .form__title {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .form__password__forgot_password {
-      color: $primary;
-      font-weight: 600;
-      font-size: 12px;
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    .form__signup {
-      text-align: center;
-      font-weight: 600;
-
-      a {
-        color: $primary;
-      }
-    }
-  }
 }
+</style>
 
-@media screen and (max-width: 600px) {
-  .container__wrapper {
-    .container {
-      max-width: 100%;
-    }
-
-    form {
-      border: none;
-    }
-  }
-}
-
-@media screen and (max-width: 470px) {
-  .container__wrapper {
-    form {
-      padding: 24px;
-    }
-  }
+<style lang="scss">
+.chaport-container {
+  display: none;
 }
 </style>

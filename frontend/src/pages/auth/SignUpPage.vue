@@ -1,121 +1,120 @@
 <template>
-  <div class="container__wrapper">
-    <div class="container">
-      <!-- logo -->
-      <div class="container__logo q-pb-xl">
-        <q-img src="/prezio.svg" />
-      </div>
+  <!-- logo -->
+  <div
+    class="q-mt-lg"
+    :class="$q.screen.lt.lg ? 'fixed-top-center' : 'fixed-top-left q-ml-lg'"
+  >
+    <q-img src="/prezio.svg" style="width: 120px" />
+  </div>
 
+  <div class="container__wrapper">
+    <!-- left -->
+    <div class="container">
       <q-form @submit.prevent="submit()">
         <!-- title -->
-        <div class="form__title">{{ $t("auth.signup.title") }}</div>
-
-        <!-- google -->
-        <q-btn
-          outline
-          color="primary"
-          no-caps
-          class="full-width q-py-md text-bold q-mt-lg"
-        >
-          <template #default>
-            <q-img
-              src="/assets/icons/google.svg"
-              style="width: 24px"
-              class="q-mr-md"
-            />
-            <span>
-              {{ $t("auth.signup.google") }}
-            </span>
-          </template>
-        </q-btn>
-
-        <!-- or -->
-        <div class="q-py-lg text-center text-grey-5">
-          {{ $t("auth.signup.or") }}
+        <div class="text-h5 text-semibold">
+          {{ $t("auth.signup.title") }}
         </div>
 
-        <div class="column q-gutter-md">
-          <!-- name -->
-          <q-input
-            v-model="form.name"
-            type="text"
-            no-error-icon
-            outlined
-            autofocus
-            :label="$t('auth.signup.form.name')"
-            :rules="[nameRule]"
-            lazy-rules
-          >
-            <template #prepend>
-              <q-icon name="r_account_circle" class="grey-2" />
-            </template>
-          </q-input>
+        <!-- sub-title -->
+        <div class="text-grey-9 q-mt-sm q-mb-lg">
+          {{ $t("auth.signup.subtitle") }}
+        </div>
 
-          <!-- email -->
-          <q-input
-            v-model="form.email"
-            type="email"
-            outlined
-            no-error-icon
-            :label="$t('auth.signup.form.email')"
-            :rules="[emailRule]"
-            lazy-rules
-          >
-            <template #prepend>
-              <q-icon name="r_mail" class="grey-2" />
-            </template>
-          </q-input>
+        <!-- name -->
+        <q-input
+          v-model="form.name"
+          type="text"
+          no-error-icon
+          outlined
+          dense
+          hide-bottom-space
+          autofocus
+          :label="$t('auth.signup.form.name')"
+          :rules="[nameRule]"
+          lazy-rules
+        />
 
-          <!-- password -->
-          <q-input
-            v-model="form.password"
-            :type="isPasswordVisible ? 'text' : 'password'"
-            no-error-icon
-            outlined
-            :label="$t('auth.signup.form.password')"
-            :rules="[passwordRule]"
-            lazy-rules
-          >
-            <template #prepend>
-              <q-icon name="r_lock" class="grey-2" />
-            </template>
+        <!-- email -->
+        <q-input
+          v-model="form.email"
+          type="email"
+          outlined
+          dense
+          hide-bottom-space
+          no-error-icon
+          class="q-mt-md"
+          :label="$t('auth.signup.form.email')"
+          :rules="[emailRule]"
+          lazy-rules
+        />
 
-            <template #append>
-              <q-icon
-                :name="isPasswordVisible ? 'r_visibility_off' : 'r_visibility'"
-                class="grey-2 cursor-pointer"
-                @click="isPasswordVisible = !isPasswordVisible"
-              />
-            </template>
-          </q-input>
+        <!-- password -->
+        <q-input
+          v-model="form.password"
+          :type="isPasswordVisible ? 'text' : 'password'"
+          no-error-icon
+          outlined
+          dense
+          hide-bottom-space
+          class="q-mt-md"
+          :label="$t('auth.signup.form.password')"
+          :rules="[passwordRule]"
+          lazy-rules
+        >
+          <template #append>
+            <q-btn
+              flat
+              round
+              :icon="isPasswordVisible ? 'r_visibility_off' : 'r_visibility'"
+              color="grey"
+              class="round-borders"
+              size="8px"
+              @click="isPasswordVisible = !isPasswordVisible"
+            />
+          </template>
+        </q-input>
 
-          <!-- disclaimer -->
-          <div
-            v-html="$t('auth.signup.form.disclaimer')"
-            class="form__disclaimer"
-          ></div>
-
-          <!-- submit -->
+        <!-- submit -->
+        <div class="q-mt-md q-pt-xs">
           <q-btn
             color="primary"
             unelevated
             no-caps
             type="submit"
             :loading="isLoading"
-            class="q-py-md text-bold"
+            align="left"
+            class="q-py-sm full-width"
             :label="$t('auth.signup.form.submit')"
           />
         </div>
 
-        <!-- signup -->
-        <div class="form__login q-mt-lg">
+        <!-- disclaimer -->
+        <div
+          v-html="$t('auth.signup.form.disclaimer')"
+          class="text-caption q-mt-md text-center"
+        ></div>
+
+        <!-- login -->
+        <div class="text-center text-weight-medium q-mt-lg">
           {{ $t("auth.signup.form.oldUser") }}
 
-          <router-link :to="ROUTE_PATHS.AUTH.LOGIN">
+          <router-link :to="ROUTE_PATHS.AUTH.LOGIN" class="link text-primary">
             {{ $t("auth.signup.form.login") }}
           </router-link>
         </div>
       </q-form>
+    </div>
+
+    <!-- right -->
+    <div
+      v-if="!$q.screen.lt.lg"
+      class="full-width full-height row justify-center items-center q-px-xl"
+      style="
+        background: linear-gradient(203.08deg, #5fa5ff 2.22%, #135dbc 96.08%);
+      "
+    >
+      <q-img src="/assets/images/class.svg" style="width: 50%" />
     </div>
   </div>
 </template>
@@ -211,68 +210,26 @@ const submit = async () => {
 
 <style scoped lang="scss">
 .container__wrapper {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   justify-content: center;
   align-items: center;
   width: 100vw;
+  height: 100svh;
+
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 
   .container {
-    max-width: 600px;
+    max-width: 460px;
     width: 100%;
   }
-
-  .container__logo {
-    width: 140px;
-    margin: 0 auto;
-  }
-
-  form {
-    padding: 48px;
-    background: $white;
-    border-radius: 16px;
-    box-shadow: rgba(73, 112, 255, 0.1) 0 8px 24px;
-
-    .form__title {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .form__disclaimer {
-      text-align: center;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 8px 0;
-    }
-
-    .form__login {
-      text-align: center;
-      font-weight: 600;
-
-      a {
-        color: $primary;
-      }
-    }
-  }
 }
+</style>
 
-@media screen and (max-width: 600px) {
-  .container__wrapper {
-    .container {
-      max-width: 100%;
-    }
-
-    form {
-      border: none;
-    }
-  }
-}
-
-@media screen and (max-width: 470px) {
-  .container__wrapper {
-    form {
-      padding: 24px;
-    }
-  }
+<style lang="scss">
+.chaport-container {
+  display: none;
 }
 </style>

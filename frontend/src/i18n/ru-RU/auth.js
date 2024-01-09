@@ -3,9 +3,9 @@ import { ROUTE_PATHS } from "src/constants/routes";
 export default {
   auth: {
     login: {
-      title: "Войти",
-      google: "Войти с помощью Google",
-      or: "или",
+      title: "Войти в аккаунт",
+      subtitle:
+        "Введите свои учетные данные для доступа к вашей учетной записи",
       form: {
         email: "Введите email",
         password: "Введите пароль",
@@ -28,15 +28,14 @@ export default {
 
     signup: {
       title: "Регистрация",
-      google: "Зарегистрироваться с помощью Google",
-      or: "или",
+      subtitle: "Создайте новый аккаунт, чтобы начать",
       form: {
         name: "Ваше имя",
         email: "Введите email",
         password: "Введите пароль",
         disclaimer: `Нажимая на кнопку “Зарегистрироваться”, вы подтверждаете, что ознакомились с <a href="${ROUTE_PATHS.POLICIES.PRIVACY_POLICY}" target="_blank">Политикой конфиденциальности</a> и <a href="${ROUTE_PATHS.POLICIES.USER_AGREEMENT}" target="_blank">Пользовательским соглашением</a>`,
         submit: "Зарегистрироваться",
-        oldUser: "Уже были у нас?",
+        oldUser: "Уже зарегистрированы?",
         login: "Войдите",
 
         errors: {
@@ -63,7 +62,7 @@ export default {
         login: "Пароль был успешно изменен",
       },
       descriptions: {
-        email: "На вашу почту мы пришлем инструкцию по изменению пароля",
+        email: "На вашу почту придет код для подтверждения личности",
         code: "Введите код из письма, которое было отправлено на",
         password: "Почти закончили! Введите ваш новый пароль",
         login: "Войдите в свой аккаунт используя новый пароль",
@@ -74,7 +73,12 @@ export default {
         checkVerificationCode: "Проверить",
         resendVerificationCode: "Отправить повторно",
         resetPassword: "Сбросить пароль",
+
+        rememberPassword: "Помните пароль?",
         login: "Войти",
+
+        proceed: "Перейти в личный кабинет",
+
         errors: {
           email: {
             required: "Требуется ввести email",
