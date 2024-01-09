@@ -158,11 +158,12 @@
     <div
       v-if="!$q.screen.lt.lg"
       class="full-width full-height row justify-center items-center q-px-xl"
-      style="
-        background: linear-gradient(203.08deg, #5fa5ff 2.22%, #135dbc 96.08%);
-      "
+      style="background: linear-gradient(203.08deg, #113b98, #1751d0)"
     >
-      <q-img src="/assets/images/forgotPassword.svg" style="width: 50%" />
+      <q-img
+        src="/assets/illustrations/team.svg"
+        style="width: 80%; max-width: 512px"
+      />
     </div>
   </div>
 </template>
