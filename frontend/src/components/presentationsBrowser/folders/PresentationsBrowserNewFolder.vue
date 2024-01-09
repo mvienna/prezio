@@ -38,15 +38,6 @@
             </div>
           </template>
         </q-input>
-
-        <!-- description -->
-        <!--        <q-input-->
-        <!--          v-model="form.description"-->
-        <!--          :label="$t('presentationsBrowser.newFolder.fields.description')"-->
-        <!--          outlined-->
-        <!--          autogrow-->
-        <!--          class="q-mt-lg"-->
-        <!--        />-->
       </q-card-section>
 
       <q-separator />
@@ -68,33 +59,82 @@
         </div>
       </q-card-section>
 
-      <div class="row no-wrap q-gutter-md scroll-x scroll--hidden q-px-lg">
-        <q-card
-          v-for="presentation in presentations"
-          :key="presentation.id"
-          flat
-          class="presentation_card"
-          :class="
-            form.presentationsIds?.includes(presentation.id)
-              ? 'presentation_card--active'
-              : ''
-          "
-          @click="handlePresentationCardToggle(presentation)"
+      <div class="relative-position full-width">
+        <div
+          class="row no-wrap q-gutter-md scroll-x scroll--hidden q-px-lg"
+          ref="presentationCardsContainer"
         >
-          <!-- presentation preview -->
-          <q-img
-            :src="
-              presentation.preview?.preview_url ||
-              presentation.preview?.original_url ||
-              presentation.preview
+          <q-card
+            v-for="presentation in presentations"
+            :key="presentation.id"
+            flat
+            class="presentation_card"
+            :class="
+              form.presentationsIds?.includes(presentation.id)
+                ? 'presentation_card--active'
+                : ''
             "
-          />
+            @click="handlePresentationCardToggle(presentation)"
+          >
+            <!-- presentation preview -->
+            <q-img
+              :src="
+                presentation.preview?.preview_url ||
+                presentation.preview?.original_url ||
+                presentation.preview
+              "
+            />
 
-          <!-- presentation name -->
-          <div class="text-center ellipsis q-mt-sm text-sm">
-            {{ presentation.name }}
+            <!-- presentation name -->
+            <div class="text-center ellipsis q-mt-sm text-sm">
+              {{ presentation.name }}
+            </div>
+          </q-card>
+        </div>
+
+        <transition
+          appear
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+        >
+          <div
+            v-if="isScrollLeftAvailable"
+            class="absolute q-ml-sm"
+            style="top: 50%; left: 0; transform: translateY(-50%)"
+          >
+            <q-btn
+              outline
+              color="grey"
+              round
+              size="10px"
+              icon="r_chevron_left"
+              class="round-borders bg-white"
+              @click="scrollNextLeft()"
+            />
           </div>
-        </q-card>
+        </transition>
+
+        <transition
+          appear
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+        >
+          <div
+            v-if="isScrollRightAvailable"
+            class="absolute q-mr-sm"
+            style="top: 50%; right: 0; transform: translateY(-50%)"
+          >
+            <q-btn
+              outline
+              color="grey"
+              round
+              size="10px"
+              icon="r_chevron_right"
+              class="round-borders bg-white"
+              @click="scrollNextRight()"
+            />
+          </div>
+        </transition>
       </div>
 
       <q-card-section class="q-pa-lg">
@@ -128,7 +168,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 /*
@@ -175,6 +215,41 @@ const handlePresentationCardToggle = (presentation) => {
     form.value.presentationsIds.push(presentation.id);
   }
 };
+
+/*
+ * presentations navigation
+ */
+const presentationCardsContainer = ref();
+
+const isScrollLeftAvailable = ref(false);
+const isScrollRightAvailable = ref(true);
+
+const scrollNextLeft = () => {
+  presentationCardsContainer.value.scrollTo({
+    left: presentationCardsContainer.value.scrollLeft - 162,
+    behavior: "smooth",
+  });
+};
+
+const scrollNextRight = () => {
+  presentationCardsContainer.value.scrollTo({
+    left: presentationCardsContainer.value.scrollLeft + 162,
+    behavior: "smooth",
+  });
+};
+
+const scrollListener = () => {
+  isScrollLeftAvailable.value =
+    presentationCardsContainer.value?.scrollLeft > 0;
+  isScrollRightAvailable.value =
+    presentationCardsContainer.value.scrollLeft +
+      presentationCardsContainer.value.clientWidth <
+    presentationCardsContainer.value.scrollWidth;
+};
+
+onMounted(() => {
+  presentationCardsContainer.value.addEventListener("scroll", scrollListener);
+});
 </script>
 
 <style scoped lang="scss">
@@ -189,6 +264,7 @@ const handlePresentationCardToggle = (presentation) => {
   min-width: 164px;
   aspect-ratio: 16/9;
   cursor: pointer;
+  border-radius: 0 !important;
 
   .q-img {
     border: 1px solid $grey-2;
