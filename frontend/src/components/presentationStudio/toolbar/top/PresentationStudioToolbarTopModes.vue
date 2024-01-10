@@ -116,26 +116,75 @@
         transition-show="jump-down"
         transition-hide="jump-up"
         :offset="[0, 8]"
-        class="q-pa-sm"
-        style="width: 184px"
+        class="no-padding"
       >
-        <div class="row q-gutter-sm">
+        <!-- lines -->
+        <div class="text-grey q-px-md q-mt-md q-mb-sm">
+          {{ $t("presentationStudio.toolbar.shape.groups.lines") }}
+        </div>
+
+        <div
+          style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px"
+          class="q-px-sm"
+        >
           <q-btn
-            v-for="shape in SHAPES"
+            v-for="shape in SHAPES.filter(
+              (item) => item.group === SHAPE_TYPES.line
+            )"
             :key="shape.name"
             unelevated
             round
             size="12px"
             class="q-pa-sm"
+            text-color="grey-9"
+            :disable="shape.disabled"
             v-close-popup
             @click="
               $emit('switchMode', MODE_OPTIONS.shape);
               $emit('addShape', shape.name);
             "
           >
-            <template #default>
-              <q-img :src="shape.src" />
-            </template>
+            <q-icon :name="shape.icon" />
+
+            <q-tooltip v-if="shape.disabled" :offset="[0, 4]">
+              {{ $t("tooltips.comingSoon") }}
+            </q-tooltip>
+          </q-btn>
+        </div>
+
+        <q-separator class="q-mt-sm q-mb-md" />
+
+        <!-- simple shapes -->
+        <div class="text-grey q-px-md">
+          {{ $t("presentationStudio.toolbar.shape.groups.simpleShapes") }}
+        </div>
+
+        <div
+          style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px"
+          class="q-pa-sm"
+        >
+          <q-btn
+            v-for="shape in SHAPES.filter(
+              (item) => item.group === SHAPE_TYPES.simpleShape
+            )"
+            :key="shape.name"
+            unelevated
+            round
+            size="12px"
+            class="q-pa-sm"
+            text-color="grey-9"
+            :disable="shape.disabled"
+            v-close-popup
+            @click="
+              $emit('switchMode', MODE_OPTIONS.shape);
+              $emit('addShape', shape.name);
+            "
+          >
+            <q-icon :name="shape.icon" />
+
+            <q-tooltip v-if="shape.disabled">
+              {{ $t("tooltips.comingSoon") }}
+            </q-tooltip>
           </q-btn>
         </div>
       </q-menu>
@@ -148,7 +197,7 @@
 </template>
 <script setup>
 import { EMOJIS } from "src/constants/assets/emojis";
-import { SHAPES } from "src/constants/assets/shapes";
+import { SHAPE_TYPES, SHAPES } from "src/constants/assets/shapes";
 import SelectMedia from "components/media/SelectMedia.vue";
 import { ref } from "vue";
 import { storeToRefs } from "pinia";

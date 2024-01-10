@@ -188,10 +188,11 @@
 
         <!-- preview -->
         <q-btn
-          outline
+          unelevated
           no-caps
           no-wrap
-          color="black"
+          color="grey-2"
+          text-color="black"
           :label="$t('presentationLayout.header.preview')"
           class="q-ml-sm q-btn--md"
           @click="isPresentationPreview = true"

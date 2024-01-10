@@ -42,9 +42,9 @@
         "
         icon="icon-image_add"
         unelevated
+        class="q-py-sm"
         color="primary"
         no-caps
-        class="full-width presentation_preview__upload_btn"
         @click="showSelectPreviewDialog = true"
       />
 
@@ -53,10 +53,10 @@
         v-if="presentation.preview"
         icon="r_delete_sweep"
         outline
+        round
         size="12px"
-        color="red"
         class="q-ml-md"
-        style="width: 36px"
+        style="width: 40px"
         @click="
           presentation.preview = null;
           presentation.preview_id = null;
@@ -77,8 +77,6 @@
         "
       />
     </q-dialog>
-
-    <q-separator class="q-mt-lg q-mb-md" />
   </div>
 </template>
 
@@ -116,9 +114,5 @@ const showSelectPreviewDialog = ref(false);
   aspect-ratio: 16/9;
   border-radius: 8px;
   border: 1.5px solid $grey-2;
-}
-
-.presentation_preview__upload_btn {
-  border: 1.5px dashed $primary;
 }
 </style>

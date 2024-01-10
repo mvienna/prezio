@@ -32,18 +32,6 @@
           hide-bottom-space
         />
 
-        <!-- description -->
-        <!--        <q-input-->
-        <!--          v-model="form.description"-->
-        <!--          :placeholder="-->
-        <!--            $t('presentationsBrowser.newPresentation.fields.description')-->
-        <!--          "-->
-        <!--          outlined-->
-        <!--          dense-->
-        <!--          autogrow-->
-        <!--          class="q-mt-lg"-->
-        <!--        />-->
-
         <!-- folder -->
         <q-select
           v-model="form.folder_id"
@@ -57,7 +45,10 @@
           options-dense
           hide-dropdown-icon
           clearable
+          menu-self="top middle"
+          menu-anchor="bottom middle"
           class="q-mt-lg"
+          popup-content-class="q-px-sm"
         >
           <template #selected v-if="!form.folder_id">
             <div class="text-grey">
@@ -70,7 +61,11 @@
           </template>
 
           <template #option="scope">
-            <q-item v-bind="scope.itemProps" class="no-margin">
+            <q-item
+              v-bind="scope.itemProps"
+              class="no-margin"
+              style="max-width: 436px"
+            >
               <q-img
                 :src="`/assets/icons/folders/${getFolderIconName($q)}.png`"
                 style="width: 1.75em; min-width: 1.75em"

@@ -27,7 +27,11 @@
 
       <div
         class="base_fill_color_box relative-position"
-        :style="`background: ${selectedBaseFillColor || defaultBaseFillColor};`"
+        :style="{
+          background: !baseFillColors.includes(selectedBaseFillColor)
+            ? selectedBaseFillColor
+            : '',
+        }"
         :class="
           !baseFillColors.includes(selectedBaseFillColor)
             ? 'base_fill_color_box--active'
@@ -37,9 +41,11 @@
         <q-icon
           name="r_colorize"
           class="absolute-center"
-          :style="`color: ${textColorOnAColoredBackground(
-            selectedBaseFillColor || defaultBaseFillColor
-          )};`"
+          :style="`color: ${
+            !baseFillColors.includes(selectedBaseFillColor)
+              ? textColorOnAColoredBackground(selectedBaseFillColor)
+              : 'black'
+          };`"
         />
 
         <q-menu
@@ -48,6 +54,7 @@
           transition-show="jump-down"
           transition-hide="jump-up"
           :offset="[0, 8]"
+          class="no-padding"
         >
           <q-color
             format-model="hex"
@@ -91,12 +98,12 @@ const defaultBaseFillColor = "#FFFFFF";
 const selectedBaseFillColor = ref(defaultBaseFillColor);
 
 const baseFillColors = [
-  "#FFFFFF",
+  "#ffffff",
   "#000000",
   "#1751D0",
-  "#DB4437",
-  "#F4B400",
-  "#0F9D58",
+  "#db4437",
+  "#f4b400",
+  "#0f9d58",
 ];
 </script>
 
@@ -110,6 +117,7 @@ const baseFillColors = [
   height: 24px;
   border-radius: 6px;
   border: 1px solid $grey-2;
+  background: $grey-2;
   transition: 0.2s;
 
   &.base_fill_color_box--active {

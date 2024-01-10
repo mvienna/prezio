@@ -6,7 +6,7 @@
         $t("presentationLayout.rightDrawer.tabs.settings.groups.answerOptions")
       }}
 
-      <q-icon name="r_info" class="q-ml-xs" color="grey-8">
+      <q-icon name="r_help" class="q-ml-xs" color="grey-8">
         <q-tooltip class="text-center" max-width="350px" :offset="[0, 8]">
           {{
             $t(

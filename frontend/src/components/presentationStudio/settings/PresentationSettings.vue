@@ -27,9 +27,12 @@
     <q-card-section class="q-pt-xs">
       <div class="column no-wrap q-gutter-sm">
         <q-expansion-item
-          v-for="(tab, tabIndex) in Object.values(tabs)"
+          v-for="(tab, tabIndex) in Object.values(tabs).filter(
+            (item) => !item.disable
+          )"
           :key="tab.name"
           v-model="presentationSettingsTabsExpanded[tabIndex]"
+          @update:model-value="handleTabToggle(tabIndex)"
           :icon="tab.icon"
           :disable="tab.disable"
           :label="tab.label"
@@ -40,7 +43,7 @@
               : ''
           "
         >
-          <div class="q-mt-lg">
+          <div class="q-py-md">
             <!-- general info -->
             <PresentationSettingsGeneralInfo
               v-if="tab.name === tabs.generalInformation.name"
@@ -137,6 +140,13 @@ const tabs = {
     icon: "r_more_horiz",
     label: t("presentationStudio.settings.other.title"),
   },
+};
+
+const handleTabToggle = (tabIndex) => {
+  if (presentationSettingsTabsExpanded.value[tabIndex] === true) {
+    presentationSettingsTabsExpanded.value =
+      presentationSettingsTabsExpanded.value.map((_, i) => i === tabIndex);
+  }
 };
 </script>
 

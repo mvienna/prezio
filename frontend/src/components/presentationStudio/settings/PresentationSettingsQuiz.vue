@@ -125,8 +125,6 @@
 
       <q-toggle v-model="quizSettings.showAnswersManually" color="primary" />
     </div>
-
-    <q-separator class="q-my-md" />
   </div>
 </template>
 

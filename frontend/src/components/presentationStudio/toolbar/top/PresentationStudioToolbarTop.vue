@@ -1,6 +1,6 @@
 <template>
   <div
-    class="presentation_toolbar__top bg-white row no-wrap"
+    class="presentation_toolbar__top bg-white row items-center no-wrap"
     style="padding: 9.5px 16px"
     :style="
       isDrawerRightPanelExpanded
@@ -28,7 +28,9 @@
           "
         />
 
-        <q-separator vertical class="q-mx-sm" />
+        <div class="row items-center q-mx-sm">
+          <q-separator vertical style="height: 24px" />
+        </div>
 
         <!-- selected item actions -->
         <template v-if="copiedElement">
@@ -57,7 +59,9 @@
             </q-tooltip>
           </q-btn>
 
-          <q-separator vertical class="q-mx-sm" />
+          <div class="row items-center q-mx-sm">
+            <q-separator vertical style="height: 24px" />
+          </div>
         </template>
       </template>
 
@@ -90,7 +94,9 @@
             </q-menu>
           </q-btn>
 
-          <q-separator vertical class="q-mx-sm" />
+          <div class="row items-center q-mx-sm">
+            <q-separator vertical style="height: 24px" />
+          </div>
         </template>
 
         <!-- modes -->

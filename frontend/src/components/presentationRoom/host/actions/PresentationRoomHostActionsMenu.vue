@@ -97,7 +97,7 @@
               }`
             )
           "
-          icon="r_info"
+          icon="r_help"
           no-caps
           align="left"
           flat

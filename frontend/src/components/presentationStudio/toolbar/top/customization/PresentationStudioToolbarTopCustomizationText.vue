@@ -4,8 +4,10 @@
     flat
     size="12px"
     round
-    icon="r_format_bold"
-    :text-color="customization.formatting.isBold ? 'black' : 'grey'"
+    :ripple="false"
+    icon="icon-format_bold"
+    text-color="black"
+    :class="{ 'bg-grey-2': customization.formatting.isBold }"
     @click="
       () => {
         customization.formatting.isBold = !customization.formatting.isBold;
@@ -34,8 +36,10 @@
     flat
     size="12px"
     round
-    icon="r_format_underlined"
-    :text-color="customization.formatting.isUnderline ? 'black' : 'grey'"
+    :ripple="false"
+    icon="icon-format_underlined"
+    text-color="black"
+    :class="{ 'bg-grey-2': customization.formatting.isUnderline }"
     @click="
       () => {
         customization.formatting.isUnderline =
@@ -65,8 +69,10 @@
     flat
     size="12px"
     round
-    icon="r_strikethrough_s"
-    :text-color="customization.formatting.isLineThrough ? 'black' : 'grey'"
+    :ripple="false"
+    icon="icon-format_strikethough_s"
+    text-color="black"
+    :class="{ 'bg-grey-2': customization.formatting.isLineThrough }"
     @click="
       () => {
         customization.formatting.isLineThrough =
@@ -99,8 +105,10 @@
     flat
     size="12px"
     round
-    icon="r_format_italic"
-    :text-color="customization.formatting.isItalic ? 'black' : 'grey'"
+    :ripple="false"
+    icon="icon-format_italic"
+    text-color="black"
+    :class="{ 'bg-grey-2': customization.formatting.isItalic }"
     @click="
       () => {
         customization.formatting.isItalic = !customization.formatting.isItalic;
@@ -158,11 +166,12 @@
             v-for="item in Object.keys(ALIGNMENT.horizontal)"
             :key="item"
             flat
+            :ripple="false"
             size="12px"
             round
             :class="
               item === customization.formatting.textAlign
-                ? 'text-black'
+                ? 'text-black bg-grey-2'
                 : 'text-grey'
             "
             :icon="
@@ -216,7 +225,9 @@
     </q-menu>
   </q-btn>
 
-  <q-separator vertical />
+  <div class="row items-center">
+    <q-separator vertical style="height: 24px" />
+  </div>
 
   <!-- color picker -->
   <q-btn flat round size="12px" class="relative-position">
@@ -284,8 +295,8 @@
     type="number"
     color="primary"
     dense
-    outlined
-    style="width: 94px; min-width: 94px; max-width: 94px"
+    borderless
+    style="width: 64px; min-width: 64px; max-width: 64px"
     @update:model-value="
       () => {
         customization.fontSize = fontSizeNumber + 'px';
@@ -304,15 +315,22 @@
 
   <!-- clear formatting -->
   <q-btn
-    icon="r_format_clear"
+    icon="r_restart_alt"
     flat
-    round
+    no-caps
     size="12px"
+    :label="
+      $t(
+        'presentationStudio.toolbar.text.options.formatting.clearFormatting.title'
+      )
+    "
     @click="textStore.clearFormatting()"
   >
     <q-tooltip :offset="[0, 4]">
       {{
-        $t("presentationStudio.toolbar.text.options.formatting.clearFormatting")
+        $t(
+          "presentationStudio.toolbar.text.options.formatting.clearFormatting.tooltip"
+        )
       }}
     </q-tooltip>
   </q-btn>

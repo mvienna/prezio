@@ -145,7 +145,9 @@
       <PresentationsBrowserFolders />
 
       <!-- presentations table -->
-      <PresentationsBrowserPresentations />
+      <PresentationsBrowserPresentations
+        @new-presentation="showNewPresentationDialog = true"
+      />
     </div>
   </q-page>
 </template>

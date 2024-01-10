@@ -24,8 +24,8 @@ export default {
         },
       },
 
-      goBack: "Вернуться назад",
-      submit: "Выбрать",
+      goBack: "Назад к загрузке",
+      submit: "Загрузить",
     },
 
     actions: {

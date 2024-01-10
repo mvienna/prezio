@@ -79,7 +79,11 @@
       <!-- custom color -->
       <div
         class="text_color_box relative-position"
-        :style="`background: ${customization.default.color};`"
+        :style="{
+          background: !defaultTextColors.includes(customization.default.color)
+            ? customization.default.color
+            : '',
+        }"
         :class="
           !defaultTextColors.includes(customization.default.color)
             ? 'text_color_box--active'
@@ -89,9 +93,11 @@
         <q-icon
           name="r_colorize"
           class="absolute-center"
-          :style="`color: ${textColorOnAColoredBackground(
-            customization.default.color
-          )};`"
+          :style="`color: ${
+            !defaultTextColors.includes(customization.default.color)
+              ? textColorOnAColoredBackground(customization.default.color)
+              : 'black'
+          };`"
         />
 
         <q-menu
@@ -100,6 +106,7 @@
           transition-show="jump-down"
           transition-hide="jump-up"
           :offset="[0, 8]"
+          class="no-padding"
         >
           <q-color
             format-model="hex"
@@ -123,7 +130,7 @@ import { textColorOnAColoredBackground } from "src/helpers/colorUtils";
 const textStore = useCanvasTextStore();
 const { customization } = storeToRefs(textStore);
 
-const defaultTextColors = ["#313132", "#FFFFFF"];
+const defaultTextColors = ["#0A090B", "#ffffff"];
 </script>
 
 <style scoped lang="scss">
@@ -138,6 +145,7 @@ const defaultTextColors = ["#313132", "#FFFFFF"];
   border-radius: 6px;
   border: 1px solid $grey-2;
   transition: 0.2s;
+  background: $grey-2;
 
   &.text_color_box--active {
     border: 1px solid $primary;

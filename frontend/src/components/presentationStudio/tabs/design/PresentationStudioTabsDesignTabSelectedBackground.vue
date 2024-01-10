@@ -265,7 +265,6 @@
         unelevated
         no-caps
         no-wrap
-        :style="`${backgroundElement?.imageSrc ? 'width: 100%;' : ''}`"
         color="primary"
         @click="showSelectBackgroundDialog = true"
       />

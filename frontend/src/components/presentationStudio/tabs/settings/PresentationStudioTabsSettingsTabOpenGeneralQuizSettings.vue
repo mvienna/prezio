@@ -11,7 +11,7 @@
       class="link text-primary"
       @click="
         showSettingsDialog = true;
-        presentationSettingsTabsExpanded = [false, false, false, false, true];
+        presentationSettingsTabsExpanded = [false, false, true, false, false];
       "
     >
       {{

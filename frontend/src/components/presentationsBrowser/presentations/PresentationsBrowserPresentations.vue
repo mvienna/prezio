@@ -408,7 +408,7 @@
                   </q-btn>
 
                   <div class="text-grey text-sm">
-                    {{ presentation.slides.length }}
+                    {{ presentation?.slides?.length || 0 }}
                   </div>
                 </div>
 
@@ -426,7 +426,7 @@
                   </q-btn>
 
                   <div class="text-grey text-sm">
-                    {{ presentation.participants.length }}
+                    {{ presentation?.participants?.length || 0 }}
                   </div>
                 </div>
               </div>
@@ -444,7 +444,7 @@
   >
     <!-- winking emoji -->
     <div class="row justify-center">
-      <q-img src="/assets/images/illustration_1.png" style="width: 300px" />
+      <q-img src="/assets/illustrations/team_work.svg" style="width: 300px" />
     </div>
 
     <div class="text-center q-mt-sm">
@@ -455,6 +455,17 @@
 
       <!-- description -->
       <div>{{ $t("presentationsBrowser.noPresentations.description") }}</div>
+    </div>
+
+    <div class="row justify-center q-mt-md">
+      <q-btn
+        outline
+        :label="$t('presentationsBrowser.newPresentation.title')"
+        icon="r_add"
+        no-caps
+        class="bg-white"
+        @click="$emit('newPresentation')"
+      />
     </div>
   </div>
 </template>
@@ -478,6 +489,8 @@ import { getFolderIconName } from "src/helpers/generationUtils";
 const { t } = useI18n({ useScope: "global" });
 
 const router = useRouter();
+
+const emit = defineEmits(["newPresentation"]);
 
 /*
  * presentations store
@@ -690,6 +703,7 @@ const handlePresentationNameUpdate = async (presentation) => {
 
       .q-img {
         width: 100%;
+        aspect-ratio: 16/9;
         transition: 0.5s;
       }
 

@@ -49,16 +49,20 @@
 
       <!-- selected file -->
       <div v-if="selectedFile" style="height: calc(100% - 130px)">
-        <q-img
-          class="uploaded__file"
-          fill="contain"
-          :src="
-            selectedFile?.preview_url ||
-            selectedFile?.original_url ||
-            selectedFile?.urls?.regular
-          "
-          :alt="selectedFile?.filename || selectedFile?.alt_description"
-        />
+        <div
+          class="bg-grey-2 rounded-sm overflow-hidden row justify-center"
+          style="height: 100%"
+        >
+          <img
+            class="full-height"
+            :src="
+              selectedFile?.preview_url ||
+              selectedFile?.original_url ||
+              selectedFile?.urls?.regular
+            "
+            :alt="selectedFile?.filename || selectedFile?.alt_description"
+          />
+        </div>
 
         <!-- actions -->
         <div class="row no-wrap q-gutter-md q-pt-lg">
@@ -67,22 +71,22 @@
             unelevated
             :label="$t('media.select.goBack')"
             icon="r_arrow_back"
-            round
             no-caps
             color="grey-2"
             text-color="black"
-            style="width: 100%"
+            class="q-py-sm"
             @click="selectedFile = null"
           />
+
+          <q-space />
 
           <!-- select -->
           <q-btn
             unelevated
             :label="$t('media.select.submit')"
-            round
             no-caps
             color="primary"
-            style="width: 100%"
+            class="q-py-sm"
             @click="handleFileSelection()"
           />
         </div>
@@ -557,14 +561,6 @@ const dropHandler = (event) => {
   height: 0;
   overflow: hidden;
   width: 0;
-}
-
-/*
- * uploaded
- */
-.uploaded__file {
-  border-radius: 6px;
-  height: 100%;
 }
 
 /*

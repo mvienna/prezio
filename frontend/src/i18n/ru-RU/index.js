@@ -3,8 +3,8 @@ export default {
    * tooltips
    */
   tooltips: {
-    in_development: "В процессе разработки",
     maxUploadFileSize: "Максимальный размер 10MB",
+    comingSoon: "Скоро будет доступно",
   },
 
   /*

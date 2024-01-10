@@ -812,10 +812,6 @@ watch(
     border: 1px solid $accent;
   }
 
-  //&:active {
-  //  transform: scale(0.975);
-  //}
-
   &.slide--active {
     border: 1px solid $primary;
   }

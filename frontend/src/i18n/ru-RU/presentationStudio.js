@@ -37,7 +37,10 @@ export default {
             strikeThrough: "Зачеркивание",
             alignment: "Выравнивание",
 
-            clearFormatting: "Очистить форматирование",
+            clearFormatting: {
+              title: "Очистить",
+              tooltip: "Очистить форматирование",
+            },
           },
         },
 
@@ -98,6 +101,11 @@ export default {
             },
           },
           lineWidth: "Размер",
+        },
+
+        groups: {
+          lines: "Линии",
+          simpleShapes: "Простые формы",
         },
       },
 

@@ -59,7 +59,7 @@ export const usePresentationsStore = defineStore("presentations", {
     showSelectBackgroundDialog: false,
 
     showSettingsDialog: false,
-    presentationSettingsTabsExpanded: [],
+    presentationSettingsTabsExpanded: [false, false, false, false, false],
 
     /*
      * save

@@ -222,7 +222,7 @@ export default {
             /*
              * quizzes & games
              */
-            quizzesAndGames: "Игры & Викторины",
+            quizzesAndGames: "Викторины",
 
             pick_answer: "Выбор ответа",
             pick_image: "Выбор изображения",

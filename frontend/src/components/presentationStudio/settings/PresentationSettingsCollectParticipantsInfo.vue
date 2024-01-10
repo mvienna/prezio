@@ -82,9 +82,11 @@
                     borderless
                     hide-dropdown-icon
                     map-options
+                    options-dense
+                    color="black"
                     emit-value
                     option-value="value"
-                    class="q-borderless q-ml-xs"
+                    class="q-borderless"
                     :options="Object.values(fieldTypes)"
                   >
                     <template #default>
@@ -101,15 +103,14 @@
                         <q-item-section>
                           <q-icon :name="scope.opt.icon" size="xs" />
                         </q-item-section>
-                        <q-item-section
-                          class="text-no-wrap q-mr-sm"
-                          style="margin-left: 0"
-                        >
+                        <q-item-section class="text-no-wrap q-pr-md no-margin">
                           <q-item-label>{{ scope.opt.label }}</q-item-label>
                         </q-item-section>
                       </q-item>
                     </template>
                   </q-select>
+
+                  <q-separator vertical class="q-ml-sm" />
 
                   <q-input
                     v-model="element.name"
@@ -123,6 +124,8 @@
                     class="q-borderless"
                     style="width: 80px"
                   />
+
+                  <q-separator vertical />
                 </template>
 
                 <template #append>
@@ -161,7 +164,7 @@
           </template>
         </draggable>
 
-        <div class="row no-wrap q-gutter-md q-pl-lg q-ml-sm q-pt-md">
+        <div class="row no-wrap q-gutter-md q-ml-md q-pt-md">
           <q-btn
             :label="
               $t(
@@ -170,14 +173,15 @@
             "
             unelevated
             no-caps
-            color="primary"
-            class="full-width"
+            icon="r_add"
+            color="grey-2"
+            text-color="black"
             @click="addField()"
           />
 
           <q-btn
             v-if="isUnsavedChanges"
-            outline
+            unelevated
             color="primary"
             icon="r_done"
             size="12px"
@@ -185,21 +189,9 @@
             :disable="!isFieldsValid"
             @click="handleSave()"
           />
-
-          <q-btn
-            v-else
-            outline
-            color="grey"
-            size="12px"
-            icon="r_done"
-            style="width: 36px"
-            disable
-          />
         </div>
       </div>
     </q-slide-transition>
-
-    <q-separator class="q-mt-lg q-mb-md" />
   </div>
 </template>
 
@@ -365,6 +357,9 @@ const handleFieldsReorder = async () => {
 }
 
 ::v-deep(.q-borderless) {
+  .q-field__control {
+    box-shadow: none !important;
+  }
   .q-field__control:before,
   .q-field__control:after {
     border: none !important;

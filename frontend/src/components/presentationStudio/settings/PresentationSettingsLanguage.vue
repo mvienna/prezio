@@ -31,8 +31,6 @@
       {{ $t("presentationStudio.settings.language.info") }}
       <a href="mailto:hello@prezio.ru">hello@prezio.ru</a>
     </div>
-
-    <q-separator class="q-mt-lg q-mb-md" />
   </div>
 </template>
 
