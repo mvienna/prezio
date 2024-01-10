@@ -1,14 +1,14 @@
 <template>
-  <q-page class="q-py-lg">
+  <q-page :class="{ 'q-py-lg': !$q.screen.lt.md }">
     <div class="container">
       <q-form @submit.prevent="submit()">
         <div class="column q-gutter-sm">
           <!-- avatar -->
           <EditUserAvatar class="q-mb-lg" />
 
-          <div class="row">
+          <div class="row" :class="{ 'no-wrap': !$q.screen.lt.md }">
             <!-- name -->
-            <div class="col-12 col-sm q-mr-md">
+            <div class="full-width" :class="{ 'q-pr-sm': !$q.screen.lt.md }">
               <div class="form__field__label">
                 {{ $t("user.profile.form.name.label") }}
               </div>
@@ -27,7 +27,13 @@
             </div>
 
             <!-- phone -->
-            <div class="col-12 col-sm">
+            <div
+              class="full-width"
+              :class="{
+                'q-pl-sm': !$q.screen.lt.md,
+                'q-mt-lg': $q.screen.lt.md,
+              }"
+            >
               <div class="form__field__label row items-center">
                 {{ $t("user.profile.form.phone.label") }}
                 <q-space />
@@ -492,6 +498,10 @@ const deleteAccount = async () => {
   border-radius: 16px;
   border: 1px solid $grey-2;
   margin: 0 auto;
+
+  @media screen and (max-width: 568px) {
+    border: none;
+  }
 
   form {
     .form__title {
