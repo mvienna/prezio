@@ -7,14 +7,12 @@ export const clearRoutePathFromProps = (path) => {
 };
 
 export const getSubdomain = () => {
-  const url = window.location.origin;
-  let domain = url;
-  if (url.includes("://")) {
-    domain = url.split("://")[1];
-  }
+  const url = window.location.hostname;
+  const parts = url
+    .split(".")
+    .filter((item) => !["localhost", "testing"].includes(item));
 
-  const subdomain = domain.split(".")[0];
-  return subdomain !== window.location.host ? subdomain : null;
+  return parts?.[0];
 };
 
 export const determineRoutes = () => {
