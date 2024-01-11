@@ -174,6 +174,7 @@ import DoneCheckmark from "components/animations/DoneCheckmark.vue";
 import { useRouter } from "vue-router";
 import { startCountdown } from "src/helpers/countdown";
 import { useAuthStore } from "stores/auth";
+import { useMeta } from "quasar";
 
 /*
  * variables
@@ -366,6 +367,35 @@ const handleUpdatingPassword = async () => {
       }, 5000);
     });
 };
+
+useMeta({
+  title: t("pages.auth.restorePassword.title"),
+  titleTemplate: (title) => `${title} - ${t("pages.app")}`,
+
+  // meta tags
+  meta: {
+    description: {
+      name: "description",
+      content: t("pages.auth.restorePassword.description"),
+    },
+    keywords: {
+      name: "keywords",
+      content: t("pages.auth.restorePassword.keywords"),
+    },
+    equiv: {
+      "http-equiv": "Content-Type",
+      content: "text/html; charset=UTF-8",
+    },
+    // note: for Open Graph type metadata you will need to use SSR, to ensure page is rendered by the server
+    ogTitle: {
+      property: "og:title",
+      // optional; similar to titleTemplate, but allows templating with other meta properties
+      template(ogTitle) {
+        return `${ogTitle} - ${t("pages.app")}`;
+      },
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">

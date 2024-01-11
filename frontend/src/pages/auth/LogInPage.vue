@@ -118,6 +118,7 @@ import { ROUTE_PATHS } from "src/constants/routes";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "stores/auth";
 import { useRouter } from "vue-router";
+import { useMeta } from "quasar";
 
 /*
  * variables
@@ -184,6 +185,35 @@ const submit = async () => {
       isLoading.value = false;
     });
 };
+
+useMeta({
+  title: t("pages.auth.login.title"),
+  titleTemplate: (title) => `${title} - ${t("pages.app")}`,
+
+  // meta tags
+  meta: {
+    description: {
+      name: "description",
+      content: t("pages.auth.login.description"),
+    },
+    keywords: {
+      name: "keywords",
+      content: t("pages.auth.login.keywords"),
+    },
+    equiv: {
+      "http-equiv": "Content-Type",
+      content: "text/html; charset=UTF-8",
+    },
+    // note: for Open Graph type metadata you will need to use SSR, to ensure page is rendered by the server
+    ogTitle: {
+      property: "og:title",
+      // optional; similar to titleTemplate, but allows templating with other meta properties
+      template(ogTitle) {
+        return `${ogTitle} - ${t("pages.app")}`;
+      },
+    },
+  },
+});
 </script>
 
 <style lang="scss">

@@ -258,7 +258,7 @@ import { storeToRefs } from "pinia";
 import { useAuthStore } from "stores/auth";
 import { useI18n } from "vue-i18n";
 import { api } from "boot/axios";
-import { useQuasar } from "quasar";
+import { useMeta, useQuasar } from "quasar";
 import EditUserAvatar from "components/user/profile/EditUserAvatar.vue";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import VerifyEmail from "components/user/profile/VerifyEmail.vue";
@@ -487,6 +487,35 @@ const deleteAccount = async () => {
   await authStore.delete();
   await authStore.logout();
 };
+
+useMeta({
+  title: t("pages.profile.title"),
+  titleTemplate: (title) => `${title} - ${t("pages.app")}`,
+
+  // meta tags
+  meta: {
+    description: {
+      name: "description",
+      content: t("pages.profile.description"),
+    },
+    keywords: {
+      name: "keywords",
+      content: t("pages.profile.keywords"),
+    },
+    equiv: {
+      "http-equiv": "Content-Type",
+      content: "text/html; charset=UTF-8",
+    },
+    // note: for Open Graph type metadata you will need to use SSR, to ensure page is rendered by the server
+    ogTitle: {
+      property: "og:title",
+      // optional; similar to titleTemplate, but allows templating with other meta properties
+      template(ogTitle) {
+        return `${ogTitle} - ${t("pages.app")}`;
+      },
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">

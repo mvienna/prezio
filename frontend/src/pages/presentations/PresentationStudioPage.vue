@@ -146,7 +146,7 @@ import {
 } from "stores/canvas/helpers/select";
 import { useCanvasShapeStore } from "stores/canvas/shape";
 import { useRouter } from "vue-router";
-import { QSpinnerIos, useQuasar } from "quasar";
+import { QSpinnerIos, useMeta, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import {
@@ -893,6 +893,35 @@ const connectToRoomChannels = () => {
    */
   channel.listen("PresentationRoomTerminatedEvent", () => {});
 };
+
+useMeta({
+  title: t("pages.presentation.studio.title"),
+  titleTemplate: (title) => `${title} - ${t("pages.app")}`,
+
+  // meta tags
+  meta: {
+    description: {
+      name: "description",
+      content: t("pages.presentation.studio.description"),
+    },
+    keywords: {
+      name: "keywords",
+      content: t("pages.presentation.studio.keywords"),
+    },
+    equiv: {
+      "http-equiv": "Content-Type",
+      content: "text/html; charset=UTF-8",
+    },
+    // note: for Open Graph type metadata you will need to use SSR, to ensure page is rendered by the server
+    ogTitle: {
+      property: "og:title",
+      // optional; similar to titleTemplate, but allows templating with other meta properties
+      template(ogTitle) {
+        return `${ogTitle} - ${t("pages.app")}`;
+      },
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">

@@ -253,7 +253,7 @@ import {
 } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
-import { QSpinnerIos, useQuasar } from "quasar";
+import { QSpinnerIos, useMeta, useQuasar } from "quasar";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
@@ -1164,6 +1164,35 @@ watch(
  * qr
  */
 const qr = generateQrCode();
+
+useMeta({
+  title: t("pages.presentation.room.title"),
+  titleTemplate: (title) => `${title} - ${t("pages.app")}`,
+
+  // meta tags
+  meta: {
+    description: {
+      name: "description",
+      content: t("pages.presentation.room.description"),
+    },
+    keywords: {
+      name: "keywords",
+      content: t("pages.presentation.room.keywords"),
+    },
+    equiv: {
+      "http-equiv": "Content-Type",
+      content: "text/html; charset=UTF-8",
+    },
+    // note: for Open Graph type metadata you will need to use SSR, to ensure page is rendered by the server
+    ogTitle: {
+      property: "og:title",
+      // optional; similar to titleTemplate, but allows templating with other meta properties
+      template(ogTitle) {
+        return `${ogTitle} - ${t("pages.app")}`;
+      },
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
