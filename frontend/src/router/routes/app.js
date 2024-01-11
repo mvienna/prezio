@@ -1,6 +1,6 @@
 import { ROUTE_PATHS } from "src/constants/routes";
 
-const routes = [
+const routesApp = [
   /*
    * index
    * dashboard
@@ -100,4 +100,4 @@ const routes = [
   },
 ];
 
-export default routes;
+export default routesApp;

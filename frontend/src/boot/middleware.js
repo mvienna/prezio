@@ -1,7 +1,7 @@
 import { useAuthStore } from "stores/auth";
 import { storeToRefs } from "pinia";
 import { ROUTE_PATHS } from "src/constants/routes";
-import { clearRoutePathFromProps } from "src/helpers/routeUtils";
+import { clearRoutePathFromProps, getSubdomain } from "src/helpers/routeUtils";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 
@@ -79,6 +79,14 @@ export default async ({ app, router }) => {
   });
 
   router.beforeEach(async (to, from, next) => {
+    const subdomain = getSubdomain();
+
+    // landing page - proceed
+    if (!subdomain) {
+      next();
+      return;
+    }
+
     /*
      * not authenticated
      */

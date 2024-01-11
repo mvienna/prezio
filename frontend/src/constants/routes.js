@@ -22,3 +22,7 @@ export const ROUTE_PATHS = {
   PRESENTATION_STUDIO: "/presentation/:presentation_id",
   PRESENTATION_ROOM: "/room/:token",
 };
+
+export const SUBDOMAINS = {
+  app: "app",
+};
