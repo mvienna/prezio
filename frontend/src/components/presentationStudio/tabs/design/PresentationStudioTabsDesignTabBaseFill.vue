@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-grey q-mb-sm">
+    <div class="q-mb-sm">
       {{ $t("presentationLayout.rightDrawer.tabs.design.slideBaseFill.title") }}
     </div>
 

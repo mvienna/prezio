@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- title -->
-    <div class="row no-wrap items-center">
+    <div class="row no-wrap items-center text-semibold">
       <div>
         {{
           slide?.type === SLIDE_TYPES.LEADERBOARD
@@ -9,7 +9,7 @@
             : $t("presentationLayout.rightDrawer.tabs.settings.info.question")
         }}
       </div>
-      <q-icon name="r_help" color="grey" class="q-ml-sm" />
+      <q-icon name="r_help" color="grey-9" class="q-ml-sm" />
     </div>
 
     <!-- question -->

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-grey q-mb-sm">
+    <div class="q-mb-sm">
       {{
         $t(
           "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.font.title"
@@ -44,7 +44,7 @@
       </q-tooltip>
     </q-select>
 
-    <div class="text-grey q-mt-md q-mb-sm">
+    <div class="q-mt-md q-mb-sm">
       {{
         $t(
           "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.color.title"

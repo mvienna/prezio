@@ -17,7 +17,7 @@
             class="row no-wrap items-center justify-between"
             style="padding: 10.5px 18px"
           >
-            <div class="text-h7">
+            <div class="text-weight-medium">
               {{
                 drawerRightTabs.find((tab) => tab.name === drawerRightTab).title
               }}

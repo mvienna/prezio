@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-grey q-mb-sm q-mt-lg">
+    <div class="q-mb-sm q-mt-lg">
       {{
         $t(
           "presentationLayout.rightDrawer.tabs.design.slideBackground.select.title"
