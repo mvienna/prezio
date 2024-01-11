@@ -27,23 +27,27 @@
         </div>
 
         <!-- verification code - input -->
-        <q-input
-          v-model="code"
-          mask="#-#-#-#"
-          outlined
-          placeholder="0-0-0-0"
-          unmasked-value
-          no-error-icon
-          autofocus
-          class="verification_code q-mt-lg"
-          :rules="[codeRule]"
-          lazy-rules
-          hide-bottom-space
-          :error-message="error"
-          :error="!!error"
-        />
+        <div class="row no-wrap justify-between q-mt-lg">
+          <template v-for="n in 6" :key="n">
+            <q-input
+              v-model="code[n - 1]"
+              mask="#"
+              outlined
+              unmasked-value
+              no-error-icon
+              :autofocus="n - 1 === 0"
+              hide-bottom-space
+              class="verification_code"
+              :error="!!error"
+              @update:model-value="
+                handleEmailVerificationCodeInputUpdate(n - 1)
+              "
+              @keydown="handleEmailVerificationCodeInputKeyDown($event, n - 1)"
+            />
+          </template>
+        </div>
 
-        <div class="text-sm q-ml-3xs q-mt-sm text-grey">
+        <div class="text-sm q-ml-3xs q-mt-lg text-grey">
           {{ $t("user.profile.form.emailVerification.warning") }}
         </div>
 
@@ -110,7 +114,7 @@ const props = defineProps({
 /*
  * form
  */
-const code = ref("");
+const code = ref(["", "", "", "", "", ""]);
 
 const isLoading = ref(false);
 const error = ref();
@@ -123,6 +127,28 @@ const codeRule = (value) => {
     return t("user.profile.form.errors.code.invalid");
   }
   return true;
+};
+
+const handleEmailVerificationCodeInputUpdate = (n) => {
+  const input =
+    document.getElementsByClassName("verification_code")?.[
+      code.value[n] ? n + 1 : n - 1
+    ];
+  if (input) {
+    input.querySelector("input").focus();
+  }
+};
+
+const handleEmailVerificationCodeInputKeyDown = (event, n) => {
+  if (![37, 39].includes(event.keyCode)) return;
+
+  const input =
+    document.getElementsByClassName("verification_code")?.[
+      event.keyCode === 39 ? n + 1 : n - 1
+    ];
+  if (input) {
+    input.querySelector("input").focus();
+  }
 };
 
 /*
@@ -171,11 +197,13 @@ const check = async () => {
 }
 
 ::v-deep(.verification_code) {
+  cursor: text;
   font-size: 16px;
-  font-weight: 500;
 
-  input {
-    text-align: center;
+  .q-field__control {
+    height: 48px;
+    width: 48px;
+    padding: 0 18px;
   }
 }
 </style>

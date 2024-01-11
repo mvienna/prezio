@@ -388,6 +388,7 @@ const handleUpdatingPassword = async () => {
 }
 
 ::v-deep(.verification_code) {
+  font-size: 16px;
   cursor: text;
 
   .q-field__control {
