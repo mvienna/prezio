@@ -2,6 +2,11 @@ import { ROUTE_PATHS } from "src/constants/routes";
 
 export default {
   auth: {
+    thirdParty: {
+      title: "Войти с Yandex ID",
+      or: "или",
+    },
+
     login: {
       title: "Войти в аккаунт",
       subtitle:
@@ -28,7 +33,8 @@ export default {
 
     signup: {
       title: "Регистрация",
-      subtitle: "Создайте новый аккаунт, чтобы начать",
+      subtitle:
+        "Создайте новый аккаунт, и ваши публичные выступления уже не будут прежними",
       form: {
         name: "Ваше имя",
         email: "Введите email",
@@ -36,7 +42,7 @@ export default {
         disclaimer: `Нажимая на кнопку “Зарегистрироваться”, вы подтверждаете, что ознакомились с <a href="${ROUTE_PATHS.POLICIES.PRIVACY_POLICY}" target="_blank">Политикой конфиденциальности</a> и <a href="${ROUTE_PATHS.POLICIES.USER_AGREEMENT}" target="_blank">Пользовательским соглашением</a>`,
         submit: "Зарегистрироваться",
         oldUser: "Уже зарегистрированы?",
-        login: "Войдите",
+        login: "Войти",
 
         errors: {
           name: {
@@ -56,28 +62,29 @@ export default {
 
     restorePassword: {
       titles: {
-        email: "Восстановление доступа",
-        code: "Восстановление доступа",
-        password: "Восстановление доступа",
-        login: "Пароль был успешно изменен",
+        request: "Восстановление доступа",
+        verify: "Подтвердите email",
+        confirm: "Введите пароль",
+        success: "Пароль был успешно изменен",
       },
       descriptions: {
-        email: "На вашу почту придет код для подтверждения личности",
-        code: "Введите код из письма, которое было отправлено на",
-        password: "Почти закончили! Введите ваш новый пароль",
-        login: "Войдите в свой аккаунт используя новый пароль",
+        request:
+          "Мы вышлем на вашу почту инструкции по сбросу пароля. Если у вас нет доступа к почте, напишите нам на {mail} и мы  попробуем восстановить учетную запись.",
+        verify: "Введите код из письма, которое было отправлено на {mail}",
+        confirm: "Почти все готово! Введите новый пароль",
+        success: "Получилось! Можете перейти в личный кабинет",
       },
-      form: {
-        email: "Введите email",
-        sendEmail: "Отправить",
+      actions: {
+        sendEmail: "Сбросить пароль",
         checkVerificationCode: "Проверить",
         resendVerificationCode: "Отправить повторно",
         resetPassword: "Сбросить пароль",
-
-        rememberPassword: "Помните пароль?",
-        login: "Войти",
-
         proceed: "Перейти в личный кабинет",
+      },
+      form: {
+        email: "Введите email",
+        password: "Введите новый пароль",
+        passwordCopy: "Подтвердите новый пароль",
 
         errors: {
           email: {
@@ -91,9 +98,11 @@ export default {
           password: {
             required: "Требуется ввести пароль",
             invalid: "Пароль должен иметь 6 или больше символов",
+            mismatch: "Пароли не совпадают",
           },
         },
       },
+      rememberPassword: "Я помню пароль",
     },
   },
 };

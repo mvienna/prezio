@@ -14,7 +14,7 @@ class VerificationCodeRepository extends BaseRepository
         parent::__construct($model);
     }
 
-    public function generateCode(string $email, $digits = 4, $expirationMinutes = 15): int
+    public function generateCode(string $email, $digits = 6, $expirationMinutes = 15): int
     {
         $min = pow(10, $digits - 1);
         $max = pow(10, $digits) - 1;

@@ -51,4 +51,9 @@ export default {
     symbols: "Символы",
     flags: "Флаги",
   },
+
+  /*
+   * policies
+   */
+  privacyPolicy: "Политика конфиденциальности",
 };
