@@ -37,7 +37,9 @@
             >
               <div>
                 <q-icon :name="tab.icon" size="22px" />
-                <div class="text-caption q-mt-xs">{{ tab.label }}</div>
+                <div class="text-weight-medium text-sm-plus q-mt-sm">
+                  {{ tab.label }}
+                </div>
               </div>
             </q-tab>
           </q-tabs>
@@ -45,7 +47,7 @@
 
         <q-tab-panels v-model="tab" animated vertical style="width: 100%">
           <q-tab-panel name="inviteAudience" class="q-py-none">
-            <div class="text-semibold">
+            <div class="text-semibold text-h7">
               {{ $t("presentationLayout.header.share.inviteAudience.title") }}
             </div>
 
@@ -58,7 +60,7 @@
             <q-separator class="q-my-lg" />
 
             <!-- link -->
-            <div class="text-semibold">
+            <div class="text-weight-medium">
               {{
                 $t("presentationLayout.header.share.inviteAudience.link.title")
               }}
@@ -157,7 +159,7 @@
             </div>
 
             <!-- qr -->
-            <div class="text-semibold q-mt-lg">
+            <div class="text-weight-medium q-mt-lg">
               {{
                 $t("presentationLayout.header.share.inviteAudience.qr.title")
               }}
@@ -178,16 +180,19 @@
                 <q-btn
                   outline
                   no-caps
-                  style="width: 150px"
+                  style="width: 122px"
                   class="q-mt-md"
-                  icon="icon-download"
-                  :label="
-                    $t(
-                      'presentationLayout.header.share.inviteAudience.qr.download'
-                    )
-                  "
                   @click="handleQrCodeDownload()"
-                />
+                >
+                  <q-icon name="icon-download" />
+                  <span class="text-grey-9 text-weight-medium q-ml-sm">
+                    {{
+                      $t(
+                        "presentationLayout.header.share.inviteAudience.qr.download"
+                      )
+                    }}
+                  </span>
+                </q-btn>
               </div>
             </div>
           </q-tab-panel>
@@ -319,12 +324,6 @@ const handleQrCodeGeneration = () => {
     background: $background;
     color: $secondary;
     border: 1px solid $secondary;
-
-    .q-tab__content {
-      div {
-        font-weight: 600;
-      }
-    }
   }
 
   .q-tab__indicator {
