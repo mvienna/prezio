@@ -96,7 +96,13 @@ const routesApp = [
    */
   {
     path: "/:catchAll(.*)*",
-    component: () => import("pages/ErrorNotFound.vue"),
+    component: () => import("layouts/AuthLayout.vue"),
+    children: [
+      {
+        path: "/:catchAll(.*)*",
+        component: () => import("pages/ErrorNotFound.vue"),
+      },
+    ],
   },
 ];
 

@@ -1,17 +1,31 @@
 <template>
-  <div class="fullscreen text-center text-secondary q-pa-md flex flex-center">
-    <div>
-      <div style="font-size: 30vh; line-height: 1.2">404</div>
+  <div>
+    <div class="text-h3 text-semibold" style="line-height: 1.2">
+      {{ $t("pages.notFound.title") }}
+    </div>
 
-      <div class="text-h2" style="opacity: 0.4">Oops. Nothing here...</div>
+    <div class="q-mt-3xs text-grey-9 text-h7">
+      {{ $t("pages.notFound.description") }}
+    </div>
+
+    <div class="row no-wrap q-mt-lg q-pt-sm">
+      <q-btn
+        color="grey-9"
+        outline
+        icon="r_arrow_back"
+        :label="$t('pages.notFound.goBack')"
+        no-caps
+        @click="$router.go(-1)"
+      />
 
       <q-btn
-        class="q-mt-xl"
-        color="secondary"
+        color="primary"
         unelevated
         :to="ROUTE_PATHS.INDEX"
-        label="Go Home"
+        icon="icon-home"
+        :label="$t('pages.notFound.homepage')"
         no-caps
+        class="q-ml-md"
       />
     </div>
   </div>
