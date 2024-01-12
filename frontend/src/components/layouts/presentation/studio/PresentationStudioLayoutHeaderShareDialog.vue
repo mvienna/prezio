@@ -274,7 +274,15 @@ const qrCodeElement = ref();
 const qrCode = ref();
 
 const handleQrCodeDownload = () => {
-  qrCode.value.download({ name: "qr", extension: "png" });
+  generateQrCode(
+    1024,
+    1024,
+    roomLink.value,
+    window.location.origin + "/logo.png",
+    "#FFFFFF",
+    "#0A090B",
+    20
+  ).download({ name: "qr", extension: "png" });
 };
 
 onMounted(() => {

@@ -12,8 +12,6 @@ export const getSubdomain = () => {
     .split(".")
     .filter((item) => Object.values(SUBDOMAINS).includes(item));
 
-  console.log(parts);
-
   return parts?.[0];
 };
 

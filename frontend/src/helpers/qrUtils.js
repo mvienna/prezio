@@ -6,7 +6,8 @@ export const generateQrCode = (
   data = window.location.href,
   image = window.location.origin + "/logo.png",
   backgroundColor = "#0A090B",
-  color = "#FFFFFF"
+  color = "#FFFFFF",
+  imageMargin = 5
 ) => {
   return new QRCodeStyling({
     width: width,
@@ -32,7 +33,7 @@ export const generateQrCode = (
     imageOptions: {
       imageSize: 0.6,
       crossOrigin: "anonymous",
-      margin: 5,
+      margin: imageMargin,
     },
   });
 };
