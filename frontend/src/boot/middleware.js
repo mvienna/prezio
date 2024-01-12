@@ -94,7 +94,7 @@ export default async ({ app, router }) => {
       if (
         !allowedUnauthenticatedPaths.includes(to.path) &&
         !to.path.includes(
-          clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM)
+          clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM.HOST)
         )
       ) {
         next(ROUTE_PATHS.AUTH.LOGIN);

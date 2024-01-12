@@ -6,11 +6,13 @@
         :style="`width: ${$q.screen.lt.lg ? '100%' : '50%'}`"
         style="z-index: 2"
       >
-        <q-img
-          src="/prezio.svg"
-          style="width: 120px; min-width: 120px"
-          fit="contain"
-        />
+        <a :href="landingUrl">
+          <q-img
+            src="/prezio.svg"
+            style="width: 120px; min-width: 120px"
+            fit="contain"
+          />
+        </a>
       </q-toolbar>
 
       <q-toolbar
@@ -21,9 +23,12 @@
         <div class="container row justify-between">
           <div>© {{ new Date().getFullYear() }} Prezio</div>
 
-          <router-link to="#" class="link text-black">
+          <a
+            :href="landingUrl + ROUTE_PATHS.POLICIES.PRIVACY_POLICY"
+            class="link text-black"
+          >
             {{ $t("privacyPolicy") }}
-          </router-link>
+          </a>
         </div>
       </q-toolbar>
 
@@ -50,12 +55,24 @@
 </template>
 
 <script setup>
+import { ROUTE_PATHS, SUBDOMAINS } from "src/constants/routes";
+
 const wallpapers = [
   "/assets/images/auth.jpg",
   // "/assets/images/auth1.jpg",
   // "/assets/images/auth2.jpg",
 ];
 const random = Math.floor(Math.random() * wallpapers.length);
+
+/*
+ * landing url
+ */
+const landingUrl =
+  // protocol
+  window.location.protocol +
+  "//" +
+  // host
+  window.location.host.replace(SUBDOMAINS.app + ".", "");
 </script>
 
 <style scoped lang="scss">

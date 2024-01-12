@@ -20,7 +20,10 @@ export const ROUTE_PATHS = {
 
   PRESENTATIONS_BROWSER: "/dashboard",
   PRESENTATION_STUDIO: "/presentation/:presentation_id",
-  PRESENTATION_ROOM: "/room/:token",
+  PRESENTATION_ROOM: {
+    HOST: "/room/:token",
+    PARTICIPANT: "/:token",
+  },
 };
 
 export const SUBDOMAINS = {

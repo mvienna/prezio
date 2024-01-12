@@ -85,7 +85,7 @@ const routesApp = [
     component: () => import("layouts/NoLayout.vue"),
     children: [
       {
-        path: ROUTE_PATHS.PRESENTATION_ROOM,
+        path: ROUTE_PATHS.PRESENTATION_ROOM.HOST,
         component: () => import("pages/presentations/PresentationRoomPage.vue"),
       },
     ],

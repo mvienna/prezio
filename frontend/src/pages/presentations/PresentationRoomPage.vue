@@ -661,7 +661,7 @@ const connectToRoomChannels = async () => {
     // on room token updated
     if (router.currentRoute.value.params.token !== room.value.token) {
       return await router.push(
-        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
+        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM.HOST) +
           room.value.token
       );
     }

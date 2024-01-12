@@ -593,7 +593,7 @@ const openPresentationRoom = () => {
   if (!presentation.value?.room?.token) return;
 
   window.location =
-    clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
+    clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM.HOST) +
     presentation.value?.room?.token;
 };
 

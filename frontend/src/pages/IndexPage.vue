@@ -1,27 +1,22 @@
 <template>
   <q-page>
-    <q-header class="bg-white q-pa-sm" bordered>
-      <q-toolbar class="container row no-wrap items-center">
+    <q-header class="bg-white" bordered>
+      <q-toolbar class="container q-pa-3xs row no-wrap items-center">
         <!-- logo -->
-        <a
-          :href="ROUTE_PATHS.PRESENTATIONS_BROWSER"
-          class="link--no-decorations"
-        >
-          <div class="row no-wrap">
-            <img
-              :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"
-              style="height: 36px"
-            />
+        <div class="row no-wrap">
+          <img
+            :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"
+            style="height: 36px"
+          />
 
-            <div class="q-ml-sm column">
-              <q-badge
-                class="bg-grey-2 text-grey-7"
-                style="font-size: 10px; margin-top: 3px"
-                :label="VERSION"
-              />
-            </div>
+          <div class="q-ml-sm column">
+            <q-badge
+              class="bg-grey-2 text-grey-7"
+              style="font-size: 10px; margin-top: 3px"
+              :label="VERSION"
+            />
           </div>
-        </a>
+        </div>
 
         <q-space />
 
@@ -53,6 +48,53 @@
           :label="$t('landing.auth.signup')"
           no-caps
           :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
+        />
+      </q-toolbar>
+
+      <q-toolbar
+        v-if="showJoinRoomToolbar"
+        class="row no-wrap justify-center items-center q-pa-sm join_room"
+      >
+        <div class="text-black q-mr-sm">
+          {{ $t("landing.joinRoom.title") }}
+        </div>
+
+        <form @submit.prevent="handleRoomSearch()">
+          <q-input
+            v-model="roomId"
+            outlined
+            dense
+            class="join_room__token_input"
+            :placeholder="$t('landing.joinRoom.enterCode')"
+            :prefix="$t('landing.joinRoom.url')"
+            :error="!!roomSearchError"
+            hide-bottom-space
+            no-error-icon
+          >
+            <template #append>
+              <q-btn
+                unelevated
+                :label="$t('landing.joinRoom.join')"
+                color="grey-2"
+                text-color="black"
+                size="12px"
+                no-caps
+                class="q-px-sm"
+                @click="handleRoomSearch()"
+              />
+            </template>
+          </q-input>
+        </form>
+
+        <q-btn
+          flat
+          round
+          size="10px"
+          color="black"
+          icon="r_close"
+          class="absolute round-borders"
+          style="top: 50%; transform: translateY(-50%); right: 24px"
+          @click="showJoinRoomToolbar = false"
         />
       </q-toolbar>
     </q-header>
@@ -97,7 +139,7 @@
     </div>
 
     <!-- benefits -->
-    <div id="features" class="bg-grey-2 q-py-xl">
+    <div id="features" class="bg-white q-py-xl">
       <div class="container">
         <div class="q-py-xl">
           <div class="text-h4 text-semibold text-center">
@@ -108,11 +150,11 @@
           </div>
 
           <div class="betefit_cards_grid">
-            <q-card class="shadow-sm-hard betefit_card">
-              <q-card-section>
-                <q-img src="assets/images/landing/benefit/sales.png" />
+            <q-card flat class="betefit_card">
+              <q-img src="assets/images/landing/benefit/sales.png" />
 
-                <div class="text-h6 text-semibold q-mt-md q-mb-sm">
+              <q-card-section class="q-pa-lg">
+                <div class="text-h6 text-semibold q-mb-sm">
                   {{ $t("landing.benefits.sales.title") }}
                 </div>
 
@@ -122,13 +164,13 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="shadow-sm-hard betefit_card">
-              <q-card-section>
-                <q-img
-                  src="assets/images/landing/benefit/experts_and_teams.png"
-                />
+            <q-card flat class="betefit_card">
+              <q-img
+                src="assets/images/landing/benefit/experts_and_teams.png"
+              />
 
-                <div class="text-h6 text-semibold q-mt-md q-mb-sm">
+              <q-card-section class="q-pa-lg">
+                <div class="text-h6 text-semibold q-mb-sm">
                   {{ $t("landing.benefits.expertsAndTeams.title") }}
                 </div>
 
@@ -138,11 +180,11 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="shadow-sm-hard betefit_card">
-              <q-card-section>
-                <q-img src="assets/images/landing/benefit/teachers.png" />
+            <q-card flat class="betefit_card">
+              <q-img src="assets/images/landing/benefit/teachers.png" />
 
-                <div class="text-h6 text-semibold q-mt-md q-mb-sm">
+              <q-card-section class="q-pa-lg">
+                <div class="text-h6 text-semibold q-mb-sm">
                   {{ $t("landing.benefits.teachers.title") }}
                 </div>
 
@@ -162,7 +204,9 @@
 import { useMeta } from "quasar";
 import { useI18n } from "vue-i18n";
 import { ROUTE_PATHS, SUBDOMAINS } from "src/constants/routes";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { api } from "boot/axios";
+import { useRouter } from "vue-router";
 
 /*
  * assembly version
@@ -189,23 +233,44 @@ const appUrl =
  */
 const { t } = useI18n({ useScope: "global" });
 
+const router = useRouter();
+
+/*
+ * join room
+ */
+const showJoinRoomToolbar = ref(true);
+
+const roomId = ref();
+const roomSearchError = ref();
+
+const handleRoomSearch = () => {
+  api
+    .get(`/room/${roomId.value}`)
+    .then((response) => {
+      router.push(response.data.room.token);
+    })
+    .catch((error) => {
+      console.log(error);
+      roomSearchError.value = error.response.data.message;
+
+      $q.notify({
+        message: error.response.data.message,
+        color: "red",
+        icon: "r_crisis_alert",
+      });
+    });
+};
+
 /*
  * typing animation
  */
-const dynamicTitles =
-  "[" +
-  '"' +
-  t("landing.heroes.title.dynamic.one") +
-  '",' +
-  '"' +
-  t("landing.heroes.title.dynamic.two") +
-  '",' +
-  '"' +
-  t("landing.heroes.title.dynamic.three") +
-  '"' +
-  "]";
+const dynamicTitles = [
+  t("landing.heroes.title.dynamic.one"),
+  t("landing.heroes.title.dynamic.two"),
+  t("landing.heroes.title.dynamic.three"),
+];
 
-let TxtType = function (el, toRotate, period) {
+const TxtType = function (el, toRotate, period) {
   this.toRotate = toRotate;
   this.el = el;
   this.loopNum = 0;
@@ -225,7 +290,12 @@ TxtType.prototype.tick = function () {
     this.txt = fullTxt.substring(0, this.txt.length + 1);
   }
 
-  this.el.innerHTML = '<span class="wrap">' + this.txt + "</span>";
+  const colors = ["var(--q-primary)", "#F53535", "#8136DC"];
+  const color = colors[i % colors.length];
+
+  this.el.innerHTML = `<span class="wrap" style="color: ${color}; border-right: 0.08em solid ${color}; animation: pulse 1s infinite steps(1);">
+    ${this.txt}
+    </span>`;
 
   let that = this;
   let delta = 200 - Math.random() * 100;
@@ -243,7 +313,7 @@ TxtType.prototype.tick = function () {
     delta = 500;
   }
 
-  setTimeout(function () {
+  setTimeout(() => {
     that.tick();
   }, delta);
 };
@@ -254,15 +324,9 @@ onMounted(() => {
     let toRotate = elements[i].getAttribute("data-type");
     let period = elements[i].getAttribute("data-period");
     if (toRotate) {
-      new TxtType(elements[i], JSON.parse(toRotate), period);
+      new TxtType(elements[i], toRotate.split(","), period);
     }
   }
-  // INJECT CSS
-  let css = document.createElement("style");
-  css.type = "text/css";
-  css.innerHTML =
-    ".typewrite > .wrap { border-right: 0.08em solid var(--q-primary)}";
-  document.body.appendChild(css);
 });
 
 /*
@@ -332,6 +396,10 @@ useMeta({
 </script>
 
 <style scoped lang="scss">
+.q-page {
+  background: $grey-1;
+}
+
 .container {
   max-width: 1200px;
 }
@@ -347,11 +415,36 @@ useMeta({
   gap: 24px;
 
   .betefit_card {
-    border-radius: 1em;
+    background: $grey-1;
+    border-radius: 1.25em;
+  }
+}
 
-    .q-img {
-      border-radius: calc(1em - 1em / 2);
-    }
+.join_room {
+  background: linear-gradient(90deg, #e9eefd 0%, #f9e9f3 100%);
+  border-top: 1px solid #e8e8eb;
+}
+
+::v-deep(.join_room__token_input) {
+  .q-field__control {
+    background: $white;
+    padding: 0 8px !important;
+    width: 321px;
+  }
+  .q-field__prepend {
+    padding-right: 4px !important;
+  }
+}
+</style>
+
+<style lang="scss">
+@keyframes pulse {
+  0%,
+  100% {
+    border-color: currentColor;
+  }
+  50% {
+    border-color: $grey-3;
   }
 }
 </style>

@@ -141,8 +141,9 @@
                       no-wrap
                       no-caps
                       :href="
-                        clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM) +
-                        presentation?.room?.token
+                        clearRoutePathFromProps(
+                          ROUTE_PATHS.PRESENTATION_ROOM.HOST
+                        ) + presentation?.room?.token
                       "
                       icon="r_play_circle"
                       :label="
