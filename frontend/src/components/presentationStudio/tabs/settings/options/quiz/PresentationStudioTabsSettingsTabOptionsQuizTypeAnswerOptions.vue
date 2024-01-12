@@ -143,7 +143,9 @@
       :class="
         slideSettings.otherAcceptedAnswers?.length ? 'q-mt-md' : 'q-mt-sm'
       "
-      style="margin-left: 32px"
+      :style="`${
+        slideSettings.otherAcceptedAnswers?.length ? 'margin-left: 32px;' : ''
+      }`"
     >
       <q-btn
         v-if="slideSettings.otherAcceptedAnswers?.length < 8"

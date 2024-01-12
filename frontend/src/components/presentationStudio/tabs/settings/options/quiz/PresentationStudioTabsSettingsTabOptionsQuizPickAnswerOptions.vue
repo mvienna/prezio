@@ -160,7 +160,12 @@
     </draggable>
 
     <!-- add answer option -->
-    <div class="q-mt-md" style="margin-left: 32px">
+    <div
+      class="q-mt-md"
+      :style="`${
+        slideSettings.answerOptions?.length ? 'margin-left: 32px;' : ''
+      }`"
+    >
       <q-btn
         v-if="slideSettings.answerOptions?.length < 8"
         unelevated
