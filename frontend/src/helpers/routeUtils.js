@@ -10,7 +10,9 @@ export const getSubdomain = () => {
   const url = window.location.hostname;
   const parts = url
     .split(".")
-    .filter((item) => !["localhost", "testing"].includes(item));
+    .filter((item) => Object.values(SUBDOMAINS).includes(item));
+
+  console.log(parts);
 
   return parts?.[0];
 };
