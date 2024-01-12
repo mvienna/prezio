@@ -83,6 +83,7 @@
             color="primary"
             no-caps
             size="16px"
+            :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
           />
         </div>
 
