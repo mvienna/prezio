@@ -9,7 +9,7 @@
       >
         <slot name="icon" />
 
-        <div class="text-h7 text-semibold text-white">
+        <div class="text-16 text-semibold text-white">
           <slot name="message" />
         </div>
 
@@ -17,7 +17,7 @@
           style="background: rgba(255, 255, 255, 0.2); border-radius: 24px"
           class="q-px-md q-py-xs row items-center text-white"
         >
-          <span class="text-h7 text-semibold">
+          <span class="text-16 text-semibold">
             <slot name="score" />
 
             <q-tooltip

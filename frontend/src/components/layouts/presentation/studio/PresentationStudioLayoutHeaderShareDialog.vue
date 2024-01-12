@@ -37,7 +37,7 @@
             >
               <div>
                 <q-icon :name="tab.icon" size="22px" />
-                <div class="text-weight-medium text-sm-plus q-mt-sm">
+                <div class="text-weight-medium text-13 q-mt-sm">
                   {{ tab.label }}
                 </div>
               </div>
@@ -47,7 +47,7 @@
 
         <q-tab-panels v-model="tab" animated vertical style="width: 100%">
           <q-tab-panel name="inviteAudience" class="q-py-none">
-            <div class="text-semibold text-h7">
+            <div class="text-semibold text-16">
               {{ $t("presentationLayout.header.share.inviteAudience.title") }}
             </div>
 

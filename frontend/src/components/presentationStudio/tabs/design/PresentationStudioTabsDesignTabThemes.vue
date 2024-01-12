@@ -26,7 +26,7 @@
           />
 
           <div
-            class="text-center absolute-bottom-left q-mb-sm q-ml-sm text-sm"
+            class="text-center absolute-bottom-left q-mb-sm q-ml-sm text-12"
             :style="`font-family: ${theme.font || 'Arial'}; color: ${
               theme.color || 'white'
             }`"

@@ -21,7 +21,7 @@
 
       <div
         class="text-black-4 q-mt-md row no-wrap justify-center"
-        :class="$q.screen.lt.lg ? '' : 'text-h7'"
+        :class="$q.screen.lt.lg ? '' : 'text-16'"
       >
         <div
           style="line-height: 24px"

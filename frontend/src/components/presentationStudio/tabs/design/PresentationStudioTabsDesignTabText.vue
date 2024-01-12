@@ -68,7 +68,7 @@
 
       <q-separator vertical class="q-ml-md q-mr-sm" />
 
-      <div class="text-sm-plus">
+      <div class="text-13">
         {{
           $t(
             "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.color.set"

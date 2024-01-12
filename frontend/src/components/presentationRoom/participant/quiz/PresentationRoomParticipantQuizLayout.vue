@@ -3,7 +3,7 @@
     <!-- waiting for quiz to start -->
     <div v-if="room && !room.is_quiz_started && room.is_submission_locked">
       <div
-        class="text-center q-mb-md text-h7 text-semibold"
+        class="text-center q-mb-md text-16 text-semibold"
         :style="participantData ? `color: ${participantData.color}` : ''"
       >
         {{ participantData.avatar + " " + participantData.name }}
@@ -133,7 +133,7 @@
             />
           </div>
 
-          <div class="text-center text-semibold text-h7 q-mt-md">
+          <div class="text-center text-semibold text-16 q-mt-md">
             {{ countdown }}
           </div>
         </div>

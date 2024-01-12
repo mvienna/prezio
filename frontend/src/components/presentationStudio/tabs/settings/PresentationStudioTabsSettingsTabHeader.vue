@@ -23,7 +23,7 @@
     >
       <template #append>
         <!-- length -->
-        <div class="text-sm q-mr-xs">{{ 250 - question?.length }}</div>
+        <div class="text-12 q-mr-xs">{{ 250 - question?.length }}</div>
 
         <!-- alignment -->
         <q-btn

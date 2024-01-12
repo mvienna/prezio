@@ -28,7 +28,7 @@
           class="row no-wrap items-center justify-between"
           :class="$q.screen.lt.md ? 'q-mx-sm q-mb-sm q-mt-none' : 'q-ma-sm'"
         >
-          <div class="text-h7 text-semibold">
+          <div class="text-16 text-semibold">
             {{ $t("presentationRoom.footer.chat.title") }}
           </div>
 

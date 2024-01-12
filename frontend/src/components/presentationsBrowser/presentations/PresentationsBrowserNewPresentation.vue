@@ -14,7 +14,7 @@
         />
 
         <!-- title -->
-        <div class="text-h7 text-semibold q-my-md">
+        <div class="text-16 text-semibold q-my-md">
           {{ $t("presentationsBrowser.newPresentation.title") }}
         </div>
 
@@ -84,7 +84,7 @@
 
       <!-- privacy -->
       <q-card-section class="q-pa-lg">
-        <div class="text-grey-9 text-h7 q-mb-md">
+        <div class="text-grey-9 text-16 q-mb-md">
           {{ $t("presentationsBrowser.newPresentation.fields.privacy.title") }}
         </div>
 
@@ -105,7 +105,7 @@
                   )
                 }}
               </div>
-              <div class="q-mt-xs text-grey text-sm">
+              <div class="q-mt-xs text-grey text-12">
                 {{
                   $t(
                     "presentationsBrowser.newPresentation.fields.privacy.description"

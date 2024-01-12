@@ -35,7 +35,7 @@
             />
           </div>
 
-          <div class="text-center text-sm-plus q-mt-sm">
+          <div class="text-center text-13 q-mt-sm">
             {{ layout.label }}
           </div>
         </q-card-section>

@@ -68,7 +68,7 @@
             no-error-icon
           >
             <template #append>
-              <div class="text-sm q-mr-xs">
+              <div class="text-12 q-mr-xs">
                 {{ 150 - element.value?.length }}
               </div>
 

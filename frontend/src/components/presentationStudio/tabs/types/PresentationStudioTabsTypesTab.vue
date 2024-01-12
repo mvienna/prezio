@@ -50,7 +50,7 @@
           </div>
 
           <div
-            class="text-center q-mt-sm text-sm-plus"
+            class="text-center q-mt-sm text-13"
             style="line-height: 1.4; word-spacing: 104px"
           >
             {{

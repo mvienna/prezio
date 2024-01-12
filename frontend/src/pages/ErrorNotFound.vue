@@ -4,7 +4,7 @@
       {{ $t("pages.notFound.title") }}
     </div>
 
-    <div class="q-mt-3xs text-grey-9 text-h7">
+    <div class="q-mt-3xs text-grey-9 text-16">
       {{ $t("pages.notFound.description") }}
     </div>
 

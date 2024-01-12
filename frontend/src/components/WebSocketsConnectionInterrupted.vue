@@ -2,11 +2,11 @@
   <div class="websockets_connection_interrupted_banner">
     <div class="websockets_connection_interrupted_banner__container">
       <div>
-        <div class="text-semibold text-h7">
+        <div class="text-semibold text-16">
           {{ $t("websockets.connection.interrupted.title") }}
         </div>
         <div
-          class="text-sm q-mt-sm"
+          class="text-12 q-mt-sm"
           v-html="$t('websockets.connection.interrupted.description')"
         ></div>
       </div>

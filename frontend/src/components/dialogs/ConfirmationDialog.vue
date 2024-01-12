@@ -10,7 +10,7 @@
       <div class="text-h6 text-bold text-center q-mt-lg">{{ title }}</div>
 
       <!-- message -->
-      <div class="text-h7 q-mt-sm text-center q-mb-lg" v-html="message"></div>
+      <div class="text-16 q-mt-sm text-center q-mb-lg" v-html="message"></div>
 
       <!-- slot -->
       <slot name="default" />

@@ -174,7 +174,7 @@
     </template>
 
     <div class="row items-center q-mr-md">
-      <div class="text-sm text-no-wrap" style="opacity: 0.2">
+      <div class="text-12 text-no-wrap" style="opacity: 0.2">
         x: {{ Math.round(mouse.x) }} y:{{ Math.round(mouse.y) }}
       </div>
     </div>

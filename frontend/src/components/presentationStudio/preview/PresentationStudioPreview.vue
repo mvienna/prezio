@@ -1,7 +1,7 @@
 <template>
   <q-card flat class="relative-position">
     <!-- header -->
-    <q-toolbar class="items-center justify-center text-h7" style="height: 74px">
+    <q-toolbar class="items-center justify-center text-16" style="height: 74px">
       <span class="text-grey">
         {{ $t("presentationStudio.preview.title") }}
       </span>

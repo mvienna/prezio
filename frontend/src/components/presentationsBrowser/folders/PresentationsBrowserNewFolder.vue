@@ -14,7 +14,7 @@
         />
 
         <!-- title -->
-        <div class="text-h7 text-semibold q-my-md">
+        <div class="text-16 text-semibold q-my-md">
           {{ $t("presentationsBrowser.newFolder.title") }}
         </div>
 
@@ -44,7 +44,7 @@
 
       <q-card-section class="q-pa-lg">
         <!-- add presentations -->
-        <div class="text-h7 text-semibold q-mb-sm">
+        <div class="text-16 text-semibold q-mb-sm">
           {{
             $t("presentationsBrowser.newFolder.fields.addPresentations.title")
           }}
@@ -86,7 +86,7 @@
             />
 
             <!-- presentation name -->
-            <div class="text-center ellipsis q-mt-sm text-sm">
+            <div class="text-center ellipsis q-mt-sm text-12">
               {{ presentation.name }}
             </div>
           </q-card>

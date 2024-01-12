@@ -67,7 +67,7 @@
           >
             <q-icon name="r_add" />
             <div
-              :class="$q.screen.lt.md ? 'q-ml-sm' : 'q-ml-3xs q-mr-xs text-h7'"
+              :class="$q.screen.lt.md ? 'q-ml-sm' : 'q-ml-3xs q-mr-xs text-16'"
             >
               {{ $t("presentationsBrowser.newPresentation.title") }}
             </div>
@@ -96,7 +96,7 @@
             @click="showNewFolderDialog = true"
           >
             <q-icon name="icon-folder_add" />
-            <div v-if="!$q.screen.lt.md" class="text-h7 q-ml-md">
+            <div v-if="!$q.screen.lt.md" class="text-16 q-ml-md">
               {{ $t("presentationsBrowser.newFolder.title") }}
             </div>
           </q-btn>

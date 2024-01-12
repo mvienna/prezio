@@ -191,7 +191,7 @@
                   </div>
 
                   <!-- updated at -->
-                  <div class="text-grey-9 text-sm q-mt-xs">
+                  <div class="text-grey-9 text-12 q-mt-xs">
                     {{ formatDateTime(getUpdatedAtTitle(presentation)) }}
 
                     <q-tooltip
@@ -408,7 +408,7 @@
                     <q-icon name="r_layers" size="14px" />
                   </q-btn>
 
-                  <div class="text-grey text-sm">
+                  <div class="text-grey text-12">
                     {{ presentation?.slides?.length || 0 }}
                   </div>
                 </div>
@@ -426,7 +426,7 @@
                     <q-icon name="r_group" size="14px" />
                   </q-btn>
 
-                  <div class="text-grey text-sm">
+                  <div class="text-grey text-12">
                     {{ presentation?.participants?.length || 0 }}
                   </div>
                 </div>

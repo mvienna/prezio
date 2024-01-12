@@ -14,7 +14,7 @@
       style="width: 100%"
     >
       <template #append>
-        <div class="text-md text-black">
+        <div class="text-14 text-black">
           {{ $t("presentationLayout.rightDrawer.tabs.settings.points.min") }}
         </div>
       </template>
@@ -34,7 +34,7 @@
       style="width: 100%"
     >
       <template #append>
-        <div class="text-md text-black">
+        <div class="text-14 text-black">
           {{ $t("presentationLayout.rightDrawer.tabs.settings.points.max") }}
         </div>
       </template>

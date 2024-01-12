@@ -47,7 +47,7 @@
           </template>
         </div>
 
-        <div class="text-sm q-ml-3xs q-mt-lg text-grey">
+        <div class="text-12 q-ml-3xs q-mt-lg text-grey">
           {{ $t("user.profile.form.emailVerification.warning") }}
         </div>
 

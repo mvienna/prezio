@@ -10,7 +10,7 @@
         backdrop-filter: blur(4px);
       "
     >
-      <div class="text-h7 text-semibold">
+      <div class="text-16 text-semibold">
         {{ $t("presentationStudio.settings.title") }}
       </div>
 

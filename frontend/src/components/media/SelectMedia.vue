@@ -124,7 +124,7 @@
                 />
               </div>
 
-              <div class="text-h7 q-mt-md row no-wrap justify-center">
+              <div class="text-16 q-mt-md row no-wrap justify-center">
                 <div>
                   {{ $t("media.select.tabs.upload.dragAndDropFiles") }}
                 </div>

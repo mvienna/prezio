@@ -10,7 +10,7 @@
     <!-- message & illustration -->
     <div class="row no-wrap justify-center text-center">
       <div style="max-width: 500px">
-        <div class="text-bold text-h7">
+        <div class="text-bold text-16">
           {{ $t("presentationRoom.isPrivate.title") }}
         </div>
 
