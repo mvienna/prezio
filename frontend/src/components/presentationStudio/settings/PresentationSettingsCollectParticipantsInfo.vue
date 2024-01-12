@@ -31,7 +31,7 @@
         />
 
         <!-- form fields -->
-        <div class="q-mt-md q-mb-sm text-grey">
+        <div class="q-mt-md q-mb-sm">
           {{
             $t(
               `presentationStudio.settings.collectParticipantsInfo.fields.title`
@@ -134,6 +134,7 @@
                     checked-icon="r_emergency"
                     unchecked-icon="r_check_box_outline_blank"
                     indeterminate-icon="r_help"
+                    size="sm"
                   >
                     <q-tooltip>
                       <div
@@ -153,8 +154,8 @@
                     v-if="form.fields.length > 1"
                     flat
                     round
-                    icon="r_delete"
-                    color="red"
+                    icon="r_delete_sweep"
+                    class="round-borders"
                     size="sm"
                     @click="deleteField(element)"
                   />
