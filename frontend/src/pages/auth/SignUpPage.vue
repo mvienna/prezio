@@ -214,18 +214,18 @@ const submit = async () => {
 };
 
 useMeta({
-  title: t("pages.auth.signup.title"),
-  titleTemplate: (title) => `${title} - ${t("pages.app")}`,
+  title: t("meta.auth.signup.title"),
+  titleTemplate: (title) => `${title} - ${t("meta.app")}`,
 
   // meta tags
   meta: {
     description: {
       name: "description",
-      content: t("pages.auth.signup.description"),
+      content: t("meta.auth.signup.description"),
     },
     keywords: {
       name: "keywords",
-      content: t("pages.auth.signup.keywords"),
+      content: t("meta.auth.signup.keywords"),
     },
     equiv: {
       "http-equiv": "Content-Type",
@@ -236,7 +236,7 @@ useMeta({
       property: "og:title",
       // optional; similar to titleTemplate, but allows templating with other meta properties
       template(ogTitle) {
-        return `${ogTitle} - ${t("pages.app")}`;
+        return `${ogTitle} - ${t("meta.app")}`;
       },
     },
   },

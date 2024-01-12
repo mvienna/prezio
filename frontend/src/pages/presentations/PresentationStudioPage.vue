@@ -895,18 +895,18 @@ const connectToRoomChannels = () => {
 };
 
 useMeta({
-  title: t("pages.presentation.studio.title"),
-  titleTemplate: (title) => `${title} - ${t("pages.app")}`,
+  title: t("meta.presentation.studio.title"),
+  titleTemplate: (title) => `${title} - ${t("meta.app")}`,
 
   // meta tags
   meta: {
     description: {
       name: "description",
-      content: t("pages.presentation.studio.description"),
+      content: t("meta.presentation.studio.description"),
     },
     keywords: {
       name: "keywords",
-      content: t("pages.presentation.studio.keywords"),
+      content: t("meta.presentation.studio.keywords"),
     },
     equiv: {
       "http-equiv": "Content-Type",
@@ -917,7 +917,7 @@ useMeta({
       property: "og:title",
       // optional; similar to titleTemplate, but allows templating with other meta properties
       template(ogTitle) {
-        return `${ogTitle} - ${t("pages.app")}`;
+        return `${ogTitle} - ${t("meta.app")}`;
       },
     },
   },

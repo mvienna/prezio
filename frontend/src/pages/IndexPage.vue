@@ -12,18 +12,18 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
 
 useMeta({
-  title: t("pages.app"),
-  titleTemplate: (title) => `${title} - ${t("pages.homepage.title")}`,
+  title: t("meta.app"),
+  titleTemplate: (title) => `${title} - ${t("meta.homepage.title")}`,
 
   // meta tags
   meta: {
     description: {
       name: "description",
-      content: t("pages.homepage.description"),
+      content: t("meta.homepage.description"),
     },
     keywords: {
       name: "keywords",
-      content: t("pages.homepage.keywords"),
+      content: t("meta.homepage.keywords"),
     },
     equiv: {
       "http-equiv": "Content-Type",
@@ -34,7 +34,7 @@ useMeta({
       property: "og:title",
       // optional; similar to titleTemplate, but allows templating with other meta properties
       template(ogTitle) {
-        return `${ogTitle} - ${t("pages.homepage.title")}`;
+        return `${ogTitle} - ${t("meta.homepage.title")}`;
       },
     },
   },

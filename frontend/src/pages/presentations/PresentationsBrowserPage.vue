@@ -208,18 +208,18 @@ const handleCreatingNewPresentation = (data) => {
 const showNewFolderDialog = ref(false);
 
 useMeta({
-  title: t("pages.dashboard.title"),
-  titleTemplate: (title) => `${title} - ${t("pages.app")}`,
+  title: t("meta.dashboard.title"),
+  titleTemplate: (title) => `${title} - ${t("meta.app")}`,
 
   // meta tags
   meta: {
     description: {
       name: "description",
-      content: t("pages.dashboard.description"),
+      content: t("meta.dashboard.description"),
     },
     keywords: {
       name: "keywords",
-      content: t("pages.dashboard.keywords"),
+      content: t("meta.dashboard.keywords"),
     },
     equiv: {
       "http-equiv": "Content-Type",
@@ -230,7 +230,7 @@ useMeta({
       property: "og:title",
       // optional; similar to titleTemplate, but allows templating with other meta properties
       template(ogTitle) {
-        return `${ogTitle} - ${t("pages.app")}`;
+        return `${ogTitle} - ${t("meta.app")}`;
       },
     },
   },

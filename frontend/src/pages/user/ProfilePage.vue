@@ -489,18 +489,18 @@ const deleteAccount = async () => {
 };
 
 useMeta({
-  title: t("pages.profile.title"),
-  titleTemplate: (title) => `${title} - ${t("pages.app")}`,
+  title: t("meta.profile.title"),
+  titleTemplate: (title) => `${title} - ${t("meta.app")}`,
 
   // meta tags
   meta: {
     description: {
       name: "description",
-      content: t("pages.profile.description"),
+      content: t("meta.profile.description"),
     },
     keywords: {
       name: "keywords",
-      content: t("pages.profile.keywords"),
+      content: t("meta.profile.keywords"),
     },
     equiv: {
       "http-equiv": "Content-Type",
@@ -511,7 +511,7 @@ useMeta({
       property: "og:title",
       // optional; similar to titleTemplate, but allows templating with other meta properties
       template(ogTitle) {
-        return `${ogTitle} - ${t("pages.app")}`;
+        return `${ogTitle} - ${t("meta.app")}`;
       },
     },
   },
