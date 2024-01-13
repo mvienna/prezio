@@ -1,164 +1,164 @@
 <template>
   <q-page>
-    <q-header class="bg-transparent" bordered>
-      <div class="bg-white">
-        <div class="container">
-          <q-toolbar class="q-pa-md row no-wrap items-center">
-            <!-- logo -->
-            <div class="row no-wrap">
-              <img
-                :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"
-                style="height: 38px"
-              />
+    <!--    <q-header class="bg-transparent" bordered>-->
+    <!--      <div class="bg-white">-->
+    <!--        <div class="container">-->
+    <!--          <q-toolbar class="q-pa-md row no-wrap items-center">-->
+    <!--            &lt;!&ndash; logo &ndash;&gt;-->
+    <!--            <div class="row no-wrap">-->
+    <!--              <img-->
+    <!--                :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"-->
+    <!--                style="height: 38px"-->
+    <!--              />-->
 
-              <div class="q-ml-sm column">
-                <q-badge
-                  class="bg-grey-2 text-grey-7"
-                  style="font-size: 10px; margin-top: 3px"
-                  :label="VERSION"
-                />
-              </div>
-            </div>
+    <!--              <div class="q-ml-sm column">-->
+    <!--                <q-badge-->
+    <!--                  class="bg-grey-2 text-grey-7"-->
+    <!--                  style="font-size: 10px; margin-top: 3px"-->
+    <!--                  :label="VERSION"-->
+    <!--                />-->
+    <!--              </div>-->
+    <!--            </div>-->
 
-            <q-space />
+    <!--            <q-space />-->
 
-            <!-- hyperlinks -->
-            <a href="#features" class="text-16 link text-grey-9">
-              {{ $t("landing.hyperlinks.features") }}
-            </a>
-            <a href="#prices" class="text-16 link text-grey-9 q-mx-md">
-              {{ $t("landing.hyperlinks.prices") }}
-            </a>
-            <a href="#faq" class="text-16 link text-grey-9">
-              {{ $t("landing.hyperlinks.faq") }}
-            </a>
+    <!--            &lt;!&ndash; hyperlinks &ndash;&gt;-->
+    <!--            <a href="#features" class="text-16 link text-grey-9">-->
+    <!--              {{ $t("landing.hyperlinks.features") }}-->
+    <!--            </a>-->
+    <!--            <a href="#prices" class="text-16 link text-grey-9 q-mx-md">-->
+    <!--              {{ $t("landing.hyperlinks.prices") }}-->
+    <!--            </a>-->
+    <!--            <a href="#faq" class="text-16 link text-grey-9">-->
+    <!--              {{ $t("landing.hyperlinks.faq") }}-->
+    <!--            </a>-->
 
-            <q-space />
+    <!--            <q-space />-->
 
-            <!-- login -->
-            <q-btn
-              outline
-              :label="$t('landing.auth.login')"
-              no-caps
-              size="16px"
-              class="q-mr-md q-px-md"
-              style="min-height: 38px"
-              :href="appUrl + ROUTE_PATHS.AUTH.LOGIN"
-            />
+    <!--            &lt;!&ndash; login &ndash;&gt;-->
+    <!--            <q-btn-->
+    <!--              outline-->
+    <!--              :label="$t('landing.auth.login')"-->
+    <!--              no-caps-->
+    <!--              size="16px"-->
+    <!--              class="q-mr-md q-px-md"-->
+    <!--              style="min-height: 38px"-->
+    <!--              :href="appUrl + ROUTE_PATHS.AUTH.LOGIN"-->
+    <!--            />-->
 
-            <!-- signup -->
-            <q-btn
-              unelevated
-              color="primary"
-              :label="$t('landing.auth.signup')"
-              no-caps
-              size="16px"
-              class="q-px-md"
-              style="min-height: 38px"
-              :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
-            />
-          </q-toolbar>
-        </div>
-      </div>
+    <!--            &lt;!&ndash; signup &ndash;&gt;-->
+    <!--            <q-btn-->
+    <!--              unelevated-->
+    <!--              color="primary"-->
+    <!--              :label="$t('landing.auth.signup')"-->
+    <!--              no-caps-->
+    <!--              size="16px"-->
+    <!--              class="q-px-md"-->
+    <!--              style="min-height: 38px"-->
+    <!--              :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"-->
+    <!--            />-->
+    <!--          </q-toolbar>-->
+    <!--        </div>-->
+    <!--      </div>-->
 
-      <!-- join room toolbar -->
-      <q-toolbar
-        v-if="showJoinRoomToolbar"
-        class="row no-wrap justify-center items-center q-pa-sm join_room"
-      >
-        <div class="text-black q-mr-sm">
-          {{ $t("landing.joinRoom.title") }}
-        </div>
+    <!--      &lt;!&ndash; join room toolbar &ndash;&gt;-->
+    <!--      <q-toolbar-->
+    <!--        v-if="showJoinRoomToolbar"-->
+    <!--        class="row no-wrap justify-center items-center q-pa-sm join_room"-->
+    <!--      >-->
+    <!--        <div class="text-black q-mr-sm">-->
+    <!--          {{ $t("landing.joinRoom.title") }}-->
+    <!--        </div>-->
 
-        <!-- join room with token -->
-        <form @submit.prevent="handleRoomSearch()">
-          <q-input
-            v-model="roomId"
-            borderless
-            dense
-            class="join_room__token_input"
-            :placeholder="$t('landing.joinRoom.enterCode')"
-            :prefix="$t('landing.joinRoom.url')"
-            :error="!!roomSearchError"
-            hide-bottom-space
-            no-error-icon
-          >
-            <template #append>
-              <!-- join room -->
-              <q-btn
-                unelevated
-                :label="$t('landing.joinRoom.join')"
-                color="grey-2"
-                text-color="black"
-                size="12px"
-                no-caps
-                class="q-px-sm"
-                @click="handleRoomSearch()"
-              />
-            </template>
-          </q-input>
-        </form>
+    <!--        &lt;!&ndash; join room with token &ndash;&gt;-->
+    <!--        <form @submit.prevent="handleRoomSearch()">-->
+    <!--          <q-input-->
+    <!--            v-model="roomId"-->
+    <!--            borderless-->
+    <!--            dense-->
+    <!--            class="join_room__token_input"-->
+    <!--            :placeholder="$t('landing.joinRoom.enterCode')"-->
+    <!--            :prefix="$t('landing.joinRoom.url')"-->
+    <!--            :error="!!roomSearchError"-->
+    <!--            hide-bottom-space-->
+    <!--            no-error-icon-->
+    <!--          >-->
+    <!--            <template #append>-->
+    <!--              &lt;!&ndash; join room &ndash;&gt;-->
+    <!--              <q-btn-->
+    <!--                unelevated-->
+    <!--                :label="$t('landing.joinRoom.join')"-->
+    <!--                color="grey-2"-->
+    <!--                text-color="black"-->
+    <!--                size="12px"-->
+    <!--                no-caps-->
+    <!--                class="q-px-sm"-->
+    <!--                @click="handleRoomSearch()"-->
+    <!--              />-->
+    <!--            </template>-->
+    <!--          </q-input>-->
+    <!--        </form>-->
 
-        <!-- close join room toolbar -->
-        <q-btn
-          flat
-          round
-          size="10px"
-          color="black"
-          icon="r_close"
-          class="absolute round-borders"
-          style="top: 50%; transform: translateY(-50%); right: 24px"
-          @click="showJoinRoomToolbar = false"
-        />
-      </q-toolbar>
-    </q-header>
+    <!--        &lt;!&ndash; close join room toolbar &ndash;&gt;-->
+    <!--        <q-btn-->
+    <!--          flat-->
+    <!--          round-->
+    <!--          size="10px"-->
+    <!--          color="black"-->
+    <!--          icon="r_close"-->
+    <!--          class="absolute round-borders"-->
+    <!--          style="top: 50%; transform: translateY(-50%); right: 24px"-->
+    <!--          @click="showJoinRoomToolbar = false"-->
+    <!--        />-->
+    <!--      </q-toolbar>-->
+    <!--    </q-header>-->
 
-    <!-- heroes -->
-    <div class="container">
-      <div class="splitter q-py-xl q-my-xl">
-        <div class="column no-wrap">
-          <!-- title -->
-          <div class="text-h3 text-semibold" style="line-height: 1.2">
-            {{ $t("landing.heroes.title.static") }} <br />
+    <!--    &lt;!&ndash; heroes &ndash;&gt;-->
+    <!--    <div class="container">-->
+    <!--      <div class="splitter q-py-xl q-my-xl">-->
+    <!--        <div class="column no-wrap">-->
+    <!--          &lt;!&ndash; title &ndash;&gt;-->
+    <!--          <div class="text-h3 text-semibold" style="line-height: 1.2">-->
+    <!--            {{ $t("landing.heroes.title.static") }} <br />-->
 
-            <span
-              class="typewrite text-primary"
-              data-period="4000"
-              :data-type="dynamicTitles"
-            >
-              <span class="wrap"></span>
-            </span>
-          </div>
+    <!--            <span-->
+    <!--              class="typewrite text-primary"-->
+    <!--              data-period="4000"-->
+    <!--              :data-type="dynamicTitles"-->
+    <!--            >-->
+    <!--              <span class="wrap"></span>-->
+    <!--            </span>-->
+    <!--          </div>-->
 
-          <!-- description -->
-          <div class="text-20 q-my-lg q-py-sm" style="max-width: 500px">
-            {{ $t("landing.heroes.description") }}
-          </div>
+    <!--          &lt;!&ndash; description &ndash;&gt;-->
+    <!--          <div class="text-20 q-my-lg q-py-sm" style="max-width: 500px">-->
+    <!--            {{ $t("landing.heroes.description") }}-->
+    <!--          </div>-->
 
-          <q-space />
+    <!--          <q-space />-->
 
-          <!-- create presentation -->
-          <div>
-            <q-btn
-              :label="$t('landing.heroes.action')"
-              unelevated
-              color="primary"
-              no-caps
-              size="16px"
-              :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
-            />
-          </div>
-        </div>
+    <!--          &lt;!&ndash; create presentation &ndash;&gt;-->
+    <!--          <div>-->
+    <!--            <q-btn-->
+    <!--              :label="$t('landing.heroes.action')"-->
+    <!--              unelevated-->
+    <!--              color="primary"-->
+    <!--              no-caps-->
+    <!--              size="16px"-->
+    <!--              :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"-->
+    <!--            />-->
+    <!--          </div>-->
+    <!--        </div>-->
 
-        <!-- heroes illustration -->
-        <div>
-          <q-img
-            src="/assets/illustrations/heroes.svg"
-            alt="Prezio heroes illustration"
-          />
-        </div>
-      </div>
-    </div>
+    <!--        &lt;!&ndash; heroes illustration &ndash;&gt;-->
+    <!--        <div>-->
+    <!--          <q-img-->
+    <!--            src="/assets/illustrations/heroes.svg"-->
+    <!--            alt="Prezio heroes illustration"-->
+    <!--          />-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
     <!--    &lt;!&ndash; benefits &ndash;&gt;-->
     <!--    <div id="features" class="bg-white q-py-xl">-->
@@ -912,348 +912,348 @@
     <!--      </div>-->
     <!--    </div>-->
 
-    <!-- faq -->
-    <div id="faq" class="bg-white q-py-xl">
-      <div class="container">
-        <div class="q-py-xl">
-          <!-- title -->
-          <div class="text-h4 text-semibold text-center q-mb-xl">
-            {{ $t("landing.faq.title") }}
-          </div>
+    <!--    &lt;!&ndash; faq &ndash;&gt;-->
+    <!--    <div id="faq" class="bg-white q-py-xl">-->
+    <!--      <div class="container">-->
+    <!--        <div class="q-py-xl">-->
+    <!--          &lt;!&ndash; title &ndash;&gt;-->
+    <!--          <div class="text-h4 text-semibold text-center q-mb-xl">-->
+    <!--            {{ $t("landing.faq.title") }}-->
+    <!--          </div>-->
 
-          <q-separator />
+    <!--          <q-separator />-->
 
-          <q-expansion-item
-            group="faq"
-            :label="$t('landing.faq.list.one.title')"
-            expand-icon="r_add"
-          >
-            <q-card class="bg-grey-1">
-              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">
-                {{ $t("landing.faq.list.one.description") }}
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
+    <!--          <q-expansion-item-->
+    <!--            group="faq"-->
+    <!--            :label="$t('landing.faq.list.one.title')"-->
+    <!--            expand-icon="r_add"-->
+    <!--          >-->
+    <!--            <q-card class="bg-grey-1">-->
+    <!--              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">-->
+    <!--                {{ $t("landing.faq.list.one.description") }}-->
+    <!--              </q-card-section>-->
+    <!--            </q-card>-->
+    <!--          </q-expansion-item>-->
 
-          <q-separator />
+    <!--          <q-separator />-->
 
-          <q-expansion-item
-            group="faq"
-            :label="$t('landing.faq.list.two.title')"
-            expand-icon="r_add"
-          >
-            <q-card class="bg-grey-1">
-              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">
-                {{ $t("landing.faq.list.two.description") }}
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
+    <!--          <q-expansion-item-->
+    <!--            group="faq"-->
+    <!--            :label="$t('landing.faq.list.two.title')"-->
+    <!--            expand-icon="r_add"-->
+    <!--          >-->
+    <!--            <q-card class="bg-grey-1">-->
+    <!--              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">-->
+    <!--                {{ $t("landing.faq.list.two.description") }}-->
+    <!--              </q-card-section>-->
+    <!--            </q-card>-->
+    <!--          </q-expansion-item>-->
 
-          <q-separator />
+    <!--          <q-separator />-->
 
-          <q-expansion-item
-            group="faq"
-            :label="$t('landing.faq.list.three.title')"
-            expand-icon="r_add"
-          >
-            <q-card class="bg-grey-1">
-              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">
-                {{ $t("landing.faq.list.three.description") }}
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
+    <!--          <q-expansion-item-->
+    <!--            group="faq"-->
+    <!--            :label="$t('landing.faq.list.three.title')"-->
+    <!--            expand-icon="r_add"-->
+    <!--          >-->
+    <!--            <q-card class="bg-grey-1">-->
+    <!--              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">-->
+    <!--                {{ $t("landing.faq.list.three.description") }}-->
+    <!--              </q-card-section>-->
+    <!--            </q-card>-->
+    <!--          </q-expansion-item>-->
 
-          <q-separator />
+    <!--          <q-separator />-->
 
-          <q-expansion-item
-            group="faq"
-            :label="$t('landing.faq.list.four.title')"
-            expand-icon="r_add"
-          >
-            <q-card class="bg-grey-1">
-              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">
-                {{ $t("landing.faq.list.four.description") }}
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-        </div>
-      </div>
-    </div>
+    <!--          <q-expansion-item-->
+    <!--            group="faq"-->
+    <!--            :label="$t('landing.faq.list.four.title')"-->
+    <!--            expand-icon="r_add"-->
+    <!--          >-->
+    <!--            <q-card class="bg-grey-1">-->
+    <!--              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">-->
+    <!--                {{ $t("landing.faq.list.four.description") }}-->
+    <!--              </q-card-section>-->
+    <!--            </q-card>-->
+    <!--          </q-expansion-item>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
-    <!-- promo -->
-    <div id="promo" class="promo relative-position overflow-hidden q-py-xl">
-      <div class="q-my-xl">
-        <!-- title -->
-        <div class="text-center text-36">{{ $t("landing.promo.title") }}</div>
+    <!--    &lt;!&ndash; promo &ndash;&gt;-->
+    <!--    <div id="promo" class="promo relative-position overflow-hidden q-py-xl">-->
+    <!--      <div class="q-my-xl">-->
+    <!--        &lt;!&ndash; title &ndash;&gt;-->
+    <!--        <div class="text-center text-36">{{ $t("landing.promo.title") }}</div>-->
 
-        <!-- description -->
-        <div class="text-center text-16 q-mt-3xs">
-          {{ $t("landing.promo.description") }}
-        </div>
+    <!--        &lt;!&ndash; description &ndash;&gt;-->
+    <!--        <div class="text-center text-16 q-mt-3xs">-->
+    <!--          {{ $t("landing.promo.description") }}-->
+    <!--        </div>-->
 
-        <!-- create presentation -->
-        <div class="row justify-center q-mt-xl">
-          <q-btn
-            :label="$t('landing.promo.action')"
-            unelevated
-            color="primary"
-            no-caps
-            size="16px"
-            :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
-          />
-        </div>
+    <!--        &lt;!&ndash; create presentation &ndash;&gt;-->
+    <!--        <div class="row justify-center q-mt-xl">-->
+    <!--          <q-btn-->
+    <!--            :label="$t('landing.promo.action')"-->
+    <!--            unelevated-->
+    <!--            color="primary"-->
+    <!--            no-caps-->
+    <!--            size="16px"-->
+    <!--            :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"-->
+    <!--          />-->
+    <!--        </div>-->
 
-        <!-- background -->
-        <div class="absolute" style="top: 0; left: 0; width: 100%">
-          <div class="container">
-            <q-img
-              src="/assets/images/landing/bubbles.png"
-              style="width: 100%"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    <!--        &lt;!&ndash; background &ndash;&gt;-->
+    <!--        <div class="absolute" style="top: 0; left: 0; width: 100%">-->
+    <!--          <div class="container">-->
+    <!--            <q-img-->
+    <!--              src="/assets/images/landing/bubbles.png"-->
+    <!--              style="width: 100%"-->
+    <!--            />-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
-    <!-- footer -->
-    <div id="footer">
-      <div class="q-py-xl q-my-lg">
-        <!-- logo -->
-        <div class="row justify-center no-wrap">
-          <img
-            :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"
-            style="height: 30px"
-          />
+    <!--    &lt;!&ndash; footer &ndash;&gt;-->
+    <!--    <div id="footer">-->
+    <!--      <div class="q-py-xl q-my-lg">-->
+    <!--        &lt;!&ndash; logo &ndash;&gt;-->
+    <!--        <div class="row justify-center no-wrap">-->
+    <!--          <img-->
+    <!--            :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"-->
+    <!--            style="height: 30px"-->
+    <!--          />-->
 
-          <div class="q-ml-sm column">
-            <q-badge
-              class="bg-grey-2 text-grey-7"
-              style="font-size: 10px; margin-top: 3px"
-              :label="VERSION"
-            />
-          </div>
-        </div>
+    <!--          <div class="q-ml-sm column">-->
+    <!--            <q-badge-->
+    <!--              class="bg-grey-2 text-grey-7"-->
+    <!--              style="font-size: 10px; margin-top: 3px"-->
+    <!--              :label="VERSION"-->
+    <!--            />-->
+    <!--          </div>-->
+    <!--        </div>-->
 
-        <div class="row justify-center q-mt-lg">
-          <div class="text-center" style="max-width: 340px">
-            {{ $t("landing.footer.title") }}
-          </div>
-        </div>
-      </div>
+    <!--        <div class="row justify-center q-mt-lg">-->
+    <!--          <div class="text-center" style="max-width: 340px">-->
+    <!--            {{ $t("landing.footer.title") }}-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
 
-      <div class="footer">
-        <div
-          class="q-py-lg q-my-sm q-px-xl q-mx-xl text-grey-9 text-12 row no-wrap"
-        >
-          <div>
-            © {{ new Date().getFullYear() }} Prezio -
-            {{ $t("landing.footer.allRightsReserved") }}
-          </div>
+    <!--      <div class="footer">-->
+    <!--        <div-->
+    <!--          class="q-py-lg q-my-sm q-px-xl q-mx-xl text-grey-9 text-12 row no-wrap"-->
+    <!--        >-->
+    <!--          <div>-->
+    <!--            © {{ new Date().getFullYear() }} Prezio - -->
+    <!--            {{ $t("landing.footer.allRightsReserved") }}-->
+    <!--          </div>-->
 
-          <q-space />
+    <!--          <q-space />-->
 
-          <div>
-            {{ $t("landing.footer.madeInRussia") }}
-          </div>
-        </div>
-      </div>
-    </div>
+    <!--          <div>-->
+    <!--            {{ $t("landing.footer.madeInRussia") }}-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
   </q-page>
 </template>
 
 <script setup>
-import { useMeta } from "quasar";
-import { useI18n } from "vue-i18n";
-import { ROUTE_PATHS, SUBDOMAINS } from "src/constants/routes";
-import { computed, onMounted, ref } from "vue";
-import { api } from "boot/axios";
-import { useRouter } from "vue-router";
-
-/*
- * assembly version
- */
-const VERSION = computed(() => {
-  return process.env.VERSION;
-});
-
-/*
- * url
- */
-const appUrl =
-  // protocol
-  window.location.protocol +
-  "//" +
-  // subdomain
-  SUBDOMAINS.app +
-  "." +
-  // host
-  window.location.host;
-
-/*
- * variables
- */
-const { t } = useI18n({ useScope: "global" });
-
-const router = useRouter();
-
-/*
- * join room
- */
-const showJoinRoomToolbar = ref(true);
-
-const roomId = ref();
-const roomSearchError = ref();
-
-const handleRoomSearch = () => {
-  api
-    .get(`/room/${roomId.value}`)
-    .then((response) => {
-      router.push(response.data.room.token);
-    })
-    .catch((error) => {
-      console.log(error);
-      roomSearchError.value = error.response.data.message;
-
-      $q.notify({
-        message: error.response.data.message,
-        color: "red",
-        icon: "r_crisis_alert",
-      });
-    });
-};
-
-/*
- * typing animation
- */
-const dynamicTitles = [
-  t("landing.heroes.title.dynamic.one"),
-  t("landing.heroes.title.dynamic.two"),
-  t("landing.heroes.title.dynamic.three"),
-];
-
-const TxtType = function (el, toRotate, period) {
-  this.toRotate = toRotate;
-  this.el = el;
-  this.loopNum = 0;
-  this.period = parseInt(period, 10) || 2000;
-  this.txt = "";
-  this.tick();
-  this.isDeleting = false;
-};
-
-TxtType.prototype.tick = function () {
-  let i = this.loopNum % this.toRotate.length;
-  let fullTxt = this.toRotate[i];
-
-  if (this.isDeleting) {
-    this.txt = fullTxt.substring(0, this.txt.length - 1);
-  } else {
-    this.txt = fullTxt.substring(0, this.txt.length + 1);
-  }
-
-  const colors = ["var(--q-primary)", "#F53535", "#8136DC"];
-  const color = colors[i % colors.length];
-
-  this.el.innerHTML = `<span class="wrap" style="color: ${color}; border-right: 0.08em solid ${color}; animation: pulse 1s infinite steps(1);">
-    ${this.txt}
-    </span>`;
-
-  let that = this;
-  let delta = 200 - Math.random() * 100;
-
-  if (this.isDeleting) {
-    delta /= 2;
-  }
-
-  if (!this.isDeleting && this.txt === fullTxt) {
-    delta = this.period;
-    this.isDeleting = true;
-  } else if (this.isDeleting && this.txt === "") {
-    this.isDeleting = false;
-    this.loopNum++;
-    delta = 500;
-  }
-
-  setTimeout(() => {
-    that.tick();
-  }, delta);
-};
-
-onMounted(() => {
-  let elements = document.getElementsByClassName("typewrite");
-  for (let i = 0; i < elements.length; i++) {
-    let toRotate = elements[i].getAttribute("data-type");
-    let period = elements[i].getAttribute("data-period");
-    if (toRotate) {
-      new TxtType(elements[i], toRotate.split(","), period);
-    }
-  }
-});
-
-/*
- * meta
- */
-useMeta({
-  title: t("meta.app"),
-  titleTemplate: (title) => `${title} - ${t("meta.homepage.title")}`,
-
-  // meta tags
-  meta: {
-    description: {
-      name: "description",
-      content: t("meta.homepage.description"),
-    },
-    keywords: {
-      name: "keywords",
-      content: t("meta.homepage.keywords"),
-    },
-    equiv: {
-      "http-equiv": "Content-Type",
-      content: "text/html; charset=UTF-8",
-    },
-    // note: for Open Graph type metadata you will need to use SSR, to ensure page is rendered by the server
-    ogTitle: {
-      property: "og:title",
-      // optional; similar to titleTemplate, but allows templating with other meta properties
-      template(ogTitle) {
-        return `${ogTitle} - ${t("meta.homepage.title")}`;
-      },
-    },
-  },
-
-  // CSS tags
-  link: {
-    material: {
-      rel: "stylesheet",
-      href: "https://fonts.googleapis.com/icon?family=Material+Icons",
-    },
-  },
-
-  // JS tags
-  script: {
-    ldJson: {
-      type: "application/ld+json",
-      innerHTML: `{ "@context": "http://schema.org" }`,
-    },
-  },
-
-  // <html> attributes
-  htmlAttr: {
-    "xmlns:cc": "http://creativecommons.org/ns#", // generates <html xmlns:cc="http://creativecommons.org/ns#">,
-    empty: undefined, // generates <html empty>
-  },
-
-  // <body> attributes
-  bodyAttr: {
-    "action-scope": "xyz", // generates <body action-scope="xyz">
-    empty: undefined, // generates <body empty>
-  },
-
-  // <noscript> tags
-  noscript: {
-    default: "This is content for browsers with no JS (or disabled JS)",
-  },
-});
+// import { useMeta } from "quasar";
+// import { useI18n } from "vue-i18n";
+// import { ROUTE_PATHS, SUBDOMAINS } from "src/constants/routes";
+// import { computed, onMounted, ref } from "vue";
+// import { api } from "boot/axios";
+// import { useRouter } from "vue-router";
+//
+// /*
+//  * assembly version
+//  */
+// const VERSION = computed(() => {
+//   return process.env.VERSION;
+// });
+//
+// /*
+//  * url
+//  */
+// const appUrl =
+//   // protocol
+//   window.location.protocol +
+//   "//" +
+//   // subdomain
+//   SUBDOMAINS.app +
+//   "." +
+//   // host
+//   window.location.host;
+//
+// /*
+//  * variables
+//  */
+// const { t } = useI18n({ useScope: "global" });
+//
+// const router = useRouter();
+//
+// /*
+//  * join room
+//  */
+// const showJoinRoomToolbar = ref(true);
+//
+// const roomId = ref();
+// const roomSearchError = ref();
+//
+// const handleRoomSearch = () => {
+//   api
+//     .get(`/room/${roomId.value}`)
+//     .then((response) => {
+//       router.push(response.data.room.token);
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       roomSearchError.value = error.response.data.message;
+//
+//       $q.notify({
+//         message: error.response.data.message,
+//         color: "red",
+//         icon: "r_crisis_alert",
+//       });
+//     });
+// };
+//
+// /*
+//  * typing animation
+//  */
+// const dynamicTitles = [
+//   t("landing.heroes.title.dynamic.one"),
+//   t("landing.heroes.title.dynamic.two"),
+//   t("landing.heroes.title.dynamic.three"),
+// ];
+//
+// const TxtType = function (el, toRotate, period) {
+//   this.toRotate = toRotate;
+//   this.el = el;
+//   this.loopNum = 0;
+//   this.period = parseInt(period, 10) || 2000;
+//   this.txt = "";
+//   this.tick();
+//   this.isDeleting = false;
+// };
+//
+// TxtType.prototype.tick = function () {
+//   let i = this.loopNum % this.toRotate.length;
+//   let fullTxt = this.toRotate[i];
+//
+//   if (this.isDeleting) {
+//     this.txt = fullTxt.substring(0, this.txt.length - 1);
+//   } else {
+//     this.txt = fullTxt.substring(0, this.txt.length + 1);
+//   }
+//
+//   const colors = ["var(--q-primary)", "#F53535", "#8136DC"];
+//   const color = colors[i % colors.length];
+//
+//   this.el.innerHTML = `<span class="wrap" style="color: ${color}; border-right: 0.08em solid ${color}; animation: pulse 1s infinite steps(1);">
+//     ${this.txt}
+//     </span>`;
+//
+//   let that = this;
+//   let delta = 200 - Math.random() * 100;
+//
+//   if (this.isDeleting) {
+//     delta /= 2;
+//   }
+//
+//   if (!this.isDeleting && this.txt === fullTxt) {
+//     delta = this.period;
+//     this.isDeleting = true;
+//   } else if (this.isDeleting && this.txt === "") {
+//     this.isDeleting = false;
+//     this.loopNum++;
+//     delta = 500;
+//   }
+//
+//   setTimeout(() => {
+//     that.tick();
+//   }, delta);
+// };
+//
+// onMounted(() => {
+//   let elements = document.getElementsByClassName("typewrite");
+//   for (let i = 0; i < elements.length; i++) {
+//     let toRotate = elements[i].getAttribute("data-type");
+//     let period = elements[i].getAttribute("data-period");
+//     if (toRotate) {
+//       new TxtType(elements[i], toRotate.split(","), period);
+//     }
+//   }
+// });
+//
+// /*
+//  * meta
+//  */
+// useMeta({
+//   title: t("meta.app"),
+//   titleTemplate: (title) => `${title} - ${t("meta.homepage.title")}`,
+//
+//   // meta tags
+//   meta: {
+//     description: {
+//       name: "description",
+//       content: t("meta.homepage.description"),
+//     },
+//     keywords: {
+//       name: "keywords",
+//       content: t("meta.homepage.keywords"),
+//     },
+//     equiv: {
+//       "http-equiv": "Content-Type",
+//       content: "text/html; charset=UTF-8",
+//     },
+//     // note: for Open Graph type metadata you will need to use SSR, to ensure page is rendered by the server
+//     ogTitle: {
+//       property: "og:title",
+//       // optional; similar to titleTemplate, but allows templating with other meta properties
+//       template(ogTitle) {
+//         return `${ogTitle} - ${t("meta.homepage.title")}`;
+//       },
+//     },
+//   },
+//
+//   // CSS tags
+//   link: {
+//     material: {
+//       rel: "stylesheet",
+//       href: "https://fonts.googleapis.com/icon?family=Material+Icons",
+//     },
+//   },
+//
+//   // JS tags
+//   script: {
+//     ldJson: {
+//       type: "application/ld+json",
+//       innerHTML: `{ "@context": "http://schema.org" }`,
+//     },
+//   },
+//
+//   // <html> attributes
+//   htmlAttr: {
+//     "xmlns:cc": "http://creativecommons.org/ns#", // generates <html xmlns:cc="http://creativecommons.org/ns#">,
+//     empty: undefined, // generates <html empty>
+//   },
+//
+//   // <body> attributes
+//   bodyAttr: {
+//     "action-scope": "xyz", // generates <body action-scope="xyz">
+//     empty: undefined, // generates <body empty>
+//   },
+//
+//   // <noscript> tags
+//   noscript: {
+//     default: "This is content for browsers with no JS (or disabled JS)",
+//   },
+// });
 </script>
 
 <style scoped lang="scss">
