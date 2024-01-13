@@ -71,15 +71,15 @@
         </div>
 
         <!-- join room with token -->
-        <q-form @submit.prevent="handleRoomSearch()">
+        <form @submit.prevent="handleRoomSearch()">
           <q-input
             v-model="roomId"
             borderless
             dense
             class="join_room__token_input"
+            :class="{ 'join_room__token_input--error': !!roomSearchError }"
             :placeholder="$t('landing.joinRoom.enterCode')"
             :prefix="$t('landing.joinRoom.url')"
-            :error="!!roomSearchError"
             hide-bottom-space
             no-error-icon
           >
@@ -93,11 +93,12 @@
                 size="12px"
                 no-caps
                 class="q-px-sm"
+                :loading="isSearchingForRoom"
                 @click="handleRoomSearch()"
               />
             </template>
           </q-input>
-        </q-form>
+        </form>
 
         <!-- close join room toolbar -->
         <q-btn
@@ -1106,8 +1107,12 @@ const showJoinRoomToolbar = ref(true);
 
 const roomId = ref();
 const roomSearchError = ref();
+const isSearchingForRoom = ref(false);
 
 const handleRoomSearch = () => {
+  roomSearchError.value = null;
+  isSearchingForRoom.value = true;
+
   api
     .get(`/room/${roomId.value}`)
     .then((response) => {
@@ -1119,9 +1124,12 @@ const handleRoomSearch = () => {
 
       $q.notify({
         message: error.response.data.message,
-        color: "red",
+        textColor: "red",
         icon: "r_crisis_alert",
       });
+    })
+    .finally(() => {
+      isSearchingForRoom.value = false;
     });
 };
 
@@ -1306,6 +1314,11 @@ useMeta({
   }
   .q-field__prepend {
     padding-right: 4px !important;
+  }
+}
+::v-deep(.join_room__token_input--error) {
+  input {
+    color: $red;
   }
 }
 
