@@ -998,6 +998,7 @@
             unelevated
             color="primary"
             no-caps
+            style="z-index: 1"
             size="16px"
             :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
           />
