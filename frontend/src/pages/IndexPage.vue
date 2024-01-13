@@ -62,103 +62,103 @@
       </div>
 
       <!-- join room toolbar -->
-      <q-toolbar
-        v-if="showJoinRoomToolbar"
-        class="row no-wrap justify-center items-center q-pa-sm join_room"
-      >
-        <div class="text-black q-mr-sm">
-          {{ $t("landing.joinRoom.title") }}
-        </div>
+      <!--      <q-toolbar-->
+      <!--        v-if="showJoinRoomToolbar"-->
+      <!--        class="row no-wrap justify-center items-center q-pa-sm join_room"-->
+      <!--      >-->
+      <!--        <div class="text-black q-mr-sm">-->
+      <!--          {{ $t("landing.joinRoom.title") }}-->
+      <!--        </div>-->
 
-        <!-- join room with token -->
-        <form @submit.prevent="handleRoomSearch()">
-          <q-input
-            v-model="roomId"
-            borderless
-            dense
-            class="join_room__token_input"
-            :placeholder="$t('landing.joinRoom.enterCode')"
-            :prefix="$t('landing.joinRoom.url')"
-            :error="!!roomSearchError"
-            hide-bottom-space
-            no-error-icon
-          >
-            <template #append>
-              <!-- join room -->
-              <q-btn
-                unelevated
-                :label="$t('landing.joinRoom.join')"
-                color="grey-2"
-                text-color="black"
-                size="12px"
-                no-caps
-                class="q-px-sm"
-                @click="handleRoomSearch()"
-              />
-            </template>
-          </q-input>
-        </form>
+      <!--        &lt;!&ndash; join room with token &ndash;&gt;-->
+      <!--        <form @submit.prevent="handleRoomSearch()">-->
+      <!--          <q-input-->
+      <!--            v-model="roomId"-->
+      <!--            borderless-->
+      <!--            dense-->
+      <!--            class="join_room__token_input"-->
+      <!--            :placeholder="$t('landing.joinRoom.enterCode')"-->
+      <!--            :prefix="$t('landing.joinRoom.url')"-->
+      <!--            :error="!!roomSearchError"-->
+      <!--            hide-bottom-space-->
+      <!--            no-error-icon-->
+      <!--          >-->
+      <!--            <template #append>-->
+      <!--              &lt;!&ndash; join room &ndash;&gt;-->
+      <!--              <q-btn-->
+      <!--                unelevated-->
+      <!--                :label="$t('landing.joinRoom.join')"-->
+      <!--                color="grey-2"-->
+      <!--                text-color="black"-->
+      <!--                size="12px"-->
+      <!--                no-caps-->
+      <!--                class="q-px-sm"-->
+      <!--                @click="handleRoomSearch()"-->
+      <!--              />-->
+      <!--            </template>-->
+      <!--          </q-input>-->
+      <!--        </form>-->
 
-        <!-- close join room toolbar -->
-        <q-btn
-          flat
-          round
-          size="10px"
-          color="black"
-          icon="r_close"
-          class="absolute round-borders"
-          style="top: 50%; transform: translateY(-50%); right: 24px"
-          @click="showJoinRoomToolbar = false"
-        />
-      </q-toolbar>
+      <!--        &lt;!&ndash; close join room toolbar &ndash;&gt;-->
+      <!--        <q-btn-->
+      <!--          flat-->
+      <!--          round-->
+      <!--          size="10px"-->
+      <!--          color="black"-->
+      <!--          icon="r_close"-->
+      <!--          class="absolute round-borders"-->
+      <!--          style="top: 50%; transform: translateY(-50%); right: 24px"-->
+      <!--          @click="showJoinRoomToolbar = false"-->
+      <!--        />-->
+      <!--      </q-toolbar>-->
     </q-header>
 
     <!-- heroes -->
-    <!--    <div class="container">-->
-    <!--      <div class="splitter q-py-xl q-my-xl">-->
-    <!--        <div class="column no-wrap">-->
-    <!--          &lt;!&ndash; title &ndash;&gt;-->
-    <!--          <div class="text-h3 text-semibold" style="line-height: 1.2">-->
-    <!--            {{ $t("landing.heroes.title.static") }} <br />-->
+    <div class="container">
+      <div class="splitter q-py-xl q-my-xl">
+        <div class="column no-wrap">
+          <!-- title -->
+          <div class="text-h3 text-semibold" style="line-height: 1.2">
+            {{ $t("landing.heroes.title.static") }} <br />
 
-    <!--            <span-->
-    <!--              class="typewrite text-primary"-->
-    <!--              data-period="4000"-->
-    <!--              :data-type="dynamicTitles"-->
-    <!--            >-->
-    <!--              <span class="wrap"></span>-->
-    <!--            </span>-->
-    <!--          </div>-->
+            <span
+              class="typewrite text-primary"
+              data-period="4000"
+              :data-type="dynamicTitles"
+            >
+              <span class="wrap"></span>
+            </span>
+          </div>
 
-    <!--          &lt;!&ndash; description &ndash;&gt;-->
-    <!--          <div class="text-20 q-my-lg q-py-sm" style="max-width: 500px">-->
-    <!--            {{ $t("landing.heroes.description") }}-->
-    <!--          </div>-->
+          <!-- description -->
+          <div class="text-20 q-my-lg q-py-sm" style="max-width: 500px">
+            {{ $t("landing.heroes.description") }}
+          </div>
 
-    <!--          <q-space />-->
+          <q-space />
 
-    <!--          &lt;!&ndash; create presentation &ndash;&gt;-->
-    <!--          <div>-->
-    <!--            <q-btn-->
-    <!--              :label="$t('landing.heroes.action')"-->
-    <!--              unelevated-->
-    <!--              color="primary"-->
-    <!--              no-caps-->
-    <!--              size="16px"-->
-    <!--              :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"-->
-    <!--            />-->
-    <!--          </div>-->
-    <!--        </div>-->
+          <!-- create presentation -->
+          <div>
+            <q-btn
+              :label="$t('landing.heroes.action')"
+              unelevated
+              color="primary"
+              no-caps
+              size="16px"
+              :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
+            />
+          </div>
+        </div>
 
-    <!--        &lt;!&ndash; heroes illustration &ndash;&gt;-->
-    <!--        <div>-->
-    <!--          <q-img-->
-    <!--            src="/assets/illustrations/heroes.svg"-->
-    <!--            alt="Prezio heroes illustration"-->
-    <!--          />-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
+        <!-- heroes illustration -->
+        <div>
+          <q-img
+            src="/assets/illustrations/heroes.svg"
+            alt="Prezio heroes illustration"
+          />
+        </div>
+      </div>
+    </div>
 
     <!-- benefits -->
     <div id="features" class="bg-white q-py-xl">
@@ -1125,70 +1125,70 @@ const handleRoomSearch = () => {
 /*
  * typing animation
  */
-// const dynamicTitles = [
-//   t("landing.heroes.title.dynamic.one"),
-//   t("landing.heroes.title.dynamic.two"),
-//   t("landing.heroes.title.dynamic.three"),
-// ];
-//
-// const TxtType = function (el, toRotate, period) {
-//   this.toRotate = toRotate;
-//   this.el = el;
-//   this.loopNum = 0;
-//   this.period = parseInt(period, 10) || 2000;
-//   this.txt = "";
-//   this.tick();
-//   this.isDeleting = false;
-// };
-//
-// TxtType.prototype.tick = function () {
-//   let i = this.loopNum % this.toRotate.length;
-//   let fullTxt = this.toRotate[i];
-//
-//   if (this.isDeleting) {
-//     this.txt = fullTxt.substring(0, this.txt.length - 1);
-//   } else {
-//     this.txt = fullTxt.substring(0, this.txt.length + 1);
-//   }
-//
-//   const colors = ["var(--q-primary)", "#F53535", "#8136DC"];
-//   const color = colors[i % colors.length];
-//
-//   this.el.innerHTML = `<span class="wrap" style="color: ${color}; border-right: 0.08em solid ${color}; animation: pulse 1s infinite steps(1);">
-//     ${this.txt}
-//     </span>`;
-//
-//   let that = this;
-//   let delta = 200 - Math.random() * 100;
-//
-//   if (this.isDeleting) {
-//     delta /= 2;
-//   }
-//
-//   if (!this.isDeleting && this.txt === fullTxt) {
-//     delta = this.period;
-//     this.isDeleting = true;
-//   } else if (this.isDeleting && this.txt === "") {
-//     this.isDeleting = false;
-//     this.loopNum++;
-//     delta = 500;
-//   }
-//
-//   setTimeout(() => {
-//     that.tick();
-//   }, delta);
-// };
-//
-// onMounted(() => {
-//   let elements = document.getElementsByClassName("typewrite");
-//   for (let i = 0; i < elements.length; i++) {
-//     let toRotate = elements[i].getAttribute("data-type");
-//     let period = elements[i].getAttribute("data-period");
-//     if (toRotate) {
-//       new TxtType(elements[i], toRotate.split(","), period);
-//     }
-//   }
-// });
+const dynamicTitles = [
+  t("landing.heroes.title.dynamic.one"),
+  t("landing.heroes.title.dynamic.two"),
+  t("landing.heroes.title.dynamic.three"),
+];
+
+const TxtType = function (el, toRotate, period) {
+  this.toRotate = toRotate;
+  this.el = el;
+  this.loopNum = 0;
+  this.period = parseInt(period, 10) || 2000;
+  this.txt = "";
+  this.tick();
+  this.isDeleting = false;
+};
+
+TxtType.prototype.tick = function () {
+  let i = this.loopNum % this.toRotate.length;
+  let fullTxt = this.toRotate[i];
+
+  if (this.isDeleting) {
+    this.txt = fullTxt.substring(0, this.txt.length - 1);
+  } else {
+    this.txt = fullTxt.substring(0, this.txt.length + 1);
+  }
+
+  const colors = ["var(--q-primary)", "#F53535", "#8136DC"];
+  const color = colors[i % colors.length];
+
+  this.el.innerHTML = `<span class="wrap" style="color: ${color}; border-right: 0.08em solid ${color}; animation: pulse 1s infinite steps(1);">
+    ${this.txt}
+    </span>`;
+
+  let that = this;
+  let delta = 200 - Math.random() * 100;
+
+  if (this.isDeleting) {
+    delta /= 2;
+  }
+
+  if (!this.isDeleting && this.txt === fullTxt) {
+    delta = this.period;
+    this.isDeleting = true;
+  } else if (this.isDeleting && this.txt === "") {
+    this.isDeleting = false;
+    this.loopNum++;
+    delta = 500;
+  }
+
+  setTimeout(() => {
+    that.tick();
+  }, delta);
+};
+
+onMounted(() => {
+  let elements = document.getElementsByClassName("typewrite");
+  for (let i = 0; i < elements.length; i++) {
+    let toRotate = elements[i].getAttribute("data-type");
+    let period = elements[i].getAttribute("data-period");
+    if (toRotate) {
+      new TxtType(elements[i], toRotate.split(","), period);
+    }
+  }
+});
 
 /*
  * meta
