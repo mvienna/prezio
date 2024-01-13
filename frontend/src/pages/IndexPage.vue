@@ -1,119 +1,119 @@
 <template>
   <q-page>
-    <!--    <q-header class="bg-transparent" bordered>-->
-    <!--      <div class="bg-white">-->
-    <!--        <div class="container">-->
-    <!--          <q-toolbar class="q-pa-md row no-wrap items-center">-->
-    <!--            &lt;!&ndash; logo &ndash;&gt;-->
-    <!--            <div class="row no-wrap">-->
-    <!--              <img-->
-    <!--                :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"-->
-    <!--                style="height: 38px"-->
-    <!--              />-->
+    <q-header class="bg-transparent" bordered>
+      <div class="bg-white">
+        <div class="container">
+          <q-toolbar class="q-pa-md row no-wrap items-center">
+            <!-- logo -->
+            <div class="row no-wrap">
+              <img
+                :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"
+                style="height: 38px"
+              />
 
-    <!--              <div class="q-ml-sm column">-->
-    <!--                <q-badge-->
-    <!--                  class="bg-grey-2 text-grey-7"-->
-    <!--                  style="font-size: 10px; margin-top: 3px"-->
-    <!--                  :label="VERSION"-->
-    <!--                />-->
-    <!--              </div>-->
-    <!--            </div>-->
+              <div class="q-ml-sm column">
+                <q-badge
+                  class="bg-grey-2 text-grey-7"
+                  style="font-size: 10px; margin-top: 3px"
+                  :label="VERSION"
+                />
+              </div>
+            </div>
 
-    <!--            <q-space />-->
+            <q-space />
 
-    <!--            &lt;!&ndash; hyperlinks &ndash;&gt;-->
-    <!--            <a href="#features" class="text-16 link text-grey-9">-->
-    <!--              {{ $t("landing.hyperlinks.features") }}-->
-    <!--            </a>-->
-    <!--            <a href="#prices" class="text-16 link text-grey-9 q-mx-md">-->
-    <!--              {{ $t("landing.hyperlinks.prices") }}-->
-    <!--            </a>-->
-    <!--            <a href="#faq" class="text-16 link text-grey-9">-->
-    <!--              {{ $t("landing.hyperlinks.faq") }}-->
-    <!--            </a>-->
+            <!-- hyperlinks -->
+            <a href="#features" class="text-16 link text-grey-9">
+              {{ $t("landing.hyperlinks.features") }}
+            </a>
+            <a href="#prices" class="text-16 link text-grey-9 q-mx-md">
+              {{ $t("landing.hyperlinks.prices") }}
+            </a>
+            <a href="#faq" class="text-16 link text-grey-9">
+              {{ $t("landing.hyperlinks.faq") }}
+            </a>
 
-    <!--            <q-space />-->
+            <q-space />
 
-    <!--            &lt;!&ndash; login &ndash;&gt;-->
-    <!--            <q-btn-->
-    <!--              outline-->
-    <!--              :label="$t('landing.auth.login')"-->
-    <!--              no-caps-->
-    <!--              size="16px"-->
-    <!--              class="q-mr-md q-px-md"-->
-    <!--              style="min-height: 38px"-->
-    <!--              :href="appUrl + ROUTE_PATHS.AUTH.LOGIN"-->
-    <!--            />-->
+            <!-- login -->
+            <q-btn
+              outline
+              :label="$t('landing.auth.login')"
+              no-caps
+              size="16px"
+              class="q-mr-md q-px-md"
+              style="min-height: 38px"
+              :href="appUrl + ROUTE_PATHS.AUTH.LOGIN"
+            />
 
-    <!--            &lt;!&ndash; signup &ndash;&gt;-->
-    <!--            <q-btn-->
-    <!--              unelevated-->
-    <!--              color="primary"-->
-    <!--              :label="$t('landing.auth.signup')"-->
-    <!--              no-caps-->
-    <!--              size="16px"-->
-    <!--              class="q-px-md"-->
-    <!--              style="min-height: 38px"-->
-    <!--              :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"-->
-    <!--            />-->
-    <!--          </q-toolbar>-->
-    <!--        </div>-->
-    <!--      </div>-->
+            <!-- signup -->
+            <q-btn
+              unelevated
+              color="primary"
+              :label="$t('landing.auth.signup')"
+              no-caps
+              size="16px"
+              class="q-px-md"
+              style="min-height: 38px"
+              :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
+            />
+          </q-toolbar>
+        </div>
+      </div>
 
-    <!--      &lt;!&ndash; join room toolbar &ndash;&gt;-->
-    <!--      <q-toolbar-->
-    <!--        v-if="showJoinRoomToolbar"-->
-    <!--        class="row no-wrap justify-center items-center q-pa-sm join_room"-->
-    <!--      >-->
-    <!--        <div class="text-black q-mr-sm">-->
-    <!--          {{ $t("landing.joinRoom.title") }}-->
-    <!--        </div>-->
+      <!-- join room toolbar -->
+      <q-toolbar
+        v-if="showJoinRoomToolbar"
+        class="row no-wrap justify-center items-center q-pa-sm join_room"
+      >
+        <div class="text-black q-mr-sm">
+          {{ $t("landing.joinRoom.title") }}
+        </div>
 
-    <!--        &lt;!&ndash; join room with token &ndash;&gt;-->
-    <!--        <form @submit.prevent="handleRoomSearch()">-->
-    <!--          <q-input-->
-    <!--            v-model="roomId"-->
-    <!--            borderless-->
-    <!--            dense-->
-    <!--            class="join_room__token_input"-->
-    <!--            :placeholder="$t('landing.joinRoom.enterCode')"-->
-    <!--            :prefix="$t('landing.joinRoom.url')"-->
-    <!--            :error="!!roomSearchError"-->
-    <!--            hide-bottom-space-->
-    <!--            no-error-icon-->
-    <!--          >-->
-    <!--            <template #append>-->
-    <!--              &lt;!&ndash; join room &ndash;&gt;-->
-    <!--              <q-btn-->
-    <!--                unelevated-->
-    <!--                :label="$t('landing.joinRoom.join')"-->
-    <!--                color="grey-2"-->
-    <!--                text-color="black"-->
-    <!--                size="12px"-->
-    <!--                no-caps-->
-    <!--                class="q-px-sm"-->
-    <!--                @click="handleRoomSearch()"-->
-    <!--              />-->
-    <!--            </template>-->
-    <!--          </q-input>-->
-    <!--        </form>-->
+        <!-- join room with token -->
+        <form @submit.prevent="handleRoomSearch()">
+          <q-input
+            v-model="roomId"
+            borderless
+            dense
+            class="join_room__token_input"
+            :placeholder="$t('landing.joinRoom.enterCode')"
+            :prefix="$t('landing.joinRoom.url')"
+            :error="!!roomSearchError"
+            hide-bottom-space
+            no-error-icon
+          >
+            <template #append>
+              <!-- join room -->
+              <q-btn
+                unelevated
+                :label="$t('landing.joinRoom.join')"
+                color="grey-2"
+                text-color="black"
+                size="12px"
+                no-caps
+                class="q-px-sm"
+                @click="handleRoomSearch()"
+              />
+            </template>
+          </q-input>
+        </form>
 
-    <!--        &lt;!&ndash; close join room toolbar &ndash;&gt;-->
-    <!--        <q-btn-->
-    <!--          flat-->
-    <!--          round-->
-    <!--          size="10px"-->
-    <!--          color="black"-->
-    <!--          icon="r_close"-->
-    <!--          class="absolute round-borders"-->
-    <!--          style="top: 50%; transform: translateY(-50%); right: 24px"-->
-    <!--          @click="showJoinRoomToolbar = false"-->
-    <!--        />-->
-    <!--      </q-toolbar>-->
-    <!--    </q-header>-->
+        <!-- close join room toolbar -->
+        <q-btn
+          flat
+          round
+          size="10px"
+          color="black"
+          icon="r_close"
+          class="absolute round-borders"
+          style="top: 50%; transform: translateY(-50%); right: 24px"
+          @click="showJoinRoomToolbar = false"
+        />
+      </q-toolbar>
+    </q-header>
 
-    <!--    &lt;!&ndash; heroes &ndash;&gt;-->
+    <!-- heroes -->
     <!--    <div class="container">-->
     <!--      <div class="splitter q-py-xl q-my-xl">-->
     <!--        <div class="column no-wrap">-->
@@ -560,357 +560,357 @@
       </div>
     </div>
 
-    <!--    &lt;!&ndash; prices &ndash;&gt;-->
-    <!--    <div id="prices" class="q-py-xl">-->
-    <!--      <div class="container">-->
-    <!--        <div class="q-py-xl">-->
-    <!--          &lt;!&ndash; title &ndash;&gt;-->
-    <!--          <div class="text-h4 text-semibold text-center">-->
-    <!--            {{ $t("landing.prices.title") }}-->
-    <!--          </div>-->
+    <!-- prices -->
+    <div id="prices" class="q-py-xl">
+      <div class="container">
+        <div class="q-py-xl">
+          <!-- title -->
+          <div class="text-h4 text-semibold text-center">
+            {{ $t("landing.prices.title") }}
+          </div>
 
-    <!--          &lt;!&ndash; description &ndash;&gt;-->
-    <!--          <div class="row justify-center">-->
-    <!--            <div-->
-    <!--              class="text-center q-mt-3xs q-mb-xl text-16"-->
-    <!--              style="max-width: 800px"-->
-    <!--            >-->
-    <!--              {{ $t("landing.prices.description") }}-->
-    <!--            </div>-->
-    <!--          </div>-->
+          <!-- description -->
+          <div class="row justify-center">
+            <div
+              class="text-center q-mt-3xs q-mb-xl text-16"
+              style="max-width: 800px"
+            >
+              {{ $t("landing.prices.description") }}
+            </div>
+          </div>
 
-    <!--          &lt;!&ndash; plans &ndash;&gt;-->
-    <!--          <div class="plans_grid">-->
-    <!--            &lt;!&ndash; free &ndash;&gt;-->
-    <!--            <q-card flat bordered class="bg-white">-->
-    <!--              <q-card-section>-->
-    <!--                &lt;!&ndash; title &ndash;&gt;-->
-    <!--                <div class="text-18 text-semibold">-->
-    <!--                  {{ $t("landing.prices.plans.free.title") }}-->
-    <!--                </div>-->
+          <!-- plans -->
+          <div class="plans_grid">
+            <!-- free -->
+            <q-card flat bordered class="bg-white">
+              <q-card-section>
+                <!-- title -->
+                <div class="text-18 text-semibold">
+                  {{ $t("landing.prices.plans.free.title") }}
+                </div>
 
-    <!--                &lt;!&ndash; description &ndash;&gt;-->
-    <!--                <div class="q-mt-sm text-grey">-->
-    <!--                  {{ $t("landing.prices.plans.free.description") }}-->
-    <!--                </div>-->
+                <!-- description -->
+                <div class="q-mt-sm text-grey">
+                  {{ $t("landing.prices.plans.free.description") }}
+                </div>
 
-    <!--                &lt;!&ndash; price & period &ndash;&gt;-->
-    <!--                <div class="row no-wrap items-end q-my-md">-->
-    <!--                  <div class="text-36 text-semibold">-->
-    <!--                    {{ $t("landing.prices.plans.free.price") }}-->
-    <!--                  </div>-->
-    <!--                  <div class="text-grey q-mb-sm q-ml-xs text-weight-medium">-->
-    <!--                    {{ $t("landing.prices.plans.free.period") }}-->
-    <!--                  </div>-->
-    <!--                </div>-->
+                <!-- price & period -->
+                <div class="row no-wrap items-end q-my-md">
+                  <div class="text-36 text-semibold">
+                    {{ $t("landing.prices.plans.free.price") }}
+                  </div>
+                  <div class="text-grey q-mb-sm q-ml-xs text-weight-medium">
+                    {{ $t("landing.prices.plans.free.period") }}
+                  </div>
+                </div>
 
-    <!--                &lt;!&ndash; participants limit &ndash;&gt;-->
-    <!--                <div class="row no-wrap items-center">-->
-    <!--                  <q-icon-->
-    <!--                    name="icon-profile_group"-->
-    <!--                    color="primary"-->
-    <!--                    size="20px"-->
-    <!--                  />-->
-    <!--                  <div class="text-semibold q-ml-sm">-->
-    <!--                    {{ $t("landing.prices.plans.free.participantsLimit") }}-->
-    <!--                  </div>-->
-    <!--                </div>-->
+                <!-- participants limit -->
+                <div class="row no-wrap items-center">
+                  <q-icon
+                    name="icon-profile_group"
+                    color="primary"
+                    size="20px"
+                  />
+                  <div class="text-semibold q-ml-sm">
+                    {{ $t("landing.prices.plans.free.participantsLimit") }}
+                  </div>
+                </div>
 
-    <!--                <q-separator />-->
+                <q-separator />
 
-    <!--                &lt;!&ndash; features &ndash;&gt;-->
-    <!--                <div class="column no-wrap q-gutter-sm">-->
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                <!-- features -->
+                <div class="column no-wrap q-gutter-sm">
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.free.features.one") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.free.features.one") }}
+                    </div>
+                  </div>
 
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.free.features.two") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.free.features.two") }}
+                    </div>
+                  </div>
 
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.free.features.three") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
-    <!--                </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.free.features.three") }}
+                    </div>
+                  </div>
+                </div>
 
-    <!--                <q-separator />-->
+                <q-separator />
 
-    <!--                &lt;!&ndash; action &ndash;&gt;-->
-    <!--                <q-btn-->
-    <!--                  outline-->
-    <!--                  color="grey-9"-->
-    <!--                  :label="$t('landing.prices.plans.free.action')"-->
-    <!--                  no-caps-->
-    <!--                  class="full-width"-->
-    <!--                  :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"-->
-    <!--                />-->
-    <!--              </q-card-section>-->
-    <!--            </q-card>-->
+                <!-- action -->
+                <q-btn
+                  outline
+                  color="grey-9"
+                  :label="$t('landing.prices.plans.free.action')"
+                  no-caps
+                  class="full-width"
+                  :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
+                />
+              </q-card-section>
+            </q-card>
 
-    <!--            &lt;!&ndash; basic &ndash;&gt;-->
-    <!--            <q-card flat bordered class="bg-white overflow-hidden">-->
-    <!--              <div-->
-    <!--                style="-->
-    <!--                  position: absolute;-->
-    <!--                  top: 0;-->
-    <!--                  right: 0;-->
-    <!--                  width: 100%;-->
-    <!--                  height: 100%;-->
-    <!--                  background: linear-gradient(-150deg, #efb5b5 0%, #ebf0fb 75%);-->
-    <!--                  filter: blur(50px);-->
-    <!--                "-->
-    <!--              ></div>-->
+            <!-- basic -->
+            <q-card flat bordered class="bg-white overflow-hidden">
+              <div
+                style="
+                  position: absolute;
+                  top: 0;
+                  right: 0;
+                  width: 100%;
+                  height: 100%;
+                  background: linear-gradient(-150deg, #efb5b5 0%, #ebf0fb 75%);
+                  filter: blur(50px);
+                "
+              ></div>
 
-    <!--              <q-card-section>-->
-    <!--                &lt;!&ndash; title &ndash;&gt;-->
-    <!--                <div class="text-18 text-semibold">-->
-    <!--                  {{ $t("landing.prices.plans.basic.title") }}-->
-    <!--                </div>-->
+              <q-card-section>
+                <!-- title -->
+                <div class="text-18 text-semibold">
+                  {{ $t("landing.prices.plans.basic.title") }}
+                </div>
 
-    <!--                &lt;!&ndash; description &ndash;&gt;-->
-    <!--                <div class="q-mt-sm text-grey">-->
-    <!--                  {{ $t("landing.prices.plans.basic.description") }}-->
-    <!--                </div>-->
+                <!-- description -->
+                <div class="q-mt-sm text-grey">
+                  {{ $t("landing.prices.plans.basic.description") }}
+                </div>
 
-    <!--                &lt;!&ndash; price & period &ndash;&gt;-->
-    <!--                <div class="row no-wrap items-end q-my-md">-->
-    <!--                  <div class="text-36 text-semibold">-->
-    <!--                    {{ $t("landing.prices.plans.basic.price") }}-->
-    <!--                  </div>-->
-    <!--                  <div class="text-grey q-mb-sm q-ml-xs text-weight-medium">-->
-    <!--                    {{ $t("landing.prices.plans.basic.period") }}-->
-    <!--                  </div>-->
-    <!--                </div>-->
+                <!-- price & period -->
+                <div class="row no-wrap items-end q-my-md">
+                  <div class="text-36 text-semibold">
+                    {{ $t("landing.prices.plans.basic.price") }}
+                  </div>
+                  <div class="text-grey q-mb-sm q-ml-xs text-weight-medium">
+                    {{ $t("landing.prices.plans.basic.period") }}
+                  </div>
+                </div>
 
-    <!--                &lt;!&ndash; participants limit &ndash;&gt;-->
-    <!--                <div class="row no-wrap items-center">-->
-    <!--                  <q-icon-->
-    <!--                    name="icon-profile_group"-->
-    <!--                    color="primary"-->
-    <!--                    size="20px"-->
-    <!--                  />-->
-    <!--                  <div class="text-semibold q-ml-sm">-->
-    <!--                    {{ $t("landing.prices.plans.basic.participantsLimit") }}-->
-    <!--                  </div>-->
-    <!--                </div>-->
+                <!-- participants limit -->
+                <div class="row no-wrap items-center">
+                  <q-icon
+                    name="icon-profile_group"
+                    color="primary"
+                    size="20px"
+                  />
+                  <div class="text-semibold q-ml-sm">
+                    {{ $t("landing.prices.plans.basic.participantsLimit") }}
+                  </div>
+                </div>
 
-    <!--                <q-separator />-->
+                <q-separator />
 
-    <!--                &lt;!&ndash; features &ndash;&gt;-->
-    <!--                <div class="column no-wrap q-gutter-sm">-->
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                <!-- features -->
+                <div class="column no-wrap q-gutter-sm">
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.basic.features.one") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.basic.features.one") }}
+                    </div>
+                  </div>
 
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.basic.features.two") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.basic.features.two") }}
+                    </div>
+                  </div>
 
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.basic.features.three") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.basic.features.three") }}
+                    </div>
+                  </div>
 
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.basic.features.four") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
-    <!--                </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.basic.features.four") }}
+                    </div>
+                  </div>
+                </div>
 
-    <!--                <q-separator />-->
+                <q-separator />
 
-    <!--                &lt;!&ndash; action &ndash;&gt;-->
-    <!--                <q-btn-->
-    <!--                  unelevated-->
-    <!--                  color="primary"-->
-    <!--                  :label="$t('landing.prices.plans.basic.action')"-->
-    <!--                  no-caps-->
-    <!--                  class="full-width"-->
-    <!--                  :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"-->
-    <!--                />-->
-    <!--              </q-card-section>-->
-    <!--            </q-card>-->
+                <!-- action -->
+                <q-btn
+                  unelevated
+                  color="primary"
+                  :label="$t('landing.prices.plans.basic.action')"
+                  no-caps
+                  class="full-width"
+                  :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
+                />
+              </q-card-section>
+            </q-card>
 
-    <!--            &lt;!&ndash; pro &ndash;&gt;-->
-    <!--            <q-card flat bordered class="bg-white">-->
-    <!--              <q-card-section>-->
-    <!--                &lt;!&ndash; title &ndash;&gt;-->
-    <!--                <div class="text-18 text-semibold">-->
-    <!--                  {{ $t("landing.prices.plans.pro.title") }}-->
-    <!--                </div>-->
+            <!-- pro -->
+            <q-card flat bordered class="bg-white">
+              <q-card-section>
+                <!-- title -->
+                <div class="text-18 text-semibold">
+                  {{ $t("landing.prices.plans.pro.title") }}
+                </div>
 
-    <!--                &lt;!&ndash; description &ndash;&gt;-->
-    <!--                <div class="q-mt-sm text-grey">-->
-    <!--                  {{ $t("landing.prices.plans.pro.description") }}-->
-    <!--                </div>-->
+                <!-- description -->
+                <div class="q-mt-sm text-grey">
+                  {{ $t("landing.prices.plans.pro.description") }}
+                </div>
 
-    <!--                &lt;!&ndash; price & period &ndash;&gt;-->
-    <!--                <div class="row no-wrap items-end q-my-md">-->
-    <!--                  <div class="text-36 text-semibold">-->
-    <!--                    {{ $t("landing.prices.plans.pro.price") }}-->
-    <!--                  </div>-->
-    <!--                  <div class="text-grey q-mb-sm q-ml-xs text-weight-medium">-->
-    <!--                    {{ $t("landing.prices.plans.pro.period") }}-->
-    <!--                  </div>-->
-    <!--                </div>-->
+                <!-- price & period -->
+                <div class="row no-wrap items-end q-my-md">
+                  <div class="text-36 text-semibold">
+                    {{ $t("landing.prices.plans.pro.price") }}
+                  </div>
+                  <div class="text-grey q-mb-sm q-ml-xs text-weight-medium">
+                    {{ $t("landing.prices.plans.pro.period") }}
+                  </div>
+                </div>
 
-    <!--                &lt;!&ndash; participants limit &ndash;&gt;-->
-    <!--                <div class="row no-wrap items-center">-->
-    <!--                  <q-icon-->
-    <!--                    name="icon-profile_group"-->
-    <!--                    color="primary"-->
-    <!--                    size="20px"-->
-    <!--                  />-->
-    <!--                  <div class="text-semibold q-ml-sm">-->
-    <!--                    {{ $t("landing.prices.plans.pro.participantsLimit") }}-->
-    <!--                  </div>-->
-    <!--                </div>-->
+                <!-- participants limit -->
+                <div class="row no-wrap items-center">
+                  <q-icon
+                    name="icon-profile_group"
+                    color="primary"
+                    size="20px"
+                  />
+                  <div class="text-semibold q-ml-sm">
+                    {{ $t("landing.prices.plans.pro.participantsLimit") }}
+                  </div>
+                </div>
 
-    <!--                <q-separator />-->
+                <q-separator />
 
-    <!--                &lt;!&ndash; features &ndash;&gt;-->
-    <!--                <div class="column no-wrap q-gutter-sm">-->
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                <!-- features -->
+                <div class="column no-wrap q-gutter-sm">
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.pro.features.one") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.pro.features.one") }}
+                    </div>
+                  </div>
 
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.pro.features.two") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.pro.features.two") }}
+                    </div>
+                  </div>
 
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.pro.features.three") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.pro.features.three") }}
+                    </div>
+                  </div>
 
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.pro.features.four") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.pro.features.four") }}
+                    </div>
+                  </div>
 
-    <!--                  <div class="row no-wrap items-center">-->
-    <!--                    <div-->
-    <!--                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"-->
-    <!--                    >-->
-    <!--                      <q-icon name="r_done" color="primary" size="12px" />-->
-    <!--                    </div>-->
+                  <div class="row no-wrap items-center">
+                    <div
+                      class="round-borders bg-blue-1 row items-center justify-center q-pa-xs q-mr-sm"
+                    >
+                      <q-icon name="r_done" color="primary" size="12px" />
+                    </div>
 
-    <!--                    <div>-->
-    <!--                      {{ $t("landing.prices.plans.pro.features.five") }}-->
-    <!--                    </div>-->
-    <!--                  </div>-->
-    <!--                </div>-->
+                    <div>
+                      {{ $t("landing.prices.plans.pro.features.five") }}
+                    </div>
+                  </div>
+                </div>
 
-    <!--                <q-separator />-->
+                <q-separator />
 
-    <!--                &lt;!&ndash; action &ndash;&gt;-->
-    <!--                <q-btn-->
-    <!--                  outline-->
-    <!--                  color="grey-9"-->
-    <!--                  :label="$t('landing.prices.plans.pro.action')"-->
-    <!--                  no-caps-->
-    <!--                  class="full-width"-->
-    <!--                  :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"-->
-    <!--                />-->
-    <!--              </q-card-section>-->
-    <!--            </q-card>-->
-    <!--          </div>-->
+                <!-- action -->
+                <q-btn
+                  outline
+                  color="grey-9"
+                  :label="$t('landing.prices.plans.pro.action')"
+                  no-caps
+                  class="full-width"
+                  :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
+                />
+              </q-card-section>
+            </q-card>
+          </div>
 
-    <!--          &lt;!&ndash; contact &ndash;&gt;-->
-    <!--          <div class="text-weight-medium text-16 text-center q-mt-lg">-->
-    <!--            {{ $t("landing.prices.contact.title") }}-->
-    <!--            <a href="mailto:hello@prezio.ru" class="link text-underline">-->
-    <!--              {{ $t("landing.prices.contact.mail") }}-->
-    <!--            </a>-->
-    <!--            .-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
+          <!-- contact -->
+          <div class="text-weight-medium text-16 text-center q-mt-lg">
+            {{ $t("landing.prices.contact.title") }}
+            <a href="mailto:hello@prezio.ru" class="link text-underline">
+              {{ $t("landing.prices.contact.mail") }}
+            </a>
+            .
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- faq -->
     <div id="faq" class="bg-white q-py-xl">
@@ -991,17 +991,17 @@
           {{ $t("landing.promo.description") }}
         </div>
 
-        <!--        &lt;!&ndash; create presentation &ndash;&gt;-->
-        <!--        <div class="row justify-center q-mt-xl">-->
-        <!--          <q-btn-->
-        <!--            :label="$t('landing.promo.action')"-->
-        <!--            unelevated-->
-        <!--            color="primary"-->
-        <!--            no-caps-->
-        <!--            size="16px"-->
-        <!--            :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"-->
-        <!--          />-->
-        <!--        </div>-->
+        <!-- create presentation -->
+        <div class="row justify-center q-mt-xl">
+          <q-btn
+            :label="$t('landing.promo.action')"
+            unelevated
+            color="primary"
+            no-caps
+            size="16px"
+            :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
+          />
+        </div>
 
         <!-- background -->
         <div class="absolute" style="top: 0; left: 0; width: 100%">
@@ -1064,9 +1064,9 @@
 <script setup>
 import { useMeta } from "quasar";
 import { useI18n } from "vue-i18n";
-// import { ROUTE_PATHS, SUBDOMAINS } from "src/constants/routes";
+import { ROUTE_PATHS, SUBDOMAINS } from "src/constants/routes";
 import { computed, onMounted, ref } from "vue";
-// import { api } from "boot/axios";
+import { api } from "boot/axios";
 import { useRouter } from "vue-router";
 
 /*
@@ -1079,15 +1079,15 @@ const VERSION = computed(() => {
 /*
  * url
  */
-// const appUrl =
-//   // protocol
-//   window.location.protocol +
-//   "//" +
-//   // subdomain
-//   SUBDOMAINS.app +
-//   "." +
-//   // host
-//   window.location.host;
+const appUrl =
+  // protocol
+  window.location.protocol +
+  "//" +
+  // subdomain
+  SUBDOMAINS.app +
+  "." +
+  // host
+  window.location.host;
 
 /*
  * variables
@@ -1099,28 +1099,28 @@ const router = useRouter();
 /*
  * join room
  */
-// const showJoinRoomToolbar = ref(true);
-//
-// const roomId = ref();
-// const roomSearchError = ref();
-//
-// const handleRoomSearch = () => {
-//   api
-//     .get(`/room/${roomId.value}`)
-//     .then((response) => {
-//       router.push(response.data.room.token);
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//       roomSearchError.value = error.response.data.message;
-//
-//       $q.notify({
-//         message: error.response.data.message,
-//         color: "red",
-//         icon: "r_crisis_alert",
-//       });
-//     });
-// };
+const showJoinRoomToolbar = ref(true);
+
+const roomId = ref();
+const roomSearchError = ref();
+
+const handleRoomSearch = () => {
+  api
+    .get(`/room/${roomId.value}`)
+    .then((response) => {
+      router.push(response.data.room.token);
+    })
+    .catch((error) => {
+      console.log(error);
+      roomSearchError.value = error.response.data.message;
+
+      $q.notify({
+        message: error.response.data.message,
+        color: "red",
+        icon: "r_crisis_alert",
+      });
+    });
+};
 
 /*
  * typing animation
