@@ -62,55 +62,55 @@
       </div>
 
       <!-- join room toolbar -->
-      <!--      <q-toolbar-->
-      <!--        v-if="showJoinRoomToolbar"-->
-      <!--        class="row no-wrap justify-center items-center q-pa-sm join_room"-->
-      <!--      >-->
-      <!--        <div class="text-black q-mr-sm">-->
-      <!--          {{ $t("landing.joinRoom.title") }}-->
-      <!--        </div>-->
+      <q-toolbar
+        v-if="showJoinRoomToolbar"
+        class="row no-wrap justify-center items-center q-pa-sm join_room"
+      >
+        <div class="text-black q-mr-sm">
+          {{ $t("landing.joinRoom.title") }}
+        </div>
 
-      <!--        &lt;!&ndash; join room with token &ndash;&gt;-->
-      <!--        <form @submit.prevent="handleRoomSearch()">-->
-      <!--          <q-input-->
-      <!--            v-model="roomId"-->
-      <!--            borderless-->
-      <!--            dense-->
-      <!--            class="join_room__token_input"-->
-      <!--            :placeholder="$t('landing.joinRoom.enterCode')"-->
-      <!--            :prefix="$t('landing.joinRoom.url')"-->
-      <!--            :error="!!roomSearchError"-->
-      <!--            hide-bottom-space-->
-      <!--            no-error-icon-->
-      <!--          >-->
-      <!--            <template #append>-->
-      <!--              &lt;!&ndash; join room &ndash;&gt;-->
-      <!--              <q-btn-->
-      <!--                unelevated-->
-      <!--                :label="$t('landing.joinRoom.join')"-->
-      <!--                color="grey-2"-->
-      <!--                text-color="black"-->
-      <!--                size="12px"-->
-      <!--                no-caps-->
-      <!--                class="q-px-sm"-->
-      <!--                @click="handleRoomSearch()"-->
-      <!--              />-->
-      <!--            </template>-->
-      <!--          </q-input>-->
-      <!--        </form>-->
+        <!-- join room with token -->
+        <q-form @submit.prevent="handleRoomSearch()">
+          <q-input
+            v-model="roomId"
+            borderless
+            dense
+            class="join_room__token_input"
+            :placeholder="$t('landing.joinRoom.enterCode')"
+            :prefix="$t('landing.joinRoom.url')"
+            :error="!!roomSearchError"
+            hide-bottom-space
+            no-error-icon
+          >
+            <template #append>
+              <!-- join room -->
+              <q-btn
+                unelevated
+                :label="$t('landing.joinRoom.join')"
+                color="grey-2"
+                text-color="black"
+                size="12px"
+                no-caps
+                class="q-px-sm"
+                @click="handleRoomSearch()"
+              />
+            </template>
+          </q-input>
+        </q-form>
 
-      <!--        &lt;!&ndash; close join room toolbar &ndash;&gt;-->
-      <!--        <q-btn-->
-      <!--          flat-->
-      <!--          round-->
-      <!--          size="10px"-->
-      <!--          color="black"-->
-      <!--          icon="r_close"-->
-      <!--          class="absolute round-borders"-->
-      <!--          style="top: 50%; transform: translateY(-50%); right: 24px"-->
-      <!--          @click="showJoinRoomToolbar = false"-->
-      <!--        />-->
-      <!--      </q-toolbar>-->
+        <!-- close join room toolbar -->
+        <q-btn
+          flat
+          round
+          size="10px"
+          color="black"
+          icon="r_close"
+          class="absolute round-borders"
+          style="top: 50%; transform: translateY(-50%); right: 24px"
+          @click="showJoinRoomToolbar = false"
+        />
+      </q-toolbar>
     </q-header>
 
     <!-- heroes -->
@@ -1062,7 +1062,7 @@
 </template>
 
 <script setup>
-import { useMeta } from "quasar";
+import { useMeta, useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
 import { ROUTE_PATHS, SUBDOMAINS } from "src/constants/routes";
 import { computed, onMounted, ref } from "vue";
@@ -1093,6 +1093,8 @@ const appUrl =
  * variables
  */
 const { t } = useI18n({ useScope: "global" });
+
+const $q = useQuasar();
 
 const router = useRouter();
 
