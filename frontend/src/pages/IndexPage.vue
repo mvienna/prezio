@@ -175,53 +175,26 @@
             {{ $t("landing.benefits.description") }}
           </div>
 
-          <!-- sales -->
           <div class="betefit_cards_grid">
-            <q-card flat class="betefit_card">
-              <q-img src="assets/images/landing/benefit/sales.png" />
+            <template v-for="n in 3" :key="n">
+              <q-card flat class="betefit_card">
+                <q-card-section class="q-pa-lg">
+                  <q-img
+                    :src="`assets/images/landing/benefit/${$t(
+                      `landing.benefits.${n}.img`
+                    )}`"
+                  />
 
-              <q-card-section class="q-pa-lg">
-                <div class="text-h6 text-semibold q-mb-sm">
-                  {{ $t("landing.benefits.sales.title") }}
-                </div>
+                  <div class="text-h6 text-semibold q-mt-lg q-mb-sm">
+                    {{ $t(`landing.benefits.${n}.title`) }}
+                  </div>
 
-                <div class="text-grey-9">
-                  {{ $t("landing.benefits.sales.description") }}
-                </div>
-              </q-card-section>
-            </q-card>
-
-            <!-- experts & teams -->
-            <q-card flat class="betefit_card">
-              <q-img
-                src="assets/images/landing/benefit/experts_and_teams.png"
-              />
-
-              <q-card-section class="q-pa-lg">
-                <div class="text-h6 text-semibold q-mb-sm">
-                  {{ $t("landing.benefits.expertsAndTeams.title") }}
-                </div>
-
-                <div class="text-grey-9">
-                  {{ $t("landing.benefits.expertsAndTeams.description") }}
-                </div>
-              </q-card-section>
-            </q-card>
-
-            <!-- teachers -->
-            <q-card flat class="betefit_card">
-              <q-img src="assets/images/landing/benefit/teachers.png" />
-
-              <q-card-section class="q-pa-lg">
-                <div class="text-h6 text-semibold q-mb-sm">
-                  {{ $t("landing.benefits.teachers.title") }}
-                </div>
-
-                <div class="text-grey-9">
-                  {{ $t("landing.benefits.teachers.description") }}
-                </div>
-              </q-card-section>
-            </q-card>
+                  <div class="text-grey-9">
+                    {{ $t(`landing.benefits.${n}.description`) }}
+                  </div>
+                </q-card-section>
+              </q-card>
+            </template>
           </div>
         </div>
       </div>
@@ -1223,6 +1196,10 @@ useMeta({
   .betefit_card {
     background: $grey-1;
     border-radius: 1.25em;
+
+    .q-img {
+      border-radius: calc(1.25em - 24px / 2);
+    }
   }
 }
 
