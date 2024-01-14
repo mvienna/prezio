@@ -70,70 +70,66 @@
           </q-toolbar>
         </div>
       </div>
-
-      <!-- join room toolbar -->
-      <transition
-        appear
-        enter-active-class="animated fadeIn"
-        leave-active-class="animated fadeOut"
-      >
-        <q-toolbar
-          v-if="showJoinRoomToolbar && !showMobileMenu"
-          class="justify-center items-center q-pa-sm no-wrap join_room"
-          :class="$q.screen.lt.lg ? 'column' : 'row'"
-        >
-          <div
-            class="text-black"
-            :class="$q.screen.lt.lg ? 'q-mb-sm' : 'q-mr-sm'"
-          >
-            {{ $t("landing.joinRoom.title") }}
-          </div>
-
-          <!-- join room with token -->
-          <form @submit.prevent="handleRoomSearch()">
-            <q-input
-              v-model="roomId"
-              borderless
-              dense
-              class="join_room__token_input"
-              :class="{ 'join_room__token_input--error': !!roomSearchError }"
-              :placeholder="$t('landing.joinRoom.enterCode')"
-              :prefix="$t('landing.joinRoom.url')"
-              hide-bottom-space
-              no-error-icon
-            >
-              <template #append>
-                <!-- join room -->
-                <q-btn
-                  unelevated
-                  :label="$t('landing.joinRoom.join')"
-                  color="grey-2"
-                  text-color="black"
-                  size="12px"
-                  no-caps
-                  class="q-px-sm"
-                  :loading="isSearchingForRoom"
-                  @click="handleRoomSearch()"
-                />
-              </template>
-            </q-input>
-          </form>
-
-          <!-- close join room toolbar -->
-          <q-btn
-            v-if="!$q.screen.lt.lg"
-            flat
-            round
-            size="10px"
-            color="black"
-            icon="r_close"
-            class="absolute round-borders"
-            style="top: 50%; transform: translateY(-50%); right: 24px"
-            @click="showJoinRoomToolbar = false"
-          />
-        </q-toolbar>
-      </transition>
     </q-header>
+
+    <!-- join room toolbar -->
+    <q-slide-transition>
+      <q-toolbar
+        v-if="showJoinRoomToolbar"
+        class="justify-center items-center q-pa-sm no-wrap join_room"
+        :class="$q.screen.lt.lg ? 'column' : 'row'"
+      >
+        <div
+          class="text-black"
+          :class="$q.screen.lt.lg ? 'q-mb-sm' : 'q-mr-sm'"
+        >
+          {{ $t("landing.joinRoom.title") }}
+        </div>
+
+        <!-- join room with token -->
+        <form @submit.prevent="handleRoomSearch()">
+          <q-input
+            v-model="roomId"
+            borderless
+            dense
+            class="join_room__token_input"
+            :class="{ 'join_room__token_input--error': !!roomSearchError }"
+            :placeholder="$t('landing.joinRoom.enterCode')"
+            :prefix="$t('landing.joinRoom.url')"
+            hide-bottom-space
+            no-error-icon
+          >
+            <template #append>
+              <!-- join room -->
+              <q-btn
+                unelevated
+                :label="$t('landing.joinRoom.join')"
+                color="grey-2"
+                text-color="black"
+                size="12px"
+                no-caps
+                class="q-px-sm"
+                :loading="isSearchingForRoom"
+                @click="handleRoomSearch()"
+              />
+            </template>
+          </q-input>
+        </form>
+
+        <!-- close join room toolbar -->
+        <q-btn
+          v-if="!$q.screen.lt.lg"
+          flat
+          round
+          size="10px"
+          color="black"
+          icon="r_close"
+          class="absolute round-borders"
+          style="top: 50%; transform: translateY(-50%); right: 24px"
+          @click="showJoinRoomToolbar = false"
+        />
+      </q-toolbar>
+    </q-slide-transition>
 
     <transition
       appear
@@ -1408,8 +1404,6 @@ section {
     rgba(233, 238, 253, 1) 0%,
     rgba(249, 233, 243, 1) 100%
   );
-
-  border-top: 1px solid #e8e8eb;
 }
 
 ::v-deep(.join_room__token_input) {
