@@ -810,19 +810,14 @@
 
             <!-- basic -->
             <q-card flat bordered class="bg-white overflow-hidden">
-              <div
+              <q-card-section
                 style="
-                  position: absolute;
-                  top: 0;
-                  right: 0;
-                  width: 100%;
-                  height: 100%;
-                  background: linear-gradient(-150deg, #efb5b5 0%, #ebf0fb 75%);
-                  filter: blur(50px);
+                  background-image: url('/assets/images/landing/plan_background.png');
+                  background-size: 100%;
+                  background-position: top;
+                  margin-top: -1px;
                 "
-              ></div>
-
-              <q-card-section>
+              >
                 <!-- title -->
                 <div class="text-18 text-semibold">
                   {{ $t("landing.prices.plans.basic.title") }}
