@@ -3,16 +3,18 @@
     <Vue3Lottie
       v-if="results?.length"
       :animation-data="confettiJSON"
-      :height="canvasRect.height * 65 / 100"
+      :height="(canvasRect.height * 65) / 100"
       :width="canvasRect.width"
-      class="fixed "
+      class="fixed"
       :scale="2"
       style="z-index: 1"
-      :style="`top: ${canvasRect.top + (canvasRect.height * 20) / 100}px; left: ${canvasRect.left}px;`"
+      :style="`top: ${
+        canvasRect.top + (canvasRect.height * 20) / 100
+      }px; left: ${canvasRect.left}px;`"
     />
 
     <div
-      class="leaderboard scroll--hidden q-pa-sm "
+      class="leaderboard scroll--hidden q-pa-sm"
       :style="`top: ${
         canvasRect.top + (canvasRect.height * 20) / 100
       }px; left: ${canvasRect.left + (canvasRect.width * 10) / 100}px; width: ${
@@ -24,55 +26,47 @@
           <div
             v-for="(result, index) in results"
             :key="result?.participant?.id"
-            class="row no-wrap"
+            class="row no-wrap items-center text-18 text-weight-medium"
           >
-            <div class="column justify-center">
-              <q-btn
-                round
-                flat
-                style="border-radius: 50%; backdrop-filter: blur(4px)"
-                :class="
-                  averageBackgroundBrightness >= backgroundBrightnessThreshold
-                    ? 'text-black'
-                    : 'text-white'
-                "
-                :style="
-                  averageBackgroundBrightness >= backgroundBrightnessThreshold
-                    ? `background: rgba(255, 255, 255, 0.5)`
-                    : 'background: rgba(0, 0, 0, 0.5)'
-                "
-                class="q-mr-md"
-                size="12px"
-              >
-                {{ index + 1 }}
-              </q-btn>
+            <div
+              class="q-mr-md"
+              :class="
+                averageBackgroundBrightness >= backgroundBrightnessThreshold
+                  ? 'text-black'
+                  : 'text-white'
+              "
+            >
+              {{ index + 1 }}
+            </div>
+
+            <div v-if="!result.score" class="text-semibold ellipsis q-pa-md">
+              {{
+                result.participantData?.avatar +
+                " " +
+                result.participantData?.name
+              }}
             </div>
 
             <q-card
+              v-else
               flat
-              style="
-                border-radius: 16px !important;
-                overflow: hidden;
-                width: 100%;
-              "
+              style="border-radius: 6px !important; overflow: hidden"
+              :style="`width: ${(result.score * 100) / maxScore}%`"
               class="bg-white"
             >
               <div
                 class="absolute-left"
-                style="height: 100%; border-radius: 0"
+                style="height: 100%; width: 100%; border-radius: 0"
                 :style="`background: rgba(${Object.values(
                   colors.textToRgb(result.participantData?.color || '#FFFFFF')
-                ).join(',')}, 0.7); width: ${(result.score * 100) / maxScore}%`"
+                ).join(',')}, 0.7);`"
               ></div>
 
               <q-card-section
                 class="row no-wrap items-center"
                 :class="$q.screen.lt.lg ? 'q-pa-sm' : 'q-pa-md'"
               >
-                <div
-                  class="text-semibold ellipsis text-no-wrap"
-                  style="font-size: 1em"
-                >
+                <div class="text-semibold ellipsis text-no-wrap">
                   {{
                     result.participantData?.avatar +
                     " " +
