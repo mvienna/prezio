@@ -922,61 +922,18 @@
             {{ $t("landing.faq.title") }}
           </div>
 
-          <q-separator />
-
-          <q-expansion-item
-            group="faq"
-            :label="$t('landing.faq.list.one.title')"
-            expand-icon="r_add"
-          >
-            <q-card class="bg-grey-1">
-              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">
-                {{ $t("landing.faq.list.one.description") }}
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-
-          <q-separator />
-
-          <q-expansion-item
-            group="faq"
-            :label="$t('landing.faq.list.two.title')"
-            expand-icon="r_add"
-          >
-            <q-card class="bg-grey-1">
-              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">
-                {{ $t("landing.faq.list.two.description") }}
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-
-          <q-separator />
-
-          <q-expansion-item
-            group="faq"
-            :label="$t('landing.faq.list.three.title')"
-            expand-icon="r_add"
-          >
-            <q-card class="bg-grey-1">
-              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">
-                {{ $t("landing.faq.list.three.description") }}
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-
-          <q-separator />
-
-          <q-expansion-item
-            group="faq"
-            :label="$t('landing.faq.list.four.title')"
-            expand-icon="r_add"
-          >
-            <q-card class="bg-grey-1">
-              <q-card-section class="q-px-lg q-pb-lg q-pt-none text-16">
-                {{ $t("landing.faq.list.four.description") }}
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
+          <template v-for="n in 7" :key="n">
+            <q-expansion-item
+              group="faq"
+              :label="$t(`landing.faq.list.${n}.title`)"
+              expanded-icon="r_remove"
+              class="shadow-sm-hard"
+            >
+              <div class="text-grey-9 text-16 q-px-lg q-pb-lg">
+                {{ $t(`landing.faq.list.${n}.description`) }}
+              </div>
+            </q-expansion-item>
+          </template>
         </div>
       </div>
     </div>
@@ -1322,24 +1279,18 @@ useMeta({
 
 ::v-deep(.q-expansion-item) {
   margin: 16px 0;
+  border-radius: 12px;
+  border: 1px solid $grey-2;
+  outline: 1px solid transparent;
+  transition: 0.3s;
 
   .q-item {
-    padding-left: 0;
-    padding-right: 24px;
-    transition: 0.3s;
+    padding: 24px;
   }
 
   &.q-expansion-item--expanded {
-    .q-item {
-      padding: 24px;
-      background: $grey-1;
-      border-radius: 12px 12px 0 0;
-      padding-top: 24px;
-    }
-
-    .q-card {
-      border-radius: 0 0 12px 12px;
-    }
+    border-color: $primary !important;
+    outline-color: $primary !important;
   }
 
   .q-item__label {
@@ -1348,9 +1299,8 @@ useMeta({
   }
 
   &:hover {
-    .q-item__label {
-      text-decoration: underline;
-    }
+    border-color: $accent;
+    outline-color: $accent;
   }
 
   .q-focus-helper {

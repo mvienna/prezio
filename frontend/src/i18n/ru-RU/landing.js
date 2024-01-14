@@ -193,26 +193,41 @@ export default {
       title: "Вопросы и ответы",
 
       list: {
-        one: {
+        1: {
           title: "Почему я должен вам платить?",
           description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+            "Мы всего лишь небольшая команда энтузиастов, и ваша поддержка поможет нам развивать сервис, обеспечивать его стабильность и качество. Деньги пойдут на оборудование и сервера.",
         },
-        two: {
+        2: {
           title: "Будете ли вы хранить данные моей кредитной карты?",
           description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+            "Нет, мы не храним данные карт. Ваши личные данные, включая информацию о платежах, находятся в безопасности.",
         },
-        three: {
+        3: {
           title: "Могу ли я отменить в любое время?",
           description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+            "Да, вы можете отменить подписку в любой момент. Ваш комфорт и свобода в использовании сервиса для нас важны.",
         },
-        four: {
+        4: {
+          title: "Какие возможности у меня есть на бесплатном тарифе?",
+          description:
+            "На бесплатном тарифе вы можете подключить до 7 участников, наслаждаться основными функциями и убедиться, насколько Prezio удобен.",
+        },
+        5: {
+          title: "Где расположены сервера сервиса?",
+          description:
+            "Prezio - российский продукт. Наши сервера и разработчики находятся в России, и мы соблюдаем законодательство РФ. Ваши данные в безопасности.",
+        },
+        6: {
           title:
             "Что произойдет, когда моя презентация достигнет лимита участников?",
           description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+            "Тариф ограничивает количество участников. После превышения лимита новые участники не смогут подключиться, но это не повлияет на показ презентации.",
+        },
+        7: {
+          title: "Какая поддержка доступна для пользователей?",
+          description:
+            "Мы готовы помочь вам! У нас есть онлайн-чат и электронная почта для оперативной поддержки. Наша цель - сделать ваш опыт с Prezio максимально комфортным.",
         },
       },
     },
