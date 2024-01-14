@@ -214,8 +214,8 @@ const submit = async () => {
 };
 
 useMeta({
-  title: t("meta.auth.signup.title"),
-  titleTemplate: (title) => `${title} - ${t("meta.app")}`,
+  title: t("meta.auth.signup.title", { split: "|" }),
+  titleTemplate: (title) => title,
 
   // meta tags
   meta: {
@@ -236,7 +236,15 @@ useMeta({
       property: "og:title",
       // optional; similar to titleTemplate, but allows templating with other meta properties
       template(ogTitle) {
-        return `${ogTitle} - ${t("meta.app")}`;
+        return t("meta.auth.signup.ogTitle");
+      },
+    },
+    // note: for Open Graph type metadata you will need to use SSR, to ensure page is rendered by the server
+    ogDescription: {
+      property: "og:description",
+      // optional; similar to titleTemplate, but allows templating with other meta properties
+      template(ogDescription) {
+        return t("meta.auth.signup.ogDescription");
       },
     },
   },

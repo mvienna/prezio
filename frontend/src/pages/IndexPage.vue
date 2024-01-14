@@ -1205,8 +1205,8 @@ onMounted(() => {
  * meta
  */
 useMeta({
-  title: t("meta.app"),
-  titleTemplate: (title) => `${title} - ${t("meta.homepage.title")}`,
+  title: t("meta.homepage.title", { split: "|" }),
+  titleTemplate: (title) => title,
 
   // meta tags
   meta: {
@@ -1227,42 +1227,17 @@ useMeta({
       property: "og:title",
       // optional; similar to titleTemplate, but allows templating with other meta properties
       template(ogTitle) {
-        return `${ogTitle} - ${t("meta.homepage.title")}`;
+        return t("meta.homepage.ogTitle");
       },
     },
-  },
-
-  // CSS tags
-  link: {
-    material: {
-      rel: "stylesheet",
-      href: "https://fonts.googleapis.com/icon?family=Material+Icons",
+    // note: for Open Graph type metadata you will need to use SSR, to ensure page is rendered by the server
+    ogDescription: {
+      property: "og:description",
+      // optional; similar to titleTemplate, but allows templating with other meta properties
+      template(ogDescription) {
+        return t("meta.homepage.ogDescription");
+      },
     },
-  },
-
-  // JS tags
-  script: {
-    ldJson: {
-      type: "application/ld+json",
-      innerHTML: `{ "@context": "http://schema.org" }`,
-    },
-  },
-
-  // <html> attributes
-  htmlAttr: {
-    "xmlns:cc": "http://creativecommons.org/ns#", // generates <html xmlns:cc="http://creativecommons.org/ns#">,
-    empty: undefined, // generates <html empty>
-  },
-
-  // <body> attributes
-  bodyAttr: {
-    "action-scope": "xyz", // generates <body action-scope="xyz">
-    empty: undefined, // generates <body empty>
-  },
-
-  // <noscript> tags
-  noscript: {
-    default: "This is content for browsers with no JS (or disabled JS)",
   },
 });
 </script>
