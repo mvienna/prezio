@@ -6,10 +6,7 @@
           <q-toolbar class="q-pa-md row no-wrap items-center">
             <!-- logo -->
             <div class="row no-wrap">
-              <img
-                :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"
-                style="height: 38px"
-              />
+              <img src="/prezio.svg" style="height: 38px" />
 
               <div class="q-ml-sm column">
                 <q-badge
@@ -22,160 +19,271 @@
 
             <q-space />
 
-            <!-- hyperlinks -->
-            <a href="#features" class="text-16 link text-grey-9">
-              {{ $t("landing.hyperlinks.features") }}
-            </a>
-            <a href="#prices" class="text-16 link text-grey-9 q-mx-md">
-              {{ $t("landing.hyperlinks.prices") }}
-            </a>
-            <a href="#faq" class="text-16 link text-grey-9">
-              {{ $t("landing.hyperlinks.faq") }}
-            </a>
+            <template v-if="$q.screen.lt.lg">
+              <q-btn
+                flat
+                round
+                :icon="showMobileMenu ? 'r_close' : 'r_menu'"
+                class="round-borders"
+                color="black"
+                @click="showMobileMenu = !showMobileMenu"
+              />
+            </template>
 
-            <q-space />
+            <template v-else>
+              <!-- hyperlinks -->
+              <a href="#features" class="text-16 link text-grey-9">
+                {{ $t("landing.hyperlinks.features") }}
+              </a>
+              <a href="#prices" class="text-16 link text-grey-9 q-mx-md">
+                {{ $t("landing.hyperlinks.prices") }}
+              </a>
+              <a href="#faq" class="text-16 link text-grey-9">
+                {{ $t("landing.hyperlinks.faq") }}
+              </a>
 
-            <!-- login -->
-            <q-btn
-              outline
-              :label="$t('landing.auth.login')"
-              no-caps
-              size="16px"
-              class="q-mr-md q-px-md"
-              style="min-height: 38px"
-              :href="appUrl + ROUTE_PATHS.AUTH.LOGIN"
-            />
+              <q-space />
 
-            <!-- signup -->
-            <q-btn
-              unelevated
-              color="primary"
-              :label="$t('landing.auth.signup')"
-              no-caps
-              size="16px"
-              class="q-px-md"
-              style="min-height: 38px"
-              :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
-            />
+              <!-- login -->
+              <q-btn
+                outline
+                :label="$t('landing.auth.login')"
+                no-caps
+                size="16px"
+                class="q-mr-md q-px-md"
+                style="min-height: 38px"
+                :href="appUrl + ROUTE_PATHS.AUTH.LOGIN"
+              />
+
+              <!-- signup -->
+              <q-btn
+                unelevated
+                color="primary"
+                :label="$t('landing.auth.signup')"
+                no-caps
+                size="16px"
+                class="q-px-md"
+                style="min-height: 38px"
+                :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
+              />
+            </template>
           </q-toolbar>
         </div>
       </div>
 
       <!-- join room toolbar -->
-      <q-toolbar
-        v-if="showJoinRoomToolbar"
-        class="row no-wrap justify-center items-center q-pa-sm join_room"
+      <transition
+        appear
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
       >
-        <div class="text-black q-mr-sm">
-          {{ $t("landing.joinRoom.title") }}
-        </div>
-
-        <!-- join room with token -->
-        <form @submit.prevent="handleRoomSearch()">
-          <q-input
-            v-model="roomId"
-            borderless
-            dense
-            class="join_room__token_input"
-            :class="{ 'join_room__token_input--error': !!roomSearchError }"
-            :placeholder="$t('landing.joinRoom.enterCode')"
-            :prefix="$t('landing.joinRoom.url')"
-            hide-bottom-space
-            no-error-icon
+        <q-toolbar
+          v-if="showJoinRoomToolbar && !showMobileMenu"
+          class="justify-center items-center q-pa-sm no-wrap join_room"
+          :class="$q.screen.lt.lg ? 'column' : 'row'"
+        >
+          <div
+            class="text-black"
+            :class="$q.screen.lt.lg ? 'q-mb-sm' : 'q-mr-sm'"
           >
-            <template #append>
-              <!-- join room -->
-              <q-btn
-                unelevated
-                :label="$t('landing.joinRoom.join')"
-                color="grey-2"
-                text-color="black"
-                size="12px"
-                no-caps
-                class="q-px-sm"
-                :loading="isSearchingForRoom"
-                @click="handleRoomSearch()"
-              />
-            </template>
-          </q-input>
-        </form>
+            {{ $t("landing.joinRoom.title") }}
+          </div>
 
-        <!-- close join room toolbar -->
-        <q-btn
-          flat
-          round
-          size="10px"
-          color="black"
-          icon="r_close"
-          class="absolute round-borders"
-          style="top: 50%; transform: translateY(-50%); right: 24px"
-          @click="showJoinRoomToolbar = false"
-        />
-      </q-toolbar>
+          <!-- join room with token -->
+          <form @submit.prevent="handleRoomSearch()">
+            <q-input
+              v-model="roomId"
+              borderless
+              dense
+              class="join_room__token_input"
+              :class="{ 'join_room__token_input--error': !!roomSearchError }"
+              :placeholder="$t('landing.joinRoom.enterCode')"
+              :prefix="$t('landing.joinRoom.url')"
+              hide-bottom-space
+              no-error-icon
+            >
+              <template #append>
+                <!-- join room -->
+                <q-btn
+                  unelevated
+                  :label="$t('landing.joinRoom.join')"
+                  color="grey-2"
+                  text-color="black"
+                  size="12px"
+                  no-caps
+                  class="q-px-sm"
+                  :loading="isSearchingForRoom"
+                  @click="handleRoomSearch()"
+                />
+              </template>
+            </q-input>
+          </form>
+
+          <!-- close join room toolbar -->
+          <q-btn
+            v-if="!$q.screen.lt.lg"
+            flat
+            round
+            size="10px"
+            color="black"
+            icon="r_close"
+            class="absolute round-borders"
+            style="top: 50%; transform: translateY(-50%); right: 24px"
+            @click="showJoinRoomToolbar = false"
+          />
+        </q-toolbar>
+      </transition>
     </q-header>
 
-    <!-- heroes -->
-    <div class="container">
-      <div class="splitter q-py-xl q-my-xl">
-        <div class="column no-wrap">
-          <!-- title -->
-          <div class="text-h3 text-semibold" style="line-height: 1.2">
-            {{ $t("landing.heroes.title.static") }} <br />
-
-            <span
-              class="typewrite text-primary"
-              data-period="4000"
-              :data-type="dynamicTitles"
-            >
-              <span class="wrap"></span>
-            </span>
-          </div>
-
-          <!-- description -->
-          <div class="text-20 q-my-lg q-py-sm" style="max-width: 500px">
-            {{ $t("landing.heroes.description") }}
-          </div>
-
-          <q-space />
-
-          <!-- create presentation -->
-          <div>
-            <q-btn
-              :label="$t('landing.heroes.action')"
-              unelevated
-              color="primary"
-              no-caps
-              size="16px"
-              :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
-            />
-          </div>
+    <transition
+      appear
+      enter-active-class="animated fadeInDown"
+      leave-active-class="animated fadeOutUp"
+    >
+      <div
+        v-if="showMobileMenu"
+        class="fixed-full bg-white column no-wrap q-pt-xl"
+        style="z-index: 9"
+      >
+        <div class="column no-wrap q-gutter-lg q-py-xl q-px-lg">
+          <!-- hyperlinks -->
+          <a
+            href="#features"
+            class="text-16 link text-grey-9"
+            @click="showMobileMenu = false"
+          >
+            {{ $t("landing.hyperlinks.features") }}
+            <q-icon name="r_arrow_forward_ios" class="q-ml-xs" size="14px" />
+          </a>
+          <a
+            href="#prices"
+            class="text-16 link text-grey-9"
+            @click="showMobileMenu = false"
+          >
+            {{ $t("landing.hyperlinks.prices") }}
+            <q-icon name="r_arrow_forward_ios" class="q-ml-xs" size="14px" />
+          </a>
+          <a
+            href="#faq"
+            class="text-16 link text-grey-9"
+            @click="showMobileMenu = false"
+          >
+            {{ $t("landing.hyperlinks.faq") }}
+            <q-icon name="r_arrow_forward_ios" class="q-ml-xs" size="14px" />
+          </a>
         </div>
 
-        <!-- heroes illustration -->
-        <div>
-          <q-img
-            src="/assets/illustrations/heroes.svg"
-            alt="Prezio heroes illustration"
+        <q-space />
+
+        <div class="column no-wrap q-gutter-md q-py-lg q-px-lg">
+          <!-- login -->
+          <q-btn
+            outline
+            :label="$t('landing.auth.login')"
+            no-caps
+            size="16px"
+            class="q-px-md"
+            style="min-height: 48px"
+            :href="appUrl + ROUTE_PATHS.AUTH.LOGIN"
+          />
+
+          <!-- signup -->
+          <q-btn
+            unelevated
+            color="primary"
+            :label="$t('landing.auth.signup')"
+            no-caps
+            size="16px"
+            class="q-px-md"
+            style="min-height: 48px"
+            :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
           />
         </div>
       </div>
-    </div>
+    </transition>
+
+    <!-- heroes -->
+    <section>
+      <div class="container">
+        <div class="splitter">
+          <div class="column no-wrap">
+            <!-- title -->
+            <div
+              class="text-semibold"
+              :class="$q.screen.lt.lg ? 'text-center text-36' : 'text-h3'"
+              style="line-height: 1.2"
+            >
+              {{ $t("landing.heroes.title.static") }} <br />
+
+              <span
+                class="typewrite text-primary"
+                data-period="4000"
+                :data-type="dynamicTitles"
+              >
+                <span class="wrap"></span>
+              </span>
+            </div>
+
+            <!-- description -->
+            <div
+              class="text-20 q-my-lg q-py-sm"
+              :class="$q.screen.lt.lg ? 'text-center ' : ''"
+              :style="$q.screen.lt.lg ? 'margin: 24px auto;' : ''"
+              style="max-width: 500px"
+            >
+              {{ $t("landing.heroes.description") }}
+            </div>
+
+            <q-space />
+
+            <!-- create presentation -->
+            <div :class="$q.screen.lt.lg ? 'row justify-center' : ''">
+              <q-btn
+                :label="$t('landing.heroes.action')"
+                unelevated
+                color="primary"
+                no-caps
+                size="16px"
+                :href="appUrl + ROUTE_PATHS.AUTH.SIGNUP"
+              />
+            </div>
+          </div>
+
+          <!-- heroes illustration -->
+          <div :class="$q.screen.lt.lg ? 'q-px-lg q-mt-xl' : ''">
+            <q-img
+              src="/assets/illustrations/heroes.svg"
+              alt="Prezio heroes illustration"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- features -->
-    <section class="bg-white q-py-xl">
+    <section class="bg-white">
       <div class="container">
-        <div class="q-py-xl">
+        <div>
           <!-- title -->
-          <div class="text-h4 text-semibold text-center">
+          <div
+            class="text-h4 text-semibold text-center"
+            :class="$q.screen.lt.lg ? 'q-px-lg' : ''"
+          >
             {{ $t("landing.features.title") }}
           </div>
 
           <!-- description -->
-          <div class="text-center q-mt-3xs q-mb-xl">
+          <div
+            class="text-center q-mt-3xs q-mb-xl"
+            :class="$q.screen.lt.lg ? 'q-px-md' : ''"
+          >
             {{ $t("landing.features.description") }}
           </div>
 
-          <div class="betefit_cards_grid">
+          <div
+            class="betefit_cards_grid scroll--hidden"
+            :class="$q.screen.lt.lg ? 'q-px-lg' : ''"
+          >
             <template v-for="n in 3" :key="n">
               <q-card flat class="betefit_card">
                 <q-card-section>
@@ -203,12 +311,13 @@
     </section>
 
     <!-- mechanics -->
-    <section id="mechanics" class="q-py-xl">
+    <section id="mechanics">
       <div class="container">
-        <div class="q-py-xl">
+        <div class="q-px-lg">
           <!-- title -->
           <div
-            class="text-h4 text-semibold text-center q-pb-xl q-mb-xl"
+            class="text-h4 text-semibold text-center q-mb-xl"
+            :class="!$q.screen.lt.lg ? 'q-pb-xl' : ''"
             v-html="$t('landing.mechanics.title')"
           ></div>
 
@@ -265,8 +374,14 @@
               </div>
             </div>
 
-            <div class="row justify-end">
-              <div style="max-width: 500px; width: 100%">
+            <div
+              class="row justify-end"
+              :class="$q.screen.lt.lg ? 'q-mt-lg' : ''"
+            >
+              <div
+                style="width: 100%"
+                :style="!$q.screen.lt.lg ? 'max-width: 500px;' : ''"
+              >
                 <q-img
                   src="/assets/images/landing/mechanics/quiz_pick_answer.svg"
                   class="rounded-3xs"
@@ -277,7 +392,7 @@
 
           <!-- quiz - leaderboard -->
           <div class="splitter q-py-xl q-my-xl">
-            <div style="max-width: 500px; width: 100%">
+            <div v-if="!$q.screen.lt.lg" style="max-width: 500px; width: 100%">
               <q-img
                 src="/assets/images/landing/mechanics/quiz_leaderboard.svg"
                 class="rounded-3xs"
@@ -336,6 +451,13 @@
                 </div>
               </div>
             </div>
+
+            <div v-if="$q.screen.lt.lg" class="q-mt-lg" style="width: 100%">
+              <q-img
+                src="/assets/images/landing/mechanics/quiz_leaderboard.svg"
+                class="rounded-3xs"
+              />
+            </div>
           </div>
 
           <!-- quiz - wordcloud -->
@@ -391,8 +513,14 @@
               </div>
             </div>
 
-            <div class="row justify-end">
-              <div style="max-width: 500px; width: 100%">
+            <div
+              class="row justify-end"
+              :class="$q.screen.lt.lg ? 'q-mt-lg' : ''"
+            >
+              <div
+                style="width: 100%"
+                :style="!$q.screen.lt.lg ? 'max-width: 500px;' : ''"
+              >
                 <q-img
                   src="/assets/images/landing/mechanics/quiz_wordcloud.svg"
                   class="rounded-3xs"
@@ -405,16 +533,22 @@
     </section>
 
     <!-- tools -->
-    <section id="tools" class="bg-white q-py-xl">
+    <section id="tools" class="bg-white">
       <div class="container">
-        <div class="q-py-xl">
+        <div>
           <!-- title -->
-          <div class="text-h4 text-semibold text-center">
+          <div
+            class="text-h4 text-semibold text-center"
+            :class="$q.screen.lt.lg ? 'q-px-lg ' : ''"
+          >
             {{ $t("landing.tools.title") }}
           </div>
 
           <!-- description -->
-          <div class="row justify-center">
+          <div
+            class="row justify-center"
+            :class="$q.screen.lt.lg ? 'q-px-lg' : ''"
+          >
             <div
               class="text-center q-mt-3xs q-mb-xl text-16"
               style="max-width: 800px"
@@ -424,10 +558,15 @@
           </div>
 
           <!-- bento -->
-          <div>
-            <div class="row no-wrap">
+          <div :class="$q.screen.lt.lg ? 'q-px-lg' : ''">
+            <div
+              class="no-wrap"
+              :class="$q.screen.lt.lg ? 'column q-gutter-lg' : 'row'"
+            >
               <!-- studio -->
-              <div class="col-7 q-mr-lg q-pr-sm">
+              <div
+                :class="$q.screen.lt.lg ? 'col-12' : 'col-7 q-mr-lg q-pr-sm'"
+              >
                 <q-card flat class="bg-grey-1 rounded-xl">
                   <q-card-section class="q-pa-lg">
                     <div class="text-h4 text-semibold">
@@ -442,7 +581,10 @@
                 </q-card>
               </div>
 
-              <div class="col-5 column no-wrap items-stretch">
+              <div
+                class="column no-wrap items-stretch"
+                :class="$q.screen.lt.lg ? 'col-12' : 'col-5'"
+              >
                 <!-- stock -->
                 <div class="q-mb-lg q-pb-sm">
                   <q-card flat class="bg-grey-1 rounded-xl">
@@ -475,6 +617,7 @@
                     </div>
 
                     <q-img
+                      v-if="!$q.screen.lt.lg"
                       src="assets/images/landing/tools/sparkles.png"
                       style="
                         width: 120px;
@@ -486,7 +629,12 @@
                     />
                     <q-img
                       src="assets/images/landing/tools/unicorn.png"
-                      style="width: 140px; right: 24px; bottom: -30px"
+                      style="width: 140px"
+                      :style="
+                        $q.screen.lt.lg
+                          ? 'right: 0px; bottom: -8px; width: 70px;'
+                          : 'right: 24px; bottom: -30px; width: 140px;'
+                      "
                       class="absolute"
                     />
                   </q-card-section>
@@ -494,21 +642,36 @@
               </div>
             </div>
 
-            <div class="row no-wrap q-mt-lg q-pt-sm">
+            <div
+              class="no-wrap"
+              :class="
+                $q.screen.lt.lg
+                  ? 'column q-gutter-lg q-pt-lg'
+                  : 'row q-mt-lg q-pt-sm'
+              "
+            >
               <!-- online chat -->
-              <q-card flat class="col-5 bg-grey-1 rounded-xl">
+              <q-card
+                flat
+                class="bg-grey-1 rounded-xl"
+                :class="$q.screen.lt.lg ? 'col-12' : 'col-5'"
+              >
                 <q-card-section class="q-pa-lg">
                   <div class="text-h4 text-semibold">
                     {{ $t("landing.tools.bento.onlineChat.title") }}
                   </div>
-                  <div class="text-18 q-mt-3xs q-mb-lg">
+                  <div class="text-18 q-mt-3xs">
                     {{ $t("landing.tools.bento.onlineChat.description") }}
                   </div>
                 </q-card-section>
               </q-card>
 
               <!-- templates  -->
-              <div class="col-7 q-ml-lg q-pl-sm">
+              <div
+                :class="
+                  $q.screen.lt.lg ? 'col-12 q-mt-lg' : 'col-7 q-ml-lg q-pl-sm'
+                "
+              >
                 <q-card flat class="bg-grey-1 rounded-xl">
                   <q-card-section class="q-py-lg q-pl-lg q-pr-none">
                     <div class="q-pr-lg">
@@ -532,16 +695,19 @@
     </section>
 
     <!-- prices -->
-    <section id="prices" class="q-py-xl">
+    <section id="prices">
       <div class="container">
-        <div class="q-py-xl">
+        <div>
           <!-- title -->
           <div class="text-h4 text-semibold text-center">
             {{ $t("landing.prices.title") }}
           </div>
 
           <!-- description -->
-          <div class="row justify-center">
+          <div
+            class="row justify-center"
+            :class="$q.screen.lt.md ? 'q-px-lg' : ''"
+          >
             <div
               class="text-center q-mt-3xs q-mb-xl text-16"
               style="max-width: 800px"
@@ -551,7 +717,7 @@
           </div>
 
           <!-- plans -->
-          <div class="plans_grid">
+          <div class="plans_grid" :class="$q.screen.lt.md ? 'q-px-lg' : ''">
             <!-- free -->
             <q-card flat bordered class="bg-white">
               <q-card-section>
@@ -872,46 +1038,58 @@
           </div>
 
           <!-- contact -->
-          <div class="text-weight-medium text-16 text-center q-mt-lg">
+          <div
+            class="text-weight-medium text-16 text-center q-mt-lg"
+            :class="$q.screen.lt.md ? 'q-px-lg' : ''"
+          >
             {{ $t("landing.prices.contact.title") }}
-            <a href="mailto:hello@prezio.ru" class="link text-underline">
-              {{ $t("landing.prices.contact.mail") }}
-            </a>
-            .
+            <span
+              ><a href="mailto:hello@prezio.ru" class="link text-underline">
+                {{ $t("landing.prices.contact.mail") }} </a
+              >.
+            </span>
           </div>
         </div>
       </div>
     </section>
 
     <!-- faq -->
-    <section id="faq" class="bg-white q-py-xl">
+    <section id="faq" class="bg-white">
       <div class="container">
-        <div class="q-py-xl">
+        <div>
           <!-- title -->
           <div class="text-h4 text-semibold text-center q-mb-xl">
             {{ $t("landing.faq.title") }}
           </div>
 
-          <q-expansion-item
-            v-for="n in 7"
-            :key="n"
-            group="faq"
-            :label="$t(`landing.faq.list.${n}.title`)"
-            expanded-icon="r_remove"
-          >
-            <div class="text-grey-9 text-16 q-px-lg q-pb-lg">
-              {{ $t(`landing.faq.list.${n}.description`) }}
-            </div>
-          </q-expansion-item>
+          <div :class="$q.screen.lt.md ? 'q-px-lg' : ''">
+            <q-expansion-item
+              v-for="n in 7"
+              :key="n"
+              group="faq"
+              :label="$t(`landing.faq.list.${n}.title`)"
+              expanded-icon="r_remove"
+            >
+              <div class="text-grey-9 text-16 q-px-lg q-pb-lg">
+                {{ $t(`landing.faq.list.${n}.description`) }}
+              </div>
+            </q-expansion-item>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- promo -->
-    <section id="promo" class="promo relative-position overflow-hidden q-py-xl">
-      <div class="q-my-xl">
+    <section
+      id="promo"
+      class="promo relative-position overflow-hidden"
+      :class="$q.screen.lt.lg ? 'col-12' : ''"
+    >
+      <div>
         <!-- title -->
-        <div class="text-center text-36">{{ $t("landing.promo.title") }}</div>
+        <div class="text-center text-28 text-semibold">
+          {{ $t("landing.promo.title") }}
+        </div>
 
         <!-- description -->
         <div class="text-center text-16 q-mt-3xs">
@@ -944,14 +1122,11 @@
     </section>
 
     <!-- footer -->
-    <section id="footer">
-      <div class="q-py-xl q-my-lg">
+    <section id="footer" class="no-padding">
+      <div class="q-py-xl">
         <!-- logo -->
         <div class="row justify-center no-wrap">
-          <img
-            :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"
-            style="height: 30px"
-          />
+          <img src="/prezio.svg" style="height: 30px" />
 
           <div class="q-ml-sm column">
             <q-badge
@@ -971,7 +1146,8 @@
 
       <div class="footer">
         <div
-          class="q-py-lg q-my-sm q-px-xl q-mx-xl text-grey-9 text-12 row no-wrap"
+          class="q-py-lg q-my-sm text-grey-9 text-12 row no-wrap"
+          :class="$q.screen.lt.lg ? 'q-px-lg' : 'q-px-xl q-mx-xl'"
         >
           <div>
             © {{ new Date().getFullYear() }} Prezio -
@@ -1023,8 +1199,14 @@ const appUrl =
 const { t } = useI18n({ useScope: "global" });
 
 const $q = useQuasar();
+$q.screen.setSizes({ sm: 300, md: 848, lg: 1248 });
 
 const router = useRouter();
+
+/*
+ * menu
+ */
+const showMobileMenu = ref(false);
 
 /*
  * join room
@@ -1190,18 +1372,32 @@ document.addEventListener("DOMContentLoaded", () => {
   padding: 0;
 }
 
+section {
+  padding: 98px 0;
+
+  @media screen and (max-width: 800px) {
+    padding: 48px 0;
+  }
+}
+
 .splitter {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   align-items: center;
+
+  @media screen and (max-width: 1248px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .betefit_cards_grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  overflow-x: scroll;
 
   .betefit_card {
+    min-width: 335px;
     background: $grey-1;
     border-radius: 1.25em;
 
@@ -1244,9 +1440,18 @@ document.addEventListener("DOMContentLoaded", () => {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 
+  @media screen and (max-width: 1248px) {
+    grid-template-columns: 1fr;
+
+    .q-card {
+      margin: 0 auto;
+    }
+  }
+
   .q-card {
     align-self: start;
     border-radius: 12px;
+    max-width: 382px;
 
     .q-card__section {
       padding: 20px;
