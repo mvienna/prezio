@@ -809,7 +809,7 @@
               <q-card-section
                 style="
                   background-image: url('/assets/images/landing/plan_background.png');
-                  background-size: 100%;
+                  background-size: cover;
                   background-position: top;
                   margin-top: -1px;
                 "
