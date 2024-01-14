@@ -161,36 +161,38 @@
       </div>
     </div>
 
-    <!-- benefits -->
-    <div id="features" class="bg-white q-py-xl">
+    <!-- features -->
+    <section class="bg-white q-py-xl">
       <div class="container">
         <div class="q-py-xl">
           <!-- title -->
           <div class="text-h4 text-semibold text-center">
-            {{ $t("landing.benefits.title") }}
+            {{ $t("landing.features.title") }}
           </div>
 
           <!-- description -->
           <div class="text-center q-mt-3xs q-mb-xl">
-            {{ $t("landing.benefits.description") }}
+            {{ $t("landing.features.description") }}
           </div>
 
           <div class="betefit_cards_grid">
             <template v-for="n in 3" :key="n">
               <q-card flat class="betefit_card">
-                <q-card-section class="q-pa-lg">
+                <q-card-section>
                   <q-img
                     :src="`assets/images/landing/benefit/${$t(
-                      `landing.benefits.${n}.img`
+                      `landing.features.${n}.img`
                     )}`"
                   />
 
-                  <div class="text-h6 text-semibold q-mt-lg q-mb-sm">
-                    {{ $t(`landing.benefits.${n}.title`) }}
-                  </div>
+                  <div class="q-pa-sm q-mt-md">
+                    <div class="text-h6 text-semibold q-mb-sm">
+                      {{ $t(`landing.features.${n}.title`) }}
+                    </div>
 
-                  <div class="text-grey-9">
-                    {{ $t(`landing.benefits.${n}.description`) }}
+                    <div class="text-grey-9">
+                      {{ $t(`landing.features.${n}.description`) }}
+                    </div>
                   </div>
                 </q-card-section>
               </q-card>
@@ -198,10 +200,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- mechanics -->
-    <div id="mechanics" class="q-py-xl">
+    <section id="mechanics" class="q-py-xl">
       <div class="container">
         <div class="q-py-xl">
           <!-- title -->
@@ -400,10 +402,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- tools -->
-    <div id="tools" class="bg-white q-py-xl">
+    <section id="tools" class="bg-white q-py-xl">
       <div class="container">
         <div class="q-py-xl">
           <!-- title -->
@@ -425,7 +427,7 @@
           <div>
             <div class="row no-wrap">
               <!-- studio -->
-              <div style="min-width: 56.25%" class="q-mr-lg q-pr-sm">
+              <div class="col-7 q-mr-lg q-pr-sm">
                 <q-card flat class="bg-grey-1 rounded-xl">
                   <q-card-section class="q-pa-lg">
                     <div class="text-h4 text-semibold">
@@ -440,7 +442,7 @@
                 </q-card>
               </div>
 
-              <div class="column no-wrap items-stretch">
+              <div class="col-5 column no-wrap items-stretch">
                 <!-- stock -->
                 <div class="q-mb-lg q-pb-sm">
                   <q-card flat class="bg-grey-1 rounded-xl">
@@ -477,14 +479,14 @@
                       style="
                         width: 120px;
                         left: 50%;
-                        bottom: -40px;
+                        bottom: -30px;
                         transform: translateX(-50%);
                       "
                       class="absolute"
                     />
                     <q-img
                       src="assets/images/landing/tools/unicorn.png"
-                      style="width: 140px; right: 24px; bottom: -24px"
+                      style="width: 140px; right: 24px; bottom: -30px"
                       class="absolute"
                     />
                   </q-card-section>
@@ -494,7 +496,7 @@
 
             <div class="row no-wrap q-mt-lg q-pt-sm">
               <!-- online chat -->
-              <q-card flat class="bg-grey-1 rounded-xl">
+              <q-card flat class="col-5 bg-grey-1 rounded-xl">
                 <q-card-section class="q-pa-lg">
                   <div class="text-h4 text-semibold">
                     {{ $t("landing.tools.bento.onlineChat.title") }}
@@ -502,16 +504,11 @@
                   <div class="text-18 q-mt-3xs q-mb-lg">
                     {{ $t("landing.tools.bento.onlineChat.description") }}
                   </div>
-
-                  <q-img
-                    src="assets/images/landing/tools/avatars.png"
-                    style="width: 240px"
-                  />
                 </q-card-section>
               </q-card>
 
               <!-- templates  -->
-              <div style="min-width: 60%" class="q-ml-lg q-pl-sm">
+              <div class="col-7 q-ml-lg q-pl-sm">
                 <q-card flat class="bg-grey-1 rounded-xl">
                   <q-card-section class="q-py-lg q-pl-lg q-pr-none">
                     <div class="q-pr-lg">
@@ -532,10 +529,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- prices -->
-    <div id="prices" class="q-py-xl">
+    <section id="prices" class="q-py-xl">
       <div class="container">
         <div class="q-py-xl">
           <!-- title -->
@@ -884,10 +881,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- faq -->
-    <div id="faq" class="bg-white q-py-xl">
+    <section id="faq" class="bg-white q-py-xl">
       <div class="container">
         <div class="q-py-xl">
           <!-- title -->
@@ -895,24 +892,23 @@
             {{ $t("landing.faq.title") }}
           </div>
 
-          <template v-for="n in 7" :key="n">
-            <q-expansion-item
-              group="faq"
-              :label="$t(`landing.faq.list.${n}.title`)"
-              expanded-icon="r_remove"
-              class="shadow-sm-hard"
-            >
-              <div class="text-grey-9 text-16 q-px-lg q-pb-lg">
-                {{ $t(`landing.faq.list.${n}.description`) }}
-              </div>
-            </q-expansion-item>
-          </template>
+          <q-expansion-item
+            v-for="n in 7"
+            :key="n"
+            group="faq"
+            :label="$t(`landing.faq.list.${n}.title`)"
+            expanded-icon="r_remove"
+          >
+            <div class="text-grey-9 text-16 q-px-lg q-pb-lg">
+              {{ $t(`landing.faq.list.${n}.description`) }}
+            </div>
+          </q-expansion-item>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- promo -->
-    <div id="promo" class="promo relative-position overflow-hidden q-py-xl">
+    <section id="promo" class="promo relative-position overflow-hidden q-py-xl">
       <div class="q-my-xl">
         <!-- title -->
         <div class="text-center text-36">{{ $t("landing.promo.title") }}</div>
@@ -945,10 +941,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- footer -->
-    <div id="footer">
+    <section id="footer">
       <div class="q-py-xl q-my-lg">
         <!-- logo -->
         <div class="row justify-center no-wrap">
@@ -989,7 +985,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
   </q-page>
 </template>
 
@@ -1170,6 +1166,18 @@ useMeta({
     },
   },
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const offsetHeight = 60; // Height of your fixed header
+
+  if (window.location.hash) {
+    window.scrollTo(0, window.scrollY - offsetHeight);
+  }
+
+  window.addEventListener("hashchange", () => {
+    window.scrollTo(window.scrollX, window.scrollY - offsetHeight);
+  });
+});
 </script>
 
 <style scoped lang="scss">
@@ -1198,7 +1206,7 @@ useMeta({
     border-radius: 1.25em;
 
     .q-img {
-      border-radius: calc(1.25em - 24px / 2);
+      border-radius: calc(1.25em - 16px / 2);
     }
   }
 }
