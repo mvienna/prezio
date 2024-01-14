@@ -11,14 +11,14 @@
           :class="{ link: selectedFolder }"
           @click="handleFolderClose()"
         >
-          {{ $t("presentationsBrowser.presentationItem.title") }}
+          {{ $t("dashboard.presentationItem.title") }}
         </span>
         <span class="text-grey"> / </span>
         {{ selectedFolder.name }}
       </div>
 
       <div v-else class="text-h6 text-semibold">
-        {{ $t("presentationsBrowser.presentationItem.title") }}
+        {{ $t("dashboard.presentationItem.title") }}
       </div>
 
       <q-space />
@@ -128,9 +128,7 @@
                         ) + presentation?.id
                       "
                       no-caps
-                      :label="
-                        $t('presentationsBrowser.presentationItem.actions.edit')
-                      "
+                      :label="$t('dashboard.presentationItem.actions.edit')"
                     />
 
                     <!-- launch presentation -->
@@ -146,11 +144,7 @@
                         ) + presentation?.room?.token
                       "
                       icon="r_play_circle"
-                      :label="
-                        $t(
-                          'presentationsBrowser.presentationItem.actions.launch'
-                        )
-                      "
+                      :label="$t('dashboard.presentationItem.actions.launch')"
                     >
                     </q-btn>
                   </div>
@@ -242,11 +236,7 @@
                         <q-icon name="r_edit" size="16px" class="q-mr-sm" />
 
                         <div>
-                          {{
-                            $t(
-                              "presentationsBrowser.presentationItem.actions.rename"
-                            )
-                          }}
+                          {{ $t("dashboard.presentationItem.actions.rename") }}
                         </div>
                       </q-item>
 
@@ -266,7 +256,7 @@
                         <div>
                           {{
                             $t(
-                              "presentationsBrowser.presentationItem.actions.folder.addToFolder"
+                              "dashboard.presentationItem.actions.folder.addToFolder"
                             )
                           }}
                         </div>
@@ -333,7 +323,7 @@
                         <div>
                           {{
                             $t(
-                              "presentationsBrowser.presentationItem.actions.delete.title"
+                              "dashboard.presentationItem.actions.delete.title"
                             )
                           }}
                         </div>
@@ -347,12 +337,12 @@
                           icon-color="red"
                           :title="
                             $t(
-                              'presentationsBrowser.presentationItem.actions.delete.confirmation.title'
+                              'dashboard.presentationItem.actions.delete.confirmation.title'
                             )
                           "
                           :message="
                             $t(
-                              'presentationsBrowser.presentationItem.actions.delete.confirmation.message'
+                              'dashboard.presentationItem.actions.delete.confirmation.message'
                             )
                           "
                           confirm-btn-color="red"
@@ -451,17 +441,17 @@
     <div class="text-center q-mt-sm">
       <!-- title -->
       <div class="text-h6 text-semibold">
-        {{ $t("presentationsBrowser.noPresentations.title") }}
+        {{ $t("dashboard.noPresentations.title") }}
       </div>
 
       <!-- description -->
-      <div>{{ $t("presentationsBrowser.noPresentations.description") }}</div>
+      <div>{{ $t("dashboard.noPresentations.description") }}</div>
     </div>
 
     <div class="row justify-center q-mt-md">
       <q-btn
         outline
-        :label="$t('presentationsBrowser.newPresentation.title')"
+        :label="$t('dashboard.newPresentation.title')"
         icon="r_add"
         no-caps
         class="bg-white"
@@ -505,15 +495,15 @@ const { folders, selectedFolder, presentations, isLoading, pagination } =
  */
 const columns = [
   {
-    label: t("presentationsBrowser.sort.fields.name"),
+    label: t("dashboard.sort.fields.name"),
     value: "name",
   },
   {
-    label: t("presentationsBrowser.sort.fields.created_at"),
+    label: t("dashboard.sort.fields.created_at"),
     value: "created_at",
   },
   {
-    label: t("presentationsBrowser.sort.fields.updated_at"),
+    label: t("dashboard.sort.fields.updated_at"),
     value: "updated_at",
   },
 ];

@@ -8,11 +8,11 @@
         <!-- welcome -->
         <div>
           <div class="text-h5 text-semibold" style="font-size: 1.75rem">
-            {{ $t("presentationsBrowser.welcome.title", { name: user.name }) }}
+            {{ $t("dashboard.welcome.title", { name: user.name }) }}
           </div>
 
           <div class="text-grey-9 q-mt-xs">
-            {{ $t("presentationsBrowser.welcome.description") }}
+            {{ $t("dashboard.welcome.description") }}
           </div>
         </div>
 
@@ -28,10 +28,10 @@
 
             <div class="q-mx-md q-px-xs">
               <div class="text-semibold">
-                {{ $t("presentationsBrowser.upgrade.title") }}
+                {{ $t("dashboard.upgrade.title") }}
               </div>
               <div class="text-caption text-grey">
-                {{ $t("presentationsBrowser.upgrade.description") }}
+                {{ $t("dashboard.upgrade.description") }}
               </div>
             </div>
 
@@ -42,7 +42,7 @@
                 unelevated
                 color="primary"
                 no-caps
-                :label="$t('presentationsBrowser.upgrade.upgrade')"
+                :label="$t('dashboard.upgrade.upgrade')"
                 :to="ROUTE_PATHS.PROFILE.SUBSCRIPTION"
               />
             </div>
@@ -69,7 +69,7 @@
             <div
               :class="$q.screen.lt.md ? 'q-ml-sm' : 'q-ml-3xs q-mr-xs text-16'"
             >
-              {{ $t("presentationsBrowser.newPresentation.title") }}
+              {{ $t("dashboard.newPresentation.title") }}
             </div>
           </q-btn>
 
@@ -97,7 +97,7 @@
           >
             <q-icon name="icon-folder_add" />
             <div v-if="!$q.screen.lt.md" class="text-16 q-ml-md">
-              {{ $t("presentationsBrowser.newFolder.title") }}
+              {{ $t("dashboard.newFolder.title") }}
             </div>
           </q-btn>
 
@@ -127,7 +127,7 @@
           bg-color="white"
           style="width: 290px"
           :class="$q.screen.lt.md ? 'full-width q-mt-lg' : ''"
-          :placeholder="$t('presentationsBrowser.search.placeholder')"
+          :placeholder="$t('dashboard.search.placeholder')"
           debounce="500"
           clearable
           clear-icon="r_backspace"
@@ -142,10 +142,10 @@
       </div>
 
       <!-- folders -->
-      <PresentationsBrowserFolders />
+      <DashboardFolders />
 
       <!-- presentations table -->
-      <PresentationsBrowserPresentations
+      <DashboardPresentations
         @new-presentation="showNewPresentationDialog = true"
       />
     </div>
@@ -155,12 +155,12 @@
 <script setup>
 import { useAuthStore } from "stores/auth";
 import { storeToRefs } from "pinia";
-import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
-import PresentationsBrowserFolders from "components/presentationsBrowser/folders/PresentationsBrowserFolders.vue";
-import PresentationsBrowserPresentations from "components/presentationsBrowser/presentations/PresentationsBrowserPresentations.vue";
-import PresentationBrowserNewFolder from "components/presentationsBrowser/folders/PresentationsBrowserNewFolder.vue";
+import { onBeforeMount, ref } from "vue";
+import DashboardFolders from "components/dashboard/folders/DashboardFolders.vue";
+import DashboardPresentations from "components/dashboard/presentations/DashboardPresentations.vue";
+import PresentationBrowserNewFolder from "components/dashboard/folders/DashboardNewFolder.vue";
 import { usePresentationsStore } from "stores/presentations";
-import PresentationBrowserNewPresentation from "components/presentationsBrowser/presentations/PresentationsBrowserNewPresentation.vue";
+import PresentationBrowserNewPresentation from "components/dashboard/presentations/DashboardNewPresentation.vue";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import { ROUTE_PATHS } from "src/constants/routes";
 import { useRouter } from "vue-router";

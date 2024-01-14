@@ -3,7 +3,7 @@
   <div v-if="!selectedFolder && folders.length">
     <!-- title -->
     <div class="text-h6 text-semibold q-mb-md q-mt-lg">
-      {{ $t("presentationsBrowser.folderItem.title") }}
+      {{ $t("dashboard.folderItem.title") }}
     </div>
 
     <div class="folders_grid q-pb-sm">
@@ -71,9 +71,7 @@
               >
                 <q-icon name="r_edit" size="16px" class="q-mr-sm" />
                 <div>
-                  {{
-                    $t("presentationsBrowser.presentationItem.actions.rename")
-                  }}
+                  {{ $t("dashboard.presentationItem.actions.rename") }}
                 </div>
               </q-item>
 
@@ -90,9 +88,7 @@
                 <q-icon name="r_delete" class="q-mr-sm" size="xs" />
                 <div>
                   {{
-                    $t(
-                      "presentationsBrowser.presentationItem.actions.folder.delete.title"
-                    )
+                    $t("dashboard.presentationItem.actions.folder.delete.title")
                   }}
                 </div>
               </q-item>
@@ -103,12 +99,12 @@
                   icon-color="red"
                   :title="
                     $t(
-                      'presentationsBrowser.presentationItem.actions.folder.delete.confirmation.title'
+                      'dashboard.presentationItem.actions.folder.delete.confirmation.title'
                     )
                   "
                   :message="
                     $t(
-                      'presentationsBrowser.presentationItem.actions.folder.delete.confirmation.message'
+                      'dashboard.presentationItem.actions.folder.delete.confirmation.message'
                     )
                   "
                   confirm-btn-color="red"

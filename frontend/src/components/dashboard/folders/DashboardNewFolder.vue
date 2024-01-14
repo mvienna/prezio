@@ -15,13 +15,13 @@
 
         <!-- title -->
         <div class="text-16 text-semibold q-my-md">
-          {{ $t("presentationsBrowser.newFolder.title") }}
+          {{ $t("dashboard.newFolder.title") }}
         </div>
 
         <!-- name -->
         <q-input
           v-model="form.name"
-          :placeholder="$t('presentationsBrowser.newFolder.fields.name')"
+          :placeholder="$t('dashboard.newFolder.fields.name')"
           outlined
           dense
           autofocus
@@ -45,17 +45,11 @@
       <q-card-section class="q-pa-lg">
         <!-- add presentations -->
         <div class="text-16 text-semibold q-mb-sm">
-          {{
-            $t("presentationsBrowser.newFolder.fields.addPresentations.title")
-          }}
+          {{ $t("dashboard.newFolder.fields.addPresentations.title") }}
         </div>
 
         <div class="text-grey-9">
-          {{
-            $t(
-              "presentationsBrowser.newFolder.fields.addPresentations.description"
-            )
-          }}
+          {{ $t("dashboard.newFolder.fields.addPresentations.description") }}
         </div>
       </q-card-section>
 
@@ -143,7 +137,7 @@
           <q-btn
             outline
             no-caps
-            :label="$t('presentationsBrowser.newFolder.cancel')"
+            :label="$t('dashboard.newFolder.cancel')"
             class="q-py-sm"
             style="width: 100%"
             color="grey"
@@ -155,7 +149,7 @@
             unelevated
             no-caps
             :loading="isLoading"
-            :label="$t('presentationsBrowser.newFolder.create')"
+            :label="$t('dashboard.newFolder.create')"
             class="q-py-sm"
             style="width: 100%"
             color="primary"
@@ -198,7 +192,7 @@ const form = ref({
 // name validation
 const nameRule = (value) => {
   if (!value) {
-    return t("presentationsBrowser.newFolder.fields.errors.name.required");
+    return t("dashboard.newFolder.fields.errors.name.required");
   }
   return true;
 };

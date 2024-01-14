@@ -16,8 +16,7 @@ const routesApp = [
       },
       {
         path: ROUTE_PATHS.PRESENTATIONS_BROWSER,
-        component: () =>
-          import("pages/presentations/PresentationsBrowserPage.vue"),
+        component: () => import("pages/DashboardPage.vue"),
       },
     ],
   },

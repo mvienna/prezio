@@ -2,7 +2,7 @@ export default {
   /*
    * my presentations table
    */
-  presentationsBrowser: {
+  dashboard: {
     welcome: {
       title: "Привет, {name} 👋",
       description: "Управляй своими презентациями в едином пространстве",

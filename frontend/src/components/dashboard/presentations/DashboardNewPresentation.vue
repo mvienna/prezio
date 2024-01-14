@@ -15,13 +15,13 @@
 
         <!-- title -->
         <div class="text-16 text-semibold q-my-md">
-          {{ $t("presentationsBrowser.newPresentation.title") }}
+          {{ $t("dashboard.newPresentation.title") }}
         </div>
 
         <!-- name -->
         <q-input
           v-model="form.name"
-          :placeholder="$t('presentationsBrowser.newPresentation.fields.name')"
+          :placeholder="$t('dashboard.newPresentation.fields.name')"
           outlined
           autofocus
           dense
@@ -52,7 +52,7 @@
         >
           <template #selected v-if="!form.folder_id">
             <div class="text-grey">
-              {{ $t("presentationsBrowser.newPresentation.fields.folder") }}
+              {{ $t("dashboard.newPresentation.fields.folder") }}
             </div>
           </template>
 
@@ -85,7 +85,7 @@
       <!-- privacy -->
       <q-card-section class="q-pa-lg">
         <div class="text-grey-9 text-16 q-mb-md">
-          {{ $t("presentationsBrowser.newPresentation.fields.privacy.title") }}
+          {{ $t("dashboard.newPresentation.fields.privacy.title") }}
         </div>
 
         <q-card flat class="bg-grey-2">
@@ -99,18 +99,10 @@
 
             <div>
               <div>
-                {{
-                  $t(
-                    "presentationsBrowser.newPresentation.fields.privacy.private"
-                  )
-                }}
+                {{ $t("dashboard.newPresentation.fields.privacy.private") }}
               </div>
               <div class="q-mt-xs text-grey text-12">
-                {{
-                  $t(
-                    "presentationsBrowser.newPresentation.fields.privacy.description"
-                  )
-                }}
+                {{ $t("dashboard.newPresentation.fields.privacy.description") }}
               </div>
             </div>
 
@@ -128,7 +120,7 @@
           <q-btn
             outline
             no-caps
-            :label="$t('presentationsBrowser.newPresentation.cancel')"
+            :label="$t('dashboard.newPresentation.cancel')"
             class="q-py-sm"
             style="width: 100%"
             color="grey"
@@ -140,7 +132,7 @@
             unelevated
             no-caps
             :loading="isLoading"
-            :label="$t('presentationsBrowser.newPresentation.create')"
+            :label="$t('dashboard.newPresentation.create')"
             class="q-py-sm"
             style="width: 100%"
             color="primary"
@@ -183,9 +175,7 @@ const form = ref({
 // name validation
 const nameRule = (value) => {
   if (!value) {
-    return t(
-      "presentationsBrowser.newPresentation.fields.errors.name.required"
-    );
+    return t("dashboard.newPresentation.fields.errors.name.required");
   }
   return true;
 };
