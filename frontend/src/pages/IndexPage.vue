@@ -182,6 +182,13 @@
             {{ $t("landing.hyperlinks.faq") }}
             <q-icon name="r_arrow_forward_ios" class="q-ml-xs" size="14px" />
           </a>
+
+          <q-separator />
+
+          <a href="mailto:hello@prezio.ru" class="text-16 link text-black">
+            {{ $t("landing.hyperlinks.mail") }}
+            <span class="text-primary">hello@prezio.ru</span>
+          </a>
         </div>
 
         <q-space />

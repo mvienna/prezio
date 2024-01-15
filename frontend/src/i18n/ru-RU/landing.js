@@ -16,6 +16,7 @@ export default {
       features: "Возможности",
       prices: "Цены",
       faq: "Вопросы и ответ",
+      mail: "Написать нам на ",
     },
 
     heroes: {
