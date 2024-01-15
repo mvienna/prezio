@@ -35,12 +35,12 @@ export const SHAPES = [
    */
   {
     name: "circle",
-    icon: "r_circle",
+    icon: "o_circle",
     group: SHAPE_TYPES.simpleShape,
   },
   {
     name: "square",
-    icon: "r_square",
+    icon: "o_square",
     group: SHAPE_TYPES.simpleShape,
   },
   {
@@ -50,30 +50,30 @@ export const SHAPES = [
   },
   {
     name: "star",
-    icon: "r_grade",
+    icon: "o_grade",
     group: SHAPE_TYPES.simpleShape,
   },
   {
     name: "hexagon",
-    icon: "r_hexagon",
+    icon: "o_hexagon",
     group: SHAPE_TYPES.simpleShape,
     disabled: true,
   },
   {
     name: "label",
-    icon: "r_label",
+    icon: "o_label",
     group: SHAPE_TYPES.simpleShape,
     disabled: true,
   },
   {
     name: "label_important",
-    icon: "r_label_important",
+    icon: "icon-label_important",
     group: SHAPE_TYPES.simpleShape,
     disabled: true,
   },
   {
     name: "heart",
-    icon: "r_favorite",
+    icon: "icon-heart",
     group: SHAPE_TYPES.simpleShape,
     disabled: true,
   },
