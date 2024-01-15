@@ -12,7 +12,7 @@
         v-if="isDrawerRightPanelExpanded"
         class="presentation_studio__layout__drawer_right__content scroll--hidden"
       >
-        <div style="position: sticky; top: 0; z-index: 1" class="bg-white">
+        <div style="position: sticky; top: 0; z-index: 9" class="bg-white">
           <div
             class="row no-wrap items-center justify-between"
             style="padding: 10.5px 18px"
