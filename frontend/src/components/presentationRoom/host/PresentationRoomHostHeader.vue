@@ -113,7 +113,7 @@
           </span>
 
           <span class="text-semibold">
-            {{ host }}/room/<b class="text-uppercase">
+            {{ host }}/<b class="text-uppercase">
               {{ router.currentRoute.value.params.token }}
             </b>
           </span>
@@ -177,7 +177,7 @@
 
 <script setup>
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
-import { ROUTE_PATHS } from "src/constants/routes";
+import { ROUTE_PATHS, SUBDOMAINS } from "src/constants/routes";
 import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
@@ -225,9 +225,9 @@ const logo = computed(() => {
 /*
  * room link
  */
-const host = window.location.hostname;
+const host = window.location.hostname.replace(SUBDOMAINS.app + ".", "");
 const roomLink = computed(() => {
-  return `${window.location.hostname}/room/${router.currentRoute.value.params.token}`;
+  return `${host}/${router.currentRoute.value.params.token}`;
 });
 
 const isCopied = ref(false);

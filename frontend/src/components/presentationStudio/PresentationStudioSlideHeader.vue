@@ -42,7 +42,7 @@
           </span>
 
           <span class="text-semibold">
-            {{ host }}/room/<b class="text-uppercase">
+            {{ host }}/<b class="text-uppercase">
               {{ presentation.room.token }}
             </b>
           </span>
@@ -97,6 +97,7 @@ import {
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
+import { SUBDOMAINS } from "src/constants/routes";
 
 /*
  * variables
@@ -166,9 +167,9 @@ const onResize = () => {
 /*
  * room link
  */
-const host = window.location.hostname;
+const host = window.location.hostname.replace(SUBDOMAINS.app + ".", "");
 const roomLink = computed(() => {
-  return `${window.location.hostname}/room/${presentation.value.room.token}`;
+  return `${host}/${presentation.value.room.token}`;
 });
 
 const isCopied = ref(false);

@@ -33,12 +33,12 @@
 
     <!-- other option -->
     <div class="text-center text-semibold text-grey-6 text-20">
-      <!-- url -->
+      <!-- host -->
       <div>
         {{ $t("presentationRoom.invitationPanel.otherOption.url") }}
       </div>
-      <a :href="url" target="_blank" class="text-white text-semibold">
-        {{ url }}
+      <a :href="host" target="_blank" class="text-white text-semibold">
+        {{ host }}
       </a>
 
       <div class="q-my-sm">
@@ -57,6 +57,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
+import { SUBDOMAINS } from "src/constants/routes";
 
 /*
  * props
@@ -74,7 +75,7 @@ const { room, showRoomInvitationPanel } = storeToRefs(presentationsStore);
 /*
  * url
  */
-const url = window.location.host;
+const host = window.location.hostname.replace(SUBDOMAINS.app + ".", "");
 </script>
 
 <style scoped lang="scss">

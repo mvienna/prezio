@@ -72,7 +72,7 @@
                 style="width: 100%; border-radius: 8px"
               >
                 <span class="cursor-not-allowed text-grey-8">
-                  {{ host }}/room/
+                  {{ host }}/
                 </span>
                 <b class="cursor-pointer text-uppercase">
                   {{ presentation?.room?.token }}
@@ -209,6 +209,7 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 import { copyToClipboard } from "quasar";
 import { generateQrCode } from "src/helpers/qrUtils";
+import { SUBDOMAINS } from "src/constants/routes";
 
 const { t } = useI18n({ useScope: "global" });
 
@@ -253,13 +254,13 @@ const tab = ref(tabOptions[0].name);
 /*
  * room link
  */
-const host = window.location.origin;
+const host = window.location.origin.replace(SUBDOMAINS.app + ".", "");
 
 const isRoomLinkCopied = ref(false);
 const roomLinkCopiedTimeout = ref();
 
 const roomLink = computed(() => {
-  return `${host}/room/${presentation.value?.room?.token}`;
+  return `${host}/${presentation.value?.room?.token}`;
 });
 
 const handleRoomLinkCopyToClipboard = () => {
