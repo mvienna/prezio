@@ -254,7 +254,7 @@ import {
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
 import { QSpinnerIos, useMeta, useQuasar } from "quasar";
-import { ROUTE_PATHS } from "src/constants/routes";
+import { ROUTE_PATHS, SUBDOMAINS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useCanvasStore } from "stores/canvas";
@@ -1163,7 +1163,12 @@ watch(
 /*
  * qr
  */
-const qr = generateQrCode();
+const host = window.location.origin.replace(SUBDOMAINS.app + ".", "");
+const roomLink = computed(() => {
+  return `${host}/${router.currentRoute.value.params.token}`;
+});
+
+const qr = generateQrCode(undefined, undefined, roomLink.value);
 
 /*
  * meta

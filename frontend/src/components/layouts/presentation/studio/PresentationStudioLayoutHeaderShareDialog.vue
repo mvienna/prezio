@@ -255,13 +255,12 @@ const tab = ref(tabOptions[0].name);
  * room link
  */
 const host = window.location.origin.replace(SUBDOMAINS.app + ".", "");
-
-const isRoomLinkCopied = ref(false);
-const roomLinkCopiedTimeout = ref();
-
 const roomLink = computed(() => {
   return `${host}/${presentation.value?.room?.token}`;
 });
+
+const isRoomLinkCopied = ref(false);
+const roomLinkCopiedTimeout = ref();
 
 const handleRoomLinkCopyToClipboard = () => {
   clearTimeout(roomLinkCopiedTimeout.value);
