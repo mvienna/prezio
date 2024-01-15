@@ -1,7 +1,9 @@
 <template>
   <q-card flat>
     <q-form @submit.prevent="$emit('submit', form)">
-      <q-card-section class="q-pa-lg">
+      <q-card-section
+        :class="presentations?.length ? 'q-pa-lg' : 'q-px-lg q-pt-lg'"
+      >
         <!-- icon -->
         <q-btn
           color="background"
@@ -40,96 +42,98 @@
         </q-input>
       </q-card-section>
 
-      <q-separator />
+      <template v-if="presentations?.length">
+        <q-separator />
 
-      <q-card-section class="q-pa-lg">
-        <!-- add presentations -->
-        <div class="text-16 text-semibold q-mb-sm">
-          {{ $t("dashboard.newFolder.fields.addPresentations.title") }}
-        </div>
+        <q-card-section class="q-pa-lg">
+          <!-- add presentations -->
+          <div class="text-16 text-semibold q-mb-sm">
+            {{ $t("dashboard.newFolder.fields.addPresentations.title") }}
+          </div>
 
-        <div class="text-grey-9">
-          {{ $t("dashboard.newFolder.fields.addPresentations.description") }}
-        </div>
-      </q-card-section>
+          <div class="text-grey-9">
+            {{ $t("dashboard.newFolder.fields.addPresentations.description") }}
+          </div>
+        </q-card-section>
 
-      <div class="relative-position full-width">
-        <div
-          class="row no-wrap q-gutter-md scroll-x scroll--hidden q-px-lg"
-          ref="presentationCardsContainer"
-        >
-          <q-card
-            v-for="presentation in presentations"
-            :key="presentation.id"
-            flat
-            class="presentation_card"
-            :class="
-              form.presentationsIds?.includes(presentation.id)
-                ? 'presentation_card--active'
-                : ''
-            "
-            @click="handlePresentationCardToggle(presentation)"
+        <div class="relative-position full-width">
+          <div
+            class="row no-wrap q-gutter-md scroll-x scroll--hidden q-px-lg"
+            ref="presentationCardsContainer"
           >
-            <!-- presentation preview -->
-            <q-img
-              :src="
-                presentation.preview?.preview_url ||
-                presentation.preview?.original_url ||
-                presentation.preview
+            <q-card
+              v-for="presentation in presentations"
+              :key="presentation.id"
+              flat
+              class="presentation_card"
+              :class="
+                form.presentationsIds?.includes(presentation.id)
+                  ? 'presentation_card--active'
+                  : ''
               "
-            />
+              @click="handlePresentationCardToggle(presentation)"
+            >
+              <!-- presentation preview -->
+              <q-img
+                :src="
+                  presentation.preview?.preview_url ||
+                  presentation.preview?.original_url ||
+                  presentation.preview
+                "
+              />
 
-            <!-- presentation name -->
-            <div class="text-center ellipsis q-mt-sm text-12">
-              {{ presentation.name }}
+              <!-- presentation name -->
+              <div class="text-center ellipsis q-mt-sm text-12">
+                {{ presentation.name }}
+              </div>
+            </q-card>
+          </div>
+
+          <transition
+            appear
+            enter-active-class="animated fadeIn"
+            leave-active-class="animated fadeOut"
+          >
+            <div
+              v-if="isScrollLeftAvailable"
+              class="absolute q-ml-sm"
+              style="top: 50%; left: 0; transform: translateY(-50%)"
+            >
+              <q-btn
+                outline
+                color="grey"
+                round
+                size="10px"
+                icon="r_chevron_left"
+                class="round-borders bg-white"
+                @click="scrollNextLeft()"
+              />
             </div>
-          </q-card>
+          </transition>
+
+          <transition
+            appear
+            enter-active-class="animated fadeIn"
+            leave-active-class="animated fadeOut"
+          >
+            <div
+              v-if="isScrollRightAvailable"
+              class="absolute q-mr-sm"
+              style="top: 50%; right: 0; transform: translateY(-50%)"
+            >
+              <q-btn
+                outline
+                color="grey"
+                round
+                size="10px"
+                icon="r_chevron_right"
+                class="round-borders bg-white"
+                @click="scrollNextRight()"
+              />
+            </div>
+          </transition>
         </div>
-
-        <transition
-          appear
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-        >
-          <div
-            v-if="isScrollLeftAvailable"
-            class="absolute q-ml-sm"
-            style="top: 50%; left: 0; transform: translateY(-50%)"
-          >
-            <q-btn
-              outline
-              color="grey"
-              round
-              size="10px"
-              icon="r_chevron_left"
-              class="round-borders bg-white"
-              @click="scrollNextLeft()"
-            />
-          </div>
-        </transition>
-
-        <transition
-          appear
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-        >
-          <div
-            v-if="isScrollRightAvailable"
-            class="absolute q-mr-sm"
-            style="top: 50%; right: 0; transform: translateY(-50%)"
-          >
-            <q-btn
-              outline
-              color="grey"
-              round
-              size="10px"
-              icon="r_chevron_right"
-              class="round-borders bg-white"
-              @click="scrollNextRight()"
-            />
-          </div>
-        </transition>
-      </div>
+      </template>
 
       <q-card-section class="q-pa-lg">
         <div class="row no-wrap q-gutter-lg">
@@ -140,7 +144,6 @@
             :label="$t('dashboard.newFolder.cancel')"
             class="q-py-sm"
             style="width: 100%"
-            color="grey"
             @click="$emit('cancel')"
           />
 
@@ -262,6 +265,8 @@ onMounted(() => {
 
   .q-img {
     border: 1px solid $grey-2;
+    outline: 1px solid transparent;
+
     transition: 0.2s;
     border-radius: 8px;
     width: 100%;
@@ -271,12 +276,14 @@ onMounted(() => {
   &:hover {
     .q-img {
       border-color: $accent;
+      outline-color: $accent;
     }
   }
 
   &.presentation_card--active {
     .q-img {
       border-color: $primary;
+      outline-color: $primary;
     }
   }
 }

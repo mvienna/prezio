@@ -123,7 +123,6 @@
             :label="$t('dashboard.newPresentation.cancel')"
             class="q-py-sm"
             style="width: 100%"
-            color="grey"
             @click="$emit('cancel')"
           />
 
