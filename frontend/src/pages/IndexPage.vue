@@ -337,10 +337,7 @@
 
           <!-- quiz - pick answer -->
           <div class="splitter">
-            <div
-              :style="!$q.screen.lt.lg ? 'max-width: 500px' : ''"
-              :class="$q.screen.lt.lg ? 'q-mb-md' : ''"
-            >
+            <div :style="!$q.screen.lt.lg ? 'max-width: 500px' : ''">
               <!-- title -->
               <div class="text-30 text-semibold">
                 {{ $t("landing.mechanics.pickAnswer.title") }}
@@ -416,10 +413,7 @@
               />
             </div>
 
-            <div
-              class="row"
-              :class="$q.screen.lt.lg ? 'q-mb-md' : 'justify-end'"
-            >
+            <div class="row" :class="!$q.screen.lt.lg ? 'justify-end' : ''">
               <div :style="!$q.screen.lt.lg ? 'max-width: 500px' : ''">
                 <!-- title -->
                 <div class="text-30 text-semibold">
@@ -482,10 +476,7 @@
 
           <!-- quiz - wordcloud -->
           <div class="splitter">
-            <div
-              :style="!$q.screen.lt.lg ? 'max-width: 500px' : ''"
-              :class="$q.screen.lt.lg ? 'q-mb-md' : ''"
-            >
+            <div :style="!$q.screen.lt.lg ? 'max-width: 500px' : ''">
               <!-- title -->
               <div class="text-30 text-semibold">
                 {{ $t("landing.mechanics.wordcloud.title") }}
@@ -1177,8 +1168,10 @@
 
       <div class="footer">
         <div
-          class="q-py-lg q-my-sm text-12 row no-wrap"
-          :class="$q.screen.lt.xl ? 'q-px-lg' : 'q-px-xl q-mx-xl'"
+          class="q-py-lg text-12 no-wrap"
+          :class="`${$q.screen.lt.xl ? 'q-px-lg' : 'q-px-xl q-mx-xl'} ${
+            $q.screen.lt.md ? 'column items-center q-gutter-sm' : 'row q-my-sm'
+          }`"
         >
           <div>
             © {{ new Date().getFullYear() }} Prezio -
