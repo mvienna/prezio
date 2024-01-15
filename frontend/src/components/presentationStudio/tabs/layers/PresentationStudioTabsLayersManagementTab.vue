@@ -17,6 +17,11 @@
     >
       <template #item="{ element }">
         <q-card
+          v-if="
+            ![MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
+              element.mode
+            )
+          "
           flat
           class="layer cursor-pointer no-scroll"
           :class="`${
