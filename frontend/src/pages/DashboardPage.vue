@@ -207,7 +207,7 @@ const handleCreatingNewPresentation = (data) => {
  */
 const showNewFolderDialog = ref(false);
 
-useMeta({
+const metaOptions = {
   title: t("meta.dashboard.title", { split: "|" }),
   titleTemplate: (title) => title,
 
@@ -242,7 +242,16 @@ useMeta({
       },
     },
   },
-});
+};
+
+if (window.location.host === process.env.STAGING_HOST) {
+  metaOptions.meta.robots = {
+    name: "robots",
+    content: "noindex, nofollow",
+  };
+}
+
+useMeta(metaOptions);
 </script>
 
 <style scoped lang="scss">

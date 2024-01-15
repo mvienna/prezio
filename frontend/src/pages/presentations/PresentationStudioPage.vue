@@ -894,7 +894,10 @@ const connectToRoomChannels = () => {
   channel.listen("PresentationRoomTerminatedEvent", () => {});
 };
 
-useMeta({
+/*
+ * meta
+ */
+const metaOptions = {
   title: t("meta.presentation.studio.title"),
   titleTemplate: (title) => `${title} - ${t("meta.app")}`,
 
@@ -921,7 +924,16 @@ useMeta({
       },
     },
   },
-});
+};
+
+if (window.location.host === process.env.STAGING_HOST) {
+  metaOptions.meta.robots = {
+    name: "robots",
+    content: "noindex, nofollow",
+  };
+}
+
+useMeta(metaOptions);
 </script>
 
 <style scoped lang="scss">

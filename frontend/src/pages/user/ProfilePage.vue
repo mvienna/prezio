@@ -488,7 +488,10 @@ const deleteAccount = async () => {
   await authStore.logout();
 };
 
-useMeta({
+/*
+ * meta
+ */
+const metaOptions = {
   title: t("meta.profile.title"),
   titleTemplate: (title) => `${title} - ${t("meta.app")}`,
 
@@ -515,7 +518,16 @@ useMeta({
       },
     },
   },
-});
+};
+
+if (window.location.host === process.env.STAGING_HOST) {
+  metaOptions.meta.robots = {
+    name: "robots",
+    content: "noindex, nofollow",
+  };
+}
+
+useMeta(metaOptions);
 </script>
 
 <style scoped lang="scss">

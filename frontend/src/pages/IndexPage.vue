@@ -1369,7 +1369,7 @@ onMounted(() => {
 /*
  * meta
  */
-useMeta({
+const metaOptions = {
   title: t("meta.homepage.title", { split: "|" }),
   titleTemplate: (title) => title,
 
@@ -1404,19 +1404,16 @@ useMeta({
       },
     },
   },
-});
+};
 
-document.addEventListener("DOMContentLoaded", () => {
-  const offsetHeight = 60; // Height of your fixed header
+if (window.location.host === process.env.STAGING_HOST) {
+  metaOptions.meta.robots = {
+    name: "robots",
+    content: "noindex, nofollow",
+  };
+}
 
-  if (window.location.hash) {
-    window.scrollTo(0, window.scrollY - offsetHeight);
-  }
-
-  window.addEventListener("hashchange", () => {
-    window.scrollTo(window.scrollX, window.scrollY - offsetHeight);
-  });
-});
+useMeta(metaOptions);
 </script>
 
 <style scoped lang="scss">

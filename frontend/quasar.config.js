@@ -62,6 +62,8 @@ module.exports = configure(function (ctx) {
 
         FEEDBACK_FORM_URL: env.FEEDBACK_FORM_URL,
 
+        STAGING_HOST: env.FRONTEND_STAGING_APP_HOST,
+
         baseURL: env.APP_URL,
       },
 

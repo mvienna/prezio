@@ -368,7 +368,10 @@ const handleUpdatingPassword = async () => {
     });
 };
 
-useMeta({
+/*
+ * meta
+ */
+const metaOptions = {
   title: t("meta.auth.restorePassword.title", { split: "|" }),
   titleTemplate: (title) => title,
 
@@ -403,7 +406,16 @@ useMeta({
       },
     },
   },
-});
+};
+
+if (window.location.host === process.env.STAGING_HOST) {
+  metaOptions.meta.robots = {
+    name: "robots",
+    content: "noindex, nofollow",
+  };
+}
+
+useMeta(metaOptions);
 </script>
 
 <style scoped lang="scss">
