@@ -25,7 +25,7 @@
         v-if="
           presentation?.settings?.show_joining_instructions_bar || isHovered
         "
-        class="row no-wrap items-center justify-center ellipsis q-px-sm presentation_studio_slide_header__banner"
+        class="row no-wrap items-center justify-center ellipsis q-px-sm presentation_studio_slide_header__banner text-14"
         style="max-width: 70%"
         :style="`background: ${
           presentation?.settings?.show_joining_instructions_bar || isHovered
@@ -190,6 +190,5 @@ const copyRoomLinkToClipboard = () => {
 .presentation_studio_slide_header__banner {
   border-radius: 12px;
   height: 24px;
-  font-size: 0.8rem;
 }
 </style>

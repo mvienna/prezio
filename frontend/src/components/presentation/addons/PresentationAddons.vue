@@ -19,7 +19,7 @@
         canvasStore.computeRealSize(hoveredElement.width) / 2 -
         tooltipWidth / 2
       }px;`"
-      class="tooltip"
+      class="tooltip text-12"
     >
       {{ slideSettings.description }}
     </div>
@@ -243,6 +243,5 @@ const computeQuizTypeAnswerBarChartData = () => {
   border-radius: 8px;
   padding: 8px;
   max-width: 400px;
-  font-size: 12px;
 }
 </style>

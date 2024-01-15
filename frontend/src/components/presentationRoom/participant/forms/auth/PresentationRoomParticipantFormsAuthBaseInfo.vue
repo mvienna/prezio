@@ -17,7 +17,7 @@
         </div>
 
         <!-- title -->
-        <div class="form__title q-mb-md">
+        <div class="form__title q-mb-md text-center text-semibold text-20">
           {{ $t("presentationRoom.auth.form.title") }}
         </div>
 
@@ -36,7 +36,7 @@
         >
           <template #prepend>
             <q-btn flat round>
-              <div style="font-size: 24px">{{ form?.avatar }}</div>
+              <div class="text-24">{{ form?.avatar }}</div>
 
               <q-menu
                 transition-show="jump-down"
@@ -279,14 +279,6 @@ const submit = async () => {
     max-width: 500px;
     width: 100%;
   }
-
-  form {
-    .form__title {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-    }
-  }
 }
 
 ::v-deep(.q-field__control) {
@@ -361,7 +353,7 @@ const submit = async () => {
  * emojis
  */
 ::v-deep(.v3-sticky) {
-  font-size: 16px !important;
+  font-size: 1rem !important;
 }
 
 .v3-emoji-picker {

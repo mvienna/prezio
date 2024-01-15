@@ -14,7 +14,7 @@
     </div>
 
     <!-- title -->
-    <div class="room_invitation_panel__title q-mb-sm">
+    <div class="room_invitation_panel__title text-24 q-mb-sm">
       {{ $t("presentationRoom.invitationPanel.title") }}
     </div>
 
@@ -32,7 +32,7 @@
     </div>
 
     <!-- other option -->
-    <div class="text-center text-semibold text-grey-6" style="font-size: 22px">
+    <div class="text-center text-semibold text-grey-6 text-20">
       <!-- url -->
       <div>
         {{ $t("presentationRoom.invitationPanel.otherOption.url") }}
@@ -88,7 +88,6 @@ const url = window.location.host;
 
   .room_invitation_panel__title {
     font-weight: 800;
-    font-size: 24px;
     text-align: center;
     color: $white;
   }

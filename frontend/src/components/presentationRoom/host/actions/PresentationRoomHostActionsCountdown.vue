@@ -1,5 +1,5 @@
 <template>
-  <q-btn flat class="q-px-sm">
+  <q-btn flat class="q-px-sm" size="1rem">
     <q-circular-progress
       :value="timeLeftPercentage"
       size="28px"

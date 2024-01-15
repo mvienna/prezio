@@ -37,7 +37,7 @@
               no-error-icon
               :autofocus="n - 1 === 0"
               hide-bottom-space
-              class="verification_code"
+              class="verification_code text-16"
               :error="!!error"
               @update:model-value="
                 handleEmailVerificationCodeInputUpdate(n - 1)
@@ -198,7 +198,6 @@ const check = async () => {
 
 ::v-deep(.verification_code) {
   cursor: text;
-  font-size: 16px;
 
   .q-field__control {
     height: 48px;

@@ -9,7 +9,9 @@
         {{ participantData.avatar + " " + participantData.name }}
       </div>
 
-      <div class="waiting_for_quiz_start__title">
+      <div
+        class="waiting_for_quiz_start__title text-center text-30 text-semibold"
+      >
         {{ $t("presentationRoom.waitingForQuizStart.title") }}
       </div>
 
@@ -189,9 +191,6 @@ const participantData = computed(() => {
  */
 .waiting_for_quiz_start__title {
   z-index: 2;
-  font-size: 2em;
-  font-weight: 600;
-  text-align: center;
   animation: pulse 2s infinite ease-in-out;
 }
 

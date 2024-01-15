@@ -8,7 +8,7 @@
                 font-family: 'Inter', sans-serif;
                 background: #F8F8F8;
                 margin: 48px 8px;
-                font-size: 14px;
+                font-size: 1rem;
             }
 
             .logo {
@@ -43,7 +43,7 @@
             }
 
             .verification-code {
-                font-size: 2em;
+                font-size: 2rem;
                 font-weight: 600;
                 text-align: center;
                 letter-spacing: 8px;
@@ -55,7 +55,7 @@
             }
 
             .instructions {
-                font-size: 1em;
+                font-size: 1rem;
                 color: #0A090B;
             }
             .footer {

@@ -10,8 +10,7 @@
 
               <div class="q-ml-sm column">
                 <q-badge
-                  class="bg-grey-2 text-grey-7"
-                  style="font-size: 10px; margin-top: 3px"
+                  class="bg-grey-2 text-grey-7 text-8"
                   :label="VERSION"
                 />
               </div>
@@ -1158,11 +1157,7 @@
           <img src="/prezio.svg" style="height: 30px" />
 
           <div class="q-ml-sm column">
-            <q-badge
-              class="bg-grey-2 text-grey-7"
-              style="font-size: 10px; margin-top: 3px"
-              :label="VERSION"
-            />
+            <q-badge class="bg-grey-2 text-grey-7 text-8" :label="VERSION" />
           </div>
         </div>
 
@@ -1537,7 +1532,7 @@ section {
 
   .q-item__label {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 1.125rem;
   }
 
   &:hover {

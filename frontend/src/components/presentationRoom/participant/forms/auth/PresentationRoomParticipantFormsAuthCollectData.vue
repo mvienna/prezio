@@ -19,7 +19,7 @@
         <!-- title -->
         <div
           v-if="presentation?.settings?.participants_info_form_title"
-          class="form__title q-mb-md"
+          class="form__title q-mb-md text-center text-semibold text-20"
         >
           {{ presentation?.settings?.participants_info_form_title }}
         </div>
@@ -180,14 +180,6 @@ const submit = async () => {
   .container {
     max-width: 500px;
     width: 100%;
-  }
-
-  form {
-    .form__title {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-    }
   }
 }
 

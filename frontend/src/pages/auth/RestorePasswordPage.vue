@@ -438,7 +438,7 @@ useMeta(metaOptions);
 }
 
 ::v-deep(.verification_code) {
-  font-size: 16px;
+  font-size: 1rem;
   cursor: text;
 
   .q-field__control {

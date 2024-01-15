@@ -545,12 +545,6 @@ useMeta(metaOptions);
   }
 
   form {
-    .form__title {
-      text-align: center;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
     .form__field__label {
       margin-bottom: 8px;
       padding-left: 12px;

@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-end q-pr-sm">
     <div
-      class="room_data row no-wrap items-center justify-center"
+      class="room_data text-16 row no-wrap items-center justify-center"
       :class="`text-${
         averageBackgroundBrightness >= backgroundBrightnessThreshold
           ? 'black'
@@ -178,7 +178,6 @@ const onResize = () => {
   height: 24px;
   margin-top: calc(-24px - 16px);
   margin-right: 8px;
-  font-size: 0.8em;
   transition: 0.2s;
 
   .room_data__participants_count {
@@ -191,7 +190,6 @@ const onResize = () => {
     }
 
     .room_data__participants_count__limit {
-      font-size: 0.85em;
       opacity: 0.7;
     }
   }

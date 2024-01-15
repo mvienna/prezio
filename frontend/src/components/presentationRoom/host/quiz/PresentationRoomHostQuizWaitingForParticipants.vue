@@ -12,7 +12,9 @@
     :class="`text-${textColor}`"
   >
     <!-- title -->
-    <div>{{ $t("presentationRoom.waitingForParticipants.title") }}</div>
+    <div class="text-semibold text-h4">
+      {{ $t("presentationRoom.waitingForParticipants.title") }}
+    </div>
 
     <!-- participants count -->
     <div v-if="participants.length" style="opacity: 0.5">
@@ -356,11 +358,6 @@ text {
   transform: translate(-50%, 0) scale(1);
   text-align: center;
   animation: pulse 2s infinite ease-in-out;
-
-  div:first-child {
-    font-size: 2.5em;
-    font-weight: 600;
-  }
 }
 
 @keyframes pulse {

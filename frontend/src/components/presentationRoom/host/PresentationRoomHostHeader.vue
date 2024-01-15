@@ -105,8 +105,7 @@
       >
         <!-- link -->
         <div
-          class="ellipsis room_link"
-          style="font-size: 1.25em"
+          class="ellipsis room_link text-20"
           @click="copyRoomLinkToClipboard()"
         >
           <span v-if="!$q.screen.lt.sm" class="text-grey-4 q-mr-xs">

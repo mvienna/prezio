@@ -128,7 +128,6 @@ const { room, slide, slideSettings, presentation } =
 
     .q-btn {
       border-radius: 16px;
-      font-size: 1em;
       transition: 0.2s;
       height: 46px;
     }
@@ -163,7 +162,6 @@ const { room, slide, slideSettings, presentation } =
       height: 50px;
 
       .q-btn {
-        font-size: 0.8em;
         height: 36px;
       }
     }

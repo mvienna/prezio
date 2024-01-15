@@ -1,5 +1,5 @@
 <template>
-  <div class="presentation_toolbar__bottom row no-wrap items-center">
+  <div class="presentation_toolbar__bottom text-12 row no-wrap items-center">
     <q-input
       v-model="note"
       type="textarea"
@@ -30,7 +30,6 @@ const note = ref();
   z-index: 2;
   bottom: 0;
   left: 0;
-  font-size: 12px;
   width: 100%;
   background: $white;
   border-top: 1px solid $grey-2;

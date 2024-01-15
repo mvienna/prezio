@@ -7,7 +7,7 @@
       >
         <!-- welcome -->
         <div>
-          <div class="text-h5 text-semibold" style="font-size: 1.75rem">
+          <div class="text-h5 text-semibold text-28">
             {{ $t("dashboard.welcome.title", { name: user.name }) }}
           </div>
 

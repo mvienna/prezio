@@ -100,10 +100,7 @@
                   class="row no-wrap items-center"
                   :class="$q.screen.lt.lg ? 'q-pa-sm' : 'q-pa-md'"
                 >
-                  <div
-                    class="text-semibold ellipsis text-no-wrap"
-                    style="font-size: 1em"
-                  >
+                  <div class="text-semibold ellipsis text-no-wrap text-16">
                     {{
                       result.participantData?.avatar +
                       " " +

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="room_data row no-wrap"
+    class="room_data text-14 row no-wrap"
     :class="`${
       isHost ? 'room_data__host' : 'room_data__participant q-mt-md'
     } text-${isHost ? 'white' : textColor}`"
@@ -164,7 +164,6 @@ watch(
   padding: 16px;
   z-index: 2;
   height: 62px;
-  font-size: 1em;
   transition: 0.2s;
 
   &.room_data__host {
@@ -190,7 +189,6 @@ watch(
     }
 
     .room_data__participants_count__limit {
-      font-size: 0.85em;
       opacity: 0.7;
     }
   }
@@ -199,7 +197,6 @@ watch(
 @media screen and (max-width: 1023px) {
   .room_data {
     height: 50px;
-    font-size: 0.8em;
 
     &.room_data__host {
       right: 8px;

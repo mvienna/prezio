@@ -132,9 +132,8 @@
               <q-btn
                 unelevated
                 no-caps
+                class="rounded-md text-16"
                 style="
-                  border-radius: 16px;
-                  font-size: 1em;
                   transition: 0.2s;
                   height: 46px;
                   background: rgba(0, 0, 0, 0.5);
@@ -333,13 +332,13 @@ const otherAnswersToAccept = computed(() => {
 </script>
 
 <style lang="scss">
-.quiz_countdown__title {
-  z-index: 2;
-  font-size: 2em;
-  font-weight: 600;
-  text-align: center;
-  animation: pulse 2s infinite ease-in-out;
-}
+//.quiz_countdown__title {
+//  z-index: 2;
+//  font-size: 2em;
+//  font-weight: 600;
+//  text-align: center;
+//  animation: pulse 2s infinite ease-in-out;
+//}
 
 @keyframes pulse {
   from {

@@ -14,11 +14,7 @@
             />
 
             <div class="q-ml-sm column">
-              <q-badge
-                class="bg-grey-2 text-grey-7"
-                style="font-size: 10px; margin-top: 3px"
-                :label="VERSION"
-              />
+              <q-badge class="bg-grey-2 text-grey-7 text-8" :label="VERSION" />
             </div>
           </div>
         </a>

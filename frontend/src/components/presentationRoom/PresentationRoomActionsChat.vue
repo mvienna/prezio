@@ -134,7 +134,7 @@
         <q-space />
 
         <q-form
-          class="row no-wrap q-gutter-sm chat__form"
+          class="row no-wrap q-gutter-sm chat__form text-caption"
           @submit="sendNewMessage()"
         >
           <q-input
@@ -311,7 +311,6 @@ watch(
     .q-btn {
       min-height: 32px;
       min-width: 32px;
-      font-size: 10px;
     }
   }
 
