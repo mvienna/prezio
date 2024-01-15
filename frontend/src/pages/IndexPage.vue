@@ -19,7 +19,7 @@
 
             <q-space />
 
-            <template v-if="$q.screen.lt.lg">
+            <template v-if="$q.screen.lt.xl">
               <q-btn
                 flat
                 round
@@ -32,13 +32,13 @@
 
             <template v-else>
               <!-- hyperlinks -->
-              <a href="#features" class="text-16 link text-grey-9">
+              <a href="#features" class="text-16 link text-black">
                 {{ $t("landing.hyperlinks.features") }}
               </a>
-              <a href="#prices" class="text-16 link text-grey-9 q-mx-md">
+              <a href="#prices" class="text-16 link text-black q-mx-md">
                 {{ $t("landing.hyperlinks.prices") }}
               </a>
-              <a href="#faq" class="text-16 link text-grey-9">
+              <a href="#faq" class="text-16 link text-black">
                 {{ $t("landing.hyperlinks.faq") }}
               </a>
 
@@ -77,11 +77,11 @@
       <q-toolbar
         v-if="showJoinRoomToolbar"
         class="justify-center items-center q-pa-sm no-wrap join_room"
-        :class="$q.screen.lt.lg ? 'column' : 'row'"
+        :class="$q.screen.lt.xl ? 'column' : 'row'"
       >
         <div
           class="text-black"
-          :class="$q.screen.lt.lg ? 'q-mb-sm' : 'q-mr-sm'"
+          :class="$q.screen.lt.xl ? 'q-mb-sm' : 'q-mr-sm'"
         >
           {{ $t("landing.joinRoom.title") }}
         </div>
@@ -118,7 +118,7 @@
 
         <!-- close join room toolbar -->
         <q-btn
-          v-if="!$q.screen.lt.lg"
+          v-if="!$q.screen.lt.xl"
           flat
           round
           size="10px"
@@ -138,14 +138,14 @@
     >
       <div
         v-if="showMobileMenu"
-        class="fixed-full bg-white column no-wrap q-pt-xl"
-        style="z-index: 9"
+        class="fixed-full bg-white column no-wrap"
+        style="z-index: 9999999999999; margin-top: 75px"
       >
-        <div class="column no-wrap q-gutter-lg q-py-xl q-px-lg">
+        <div class="column no-wrap q-gutter-lg q-py-lg q-px-lg">
           <!-- hyperlinks -->
           <a
             href="#features"
-            class="text-16 link text-grey-9"
+            class="text-16 link text-black"
             @click="showMobileMenu = false"
           >
             {{ $t("landing.hyperlinks.features") }}
@@ -153,7 +153,7 @@
           </a>
           <a
             href="#prices"
-            class="text-16 link text-grey-9"
+            class="text-16 link text-black"
             @click="showMobileMenu = false"
           >
             {{ $t("landing.hyperlinks.prices") }}
@@ -161,7 +161,7 @@
           </a>
           <a
             href="#faq"
-            class="text-16 link text-grey-9"
+            class="text-16 link text-black"
             @click="showMobileMenu = false"
           >
             {{ $t("landing.hyperlinks.faq") }}
@@ -206,7 +206,7 @@
             <!-- title -->
             <div
               class="text-semibold"
-              :class="$q.screen.lt.lg ? 'text-center text-36' : 'text-h3'"
+              :class="$q.screen.lt.xl ? 'text-center text-h4' : 'text-h3'"
               style="line-height: 1.2"
             >
               {{ $t("landing.heroes.title.static") }} <br />
@@ -223,8 +223,8 @@
             <!-- description -->
             <div
               class="text-20 q-my-lg q-py-sm"
-              :class="$q.screen.lt.lg ? 'text-center ' : ''"
-              :style="$q.screen.lt.lg ? 'margin: 24px auto;' : ''"
+              :class="$q.screen.lt.xl ? 'text-center ' : ''"
+              :style="$q.screen.lt.xl ? 'margin: 24px auto;' : ''"
               style="max-width: 500px"
             >
               {{ $t("landing.heroes.description") }}
@@ -233,7 +233,7 @@
             <q-space />
 
             <!-- create presentation -->
-            <div :class="$q.screen.lt.lg ? 'row justify-center' : ''">
+            <div :class="$q.screen.lt.xl ? 'row justify-center' : ''">
               <q-btn
                 :label="$t('landing.heroes.action')"
                 unelevated
@@ -246,7 +246,7 @@
           </div>
 
           <!-- heroes illustration -->
-          <div :class="$q.screen.lt.lg ? 'q-px-lg q-mt-xl' : ''">
+          <div :class="$q.screen.lt.xl ? 'q-px-lg q-mt-xl' : ''">
             <q-img
               src="/assets/illustrations/heroes.svg"
               alt="Prezio heroes illustration"
@@ -263,28 +263,31 @@
           <!-- title -->
           <div
             class="text-h4 text-semibold text-center"
-            :class="$q.screen.lt.lg ? 'q-px-lg' : ''"
+            :class="$q.screen.lt.xl ? 'q-px-lg' : ''"
           >
             {{ $t("landing.features.title") }}
           </div>
 
           <!-- description -->
-          <div
-            class="text-center q-mt-3xs q-mb-xl"
-            :class="$q.screen.lt.lg ? 'q-px-md' : ''"
-          >
-            {{ $t("landing.features.description") }}
+          <div class="row justify-center">
+            <div
+              class="text-center q-mt-3xs q-mb-xl text-grey-9"
+              :class="$q.screen.lt.xl ? 'q-px-md text-18' : 'text-20'"
+              style="max-width: 900px"
+            >
+              {{ $t("landing.features.description") }}
+            </div>
           </div>
 
           <div
-            class="betefit_cards_grid scroll--hidden"
-            :class="$q.screen.lt.lg ? 'q-px-lg' : ''"
+            class="feature_cards_grid scroll--hidden"
+            :class="$q.screen.lt.xl ? 'q-px-lg' : ''"
           >
             <template v-for="n in 3" :key="n">
-              <q-card flat class="betefit_card">
+              <q-card flat class="feature_card">
                 <q-card-section>
                   <q-img
-                    :src="`assets/images/landing/benefit/${$t(
+                    :src="`assets/images/landing/features/${$t(
                       `landing.features.${n}.img`
                     )}`"
                   />
@@ -294,7 +297,7 @@
                       {{ $t(`landing.features.${n}.title`) }}
                     </div>
 
-                    <div class="text-grey-9">
+                    <div class="">
                       {{ $t(`landing.features.${n}.description`) }}
                     </div>
                   </div>
@@ -319,9 +322,12 @@
 
           <!-- quiz - pick answer -->
           <div class="splitter">
-            <div style="max-width: 500px">
+            <div
+              :style="!$q.screen.lt.lg ? 'max-width: 500px' : ''"
+              :class="$q.screen.lt.lg ? 'q-mb-md' : ''"
+            >
               <!-- title -->
-              <div class="text-h4 text-semibold">
+              <div class="text-30 text-semibold">
                 {{ $t("landing.mechanics.pickAnswer.title") }}
               </div>
 
@@ -395,10 +401,13 @@
               />
             </div>
 
-            <div class="row justify-end">
-              <div style="max-width: 500px">
+            <div
+              class="row"
+              :class="$q.screen.lt.lg ? 'q-mb-md' : 'justify-end'"
+            >
+              <div :style="!$q.screen.lt.lg ? 'max-width: 500px' : ''">
                 <!-- title -->
-                <div class="text-h4 text-semibold">
+                <div class="text-30 text-semibold">
                   {{ $t("landing.mechanics.leaderboard.title") }}
                 </div>
 
@@ -458,9 +467,12 @@
 
           <!-- quiz - wordcloud -->
           <div class="splitter">
-            <div style="max-width: 500px">
+            <div
+              :style="!$q.screen.lt.lg ? 'max-width: 500px' : ''"
+              :class="$q.screen.lt.lg ? 'q-mb-md' : ''"
+            >
               <!-- title -->
-              <div class="text-h4 text-semibold">
+              <div class="text-30 text-semibold">
                 {{ $t("landing.mechanics.wordcloud.title") }}
               </div>
 
@@ -535,7 +547,7 @@
           <!-- title -->
           <div
             class="text-h4 text-semibold text-center"
-            :class="$q.screen.lt.lg ? 'q-px-lg ' : ''"
+            :class="$q.screen.lt.xl ? 'q-px-lg ' : ''"
           >
             {{ $t("landing.tools.title") }}
           </div>
@@ -543,10 +555,10 @@
           <!-- description -->
           <div
             class="row justify-center"
-            :class="$q.screen.lt.lg ? 'q-px-lg' : ''"
+            :class="$q.screen.lt.xl ? 'q-px-lg text-18' : 'text-20'"
           >
             <div
-              class="text-center q-mt-3xs q-mb-xl text-16"
+              class="text-center q-mt-3xs q-mb-xl text-grey-9"
               style="max-width: 800px"
             >
               {{ $t("landing.tools.description") }}
@@ -554,10 +566,12 @@
           </div>
 
           <!-- bento -->
-          <div :class="$q.screen.lt.lg ? 'q-px-lg' : ''">
+          <div :class="$q.screen.lt.xl ? 'q-px-lg' : ''">
             <div
               class="no-wrap"
-              :class="$q.screen.lt.lg ? 'column q-gutter-lg' : 'row'"
+              :class="`${$q.screen.lt.lg ? 'column q-gutter-lg ' : 'row'} ${
+                $q.screen.lt.xl && !$q.screen.lt.lg ? 'q-mr-lg' : ''
+              }`"
             >
               <!-- studio -->
               <div
@@ -565,10 +579,10 @@
               >
                 <q-card flat class="bg-grey-1 rounded-xl">
                   <q-card-section class="q-pa-lg">
-                    <div class="text-h4 text-semibold">
+                    <div class="text-30 text-semibold">
                       {{ $t("landing.tools.bento.studio.title") }}
                     </div>
-                    <div class="text-18 q-mt-3xs q-mb-lg">
+                    <div class="text-16 q-mt-3xs q-mb-lg">
                       {{ $t("landing.tools.bento.studio.description") }}
                     </div>
 
@@ -585,11 +599,11 @@
                 <div class="q-mb-lg q-pb-sm">
                   <q-card flat class="bg-grey-1 rounded-xl">
                     <q-card-section class="q-px-lg q-pt-lg q-pb-none">
-                      <div class="text-h4 text-semibold">
+                      <div class="text-30 text-semibold">
                         {{ $t("landing.tools.bento.stock.title") }}
                       </div>
 
-                      <div class="text-18 q-mt-3xs q-mb-lg">
+                      <div class="text-16 q-mt-3xs q-mb-lg">
                         {{ $t("landing.tools.bento.stock.description") }}
                       </div>
 
@@ -603,34 +617,32 @@
                   <q-card-section
                     class="q-px-lg q-pt-lg q-pb-none relative-position overflow-hidden"
                     style="height: 100%"
+                    :class="$q.screen.lt.lg ? 'q-pb-xl' : ''"
                   >
-                    <div class="text-h4 text-semibold">
+                    <div class="text-30 text-semibold">
                       {{ $t("landing.tools.bento.emojisAndGifs.title") }}
                     </div>
 
-                    <div class="text-18 q-mt-3xs q-mb-md">
+                    <div
+                      class="text-16 q-mt-3xs q-mb-md"
+                      :class="$q.screen.lt.lg ? 'q-pb-xl q-mb-lg' : ''"
+                    >
                       {{ $t("landing.tools.bento.emojisAndGifs.description") }}
                     </div>
 
                     <q-img
-                      v-if="!$q.screen.lt.lg"
                       src="assets/images/landing/tools/sparkles.png"
-                      style="
-                        width: 120px;
-                        left: 50%;
-                        bottom: -30px;
-                        transform: translateX(-50%);
+                      style="width: 120px; bottom: -30px"
+                      :style="
+                        $q.screen.lt.md
+                          ? 'left: 24px; bottom: -16px;'
+                          : 'left: 50%; transform: translateX(-50%);'
                       "
                       class="absolute"
                     />
                     <q-img
                       src="assets/images/landing/tools/unicorn.png"
-                      style="width: 140px"
-                      :style="
-                        $q.screen.lt.lg
-                          ? 'right: 0px; bottom: -8px; width: 70px;'
-                          : 'right: 24px; bottom: -30px; width: 140px;'
-                      "
+                      style="width: 140px; bottom: -30px; right: 24px"
                       class="absolute"
                     />
                   </q-card-section>
@@ -640,11 +652,11 @@
 
             <div
               class="no-wrap"
-              :class="
+              :class="`${
                 $q.screen.lt.lg
                   ? 'column q-gutter-lg q-pt-lg'
                   : 'row q-mt-lg q-pt-sm'
-              "
+              } ${$q.screen.lt.xl && !$q.screen.lt.lg ? 'q-mr-lg' : ''}`"
             >
               <!-- online chat -->
               <q-card
@@ -652,13 +664,24 @@
                 class="bg-grey-1 rounded-xl"
                 :class="$q.screen.lt.lg ? 'col-12' : 'col-5'"
               >
-                <q-card-section class="q-pa-lg">
-                  <div class="text-h4 text-semibold">
+                <q-card-section
+                  class="q-pa-lg column no-wrap"
+                  style="height: 100%"
+                >
+                  <div class="text-30 text-semibold">
                     {{ $t("landing.tools.bento.onlineChat.title") }}
                   </div>
-                  <div class="text-18 q-mt-3xs">
+                  <div class="text-16 q-mt-3xs">
                     {{ $t("landing.tools.bento.onlineChat.description") }}
                   </div>
+
+                  <q-space />
+
+                  <q-img
+                    src="assets/images/landing/tools/online_chat.png"
+                    :class="$q.screen.lt.lg ? 'q-mt-md' : ''"
+                    style="max-width: 350px; width: 100%"
+                  />
                 </q-card-section>
               </q-card>
 
@@ -671,11 +694,11 @@
                 <q-card flat class="bg-grey-1 rounded-xl">
                   <q-card-section class="q-py-lg q-pl-lg q-pr-none">
                     <div class="q-pr-lg">
-                      <div class="text-h4 text-semibold">
+                      <div class="text-30 text-semibold">
                         {{ $t("landing.tools.bento.templates.title") }}
                       </div>
 
-                      <div class="text-18 q-mt-3xs q-mb-lg">
+                      <div class="text-16 q-mt-3xs q-mb-lg">
                         {{ $t("landing.tools.bento.templates.description") }}
                       </div>
                     </div>
@@ -701,19 +724,16 @@
 
           <!-- description -->
           <div
-            class="row justify-center"
-            :class="$q.screen.lt.md ? 'q-px-lg' : ''"
+            class="row justify-center text-grey-9"
+            :class="$q.screen.lt.lg ? 'q-px-lg text-18' : 'text-20'"
           >
-            <div
-              class="text-center q-mt-3xs q-mb-xl text-16"
-              style="max-width: 800px"
-            >
+            <div class="text-center q-mt-3xs q-mb-xl" style="max-width: 800px">
               {{ $t("landing.prices.description") }}
             </div>
           </div>
 
           <!-- plans -->
-          <div class="plans_grid" :class="$q.screen.lt.md ? 'q-px-lg' : ''">
+          <div class="plans_grid" :class="$q.screen.lt.lg ? 'q-px-lg' : ''">
             <!-- free -->
             <q-card flat bordered class="bg-white">
               <q-card-section>
@@ -729,7 +749,7 @@
 
                 <!-- price & period -->
                 <div class="row no-wrap items-end q-my-md">
-                  <div class="text-36 text-semibold">
+                  <div class="text-h4 text-semibold">
                     {{ $t("landing.prices.plans.free.price") }}
                   </div>
                   <div class="text-grey q-mb-sm q-ml-xs text-weight-medium">
@@ -795,7 +815,6 @@
                 <!-- action -->
                 <q-btn
                   outline
-                  color="grey-9"
                   :label="$t('landing.prices.plans.free.action')"
                   no-caps
                   class="full-width"
@@ -826,7 +845,7 @@
 
                 <!-- price & period -->
                 <div class="row no-wrap items-end q-my-md">
-                  <div class="text-36 text-semibold">
+                  <div class="text-h4 text-semibold">
                     {{ $t("landing.prices.plans.basic.price") }}
                   </div>
                   <div class="text-grey q-mb-sm q-ml-xs text-weight-medium">
@@ -928,7 +947,7 @@
 
                 <!-- price & period -->
                 <div class="row no-wrap items-end q-my-md">
-                  <div class="text-36 text-semibold">
+                  <div class="text-h4 text-semibold">
                     {{ $t("landing.prices.plans.pro.price") }}
                   </div>
                   <div class="text-grey q-mb-sm q-ml-xs text-weight-medium">
@@ -1018,7 +1037,6 @@
                 <!-- action -->
                 <q-btn
                   outline
-                  color="grey-9"
                   :label="$t('landing.prices.plans.pro.action')"
                   no-caps
                   class="full-width"
@@ -1031,7 +1049,7 @@
           <!-- contact -->
           <div
             class="text-weight-medium text-16 text-center q-mt-lg"
-            :class="$q.screen.lt.md ? 'q-px-lg' : ''"
+            :class="$q.screen.lt.lg ? 'q-px-lg' : ''"
           >
             {{ $t("landing.prices.contact.title") }}
             <span
@@ -1053,7 +1071,7 @@
             {{ $t("landing.faq.title") }}
           </div>
 
-          <div :class="$q.screen.lt.md ? 'q-px-lg' : ''">
+          <div :class="$q.screen.lt.lg ? 'q-px-lg' : ''">
             <q-expansion-item
               v-for="n in 7"
               :key="n"
@@ -1061,7 +1079,7 @@
               :label="$t(`landing.faq.list.${n}.title`)"
               expanded-icon="r_remove"
             >
-              <div class="text-grey-9 text-16 q-px-lg q-pb-lg">
+              <div class="text-16 q-px-lg q-pb-lg">
                 {{ $t(`landing.faq.list.${n}.description`) }}
               </div>
             </q-expansion-item>
@@ -1074,16 +1092,19 @@
     <section
       id="promo"
       class="promo relative-position overflow-hidden"
-      :class="$q.screen.lt.lg ? 'col-12' : ''"
+      :class="$q.screen.lt.xl ? 'q-px-lg' : ''"
     >
-      <div>
+      <div class="q-px-md">
         <!-- title -->
-        <div class="text-center text-28 text-semibold">
+        <div class="text-center text-h4 text-semibold">
           {{ $t("landing.promo.title") }}
         </div>
 
         <!-- description -->
-        <div class="text-center text-16 q-mt-3xs">
+        <div
+          class="text-center q-mt-3xs text-grey-9"
+          :class="$q.screen.lt.xl ? 'text-18' : 'text-20'"
+        >
           {{ $t("landing.promo.description") }}
         </div>
 
@@ -1101,11 +1122,15 @@
         </div>
 
         <!-- background -->
-        <div class="absolute" style="top: 0; left: 0; width: 100%">
+        <div
+          class="absolute"
+          style="top: 0; left: 0; width: 100%; height: 100%"
+        >
           <div class="container">
             <q-img
               src="/assets/images/landing/bubbles.png"
-              style="width: 100%"
+              class="full-width full-height"
+              fit="cover"
             />
           </div>
         </div>
@@ -1137,8 +1162,8 @@
 
       <div class="footer">
         <div
-          class="q-py-lg q-my-sm text-grey-9 text-12 row no-wrap"
-          :class="$q.screen.lt.lg ? 'q-px-lg' : 'q-px-xl q-mx-xl'"
+          class="q-py-lg q-my-sm text-12 row no-wrap"
+          :class="$q.screen.lt.xl ? 'q-px-lg' : 'q-px-xl q-mx-xl'"
         >
           <div>
             © {{ new Date().getFullYear() }} Prezio -
@@ -1147,8 +1172,13 @@
 
           <q-space />
 
-          <div>
+          <div class="row items-center no-wrap">
             {{ $t("landing.footer.madeInRussia") }}
+            <q-img
+              src="/assets/images/landing/russia.png"
+              style="width: 20px"
+              class="q-ml-sm"
+            />
           </div>
         </div>
       </div>
@@ -1190,7 +1220,7 @@ const appUrl =
 const { t } = useI18n({ useScope: "global" });
 
 const $q = useQuasar();
-$q.screen.setSizes({ sm: 300, md: 848, lg: 1248 });
+$q.screen.setSizes({ xs: 500, sm: 848, lg: 1048, xl: 1248 });
 
 const router = useRouter();
 
@@ -1376,19 +1406,19 @@ section {
   grid-template-columns: repeat(2, 1fr);
   align-items: center;
 
-  @media screen and (max-width: 1248px) {
+  @media screen and (max-width: 1048px) {
     grid-template-columns: 1fr;
   }
 }
 
-.betefit_cards_grid {
+.feature_cards_grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   overflow-x: scroll;
 
-  .betefit_card {
-    min-width: 335px;
+  .feature_card {
+    min-width: 290px;
     background: $grey-1;
     border-radius: 1.25em;
 

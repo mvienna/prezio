@@ -33,21 +33,7 @@ body {
 }
 
 html, body {
-  touch-action: manipulation;
-  -ms-content-zooming: none;
-  -ms-overflow-style: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
   scroll-behavior: smooth;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 /*
