@@ -32,15 +32,24 @@
 
             <template v-else>
               <!-- hyperlinks -->
-              <a href="#features" class="text-16 link text-black">
+              <div
+                class="text-16 link text-black"
+                @click="handleScrollIntoView('#features')"
+              >
                 {{ $t("landing.hyperlinks.features") }}
-              </a>
-              <a href="#prices" class="text-16 link text-black q-mx-md">
+              </div>
+              <div
+                class="text-16 link text-black q-mx-md"
+                @click="handleScrollIntoView('#prices')"
+              >
                 {{ $t("landing.hyperlinks.prices") }}
-              </a>
-              <a href="#faq" class="text-16 link text-black">
+              </div>
+              <div
+                class="text-16 link text-black"
+                @click="handleScrollIntoView('#faq')"
+              >
                 {{ $t("landing.hyperlinks.faq") }}
-              </a>
+              </div>
 
               <q-space />
 
@@ -144,25 +153,31 @@
         <div class="column no-wrap q-gutter-lg q-py-lg q-px-lg">
           <!-- hyperlinks -->
           <a
-            href="#features"
             class="text-16 link text-black"
-            @click="showMobileMenu = false"
+            @click="
+              showMobileMenu = false;
+              handleScrollIntoView('#features');
+            "
           >
             {{ $t("landing.hyperlinks.features") }}
             <q-icon name="r_arrow_forward_ios" class="q-ml-xs" size="14px" />
           </a>
           <a
-            href="#prices"
             class="text-16 link text-black"
-            @click="showMobileMenu = false"
+            @click="
+              showMobileMenu = false;
+              handleScrollIntoView('#prices');
+            "
           >
             {{ $t("landing.hyperlinks.prices") }}
             <q-icon name="r_arrow_forward_ios" class="q-ml-xs" size="14px" />
           </a>
           <a
-            href="#faq"
             class="text-16 link text-black"
-            @click="showMobileMenu = false"
+            @click="
+              showMobileMenu = false;
+              handleScrollIntoView('#faq');
+            "
           >
             {{ $t("landing.hyperlinks.faq") }}
             <q-icon name="r_arrow_forward_ios" class="q-ml-xs" size="14px" />
@@ -257,7 +272,7 @@
     </section>
 
     <!-- features -->
-    <section class="bg-white">
+    <section id="features" class="bg-white">
       <div class="container">
         <div>
           <!-- title -->
@@ -1260,6 +1275,27 @@ const handleRoomSearch = () => {
     .finally(() => {
       isSearchingForRoom.value = false;
     });
+};
+
+/*
+ * scrollintoview
+ */
+const handleScrollIntoView = (id, isRecursive = true) => {
+  const element = document.querySelector(id);
+
+  const yOffset = -71;
+  const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+  window.scrollTo({
+    top: y,
+    behavior: "smooth",
+  });
+
+  if (id === "#prices" && isRecursive) {
+    setTimeout(() => {
+      handleScrollIntoView(id, false);
+    }, 600);
+  }
 };
 
 /*
