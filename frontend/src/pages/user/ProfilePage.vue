@@ -140,7 +140,11 @@
                   :class="`text-${scope.opt.color}`"
                   class="row items-center"
                 >
-                  <q-icon :name="scope.opt.icon" size="20px" class="q-mr-sm" />
+                  <q-icon
+                    :name="scope.opt.icon"
+                    size="1.25rem"
+                    class="q-mr-sm"
+                  />
                   {{ scope.opt.label }}
                 </q-item>
               </template>
@@ -173,7 +177,7 @@
                   "
                   color="grey"
                   class="round-borders"
-                  size="8px"
+                  size="0.5rem"
                   @click="isPasswordVisible = !isPasswordVisible"
                 />
               </template>
@@ -536,7 +540,7 @@ useMeta(metaOptions);
   max-width: 520px;
   width: 100%;
   padding: 24px;
-  border-radius: 16px;
+  border-radius: 1rem;
   border: 1px solid $grey-2;
   margin: 0 auto;
 

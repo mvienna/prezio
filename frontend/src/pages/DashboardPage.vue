@@ -23,7 +23,7 @@
               class="round-borders bg-background text-primary row items-center justify-center"
               style="min-width: 46px; width: 46px; height: 46px"
             >
-              <q-icon name="r_bolt" size="24px" />
+              <q-icon name="r_bolt" size="1.5rem" />
             </div>
 
             <div class="q-mx-md q-px-xs">

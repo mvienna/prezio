@@ -19,7 +19,7 @@
         />
 
         <!-- default avatar -->
-        <q-icon v-else name="r_account_circle" size="36px" />
+        <q-icon v-else name="r_account_circle" size="2.25rem" />
       </div>
     </div>
 

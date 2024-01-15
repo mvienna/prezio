@@ -29,10 +29,10 @@
           no-caps
           text-color="black"
           :class="$q.screen.lt.sm ? 'q-mr-sm round-borders' : ''"
-          :size="$q.screen.lt.sm ? '12px' : ''"
+          :size="$q.screen.lt.sm ? '0.75rem' : ''"
           :round="$q.screen.lt.sm"
         >
-          <q-icon size="20px" name="o_reviews" />
+          <q-icon size="1.25rem" name="o_reviews" />
           <div v-if="!$q.screen.lt.sm" class="q-ml-sm">
             {{ $t("mainLayout.header.feedbackForm.title") }}
           </div>
@@ -48,7 +48,7 @@
           no-caps
           no-wrap
           round
-          size="12px"
+          size="0.75rem"
           icon="o_notifications"
           class="q-mr-md round-borders"
         />

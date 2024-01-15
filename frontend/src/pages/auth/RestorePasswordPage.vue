@@ -101,7 +101,7 @@
             :icon="isPasswordVisible ? 'r_visibility_off' : 'r_visibility'"
             color="grey"
             class="round-borders"
-            size="8px"
+            size="0.5rem"
             @click="isPasswordVisible = !isPasswordVisible"
           />
         </template>

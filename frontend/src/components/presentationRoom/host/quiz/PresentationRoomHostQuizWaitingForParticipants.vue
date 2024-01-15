@@ -39,7 +39,7 @@
         unelevated
         icon="r_keyboard_return"
         round
-        size="8px"
+        size="sm"
         class="q-ml-sm"
         @click="presentationsStore.handleQuizStart()"
       />
@@ -53,7 +53,7 @@
         :label="$t('presentationRoom.waitingForParticipants.startQuiz.title')"
         :class="$q.screen.lt.md ? 'q-px-lg' : 'q-px-xl'"
         :style="$q.screen.lt.md ? 'height: 50px' : 'height: 62px'"
-        :size="$q.screen.lt.md ? '14px' : '18px'"
+        :size="$q.screen.lt.md ? '0.875rem' : '1.125rem'"
         @click="presentationsStore.handleQuizStart()"
       />
     </div>
@@ -383,7 +383,7 @@ text {
   transform: translate(-50%, 0);
 
   .q-btn {
-    border-radius: 24px;
+    border-radius: 1.5rem;
     background: rgba(0, 0, 0, 0.5);
     color: $white;
     backdrop-filter: blur(4px);
