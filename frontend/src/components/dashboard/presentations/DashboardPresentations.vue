@@ -435,7 +435,7 @@
   >
     <!-- winking emoji -->
     <div class="row justify-center">
-      <q-img src="/assets/illustrations/team_work.svg" style="width: 300px" />
+      <q-img src="/assets/illustrations/team_work.svg" style="width: 370px" />
     </div>
 
     <div class="text-center q-mt-sm">
