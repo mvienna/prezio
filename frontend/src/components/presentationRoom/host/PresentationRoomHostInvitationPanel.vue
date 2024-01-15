@@ -37,9 +37,9 @@
       <div>
         {{ $t("presentationRoom.invitationPanel.otherOption.url") }}
       </div>
-      <a :href="host" target="_blank" class="text-white text-semibold">
+      <div class="text-white text-semibold cursor-pointer">
         {{ host }}
-      </a>
+      </div>
 
       <div class="q-my-sm">
         <q-icon name="r_keyboard_double_arrow_down" size="sm" color="white" />
@@ -73,7 +73,7 @@ const presentationsStore = usePresentationsStore();
 const { room, showRoomInvitationPanel } = storeToRefs(presentationsStore);
 
 /*
- * url
+ * host
  */
 const host = window.location.hostname.replace(SUBDOMAINS.app + ".", "");
 </script>
