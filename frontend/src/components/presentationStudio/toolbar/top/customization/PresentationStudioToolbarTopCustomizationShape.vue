@@ -225,7 +225,7 @@
   </q-btn>
 
   <!-- shadow -->
-  <q-btn flat round size="12px" icon="r_texture" class="q-ml-sm">
+  <q-btn flat round size="12px" icon="icon-shadow " class="q-ml-sm">
     <q-menu
       anchor="bottom left"
       self="top left"

@@ -1,7 +1,7 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.woff?aaca76f739530835ce84ed392c3b339f") format("woff"),
-url("./icons.woff2?aaca76f739530835ce84ed392c3b339f") format("woff2");
+    src: url("./icons.woff?e89b8934216a6c6ddbdddef92f8ffcea") format("woff"),
+url("./icons.woff2?e89b8934216a6c6ddbdddef92f8ffcea") format("woff2");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -99,21 +99,24 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
 .icon-profile_group:before {
     content: "\f11c";
 }
-.icon-shape_line:before {
+.icon-shadow:before {
     content: "\f11d";
 }
-.icon-space_dashboard:before {
+.icon-shape_line:before {
     content: "\f11e";
 }
-.icon-thumb-down-circular:before {
+.icon-space_dashboard:before {
     content: "\f11f";
 }
-.icon-triangle:before {
+.icon-thumb-down-circular:before {
     content: "\f120";
 }
-.icon-unsplash:before {
+.icon-triangle:before {
     content: "\f121";
 }
-.icon-upload:before {
+.icon-unsplash:before {
     content: "\f122";
+}
+.icon-upload:before {
+    content: "\f123";
 }

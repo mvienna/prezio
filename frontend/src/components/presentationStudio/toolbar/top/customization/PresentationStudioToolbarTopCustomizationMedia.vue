@@ -25,7 +25,7 @@
   </q-dialog>
 
   <!-- shadow -->
-  <q-btn flat round size="12px" icon="r_texture">
+  <q-btn flat round size="12px" icon="icon-shadow">
     <q-menu
       anchor="bottom left"
       self="top left"
