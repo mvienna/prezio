@@ -33,7 +33,7 @@
               <!-- hyperlinks -->
               <div
                 class="text-16 link text-black"
-                @click="handleScrollIntoView('#features')"
+                @click="handleScrollIntoView('#mechanics')"
               >
                 {{ $t("landing.hyperlinks.features") }}
               </div>
@@ -155,7 +155,7 @@
             class="text-16 link text-black"
             @click="
               showMobileMenu = false;
-              handleScrollIntoView('#features');
+              handleScrollIntoView('#mechanics');
             "
           >
             {{ $t("landing.hyperlinks.features") }}
