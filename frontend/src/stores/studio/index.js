@@ -1253,9 +1253,7 @@ export const useStudioStore = defineStore("studio", {
           draggable: true,
           name: this.MODE_OPTIONS.drawing,
         });
-        console.log(this.drawing.lastLine);
         this.layers.default.add(this.drawing.lastLine);
-        console.log(this.layers.default.find(".line"));
       };
 
       const handleMouseUp = () => {
