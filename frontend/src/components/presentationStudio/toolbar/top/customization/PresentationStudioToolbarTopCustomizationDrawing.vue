@@ -1,11 +1,11 @@
 <template>
-  <!-- color picker -->
+  <!-- stroke color -->
   <q-btn flat round size="12px" class="relative-position">
     <div>
       <q-icon name="icon-mdi_border_color_top" class="absolute-center" />
       <q-icon
         name="icon-mdi_border_color_bottom"
-        :style="`color: ${drawingState.customization.value.color}`"
+        :style="`color: ${drawing.stroke}`"
         class="absolute-center"
       />
     </div>
@@ -21,29 +21,29 @@
         format-model="hex"
         no-header-tabs
         default-view="palette"
-        v-model="drawingState.customization.value.color"
-        @change="drawingStore.applyStyles()"
+        v-model="drawing.stroke"
+        @change="studioStore.applyCustomizationChanges()"
       />
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.drawing.options.color") }}
+      {{ $t("presentationStudio.toolbar.drawing.options.strokeColor") }}
     </q-tooltip>
   </q-btn>
 
-  <!-- brush size -->
+  <!-- stroke width -->
   <q-select
-    v-model="drawingState.customization.value.brushSize"
-    :options="BRUSH_SIZE_OPTIONS"
+    v-model="drawing.strokeWidth"
+    :options="DRAWING_STROKE_WIDTH_OPTIONS"
     map-options
     emit-value
-    borderless
-    color="black"
     hide-dropdown-icon
     dense
+    borderless
+    :option-label="(option) => option + 'px'"
     class="q-px-sm"
     options-dense
-    @update:model-value="drawingStore.applyStyles()"
+    @update:model-value="studioStore.applyCustomizationChanges()"
   >
     <template #prepend>
       <q-icon
@@ -54,60 +54,48 @@
     </template>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.drawing.options.brushSize") }}
+      {{ $t("presentationStudio.toolbar.drawing.options.strokeWidth") }}
     </q-tooltip>
   </q-select>
 
-  <!-- brush type -->
+  <!-- mode -->
   <q-select
-    v-model="drawingState.customization.value.selectedBrushType"
-    :options="BRUSH_TYPES"
-    map-options
+    v-model="drawing.mode"
+    :options="Object.values(DRAWING_MODES)"
     emit-value
-    :option-label="(option) => $t(option.label)"
+    :option-label="
+      (option) => $t(`presentationStudio.toolbar.drawing.modes.${option}`)
+    "
     borderless
     color="black"
     hide-dropdown-icon
     dense
     options-dense
-    @update:model-value="drawingStore.applyStyles()"
+    @update:model-value="studioStore.applyCustomizationChanges()"
   >
     <template #prepend>
       <q-icon name="r_brush" class="text-semibold text-dark" size="20px" />
     </template>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.drawing.options.brushType") }}
+      {{ $t("presentationStudio.toolbar.drawing.options.mode") }}
     </q-tooltip>
   </q-select>
-
-  <q-separator vertical class="q-ml-md q-mr-sm" />
-
-  <!-- eraser -->
-  <q-checkbox
-    v-model="drawingState.eraserMode.value"
-    size="36px"
-    checked-icon="icon-eraser"
-    unchecked-icon="icon-eraser_off"
-    indeterminate-icon="help"
-  >
-    <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.drawing.options.erase") }}
-    </q-tooltip>
-  </q-checkbox>
 </template>
 
 <script setup>
 import {
-  BRUSH_SIZE_OPTIONS,
-  BRUSH_TYPES,
+  DRAWING_MODES,
+  DRAWING_STROKE_WIDTH_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import { storeToRefs } from "pinia";
-import { useCanvasDrawingStore } from "stores/canvas/drawing";
+import { useStudioStore } from "stores/studio";
+import { onMounted, onUnmounted } from "vue";
+import Konva from "konva";
 
 /*
  * stores
  */
-const drawingStore = useCanvasDrawingStore();
-const drawingState = storeToRefs(drawingStore);
+const studioStore = useStudioStore();
+const { drawing } = storeToRefs(studioStore);
 </script>

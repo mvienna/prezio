@@ -357,14 +357,14 @@ const handleFieldsReorder = async () => {
   cursor: grab;
 }
 
-::v-deep(.q-borderless) {
-  .q-field__control {
-    box-shadow: none !important;
-  }
-  .q-field__control:before,
-  .q-field__control:after {
-    border: none !important;
-    transition: none !important;
-  }
-}
+//::v-deep(.q-borderless) {
+//  .q-field__control {
+//    box-shadow: none !important;
+//  }
+//  .q-field__control:before,
+//  .q-field__control:after {
+//    border: none !important;
+//    transition: none !important;
+//  }
+//}
 </style>

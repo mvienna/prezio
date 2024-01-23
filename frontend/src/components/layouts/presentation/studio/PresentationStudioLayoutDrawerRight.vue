@@ -152,6 +152,7 @@ import {
 import { useCanvasTextStore } from "stores/canvas/text";
 import PresentationStudioTabsSettingsTab from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTab.vue";
 import { generateUniqueId } from "src/helpers/generationUtils";
+import { useStudioStore } from "stores/studio";
 
 /*
  * variables
@@ -169,6 +170,8 @@ const { presentation, slide, drawerRightTab, isDrawerRightPanelExpanded } =
 
 const canvasStore = useCanvasStore();
 const { elements, MODE_OPTIONS } = storeToRefs(canvasStore);
+
+const studioStore = useStudioStore();
 
 const textStore = useCanvasTextStore();
 const { customization } = storeToRefs(textStore);
@@ -214,6 +217,7 @@ const drawerRightTabs = computed(() => {
       label: t("presentationLayout.rightDrawer.tabs.templates.label"),
       title: t("presentationLayout.rightDrawer.tabs.templates.title"),
       hidden: slide.value?.type !== SLIDE_TYPES.CONTENT,
+      disable: true,
     },
     {
       name: PRESENTATION_TABS.AUDIO,
@@ -248,6 +252,15 @@ const handleTabSelect = () => {
     }
   }
 };
+
+watch(
+  () => isDrawerRightPanelExpanded.value,
+  () => {
+    setTimeout(() => {
+      studioStore.fitStageIntoParentContainer();
+    });
+  }
+);
 
 /*
  * change slide type

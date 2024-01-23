@@ -14,8 +14,6 @@ const {
   magnet,
 } = storeToRefs(canvasStore);
 
-const textStore = useCanvasTextStore();
-
 export const getHoveredElement = () => {
   let hoveredElement = null;
   let hoveredElementIndex = -1;

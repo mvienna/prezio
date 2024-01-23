@@ -6,13 +6,15 @@
       border-radius: 8px 8px 0 0;
       z-index: 2;
     "
-    :style="`width: ${canvasRect?.width}px; left: ${canvasRect?.left}px; top: ${canvasRect?.top}px;`"
-    class="row no-wrap items-center justify-center q-px-sm"
+    :style="`width: ${stages.default?.width()}px; left: ${
+      stages.default?.attrs?.container?.getBoundingClientRect()?.left
+    }px; top: ${
+      stages.default?.attrs?.container?.getBoundingClientRect()?.top
+    }px;`"
     :class="`text-${
-      averageBackgroundBrightness >= backgroundBrightnessThreshold
-        ? 'black'
-        : 'white'
+      slide?.color_scheme === COLOR_SCHEME_OPTIONS.light ? 'black' : 'white'
     }`"
+    class="row no-wrap items-center justify-center q-px-sm text-black"
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
   >
@@ -27,13 +29,13 @@
         "
         class="row no-wrap items-center justify-center ellipsis q-px-sm presentation_studio_slide_header__banner text-14"
         style="max-width: 70%"
-        :style="`background: ${
+        :style="
           presentation?.settings?.show_joining_instructions_bar || isHovered
-            ? averageBackgroundBrightness >= backgroundBrightnessThreshold
-              ? 'rgba(0, 0, 0, 0.1)'
-              : 'rgba(255, 255, 255, 0.1)'
-            : 'transparent'
-        };`"
+            ? slide?.color_scheme === COLOR_SCHEME_OPTIONS.light
+              ? 'background: rgba(0, 0, 0, 0.1); color: black;'
+              : 'background: rgba(255, 255, 255, 0.1); color: white;'
+            : 'background: transparent'
+        "
       >
         <!-- link -->
         <div class="ellipsis cursor-pointer" @click="copyRoomLinkToClipboard()">
@@ -74,7 +76,7 @@
     >
       <q-img
         :src="
-          averageBackgroundBrightness >= backgroundBrightnessThreshold
+          slide?.color_scheme === COLOR_SCHEME_OPTIONS.light
             ? '/prezio.svg'
             : '/prezio--white.svg'
         "
@@ -86,18 +88,12 @@
 
 <script setup>
 import { copyToClipboard } from "quasar";
-import {
-  computed,
-  onBeforeMount,
-  onMounted,
-  onUnmounted,
-  ref,
-  watch,
-} from "vue";
-import { useCanvasStore } from "stores/canvas";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { SUBDOMAINS } from "src/constants/routes";
+import { useStudioStore } from "stores/studio";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * variables
@@ -107,62 +103,12 @@ const isHovered = ref(false);
 /*
  * stores
  */
-const canvasStore = useCanvasStore();
-const { scale } = storeToRefs(canvasStore);
+const studioStore = useStudioStore();
+const { stages } = storeToRefs(studioStore);
 
 const presentationsStore = usePresentationsStore();
-const {
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-  showShareDialog,
-  presentation,
-} = storeToRefs(presentationsStore);
-
-/*
- * slide canvas element
- */
-const canvasRect = ref(canvasStore.canvasRect());
-
-const resizeObserverCanvas = ref();
-const resizeObserverPage = ref();
-
-onMounted(() => {
-  const canvas = document.getElementById("canvas");
-  resizeObserverCanvas.value = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      canvasRect.value = canvasStore.canvasRect();
-    }
-  });
-  resizeObserverCanvas.value.observe(canvas);
-
-  const page = document.getElementsByClassName("q-page-container")[0];
-  resizeObserverPage.value = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      canvasRect.value = canvasStore.canvasRect();
-    }
-  });
-  resizeObserverPage.value.observe(page);
-});
-
-onUnmounted(() => {
-  resizeObserverCanvas.value.disconnect();
-  resizeObserverPage.value.disconnect();
-});
-
-/*
- * on resize
- */
-onBeforeMount(() => {
-  window.addEventListener("resize", onResize);
-});
-
-onUnmounted(() => {
-  window.addEventListener("resize", onResize);
-});
-
-const onResize = () => {
-  canvasRect.value = canvasStore.canvasRect();
-};
+const { slide, showShareDialog, presentation } =
+  storeToRefs(presentationsStore);
 
 /*
  * room link

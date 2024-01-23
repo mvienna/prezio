@@ -248,7 +248,7 @@
         <!-- shadow opacity -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.media.options.shadow.opacity") }}
+            {{ $t("presentationStudio.toolbar.image.shadow.opacity") }}
           </div>
 
           <q-slider
@@ -265,7 +265,7 @@
         <!-- shadow blur -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.media.options.shadow.blur") }}
+            {{ $t("presentationStudio.toolbar.image.shadow.blur") }}
           </div>
 
           <q-slider
@@ -282,7 +282,7 @@
         <!-- shadow offset x -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.media.options.shadow.offsetX") }}
+            {{ $t("presentationStudio.toolbar.image.shadow.offsetX") }}
           </div>
 
           <q-slider
@@ -299,7 +299,7 @@
         <!-- shadow offset y -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.media.options.shadow.offsetY") }}
+            {{ $t("presentationStudio.toolbar.image.shadow.offsetY") }}
           </div>
 
           <q-slider
@@ -319,7 +319,7 @@
           flat
           dense
           icon="r_remove"
-          :label="$t('presentationStudio.toolbar.media.options.shadow.remove')"
+          :label="$t('presentationStudio.toolbar.image.shadow.remove')"
           color="grey"
           class="full-width q-my-sm"
           no-caps
@@ -332,7 +332,7 @@
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.media.options.shadow.title") }}
+      {{ $t("presentationStudio.toolbar.image.shadow.title") }}
     </q-tooltip>
   </q-btn>
 
@@ -349,7 +349,7 @@
         <!-- shadow opacity -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.media.options.opacity.title") }}
+            {{ $t("presentationStudio.toolbar.image.opacity.title") }}
           </div>
 
           <q-slider
@@ -366,7 +366,7 @@
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.media.options.opacity.title") }}
+      {{ $t("presentationStudio.toolbar.image.opacity.title") }}
     </q-tooltip>
   </q-btn>
 </template>

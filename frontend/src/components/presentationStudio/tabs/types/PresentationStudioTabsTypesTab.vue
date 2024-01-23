@@ -138,6 +138,7 @@ const types = computed(() => {
     quizzesAndGames: [
       {
         name: SLIDE_TYPES.PICK_ANSWER,
+        disable: true, // TODO:
       },
       // {
       //   name: SLIDE_TYPES.PICK_IMAGE,
@@ -145,6 +146,7 @@ const types = computed(() => {
       // },
       {
         name: SLIDE_TYPES.TYPE_ANSWER,
+        disable: true, // TODO:
       },
       {
         name: SLIDE_TYPES.MATCH_PAIRS,
@@ -156,11 +158,12 @@ const types = computed(() => {
       },
       {
         name: SLIDE_TYPES.LEADERBOARD,
-        disable: !presentation.value?.slides?.filter(
-          (item) =>
-            SLIDE_TYPES_OF_QUIZ.includes(item.type) &&
-            (!props.disableLayoutSelection ? item.id !== slide.value?.id : true)
-        )?.length,
+        // disable: !presentation.value?.slides?.filter(
+        //   (item) =>
+        //     SLIDE_TYPES_OF_QUIZ.includes(item.type) &&
+        //     (!props.disableLayoutSelection ? item.id !== slide.value?.id : true)
+        // )?.length,
+        disable: true, // TODO:
       },
     ],
 
@@ -178,6 +181,7 @@ const types = computed(() => {
       },
       {
         name: SLIDE_TYPES.WORD_CLOUD,
+        disable: true, // TODO:
       },
       {
         name: SLIDE_TYPES.QNA,

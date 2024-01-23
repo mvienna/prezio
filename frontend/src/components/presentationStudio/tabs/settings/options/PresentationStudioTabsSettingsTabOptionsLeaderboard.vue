@@ -51,11 +51,10 @@ const handleAddingLeaderboardSlide = async () => {
     presentationsStore.saveSlide(undefined, elements.value);
   }
 
-  await presentationsStore.addNewSlide(
-    undefined,
-    undefined,
-    SLIDE_TYPES.LEADERBOARD
-  );
+  const newSlide = await presentationsStore.addNewSlide({
+    type: SLIDE_TYPES.LEADERBOARD,
+  });
+  // TODO: set new slide
   await canvasStore.setElementsFromSlide();
 
   canvasStore.renderSlidePreview();

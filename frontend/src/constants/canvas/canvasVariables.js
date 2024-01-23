@@ -1,16 +1,13 @@
-export const BRUSH_SIZE_OPTIONS = [
-  { value: 1, label: "1px" },
-  { value: 2, label: "2px" },
-  { value: 4, label: "4px" },
-  { value: 8, label: "8px" },
-  { value: 16, label: "16px" },
-  { value: 24, label: "24px" },
-  { value: 32, label: "36px" },
-  { value: 48, label: "48px" },
-  { value: 64, label: "64px" },
-  { value: 96, label: "96px" },
+export const DRAWING_STROKE_WIDTH_OPTIONS = [
+  1, 2, 4, 8, 16, 24, 32, 48, 64, 96,
 ];
 
+export const DRAWING_MODES = {
+  BRUSH: "brush",
+  ERASER: "eraser",
+};
+
+// TODO: REMOVE! canvas/index.js
 export const BRUSH_TYPES = [
   { label: "presentationStudio.toolbar.drawing.BRUSH_TYPES.pen", value: "pen" },
   {
@@ -23,12 +20,10 @@ export const FONT_OPTIONS = [
   "Arial",
   "Helvetica",
   "Times New Roman",
-  // "Times",
   "Courier New",
   "Courier",
   "Georgia",
   "Palatino",
-  // "Palatino Linotype",
   "Verdana",
   "Geneva",
   "Tahoma",
@@ -36,6 +31,14 @@ export const FONT_OPTIONS = [
   "Impact",
   "Roboto",
 ];
+
+export const COLOR_PALETTE = {
+  WHITE: "#FFFFFF",
+  BLACK: "#000000",
+  PRIMARY: "#1751D0",
+  SECONDARY: "#113B98",
+  SELECTION_RECT: "rgba(17, 59, 152, .1)",
+};
 
 export const ALIGNMENT = {
   horizontal: {
@@ -60,15 +63,34 @@ export const SHAPES_OPTIONS = {
   arrow: "arrow",
 };
 
-export const SHAPE_LINE_WIDTH_OPTIONS = [
-  { value: 1, label: "1px" },
-  { value: 2, label: "2px" },
-  { value: 4, label: "4px" },
-  { value: 8, label: "8px" },
-  { value: 16, label: "16px" },
-  { value: 24, label: "24px" },
-  { value: 32, label: "36px" },
-  { value: 48, label: "48px" },
-  { value: 64, label: "64px" },
-  { value: 96, label: "96px" },
+export const SHAPE_LINE_WIDTH_OPTIONS = [0, 1, 2, 4, 8, 16, 24, 32, 48, 64, 96];
+
+export const CROP_POSITION_OPTIONS = {
+  none: "none",
+
+  centerTop: "centerTop",
+  centerMiddle: "centerMiddle",
+  centerBottom: "centerBottom",
+
+  rightTop: "rightTop",
+  rightMiddle: "rightMiddle",
+  rightBottom: "rightBottom",
+
+  leftTop: "leftTop",
+  leftMiddle: "leftMiddle",
+  leftBottom: "leftBottom",
+};
+
+export const BASE_FILL_COLOR_OPTIONS = [
+  "#FFFFFF",
+  "#000000",
+  "#1751D0",
+  "#DB4437",
+  "#F4B400",
+  "#0F9D58",
 ];
+
+export const COLOR_SCHEME_OPTIONS = {
+  light: "light",
+  dark: "dark",
+};

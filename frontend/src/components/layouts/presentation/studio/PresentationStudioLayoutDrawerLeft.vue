@@ -121,22 +121,14 @@
             }`"
             @mouseover="hoveredSlideIndex = index"
             @mouseleave="hoveredSlideIndex = null"
-            @click="handleSlideChange(element)"
+            @click="presentationsStore.setSlide(element)"
             @contextmenu.prevent="
               showSlideContextMenu[index] = !showSlideContextMenu[index]
             "
           >
-            <!-- live preview -->
-            <canvas
-              v-show="element.isLivePreview"
-              :id="`canvas_slide_preview_${index}`"
-            />
-
-            <!-- saved preview -->
-            <q-img
-              v-show="!element.isLivePreview"
+            <img
               :src="element.preview"
-              fit="cover"
+              :id="element.id === slide.id ? 'preview' : ''"
             />
 
             <!-- slide type -->
@@ -149,8 +141,7 @@
                   :src="`/assets/icons/slide/types/${element.type}.svg`"
                   style="width: 36px; height: 36px; background: transparent"
                   :style="
-                    element.previewAverageBrightness >=
-                    backgroundBrightnessThreshold
+                    element.color_scheme >= COLOR_SCHEME_OPTIONS.light
                       ? ''
                       : 'filter: invert(100%) grayscale(100%) brightness(200%);'
                   "
@@ -160,8 +151,7 @@
               <div
                 class="text-semibold text-center text-caption text-no-wrap"
                 :class="
-                  element.previewAverageBrightness >=
-                  backgroundBrightnessThreshold
+                  element.color_scheme >= COLOR_SCHEME_OPTIONS.light
                     ? 'text-grey-7'
                     : 'text-white'
                 "
@@ -182,8 +172,7 @@
                 flat
                 size="8px"
                 :color="
-                  element.previewAverageBrightness >=
-                  backgroundBrightnessThreshold
+                  element.color_scheme >= COLOR_SCHEME_OPTIONS.light
                     ? 'black'
                     : 'white'
                 "
@@ -196,6 +185,7 @@
                   transition-hide="jump-up"
                   :offset="[0, 8]"
                   style="width: 250px"
+                  @keydown="handleSlideMenuKeyDownEvent($event, element, index)"
                 >
                   <!-- new slide -->
                   <q-item
@@ -367,21 +357,14 @@ import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import draggable from "vuedraggable/src/vuedraggable";
 import { useCanvasStore } from "stores/canvas";
-import { deselectElement } from "stores/canvas/helpers/select";
 import { useQuasar } from "quasar";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
-import {
-  ALIGNMENT,
-  SHAPES_OPTIONS,
-} from "src/constants/canvas/canvasVariables";
-import { useCanvasTextStore } from "stores/canvas/text";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
 import { useI18n } from "vue-i18n";
-import { generateUniqueId } from "src/helpers/generationUtils";
-import { computeAverageBrightness } from "src/helpers/colorUtils";
 
 /*
  * variables
@@ -403,37 +386,10 @@ const { presentation, slide, backgroundBrightnessThreshold } =
 const canvasStore = useCanvasStore();
 const { elements, MODE_OPTIONS, canvas } = storeToRefs(canvasStore);
 
-const textStore = useCanvasTextStore();
-const { customization } = storeToRefs(textStore);
-
 /*
  * slide context menu
  */
 const showSlideContextMenu = ref([]);
-
-const handleKeyDownEvent = (event) => {
-  const slideIndex = showSlideContextMenu.value.findIndex(
-    (bool) => bool === true
-  );
-
-  if (event.key === "Delete" || event.key === "Backspace") {
-    // delete
-    if (slideIndex !== -1) {
-      handleSlideDeletion(presentation.value.slides[slideIndex]);
-    }
-  }
-
-  if (event.ctrlKey || event.metaKey) {
-    if (slideIndex !== -1) {
-      // duplicate
-      if (event.key === "d") {
-        event.preventDefault();
-        handleDuplicatingSlide(presentation.value.slides[slideIndex]);
-        showSlideContextMenu.value[slideIndex] = false;
-      }
-    }
-  }
-};
 
 const isDeletionAvailable = (item) => {
   const leaderboards = presentation.value.slides.filter(
@@ -460,10 +416,12 @@ const isDeletionAvailable = (item) => {
 };
 
 const handleSlideDeletion = async (item) => {
+  if (presentation.value.slides.length === 1) return;
+
+  // remove leaderboards
   const leaderboards = presentation.value.slides.filter(
     (slideItem) => slideItem.type === SLIDE_TYPES.LEADERBOARD
   );
-
   const quizTypeSlides = presentation.value.slides.filter((slideItem) =>
     SLIDE_TYPES_OF_QUIZ.includes(slideItem.type)
   );
@@ -473,15 +431,79 @@ const handleSlideDeletion = async (item) => {
     SLIDE_TYPES_OF_QUIZ.includes(item.type) &&
     leaderboards.length
   ) {
-    for (const leaderboard of leaderboards) {
-      await presentationsStore.deleteSlide(leaderboard);
-    }
+    const deletePromises = leaderboards.map((leaderboard) => {
+      return presentationsStore.deleteSlide(leaderboard);
+    });
+
+    await Promise.all(deletePromises);
+  }
+
+  // change slide
+  const currentSlideIndex = presentation.value.slides.findIndex(
+    (presentationSlide) => presentationSlide.id === item.id
+  );
+  if (presentation.value.slides?.[currentSlideIndex - 1]) {
+    await presentationsStore.setSlide(
+      presentation.value.slides?.[currentSlideIndex - 1]
+    );
+  } else {
+    await presentationsStore.setSlide(
+      presentation.value.slides?.[currentSlideIndex + 1]
+    );
   }
 
   await presentationsStore.deleteSlide(item);
-  await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(false);
-  slide.value.isLivePreview = false;
+};
+
+/*
+ * shortcuts
+ */
+const showShortcuts = computed(() => {
+  return $q.platform.is.desktop;
+});
+
+const isMac = computed(() => {
+  return $q.platform.is.platform === "mac";
+});
+
+const handleSlideMenuKeyDownEvent = (event, slide, index) => {
+  // delete
+  if (event.key === "Delete" || event.key === "Backspace") {
+    event.preventDefault();
+    handleSlideDeletion(slide);
+  }
+
+  if (event.ctrlKey || event.metaKey) {
+    // duplicate
+    if (event.key === "d") {
+      event.preventDefault();
+      handleDuplicatingSlide(slide);
+      showSlideContextMenu.value[index] = false;
+    }
+  }
+};
+
+const handleKeyDownEvent = (event) => {
+  // change slide
+  if (["ArrowDown", "ArrowUp"].includes(event.key)) {
+    const currentSlideIndex = presentation.value.slides.findIndex(
+      (item) => item.id === slide.value.id
+    );
+
+    if (event.key === "ArrowDown") {
+      const nextSlide = presentation.value.slides?.[currentSlideIndex + 1];
+      if (nextSlide) {
+        presentationsStore.setSlide(nextSlide);
+      }
+    }
+
+    if (event.key === "ArrowUp") {
+      const previousSlide = presentation.value.slides?.[currentSlideIndex - 1];
+      if (previousSlide) {
+        presentationsStore.setSlide(previousSlide);
+      }
+    }
+  }
 };
 
 onBeforeMount(() => {
@@ -493,7 +515,210 @@ onUnmounted(() => {
 });
 
 /*
- * slides drag
+ * slides selection
+ */
+const hoveredSlideIndex = ref(null);
+
+// const prepareElementsForNewSlide = (type) => {
+//   let preparedElements = [];
+//   return [];
+//
+//   /*
+//    * default elements
+//    */
+//   const layoutDefaultElementProps = {
+//     mode: MODE_OPTIONS.value.text,
+//     isVisible: true,
+//     isLocked: false,
+//     fontFamily: customization.value.font,
+//     lineHeight: customization.value.lineHeight,
+//     fontWeight: "normal",
+//     textDecoration: "none",
+//     fontStyle: "normal",
+//     textAlign: ALIGNMENT.horizontal.left,
+//     verticalAlign: ALIGNMENT.vertical.top,
+//     rotationAngle: 0,
+//
+//     /*
+//      * editable
+//      */
+//     id: "layout-",
+//     text: "",
+//
+//     fontSize: "68px",
+//     color: customization.value.color,
+//
+//     x: canvasStore.computeAdjustedSize(
+//       (canvasStore.canvasRect().width * 5) / 100
+//     ),
+//     y: canvasStore.computeAdjustedSize(
+//       (canvasStore.canvasRect().width * 5) / 100
+//     ),
+//
+//     width: canvasStore.computeAdjustedSize(
+//       (canvasStore.canvasRect().width * 90) / 100
+//     ),
+//     height: canvasStore.computeAdjustedSize(30),
+//   };
+//
+//   /*
+//    * element:
+//    * content
+//    */
+//   if (type === SLIDE_TYPES.CONTENT) {
+//     const titleElement = {
+//       ...layoutDefaultElementProps,
+//
+//       id: "layout-title-top-titleAndBody",
+//       text: t("presentationStudio.layouts.defaultTexts.title"),
+//
+//       color: "#313232",
+//       fontSize: "68px",
+//       fontWeight: "bold",
+//     };
+//
+//     const bodyElement = {
+//       ...layoutDefaultElementProps,
+//
+//       id: "layout-body",
+//       text: t("presentationStudio.layouts.defaultTexts.body"),
+//
+//       fontSize: "38px",
+//       color: "#808080",
+//
+//       y: canvasStore.computeAdjustedSize(
+//         (canvasStore.canvasRect().width * 5) / 100 + 48
+//       ),
+//       width: canvasStore.computeAdjustedSize(
+//         (canvasStore.canvasRect().width * 45) / 100
+//       ),
+//     };
+//
+//     preparedElements = [titleElement, bodyElement];
+//   }
+//
+//   /*
+//    * quiz
+//    * word cloud
+//    */
+//   if (
+//     [
+//       ...SLIDE_TYPES_OF_QUIZ,
+//       SLIDE_TYPES.WORD_CLOUD,
+//       SLIDE_TYPES.LEADERBOARD,
+//     ].includes(type)
+//   ) {
+//     const titleElement = {
+//       ...layoutDefaultElementProps,
+//
+//       id: "layout-title-top-titleAndBody",
+//       text:
+//         type === SLIDE_TYPES.LEADERBOARD
+//           ? t("presentationStudio.layouts.defaultTexts.leaderboard")
+//           : t("presentationStudio.layouts.defaultTexts.question"),
+//       textAlign: "center",
+//
+//       color: "#313232",
+//       fontSize: "68px",
+//       fontWeight: "bold",
+//     };
+//
+//     preparedElements = [titleElement];
+//   }
+//
+//   /*
+//    * add base fill
+//    */
+//   const baseFill = {
+//     id: generateUniqueId(undefined, []),
+//     mode: MODE_OPTIONS.value.baseFill,
+//     isVisible: true,
+//     isLocked: true,
+//     type: SHAPES_OPTIONS.square,
+//     x: 0,
+//     y: 0,
+//     width: 2560,
+//     height: 1440,
+//     rotationAngle: 0,
+//     strokeColor: "#FFFFFF",
+//     fillColor: "#FFFFFF",
+//     lineWidth: "4px",
+//   };
+//
+//   preparedElements.push(baseFill);
+//
+//   return preparedElements;
+// };
+
+const handleAddingNewSlide = async (type) => {
+  // if the current quiz-slide has a leaderboard after itself,
+  // start adding new quiz-slide after that leaderboard
+  if (
+    SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
+    SLIDE_TYPES_OF_QUIZ.includes(type)
+  ) {
+    const newSlideIndex = presentation.value.slides.findIndex(
+      (item) => item.id === slide.value.id
+    );
+
+    const nextSlide = presentation.value.slides?.[newSlideIndex + 1];
+    if (nextSlide && nextSlide.type === SLIDE_TYPES.LEADERBOARD) {
+      await presentationsStore.setSlide(nextSlide);
+    }
+  }
+
+  // hide slide type menu(s)
+  showNewSlideTypeSelectionMenu.value = [false, false, false];
+
+  // add new slide
+  const newSlide = await presentationsStore.addNewSlide({ type: type });
+  await presentationsStore.setSlide(newSlide);
+
+  // add leaderboard after new quiz-type slide
+  if (SLIDE_TYPES_OF_QUIZ.includes(type)) {
+    const newSlideIndex = presentation.value.slides.findIndex(
+      (item) => item.id === slide.value.id
+    );
+
+    const nextSlide = presentation.value.slides?.[newSlideIndex + 1];
+    if (
+      !nextSlide ||
+      (nextSlide && nextSlide.type !== SLIDE_TYPES.LEADERBOARD)
+    ) {
+      await presentationsStore.addNewSlide({
+        type: SLIDE_TYPES.LEADERBOARD,
+      });
+    }
+  }
+};
+
+const handleDuplicatingSlide = async () => {
+  const duplicatedSlide = await presentationsStore.duplicateSlide();
+  await presentationsStore.setSlide(duplicatedSlide);
+};
+
+/*
+ * scroll slide into view when changed
+ */
+watch(
+  () => slide.value,
+  () => {
+    const slideElement = document.getElementById(
+      `slide_preview_${slide.value.id}`
+    );
+
+    if (slideElement) {
+      slideElement.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }
+  }
+);
+
+/*
+ * slides dragging
  */
 const isSlideDragging = ref(false);
 const slidesDraggingOptions = ref({
@@ -521,274 +746,6 @@ const handleSlidesReorder = async () => {
   });
   await presentationsStore.updateSlidesOrder();
 };
-
-/*
- * slides selection
- */
-const hoveredSlideIndex = ref(null);
-
-const handleSlideChange = async (newSlide) => {
-  if (slide.value.id === newSlide.id) return;
-
-  canvasStore.saveSlidePreview();
-  deselectElement();
-
-  await presentationsStore.setSlide(newSlide, elements.value);
-  await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(false, undefined, false);
-};
-
-const prepareElementsForNewSlide = (type) => {
-  let preparedElements = [];
-
-  /*
-   * default elements
-   */
-  const layoutDefaultElementProps = {
-    mode: MODE_OPTIONS.value.text,
-    isVisible: true,
-    isLocked: false,
-    fontFamily: customization.value.font,
-    lineHeight: customization.value.lineHeight,
-    fontWeight: "normal",
-    textDecoration: "none",
-    fontStyle: "normal",
-    textAlign: ALIGNMENT.horizontal.left,
-    verticalAlign: ALIGNMENT.vertical.top,
-    rotationAngle: 0,
-
-    /*
-     * editable
-     */
-    id: "layout-",
-    text: "",
-
-    fontSize: "68px",
-    color: customization.value.color,
-
-    x: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100
-    ),
-    y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100
-    ),
-
-    width: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 90) / 100
-    ),
-    height: canvasStore.computeAdjustedSize(30),
-  };
-
-  /*
-   * element:
-   * content
-   */
-  if (type === SLIDE_TYPES.CONTENT) {
-    const titleElement = {
-      ...layoutDefaultElementProps,
-
-      id: "layout-title-top-titleAndBody",
-      text: t("presentationStudio.layouts.defaultTexts.title"),
-
-      color: "#313232",
-      fontSize: "68px",
-      fontWeight: "bold",
-    };
-
-    const bodyElement = {
-      ...layoutDefaultElementProps,
-
-      id: "layout-body",
-      text: t("presentationStudio.layouts.defaultTexts.body"),
-
-      fontSize: "38px",
-      color: "#808080",
-
-      y: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100 + 48
-      ),
-      width: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 45) / 100
-      ),
-    };
-
-    preparedElements = [titleElement, bodyElement];
-  }
-
-  /*
-   * quiz
-   * word cloud
-   */
-  if (
-    [
-      ...SLIDE_TYPES_OF_QUIZ,
-      SLIDE_TYPES.WORD_CLOUD,
-      SLIDE_TYPES.LEADERBOARD,
-    ].includes(type)
-  ) {
-    const titleElement = {
-      ...layoutDefaultElementProps,
-
-      id: "layout-title-top-titleAndBody",
-      text:
-        type === SLIDE_TYPES.LEADERBOARD
-          ? t("presentationStudio.layouts.defaultTexts.leaderboard")
-          : t("presentationStudio.layouts.defaultTexts.question"),
-      textAlign: "center",
-
-      color: "#313232",
-      fontSize: "68px",
-      fontWeight: "bold",
-    };
-
-    preparedElements = [titleElement];
-  }
-
-  /*
-   * add base fill
-   */
-  const baseFill = {
-    id: generateUniqueId(undefined, []),
-    mode: MODE_OPTIONS.value.baseFill,
-    isVisible: true,
-    isLocked: true,
-    type: SHAPES_OPTIONS.square,
-    x: 0,
-    y: 0,
-    width: 2560,
-    height: 1440,
-    rotationAngle: 0,
-    strokeColor: "#FFFFFF",
-    fillColor: "#FFFFFF",
-    lineWidth: "4px",
-  };
-
-  preparedElements.push(baseFill);
-
-  return preparedElements;
-};
-
-const handleAddingNewSlide = async (type) => {
-  /*
-   * save previous slide
-   */
-  if (slide.value) {
-    canvasStore.saveSlidePreview();
-    deselectElement();
-
-    slide.value.canvas_data = JSON.stringify(elements.value);
-    presentationsStore.syncCurrentSlideWithPresentationSlides();
-    presentationsStore.saveSlide(undefined, elements.value);
-  }
-
-  /*
-   * if the current slide is type of quiz and has a leaderboard after itself,
-   * start adding new slide type of quiz after that leaderboard
-   */
-  if (
-    SLIDE_TYPES_OF_QUIZ.includes(slide.value?.type) &&
-    SLIDE_TYPES_OF_QUIZ.includes(type)
-  ) {
-    const newSlideIndex = presentation.value.slides.findIndex(
-      (item) => item.id === slide.value.id
-    );
-
-    const nextSlide = presentation.value.slides?.[newSlideIndex + 1];
-    if (nextSlide && nextSlide.type === SLIDE_TYPES.LEADERBOARD) {
-      await presentationsStore.setSlide(nextSlide);
-    }
-  }
-
-  /*
-   * hide type selection menu(s)
-   */
-  showNewSlideTypeSelectionMenu.value = [false, false, false];
-
-  /*
-   * add new slide
-   */
-  await presentationsStore.addNewSlide(
-    undefined,
-    prepareElementsForNewSlide(type),
-    type
-  );
-  await canvasStore.setElementsFromSlide();
-
-  canvasStore.renderSlidePreview();
-  canvasStore.saveSlidePreview();
-
-  /*
-   * add leaderboard after new quiz-type slide
-   */
-  if (SLIDE_TYPES_OF_QUIZ.includes(type)) {
-    const newSlideIndex = presentation.value.slides.findIndex(
-      (item) => item.id === slide.value.id
-    );
-
-    const nextSlide = presentation.value.slides?.[newSlideIndex + 1];
-    if (
-      !nextSlide ||
-      (nextSlide && nextSlide.type !== SLIDE_TYPES.LEADERBOARD)
-    ) {
-      const newSlide = await presentationsStore.addNewSlide(
-        undefined,
-        prepareElementsForNewSlide(SLIDE_TYPES.LEADERBOARD),
-        SLIDE_TYPES.LEADERBOARD,
-        false
-      );
-
-      const newSlideIndex = presentation.value.slides.findIndex(
-        (item) => item.id === newSlide.id
-      );
-      presentation.value.slides[newSlideIndex].previewAverageBrightness =
-        await computeAverageBrightness(JSON.parse(newSlide.canvas_data));
-    }
-  }
-};
-
-const handleDuplicatingSlide = () => {
-  presentationsStore
-    .duplicateSlide(elements.value)
-    .then(async () => {
-      await canvasStore.setElementsFromSlide();
-      canvasStore.renderSlidePreview();
-      canvasStore.saveSlidePreview();
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
-/*
- * shortcuts
- */
-const showShortcuts = computed(() => {
-  return $q.platform.is.desktop;
-});
-
-const isMac = computed(() => {
-  return $q.platform.is.platform === "mac";
-});
-
-/*
- * scroll slide into view when changed
- */
-watch(
-  () => slide.value,
-  () => {
-    const slideElement = document.getElementById(
-      `slide_preview_${slide.value.id}`
-    );
-
-    if (slideElement) {
-      slideElement.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center",
-      });
-    }
-  }
-);
 </script>
 
 <style scoped lang="scss">
@@ -799,13 +756,6 @@ watch(
   height: calc(140px * 9 / 16);
   border-radius: 6px;
   overflow: hidden;
-
-  canvas,
-  .q-img {
-    width: 100%;
-    height: 100%;
-    background: $white;
-  }
 
   &.slide--hovered,
   &.slide--hoverable:hover {

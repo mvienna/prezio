@@ -93,10 +93,7 @@
               :loading="isSaving"
               :color="isSavingError ? 'negative' : 'positive'"
               :icon="isSavingError ? 'r_report' : 'r_check_circle'"
-              @click="
-                canvasStore.saveSlidePreview();
-                presentationsStore.saveSlide(undefined, elements);
-              "
+              @click="studioStore.handleSlideUpdate()"
             >
               <template v-slot:loading>
                 <q-spinner-ios color="grey-4" size="24px" />
@@ -183,7 +180,9 @@
         </div>
 
         <!-- preview -->
+        <!-- TODO: make preview work -->
         <q-btn
+          disable
           unelevated
           no-caps
           no-wrap
@@ -192,7 +191,9 @@
           :label="$t('presentationLayout.header.preview')"
           class="q-ml-sm q-btn--md"
           @click="isPresentationPreview = true"
-        />
+        >
+          <q-tooltip> В процессе </q-tooltip>
+        </q-btn>
 
         <q-dialog v-model="isPresentationPreview">
           <PresentationStudioPreviewPresentation
@@ -203,6 +204,7 @@
         <!-- room -->
         <q-btn-dropdown
           split
+          disable
           no-caps
           color="primary"
           unelevated
@@ -451,7 +453,6 @@ import UserMenu from "components/user/UserMenu.vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { date, useQuasar } from "quasar";
-import { useCanvasStore } from "stores/canvas";
 import { computed, ref } from "vue";
 import PresentationSettings from "components/presentationStudio/settings/PresentationSettings.vue";
 import PresentationStudioPreviewPresentation from "components/presentationStudio/preview/PresentationStudioPreview.vue";
@@ -464,6 +465,7 @@ import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
+import { useStudioStore } from "stores/studio";
 
 /*
  * variables
@@ -490,8 +492,7 @@ const {
   showShareDialog,
 } = storeToRefs(presentationsStore);
 
-const canvasStore = useCanvasStore();
-const { elements } = storeToRefs(canvasStore);
+const studioStore = useStudioStore();
 
 /*
  * slide index
@@ -521,8 +522,6 @@ const handleStartPresenting = async () => {
     return;
   }
 
-  await presentationsStore.syncCurrentSlideWithPresentationSlides();
-  await presentationsStore.saveSlide(slide.value, elements.value);
   await presentationsStore.updatePresentation();
 
   /*
@@ -553,9 +552,11 @@ const handleStartPresenting = async () => {
         ) {
           quizSlidesWithoutCorrectAnswers.value.push({
             index: slideIndex,
-            title: JSON.parse(slide.canvas_data)?.find((element) =>
-              element.id.includes("-title-top-")
-            )?.text,
+            title: "",
+            // TODO: rewrite
+            // title: JSON.parse(slide.canvas_data)?.find((element) =>
+            //   element.id.includes("-title-top-")
+            // )?.text,
           });
         }
       }
@@ -570,6 +571,7 @@ const handleStartPresenting = async () => {
     }
   }
 
+  // TODO: check fullscreen functionality
   // if (presentation.value.settings.is_fullscreen) {
   //   await document.documentElement.requestFullscreen();
   // }

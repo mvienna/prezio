@@ -122,12 +122,9 @@ export default {
           names: {
             drawing: "Линия",
             text: "Текст",
-            media: "Фотография",
-            mediaEmoji: "Эмодзи",
+            image: "Фотография",
+            emoji: "Эмодзи",
             shape: "Форма",
-            background: "Фон",
-            backgroundPreview: "Фон (предпросмотр)",
-            baseFill: "Базовая заливка",
           },
         },
 
@@ -183,8 +180,6 @@ export default {
               blur: "Размытие",
               contrast: "Контраст",
               brightness: "Яркость",
-              invert: "Инверсивность",
-              grayscale: "Оттенки серого",
             },
           },
 

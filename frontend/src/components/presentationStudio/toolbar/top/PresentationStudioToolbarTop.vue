@@ -9,13 +9,14 @@
     "
   >
     <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
-      <template
-        v-if="
-          mode &&
-          (![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode) ||
-            (MODE_OPTIONS.media === mode && selectedElement))
-        "
-      >
+      <!-- modes -->
+      <PresentationStudioToolbarTopModes
+        v-if="showModes"
+        @switch-mode="switchMode($event)"
+      />
+
+      <template v-else>
+        <!-- modes customization -->
         <q-btn
           icon="r_close"
           unelevated
@@ -23,8 +24,8 @@
           round
           size="12px"
           @click="
-            $emit('switchMode', null);
-            deselectElement();
+            switchMode(null);
+            studioStore.deselectElements();
           "
         />
 
@@ -32,233 +33,88 @@
           <q-separator vertical style="height: 24px" />
         </div>
 
-        <!-- selected item actions -->
-        <template v-if="copiedElement">
-          <!-- deselect line button -->
-          <q-btn
-            icon="r_paste"
-            unelevated
-            text-color="black"
-            size="12px"
-            round
-            @click="paste()"
-          >
-            <q-tooltip>
-              <div class="text-center">
-                {{ $t("presentationStudio.elementsContextMenu.paste") }}
-              </div>
-
-              <div
-                v-if="showShortcuts"
-                class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-              >
-                <div v-if="isMac">⌘</div>
-                <div v-else>Ctrl</div>
-                <div>V</div>
-              </div>
-            </q-tooltip>
-          </q-btn>
-
-          <div class="row items-center q-mx-sm">
-            <q-separator vertical style="height: 24px" />
-          </div>
-        </template>
-      </template>
-
-      <template v-else>
-        <template v-if="slide?.type === SLIDE_TYPES.CONTENT">
-          <q-btn
-            icon="icon-space_dashboard"
-            unelevated
-            text-color="black"
-            :class="showLayoutsMenu ? 'bg-grey-2' : ''"
-            round
-            size="12px"
-          >
-            <q-tooltip>
-              {{ $t("presentationStudio.toolbar.layouts.placeholder") }}
-            </q-tooltip>
-
-            <!-- layouts -->
-            <q-menu
-              v-model="showLayoutsMenu"
-              anchor="top left"
-              self="bottom left"
-              transition-show="jump-down"
-              transition-hide="jump-up"
-              :offset="[0, 16]"
-              class="q-pa-sm bg-white scroll--hidden"
-              style="width: 384px; max-height: 100%"
-            >
-              <PresentationStudioToolbarTopLayouts v-close-popup />
-            </q-menu>
-          </q-btn>
-
-          <div class="row items-center q-mx-sm">
-            <q-separator vertical style="height: 24px" />
-          </div>
-        </template>
-
-        <!-- modes -->
-        <PresentationStudioToolbarTopModes
-          :disabled="slide?.type !== SLIDE_TYPES.CONTENT"
-          @switch-mode="$emit('switchMode', $event)"
-          @add-image="$emit('addImage', $event)"
-          @add-emoji="$emit('addEmoji', $event)"
-          @add-shape="$emit('addShape', $event)"
-        />
-      </template>
-
-      <!-- modes customization -->
-      <div
-        v-if="showCustomizationMenu"
-        class="row no-wrap items-center q-gutter-sm scroll--hidden"
-        style="width: 100%; overflow-x: scroll"
-      >
-        <!-- drawing customization -->
-        <PresentationStudioToolbarTopCustomizationDrawing
-          v-if="mode === MODE_OPTIONS.drawing"
-        />
-
-        <!-- text customization -->
-        <PresentationStudioToolbarTopCustomizationText
-          v-if="[MODE_OPTIONS.text, MODE_OPTIONS.textEditing].includes(mode)"
-        />
-
-        <!-- shape customization -->
-        <PresentationStudioToolbarTopCustomizationShape
-          v-if="mode === MODE_OPTIONS.shape"
-        />
-
-        <!-- media customization -->
-        <PresentationStudioToolbarTopCustomizationMedia
-          v-if="mode === MODE_OPTIONS.media"
-        />
-      </div>
-
-      <!-- open design tab & choose wallpaper dialog -->
-      <template
-        v-if="
-          slide?.type === SLIDE_TYPES.CONTENT &&
-          !(
-            mode &&
-            (![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode) ||
-              (MODE_OPTIONS.media === mode && selectedElement))
-          )
-        "
-      >
-        <q-separator vertical class="q-mx-sm" />
-
-        <q-btn
-          icon="r_wallpaper"
-          unelevated
-          text-color="black"
-          round
-          size="12px"
-          @click="
-            drawerRightTab = PRESENTATION_TABS.DESIGN;
-            showSelectBackgroundDialog = true;
-          "
+        <div
+          class="row no-wrap items-center q-gutter-sm scroll--hidden"
+          style="width: 100%; overflow-x: scroll"
         >
-          <q-tooltip>
-            {{ $t("presentationStudio.toolbar.changeBackground.title") }}
-          </q-tooltip>
-        </q-btn>
+          <!-- drawing customization -->
+          <PresentationStudioToolbarTopCustomizationDrawing
+            v-if="
+              mode === MODE_OPTIONS.drawing ||
+              (transformer.default?.nodes()?.length &&
+                transformer.default
+                  ?.nodes()
+                  .filter((node) => node.getClassName() === 'Line')?.length ===
+                  transformer.default?.nodes()?.length)
+            "
+          />
+
+          <!--          &lt;!&ndash; text customization &ndash;&gt;-->
+          <!--          <PresentationStudioToolbarTopCustomizationText-->
+          <!--            v-if="[MODE_OPTIONS.text, MODE_OPTIONS.textEditing].includes(mode)"-->
+          <!--          />-->
+
+          <!--          &lt;!&ndash; shape customization &ndash;&gt;-->
+          <!--          <PresentationStudioToolbarTopCustomizationShape-->
+          <!--            v-if="mode === MODE_OPTIONS.shape"-->
+          <!--          />-->
+
+          <!-- media customization -->
+          <PresentationStudioToolbarTopCustomizationImage
+            v-if="
+              transformer.default?.nodes()?.length &&
+              transformer.default
+                ?.nodes()
+                .filter((node) => node.getClassName() === 'Image')?.length ===
+                transformer.default?.nodes()?.length
+            "
+          />
+        </div>
       </template>
 
-      <q-space />
+      <!--      &lt;!&ndash; open design tab & choose wallpaper dialog &ndash;&gt;-->
+      <!--      <template-->
+      <!--        v-if="-->
+      <!--          slide?.type === SLIDE_TYPES.CONTENT &&-->
+      <!--          !(-->
+      <!--            mode &&-->
+      <!--            (![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode) ||-->
+      <!--              (MODE_OPTIONS.media === mode && selectedElement))-->
+      <!--          )-->
+      <!--        "-->
+      <!--      >-->
+      <!--        <q-separator vertical class="q-mx-sm" />-->
+
+      <!--        <q-btn-->
+      <!--          icon="r_wallpaper"-->
+      <!--          unelevated-->
+      <!--          text-color="black"-->
+      <!--          round-->
+      <!--          size="12px"-->
+      <!--          @click="-->
+      <!--            drawerRightTab = PRESENTATION_TABS.DESIGN;-->
+      <!--            showSelectBackgroundDialog = true;-->
+      <!--          "-->
+      <!--        >-->
+      <!--          <q-tooltip>-->
+      <!--            {{ $t("presentationStudio.toolbar.changeBackground.title") }}-->
+      <!--          </q-tooltip>-->
+      <!--        </q-btn>-->
+      <!--      </template>-->
     </template>
-
-    <template v-else>
-      <q-space />
-    </template>
-
-    <div class="row items-center q-mr-md">
-      <div class="text-12 text-no-wrap" style="opacity: 0.2">
-        x: {{ Math.round(mouse.x) }} y:{{ Math.round(mouse.y) }}
-      </div>
-    </div>
-
-    <div class="row no-wrap">
-      <!-- zoom out -->
-      <q-btn
-        icon="r_zoom_out"
-        round
-        size="12px"
-        unelevated
-        disable
-        @click="$emit('zoomOut')"
-      >
-        <q-tooltip>
-          {{ $t("presentationStudio.toolbar.zoom.in") }}
-        </q-tooltip>
-      </q-btn>
-
-      <!-- current zoom -->
-      <q-btn :label="`${Math.round(scale * 100)}%`" unelevated disable>
-        <q-tooltip>
-          {{ $t("presentationStudio.toolbar.zoom.select") }}
-        </q-tooltip>
-
-        <q-menu
-          anchor="top middle"
-          self="bottom middle"
-          transition-show="jump-down"
-          transition-hide="jump-up"
-          :offset="[0, 8]"
-          class="q-pa-sm"
-        >
-          <q-item
-            v-for="option in ZOOM_OPTIONS"
-            :key="option"
-            clickable
-            class="items-center justify-center"
-            @click="$emit('zoom', option)"
-          >
-            {{ option * 100 }}%
-          </q-item>
-        </q-menu>
-      </q-btn>
-
-      <!-- zoom in -->
-      <q-btn
-        icon="r_zoom_in"
-        round
-        size="12px"
-        unelevated
-        disable
-        @click="$emit('zoomIn')"
-      >
-        <q-tooltip>
-          {{ $t("presentationStudio.toolbar.zoom.out") }}
-        </q-tooltip>
-      </q-btn>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 import { storeToRefs } from "pinia";
-import { useCanvasDrawingStore } from "stores/canvas/drawing";
-import { useCanvasTextStore } from "stores/canvas/text";
-import { useCanvasStore } from "stores/canvas";
-import { useCanvasShapeStore } from "stores/canvas/shape";
-import { paste } from "stores/canvas/helpers/elementsContextMenuActions";
 import PresentationStudioToolbarTopCustomizationDrawing from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationDrawing.vue";
-import PresentationStudioToolbarTopCustomizationText from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationText.vue";
-import PresentationStudioToolbarTopCustomizationShape from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationShape.vue";
 import PresentationStudioToolbarTopModes from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopModes.vue";
-import PresentationStudioToolbarTopLayouts from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopLayouts.vue";
 import { useQuasar } from "quasar";
-import {
-  PRESENTATION_TABS,
-  SLIDE_TYPES,
-} from "src/constants/presentationStudio";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
-import PresentationStudioToolbarTopCustomizationMedia from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationMedia.vue";
-import { useCanvasMediaStore } from "stores/canvas/media";
-import { deselectElement } from "stores/canvas/helpers/select";
+import { useStudioStore } from "stores/studio";
+import PresentationStudioToolbarTopCustomizationImage from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationImage.vue";
 
 /*
  * variables
@@ -268,90 +124,20 @@ const $q = useQuasar();
 /*
  * stores
  */
-const canvasStore = useCanvasStore();
-const {
-  mode,
-  scale,
-  ZOOM_OPTIONS,
-  MODE_OPTIONS,
-  mouse,
-  selectedElement,
-  selectedElementIndex,
-  copiedElement,
-} = storeToRefs(canvasStore);
-
-const drawingStore = useCanvasDrawingStore();
-const textStore = useCanvasTextStore();
-const shapeStore = useCanvasShapeStore();
-const mediaStore = useCanvasMediaStore();
+const studioStore = useStudioStore();
+const { mode, MODE_OPTIONS, transformer } = storeToRefs(studioStore);
 
 const presentationsStore = usePresentationsStore();
-const {
-  presentation,
-  slide,
-  isDrawerRightPanelExpanded,
-  drawerRightTab,
-  showSelectBackgroundDialog,
-} = storeToRefs(presentationsStore);
+const { presentation, slide, isDrawerRightPanelExpanded } =
+  storeToRefs(presentationsStore);
 
-/*
- * emits
- */
-defineEmits([
-  "switchMode",
-  "addImage",
-  "addEmoji",
-  "addShape",
-  "zoomIn",
-  "zoomOut",
-  "zoom",
-]);
+const switchMode = (value) => {
+  mode.value = value;
+};
 
-/*
- * display variables
- */
-const showLayoutsMenu = ref(false);
-
-const showCustomizationMenu = computed(() => {
-  return (
-    mode.value &&
-    [
-      MODE_OPTIONS.value.drawing,
-      MODE_OPTIONS.value.text,
-      MODE_OPTIONS.value.textEditing,
-      MODE_OPTIONS.value.shape,
-      MODE_OPTIONS.value.media,
-    ].includes(mode.value)
-  );
+const showModes = computed(() => {
+  return !mode.value && !transformer.value.default?.nodes()?.length;
 });
-
-/*
- * handle element selection - apply customization styles
- */
-watch(
-  () => selectedElementIndex.value,
-  () => {
-    if (selectedElementIndex.value !== -1) {
-      switch (selectedElement.value.mode) {
-        case MODE_OPTIONS.value.text:
-          textStore.loadSelectedElementCustomization();
-          break;
-
-        case MODE_OPTIONS.value.drawing:
-          drawingStore.loadSelectedElementCustomization();
-          break;
-
-        case MODE_OPTIONS.value.shape:
-          shapeStore.loadSelectedElementCustomization();
-          break;
-
-        case MODE_OPTIONS.value.media:
-          mediaStore.loadSelectedElementCustomization();
-          break;
-      }
-    }
-  }
-);
 
 /*
  * shortcuts

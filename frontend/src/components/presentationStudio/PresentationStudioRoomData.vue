@@ -1,11 +1,9 @@
 <template>
   <div class="row justify-end q-pr-sm">
     <div
-      class="room_data text-16 row no-wrap items-center justify-center"
+      class="room_data row no-wrap items-center justify-center"
       :class="`text-${
-        averageBackgroundBrightness >= backgroundBrightnessThreshold
-          ? 'black'
-          : 'white'
+        slide?.color_scheme === COLOR_SCHEME_OPTIONS.light ? 'black' : 'white'
       }`"
     >
       <!-- reactions -->
@@ -61,7 +59,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onUnmounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import PresentationRoomDataLike from "components/presentationRoom/host/data/PresentationRoomHostDataLike.vue";
 import PresentationRoomDataLove from "components/presentationRoom/host/data/PresentationRoomHostDataLove.vue";
 import { usePresentationsStore } from "stores/presentations";
@@ -71,22 +69,13 @@ import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
-import { useCanvasStore } from "stores/canvas";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const {
-  slide,
-  presentation,
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-  participants,
-} = storeToRefs(presentationsStore);
-
-const canvasStore = useCanvasStore();
-const { scale } = storeToRefs(canvasStore);
+const { slide, presentation, participants } = storeToRefs(presentationsStore);
 
 /*
  * animation
@@ -141,33 +130,6 @@ watch(
     animate("pin");
   }
 );
-
-/*
- * slide canvas element
- */
-const canvasRect = ref(canvasStore.canvasRect());
-
-watch(
-  () => scale.value,
-  () => {
-    canvasRect.value = canvasStore.canvasRect();
-  }
-);
-
-/*
- * on resize
- */
-onBeforeMount(() => {
-  window.addEventListener("resize", onResize);
-});
-
-onUnmounted(() => {
-  window.addEventListener("resize", onResize);
-});
-
-const onResize = () => {
-  canvasRect.value = canvasStore.canvasRect();
-};
 </script>
 
 <style scoped lang="scss">
@@ -176,8 +138,8 @@ const onResize = () => {
   border-radius: 24px;
   z-index: 2;
   height: 24px;
-  margin-top: calc(-24px - 16px);
-  margin-right: 8px;
+  margin-top: calc(-24px - 24px - 8px);
+  margin-right: 24px;
   transition: 0.2s;
 
   .room_data__participants_count {

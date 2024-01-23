@@ -8,7 +8,7 @@
     @click="showSelectMediaDialog = true"
   >
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.media.options.replaceMedia.title") }}
+      {{ $t("presentationStudio.toolbar.image.replaceImage.title") }}
     </q-tooltip>
   </q-btn>
 
@@ -16,13 +16,39 @@
     <SelectMedia
       @cancel="showSelectMediaDialog = false"
       @select="
-        handleImageReplace(
+        studioStore.replaceImage(
+          undefined,
           $event?.preview_url || $event?.original_url || $event?.urls?.regular
         );
         showSelectMediaDialog = false;
       "
     />
   </q-dialog>
+
+  <q-select
+    v-model="image.clipPosition"
+    :options="Object.values(CROP_POSITION_OPTIONS)"
+    map-options
+    emit-value
+    hide-dropdown-icon
+    dense
+    borderless
+    class="q-px-sm"
+    :option-label="
+      (option) => $t(`presentationStudio.toolbar.image.clipPosition.${option}`)
+    "
+    options-dense
+    hide-selected
+    @update:model-value="studioStore.applyCustomizationChanges()"
+  >
+    <template #prepend>
+      <q-icon name="r_crop" class="text-semibold text-dark" size="20px" />
+    </template>
+
+    <q-tooltip :offset="[0, 4]">
+      {{ $t("presentationStudio.toolbar.image.clipPosition.title") }}
+    </q-tooltip>
+  </q-select>
 
   <!-- shadow -->
   <q-btn flat round size="12px" icon="icon-shadow">
@@ -40,99 +66,84 @@
         no-header-tabs
         style="min-width: 216px"
         default-view="palette"
-        v-model="mediaState.customization.value.shadowColor"
-        @change="mediaStore.applyStyles()"
+        v-model="image.shadowColor"
+        @change="studioStore.applyCustomizationChanges()"
       />
 
       <div class="q-py-sm q-px-lg">
         <!-- shadow opacity -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.media.options.shadow.opacity") }}
+            {{ $t("presentationStudio.toolbar.image.shadow.opacity") }}
           </div>
 
           <q-slider
-            v-model="mediaState.customization.value.shadowOpacity"
+            v-model="image.shadowOpacity"
             :min="0"
-            :max="100"
+            :max="1"
+            :step="0.01"
             label
             thumb-size="14px"
-            :label-value="mediaState.customization.value.shadowOpacity + '%'"
-            @change="mediaStore.applyStyles()"
+            :label-value="Math.round(image.shadowOpacity * 100) + '%'"
+            @change="studioStore.applyCustomizationChanges()"
           />
         </div>
 
         <!-- shadow blur -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.media.options.shadow.blur") }}
+            {{ $t("presentationStudio.toolbar.image.shadow.blur") }}
           </div>
 
           <q-slider
-            v-model="mediaState.customization.value.shadowBlur"
+            v-model="image.shadowBlur"
             :min="0"
             :max="100"
             label
             thumb-size="14px"
-            :label-value="mediaState.customization.value.shadowBlur"
-            @change="mediaStore.applyStyles()"
+            :label-value="image.shadowBlur + 'px'"
+            @change="studioStore.applyCustomizationChanges()"
           />
         </div>
 
         <!-- shadow offset x -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.media.options.shadow.offsetX") }}
+            {{ $t("presentationStudio.toolbar.image.shadow.offsetX") }}
           </div>
 
           <q-slider
-            v-model="mediaState.customization.value.shadowOffsetX"
+            v-model="image.shadowOffset.x"
             :min="-200"
             :max="200"
             label
             thumb-size="14px"
-            :label-value="mediaState.customization.value.shadowOffsetX"
-            @change="mediaStore.applyStyles()"
+            :label-value="image.shadowOffset.x"
+            @change="studioStore.applyCustomizationChanges()"
           />
         </div>
 
         <!-- shadow offset y -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.media.options.shadow.offsetY") }}
+            {{ $t("presentationStudio.toolbar.image.shadow.offsetY") }}
           </div>
 
           <q-slider
-            v-model="mediaState.customization.value.shadowOffsetY"
+            v-model="image.shadowOffset.y"
             :min="-200"
             :max="200"
             label
             thumb-size="14px"
-            :label-value="mediaState.customization.value.shadowOffsetY"
-            @change="mediaStore.applyStyles()"
+            :label-value="image.shadowOffset.y"
+            @change="studioStore.applyCustomizationChanges()"
           />
         </div>
-
-        <!-- remove shadow -->
-        <q-btn
-          v-if="mediaState.customization.value.shadowOpacity > 0"
-          flat
-          dense
-          icon="r_remove"
-          :label="$t('presentationStudio.toolbar.media.options.shadow.remove')"
-          color="grey"
-          class="full-width q-my-sm"
-          no-caps
-          @click="
-            mediaState.customization.value.shadowOpacity = 0;
-            mediaStore.applyStyles();
-          "
-        />
       </div>
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.media.options.shadow.title") }}
+      {{ $t("presentationStudio.toolbar.image.shadow.title") }}
     </q-tooltip>
   </q-btn>
 
@@ -148,28 +159,29 @@
       <div class="q-pt-sm q-pl-md q-pr-lg">
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.media.options.opacity.title") }}
+            {{ $t("presentationStudio.toolbar.image.opacity.title") }}
           </div>
 
           <q-slider
-            v-model="mediaState.customization.value.opacity"
+            v-model="image.opacity"
             :min="0"
-            :max="100"
+            :max="1"
+            :step="0.01"
             label
             thumb-size="14px"
-            :label-value="mediaState.customization.value.opacity + '%'"
-            @change="mediaStore.applyStyles()"
+            :label-value="Math.round(image.opacity * 100) + '%'"
+            @change="studioStore.applyCustomizationChanges()"
           />
         </div>
       </div>
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.media.options.opacity.title") }}
+      {{ $t("presentationStudio.toolbar.image.opacity.title") }}
     </q-tooltip>
   </q-btn>
 
-  <!-- border -->
+  <!-- stroke -->
   <q-btn flat round size="12px" icon="r_border_outer">
     <q-menu
       anchor="bottom left"
@@ -184,18 +196,18 @@
         format-model="hex"
         no-header-tabs
         default-view="palette"
-        v-model="mediaState.customization.value.borderColor"
-        @change="mediaStore.applyStyles()"
+        v-model="image.stroke"
+        @change="studioStore.applyCustomizationChanges()"
       />
 
       <div class="q-pa-sm">
         <div class="text-caption text-grey q-ml-sm">
-          {{ $t("presentationStudio.toolbar.media.options.border.width") }}
+          {{ $t("presentationStudio.toolbar.image.stroke.width") }}
         </div>
 
         <!-- line width -->
         <q-select
-          v-model="mediaState.customization.value.borderWidth"
+          v-model="image.strokeWidth"
           :options="SHAPE_LINE_WIDTH_OPTIONS"
           map-options
           emit-value
@@ -203,9 +215,10 @@
           color="black"
           dense
           hide-dropdown-icon
+          :option-label="(option) => option + 'px'"
           class="q-pl-sm"
           options-dense
-          @update:model-value="mediaStore.applyStyles()"
+          @update:model-value="studioStore.applyCustomizationChanges()"
         >
           <template #prepend>
             <q-icon
@@ -215,62 +228,69 @@
             />
           </template>
         </q-select>
-
-        <q-btn
-          v-if="mediaState.customization.value.borderWidth !== '0px'"
-          flat
-          dense
-          icon="r_remove"
-          :label="$t('presentationStudio.toolbar.media.options.border.remove')"
-          color="grey"
-          class="full-width q-mt-sm"
-          no-caps
-          @click="
-            mediaState.customization.value.borderWidth = '0px';
-            mediaStore.applyStyles();
-          "
-        />
       </div>
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.media.options.border.title") }}
+      {{ $t("presentationStudio.toolbar.image.stroke.title") }}
+    </q-tooltip>
+  </q-btn>
+
+  <!-- corner radius -->
+  <q-btn flat round size="12px" icon="r_rounded_corner">
+    <q-menu
+      anchor="bottom left"
+      self="top left"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      :offset="[0, 8]"
+    >
+      <div class="q-pt-sm q-pl-md q-pr-lg">
+        <div>
+          <div class="text-caption text-grey">
+            {{ $t("presentationStudio.toolbar.image.cornerRadius.title") }}
+          </div>
+
+          <q-slider
+            v-model="image.cornerRadius"
+            :min="0"
+            :max="50"
+            label
+            thumb-size="14px"
+            :label-value="image.cornerRadius + '%'"
+            @change="studioStore.applyCustomizationChanges()"
+          />
+        </div>
+      </div>
+    </q-menu>
+
+    <q-tooltip :offset="[0, 4]">
+      {{ $t("presentationStudio.toolbar.image.cornerRadius.title") }}
     </q-tooltip>
   </q-btn>
 </template>
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { useCanvasMediaStore } from "stores/canvas/media";
-import { SHAPE_LINE_WIDTH_OPTIONS } from "src/constants/canvas/canvasVariables";
+import { useStudioStore } from "stores/studio";
 import SelectMedia from "components/media/SelectMedia.vue";
 import { ref } from "vue";
-import { useCanvasStore } from "stores/canvas";
-import { deleteElement } from "stores/canvas/helpers/select";
+import {
+  CROP_POSITION_OPTIONS,
+  DRAWING_STROKE_WIDTH_OPTIONS,
+  SHAPE_LINE_WIDTH_OPTIONS,
+} from "src/constants/canvas/canvasVariables";
 
 /*
  * stores
  */
-const mediaStore = useCanvasMediaStore();
-const mediaState = storeToRefs(mediaStore);
-
-const canvasStore = useCanvasStore();
-const { selectedElement } = storeToRefs(canvasStore);
+const studioStore = useStudioStore();
+const { image } = storeToRefs(studioStore);
 
 /*
  * replace image
  */
 const showSelectMediaDialog = ref(false);
-const handleImageReplace = (url) => {
-  mediaStore.addImage(
-    url,
-    selectedElement.value.x,
-    selectedElement.value.y,
-    selectedElement.value.width,
-    selectedElement.value.height
-  );
-  deleteElement();
-};
 </script>
 
 <style scoped lang="scss">

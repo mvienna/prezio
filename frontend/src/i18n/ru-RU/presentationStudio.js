@@ -9,15 +9,14 @@ export default {
         title: "Рисование",
 
         options: {
-          color: "Цвет",
-          erase: "Режим стирания",
-          brushSize: "Размер кисти",
-          brushType: "Тип кисти",
+          strokeColor: "Цвет",
+          strokeWidth: "Размер кисти",
+          mode: "Тип кисти",
         },
 
-        BRUSH_TYPES: {
-          pen: "Ручка",
-          pencil: "Карандаш",
+        modes: {
+          brush: "Кисть",
+          eraser: "Стерка",
         },
       },
 
@@ -48,32 +47,50 @@ export default {
       },
 
       // media
-      media: {
+      image: {
         title: "Фотографии",
 
-        options: {
-          replaceMedia: {
-            title: "Заменить",
-          },
+        replaceImage: {
+          title: "Заменить",
+        },
 
-          shadow: {
-            title: "Тень",
-            opacity: "Прозрачность тени",
-            blur: "Размытие тени",
-            offsetX: "Отступ по X",
-            offsetY: "Отступ по Y",
-            remove: "Убрать тень",
-          },
+        shadow: {
+          title: "Тень",
+          opacity: "Прозрачность тени",
+          blur: "Размытие тени",
+          offsetX: "Отступ по X",
+          offsetY: "Отступ по Y",
+        },
 
-          opacity: {
-            title: "Прозрачность",
-          },
+        opacity: {
+          title: "Прозрачность",
+        },
 
-          border: {
-            title: "Обводка",
-            width: "Толщина обводки",
-            remove: "Убрать обводку",
-          },
+        stroke: {
+          title: "Обводка",
+          width: "Толщина обводки",
+        },
+
+        cornerRadius: {
+          title: "Радиус закругления",
+        },
+
+        clipPosition: {
+          title: "Положение зажима",
+
+          none: "Нет",
+
+          centerTop: "Центр-Верх",
+          centerMiddle: "Центр-Середина",
+          centerBottom: "Центр-Низ",
+
+          rightTop: "Право-Верх",
+          rightMiddle: "Право-Середина",
+          rightBottom: "Право-Низ",
+
+          leftTop: "Лево-Верх",
+          leftMiddle: "Лево-Середина",
+          leftBottom: "Лево-Низ",
         },
       },
 
@@ -90,11 +107,9 @@ export default {
           stroke: {
             title: "Обводка",
             width: "Размер обводки",
-            remove: "Убрать обводку",
           },
           fill: {
             title: "Цвет заливки",
-            remove: "Убрать заливку",
             style: {
               solid: "Сплошной",
               gradient: "Градиент",
@@ -177,7 +192,7 @@ export default {
       duplicate: "Дублировать",
       delete: "Удалить",
 
-      replaceMedia: "Заменить фотографию",
+      replaceImage: "Заменить фотографию",
 
       moveUp: "Переместить выше",
       moveToTheTop: "Переместить вверх",

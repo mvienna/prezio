@@ -13,11 +13,11 @@
           :key="themeIndex"
           class="theme relative-position"
           :class="
-            backgroundElement?.imageSrc === theme.src
+            baseBackgroundUrl === theme.src
               ? 'theme--active shadow--primary'
               : ''
           "
-          @click="$emit('changeBackground', theme)"
+          @click="studioStore.updateBaseLayer(undefined, theme.src)"
         >
           <q-img
             :src="theme.src"
@@ -51,11 +51,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { THEMES } from "src/constants/assets/themes";
 import { useI18n } from "vue-i18n";
 import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
+import { useStudioStore } from "stores/studio";
 
 /*
  * variables
@@ -68,17 +69,8 @@ const { t } = useI18n({ useScope: "global" });
 const canvasStore = useCanvasStore();
 const { elements, MODE_OPTIONS, canvas } = storeToRefs(canvasStore);
 
-/*
- * props
- */
-defineProps({
-  backgroundElement: { type: Object, default: null },
-});
-
-/*
- * emits
- */
-const emit = defineEmits(["changeBackground", "previewBackground"]);
+const studioStore = useStudioStore();
+const { layers } = storeToRefs(studioStore);
 
 /*
  * categories
@@ -114,29 +106,18 @@ const handleBackgroundMouseOver = (theme, themeIndex) => {
 
   setTimeout(() => {
     if (isThemesHovered.value[themeIndex]) {
-      emit("previewBackground", theme);
+      studioStore.updateBaseLayer(undefined, undefined, undefined, theme.src);
     }
   }, 500);
 };
 
+const baseBackgroundUrl = computed(() => {
+  return layers.value.base.findOne(".baseBackground")?.getAttr("source");
+});
+
 const handleBackgroundMouseLeave = (themeIndex) => {
   isThemesHovered.value[themeIndex] = false;
-
-  // remove preview background
-  elements.value = elements.value.filter(
-    (element) => element.mode !== MODE_OPTIONS.value.backgroundPreview
-  );
-
-  // un-hide active background
-  const themeElementIndex = elements.value.findIndex(
-    (element) => element.mode === MODE_OPTIONS.value.background
-  );
-  if (themeElementIndex !== -1) {
-    elements.value[themeElementIndex].isVisible = true;
-  }
-
-  // redraw canvas
-  canvasStore.redrawCanvas(false);
+  studioStore.updateBaseLayer(undefined, baseBackgroundUrl.value, undefined);
 };
 </script>
 

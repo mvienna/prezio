@@ -25,6 +25,7 @@ class PresentationSlideController extends Controller
             'presentation_id' => $presentation->id,
             'canvas_data' => $request->canvas_data,
             'preview' => $request->preview,
+            'color_scheme' => $request->color_scheme,
             'order' => $request->order,
             'type' => $request->type,
             'settings_data' => $request->settings_data,
@@ -50,6 +51,7 @@ class PresentationSlideController extends Controller
         $slide->update([
             'canvas_data' => $request->canvas_data,
             'preview' => $request->preview,
+            'color_scheme' => $request->color_scheme,
             'order' => $request->order,
             'type' => $request->type,
             'settings_data' => $request->settings_data,

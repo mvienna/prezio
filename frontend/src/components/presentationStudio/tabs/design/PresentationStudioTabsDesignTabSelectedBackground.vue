@@ -8,29 +8,10 @@
       }}
     </div>
 
-    <div v-if="backgroundElement?.imageSrc" class="relative-position">
+    <div v-if="baseBackground" class="relative-position">
       <q-img
-        :src="backgroundElement?.imageSrc"
+        :src="baseBackground.getAttr('source')"
         class="selected_background"
-        :style="`filter: opacity(${
-          backgroundFilters.opacity >= 0
-            ? backgroundFilters.opacity
-            : defaultBackgroundFilters.opacity
-        }%) blur(${
-          backgroundFilters.blur || defaultBackgroundFilters.blur
-        }px) contrast(${
-          backgroundFilters.contrast >= 0
-            ? backgroundFilters.contrast
-            : defaultBackgroundFilters.contrast
-        }%) brightness(${
-          backgroundFilters.brightness >= 0
-            ? backgroundFilters.brightness
-            : defaultBackgroundFilters.brightness
-        }%) invert(${
-          backgroundFilters.invert || defaultBackgroundFilters.invert
-        }%) grayscale(${
-          backgroundFilters.grayscale || defaultBackgroundFilters.grayscale
-        }%);`"
       />
 
       <!-- background filters -->
@@ -72,8 +53,8 @@
                   name="r_restart_alt"
                   class="q-ml-sm cursor-pointer"
                   @click="
-                    backgroundFilters = { ...defaultBackgroundFilters };
-                    $emit('changeBackgroundFilters', backgroundFilters);
+                    baseBackgroundFilters = { ...defaultBackgroundFilters };
+                    handleBaseBackgroundFiltersUpdate();
                   "
                 >
                   <q-tooltip>
@@ -107,14 +88,17 @@
               </div>
 
               <q-slider
-                v-model="backgroundFilters.opacity"
+                v-model="baseBackgroundFilters.opacity"
                 :min="0"
-                :max="100"
+                :max="1"
+                :step="0.01"
                 label
                 style="width: 150px"
                 thumb-size="14px"
-                :label-value="backgroundFilters.opacity + '%'"
-                @change="$emit('changeBackgroundFilters', backgroundFilters)"
+                :label-value="
+                  Math.round(baseBackgroundFilters.opacity * 100) + '%'
+                "
+                @change="handleBaseBackgroundFiltersUpdate()"
               />
             </div>
 
@@ -129,14 +113,14 @@
               </div>
 
               <q-slider
-                v-model="backgroundFilters.blur"
+                v-model="baseBackgroundFilters.blurRadius"
                 :min="0"
-                :max="30"
+                :max="100"
                 label
                 style="width: 150px"
                 thumb-size="14px"
-                :label-value="backgroundFilters.blur + 'px'"
-                @change="$emit('changeBackgroundFilters', backgroundFilters)"
+                :label-value="baseBackgroundFilters.blurRadius + 'px'"
+                @change="handleBaseBackgroundFiltersUpdate()"
               />
             </div>
 
@@ -151,15 +135,14 @@
               </div>
 
               <q-slider
-                v-model="backgroundFilters.contrast"
-                :min="0"
-                :max="200"
+                v-model="baseBackgroundFilters.contrast"
+                :min="-100"
+                :max="100"
                 label
-                :markers="100"
                 style="width: 150px"
                 thumb-size="14px"
-                :label-value="backgroundFilters.contrast + '%'"
-                @change="$emit('changeBackgroundFilters', backgroundFilters)"
+                :label-value="baseBackgroundFilters.contrast + '%'"
+                @change="handleBaseBackgroundFiltersUpdate()"
               />
             </div>
 
@@ -174,66 +157,24 @@
               </div>
 
               <q-slider
-                v-model="backgroundFilters.brightness"
-                :min="0"
-                :max="200"
-                label
-                :markers="100"
-                style="width: 150px"
-                thumb-size="14px"
-                :label-value="backgroundFilters.brightness + '%'"
-                @change="$emit('changeBackgroundFilters', backgroundFilters)"
-              />
-            </div>
-
-            <!-- background invert -->
-            <div class="row no-wrap items-center justify-between q-mt-sm">
-              <div class="text-caption text-grey q-mb-sm">
-                {{
-                  $t(
-                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.invert"
-                  )
-                }}
-              </div>
-
-              <q-slider
-                v-model="backgroundFilters.invert"
-                :min="0"
-                :max="100"
+                v-model="baseBackgroundFilters.brightness"
+                :min="-1"
+                :max="1"
+                :step="0.01"
                 label
                 style="width: 150px"
                 thumb-size="14px"
-                :label-value="backgroundFilters.invert + '%'"
-                @change="$emit('changeBackgroundFilters', backgroundFilters)"
-              />
-            </div>
-
-            <!-- background grayscale -->
-            <div class="row no-wrap items-center justify-between q-mt-sm">
-              <div class="text-caption text-grey q-mb-sm">
-                {{
-                  $t(
-                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.grayscale"
-                  )
-                }}
-              </div>
-
-              <q-slider
-                v-model="backgroundFilters.grayscale"
-                :min="0"
-                :max="100"
-                label
-                style="width: 150px"
-                thumb-size="14px"
-                :label-value="backgroundFilters.grayscale + '%'"
-                @change="$emit('changeBackgroundFilters', backgroundFilters)"
+                :label-value="
+                  Math.round(baseBackgroundFilters.brightness * 100) + '%'
+                "
+                @change="handleBaseBackgroundFiltersUpdate()"
               />
             </div>
           </q-menu>
         </q-btn>
       </div>
 
-      <!-- background opacity (duplicate) -->
+      <!-- background opacity (copy) -->
       <div class="text-caption text-grey q-mt-md">
         {{
           $t(
@@ -243,13 +184,14 @@
       </div>
 
       <q-slider
-        v-model="backgroundFilters.opacity"
+        v-model="baseBackgroundFilters.opacity"
         :min="0"
-        :max="100"
+        :max="1"
+        :step="0.01"
         label
         class="q-pr-sm"
-        :label-value="backgroundFilters.opacity + '%'"
-        @change="$emit('changeBackgroundFilters', backgroundFilters)"
+        :label-value="Math.round(baseBackgroundFilters.opacity * 100) + '%'"
+        @change="handleBaseBackgroundFiltersUpdate()"
       />
     </div>
 
@@ -273,10 +215,14 @@
         <SelectMedia
           @cancel="showSelectBackgroundDialog = false"
           @select="
-            $emit('changeBackground', {
-              background: $event,
-              backgroundFilters: backgroundFilters,
-            });
+            studioStore.updateBaseLayer(
+              null,
+              $event?.preview_url ||
+                $event?.original_url ||
+                $event?.urls?.regular,
+              baseBackgroundFilters
+            );
+
             showSelectBackgroundDialog = false;
           "
         />
@@ -284,24 +230,24 @@
 
       <!-- delete preview -->
       <q-btn
-        v-if="backgroundElement"
+        v-if="baseBackground"
         icon="r_delete_sweep"
         outline
         style="width: 36px"
         size="12px"
         class="q-ml-md"
-        @click="deleteElement(backgroundElement)"
+        @click="studioStore.deleteNodes([baseBackground])"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import { deleteElement } from "stores/canvas/helpers/select";
 import SelectMedia from "components/media/SelectMedia.vue";
-import { onBeforeMount, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
+import { useStudioStore } from "stores/studio";
 
 /*
  * stores
@@ -309,36 +255,48 @@ import { storeToRefs } from "pinia";
 const presentationsStore = usePresentationsStore();
 const { showSelectBackgroundDialog } = storeToRefs(presentationsStore);
 
-/*
- * props
- */
-const props = defineProps({
-  backgroundElement: { type: Object, default: null },
-  defaultBackgroundFilters: { type: Object, default: null },
-});
-
-/*
- * emits
- */
-defineEmits(["changeBackgroundFilters", "changeBackground"]);
+const studioStore = useStudioStore();
+const { layers } = storeToRefs(studioStore);
 
 /*
  * background filters
  */
-const backgroundFilters = ref({ ...props.defaultBackgroundFilters });
+const baseBackground = computed(() => {
+  return layers.value.base?.findOne(".baseBackground");
+});
 
-onBeforeMount(() => {
-  if (props.backgroundElement) {
-    backgroundFilters.value = {
-      opacity: props.backgroundElement.opacity,
-      blur: props.backgroundElement.blur,
-      contrast: props.backgroundElement.contrast,
-      brightness: props.backgroundElement.brightness,
-      invert: props.backgroundElement.invert,
-      grayscale: props.backgroundElement.grayscale,
+onMounted(() => {
+  if (baseBackground.value) {
+    baseBackgroundFilters.value = {
+      opacity: baseBackground.value.opacity(),
+      blurRadius: baseBackground.value.blurRadius(),
+      brightness: baseBackground.value.brightness(),
+      contrast: baseBackground.value.contrast(),
     };
   }
 });
+
+const baseBackgroundFilters = ref({
+  opacity: 1,
+  blurRadius: 0,
+  brightness: 0,
+  contrast: 0,
+});
+
+const defaultBackgroundFilters = {
+  opacity: 1,
+  blurRadius: 0,
+  brightness: 0,
+  contrast: 0,
+};
+
+const handleBaseBackgroundFiltersUpdate = () => {
+  studioStore.updateBaseLayer(
+    undefined,
+    undefined,
+    baseBackgroundFilters.value
+  );
+};
 </script>
 
 <style scoped lang="scss">

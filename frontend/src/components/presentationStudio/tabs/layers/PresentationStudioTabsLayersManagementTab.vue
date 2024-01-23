@@ -1,8 +1,12 @@
 <template>
   <div>
     <draggable
-      v-if="elements.length"
-      v-model="elements"
+      v-if="
+        nodes?.filter((node) =>
+          Object.values(MODE_OPTIONS).includes(node.getAttr('name'))
+        )?.length
+      "
+      v-model="nodes"
       :component-data="{
         tag: 'ul',
         type: 'transition-group',
@@ -12,81 +16,25 @@
       item-key="id"
       handle=".layer_handle"
       @start="handleStartDragging"
-      @end="handleLayersReorder"
-      @reordered="handleLayersReorder"
+      @end="handleEndDragging"
     >
       <template #item="{ element }">
         <q-card
-          v-if="
-            ![MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
-              element.mode
-            )
-          "
+          v-if="Object.values(MODE_OPTIONS).includes(element.getAttr('name'))"
           flat
           class="layer cursor-pointer no-scroll"
           :class="`${
-            element.id === selectedElement?.id ? 'layer--active' : ''
-          } ${
-            [MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
-              element.mode
-            )
-              ? 'layer--background'
+            transformer.default
+              ?.nodes()
+              ?.filter((node) => node._id === element._id)?.length
+              ? 'layer--active'
               : ''
           }`"
         >
-          <!-- slide background / base fill -->
-          <div
-            v-if="
-              [MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
-                element.mode
-              )
-            "
-            class="layer--background__image"
-            :style="`${
-              element.mode === MODE_OPTIONS.background
-                ? `background: url(${
-                    elements.find(
-                      (item) => item.mode === MODE_OPTIONS.background
-                    ).imageSrc
-                  }); filter: opacity(${element.opacity}%) blur(${
-                    element.blur
-                  }px) contrast(${element.contrast}%) brightness(${
-                    element.brightness
-                  }%) invert(${element.invert}%) grayscale(${
-                    element.grayscale
-                  }%);`
-                : element.mode === MODE_OPTIONS.baseFill
-                ? `background: ${
-                    elements.find((item) => item.mode === MODE_OPTIONS.baseFill)
-                      .fillColor
-                  };`
-                : ''
-            }`"
-          ></div>
-
           <q-card-section
             class="row no-wrap items-center q-py-none q-px-sm relative-position"
           >
-            <!-- drag handle -->
             <q-icon
-              v-if="
-                [MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
-                  element.mode
-                )
-              "
-              name="r_drag_indicator"
-              :color="
-                element.mode === MODE_OPTIONS.background
-                  ? averageBackgroundBrightness > backgroundBrightnessThreshold
-                    ? 'black'
-                    : 'white'
-                  : textColorOnAColoredBackground(element.fillColor, false)
-              "
-              size="1.25rem"
-              class="cursor-not-allowed"
-            />
-            <q-icon
-              v-else
               name="r_drag_indicator"
               color="black"
               size="1.25rem"
@@ -95,21 +43,16 @@
 
             <!-- layer mode icon -->
             <q-icon
-              v-if="
-                ![MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
-                  element.mode
-                )
-              "
               :name="
-                element.mode === MODE_OPTIONS.drawing
+                element.getAttr('name') === MODE_OPTIONS.drawing
                   ? 'r_gesture'
-                  : element.mode === MODE_OPTIONS.text
+                  : element.getAttr('name') === MODE_OPTIONS.text
                   ? 'icon-insert_text'
-                  : element.mode === MODE_OPTIONS.media
+                  : element.getAttr('name') === MODE_OPTIONS.image
                   ? 'o_add_photo_alternate'
-                  : element.mode === MODE_OPTIONS.mediaEmoji
+                  : element.getAttr('name') === MODE_OPTIONS.emoji
                   ? 'icon-add_reaction'
-                  : element.mode === MODE_OPTIONS.shape
+                  : element.getAttr('name') === MODE_OPTIONS.shape
                   ? 'icon-shape_line'
                   : ''
               "
@@ -120,25 +63,28 @@
             <!-- layer name -->
             <span
               class="text-semibold q-ml-sm q-py-xs"
-              :style="
-                element.mode === MODE_OPTIONS.baseFill
-                  ? `color: ${textColorOnAColoredBackground(
-                      element.fillColor
-                    )};`
+              @click="
+                element.draggable
+                  ? transformer.default
+                      ?.nodes()
+                      ?.filter((node) => node._id === element._id)?.length
+                    ? transformer.default?.nodes(
+                        transformer.default
+                          ?.nodes()
+                          ?.filter((node) => node._id !== element._id)
+                      )
+                    : transformer.default?.nodes([
+                        ...transformer.default?.nodes(),
+                        element,
+                      ])
                   : ''
               "
-              :class="
-                element.mode === MODE_OPTIONS.background
-                  ? averageBackgroundBrightness > backgroundBrightnessThreshold
-                    ? 'text-black'
-                    : 'text-white'
-                  : ''
-              "
-              @click="!element.isLocked ? selectElement(element) : ''"
             >
               {{
                 $t(
-                  `presentationLayout.rightDrawer.tabs.layers.names.${element.mode}`
+                  `presentationLayout.rightDrawer.tabs.layers.names.${element
+                    .getAttr("name")
+                    .toLowerCase()}`
                 )
               }}
             </span>
@@ -147,27 +93,19 @@
 
             <!-- visibility button -->
             <q-btn
-              v-if="
-                ![MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
-                  element.mode
-                )
-              "
-              :icon="element.isVisible ? 'r_visibility' : 'r_visibility_off'"
+              :icon="element.visible() ? 'r_visibility' : 'r_visibility_off'"
               flat
               round
               size="10px"
               class="round-borders q-ml-xs"
               color="black"
-              @click="
-                element.isVisible = !element.isVisible;
-                canvasStore.redrawCanvas();
-              "
+              @click="element.visible(!element.visible())"
             >
               <q-tooltip :offset="[0, 4]">
                 {{
                   $t(
                     `presentationLayout.rightDrawer.tabs.layers.layer.visibility.${
-                      element.isVisible ? "on" : "off"
+                      element.visible() ? "on" : "off"
                     }`
                   )
                 }}
@@ -176,24 +114,19 @@
 
             <!-- lock button -->
             <q-btn
-              v-if="
-                ![MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
-                  element.mode
-                )
-              "
-              :icon="element.isLocked ? 'r_lock' : 'r_lock_open'"
+              :icon="element.draggable() ? 'r_lock_open' : 'r_lock'"
               flat
               round
               size="10px"
               class="round-borders q-ml-xs"
               color="black"
-              @click="element.isLocked = !element.isLocked"
+              @click="element.draggable(!element.draggable())"
             >
               <q-tooltip :offset="[0, 4]">
                 {{
                   $t(
                     `presentationLayout.rightDrawer.tabs.layers.layer.lock.${
-                      element.isLocked ? "off" : "on"
+                      element.draggable ? "on" : "off"
                     }`
                   )
                 }}
@@ -202,42 +135,42 @@
 
             <!-- delete button -->
             <q-btn
-              v-if="
-                ![MODE_OPTIONS.background, MODE_OPTIONS.baseFill].includes(
-                  element.mode
-                )
-              "
               icon="r_delete"
               flat
               round
               size="10px"
               class="round-borders q-ml-xs"
               color="black"
-              @click="deleteElement(element)"
+              disable
+              @click="studioStore.deleteNodes([element])"
             >
-              <q-tooltip :offset="[0, 4]">
-                {{
-                  $t("presentationLayout.rightDrawer.tabs.layers.layer.delete")
-                }}
-              </q-tooltip>
+              <!--              <q-tooltip :offset="[0, 4]">-->
+              <!--                {{-->
+              <!--                  $t("presentationLayout.rightDrawer.tabs.layers.layer.delete")-->
+              <!--                }}-->
+              <!--              </q-tooltip>-->
+
+              <q-tooltip :offset="[0, 4]"> В процессе </q-tooltip>
             </q-btn>
           </q-card-section>
         </q-card>
       </template>
     </draggable>
 
-    <q-card v-else flat class="layer layer--disabled bg-grey-2">
-      <q-card-section class="row no-wrap items-center q-py-none">
-        <!-- drag handle -->
+    <!-- no elements in layer -->
+    <q-card v-else flat class="layer layer--disabled">
+      <q-card-section
+        class="row no-wrap items-center q-py-none q-px-sm relative-position"
+      >
         <q-icon
           name="r_drag_indicator"
-          color="grey"
-          size="sm"
-          class="layer_handle"
+          color="black"
+          size="1.25rem"
+          class="layer_handle cursor-not-allowed"
         />
 
         <!-- layer name -->
-        <span class="text-semibold q-pl-md q-py-sm q-my-xs">
+        <span class="text-semibold q-ml-sm q-py-xs">
           {{ $t("presentationLayout.rightDrawer.tabs.layers.layer.title") }}
         </span>
 
@@ -246,31 +179,34 @@
         <!-- visibility button -->
         <q-btn
           icon="r_visibility"
-          class="q-ml-sm"
+          class="round-borders q-ml-sm"
           flat
           round
-          color="grey"
+          color="black"
           size="10px"
+          disable
         />
 
         <!-- disable button -->
         <q-btn
           icon="r_lock_open"
-          class="q-ml-sm"
+          class="round-borders q-ml-sm"
           flat
           round
-          color="grey"
+          color="black"
           size="10px"
+          disable
         />
 
         <!-- delete button -->
         <q-btn
           icon="r_delete"
-          class="q-ml-sm"
           flat
           round
-          color="red"
+          color="black"
           size="10px"
+          class="q-ml-sm round-borders"
+          disable
         />
       </q-card-section>
     </q-card>
@@ -279,13 +215,11 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { useCanvasStore } from "stores/canvas";
 import { useI18n } from "vue-i18n";
-import { ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import draggable from "vuedraggable/src/vuedraggable";
-import { deleteElement, selectElement } from "stores/canvas/helpers/select";
-import { textColorOnAColoredBackground } from "src/helpers/colorUtils";
 import { usePresentationsStore } from "stores/presentations";
+import { useStudioStore } from "stores/studio";
 
 /*
  * variables
@@ -295,12 +229,29 @@ const { t } = useI18n({ useScope: "global" });
 /*
  * stores
  */
-const canvasStore = useCanvasStore();
-const { elements, selectedElement, MODE_OPTIONS } = storeToRefs(canvasStore);
+const studioStore = useStudioStore();
+const { layers, transformer, selection, MODE_OPTIONS } =
+  storeToRefs(studioStore);
 
 const presentationsStore = usePresentationsStore();
 const { slide, averageBackgroundBrightness, backgroundBrightnessThreshold } =
   storeToRefs(presentationsStore);
+
+/*
+ * elements
+ */
+const nodes = ref();
+
+onBeforeMount(() => {
+  nodes.value = layers.value.default?.getChildren()?.reverse();
+});
+
+watch(
+  () => layers.value.default?.getChildren(),
+  () => {
+    nodes.value = layers.value.default?.getChildren()?.reverse();
+  }
+);
 
 /*
  * drag
@@ -320,13 +271,12 @@ const handleStartDragging = () => {
 
 const handleEndDragging = () => {
   isLayerDragging.value = false;
-};
 
-const handleLayersReorder = async () => {
-  handleEndDragging();
-
-  // redraw canvas with updated layers
-  canvasStore.redrawCanvas();
+  nodes.value.forEach((node, index) => {
+    layers.value.default
+      ?.findOne((item) => item._id === node._id)
+      ?.zIndex(nodes.value.length - 1 - index);
+  });
 };
 </script>
 
@@ -334,7 +284,7 @@ const handleLayersReorder = async () => {
 .layer {
   border-radius: 6px;
   transition: 0.2s;
-  outline: 1px solid $grey-1;
+  outline: 1px solid $grey-2;
   overflow: hidden;
 
   &:hover {
@@ -359,24 +309,6 @@ const handleLayersReorder = async () => {
     color: $primary;
     background: $background;
     outline-color: $primary;
-  }
-
-  &.layer--background {
-    cursor: default !important;
-    color: $white;
-
-    .q-card__section {
-      background-size: cover !important;
-      background-repeat: no-repeat !important;
-    }
-
-    .layer--background__image {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      border-radius: 0;
-      background-size: cover !important;
-    }
   }
 }
 </style>

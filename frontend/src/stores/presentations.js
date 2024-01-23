@@ -295,12 +295,7 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async addNewSlide(
-      slide = {},
-      elements = null,
-      type,
-      selectNewSlide = true
-    ) {
+    async addNewSlide(slide = {}) {
       return await new Promise(async (resolve, reject) => {
         const slideIndex = this.presentation.slides.findIndex(
           (item) => item.id === this.slide.id
@@ -309,20 +304,24 @@ export const usePresentationsStore = defineStore("presentations", {
 
         const response = await api
           .post(`/presentation/${this.presentation.id}/slide`, {
-            canvas_data: JSON.stringify(elements),
+            canvas_data: slide.canvas_data,
             preview: slide.preview,
+            color_scheme: slide.color_scheme,
             order: insertAtIndex,
-            type: type,
+            type: slide.type,
             settings_data: slide.settings_data,
             notes: slide.notes,
             animation: slide.animation,
           })
           .catch((error) => {
             console.log(error);
+            reject(error);
           });
 
+        // insert new slide into presentation
         this.presentation.slides.splice(insertAtIndex, 0, response.data);
 
+        // update slides order
         this.presentation.slides = this.presentation.slides.map(
           (item, index) => {
             item.order = index;
@@ -331,23 +330,22 @@ export const usePresentationsStore = defineStore("presentations", {
         );
         await this.updateSlidesOrder();
 
-        if (selectNewSlide) {
-          await this.setSlide(response.data);
-        }
-
         resolve(response.data);
       });
     },
 
-    async saveSlide(slide = this.slide, elements, newSlide) {
+    async duplicateSlide(slide = this.slide) {
+      return await this.addNewSlide(slide);
+    },
+
+    async saveSlide(slide = this.slide, newSlide) {
       this.isSavingError = false;
       this.isSaving = true;
 
-      slide.canvas_data = JSON.stringify(elements);
-
       return await api
         .patch(`/presentation/${this.presentation.id}/slide/${slide.id}`, {
-          canvas_data: elements,
+          canvas_data: slide.canvas_data,
+          color_scheme: slide.color_scheme,
           preview: slide.preview,
           order: slide.order,
           type: slide.type,
@@ -358,6 +356,7 @@ export const usePresentationsStore = defineStore("presentations", {
         })
         .then(() => {
           this.lastSavedAt = new Date();
+          this.syncCurrentSlideWithPresentationSlides();
         })
         .catch((error) => {
           console.log(error);
@@ -368,28 +367,15 @@ export const usePresentationsStore = defineStore("presentations", {
         });
     },
 
-    async duplicateSlide(elements) {
-      return await this.addNewSlide(this.slide, elements, this.slide.type);
-    },
-
     async deleteSlide(slide) {
       if (this.presentation.slides.length === 1) return;
 
-      const slideIndex = this.presentation.slides.findIndex(
-        (item) => item.id === slide.id
+      this.presentation.slides = this.presentation.slides.filter(
+        (item) => item.id !== slide.id
       );
-
-      const slideToShowAfterDeleting =
-        this.presentation.slides[slideIndex + (slideIndex !== 0 ? -1 : 1)];
 
       return await api
         .delete(`/presentation/${this.presentation.id}/slide/${slide.id}`)
-        .then(() => {
-          this.presentation.slides = this.presentation.slides.filter(
-            (item) => item.id !== slide.id
-          );
-          this.setSlide(slideToShowAfterDeleting);
-        })
         .catch((error) => {
           console.log(error);
         });
@@ -398,14 +384,11 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * SLIDE - LOCAL
      */
-    async setSlide(newSlide, elements = null, saveSlide = true) {
+    async setSlide(newSlide) {
       if (!newSlide || this.slide?.id === newSlide.id) return;
 
-      // save previous slide
-      if (this.slide && elements && saveSlide) {
-        this.slide.canvas_data = JSON.stringify(elements);
-        this.syncCurrentSlideWithPresentationSlides();
-        this.saveSlide(undefined, elements, newSlide);
+      if (this.slide) {
+        this.saveSlide(this.slide);
       }
 
       this.slide = newSlide;

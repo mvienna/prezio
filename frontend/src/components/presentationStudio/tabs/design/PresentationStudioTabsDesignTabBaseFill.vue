@@ -4,19 +4,19 @@
       {{ $t("presentationLayout.rightDrawer.tabs.design.slideBaseFill.title") }}
     </div>
 
-    <div class="row no-wrap items-center justify-between">
+    <div
+      v-if="baseFill?.attrs?.fill"
+      class="row no-wrap items-center justify-between"
+    >
       <div
-        v-for="color in baseFillColors"
+        v-for="color in BASE_FILL_COLOR_OPTIONS"
         :key="color"
         class="base_fill_color_box"
         :class="
-          color === selectedBaseFillColor ? 'base_fill_color_box--active' : ''
+          color === baseFill?.attrs?.fill ? 'base_fill_color_box--active' : ''
         "
         :style="`background: ${color};`"
-        @click="
-          selectedBaseFillColor = color;
-          $emit('changeBaseFill', selectedBaseFillColor);
-        "
+        @click="studioStore.updateBaseLayer(color)"
       ></div>
 
       <q-separator vertical />
@@ -28,22 +28,16 @@
       <div
         class="base_fill_color_box relative-position"
         :style="{
-          background: !baseFillColors.includes(selectedBaseFillColor)
-            ? selectedBaseFillColor
-            : '',
+          background: isCustomBaseFill ? baseFill?.attrs?.fill : '',
         }"
-        :class="
-          !baseFillColors.includes(selectedBaseFillColor)
-            ? 'base_fill_color_box--active'
-            : ''
-        "
+        :class="isCustomBaseFill ? 'base_fill_color_box--active' : ''"
       >
         <q-icon
           name="r_colorize"
           class="absolute-center"
           :style="`color: ${
-            !baseFillColors.includes(selectedBaseFillColor)
-              ? textColorOnAColoredBackground(selectedBaseFillColor)
+            isCustomBaseFill
+              ? textColorOnAColoredBackground(baseFill?.attrs?.fill)
               : 'black'
           };`"
         />
@@ -60,8 +54,8 @@
             format-model="hex"
             no-header-tabs
             default-view="palette"
-            v-model="selectedBaseFillColor"
-            @change="$emit('changeBaseFill', selectedBaseFillColor)"
+            v-model="customBaseFill"
+            @change="studioStore.updateBaseLayer(customBaseFill)"
           />
         </q-menu>
       </div>
@@ -70,41 +64,32 @@
 </template>
 
 <script setup>
+import { computed, ref } from "vue";
+import { useStudioStore } from "stores/studio";
+import { storeToRefs } from "pinia";
+import { BASE_FILL_COLOR_OPTIONS } from "src/constants/canvas/canvasVariables";
 import { textColorOnAColoredBackground } from "src/helpers/colorUtils";
-import { onBeforeMount, ref } from "vue";
 
 /*
- * props
+ * stores
  */
-const props = defineProps({
-  baseFillElement: { type: Object, default: null },
+const studioStore = useStudioStore();
+const { layers } = storeToRefs(studioStore);
+
+/*
+ * base fill
+ */
+const baseFill = computed(() => {
+  return layers.value.base?.findOne(".baseFill");
 });
 
-onBeforeMount(() => {
-  if (props.baseFillElement) {
-    selectedBaseFillColor.value = props.baseFillElement?.fillColor;
-  }
+const customBaseFill = ref();
+
+const isCustomBaseFill = computed(() => {
+  return !BASE_FILL_COLOR_OPTIONS.map((color) => color?.toLowerCase()).includes(
+    baseFill.value?.attrs?.fill?.toLowerCase()
+  );
 });
-
-/*
- * emits
- */
-defineEmits(["changeBaseFill"]);
-
-/*
- * colors
- */
-const defaultBaseFillColor = "#FFFFFF";
-const selectedBaseFillColor = ref(defaultBaseFillColor);
-
-const baseFillColors = [
-  "#ffffff",
-  "#000000",
-  "#1751D0",
-  "#db4437",
-  "#f4b400",
-  "#0f9d58",
-];
 </script>
 
 <style scoped lang="scss">
