@@ -360,9 +360,16 @@ export const useStudioStore = defineStore("studio", {
 
       this.transformer.default.moveToTop();
 
+      this.layers.default
+        .find(".selectionRect")
+        ?.forEach((node) => node.destroy());
       this.selection.rect = new Konva.Rect({
-        fill: COLOR_PALETTE.SELECTION_RECT,
+        fill:
+          slide.value.color_scheme === COLOR_SCHEME_OPTIONS.light
+            ? COLOR_PALETTE.BLACK_TRANSPARENT
+            : COLOR_PALETTE.WHITE_TRANSPARENT,
         visible: false,
+        name: "selectionRect",
       });
       this.layers.default.add(this.selection.rect);
 
@@ -382,6 +389,12 @@ export const useStudioStore = defineStore("studio", {
         const position = stageTransform
           .invert()
           .point(this.stages.default.getPointerPosition());
+
+        this.selection.rect.fill(
+          slide.value.color_scheme === COLOR_SCHEME_OPTIONS.light
+            ? COLOR_PALETTE.BLACK_TRANSPARENT
+            : COLOR_PALETTE.WHITE_TRANSPARENT
+        );
 
         this.selection.x1 = position.x;
         this.selection.y1 = position.y;
