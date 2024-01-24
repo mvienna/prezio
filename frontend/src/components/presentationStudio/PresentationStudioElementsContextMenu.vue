@@ -107,7 +107,8 @@
           v-if="
             transformer.default
               ?.nodes()
-              .filter((node) => node.getClassName() === 'Image')?.length
+              .filter((node) => node.getAttr('name') === MODE_OPTIONS.image)
+              ?.length
           "
         >
           <q-separator class="q-my-sm" />
@@ -133,7 +134,7 @@
                   undefined,
                   $event?.preview_url ||
                     $event?.original_url ||
-                    $event?.urls?.regular
+                    $event?.urls?.regular,
                 );
                 showSelectMediaDialog = false;
               "
@@ -284,7 +285,7 @@ const { MODE_OPTIONS, transformer } = storeToRefs(studioStore);
  */
 const transformerPosition = computed(() => {
   return {
-    x: transformer.value.default.x() + 220,
+    x: transformer.value.default.x() + 215,
     y: transformer.value.default.y() + 80,
   };
 });

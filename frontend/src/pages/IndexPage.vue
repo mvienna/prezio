@@ -301,7 +301,7 @@
           </div>
 
           <div
-            class="feature_cards_grid scroll--hidden"
+            class="feature_cards_grid hide-scrollbar"
             :class="$q.screen.lt.xl ? 'q-px-lg' : ''"
           >
             <template v-for="n in 3" :key="n">
@@ -309,7 +309,7 @@
                 <q-card-section>
                   <q-img
                     :src="`assets/images/landing/features/${$t(
-                      `landing.features.${n}.img`
+                      `landing.features.${n}.img`,
                     )}`"
                   />
 
@@ -839,7 +839,7 @@
             <q-card flat bordered class="bg-white overflow-hidden">
               <q-card-section
                 style="
-                  background-image: url('/assets/images/landing/plan_background.png');
+                  background-image: url(&quot;/assets/images/landing/plan_background.png&quot;);
                   background-size: cover;
                   background-position: top;
                   margin-top: -1px;

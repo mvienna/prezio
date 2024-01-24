@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="scroll--hidden">
+  <q-card flat class="hide-scrollbar">
     <q-toolbar
       class="items-center justify-between q-py-md q-px-lg"
       style="
@@ -28,7 +28,7 @@
       <div class="column no-wrap q-gutter-sm">
         <q-expansion-item
           v-for="(tab, tabIndex) in Object.values(tabs).filter(
-            (item) => !item.disable
+            (item) => !item.disable,
           )"
           :key="tab.name"
           v-model="presentationSettingsTabsExpanded[tabIndex]"
@@ -116,7 +116,7 @@ const tabs = {
     icon: "r_flaky",
     disable: true,
     label: t(
-      "presentationStudio.settings.questionsAndAnswersFromAudience.title"
+      "presentationStudio.settings.questionsAndAnswersFromAudience.title",
     ),
   },
   quiz: {

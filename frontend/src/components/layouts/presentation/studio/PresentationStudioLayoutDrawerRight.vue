@@ -3,14 +3,14 @@
     v-model="rightDrawerOpen"
     show-if-above
     side="right"
-    class="bg-white scroll--hidden presentation_studio__layout__drawer_right"
+    class="bg-white hide-scrollbar presentation_studio__layout__drawer_right"
     :width="isDrawerRightPanelExpanded ? 471 : 110"
     bordered
   >
     <div style="padding-top: 55px; display: flex; height: 100%">
       <div
         v-if="isDrawerRightPanelExpanded"
-        class="presentation_studio__layout__drawer_right__content scroll--hidden"
+        class="presentation_studio__layout__drawer_right__content hide-scrollbar"
       >
         <div style="position: sticky; top: 0; z-index: 9" class="bg-white">
           <div
@@ -236,7 +236,7 @@ watch(
   () => slide.value,
   () => {
     handleTabSelect();
-  }
+  },
 );
 
 onBeforeMount(() => {
@@ -259,7 +259,7 @@ watch(
     setTimeout(() => {
       studioStore.fitStageIntoParentContainer();
     });
-  }
+  },
 );
 
 /*
@@ -311,14 +311,14 @@ const prepareElementsForNewSlide = (type) => {
     color: customization.value.color,
 
     x: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100
+      (canvasStore.canvasRect().width * 5) / 100,
     ),
     y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100
+      (canvasStore.canvasRect().width * 5) / 100,
     ),
 
     width: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 90) / 100
+      (canvasStore.canvasRect().width * 90) / 100,
     ),
     height: canvasStore.computeAdjustedSize(30),
   };
@@ -351,7 +351,7 @@ const prepareElementsForNewSlide = (type) => {
       y: titleElement.y + titleElement.height,
 
       height: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 65) / 100
+        (canvasStore.canvasRect().height * 65) / 100,
       ),
     };
 
@@ -393,8 +393,8 @@ const prepareElementsForNewSlide = (type) => {
   if (slide.value) {
     const designElements = elements.value.filter((element) =>
       [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
-        element.mode
-      )
+        element.mode,
+      ),
     );
 
     preparedElements = [...preparedElements, ...designElements];
@@ -404,7 +404,7 @@ const prepareElementsForNewSlide = (type) => {
       mode: MODE_OPTIONS.value.baseFill,
       isVisible: true,
       isLocked: true,
-      type: SHAPES_OPTIONS.square,
+      type: SHAPES_OPTIONS.rectangle,
       x: 0,
       y: 0,
       width: 2560,

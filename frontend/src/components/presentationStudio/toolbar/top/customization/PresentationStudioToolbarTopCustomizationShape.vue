@@ -1,26 +1,24 @@
 <template>
   <!-- fill color -->
   <q-btn
-    v-if="
-      ![SHAPES_OPTIONS.arrow, SHAPES_OPTIONS.line].includes(
-        selectedElement.type
-      )
-    "
     flat
     round
     size="12px"
     class="relative-position"
+    :ripple="false"
+    :class="{ 'bg-grey-2': showMenu.fill }"
   >
     <div>
       <q-icon name="icon-mdi_format_color_fill_top" class="absolute-center" />
       <q-icon
         name="icon-mdi_format_color_fill_bottom"
-        :style="`color: ${shapeState.customization.value.fillColor}`"
+        :style="`color: ${shape.fill}`"
         class="absolute-center"
       />
     </div>
 
     <q-menu
+      v-model="showMenu.fill"
       anchor="bottom left"
       self="top left"
       transition-show="jump-down"
@@ -28,108 +26,15 @@
       :offset="[0, 8]"
       class="no-padding"
     >
-      <q-tabs
-        v-model="shapeState.customization.value.fillStyle"
-        align="justify"
-        indicator-color="primary"
-        inline-label
-        dense
-        @update:model-value="
-          colorInput = 1;
-          shapeStore.applyStyles();
-        "
-      >
-        <q-tab
-          name="solid"
-          :label="
-            $t('presentationStudio.toolbar.shape.options.fill.style.solid')
-          "
-          no-caps
-        >
-        </q-tab>
-        <q-tab
-          name="gradient"
-          :label="
-            $t('presentationStudio.toolbar.shape.options.fill.style.gradient')
-          "
-          no-caps
-        >
-        </q-tab>
-      </q-tabs>
-
-      <div
-        v-if="shapeState.customization.value.fillStyle === 'gradient'"
-        class="gradient q-ma-md"
-      >
-        <div class="row no-wrap justify-between">
-          <!-- from color -->
-          <div class="gradient__anchor">
-            <div
-              class="gradient__anchor__color relative-position"
-              :class="`${
-                colorInput === 1 ? 'gradient__anchor__color--active' : ''
-              } ${
-                !shapeState.customization.value.fillColor
-                  ? 'gradient__anchor__color--error'
-                  : ''
-              }`"
-              :style="`background: ${shapeState.customization.value.fillColor}`"
-              @click="colorInput = 1"
-            >
-              <q-icon
-                v-if="!shapeState.customization.value.fillColor"
-                name="r_priority_high"
-                class="absolute-center"
-                color="red"
-              />
-            </div>
-            <div class="gradient__anchor__connector"></div>
-          </div>
-
-          <!-- from color -->
-          <div class="gradient__anchor">
-            <div
-              class="gradient__anchor__color"
-              :class="colorInput === 2 ? 'gradient__anchor__color--active' : ''"
-              :style="`background: ${shapeState.customization.value.fillColor2}`"
-              @click="colorInput = 2"
-            ></div>
-            <div class="gradient__anchor__connector"></div>
-          </div>
-        </div>
-
-        <div class="gradient__preview">
-          <!-- chessboard -->
-          <div class="gradient__preview__background"></div>
-
-          <!-- gradient -->
-          <div
-            class="gradient__preview__gradient"
-            :style="`background: linear-gradient(45deg, ${shapeState.customization.value.fillColor}, ${shapeState.customization.value.fillColor2});`"
-          ></div>
-        </div>
-      </div>
-
-      <!-- first color -->
       <q-color
-        v-if="colorInput === 1"
-        v-model="shapeState.customization.value.fillColor"
+        format-model="hex"
         no-header-tabs
         default-view="palette"
-        style="border-radius: 0"
-        @change="shapeStore.applyStyles()"
+        v-model="shape.fill"
+        @change="studioStore.applyNodesCustomization()"
       />
 
-      <!-- second color -->
-      <q-color
-        v-if="colorInput === 2"
-        v-model="shapeState.customization.value.fillColor2"
-        no-header-tabs
-        default-view="palette"
-        style="border-radius: 0"
-        @change="shapeStore.applyStyles()"
-      />
-
+      <!-- remove fill -->
       <div class="q-pa-sm">
         <q-btn
           icon="r_remove"
@@ -139,7 +44,10 @@
           dense
           no-caps
           :label="$t('presentationStudio.toolbar.shape.options.fill.remove')"
-          @click="handleFillRemove()"
+          @click="
+            shape.fill = 'transparent';
+            studioStore.applyNodesCustomization();
+          "
         />
       </div>
     </q-menu>
@@ -152,8 +60,16 @@
   </q-btn>
 
   <!-- stroke -->
-  <q-btn flat round size="12px" icon="r_border_outer">
+  <q-btn
+    flat
+    round
+    size="12px"
+    icon="r_border_outer"
+    :class="{ 'bg-grey-2': showMenu.stroke }"
+    :ripple="false"
+  >
     <q-menu
+      v-model="showMenu.stroke"
       anchor="bottom left"
       self="top left"
       transition-show="jump-down"
@@ -161,90 +77,82 @@
       :offset="[0, 8]"
       class="no-padding"
     >
+      <!-- stroke color -->
       <q-color
+        format-model="hex"
         no-header-tabs
         default-view="palette"
-        v-model="shapeState.customization.value.strokeColor"
-        @change="shapeStore.applyStyles()"
+        v-model="shape.stroke"
+        @change="studioStore.applyNodesCustomization()"
       />
 
-      <div class="q-pa-sm">
-        <div class="text-caption text-grey q-ml-sm">
-          {{ $t("presentationStudio.toolbar.shape.options.stroke.width") }}
+      <!-- line width -->
+      <div class="q-py-md q-px-md">
+        <div class="text-caption text-grey">
+          {{ $t("presentationStudio.toolbar.image.stroke.width") }}
         </div>
 
-        <!-- line width -->
-        <q-select
-          v-model="shapeState.customization.value.lineWidth"
-          :options="SHAPE_LINE_WIDTH_OPTIONS"
-          map-options
-          emit-value
-          borderless
-          color="black"
-          dense
-          hide-dropdown-icon
-          class="q-pl-sm"
-          options-dense
-          @update:model-value="shapeStore.applyStyles()"
-        >
-          <template #prepend>
-            <q-icon
-              name="line_weight"
-              class="text-semibold text-dark"
-              size="20px"
-            />
-          </template>
-        </q-select>
+        <div class="row no-wrap items-center q-gutter-md q-pt-sm">
+          <q-slider
+            v-model="shape.strokeWidth"
+            :min="0"
+            :max="200"
+            label
+            thumb-size="14px"
+            :label-value="shape.strokeWidth + 'px'"
+            @change="studioStore.applyNodesCustomization()"
+          />
 
-        <div
-          v-if="shapeState.customization.value.lineWidth !== '0px'"
-          class="q-pa-sm"
-        >
-          <q-btn
-            icon="r_remove"
-            class="full-width"
-            color="grey"
-            flat
+          <q-input
+            v-model.number="shape.strokeWidth"
+            :min="0"
+            :max="200"
+            type="number"
+            placeholder="0"
+            suffix="px"
+            style="min-width: 90px; width: 80px"
+            outlined
             dense
-            no-caps
-            :label="
-              $t('presentationStudio.toolbar.shape.options.stroke.remove')
-            "
-            @click="
-              shapeState.customization.value.lineWidth = '0px';
-              shapeStore.applyStyles();
-            "
+            @change="studioStore.applyNodesCustomization()"
           />
         </div>
       </div>
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.shape.options.stroke.title") }}
+      {{ $t("presentationStudio.toolbar.image.stroke.title") }}
     </q-tooltip>
   </q-btn>
 
   <!-- shadow -->
-  <q-btn flat round size="12px" icon="icon-shadow " class="q-ml-sm">
+  <q-btn
+    flat
+    round
+    size="12px"
+    icon="icon-shadow"
+    :class="{ 'bg-grey-2': showMenu.shadow }"
+    :ripple="false"
+  >
     <q-menu
+      v-model="showMenu.shadow"
       anchor="bottom left"
       self="top left"
       transition-show="jump-down"
       transition-hide="jump-up"
       :offset="[0, 8]"
-      style="overflow-x: hidden"
-      class="no-padding"
+      class="no-padding hide-scrollbar no-padding"
     >
       <!-- shadow color -->
       <q-color
         format-model="hex"
         no-header-tabs
+        style="min-width: 216px"
         default-view="palette"
-        v-model="shapeState.customization.value.shadowColor"
-        @change="shapeStore.applyStyles()"
+        v-model="shape.shadowColor"
+        @change="studioStore.applyNodesCustomization()"
       />
 
-      <div class="q-py-sm q-px-md">
+      <div class="q-px-md q-pt-md q-pb-sm">
         <!-- shadow opacity -->
         <div>
           <div class="text-caption text-grey">
@@ -252,13 +160,14 @@
           </div>
 
           <q-slider
-            v-model="shapeState.customization.value.shadowOpacity"
+            v-model="shape.shadowOpacity"
             :min="0"
-            :max="100"
+            :max="1"
+            :step="0.01"
             label
             thumb-size="14px"
-            :label-value="shapeState.customization.value.shadowOpacity + '%'"
-            @change="shapeStore.applyStyles()"
+            :label-value="Math.round(shape.shadowOpacity * 100) + '%'"
+            @change="studioStore.applyNodesCustomization()"
           />
         </div>
 
@@ -269,13 +178,13 @@
           </div>
 
           <q-slider
-            v-model="shapeState.customization.value.shadowBlur"
+            v-model="shape.shadowBlur"
             :min="0"
             :max="100"
             label
             thumb-size="14px"
-            :label-value="shapeState.customization.value.shadowBlur"
-            @change="shapeStore.applyStyles()"
+            :label-value="shape.shadowBlur + 'px'"
+            @change="studioStore.applyNodesCustomization()"
           />
         </div>
 
@@ -286,13 +195,13 @@
           </div>
 
           <q-slider
-            v-model="shapeState.customization.value.shadowOffsetX"
+            v-model="shape.shadowOffset.x"
             :min="-200"
             :max="200"
             label
             thumb-size="14px"
-            :label-value="shapeState.customization.value.shadowOffsetX"
-            @change="shapeStore.applyStyles()"
+            :label-value="shape.shadowOffset.x"
+            @change="studioStore.applyNodesCustomization()"
           />
         </div>
 
@@ -303,31 +212,15 @@
           </div>
 
           <q-slider
-            v-model="shapeState.customization.value.shadowOffsetY"
+            v-model="shape.shadowOffset.y"
             :min="-200"
             :max="200"
             label
             thumb-size="14px"
-            :label-value="shapeState.customization.value.shadowOffsetY"
-            @change="shapeStore.applyStyles()"
+            :label-value="shape.shadowOffset.y"
+            @change="studioStore.applyNodesCustomization()"
           />
         </div>
-
-        <!-- remove shadow -->
-        <q-btn
-          v-if="shapeState.customization.value.shadowOpacity > 0"
-          flat
-          dense
-          icon="r_remove"
-          :label="$t('presentationStudio.toolbar.image.shadow.remove')"
-          color="grey"
-          class="full-width q-my-sm"
-          no-caps
-          @click="
-            shapeState.customization.value.shadowOpacity = 0;
-            shapeStore.applyStyles();
-          "
-        />
       </div>
     </q-menu>
 
@@ -337,29 +230,39 @@
   </q-btn>
 
   <!-- opacity -->
-  <q-btn flat round size="12px" icon="r_opacity">
+  <q-btn
+    flat
+    round
+    size="12px"
+    icon="r_opacity"
+    :class="{ 'bg-grey-2': showMenu.opacity }"
+    :ripple="false"
+  >
     <q-menu
+      v-model="showMenu.opacity"
       anchor="bottom left"
       self="top left"
       transition-show="jump-down"
       transition-hide="jump-up"
       :offset="[0, 8]"
+      style="width: 220px"
+      class="hide-scrollbar no-padding"
     >
-      <div class="q-pt-sm q-pl-md q-pr-lg">
-        <!-- shadow opacity -->
+      <div class="q-px-md q-pt-md q-pb-sm">
         <div>
           <div class="text-caption text-grey">
             {{ $t("presentationStudio.toolbar.image.opacity.title") }}
           </div>
 
           <q-slider
-            v-model="shapeState.customization.value.opacity"
+            v-model="shape.opacity"
             :min="0"
-            :max="100"
+            :max="1"
+            :step="0.01"
             label
             thumb-size="14px"
-            :label-value="shapeState.customization.value.opacity + '%'"
-            @change="shapeStore.applyStyles()"
+            :label-value="Math.round(shape.opacity * 100) + '%'"
+            @change="studioStore.applyNodesCustomization()"
           />
         </div>
       </div>
@@ -369,37 +272,86 @@
       {{ $t("presentationStudio.toolbar.image.opacity.title") }}
     </q-tooltip>
   </q-btn>
+
+  <!-- corner radius -->
+  <q-btn
+    v-if="
+      transformer.default
+        .nodes()
+        .filter((node) => node.getClassName() === 'Rect').length
+    "
+    flat
+    round
+    size="12px"
+    icon="r_rounded_corner"
+    :class="{ 'bg-grey-2': showMenu.cornerRadius }"
+    :ripple="false"
+  >
+    <q-menu
+      v-model="showMenu.cornerRadius"
+      anchor="bottom left"
+      self="top left"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      :offset="[0, 8]"
+      class="hide-scrollbar no-padding"
+      style="width: 250px"
+    >
+      <div class="q-pa-md">
+        <div class="text-caption text-grey">
+          {{ $t("presentationStudio.toolbar.image.cornerRadius.title") }}
+        </div>
+
+        <div class="row no-wrap items-center q-gutter-md q-pt-sm">
+          <q-slider
+            v-model="shape.cornerRadius"
+            :min="0"
+            :max="50"
+            label
+            thumb-size="14px"
+            :label-value="shape.cornerRadius + '%'"
+            @change="studioStore.applyNodesCustomization()"
+          />
+
+          <q-input
+            v-model.number="shape.cornerRadius"
+            :min="0"
+            :max="50"
+            type="number"
+            placeholder="0"
+            suffix="%"
+            style="min-width: 80px; width: 80px"
+            outlined
+            dense
+            @change="studioStore.applyNodesCustomization()"
+          />
+        </div>
+      </div>
+    </q-menu>
+
+    <q-tooltip :offset="[0, 4]">
+      {{ $t("presentationStudio.toolbar.image.cornerRadius.title") }}
+    </q-tooltip>
+  </q-btn>
 </template>
 
 <script setup>
-import {
-  SHAPE_LINE_WIDTH_OPTIONS,
-  SHAPES_OPTIONS,
-} from "src/constants/canvas/canvasVariables";
-import { useCanvasShapeStore } from "stores/canvas/shape";
-import { storeToRefs } from "pinia";
 import { ref } from "vue";
-import { useCanvasStore } from "stores/canvas";
+import { useStudioStore } from "stores/studio";
+import { storeToRefs } from "pinia";
 
 /*
  * stores
  */
-const shapeStore = useCanvasShapeStore();
-const shapeState = storeToRefs(shapeStore);
+const studioStore = useStudioStore();
+const { shape, transformer } = storeToRefs(studioStore);
 
-const canvasStore = useCanvasStore();
-const { selectedElement } = storeToRefs(canvasStore);
-
-/*
- * fill color
- */
-const colorInput = ref(1);
-
-const handleFillRemove = () => {
-  shapeState.customization.value.fillStyle = "solid";
-  shapeState.customization.value.fillColor = null;
-  shapeStore.applyStyles();
-};
+const showMenu = ref({
+  fill: false,
+  stroke: false,
+  opacity: false,
+  cornerRadius: false,
+});
 </script>
 
 <style scoped lang="scss">

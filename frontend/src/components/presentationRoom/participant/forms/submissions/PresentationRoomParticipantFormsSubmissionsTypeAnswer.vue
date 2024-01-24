@@ -9,7 +9,7 @@
       overflow-y: scroll;
       max-height: calc(100vh - 96px - 96px);
     "
-    class="scroll--hidden"
+    class="hide-scrollbar"
     @submit.prevent="handleSubmittingAnswers()"
   >
     <PresentationRoomParticipantQuizLayout
@@ -181,7 +181,7 @@
                 $t(
                   `presentationRoom.answers.results.${
                     isAnsweredCorrectly ? "correct" : "incorrect"
-                  }`
+                  }`,
                 )
               }}
             </template>
@@ -303,7 +303,7 @@ const participantAnswer = computed(() => {
   return slide.value.answers.find(
     (answer) =>
       answer.participant_id === participant.value?.id &&
-      answer.slide_type === slide.value?.type
+      answer.slide_type === slide.value?.type,
   );
 });
 

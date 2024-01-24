@@ -1,6 +1,13 @@
 <template>
   <!-- stroke color -->
-  <q-btn flat round size="12px" class="relative-position">
+  <q-btn
+    flat
+    round
+    size="12px"
+    class="relative-position"
+    :class="{ 'bg-grey-2': showMenu.strokeColor }"
+    :ripple="false"
+  >
     <div>
       <q-icon name="icon-mdi_border_color_top" class="absolute-center" />
       <q-icon
@@ -11,18 +18,20 @@
     </div>
 
     <q-menu
+      v-model="showMenu.strokeColor"
       anchor="bottom left"
       self="top left"
       transition-show="jump-down"
       transition-hide="jump-up"
       :offset="[0, 8]"
+      class="no-padding"
     >
       <q-color
         format-model="hex"
         no-header-tabs
         default-view="palette"
         v-model="drawing.stroke"
-        @change="studioStore.applyCustomizationChanges()"
+        @change="studioStore.applyNodesCustomization()"
       />
     </q-menu>
 
@@ -32,70 +41,131 @@
   </q-btn>
 
   <!-- stroke width -->
-  <q-select
-    v-model="drawing.strokeWidth"
-    :options="DRAWING_STROKE_WIDTH_OPTIONS"
-    map-options
-    emit-value
-    hide-dropdown-icon
-    dense
-    borderless
-    :option-label="(option) => option + 'px'"
-    class="q-px-sm"
-    options-dense
-    @update:model-value="studioStore.applyCustomizationChanges()"
+  <q-btn
+    flat
+    round
+    size="12px"
+    icon="r_line_weight"
+    class="relative-position"
+    :class="{ 'bg-grey-2': showMenu.strokeWidth }"
+    :ripple="false"
   >
-    <template #prepend>
-      <q-icon
-        name="r_line_weight"
-        class="text-semibold text-dark"
-        size="20px"
-      />
-    </template>
+    <q-menu
+      v-model="showMenu.strokeWidth"
+      anchor="bottom left"
+      self="top left"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      :offset="[0, 8]"
+      style="width: 220px"
+      class="no-padding"
+    >
+      <div class="q-pa-md">
+        <div class="text-grey text-caption">
+          {{ $t("presentationStudio.toolbar.drawing.options.strokeWidth") }}
+        </div>
+
+        <div class="row no-wrap items-center q-gutter-md q-pt-sm">
+          <q-slider
+            v-model="drawing.strokeWidth"
+            :min="0"
+            :max="300"
+            label
+            thumb-size="14px"
+            :label-value="drawing.strokeWidth + 'px'"
+            @change="studioStore.applyNodesCustomization()"
+          />
+
+          <q-input
+            v-model.number="drawing.strokeWidth"
+            :min="0"
+            :max="300"
+            type="number"
+            placeholder="0"
+            suffix="px"
+            style="min-width: 90px; width: 80px"
+            outlined
+            dense
+            @change="studioStore.applyNodesCustomization()"
+          />
+        </div>
+      </div>
+    </q-menu>
 
     <q-tooltip :offset="[0, 4]">
       {{ $t("presentationStudio.toolbar.drawing.options.strokeWidth") }}
     </q-tooltip>
-  </q-select>
+  </q-btn>
 
-  <!-- mode -->
-  <q-select
-    v-model="drawing.mode"
-    :options="Object.values(DRAWING_MODES)"
-    emit-value
-    :option-label="
-      (option) => $t(`presentationStudio.toolbar.drawing.modes.${option}`)
+  <!-- drawing mode -->
+  <q-btn
+    flat
+    round
+    size="12px"
+    :icon="
+      drawing.mode === DRAWING_MODES.BRUSH
+        ? 'r_brush'
+        : drawing.mode === DRAWING_MODES.ERASER
+          ? 'icon-eraser'
+          : ''
     "
-    borderless
-    color="black"
-    hide-dropdown-icon
-    dense
-    options-dense
-    @update:model-value="studioStore.applyCustomizationChanges()"
+    :class="{ 'bg-grey-2': showMenu.mode }"
+    :ripple="false"
   >
-    <template #prepend>
-      <q-icon name="r_brush" class="text-semibold text-dark" size="20px" />
-    </template>
+    <q-menu
+      v-model="showMenu.mode"
+      anchor="bottom left"
+      self="top left"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      :offset="[0, 8]"
+      class="no-padding hide-scrollbar no-padding"
+    >
+      <div class="column no-wrap q-py-sm">
+        <q-item
+          v-for="item in Object.values(DRAWING_MODES)"
+          :key="item"
+          :active="drawing.mode === item"
+          clickable
+          dense
+          @click="
+            drawing.mode = item;
+            studioStore.applyNodesCustomization();
+          "
+        >
+          <q-item-section>
+            <q-item-label>
+              {{ $t(`presentationStudio.toolbar.drawing.modes.${item}`) }}
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </div>
+    </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.drawing.options.mode") }}
+      {{ $t("presentationStudio.toolbar.image.clipPosition.title") }}
     </q-tooltip>
-  </q-select>
+  </q-btn>
 </template>
 
 <script setup>
-import {
-  DRAWING_MODES,
-  DRAWING_STROKE_WIDTH_OPTIONS,
-} from "src/constants/canvas/canvasVariables";
+import { DRAWING_MODES } from "src/constants/canvas/canvasVariables";
 import { storeToRefs } from "pinia";
 import { useStudioStore } from "stores/studio";
-import { onMounted, onUnmounted } from "vue";
-import Konva from "konva";
+import { ref } from "vue";
 
 /*
  * stores
  */
 const studioStore = useStudioStore();
 const { drawing } = storeToRefs(studioStore);
+
+/*
+ * menus
+ */
+const showMenu = ref({
+  strokeColor: false,
+  strokeWidth: false,
+  mode: false,
+});
 </script>

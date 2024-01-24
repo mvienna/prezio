@@ -21,7 +21,6 @@ export const SHAPES = [
     name: "double_arrow",
     icon: "r_open_in_full",
     group: SHAPE_TYPES.line,
-    disabled: true,
   },
   {
     name: "turn_right",
@@ -39,7 +38,7 @@ export const SHAPES = [
     group: SHAPE_TYPES.simpleShape,
   },
   {
-    name: "square",
+    name: "rectangle",
     icon: "o_square",
     group: SHAPE_TYPES.simpleShape,
   },
@@ -54,10 +53,9 @@ export const SHAPES = [
     group: SHAPE_TYPES.simpleShape,
   },
   {
-    name: "hexagon",
+    name: "polygon",
     icon: "o_hexagon",
     group: SHAPE_TYPES.simpleShape,
-    disabled: true,
   },
   {
     name: "label",

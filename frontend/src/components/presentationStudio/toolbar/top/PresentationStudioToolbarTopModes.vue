@@ -77,7 +77,9 @@
         @cancel="showSelectMediaDialog = false"
         @select="
           studioStore.addImage(
-            $event?.preview_url || $event?.original_url || $event?.urls?.regular
+            $event?.preview_url ||
+              $event?.original_url ||
+              $event?.urls?.regular,
           );
           showSelectMediaDialog = false;
         "
@@ -125,97 +127,91 @@
     <!--      </q-menu>-->
     <!--    </q-btn>-->
 
-    <!--    &lt;!&ndash; shapes &ndash;&gt;-->
-    <!--    <q-btn-->
-    <!--      icon="icon-shape_line"-->
-    <!--      unelevated-->
-    <!--      text-color="black"-->
-    <!--      round-->
-    <!--      size="12px"-->
-    <!--    >-->
-    <!--      <q-menu-->
-    <!--        anchor="bottom left"-->
-    <!--        self="top left"-->
-    <!--        transition-show="jump-down"-->
-    <!--        transition-hide="jump-up"-->
-    <!--        :offset="[0, 8]"-->
-    <!--        class="no-padding"-->
-    <!--      >-->
-    <!--        &lt;!&ndash; lines &ndash;&gt;-->
-    <!--        <div class="text-grey q-px-md q-mt-md q-mb-sm">-->
-    <!--          {{ $t("presentationStudio.toolbar.shape.groups.lines") }}-->
-    <!--        </div>-->
+    <!-- shapes -->
+    <q-btn
+      icon="icon-shape_line"
+      unelevated
+      text-color="black"
+      round
+      size="12px"
+    >
+      <q-menu
+        anchor="bottom left"
+        self="top left"
+        transition-show="jump-down"
+        transition-hide="jump-up"
+        :offset="[0, 8]"
+        class="no-padding"
+      >
+        <!-- lines -->
+        <div class="text-grey q-px-md q-mt-md q-mb-sm">
+          {{ $t("presentationStudio.toolbar.shape.groups.lines") }}
+        </div>
 
-    <!--        <div-->
-    <!--          style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px"-->
-    <!--          class="q-px-sm"-->
-    <!--        >-->
-    <!--          <q-btn-->
-    <!--            v-for="shape in SHAPES.filter(-->
-    <!--              (item) => item.group === SHAPE_TYPES.line-->
-    <!--            )"-->
-    <!--            :key="shape.name"-->
-    <!--            unelevated-->
-    <!--            round-->
-    <!--            size="12px"-->
-    <!--            class="q-pa-sm"-->
-    <!--            text-color="grey-9"-->
-    <!--            :disable="shape.disabled"-->
-    <!--            v-close-popup-->
-    <!--            @click="-->
-    <!--              $emit('switchMode', MODE_OPTIONS.shape);-->
-    <!--              $emit('addShape', shape.name);-->
-    <!--            "-->
-    <!--          >-->
-    <!--            <q-icon :name="shape.icon" />-->
+        <div
+          style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px"
+          class="q-px-sm"
+        >
+          <q-btn
+            v-for="shape in SHAPES.filter(
+              (item) => item.group === SHAPE_TYPES.line,
+            )"
+            :key="shape.name"
+            unelevated
+            round
+            size="12px"
+            class="q-pa-sm"
+            text-color="grey-9"
+            :disable="shape.disabled"
+            v-close-popup
+            @click="studioStore.addShape(shape.name)"
+          >
+            <q-icon :name="shape.icon" />
 
-    <!--            <q-tooltip v-if="shape.disabled" :offset="[0, 4]">-->
-    <!--              {{ $t("tooltips.comingSoon") }}-->
-    <!--            </q-tooltip>-->
-    <!--          </q-btn>-->
-    <!--        </div>-->
+            <q-tooltip v-if="shape.disabled" :offset="[0, 4]">
+              {{ $t("tooltips.comingSoon") }}
+            </q-tooltip>
+          </q-btn>
+        </div>
 
-    <!--        <q-separator class="q-mt-sm q-mb-md" />-->
+        <q-separator class="q-mt-sm q-mb-md" />
 
-    <!--        &lt;!&ndash; simple shapes &ndash;&gt;-->
-    <!--        <div class="text-grey q-px-md">-->
-    <!--          {{ $t("presentationStudio.toolbar.shape.groups.simpleShapes") }}-->
-    <!--        </div>-->
+        <!-- simple shapes -->
+        <div class="text-grey q-px-md">
+          {{ $t("presentationStudio.toolbar.shape.groups.simpleShapes") }}
+        </div>
 
-    <!--        <div-->
-    <!--          style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px"-->
-    <!--          class="q-pa-sm"-->
-    <!--        >-->
-    <!--          <q-btn-->
-    <!--            v-for="shape in SHAPES.filter(-->
-    <!--              (item) => item.group === SHAPE_TYPES.simpleShape-->
-    <!--            )"-->
-    <!--            :key="shape.name"-->
-    <!--            unelevated-->
-    <!--            round-->
-    <!--            size="12px"-->
-    <!--            class="q-pa-sm"-->
-    <!--            text-color="grey-9"-->
-    <!--            :disable="shape.disabled"-->
-    <!--            v-close-popup-->
-    <!--            @click="-->
-    <!--              $emit('switchMode', MODE_OPTIONS.shape);-->
-    <!--              $emit('addShape', shape.name);-->
-    <!--            "-->
-    <!--          >-->
-    <!--            <q-icon :name="shape.icon" />-->
+        <div
+          style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px"
+          class="q-pa-sm"
+        >
+          <q-btn
+            v-for="shape in SHAPES.filter(
+              (item) => item.group === SHAPE_TYPES.simpleShape,
+            )"
+            :key="shape.name"
+            unelevated
+            round
+            size="12px"
+            class="q-pa-sm"
+            text-color="grey-9"
+            :disable="shape.disabled"
+            v-close-popup
+            @click="studioStore.addShape(shape.name)"
+          >
+            <q-icon :name="shape.icon" />
 
-    <!--            <q-tooltip v-if="shape.disabled">-->
-    <!--              {{ $t("tooltips.comingSoon") }}-->
-    <!--            </q-tooltip>-->
-    <!--          </q-btn>-->
-    <!--        </div>-->
-    <!--      </q-menu>-->
+            <q-tooltip v-if="shape.disabled">
+              {{ $t("tooltips.comingSoon") }}
+            </q-tooltip>
+          </q-btn>
+        </div>
+      </q-menu>
 
-    <!--      <q-tooltip>-->
-    <!--        {{ $t("presentationStudio.toolbar.shape.title") }}-->
-    <!--      </q-tooltip>-->
-    <!--    </q-btn>-->
+      <q-tooltip>
+        {{ $t("presentationStudio.toolbar.shape.title") }}
+      </q-tooltip>
+    </q-btn>
   </div>
 </template>
 
@@ -226,6 +222,7 @@ import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import PresentationStudioToolbarTopLayouts from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopLayouts.vue";
 import { useStudioStore } from "stores/studio";
+import { SHAPE_TYPES, SHAPES } from "src/constants/assets/shapes";
 
 /*
  * variables

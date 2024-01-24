@@ -47,11 +47,11 @@
 
         <div
           v-if="room?.messages?.length"
-          class="chat__messages q-pb-sm column no-wrap q-gutter-xs scroll--hidden"
+          class="chat__messages q-pb-sm column no-wrap q-gutter-xs hide-scrollbar"
         >
           <div
             v-for="item in room.messages.filter(
-              (message) => isHost || (!isHost && message.type !== 'system')
+              (message) => isHost || (!isHost && message.type !== 'system'),
             )"
             :key="item.id"
             class="chat__messages__item"
@@ -121,7 +121,7 @@
 
         <div
           v-else
-          class="chat__messages full-height q-pb-sm column no-wrap q-gutter-xs scroll--hidden justify-center text-center"
+          class="chat__messages full-height q-pb-sm column no-wrap q-gutter-xs hide-scrollbar justify-center text-center"
         >
           <div class="text-semibold text-h6">
             {{ $t("presentationRoom.footer.chat.noMessages.title") }}
@@ -230,7 +230,7 @@ const sendNewMessage = () => {
       `/presentation/${presentation.value.id}/room/${room.value.id}/message`,
       {
         message: newMessage.value,
-      }
+      },
     )
     .then(() => {
       newMessage.value = "";
@@ -253,7 +253,7 @@ watch(
         inline: "nearest",
       });
     }
-  }
+  },
 );
 </script>
 

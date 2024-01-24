@@ -95,7 +95,7 @@
       <div
         v-else
         style="height: calc(100% - 68px)"
-        class="column no-wrap scroll-y scroll--hidden"
+        class="column no-wrap scroll-y hide-scrollbar"
       >
         <!-- content -->
         <q-tab-panels v-model="tab" style="height: 100%">

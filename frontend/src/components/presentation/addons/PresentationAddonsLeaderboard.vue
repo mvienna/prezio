@@ -14,7 +14,7 @@
     />
 
     <div
-      class="leaderboard scroll--hidden q-pa-sm"
+      class="leaderboard hide-scrollbar q-pa-sm"
       :style="`top: ${
         canvasRect.top + (canvasRect.height * 20) / 100
       }px; left: ${canvasRect.left + (canvasRect.width * 10) / 100}px; width: ${
@@ -58,7 +58,7 @@
                 class="absolute-left"
                 style="height: 100%; width: 100%; border-radius: 0"
                 :style="`background: rgba(${Object.values(
-                  colors.textToRgb(result.participantData?.color || '#FFFFFF')
+                  colors.textToRgb(result.participantData?.color || '#FFFFFF'),
                 ).join(',')}, 0.7);`"
               ></div>
 
@@ -140,7 +140,7 @@ const { canvas, scale } = storeToRefs(canvasStore);
  */
 const results = computed(() => {
   const slideIndex = presentation.value.slides.findIndex(
-    (item) => item.id === slide.id
+    (item) => item.id === slide.id,
   );
 
   const slides = presentation.value.slides
@@ -176,7 +176,7 @@ const results = computed(() => {
 const maxScore = computed(() => {
   return results.value.reduce(
     (max, obj) => (obj.score > max ? obj.score : max),
-    results.value[0].score
+    results.value[0].score,
   );
 });
 

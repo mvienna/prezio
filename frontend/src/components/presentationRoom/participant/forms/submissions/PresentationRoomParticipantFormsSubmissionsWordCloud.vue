@@ -9,7 +9,7 @@
       overflow-y: scroll;
       max-height: calc(100vh - 96px - 96px);
     "
-    class="scroll--hidden"
+    class="hide-scrollbar"
     @submit.prevent="handleSubmittingAnswers()"
   >
     <template
@@ -222,13 +222,13 @@ const participantAnswersCount = computed(() => {
   return slide.value.answers.filter(
     (answer) =>
       answer.participant_id === participant.value?.id &&
-      answer.slide_type === slide.value?.type
+      answer.slide_type === slide.value?.type,
   ).length;
 });
 
 const handleSubmittingAnswers = () => {
   presentationsStore.submitPresentationRoomAnswers(
-    answerInputs.value.map((answer) => ({ value: answer }))
+    answerInputs.value.map((answer) => ({ value: answer })),
   );
   answerInputs.value = [];
 };

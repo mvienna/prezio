@@ -125,7 +125,7 @@ watch(
   () => slide.value,
   () => {
     studioStore.loadStudio();
-  }
+  },
 );
 
 /*
@@ -135,7 +135,7 @@ const isConnectedToWebSockets = ref(true);
 
 const connectToRoomChannels = () => {
   const channel = window.Echo.channel(
-    `public.room.${presentation.value.room.id}`
+    `public.room.${presentation.value.room.id}`,
   );
 
   window.Echo = new Echo({
@@ -151,7 +151,7 @@ const connectToRoomChannels = () => {
   window.Echo.join(`presence.room.${presentation.value.room.id}`)
     .here((users) => {
       participants.value = users.filter(
-        (item) => item.id !== user.value?.id && item.room_id
+        (item) => item.id !== user.value?.id && item.room_id,
       );
     })
     .joining((userJoined) => {
@@ -159,7 +159,7 @@ const connectToRoomChannels = () => {
     })
     .leaving((userLeft) => {
       participants.value = participants.value.filter(
-        (item) => item.id !== userLeft?.id && item.room_id
+        (item) => item.id !== userLeft?.id && item.room_id,
       );
     });
 
@@ -192,7 +192,7 @@ const connectToRoomChannels = () => {
 
   channel.listen("PresentationRoomAnswerUpdatedEvent", (event) => {
     const answerIndex = slide.value.answers.findIndex(
-      (answer) => answer.id === event.data.id
+      (answer) => answer.id === event.data.id,
     );
     slide.value.answers[answerIndex] = event.data;
   });

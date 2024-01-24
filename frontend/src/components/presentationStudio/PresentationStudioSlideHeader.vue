@@ -1,88 +1,79 @@
 <template>
-  <div
-    style="
-      height: 40px;
-      position: fixed;
-      border-radius: 8px 8px 0 0;
-      z-index: 2;
-    "
-    :style="`width: ${stages.default?.width()}px; left: ${
-      stages.default?.attrs?.container?.getBoundingClientRect()?.left
-    }px; top: ${
-      stages.default?.attrs?.container?.getBoundingClientRect()?.top
-    }px;`"
-    :class="`text-${
-      slide?.color_scheme === COLOR_SCHEME_OPTIONS.light ? 'black' : 'white'
-    }`"
-    class="row no-wrap items-center justify-center q-px-sm text-black"
-    @mouseover="isHovered = true"
-    @mouseleave="isHovered = false"
+  <transition
+    appear
+    enter-active-class="animated flipInX"
+    leave-active-class="animated flipOutX"
   >
-    <transition
-      appear
-      enter-active-class="animated flipInX"
-      leave-active-class="animated flipOutX"
-    >
-      <div
-        v-if="
-          presentation?.settings?.show_joining_instructions_bar || isHovered
-        "
-        class="row no-wrap items-center justify-center ellipsis q-px-sm presentation_studio_slide_header__banner text-14"
-        style="max-width: 70%"
-        :style="
-          presentation?.settings?.show_joining_instructions_bar || isHovered
-            ? slide?.color_scheme === COLOR_SCHEME_OPTIONS.light
-              ? 'background: rgba(0, 0, 0, 0.1); color: black;'
-              : 'background: rgba(255, 255, 255, 0.1); color: white;'
-            : 'background: transparent'
-        "
-      >
-        <!-- link -->
-        <div class="ellipsis cursor-pointer" @click="copyRoomLinkToClipboard()">
-          <span v-if="!$q.screen.lt.sm" class="q-mr-xs" style="opacity: 0.5">
-            {{ $t("presentationRoom.header.roomLink.title") }}
-          </span>
-
-          <span class="text-semibold">
-            {{ host }}/<b class="text-uppercase">
-              {{ presentation.room.token }}
-            </b>
-          </span>
-
-          <q-tooltip :offset="[0, 8]">
-            {{
-              $t(
-                `presentationRoom.header.roomLink.${
-                  isCopied ? "copied" : "copyToClipboard"
-                }`
-              )
-            }}
-          </q-tooltip>
-        </div>
-
-        <!-- open share -->
-        <q-icon
-          name="r_edit"
-          class="q-ml-sm cursor-pointer q-pa-xs"
-          @click="showShareDialog = true"
-        />
-      </div>
-    </transition>
-
-    <!-- logo -->
     <div
-      class="absolute-right q-mr-md q-mt-sm"
-      style="width: 64px; height: 18px"
+      v-show="
+        presentation?.settings?.show_joining_instructions_bar || isHovered
+      "
+      class="fixed row no-wrap items-center justify-between q-px-md q-mt-sm row no-wrap items-center justify-center ellipsis q-px-sm rounded-md text-14"
+      :style="`width: ${presentation?.settings?.show_joining_instructions_bar || isHovered ? width : 0}px; left: ${
+        stages.default?.attrs?.container?.getBoundingClientRect()?.left +
+        stages.default?.width() / 2 -
+        width / 2
+      }px; top: ${
+        stages.default?.attrs?.container?.getBoundingClientRect()?.top
+      }px;`"
+      :class="
+        slide?.color_scheme === COLOR_SCHEME_OPTIONS.light
+          ? 'text-black bg-grey-2'
+          : 'text-white bg-grey-9'
+      "
+      @mouseover="isHovered = true"
+      @mouseleave="isHovered = false"
     >
-      <q-img
-        :src="
-          slide?.color_scheme === COLOR_SCHEME_OPTIONS.light
-            ? '/prezio.svg'
-            : '/prezio--white.svg'
-        "
-        fit="contain"
+      <!-- link -->
+      <div class="ellipsis cursor-pointer" @click="copyRoomLinkToClipboard()">
+        <span
+          v-if="width !== WIDTH_OPTIONS.shorten"
+          class="q-mr-xs"
+          style="opacity: 0.5"
+        >
+          {{ $t("presentationRoom.header.roomLink.title") }}
+        </span>
+
+        <span class="text-semibold">
+          {{ host }}/<b class="text-uppercase">
+            {{ presentation?.room?.token }}
+          </b>
+        </span>
+
+        <q-tooltip :offset="[0, 8]">
+          {{
+            $t(
+              `presentationRoom.header.roomLink.${
+                isCopied ? "copied" : "copyToClipboard"
+              }`,
+            )
+          }}
+        </q-tooltip>
+      </div>
+
+      <!-- open share -->
+      <q-icon
+        name="r_edit"
+        class="q-ml-sm cursor-pointer q-pa-xs"
+        @click="showShareDialog = true"
       />
     </div>
+  </transition>
+
+  <!-- logo -->
+  <div
+    class="fixed row items-center q-mt-sm"
+    style="width: 64px; height: 20px"
+    :style="`left: ${stages.default?.attrs?.container?.getBoundingClientRect()?.left + stages.default?.width() - 64 - 16}px; top: ${stages.default?.attrs?.container?.getBoundingClientRect()?.top}px;`"
+  >
+    <q-img
+      :src="
+        slide?.color_scheme === COLOR_SCHEME_OPTIONS.light
+          ? '/prezio.svg'
+          : '/prezio--white.svg'
+      "
+      fit="contain"
+    />
   </div>
 </template>
 
@@ -118,6 +109,22 @@ const roomLink = computed(() => {
   return `${host}/${presentation.value.room.token}`;
 });
 
+/*
+ * bar width
+ */
+const WIDTH_OPTIONS = {
+  full: 450,
+  shorten: host.includes("testing") ? 220 : 170,
+};
+const width = computed(() => {
+  return stages.value.default?.width() > 600
+    ? WIDTH_OPTIONS.full
+    : WIDTH_OPTIONS.shorten;
+});
+
+/*
+ * copying
+ */
 const isCopied = ref(false);
 const copiedTimeout = ref();
 
@@ -132,10 +139,3 @@ const copyRoomLinkToClipboard = () => {
   }, 3000);
 };
 </script>
-
-<style scoped lang="scss">
-.presentation_studio_slide_header__banner {
-  border-radius: 12px;
-  height: 24px;
-}
-</style>

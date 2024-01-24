@@ -173,7 +173,7 @@ export const useCanvasStore = defineStore("canvas", {
       if (!newScale) {
         newScale = Math.max(
           this.minZoom,
-          Math.min(this.maxZoom, this.scale + delta * this.sensitivity)
+          Math.min(this.maxZoom, this.scale + delta * this.sensitivity),
         );
 
         const canvasRect = this.canvas.getBoundingClientRect();
@@ -260,12 +260,12 @@ export const useCanvasStore = defineStore("canvas", {
     renderSlidePreview() {
       // canvas
       const slideIndex = presentation.value?.slides?.findIndex(
-        (item) => item.id === slide.value?.id
+        (item) => item.id === slide.value?.id,
       );
       if (slideIndex === -1) return;
 
       const slide_preview_canvas = document.getElementById(
-        `canvas_slide_preview_${slideIndex}`
+        `canvas_slide_preview_${slideIndex}`,
       );
       if (!slide_preview_canvas) return;
 
@@ -278,7 +278,7 @@ export const useCanvasStore = defineStore("canvas", {
         0,
         0,
         slide_preview_canvas.width,
-        slide_preview_canvas.height
+        slide_preview_canvas.height,
       );
       slide_preview_ctx.drawImage(this.canvas, 0, 0);
 
@@ -295,7 +295,7 @@ export const useCanvasStore = defineStore("canvas", {
     reorderDesignLayers(elements) {
       // background preview to the bottom of layers list
       const backgroundPreviewElementIndex = elements.findIndex(
-        (element) => element.mode === this.MODE_OPTIONS.backgroundPreview
+        (element) => element.mode === this.MODE_OPTIONS.backgroundPreview,
       );
       if (backgroundPreviewElementIndex !== -1) {
         const backgroundPreviewElement =
@@ -306,7 +306,7 @@ export const useCanvasStore = defineStore("canvas", {
 
       // background to the bottom of layers list
       const backgroundElementIndex = elements.findIndex(
-        (element) => element.mode === this.MODE_OPTIONS.background
+        (element) => element.mode === this.MODE_OPTIONS.background,
       );
       if (backgroundElementIndex !== -1) {
         const backgroundElement = elements[backgroundElementIndex];
@@ -316,7 +316,7 @@ export const useCanvasStore = defineStore("canvas", {
 
       // base fill to the bottom of layers list
       const baseFillElementIndex = elements.findIndex(
-        (element) => element.mode === this.MODE_OPTIONS.baseFill
+        (element) => element.mode === this.MODE_OPTIONS.baseFill,
       );
       if (baseFillElementIndex !== -1) {
         const backgroundElement = this.elements[baseFillElementIndex];
@@ -330,7 +330,7 @@ export const useCanvasStore = defineStore("canvas", {
     redrawCanvas(
       saveSlide = true,
       elements = this.elements,
-      showHelpers = true
+      showHelpers = true,
     ) {
       lastChangedAt.value = new Date();
 
@@ -590,7 +590,7 @@ export const useCanvasStore = defineStore("canvas", {
       });
 
       const elementIndex = this.elements.findIndex(
-        (item) => item.id === element.id
+        (item) => item.id === element.id,
       );
       this.elements[elementIndex].height =
         adjustedFontSize * element.lineHeight * lines.length + padding * 2;
@@ -611,7 +611,7 @@ export const useCanvasStore = defineStore("canvas", {
             x,
             y + 4,
             this.ctx.measureText(line).width,
-            adjustedFontSize / 16
+            adjustedFontSize / 16,
           );
         }
 
@@ -622,7 +622,7 @@ export const useCanvasStore = defineStore("canvas", {
             x,
             y - (adjustedFontSize * element.lineHeight) / 3 + 4,
             this.ctx.measureText(line).width,
-            adjustedFontSize / 16
+            adjustedFontSize / 16,
           );
         }
 
@@ -637,12 +637,12 @@ export const useCanvasStore = defineStore("canvas", {
     renderImage(element) {
       this.ctx.translate(
         element.x + element.width / 2,
-        element.y + element.height / 2
+        element.y + element.height / 2,
       );
 
       this.applyElementFilters(
         element,
-        element.mode !== this.MODE_OPTIONS.media
+        element.mode !== this.MODE_OPTIONS.media,
       );
 
       this.ctx.strokeStyle = element.borderColor;
@@ -664,14 +664,14 @@ export const useCanvasStore = defineStore("canvas", {
             element.x,
             element.y,
             element.width,
-            element.height
+            element.height,
           );
 
           this.ctx.strokeRect(
             element.x - element.borderWidth / 2,
             element.y - element.borderWidth / 2,
             element.width + element.borderWidth,
-            element.height + element.borderWidth
+            element.height + element.borderWidth,
           );
         };
       } else {
@@ -680,14 +680,14 @@ export const useCanvasStore = defineStore("canvas", {
           -element.width / 2,
           -element.height / 2,
           element.width,
-          element.height
+          element.height,
         );
 
         this.ctx.strokeRect(
           -element.width / 2 - element.borderWidth / 2,
           -element.height / 2 - element.borderWidth / 2,
           element.width + element.borderWidth,
-          element.height + element.borderWidth
+          element.height + element.borderWidth,
         );
       }
     },
@@ -696,7 +696,7 @@ export const useCanvasStore = defineStore("canvas", {
       element,
       isGeneralFilters = true,
       applyOpacityFilters = true,
-      applyShadowFilters = true
+      applyShadowFilters = true,
     ) {
       if (isGeneralFilters) {
         this.ctx.filter = `blur(${element.blur || 0}px) contrast(${
@@ -743,12 +743,12 @@ export const useCanvasStore = defineStore("canvas", {
               element.x,
               element.y,
               element.x + element.width,
-              element.y + element.height
+              element.y + element.height,
             );
             gradient.addColorStop(0, element.fillColor || "#FFFFFF");
             gradient.addColorStop(
               1,
-              element.fillColor2 || element.fillColor || "#FFFFFF"
+              element.fillColor2 || element.fillColor || "#FFFFFF",
             );
             this.ctx.fillStyle = gradient;
           } else {
@@ -769,7 +769,7 @@ export const useCanvasStore = defineStore("canvas", {
             element.y + element.height / 2,
             element.width / 2,
             0,
-            2 * Math.PI
+            2 * Math.PI,
           );
 
           fillShape();
@@ -777,9 +777,9 @@ export const useCanvasStore = defineStore("canvas", {
           break;
 
         /*
-         * square
+         * rectangle
          */
-        case SHAPES_OPTIONS.square:
+        case SHAPES_OPTIONS.rectangle:
           this.ctx.rect(element.x, element.y, element.width, element.height);
 
           fillShape();
@@ -867,7 +867,7 @@ export const useCanvasStore = defineStore("canvas", {
 
           const angle = Math.atan2(
             arrowTipY - arrowBaseY,
-            arrowTipX - arrowBaseX
+            arrowTipX - arrowBaseX,
           );
 
           const arrowX1 =
@@ -945,7 +945,7 @@ export const useCanvasStore = defineStore("canvas", {
             element.width,
             element.height,
             [],
-            true
+            true,
           );
           break;
 
@@ -959,7 +959,7 @@ export const useCanvasStore = defineStore("canvas", {
             element.width,
             element.height,
             ["center-left", "center-right"],
-            true
+            true,
           );
           break;
 
@@ -975,7 +975,7 @@ export const useCanvasStore = defineStore("canvas", {
             [SHAPES_OPTIONS.circle, SHAPES_OPTIONS.star].includes(element.type)
               ? ["top-left", "top-right", "bottom-right", "bottom-left"]
               : undefined,
-            true
+            true,
           );
           break;
 
@@ -989,7 +989,7 @@ export const useCanvasStore = defineStore("canvas", {
             element.width,
             element.height,
             undefined,
-            true
+            true,
           );
           break;
       }
@@ -1006,13 +1006,13 @@ export const useCanvasStore = defineStore("canvas", {
       width,
       height,
       RESIZE_HANDLES_OPTIONS = Object.values(this.RESIZE_HANDLES_OPTIONS),
-      drawRotationHandle = true
+      drawRotationHandle = true,
     ) {
       /*
        * border
        */
       const borderWidth = this.computeAdjustedSize(
-        this.selectedElementBorder.borderWidth
+        this.selectedElementBorder.borderWidth,
       );
 
       this.ctx.strokeStyle = this.selectedElementBorder.borderColor;
@@ -1034,7 +1034,7 @@ export const useCanvasStore = defineStore("canvas", {
         const rotationHandleY = y + height;
 
         const connectorLineHeight = this.computeAdjustedSize(
-          this.selectedElementRotationHandle.height
+          this.selectedElementRotationHandle.height,
         );
 
         this.ctx.lineWidth = borderWidth / 2;
@@ -1042,7 +1042,7 @@ export const useCanvasStore = defineStore("canvas", {
           rotationHandleX,
           rotationHandleY,
           borderWidth,
-          connectorLineHeight
+          connectorLineHeight,
         );
 
         this.ctx.lineWidth = borderWidth;
@@ -1052,7 +1052,7 @@ export const useCanvasStore = defineStore("canvas", {
           y + height + handleSize / 2 + connectorLineHeight + borderWidth * 2,
           this.computeAdjustedSize(this.selectedElementRotationHandle.radius),
           0,
-          2 * Math.PI
+          2 * Math.PI,
         );
         this.ctx.stroke();
       }
@@ -1068,7 +1068,7 @@ export const useCanvasStore = defineStore("canvas", {
             y,
             width,
             height,
-            handleSize
+            handleSize,
           );
 
           this.ctx.fillStyle = "white";

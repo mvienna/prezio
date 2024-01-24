@@ -24,7 +24,7 @@
       <q-space />
 
       <!-- sort -->
-      <div class="row no-wrap items-center scroll-x scroll--hidden">
+      <div class="row no-wrap items-center scroll-x hide-scrollbar">
         <q-btn
           v-for="column in columns"
           flat
@@ -124,7 +124,7 @@
                       no-wrap
                       :href="
                         clearRoutePathFromProps(
-                          ROUTE_PATHS.PRESENTATION_STUDIO
+                          ROUTE_PATHS.PRESENTATION_STUDIO,
                         ) + presentation?.id
                       "
                       no-caps
@@ -140,7 +140,7 @@
                       no-caps
                       :href="
                         clearRoutePathFromProps(
-                          ROUTE_PATHS.PRESENTATION_ROOM.HOST
+                          ROUTE_PATHS.PRESENTATION_ROOM.HOST,
                         ) + presentation?.room?.token
                       "
                       icon="r_play_circle"
@@ -158,7 +158,7 @@
                   <!-- title -->
                   <div class="relative-position">
                     <div
-                      class="text-semibold cursor-pointer scroll--hidden"
+                      class="text-semibold cursor-pointer hide-scrollbar"
                       :class="{
                         ellipsis: editingPresentationId !== presentation.id,
                       }"
@@ -174,7 +174,7 @@
                           event.preventDefault();
                           handlePresentationNameDoubleClick(
                             event,
-                            presentation
+                            presentation,
                           );
                         }
                       "
@@ -196,7 +196,7 @@
                       {{
                         date.formatDate(
                           getUpdatedAtTitle(presentation),
-                          "DD.MM.YYYY HH:mm"
+                          "DD.MM.YYYY HH:mm",
                         )
                       }}
                     </q-tooltip>
@@ -229,7 +229,7 @@
                         @click="
                           handlePresentationNameDoubleClick(
                             $event,
-                            presentation
+                            presentation,
                           )
                         "
                       >
@@ -256,7 +256,7 @@
                         <div>
                           {{
                             $t(
-                              "dashboard.presentationItem.actions.folder.addToFolder"
+                              "dashboard.presentationItem.actions.folder.addToFolder",
                             )
                           }}
                         </div>
@@ -279,7 +279,7 @@
                             @click="
                               handleMovingToFolderPresentations(
                                 presentation,
-                                folder
+                                folder,
                               )
                             "
                           >
@@ -289,7 +289,7 @@
                             >
                               <q-img
                                 :src="`/assets/icons/folders/${getFolderIconName(
-                                  $q
+                                  $q,
                                 )}.png`"
                                 style="width: 1.75em; min-width: 1.75em"
                               />
@@ -323,7 +323,7 @@
                         <div>
                           {{
                             $t(
-                              "dashboard.presentationItem.actions.delete.title"
+                              "dashboard.presentationItem.actions.delete.title",
                             )
                           }}
                         </div>
@@ -337,12 +337,12 @@
                           icon-color="red"
                           :title="
                             $t(
-                              'dashboard.presentationItem.actions.delete.confirmation.title'
+                              'dashboard.presentationItem.actions.delete.confirmation.title',
                             )
                           "
                           :message="
                             $t(
-                              'dashboard.presentationItem.actions.delete.confirmation.message'
+                              'dashboard.presentationItem.actions.delete.confirmation.message',
                             )
                           "
                           confirm-btn-color="red"
@@ -548,7 +548,7 @@ const handleMovingToFolderPresentations = async (presentation, folder) => {
     folder_id: presentation.folder_id === folder.id ? null : folder.id,
   });
   presentations.value = presentations.value.filter(
-    (item) => item.id !== presentation.id
+    (item) => item.id !== presentation.id,
   );
 };
 
@@ -565,7 +565,7 @@ const showPresentationDeletionConfirmationDialog = ref(false);
 const handleDeletingPresentation = async (presentation) => {
   await presentationsStore.deletePresentation(presentation);
   presentations.value = presentations.value.filter(
-    (item) => item.id !== presentation.id
+    (item) => item.id !== presentation.id,
   );
 };
 
@@ -587,7 +587,7 @@ watch(
   () => selectedFolder.value,
   () => {
     infiniteScroll.value.setIndex(1);
-  }
+  },
 );
 
 /*
@@ -600,7 +600,7 @@ const handlePresentationNameClick = (presentation) => {
     if (editingPresentationId.value === presentation?.id) return;
     router.push(
       clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_STUDIO) +
-        presentation?.id
+        presentation?.id,
     );
   }, 300);
 };
@@ -609,7 +609,7 @@ const handlePresentationNameDoubleClick = (event, presentation) => {
   editingPresentationId.value = presentation.id;
 
   const element = document.getElementById(
-    `presentation-${presentation.id}-name`
+    `presentation-${presentation.id}-name`,
   );
   element.contentEditable = true;
 
@@ -655,7 +655,7 @@ const handlePresentationNameDoubleClick = (event, presentation) => {
 
 const handlePresentationNameUpdate = async (presentation) => {
   const element = document.getElementById(
-    `presentation-${presentation.id}-name`
+    `presentation-${presentation.id}-name`,
   );
 
   presentation.name = element.innerText;

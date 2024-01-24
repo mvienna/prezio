@@ -4,6 +4,7 @@ import {
   COLOR_SCHEME_OPTIONS,
   CROP_POSITION_OPTIONS,
   DRAWING_MODES,
+  SHAPES_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import Konva from "konva";
 import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
@@ -20,12 +21,17 @@ const { presentation, slide } = storeToRefs(presentationsStore);
 export const useStudioStore = defineStore("studio", {
   state: () => ({
     scene: {
-      width: 2560,
-      height: 1440,
+      width: 1920,
+      height: 1080,
     },
     stages: {
       default: null,
       // preview: null,
+    },
+    zoom: {
+      coefficient: 1.2,
+      min: null,
+      max: 3,
     },
     layers: {
       default: null, // default stage
@@ -43,7 +49,6 @@ export const useStudioStore = defineStore("studio", {
      */
     selection: {
       isSelecting: false,
-      selectableClassNames: ["Line", "Image"],
 
       rect: null,
       x1: null,
@@ -63,9 +68,9 @@ export const useStudioStore = defineStore("studio", {
     MODE_OPTIONS: {
       drawing: "Drawing",
       image: "Image",
+      shape: "Shape",
       text: "Text",
       emoji: "Emoji",
-      shape: "Shape",
     },
 
     /*
@@ -112,6 +117,33 @@ export const useStudioStore = defineStore("studio", {
         clipPosition: "centerMiddle",
       },
     },
+
+    /*
+     * shapes
+     */
+    shape: {
+      fill: COLOR_PALETTE.PRIMARY,
+      stroke: COLOR_PALETTE.PRIMARY,
+      strokeWidth: 0,
+      opacity: 1,
+      shadowColor: COLOR_PALETTE.BLACK,
+      shadowBlur: 0,
+      shadowOffset: { x: 0, y: 0 },
+      shadowOpacity: 0,
+      corderRadius: 6,
+
+      default: {
+        fill: COLOR_PALETTE.PRIMARY,
+        stroke: COLOR_PALETTE.PRIMARY,
+        strokeWidth: 0,
+        opacity: 1,
+        shadowColor: COLOR_PALETTE.BLACK,
+        shadowBlur: 0,
+        shadowOffset: { x: 0, y: 0 },
+        shadowOpacity: 0,
+        corderRadius: 6,
+      },
+    },
   }),
 
   actions: {
@@ -123,7 +155,7 @@ export const useStudioStore = defineStore("studio", {
         // load stage
         this.stages.default = Konva.Node.create(
           slide.value.canvas_data,
-          "container"
+          "container",
         );
 
         // load layers
@@ -214,6 +246,9 @@ export const useStudioStore = defineStore("studio", {
       this.stages.default.off("dragend", this.handleSlideUpdate);
       this.stages.default.on("dragend", this.handleSlideUpdate);
 
+      this.stages.default.off("wheel", this.handleZoom);
+      this.stages.default.on("wheel", this.handleZoom);
+
       document.removeEventListener("keydown", this.handleShortcuts);
       document.addEventListener("keydown", this.handleShortcuts);
 
@@ -230,6 +265,53 @@ export const useStudioStore = defineStore("studio", {
       this.stages.default.width(this.scene.width * scale);
       this.stages.default.height(this.scene.height * scale);
       this.stages.default.scale({ x: scale, y: scale });
+      this.stages.default.position({ x: 0, y: 0 });
+      this.zoom.min = scale;
+    },
+
+    /*
+     * zoom
+     */
+    handleZoom(event) {
+      event.evt.preventDefault();
+
+      const oldScale = this.stages.default.scaleX();
+
+      const position = this.stages.default.getPointerPosition();
+
+      const mousePointTo = {
+        x: (position.x - this.stages.default.x()) / oldScale,
+        y: (position.y - this.stages.default.y()) / oldScale,
+      };
+
+      // how to scale? Zoom in? Or zoom out?
+      let direction = event.evt.deltaY > 0 ? 1 : -1;
+
+      // when we zoom on trackpad, e.evt.ctrlKey is true
+      // in that case lets revert direction
+      if (event.evt.ctrlKey) {
+        direction = -direction;
+      }
+
+      let newScale =
+        direction > 0
+          ? oldScale * this.zoom.coefficient
+          : oldScale / this.zoom.coefficient;
+
+      if (newScale < this.zoom.min) {
+        this.fitStageIntoParentContainer();
+        return;
+      }
+
+      if (newScale > this.zoom.max) return;
+
+      this.stages.default.scale({ x: newScale, y: newScale });
+
+      const newPos = {
+        x: position.x - mousePointTo.x * newScale,
+        y: position.y - mousePointTo.y * newScale,
+      };
+      this.stages.default.position(newPos);
     },
 
     /*
@@ -253,6 +335,7 @@ export const useStudioStore = defineStore("studio", {
       this.transformer.default.moveToTop();
 
       slide.value.color_scheme = await this.defineColorScheme();
+      this.applyTransformerCustomization();
       slide.value.canvas_data = this.stages.default.toJSON();
 
       await presentationsStore.saveSlide();
@@ -262,6 +345,9 @@ export const useStudioStore = defineStore("studio", {
      * shortcuts
      */
     handleShortcuts(event) {
+      const activeElement = document.activeElement;
+      if (activeElement && activeElement.tagName === "INPUT") return;
+
       if (event.key === "Delete" || event.key === "Backspace") {
         event.preventDefault();
         this.deleteNodes();
@@ -331,9 +417,18 @@ export const useStudioStore = defineStore("studio", {
         this.transformer.default = new Konva.Transformer({
           nodes: [],
           rotationSnaps: [0, 90, 180, 270],
-          anchorStroke: COLOR_PALETTE.PRIMARY,
-          anchorFill: COLOR_PALETTE.WHITE,
-          borderStroke: COLOR_PALETTE.PRIMARY,
+          anchorStroke:
+            slide.value.color_scheme === COLOR_SCHEME_OPTIONS.light
+              ? COLOR_PALETTE.BLACK
+              : COLOR_PALETTE.WHITE,
+          anchorFill:
+            slide.value.color_scheme === COLOR_SCHEME_OPTIONS.light
+              ? COLOR_PALETTE.WHITE
+              : COLOR_PALETTE.BLACK,
+          borderStroke:
+            slide.value.color_scheme === COLOR_SCHEME_OPTIONS.light
+              ? COLOR_PALETTE.BLACK
+              : COLOR_PALETTE.WHITE,
           anchorSize: 12,
           keepRatio: false,
           boundBoxFunc: (oldBox, newBox) => {
@@ -351,7 +446,7 @@ export const useStudioStore = defineStore("studio", {
               anchor.offsetX(size / 2);
               anchor.cornerRadius(size);
             } else {
-              anchor.cornerRadius(1);
+              anchor.cornerRadius(2);
             }
           },
         });
@@ -393,7 +488,7 @@ export const useStudioStore = defineStore("studio", {
         this.selection.rect.fill(
           slide.value.color_scheme === COLOR_SCHEME_OPTIONS.light
             ? COLOR_PALETTE.BLACK_TRANSPARENT
-            : COLOR_PALETTE.WHITE_TRANSPARENT
+            : COLOR_PALETTE.WHITE_TRANSPARENT,
         );
 
         this.selection.x1 = position.x;
@@ -441,7 +536,7 @@ export const useStudioStore = defineStore("studio", {
 
         const elements = this.stages.default.find((node) => {
           return (
-            this.selection.selectableClassNames.includes(node.getClassName()) &&
+            Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")) &&
             node.getLayer().attrs.name === "defaultLayer" &&
             node.draggable()
           );
@@ -449,10 +544,11 @@ export const useStudioStore = defineStore("studio", {
         const box = this.selection.rect.getClientRect();
 
         const selected = elements.filter((shape) =>
-          Konva.Util.haveIntersection(box, shape.getClientRect())
+          Konva.Util.haveIntersection(box, shape.getClientRect()),
         );
 
         this.transformer.default.nodes(selected);
+        this.applyTransformerCustomization();
       };
 
       const handleSelectionClick = (event) => {
@@ -469,8 +565,8 @@ export const useStudioStore = defineStore("studio", {
 
         // do nothing if clicked NOT on our rectangles
         if (
-          !this.selection.selectableClassNames.includes(
-            event.target.getClassName()
+          !Object.values(this.MODE_OPTIONS).includes(
+            event.target.getAttr("name"),
           ) ||
           !event.target.draggable()
         ) {
@@ -500,6 +596,8 @@ export const useStudioStore = defineStore("studio", {
           this.transformer.default.nodes(nodes);
         }
 
+        this.applyTransformerCustomization();
+
         this.setCustomization();
       };
 
@@ -508,10 +606,40 @@ export const useStudioStore = defineStore("studio", {
       this.stages.default.off("mouseup touchend", handleSelectionMouseUp);
       this.stages.default.off("click tap", handleSelectionClick);
 
-      this.stages.default.on("mousedown touchstart", handleSelectionMouseDown);
-      this.stages.default.on("mousemove touchmove", handleSelectionMouseMove);
-      this.stages.default.on("mouseup touchend", handleSelectionMouseUp);
-      this.stages.default.on("click tap", handleSelectionClick);
+      this.stages.default.on("mousedown", handleSelectionMouseDown);
+      this.stages.default.on("mousemove", handleSelectionMouseMove);
+      this.stages.default.on("mouseup", handleSelectionMouseUp);
+      this.stages.default.on("click", handleSelectionClick);
+    },
+
+    applyTransformerCustomization() {
+      this.transformer.default.anchorStroke(
+        slide.value.color_scheme === COLOR_SCHEME_OPTIONS.light
+          ? COLOR_PALETTE.BLACK
+          : COLOR_PALETTE.WHITE,
+      );
+      this.transformer.default.anchorFill(
+        slide.value.color_scheme === COLOR_SCHEME_OPTIONS.light
+          ? COLOR_PALETTE.WHITE
+          : COLOR_PALETTE.BLACK,
+      );
+      this.transformer.default.borderStroke(
+        slide.value.color_scheme === COLOR_SCHEME_OPTIONS.light
+          ? COLOR_PALETTE.BLACK
+          : COLOR_PALETTE.WHITE,
+      );
+      this.transformer.default.anchorStyleFunc((anchor) => {
+        if (anchor.hasName("rotater")) {
+          const size = 14;
+          anchor.width(size);
+          anchor.height(size);
+          anchor.offsetY(size / 2);
+          anchor.offsetX(size / 2);
+          anchor.cornerRadius(size);
+        } else {
+          anchor.cornerRadius(2);
+        }
+      });
     },
 
     deselectElements() {
@@ -537,7 +665,7 @@ export const useStudioStore = defineStore("studio", {
 
         this.stages.default
           .find((node) =>
-            this.selection.selectableClassNames.includes(node.getClassName())
+            Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
           )
           .filter((node) => node._id !== skipShape._id)
           .forEach((guideItem) => {
@@ -796,7 +924,7 @@ export const useStudioStore = defineStore("studio", {
           this.processImageNode(
             clone,
             clone.getAttr("source"),
-            clone.getAttr("lastCropUsed")
+            clone.getAttr("lastCropUsed"),
           );
         }
         return clone;
@@ -851,7 +979,7 @@ export const useStudioStore = defineStore("studio", {
       baseFill = null,
       baseBackgroundUrl = null,
       baseBackgroundFilters = null,
-      baseBackgroundPreviewUrl = null
+      baseBackgroundPreviewUrl = null,
     ) {
       // base fill
       if (baseFill) {
@@ -912,7 +1040,7 @@ export const useStudioStore = defineStore("studio", {
           const crop = this.getCrop(
             baseBackground.image(),
             { width: baseBackground.width(), height: baseBackground.height() },
-            clipPosition
+            clipPosition,
           );
           baseBackground.setAttrs(crop);
 
@@ -994,7 +1122,7 @@ export const useStudioStore = defineStore("studio", {
               } else {
                 imageObj.src = url;
               }
-            })
+            }),
           );
         });
         await Promise.all(loadImagePromises);
@@ -1022,7 +1150,7 @@ export const useStudioStore = defineStore("studio", {
      */
     async defineColorScheme(
       baseFill = this.layers.base.findOne(".baseFill"),
-      baseBackground = this.layers.base.findOne(".baseBackground")
+      baseBackground = this.layers.base.findOne(".baseBackground"),
     ) {
       const computeAverageBrightness = async () => {
         return new Promise(async (resolve) => {
@@ -1084,7 +1212,7 @@ export const useStudioStore = defineStore("studio", {
               0,
               0,
               canvas.width,
-              canvas.height
+              canvas.height,
             );
 
             // compute average brightness
@@ -1093,7 +1221,7 @@ export const useStudioStore = defineStore("studio", {
               0,
               0,
               canvas.width,
-              canvas.height
+              canvas.height,
             ).data;
 
             for (let i = 0; i < imageData.length; i += 4) {
@@ -1125,18 +1253,23 @@ export const useStudioStore = defineStore("studio", {
 
       if (nodes) {
         nodes.forEach((node) => {
-          switch (node.getClassName()) {
-            case "Image":
+          switch (node.getAttr("name")) {
+            /*
+             * image
+             */
+            case this.MODE_OPTIONS.image:
               this.image.opacity = node.opacity();
 
               this.image.cornerRadius = Math.round(
                 (node.cornerRadius() / Math.min(node.width(), node.height())) *
-                  100
+                  100,
               );
 
               this.image.stroke = node.stroke();
               this.image.strokeWidth =
-                node.strokeWidth() === 0.1 ? 0 : node.strokeWidth();
+                !node.strokeWidth() || node.strokeWidth() === 0.1
+                  ? 0
+                  : node.strokeWidth();
 
               this.image.shadowColor = node.shadowColor();
               this.image.shadowBlur = node.shadowBlur();
@@ -1147,9 +1280,37 @@ export const useStudioStore = defineStore("studio", {
 
               break;
 
-            case "Line":
+            /*
+             * drawing
+             */
+            case this.MODE_OPTIONS.drawing:
               this.drawing.stroke = node.stroke();
               this.drawing.strokeWidth = node.strokeWidth();
+
+              break;
+
+            /*
+             * shape
+             */
+            case this.MODE_OPTIONS.shape:
+              this.shape.opacity = node.opacity();
+
+              if (node.getClassName() === "Rect") {
+                this.shape.cornerRadius = Math.round(
+                  (node.cornerRadius() /
+                    Math.min(node.width(), node.height())) *
+                    100,
+                );
+              }
+
+              this.shape.fill = node.fill();
+              this.shape.stroke = node.stroke();
+              this.shape.strokeWidth = node.strokeWidth();
+
+              this.shape.shadowColor = node.shadowColor();
+              this.shape.shadowBlur = node.shadowBlur();
+              this.shape.shadowOffset = node.shadowOffset();
+              this.shape.shadowOpacity = node.shadowOpacity();
 
               break;
           }
@@ -1157,32 +1318,28 @@ export const useStudioStore = defineStore("studio", {
       }
     },
 
-    applyCustomizationChanges() {
+    applyNodesCustomization() {
       const nodes = this.transformer.default?.nodes();
 
       if (nodes) {
         nodes.forEach((node) => {
-          switch (node.getClassName()) {
-            // image
-            case "Image":
+          switch (node.getAttr("name")) {
+            /*
+             * image
+             */
+            case this.MODE_OPTIONS.image:
               node.opacity(this.image.opacity);
+
               node.cornerRadius(
                 Math.min(node.width(), node.height()) *
-                  (this.image.cornerRadius / 100)
+                  (this.image.cornerRadius / 100),
               );
-
-              // node.stroke(
-              //   this.image.strokeWidth === 0 ? "transparent" : this.image.stroke
-              // );
-              // node.strokeWidth(
-              //   this.image.strokeWidth === 0 ? 0.1 : this.image.strokeWidth
-              // );
 
               node.stroke(
-                this.image.strokeWidth === 0 ? "transparent" : this.image.stroke
+                !this.image.strokeWidth ? "transparent" : this.image.stroke,
               );
               node.strokeWidth(
-                this.image.strokeWidth === 0 ? 0.1 : this.image.strokeWidth
+                !this.image.strokeWidth ? 0.1 : Number(this.image.strokeWidth),
               );
 
               node.shadowColor(this.image.shadowColor);
@@ -1190,9 +1347,7 @@ export const useStudioStore = defineStore("studio", {
               node.shadowOffset(this.image.shadowOffset);
               node.shadowOpacity(this.image.shadowOpacity);
 
-              /*
-               * crop
-               */
+              // crop
               node.setAttrs({
                 scaleX: 1,
                 scaleY: 1,
@@ -1204,16 +1359,42 @@ export const useStudioStore = defineStore("studio", {
               const crop = this.getCrop(
                 node.image(),
                 { width: node.width(), height: node.height() },
-                this.image.clipPosition
+                this.image.clipPosition,
               );
               node.setAttrs(crop);
 
               break;
 
-            // drawing
-            case "Line":
+            /*
+             * drawing
+             */
+            case this.MODE_OPTIONS.drawing:
               node.stroke(this.drawing.stroke);
               node.strokeWidth(this.drawing.strokeWidth);
+
+              break;
+
+            /*
+             * shape
+             */
+            case this.MODE_OPTIONS.shape:
+              node.opacity(this.shape.opacity);
+
+              if (node.getClassName() === "Rect") {
+                node.cornerRadius(
+                  Math.min(node.width(), node.height()) *
+                    (this.shape.cornerRadius / 100),
+                );
+              }
+
+              node.fill(this.shape.fill);
+              node.stroke(this.shape.stroke);
+              node.strokeWidth(this.shape.strokeWidth);
+
+              node.shadowColor(this.shape.shadowColor);
+              node.shadowBlur(this.shape.shadowBlur);
+              node.shadowOffset(this.shape.shadowOffset);
+              node.shadowOpacity(this.shape.shadowOpacity);
 
               break;
           }
@@ -1369,7 +1550,7 @@ export const useStudioStore = defineStore("studio", {
 
         default:
           console.error(
-            new Error("Unknown clip position property - " + clipPosition)
+            new Error("Unknown clip position property - " + clipPosition),
           );
           break;
       }
@@ -1446,7 +1627,7 @@ export const useStudioStore = defineStore("studio", {
       const crop = this.getCrop(
         image.image(),
         { width: image.width(), height: image.height() },
-        clipPosition
+        clipPosition,
       );
       image.setAttrs(crop);
 
@@ -1464,7 +1645,7 @@ export const useStudioStore = defineStore("studio", {
         const crop = this.getCrop(
           image.image(),
           { width: image.width(), height: image.height() },
-          this.image.clipPosition
+          this.image.clipPosition,
         );
         image.setAttrs(crop);
       };
@@ -1502,6 +1683,111 @@ export const useStudioStore = defineStore("studio", {
 
         this.handleSlideUpdate();
       };
+    },
+
+    /*
+     * shapes
+     */
+    addShape(shapeName) {
+      let shape;
+      const shapeDefaultConfig = {
+        x: this.scene.width / 2,
+        y: this.scene.height / 2,
+
+        fill: this.shape.default.fill,
+
+        stroke: this.shape.default.stroke,
+        strokeWidth: this.shape.default.strokeWidth,
+
+        opacity: this.shape.default.opacity,
+
+        lineCap: "round",
+        lineJoin: "bevel",
+
+        name: this.MODE_OPTIONS.shape,
+        draggable: true,
+      };
+
+      switch (shapeName) {
+        case SHAPES_OPTIONS.circle:
+          shape = new Konva.Circle({
+            ...shapeDefaultConfig,
+            radius: (this.scene.height * 25) / 100 / 2,
+          });
+          break;
+
+        case SHAPES_OPTIONS.rectangle:
+          shape = new Konva.Rect({
+            ...shapeDefaultConfig,
+            width: (this.scene.height * 25) / 100,
+            height: (this.scene.height * 25) / 100,
+            cornerRadius: 6,
+          });
+          break;
+
+        case SHAPES_OPTIONS.star:
+          shape = new Konva.Star({
+            ...shapeDefaultConfig,
+            numPoints: 5,
+            innerRadius: (this.scene.height * 7.5) / 100,
+            outerRadius: (this.scene.height * 15) / 100,
+          });
+          break;
+
+        case SHAPES_OPTIONS.triangle:
+          shape = new Konva.Star({
+            ...shapeDefaultConfig,
+            numPoints: 3,
+            innerRadius: (this.scene.height * 7.5) / 100,
+            outerRadius: (this.scene.height * 15) / 100,
+          });
+          break;
+
+        case SHAPES_OPTIONS.arrow:
+          shape = new Konva.Arrow({
+            ...shapeDefaultConfig,
+            points: [-this.scene.width / 4, 0, this.scene.width / 4, 0],
+            pointerLength: this.scene.width / 25,
+            pointerWidth: this.scene.width / 25,
+            strokeWidth: this.scene.width / 75,
+            pointerAtEnding: true,
+          });
+          break;
+
+        case SHAPES_OPTIONS.doubleArrow:
+          shape = new Konva.Arrow({
+            ...shapeDefaultConfig,
+            points: [-this.scene.width / 4, 0, this.scene.width / 4, 0],
+            pointerLength: this.scene.width / 25,
+            pointerWidth: this.scene.width / 25,
+            strokeWidth: this.scene.width / 75,
+            pointerAtBeginning: true,
+            pointerAtEnding: true,
+          });
+          break;
+
+        case SHAPES_OPTIONS.polygon:
+          shape = new Konva.RegularPolygon({
+            ...shapeDefaultConfig,
+            radius: (this.scene.height * 25) / 100 / 2,
+            sides: 6,
+            rotation: -90,
+          });
+          break;
+
+        case SHAPES_OPTIONS.line:
+          shape = new Konva.Line({
+            ...shapeDefaultConfig,
+            points: [-this.scene.width / 4, 0, this.scene.width / 4, 0],
+
+            strokeWidth: this.scene.width / 75,
+          });
+          break;
+      }
+
+      this.layers.default.add(shape);
+
+      this.handleSlideUpdate();
     },
   },
 });

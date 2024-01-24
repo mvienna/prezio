@@ -58,7 +58,7 @@
 
         <div class="relative-position full-width">
           <div
-            class="row no-wrap q-gutter-md scroll-x scroll--hidden q-px-lg"
+            class="row no-wrap q-gutter-md scroll-x hide-scrollbar q-px-lg"
             ref="presentationCardsContainer"
           >
             <q-card
@@ -206,7 +206,7 @@ const nameRule = (value) => {
 const handlePresentationCardToggle = (presentation) => {
   if (form.value.presentationsIds?.includes(presentation.id)) {
     form.value.presentationsIds = form.value.presentationsIds.filter(
-      (id) => id !== presentation.id
+      (id) => id !== presentation.id,
     );
   } else {
     form.value.presentationsIds.push(presentation.id);

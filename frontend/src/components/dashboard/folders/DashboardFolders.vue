@@ -29,7 +29,7 @@
 
           <!-- folder name -->
           <div
-            class="text-semibold scroll--hidden"
+            class="text-semibold hide-scrollbar"
             :class="{ ellipsis: editingFolderId !== folder.id }"
             :title="folder.name"
             style="width: 100%"
@@ -99,12 +99,12 @@
                   icon-color="red"
                   :title="
                     $t(
-                      'dashboard.presentationItem.actions.folder.delete.confirmation.title'
+                      'dashboard.presentationItem.actions.folder.delete.confirmation.title',
                     )
                   "
                   :message="
                     $t(
-                      'dashboard.presentationItem.actions.folder.delete.confirmation.message'
+                      'dashboard.presentationItem.actions.folder.delete.confirmation.message',
                     )
                   "
                   confirm-btn-color="red"

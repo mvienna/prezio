@@ -5,7 +5,7 @@
     side="left"
     :width="200"
     bordered
-    class="bg-white q-py-md scroll--hidden"
+    class="bg-white q-py-md hide-scrollbar"
   >
     <!-- header -->
     <div class="bg-white q-px-md">
@@ -25,7 +25,7 @@
           transition-show="jump-down"
           transition-hide="jump-up"
           :offset="[0, 16]"
-          class="scroll--hidden bg-white"
+          class="hide-scrollbar bg-white"
           max-height="85vh"
           style="width: 360px; padding: 16px"
         >
@@ -158,7 +158,7 @@
               >
                 {{
                   $t(
-                    `presentationLayout.rightDrawer.tabs.types.options.${element.type}`
+                    `presentationLayout.rightDrawer.tabs.types.options.${element.type}`,
                   )
                 }}
               </div>
@@ -206,7 +206,7 @@
                       transition-show="jump-right"
                       transition-hide="jump-left"
                       :offset="[24, 8]"
-                      class="scroll--hidden bg-white"
+                      class="hide-scrollbar bg-white"
                       max-height="85vh"
                       style="width: 360px; padding: 16px"
                     >
@@ -312,7 +312,7 @@
           transition-show="jump-right"
           transition-hide="jump-left"
           :offset="[24, 0]"
-          class="scroll--hidden bg-white"
+          class="hide-scrollbar bg-white"
           max-height="85vh"
           style="width: 360px; padding: 16px"
         >
@@ -393,18 +393,18 @@ const showSlideContextMenu = ref([]);
 
 const isDeletionAvailable = (item) => {
   const leaderboards = presentation.value.slides.filter(
-    (slideItem) => slideItem.type === SLIDE_TYPES.LEADERBOARD
+    (slideItem) => slideItem.type === SLIDE_TYPES.LEADERBOARD,
   );
 
   const quizTypeSlides = presentation.value.slides.filter((slideItem) =>
-    SLIDE_TYPES_OF_QUIZ.includes(slideItem.type)
+    SLIDE_TYPES_OF_QUIZ.includes(slideItem.type),
   );
 
   const otherSlides = presentation.value.slides.filter(
     (slideItem) =>
       ![...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.LEADERBOARD].includes(
-        slideItem.type
-      )
+        slideItem.type,
+      ),
   );
 
   return (
@@ -420,10 +420,10 @@ const handleSlideDeletion = async (item) => {
 
   // remove leaderboards
   const leaderboards = presentation.value.slides.filter(
-    (slideItem) => slideItem.type === SLIDE_TYPES.LEADERBOARD
+    (slideItem) => slideItem.type === SLIDE_TYPES.LEADERBOARD,
   );
   const quizTypeSlides = presentation.value.slides.filter((slideItem) =>
-    SLIDE_TYPES_OF_QUIZ.includes(slideItem.type)
+    SLIDE_TYPES_OF_QUIZ.includes(slideItem.type),
   );
 
   if (
@@ -440,15 +440,15 @@ const handleSlideDeletion = async (item) => {
 
   // change slide
   const currentSlideIndex = presentation.value.slides.findIndex(
-    (presentationSlide) => presentationSlide.id === item.id
+    (presentationSlide) => presentationSlide.id === item.id,
   );
   if (presentation.value.slides?.[currentSlideIndex - 1]) {
     await presentationsStore.setSlide(
-      presentation.value.slides?.[currentSlideIndex - 1]
+      presentation.value.slides?.[currentSlideIndex - 1],
     );
   } else {
     await presentationsStore.setSlide(
-      presentation.value.slides?.[currentSlideIndex + 1]
+      presentation.value.slides?.[currentSlideIndex + 1],
     );
   }
 
@@ -487,7 +487,7 @@ const handleKeyDownEvent = (event) => {
   // change slide
   if (["ArrowDown", "ArrowUp"].includes(event.key)) {
     const currentSlideIndex = presentation.value.slides.findIndex(
-      (item) => item.id === slide.value.id
+      (item) => item.id === slide.value.id,
     );
 
     if (event.key === "ArrowDown") {
@@ -634,7 +634,7 @@ const hoveredSlideIndex = ref(null);
 //     mode: MODE_OPTIONS.value.baseFill,
 //     isVisible: true,
 //     isLocked: true,
-//     type: SHAPES_OPTIONS.square,
+//     type: SHAPES_OPTIONS.rectangle,
 //     x: 0,
 //     y: 0,
 //     width: 2560,
@@ -658,7 +658,7 @@ const handleAddingNewSlide = async (type) => {
     SLIDE_TYPES_OF_QUIZ.includes(type)
   ) {
     const newSlideIndex = presentation.value.slides.findIndex(
-      (item) => item.id === slide.value.id
+      (item) => item.id === slide.value.id,
     );
 
     const nextSlide = presentation.value.slides?.[newSlideIndex + 1];
@@ -677,7 +677,7 @@ const handleAddingNewSlide = async (type) => {
   // add leaderboard after new quiz-type slide
   if (SLIDE_TYPES_OF_QUIZ.includes(type)) {
     const newSlideIndex = presentation.value.slides.findIndex(
-      (item) => item.id === slide.value.id
+      (item) => item.id === slide.value.id,
     );
 
     const nextSlide = presentation.value.slides?.[newSlideIndex + 1];
@@ -704,7 +704,7 @@ watch(
   () => slide.value,
   () => {
     const slideElement = document.getElementById(
-      `slide_preview_${slide.value.id}`
+      `slide_preview_${slide.value.id}`,
     );
 
     if (slideElement) {
@@ -714,7 +714,7 @@ watch(
         inline: "center",
       });
     }
-  }
+  },
 );
 
 /*

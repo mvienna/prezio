@@ -56,14 +56,14 @@ export default {
 
         shadow: {
           title: "Тень",
-          opacity: "Прозрачность тени",
+          opacity: "Непрозрачность тени",
           blur: "Размытие тени",
           offsetX: "Отступ по X",
           offsetY: "Отступ по Y",
         },
 
         opacity: {
-          title: "Прозрачность",
+          title: "Непрозрачность",
         },
 
         stroke: {
@@ -110,10 +110,7 @@ export default {
           },
           fill: {
             title: "Цвет заливки",
-            style: {
-              solid: "Сплошной",
-              gradient: "Градиент",
-            },
+            remove: "Убрать заливку",
           },
           lineWidth: "Размер",
         },

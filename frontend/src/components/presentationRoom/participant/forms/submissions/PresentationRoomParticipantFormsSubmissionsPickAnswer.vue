@@ -9,7 +9,7 @@
       overflow-y: scroll;
       max-height: calc(100vh - 96px - 96px);
     "
-    class="scroll--hidden"
+    class="hide-scrollbar"
     @submit.prevent="handleSubmittingAnswers()"
   >
     <PresentationRoomParticipantQuizLayout
@@ -44,8 +44,8 @@
                   !room.is_answers_revealed
                   ? 'var(--q-primary)'
                   : answerOption.isCorrect
-                  ? 'var(--q-positive)'
-                  : 'var(--q-negative)'
+                    ? 'var(--q-positive)'
+                    : 'var(--q-negative)'
                 : 'transparent'
             }`"
             class="text-black"
@@ -64,8 +64,8 @@
                   !room.is_answers_revealed
                     ? 'primary'
                     : answerOption.isCorrect
-                    ? 'positive'
-                    : 'negative'
+                      ? 'positive'
+                      : 'negative'
                 "
                 :disable="timeLeft === -1 || participantAnswers?.length > 0"
                 @update:model-value="
@@ -177,7 +177,7 @@
                 $t(
                   `presentationRoom.answers.results.${
                     isAnsweredCorrectly ? "correct" : "incorrect"
-                  }`
+                  }`,
                 )
               }}
             </template>
@@ -189,7 +189,7 @@
                   .map((answer) => answer.score)
                   .reduce(
                     (accumulator, currentValue) => accumulator + currentValue,
-                    0
+                    0,
                   )
               }}
             </template>
@@ -278,7 +278,7 @@ const layoutTitleElement = computed(() => {
  */
 const handleSubmittingAnswers = () => {
   presentationsStore.submitPresentationRoomAnswers(
-    slideSettings.value.answerOptions.filter((option) => option.isSelected)
+    slideSettings.value.answerOptions.filter((option) => option.isSelected),
   );
   stopCountdown();
 };
@@ -297,7 +297,7 @@ const participantAnswers = computed(() => {
   return slide.value.answers.filter(
     (answer) =>
       answer.participant_id === participant.value?.id &&
-      answer.slide_type === slide.value?.type
+      answer.slide_type === slide.value?.type,
   );
 });
 
@@ -314,7 +314,7 @@ watch(
       }
     });
   },
-  { deep: true }
+  { deep: true },
 );
 
 const isAllowedToSelectMultipleAnswerOptions = computed(() => {
@@ -333,7 +333,7 @@ const isAnsweredCorrectly = computed(() => {
       answerOptions.value
         ?.filter((item) => !item.isCorrect)
         ?.map((item) => item.value)
-        ?.includes(JSON.parse(answer.answer_data).text)
+        ?.includes(JSON.parse(answer.answer_data).text),
     ).length === 0
   );
 });

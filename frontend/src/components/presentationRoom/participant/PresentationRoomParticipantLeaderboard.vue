@@ -10,7 +10,7 @@
       style="z-index: 0"
     />
 
-    <div style="z-index: 2; overflow-y: scroll" class="scroll--hidden">
+    <div style="z-index: 2; overflow-y: scroll" class="hide-scrollbar">
       <template v-if="results?.length">
         <div class="row justify-center">
           <q-img src="/assets/images/champion.svg" class="champion_cup" />
@@ -90,7 +90,9 @@
                   class="absolute-left"
                   style="height: 100%; border-radius: 0"
                   :style="`background: rgba(${Object.values(
-                    colors.textToRgb(result.participantData?.color || '#FFFFFF')
+                    colors.textToRgb(
+                      result.participantData?.color || '#FFFFFF',
+                    ),
                   ).join(',')}, 0.7); width: ${
                     (result.score * 100) / maxScore
                   }%`"
@@ -175,7 +177,7 @@ const {
  */
 const results = computed(() => {
   const slideIndex = presentation.value.slides.findIndex(
-    (item) => item.id === slide.id
+    (item) => item.id === slide.id,
   );
 
   const slides = presentation.value.slides
@@ -211,7 +213,7 @@ const results = computed(() => {
 const maxScore = computed(() => {
   return results.value.reduce(
     (max, obj) => (obj.score > max ? obj.score : max),
-    results.value[0].score
+    results.value[0].score,
   );
 });
 
@@ -220,11 +222,11 @@ const participantResults = computed(() => {
 
   return {
     data: results.value.find(
-      (result) => result.participant.id === participant.value?.id
+      (result) => result.participant.id === participant.value?.id,
     ),
     place:
       results.value.findIndex(
-        (result) => result.participant.id === participant.value?.id
+        (result) => result.participant.id === participant.value?.id,
       ) + 1,
   };
 });

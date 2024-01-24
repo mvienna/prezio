@@ -1,7 +1,3 @@
-export const DRAWING_STROKE_WIDTH_OPTIONS = [
-  1, 2, 4, 8, 16, 24, 32, 48, 64, 96,
-];
-
 export const DRAWING_MODES = {
   BRUSH: "brush",
   ERASER: "eraser",
@@ -57,14 +53,14 @@ export const ALIGNMENT = {
 
 export const SHAPES_OPTIONS = {
   circle: "circle",
-  square: "square",
+  rectangle: "rectangle",
   triangle: "triangle",
   star: "star",
   line: "line",
   arrow: "arrow",
+  doubleArrow: "double_arrow",
+  polygon: "polygon",
 };
-
-export const SHAPE_LINE_WIDTH_OPTIONS = [0, 1, 2, 4, 8, 16, 24, 32, 48, 64, 96];
 
 export const CROP_POSITION_OPTIONS = {
   none: "none",

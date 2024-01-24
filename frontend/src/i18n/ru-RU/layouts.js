@@ -176,7 +176,7 @@ export default {
               title: "Фильтры",
               reset: "Сбросить фильтры",
 
-              opacity: "Прозрачность",
+              opacity: "Непрозрачность",
               blur: "Размытие",
               contrast: "Контраст",
               brightness: "Яркость",

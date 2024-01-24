@@ -2,7 +2,7 @@
  * input
  */
 .q-field--outlined .q-field__control {
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: 0 1.5px 4px -1px rgba(10, 9, 11, 0.07) !important;
 }
 
@@ -12,4 +12,12 @@
 
 .q-field__label {
   color: $grey;
+}
+
+.q-field--dense .q-field__control {
+  height: 30px !important;
+
+  .q-field__suffix {
+    padding: 0;
+  }
 }

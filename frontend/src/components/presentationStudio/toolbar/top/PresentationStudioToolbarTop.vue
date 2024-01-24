@@ -34,7 +34,7 @@
         </div>
 
         <div
-          class="row no-wrap items-center q-gutter-sm scroll--hidden"
+          class="row no-wrap items-center q-gutter-sm hide-scrollbar"
           style="width: 100%; overflow-x: scroll"
         >
           <!-- drawing customization -->
@@ -44,8 +44,9 @@
               (transformer.default?.nodes()?.length &&
                 transformer.default
                   ?.nodes()
-                  .filter((node) => node.getClassName() === 'Line')?.length ===
-                  transformer.default?.nodes()?.length)
+                  .filter(
+                    (node) => node.getAttr('name') === MODE_OPTIONS.drawing,
+                  )?.length === transformer.default?.nodes()?.length)
             "
           />
 
@@ -54,19 +55,25 @@
           <!--            v-if="[MODE_OPTIONS.text, MODE_OPTIONS.textEditing].includes(mode)"-->
           <!--          />-->
 
-          <!--          &lt;!&ndash; shape customization &ndash;&gt;-->
-          <!--          <PresentationStudioToolbarTopCustomizationShape-->
-          <!--            v-if="mode === MODE_OPTIONS.shape"-->
-          <!--          />-->
+          <!-- shape customization -->
+          <PresentationStudioToolbarTopCustomizationShape
+            v-if="
+              transformer.default?.nodes()?.length &&
+              transformer.default
+                ?.nodes()
+                .filter((node) => node.getAttr('name') === MODE_OPTIONS.shape)
+                ?.length === transformer.default?.nodes()?.length
+            "
+          />
 
-          <!-- media customization -->
+          <!-- image customization -->
           <PresentationStudioToolbarTopCustomizationImage
             v-if="
               transformer.default?.nodes()?.length &&
               transformer.default
                 ?.nodes()
-                .filter((node) => node.getClassName() === 'Image')?.length ===
-                transformer.default?.nodes()?.length
+                .filter((node) => node.getAttr('name') === MODE_OPTIONS.image)
+                ?.length === transformer.default?.nodes()?.length
             "
           />
         </div>
@@ -115,6 +122,7 @@ import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
 import { useStudioStore } from "stores/studio";
 import PresentationStudioToolbarTopCustomizationImage from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationImage.vue";
+import PresentationStudioToolbarTopCustomizationShape from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationShape.vue";
 
 /*
  * variables

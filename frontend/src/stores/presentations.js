@@ -5,6 +5,7 @@ import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 export const usePresentationsStore = defineStore("presentations", {
   state: () => ({
@@ -114,7 +115,7 @@ export const usePresentationsStore = defineStore("presentations", {
         .then((response) => {
           this.folders.push(response.data);
           this.presentations = this.presentations.filter(
-            (item) => !data.presentationsIds.includes(item.id)
+            (item) => !data.presentationsIds.includes(item.id),
           );
         })
         .catch((error) => {
@@ -133,7 +134,7 @@ export const usePresentationsStore = defineStore("presentations", {
         })
         .then((response) => {
           const folderIndex = this.folders.findIndex(
-            (item) => item.id === folder.id
+            (item) => item.id === folder.id,
           );
           this.folders[folderIndex] = response.data;
         })
@@ -220,11 +221,11 @@ export const usePresentationsStore = defineStore("presentations", {
         .then((response) => {
           this.presentation = response.data;
           this.presentation.settings.is_fullscreen = Boolean(
-            this.presentation.settings.is_fullscreen
+            this.presentation.settings.is_fullscreen,
           );
 
           const lastSlide = this.presentation.slides.find(
-            (slide) => slide.id === this.presentation.settings.last_slide_id
+            (slide) => slide.id === this.presentation.settings.last_slide_id,
           );
 
           this.setSlide(lastSlide || this.presentation.slides[0]);
@@ -247,7 +248,7 @@ export const usePresentationsStore = defineStore("presentations", {
         .then(() => {
           presentation.updated_at = new Date();
           const presentationIndex = this.presentations?.findIndex(
-            (item) => item.id === presentation.id
+            (item) => item.id === presentation.id,
           );
           if (presentationIndex !== -1) {
             this.presentations[presentationIndex] = presentation;
@@ -298,7 +299,7 @@ export const usePresentationsStore = defineStore("presentations", {
     async addNewSlide(slide = {}) {
       return await new Promise(async (resolve, reject) => {
         const slideIndex = this.presentation.slides.findIndex(
-          (item) => item.id === this.slide.id
+          (item) => item.id === this.slide.id,
         );
         const insertAtIndex = slideIndex + 1;
 
@@ -306,7 +307,7 @@ export const usePresentationsStore = defineStore("presentations", {
           .post(`/presentation/${this.presentation.id}/slide`, {
             canvas_data: slide.canvas_data,
             preview: slide.preview,
-            color_scheme: slide.color_scheme,
+            color_scheme: slide.color_scheme || COLOR_SCHEME_OPTIONS.light,
             order: insertAtIndex,
             type: slide.type,
             settings_data: slide.settings_data,
@@ -326,7 +327,7 @@ export const usePresentationsStore = defineStore("presentations", {
           (item, index) => {
             item.order = index;
             return item;
-          }
+          },
         );
         await this.updateSlidesOrder();
 
@@ -371,7 +372,7 @@ export const usePresentationsStore = defineStore("presentations", {
       if (this.presentation.slides.length === 1) return;
 
       this.presentation.slides = this.presentation.slides.filter(
-        (item) => item.id !== slide.id
+        (item) => item.id !== slide.id,
       );
 
       return await api
@@ -408,7 +409,7 @@ export const usePresentationsStore = defineStore("presentations", {
           });
 
           this.setSlide(
-            this.presentation.slides.find((item) => item.id === this.slide.id)
+            this.presentation.slides.find((item) => item.id === this.slide.id),
           );
         })
         .catch((error) => {
@@ -418,7 +419,7 @@ export const usePresentationsStore = defineStore("presentations", {
 
     syncCurrentSlideWithPresentationSlides() {
       const slideIndex = this.presentation.slides.findIndex(
-        (item) => item.id === this.slide.id
+        (item) => item.id === this.slide.id,
       );
       this.slide.settings_data = JSON.stringify(this.slideSettings);
       this.presentation.slides[slideIndex] = this.slide;
@@ -430,7 +431,7 @@ export const usePresentationsStore = defineStore("presentations", {
     async updateRoom(
       presentation_id = this.presentation?.id,
       room_id = this.room?.id,
-      data = {}
+      data = {},
     ) {
       if (!presentation_id || !room_id) return;
       if (this.isLoading.sendingRoomUpdatedEvent && !data?.disableNotification)
@@ -460,9 +461,8 @@ export const usePresentationsStore = defineStore("presentations", {
         .then((response) => {
           this.participant = response.data.participant;
 
-          api.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${response.data.token}`;
+          api.defaults.headers.common["Authorization"] =
+            `Bearer ${response.data.token}`;
 
           localStorage.setItem("participantToken", response.data.token);
         });
@@ -471,7 +471,7 @@ export const usePresentationsStore = defineStore("presentations", {
     async sendPresentationRoomReaction(
       reaction,
       presentation_id = this.presentation?.id,
-      room_id = this.room?.id
+      room_id = this.room?.id,
     ) {
       if (!reaction) return;
 
@@ -488,7 +488,7 @@ export const usePresentationsStore = defineStore("presentations", {
     computeScoreForAnswers(
       answers,
       secondsLeft = timeLeft.value,
-      isForceCorrect = false
+      isForceCorrect = false,
     ) {
       let totalScore = null;
 
@@ -507,7 +507,7 @@ export const usePresentationsStore = defineStore("presentations", {
 
           pointForCorrectAnswer = Math.round(
             this.slideSettings.points.max -
-              pointsPerSecond * secondsTookToAnswer
+              pointsPerSecond * secondsTookToAnswer,
           );
         }
 
@@ -521,7 +521,7 @@ export const usePresentationsStore = defineStore("presentations", {
                 const isCorrectAnswer = [
                   this.slideSettings.correctAnswer.value,
                   ...this.slideSettings.otherAcceptedAnswers.map(
-                    (item) => item.value
+                    (item) => item.value,
                   ),
                 ].includes(answer.value);
 
@@ -551,7 +551,7 @@ export const usePresentationsStore = defineStore("presentations", {
               const isCorrectAnswer = [
                 this.slideSettings.correctAnswer.value,
                 ...this.slideSettings.otherAcceptedAnswers.map(
-                  (item) => item.value
+                  (item) => item.value,
                 ),
               ].includes(answers[0].value);
 
@@ -599,7 +599,7 @@ export const usePresentationsStore = defineStore("presentations", {
               ? Number(this.slideSettings.timeLimit) - timeLeft.value
               : null,
             participant_id: this.participant.id,
-          }
+          },
         )
         .catch((error) => {
           console.log(error);
