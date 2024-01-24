@@ -169,3 +169,13 @@ const showMenu = ref({
   mode: false,
 });
 </script>
+
+<style scoped lang="scss">
+.q-field--dense .q-field__control {
+  height: 30px !important;
+
+  .q-field__suffix {
+    padding: 0;
+  }
+}
+</style>

@@ -355,90 +355,11 @@ const showMenu = ref({
 </script>
 
 <style scoped lang="scss">
-::v-deep(.q-slider) {
-  width: 100%;
-}
+.q-field--dense .q-field__control {
+  height: 30px !important;
 
-.gradient {
-  .gradient__anchor {
-    .gradient__anchor__color {
-      width: 18px;
-      height: 18px;
-      border-radius: 4px;
-      margin: 0 auto;
-      cursor: pointer;
-      border: 1px solid $grey-2;
-
-      &.gradient__anchor__color--active {
-        border: 1px solid $white;
-        outline: 2px solid $primary;
-      }
-
-      &.gradient__anchor__color--error {
-        border: 1px solid $white;
-        outline: 2px solid $red;
-      }
-    }
-
-    .gradient__anchor__connector {
-      height: 16px;
-      width: 2px;
-      margin: 4px auto;
-      background: $black;
-      opacity: 0.1;
-    }
-  }
-
-  .gradient__preview {
-    width: calc(100%);
-    height: 20px;
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
-
-    .gradient__preview__gradient {
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      position: absolute;
-    }
-
-    .gradient__preview__background {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      opacity: 0.1;
-      z-index: 1;
-
-      &::before {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: repeating-linear-gradient(
-          0deg,
-          $black 0,
-          $black 5px,
-          $white 5px,
-          $white 10px
-        );
-      }
-
-      &::after {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: repeating-linear-gradient(
-          90deg,
-          $black 0,
-          $black 5px,
-          $white 5px,
-          $white 10px
-        );
-        mix-blend-mode: difference;
-      }
-    }
+  .q-field__suffix {
+    padding: 0;
   }
 }
 </style>
