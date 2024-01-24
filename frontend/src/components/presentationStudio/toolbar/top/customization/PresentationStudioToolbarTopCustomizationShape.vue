@@ -354,7 +354,7 @@ const showMenu = ref({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .q-field--dense .q-field__control {
   height: 30px !important;
 
