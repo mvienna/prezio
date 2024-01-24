@@ -57,7 +57,7 @@ export const useStudioStore = defineStore("studio", {
       y2: null,
     },
     snapping: {
-      GUIDELINE_OFFSET: 10,
+      GUIDELINE_OFFSET: 5,
     },
     copiedNodes: [],
 
@@ -650,7 +650,7 @@ export const useStudioStore = defineStore("studio", {
      * snapping
      */
     handleSnapping() {
-      // were can we snap our objects?
+      // where can we snap our objects?
       const getLineGuideStops = (skipShape) => {
         let vertical = [
           0,
@@ -685,7 +685,6 @@ export const useStudioStore = defineStore("studio", {
       // it can be just center of the object
       // but we will enable all edges and center
       const getObjectSnappingEdges = (node) => {
-        // const box = node.getClientRect({ skipTransform: true });
         const box = node.getClientRect();
         const absPos = node.absolutePosition();
 
@@ -729,19 +728,17 @@ export const useStudioStore = defineStore("studio", {
 
       // find all snapping possibilities
       const getGuides = (lineGuideStops, itemBounds) => {
-        let resultV = [];
-        let resultH = [];
+        let guides = [];
 
         lineGuideStops.vertical.forEach((lineGuide) => {
           itemBounds.vertical.forEach((itemBound) => {
             const diff = Math.abs(lineGuide - itemBound.guide);
-            // if the distance between guild line and object snap point is close we can consider this for snapping
             if (diff < this.snapping.GUIDELINE_OFFSET) {
-              resultV.push({
+              guides.push({
                 lineGuide: lineGuide,
-                diff: diff,
-                snap: itemBound.snap,
                 offset: itemBound.offset,
+                orientation: "V",
+                snap: itemBound.snap,
               });
             }
           });
@@ -751,37 +748,15 @@ export const useStudioStore = defineStore("studio", {
           itemBounds.horizontal.forEach((itemBound) => {
             const diff = Math.abs(lineGuide - itemBound.guide);
             if (diff < this.snapping.GUIDELINE_OFFSET) {
-              resultH.push({
+              guides.push({
                 lineGuide: lineGuide,
-                diff: diff,
-                snap: itemBound.snap,
                 offset: itemBound.offset,
+                orientation: "H",
+                snap: itemBound.snap,
               });
             }
           });
         });
-
-        let guides = [];
-
-        // find closest snap
-        const minV = resultV.sort((a, b) => a.diff - b.diff)[0];
-        const minH = resultH.sort((a, b) => a.diff - b.diff)[0];
-        if (minV) {
-          guides.push({
-            lineGuide: minV.lineGuide,
-            offset: minV.offset,
-            orientation: "V",
-            snap: minV.snap,
-          });
-        }
-        if (minH) {
-          guides.push({
-            lineGuide: minH.lineGuide,
-            offset: minH.offset,
-            orientation: "H",
-            snap: minH.snap,
-          });
-        }
 
         return guides;
       };
@@ -826,7 +801,15 @@ export const useStudioStore = defineStore("studio", {
       };
 
       const handleDragMove = (event) => {
-        if (this.mode === this.MODE_OPTIONS.drawing) return;
+        // if (this.mode === this.MODE_OPTIONS.drawing) return;
+        if (event.target._id === this.transformer.default._id) return;
+
+        if (!this.transformer.default.nodes().includes(event.target)) {
+          this.transformer.default.nodes([
+            ...this.transformer.default.nodes(),
+            event.target,
+          ]);
+        }
 
         // clear all previous lines on the screen
         this.layers.default.find(".guid-line").forEach((l) => l.destroy());
