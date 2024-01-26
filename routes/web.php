@@ -1,6 +1,5 @@
 <?php
 
-use App\Mail\VerificationCodeMail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/preview-verification-email', function () {
-    return new VerificationCodeMail(1234);
-});
+//Route::get('/preview-email', function () {
+//    return new \App\Mail\WelcomeMail('Артём');
+//});

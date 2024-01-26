@@ -91,6 +91,46 @@
                 }
             }
 
+            button {
+                cursor: pointer;
+                background: #1751D0;
+                color: #FFFFFF;
+                border-radius: 0.375rem;
+                margin: 1.5rem 0;
+                font-size: 0.875rem;
+                padding: 0 0.875rem 0 0.875rem;
+                height: 2.5rem;
+                border: none;
+                transition: .2s;
+            }
+            button:hover {
+                opacity: 0.9;
+            }
+
+            .list {
+                margin: 1.5rem 0;
+            }
+            .list__item {
+                display: flex;
+                align-items: center;
+                margin: 1.5rem 0;
+            }
+            .list__item__index {
+                width: 2.5rem;
+                min-width: 2.5rem;
+                max-width: 2.5rem;
+                height: 2.5rem;
+                min-height: 2.5rem;
+                max-height: 2.5rem;
+                line-height: 2.5rem;
+                text-align: center;
+                font-weight: 600;
+                padding: 0.625rem;
+                border-radius: 50%;
+                background: #ECECED;
+                margin-right: 1rem;
+            }
+
             .footer {
                 p {
                     color: #4F4D55;
@@ -109,11 +149,34 @@
             </section>
 
             <section>
-                <h1>{{ trans('emails.verificationCode.title') }}</h1>
-                <p>{{ trans('emails.verificationCode.instruction') }}</p>
-                <div class="verification-code">{{ $verificationCode }}</div>
-                <p>{!! trans('emails.verificationCode.warning') !!}</p>
-                <p style="margin-top: 1.5rem;">{{ trans('emails.verificationCode.appeal') }}</p>
+                <h1>{!! trans('emails.welcome.title', ['name' => $name]) !!}</h1>
+                <p>{{ trans('emails.welcome.description') }}</p>
+                <a href="{{ $url }}">
+                    <button>
+                        {{ trans('emails.welcome.getStarted') }}
+                    </button>
+                </a>
+
+                <p>{{ trans('emails.welcome.tips.title') }}</p>
+
+                <div class="list">
+                    <div class="list__item">
+                        <div class="list__item__index">1</div>
+                        <p>{!! trans('emails.welcome.tips.list.one') !!}</p>
+                    </div>
+
+                    <div class="list__item">
+                        <div class="list__item__index">2</div>
+                        <p>{!! trans('emails.welcome.tips.list.two') !!}</p>
+                    </div>
+
+                    <div class="list__item">
+                        <div class="list__item__index">3</div>
+                        <p>{!! trans('emails.welcome.tips.list.three') !!}</p>
+                    </div>
+                </div>
+
+                <p>{{ trans('emails.welcome.tips.description') }}</p>
             </section>
 
             <section class="footer">

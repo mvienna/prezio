@@ -6,18 +6,18 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class VerificationCodeMail extends Mailable
+class WelcomeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public int $verificationCode;
+    public string $name;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(int $verificationCode)
+    public function __construct(string $name)
     {
-        $this->verificationCode = $verificationCode;
+        $this->name = $name;
     }
 
     /**
@@ -26,10 +26,10 @@ class VerificationCodeMail extends Mailable
      */
     public function build()
     {
-        return $this->subject(trans('emails.verificationCode.title'))
-            ->view('emails.verificationCode')
+        return $this->subject(trans('emails.welcome.title', ['name' => $this->name]))
+            ->view('emails.welcome')
             ->with([
-                'verificationCode' => $this->verificationCode,
+                'name' => $this->name,
                 'url' => env('FRONTEND_APP_URL', 'https://app.prezio.ru').'/login',
                 'telegram_url' => env('TELEGRAM_URL', 'https://t.me/preziorus'),
                 'instagram_url' => env('INSTAGRAM_URL', 'https://www.instagram.com/prezio.ru/'),
