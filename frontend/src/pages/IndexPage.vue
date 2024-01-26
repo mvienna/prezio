@@ -31,24 +31,35 @@
 
             <template v-else>
               <!-- hyperlinks -->
-              <div
-                class="text-16 link text-black"
+              <q-item
+                clickable
+                dense
+                class="text-16 link text-black text-semibold"
+                style="line-height: 32px"
                 @click="handleScrollIntoView('#mechanics')"
               >
                 {{ $t("landing.hyperlinks.features") }}
-              </div>
-              <div
-                class="text-16 link text-black q-mx-md"
+              </q-item>
+
+              <q-item
+                clickable
+                dense
+                class="text-16 link text-black text-semibold"
+                style="line-height: 32px"
                 @click="handleScrollIntoView('#prices')"
               >
                 {{ $t("landing.hyperlinks.prices") }}
-              </div>
-              <div
-                class="text-16 link text-black"
+              </q-item>
+
+              <q-item
+                clickable
+                dense
+                class="text-16 link text-black text-semibold"
+                style="line-height: 32px"
                 @click="handleScrollIntoView('#faq')"
               >
                 {{ $t("landing.hyperlinks.faq") }}
-              </div>
+              </q-item>
 
               <q-space />
 
@@ -223,7 +234,11 @@
     <section>
       <div class="container">
         <div class="splitter">
-          <div class="column no-wrap">
+          <div
+            :style="$q.screen.lt.lg ? 'order: 2;' : ''"
+            :class="$q.screen.lt.lg ? 'q-mt-xl' : ''"
+            class="column no-wrap"
+          >
             <!-- title -->
             <div
               class="text-semibold"
@@ -267,7 +282,10 @@
           </div>
 
           <!-- heroes illustration -->
-          <div :class="$q.screen.lt.xl ? 'q-px-lg q-mt-xl' : ''">
+          <div
+            :style="$q.screen.lt.lg ? 'order: 1;' : ''"
+            :class="$q.screen.lt.xl ? 'q-px-lg q-mt-xl' : ''"
+          >
             <q-img
               src="/assets/illustrations/heroes.svg"
               alt="Prezio heroes illustration"
