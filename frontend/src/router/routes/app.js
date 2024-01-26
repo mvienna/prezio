@@ -22,6 +22,30 @@ const routesApp = [
   },
 
   /*
+   * privacy policy
+   */
+  {
+    path: "/",
+    component: () => import("layouts/NoLayout.vue"),
+    children: [
+      {
+        path: ROUTE_PATHS.POLICIES.PRIVACY_POLICY,
+        component: () => import("pages/policies/PrivacyPolicyPage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/",
+    component: () => import("layouts/NoLayout.vue"),
+    children: [
+      {
+        path: ROUTE_PATHS.POLICIES.USER_AGREEMENT,
+        component: () => import("pages/policies/UserAgreementPage.vue"),
+      },
+    ],
+  },
+
+  /*
    * auth
    */
   {
