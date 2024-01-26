@@ -10,7 +10,7 @@ class VerificationCodeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $verificationCode;
+    public int $verificationCode;
 
     /**
      * Create a new message instance.
@@ -30,6 +30,10 @@ class VerificationCodeMail extends Mailable
             ->view('emails.verificationCode')
             ->with([
                 'verificationCode' => $this->verificationCode,
+                'brand' => env('APP_NAME', 'Prezio'),
+                'url' => env('FRONTEND_APP_URL', 'https://app.prezio.ru').'/login',
+                'telegram_url' => env('TELEGRAM_URL', 'https://t.me/preziorus'),
+                'instagram_url' => env('INSTAGRAM_URL', 'https://www.instagram.com/prezio.ru/'),
             ]);
     }
 }
