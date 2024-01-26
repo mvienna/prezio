@@ -13,6 +13,8 @@ export default async ({ app, router }) => {
     ROUTE_PATHS.AUTH.LOGIN,
     ROUTE_PATHS.AUTH.RESTORE_PASSWORD,
     ROUTE_PATHS.AUTH.SIGNUP,
+    ROUTE_PATHS.POLICIES.PRIVACY_POLICY,
+    ROUTE_PATHS.POLICIES.USER_AGREEMENT,
   ];
 
   /*
@@ -94,7 +96,7 @@ export default async ({ app, router }) => {
       if (
         !allowedUnauthenticatedPaths.includes(to.path) &&
         !to.path.includes(
-          clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM.HOST)
+          clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM.HOST),
         )
       ) {
         next(ROUTE_PATHS.AUTH.LOGIN);
