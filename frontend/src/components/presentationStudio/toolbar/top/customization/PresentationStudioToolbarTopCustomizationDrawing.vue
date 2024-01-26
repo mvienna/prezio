@@ -143,7 +143,7 @@
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.image.clipPosition.title") }}
+      {{ $t("presentationStudio.toolbar.drawing.options.mode") }}
     </q-tooltip>
   </q-btn>
 </template>

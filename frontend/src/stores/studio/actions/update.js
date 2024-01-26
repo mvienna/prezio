@@ -1,0 +1,47 @@
+import { usePresentationsStore } from "stores/presentations";
+import { storeToRefs } from "pinia";
+
+const presentationsStore = usePresentationsStore();
+const { slide } = storeToRefs(presentationsStore);
+
+export function generatePreviewForStage(stage = this.stages.default) {
+  const scale = 1 / 2;
+  return stage.toDataURL({
+    pixelRatio: scale,
+  });
+}
+
+export async function handleSlideUpdate() {
+  // Save current scale and position
+  const currentScale = this.stages.default.scaleX();
+  const currentPosition = this.stages.default.position();
+
+  // temporarily hide transformers
+  this.transformer.default?.hide();
+  this.layers.default.find(".customTransformer").forEach((node) => node.hide());
+
+  // Reset zoom and position to initial state
+  this.stages.default.scale({ x: this.zoom.min, y: this.zoom.min });
+  this.stages.default.position({ x: 0, y: 0 });
+
+  // save preview with initial zoom
+  const preview = this.generatePreviewForStage();
+  document.getElementById("preview").src = preview;
+  slide.value.preview = preview;
+
+  // Restore original scale and position
+  this.stages.default.scale({ x: currentScale, y: currentScale });
+  this.stages.default.position(currentPosition);
+
+  // compute color scheme & save stage
+  slide.value.color_scheme = await this.defineColorScheme();
+  slide.value.canvas_data = this.stages.default.toJSON();
+
+  // show transformers
+  this.transformer.default?.show();
+  this.layers.default.find(".customTransformer").forEach((node) => node.show());
+  this.transformer.default.moveToTop();
+  this.applyTransformerCustomization();
+
+  await presentationsStore.saveSlide();
+}

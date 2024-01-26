@@ -3,7 +3,7 @@ export const DRAWING_MODES = {
   ERASER: "eraser",
 };
 
-// TODO: REMOVE! canvas/index.js
+// TODO: REMOVE! canvas/update.js
 export const BRUSH_TYPES = [
   { label: "presentationStudio.toolbar.drawing.BRUSH_TYPES.pen", value: "pen" },
   {

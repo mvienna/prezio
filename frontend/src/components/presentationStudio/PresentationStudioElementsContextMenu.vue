@@ -308,19 +308,16 @@ const transformerPosition = computed(() => {
     const x =
       box.left -
       menuWidth / 2 +
-      ((transformer.value.custom.shape.node.points()[0] +
-        transformer.value.custom.shape.node.points()[2]) /
-        2) *
+      (transformer.value.custom.shape.node.x() +
+        (transformer.value.custom.shape.node.points()[0] +
+          transformer.value.custom.shape.node.points()[2]) /
+          2) *
         scaleX;
 
     const y =
       box.top -
       menuHeight * 2 +
-      (transformer.value.custom.shape.node.points()[1] <
-      transformer.value.custom.shape.node.points()[3]
-        ? transformer.value.custom.shape.node.points()[1]
-        : transformer.value.custom.shape.node.points()[3]) *
-        scaleY;
+      transformer.value.custom.shape.node.y() * scaleY;
 
     return {
       x: x < maxLeft ? maxLeft : x > maxRight ? maxRight : x,
