@@ -307,7 +307,7 @@ export const usePresentationsStore = defineStore("presentations", {
           .post(`/presentation/${this.presentation.id}/slide`, {
             canvas_data: slide.canvas_data,
             preview: slide.preview,
-            color_scheme: slide.color_scheme || COLOR_SCHEME_OPTIONS.light,
+            color_scheme: slide.color_scheme || COLOR_SCHEME_OPTIONS.LIGHT,
             order: insertAtIndex,
             type: slide.type,
             settings_data: slide.settings_data,
@@ -389,7 +389,7 @@ export const usePresentationsStore = defineStore("presentations", {
       if (!newSlide || this.slide?.id === newSlide.id) return;
 
       if (this.slide) {
-        this.saveSlide(this.slide);
+        this.saveSlide(this.slide, newSlide);
       }
 
       this.slide = newSlide;

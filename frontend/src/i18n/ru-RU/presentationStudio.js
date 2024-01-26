@@ -103,16 +103,31 @@ export default {
       shape: {
         title: "Формы",
 
-        options: {
-          stroke: {
-            title: "Обводка",
-            width: "Размер обводки",
-          },
-          fill: {
-            title: "Цвет заливки",
-            remove: "Убрать заливку",
-          },
-          lineWidth: "Размер",
+        fill: {
+          title: "Цвет заливки",
+          remove: "Убрать заливку",
+        },
+
+        stroke: {
+          title: "Обводка",
+          width: "Толщина обводки",
+          pointerSize: "Размер указателя",
+        },
+
+        opacity: {
+          title: "Непрозрачность",
+        },
+
+        shadow: {
+          title: "Тень",
+          opacity: "Непрозрачность тени",
+          blur: "Размытие тени",
+          offsetX: "Отступ по X",
+          offsetY: "Отступ по Y",
+        },
+
+        cornerRadius: {
+          title: "Радиус закругления",
         },
 
         groups: {

@@ -404,7 +404,7 @@ const prepareElementsForNewSlide = (type) => {
       mode: MODE_OPTIONS.value.baseFill,
       isVisible: true,
       isLocked: true,
-      type: SHAPES_OPTIONS.rectangle,
+      type: SHAPES_OPTIONS.RECT,
       x: 0,
       y: 0,
       width: 2560,

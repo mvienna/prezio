@@ -12,19 +12,20 @@
     <!-- slide -->
     <div class="slide__wrapper row justify-center items-start q-pa-md fit">
       <div class="slide__wrapper__inner row items-start" style="">
-        <div class="slide" id="stage-parent">
+        <div class="slide relative-position" id="stage-parent">
           <div id="container"></div>
+
+          <!-- context menu-->
+          <PresentationStudioElementsContextMenu
+            v-if="
+              (transformer.default?.nodes()?.length ||
+                transformer.custom.shape.node) &&
+              slide?.type === SLIDE_TYPES.CONTENT
+            "
+          />
         </div>
       </div>
     </div>
-
-    <!-- context menu-->
-    <PresentationStudioElementsContextMenu
-      v-if="
-        transformer.default?.nodes()?.length &&
-        slide?.type === SLIDE_TYPES.CONTENT
-      "
-    />
 
     <!-- slide data (reactions, answers, participants online) -->
     <PresentationStudioRoomData />

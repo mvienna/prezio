@@ -38,7 +38,7 @@ export const getResizeHandle = () => {
    * compute props
    */
   const borderWidth = canvasStore.computeAdjustedSize(
-    selectedElementBorder.value.borderWidth
+    selectedElementBorder.value.borderWidth,
   );
   const handleSize = borderWidth * 16;
 
@@ -68,8 +68,8 @@ export const getResizeHandle = () => {
      * shapes
      */
     case MODE_OPTIONS.value.shape:
-      allowedHandles = [SHAPES_OPTIONS.circle, SHAPES_OPTIONS.star].includes(
-        selectedElement.value.type
+      allowedHandles = [SHAPES_OPTIONS.CIRCLE, SHAPES_OPTIONS.STAR].includes(
+        selectedElement.value.type,
       )
         ? [
             RESIZE_HANDLES_OPTIONS.value.topLeft,
@@ -96,7 +96,7 @@ export const getResizeHandle = () => {
   }
 
   const handles = Object.values(RESIZE_HANDLES_OPTIONS.value).filter((handle) =>
-    allowedHandles.includes(handle)
+    allowedHandles.includes(handle),
   );
 
   handles.forEach((handle) => {
@@ -106,7 +106,7 @@ export const getResizeHandle = () => {
       selectedElement.value.y,
       selectedElement.value.width,
       selectedElement.value.height,
-      handleSize
+      handleSize,
     );
 
     const rotatedMinX =
@@ -188,11 +188,11 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.topLeft:
         const newTopLeftWidth = Math.max(
           minWidth,
-          resizeStart.value.width - deltaX
+          resizeStart.value.width - deltaX,
         );
         const newTopLeftHeight = Math.max(
           minHeight,
-          newTopLeftWidth / aspectRatio
+          newTopLeftWidth / aspectRatio,
         );
 
         selectedElement.value.width = newTopLeftWidth;
@@ -211,11 +211,11 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.topRight:
         const newTopRightWidth = Math.max(
           minWidth,
-          resizeStart.value.width + deltaX
+          resizeStart.value.width + deltaX,
         );
         const newTopRightHeight = Math.max(
           minHeight,
-          newTopRightWidth / aspectRatio
+          newTopRightWidth / aspectRatio,
         );
 
         selectedElement.value.width = newTopRightWidth;
@@ -232,11 +232,11 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.bottomLeft:
         const newBottomLeftWidth = Math.max(
           minWidth,
-          resizeStart.value.width - deltaX
+          resizeStart.value.width - deltaX,
         );
         const newBottomLeftHeight = Math.max(
           minHeight,
-          newBottomLeftWidth / aspectRatio
+          newBottomLeftWidth / aspectRatio,
         );
 
         selectedElement.value.width = newBottomLeftWidth;
@@ -253,11 +253,11 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.bottomRight:
         const newBottomRightWidth = Math.max(
           minWidth,
-          resizeStart.value.width + deltaX
+          resizeStart.value.width + deltaX,
         );
         const newBottomRightHeight = Math.max(
           minHeight,
-          newBottomRightWidth / aspectRatio
+          newBottomRightWidth / aspectRatio,
         );
 
         selectedElement.value.width = newBottomRightWidth;
@@ -271,7 +271,7 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.centerTop:
         const newCenterTopHeight = Math.max(
           minHeight,
-          resizeStart.value.height - deltaY
+          resizeStart.value.height - deltaY,
         );
         const newCenterTopWidth = newCenterTopHeight * aspectRatio;
         selectedElement.value.height = newCenterTopHeight;
@@ -288,7 +288,7 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.centerBottom:
         const newCenterBottomHeight = Math.max(
           minHeight,
-          resizeStart.value.height + deltaY
+          resizeStart.value.height + deltaY,
         );
         const newCenterBottomWidth = newCenterBottomHeight * aspectRatio;
         selectedElement.value.height = newCenterBottomHeight;
@@ -301,7 +301,7 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.centerLeft:
         const newCenterLeftWidth = Math.max(
           minWidth,
-          resizeStart.value.width - deltaX
+          resizeStart.value.width - deltaX,
         );
         const newCenterLeftHeight = newCenterLeftWidth / aspectRatio;
         selectedElement.value.width = newCenterLeftWidth;
@@ -319,7 +319,7 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.centerRight:
         const newCenterRightWidth = Math.max(
           minWidth,
-          resizeStart.value.width + deltaX
+          resizeStart.value.width + deltaX,
         );
         const newCenterRightHeight = newCenterRightWidth / aspectRatio;
         selectedElement.value.width = newCenterRightWidth;
@@ -338,11 +338,11 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.topLeft:
         const newTopLeftWidth = Math.max(
           minWidth,
-          selectedElement.value.width - deltaX
+          selectedElement.value.width - deltaX,
         );
         const newTopLeftHeight = Math.max(
           minHeight,
-          selectedElement.value.height - deltaY
+          selectedElement.value.height - deltaY,
         );
 
         if (newTopLeftWidth !== selectedElement.value.width) {
@@ -362,11 +362,11 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.topRight:
         const newTopRightWidth = Math.max(
           minWidth,
-          selectedElement.value.width + deltaX
+          selectedElement.value.width + deltaX,
         );
         const newTopRightHeight = Math.max(
           minHeight,
-          selectedElement.value.height - deltaY
+          selectedElement.value.height - deltaY,
         );
 
         if (newTopRightWidth !== selectedElement.value.width) {
@@ -385,11 +385,11 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.bottomLeft:
         const newBottomLeftWidth = Math.max(
           minWidth,
-          selectedElement.value.width - deltaX
+          selectedElement.value.width - deltaX,
         );
         const newBottomLeftHeight = Math.max(
           minHeight,
-          selectedElement.value.height + deltaY
+          selectedElement.value.height + deltaY,
         );
 
         if (newBottomLeftWidth !== selectedElement.value.width) {
@@ -408,11 +408,11 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.bottomRight:
         const newBottomRightWidth = Math.max(
           minWidth,
-          selectedElement.value.width + deltaX
+          selectedElement.value.width + deltaX,
         );
         const newBottomRightHeight = Math.max(
           minHeight,
-          selectedElement.value.height + deltaY
+          selectedElement.value.height + deltaY,
         );
 
         if (newBottomRightWidth !== selectedElement.value.width) {
@@ -430,7 +430,7 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.centerTop:
         const newCenterTopHeight = Math.max(
           minHeight,
-          resizeStart.value.height - deltaY
+          resizeStart.value.height - deltaY,
         );
         selectedElement.value.height = newCenterTopHeight;
         selectedElement.value.y =
@@ -443,7 +443,7 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.centerBottom:
         const newCenterBottomHeight = Math.max(
           minHeight,
-          resizeStart.value.height + deltaY
+          resizeStart.value.height + deltaY,
         );
         selectedElement.value.height = newCenterBottomHeight;
         break;
@@ -454,7 +454,7 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.centerLeft:
         selectedElement.value.width = Math.max(
           minWidth,
-          selectedElement.value.width - deltaX
+          selectedElement.value.width - deltaX,
         );
         selectedElement.value.x += deltaX;
         break;
@@ -465,7 +465,7 @@ export const resizeElement = (event) => {
       case RESIZE_HANDLES_OPTIONS.value.centerRight:
         selectedElement.value.width = Math.max(
           minWidth,
-          selectedElement.value.width + deltaX
+          selectedElement.value.width + deltaX,
         );
         break;
     }

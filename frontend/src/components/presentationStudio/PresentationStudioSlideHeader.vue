@@ -17,7 +17,7 @@
         stages.default?.attrs?.container?.getBoundingClientRect()?.top
       }px;`"
       :class="
-        slide?.color_scheme === COLOR_SCHEME_OPTIONS.light
+        slide?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
           ? 'text-black bg-grey-2'
           : 'text-white bg-grey-9'
       "
@@ -68,7 +68,7 @@
   >
     <q-img
       :src="
-        slide?.color_scheme === COLOR_SCHEME_OPTIONS.light
+        slide?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
           ? '/prezio.svg'
           : '/prezio--white.svg'
       "

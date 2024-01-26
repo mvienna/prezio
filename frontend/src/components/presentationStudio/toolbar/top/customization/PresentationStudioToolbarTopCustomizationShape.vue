@@ -1,6 +1,7 @@
 <template>
   <!-- fill color -->
   <q-btn
+    v-if="!transformer.custom.shape.node"
     flat
     round
     size="12px"
@@ -31,7 +32,7 @@
         no-header-tabs
         default-view="palette"
         v-model="shape.fill"
-        @change="studioStore.applyNodesCustomization()"
+        @change="studioStore.applyCustomization()"
       />
 
       <!-- remove fill -->
@@ -43,10 +44,10 @@
           flat
           dense
           no-caps
-          :label="$t('presentationStudio.toolbar.shape.options.fill.remove')"
+          :label="$t('presentationStudio.toolbar.shape.fill.remove')"
           @click="
             shape.fill = 'transparent';
-            studioStore.applyNodesCustomization();
+            studioStore.applyCustomization();
           "
         />
       </div>
@@ -54,7 +55,7 @@
 
     <q-tooltip :offset="[0, 4]">
       <div>
-        {{ $t("presentationStudio.toolbar.shape.options.fill.title") }}
+        {{ $t("presentationStudio.toolbar.shape.fill.title") }}
       </div>
     </q-tooltip>
   </q-btn>
@@ -83,13 +84,13 @@
         no-header-tabs
         default-view="palette"
         v-model="shape.stroke"
-        @change="studioStore.applyNodesCustomization()"
+        @change="studioStore.applyCustomization()"
       />
 
       <!-- line width -->
       <div class="q-py-md q-px-md">
         <div class="text-caption text-grey">
-          {{ $t("presentationStudio.toolbar.image.stroke.width") }}
+          {{ $t("presentationStudio.toolbar.shape.stroke.width") }}
         </div>
 
         <div class="row no-wrap items-center q-gutter-md q-pt-sm">
@@ -100,7 +101,7 @@
             label
             thumb-size="14px"
             :label-value="shape.strokeWidth + 'px'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
 
           <q-input
@@ -113,14 +114,45 @@
             style="min-width: 90px; width: 80px"
             outlined
             dense
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
+
+        <template v-if="transformer.custom.shape.node">
+          <div class="text-caption text-grey q-mt-md">
+            {{ $t("presentationStudio.toolbar.shape.stroke.pointerSize") }}
+          </div>
+
+          <div class="row no-wrap items-center q-gutter-md q-pt-sm">
+            <q-slider
+              v-model="shape.pointerSize"
+              :min="0"
+              :max="200"
+              label
+              thumb-size="14px"
+              :label-value="shape.pointerSize + 'px'"
+              @change="studioStore.applyCustomization()"
+            />
+
+            <q-input
+              v-model.number="shape.pointerSize"
+              :min="0"
+              :max="200"
+              type="number"
+              placeholder="0"
+              suffix="px"
+              style="min-width: 90px; width: 80px"
+              outlined
+              dense
+              @change="studioStore.applyCustomization()"
+            />
+          </div>
+        </template>
       </div>
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.image.stroke.title") }}
+      {{ $t("presentationStudio.toolbar.shape.stroke.title") }}
     </q-tooltip>
   </q-btn>
 
@@ -149,14 +181,14 @@
         style="min-width: 216px"
         default-view="palette"
         v-model="shape.shadowColor"
-        @change="studioStore.applyNodesCustomization()"
+        @change="studioStore.applyCustomization()"
       />
 
       <div class="q-px-md q-pt-md q-pb-sm">
         <!-- shadow opacity -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.image.shadow.opacity") }}
+            {{ $t("presentationStudio.toolbar.shape.shadow.opacity") }}
           </div>
 
           <q-slider
@@ -167,14 +199,14 @@
             label
             thumb-size="14px"
             :label-value="Math.round(shape.shadowOpacity * 100) + '%'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
 
         <!-- shadow blur -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.image.shadow.blur") }}
+            {{ $t("presentationStudio.toolbar.shape.shadow.blur") }}
           </div>
 
           <q-slider
@@ -184,14 +216,14 @@
             label
             thumb-size="14px"
             :label-value="shape.shadowBlur + 'px'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
 
         <!-- shadow offset x -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.image.shadow.offsetX") }}
+            {{ $t("presentationStudio.toolbar.shape.shadow.offsetX") }}
           </div>
 
           <q-slider
@@ -201,14 +233,14 @@
             label
             thumb-size="14px"
             :label-value="shape.shadowOffset.x"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
 
         <!-- shadow offset y -->
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.image.shadow.offsetY") }}
+            {{ $t("presentationStudio.toolbar.shape.shadow.offsetY") }}
           </div>
 
           <q-slider
@@ -218,14 +250,14 @@
             label
             thumb-size="14px"
             :label-value="shape.shadowOffset.y"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
       </div>
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.image.shadow.title") }}
+      {{ $t("presentationStudio.toolbar.shape.shadow.title") }}
     </q-tooltip>
   </q-btn>
 
@@ -251,7 +283,7 @@
       <div class="q-px-md q-pt-md q-pb-sm">
         <div>
           <div class="text-caption text-grey">
-            {{ $t("presentationStudio.toolbar.image.opacity.title") }}
+            {{ $t("presentationStudio.toolbar.shape.opacity.title") }}
           </div>
 
           <q-slider
@@ -262,14 +294,14 @@
             label
             thumb-size="14px"
             :label-value="Math.round(shape.opacity * 100) + '%'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
       </div>
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.image.opacity.title") }}
+      {{ $t("presentationStudio.toolbar.shape.opacity.title") }}
     </q-tooltip>
   </q-btn>
 
@@ -278,7 +310,7 @@
     v-if="
       transformer.default
         .nodes()
-        .filter((node) => node.getClassName() === 'Rect').length
+        .filter((node) => node.getClassName() === SHAPES_OPTIONS.RECT).length
     "
     flat
     round
@@ -299,7 +331,7 @@
     >
       <div class="q-pa-md">
         <div class="text-caption text-grey">
-          {{ $t("presentationStudio.toolbar.image.cornerRadius.title") }}
+          {{ $t("presentationStudio.toolbar.shape.cornerRadius.title") }}
         </div>
 
         <div class="row no-wrap items-center q-gutter-md q-pt-sm">
@@ -310,7 +342,7 @@
             label
             thumb-size="14px"
             :label-value="shape.cornerRadius + '%'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
 
           <q-input
@@ -323,14 +355,14 @@
             style="min-width: 80px; width: 80px"
             outlined
             dense
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
       </div>
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.image.cornerRadius.title") }}
+      {{ $t("presentationStudio.toolbar.shape.cornerRadius.title") }}
     </q-tooltip>
   </q-btn>
 </template>
@@ -339,6 +371,7 @@
 import { ref } from "vue";
 import { useStudioStore } from "stores/studio";
 import { storeToRefs } from "pinia";
+import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * stores

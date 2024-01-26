@@ -54,7 +54,7 @@
           dense
           @click="
             image.clipPosition = item;
-            studioStore.applyNodesCustomization();
+            studioStore.applyCustomization();
           "
         >
           <q-item-section avatar style="min-width: 20px">
@@ -99,7 +99,7 @@
         style="min-width: 216px"
         default-view="palette"
         v-model="image.shadowColor"
-        @change="studioStore.applyNodesCustomization()"
+        @change="studioStore.applyCustomization()"
       />
 
       <div class="q-px-md q-pt-md q-pb-sm">
@@ -117,7 +117,7 @@
             label
             thumb-size="14px"
             :label-value="Math.round(image.shadowOpacity * 100) + '%'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
 
@@ -134,7 +134,7 @@
             label
             thumb-size="14px"
             :label-value="image.shadowBlur + 'px'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
 
@@ -151,7 +151,7 @@
             label
             thumb-size="14px"
             :label-value="image.shadowOffset.x"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
 
@@ -168,7 +168,7 @@
             label
             thumb-size="14px"
             :label-value="image.shadowOffset.y"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
       </div>
@@ -212,7 +212,7 @@
             label
             thumb-size="14px"
             :label-value="Math.round(image.opacity * 100) + '%'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
       </div>
@@ -247,7 +247,7 @@
         no-header-tabs
         default-view="palette"
         v-model="image.stroke"
-        @change="studioStore.applyNodesCustomization()"
+        @change="studioStore.applyCustomization()"
       />
 
       <!-- line width -->
@@ -264,7 +264,7 @@
             label
             thumb-size="14px"
             :label-value="image.strokeWidth + 'px'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
 
           <q-input
@@ -277,7 +277,7 @@
             style="min-width: 90px; width: 80px"
             outlined
             dense
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
       </div>
@@ -320,7 +320,7 @@
             label
             thumb-size="14px"
             :label-value="image.cornerRadius + '%'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
 
           <q-input
@@ -333,7 +333,7 @@
             style="min-width: 80px; width: 80px"
             outlined
             dense
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
       </div>

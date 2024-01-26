@@ -278,16 +278,55 @@ const showSelectMediaDialog = ref(false);
  * stores
  */
 const studioStore = useStudioStore();
-const { MODE_OPTIONS, transformer } = storeToRefs(studioStore);
+const { MODE_OPTIONS, transformer, stages, scene } = storeToRefs(studioStore);
 
 /*
  * position
  */
 const transformerPosition = computed(() => {
-  return {
-    x: transformer.value.default.x() + 215,
-    y: transformer.value.default.y() + 80,
-  };
+  if (transformer.value.default.nodes()?.length) {
+    return {
+      x: transformer.value.default.x() + 215,
+      y: transformer.value.default.y() + 80,
+    };
+  } else {
+    const box = stages.value.default
+      .getAttr("container")
+      .getBoundingClientRect();
+
+    const scaleX = box.width / scene.value.width;
+    const scaleY = box.height / scene.value.height;
+
+    const menuWidth = 93;
+    const menuHeight = 32;
+
+    const maxLeft = box.left;
+    const maxRight = box.left + box.width - menuWidth;
+    const maxTop = box.top;
+    const maxBottom = box.top + box.height - menuHeight;
+
+    const x =
+      box.left -
+      menuWidth / 2 +
+      ((transformer.value.custom.shape.node.points()[0] +
+        transformer.value.custom.shape.node.points()[2]) /
+        2) *
+        scaleX;
+
+    const y =
+      box.top -
+      menuHeight * 2 +
+      (transformer.value.custom.shape.node.points()[1] <
+      transformer.value.custom.shape.node.points()[3]
+        ? transformer.value.custom.shape.node.points()[1]
+        : transformer.value.custom.shape.node.points()[3]) *
+        scaleY;
+
+    return {
+      x: x < maxLeft ? maxLeft : x > maxRight ? maxRight : x,
+      y: y < maxTop ? maxTop : y > maxBottom ? maxBottom : y,
+    };
+  }
 });
 
 /*

@@ -31,7 +31,7 @@
         no-header-tabs
         default-view="palette"
         v-model="drawing.stroke"
-        @change="studioStore.applyNodesCustomization()"
+        @change="studioStore.applyCustomization()"
       />
     </q-menu>
 
@@ -73,7 +73,7 @@
             label
             thumb-size="14px"
             :label-value="drawing.strokeWidth + 'px'"
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
 
           <q-input
@@ -86,7 +86,7 @@
             style="min-width: 90px; width: 80px"
             outlined
             dense
-            @change="studioStore.applyNodesCustomization()"
+            @change="studioStore.applyCustomization()"
           />
         </div>
       </div>
@@ -130,7 +130,7 @@
           dense
           @click="
             drawing.mode = item;
-            studioStore.applyNodesCustomization();
+            studioStore.applyCustomization();
           "
         >
           <q-item-section>

@@ -1,6 +1,8 @@
+import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
+
 export const SHAPE_TYPES = {
-  line: "line",
-  simpleShape: "simple_shape",
+  LINE: "line",
+  SIMPLE_SHAPE: "simple_shape",
 };
 
 export const SHAPES = [
@@ -8,24 +10,24 @@ export const SHAPES = [
    * lines
    */
   {
-    name: "line",
+    name: SHAPES_OPTIONS.LINE,
     icon: "r_remove",
-    group: SHAPE_TYPES.line,
+    group: SHAPE_TYPES.LINE,
   },
   {
-    name: "arrow",
+    name: SHAPES_OPTIONS.ARROW,
     icon: "r_arrow_right_alt",
-    group: SHAPE_TYPES.line,
+    group: SHAPE_TYPES.LINE,
   },
   {
-    name: "double_arrow",
+    name: SHAPES_OPTIONS.ARROW_DOUBLE,
     icon: "r_open_in_full",
-    group: SHAPE_TYPES.line,
+    group: SHAPE_TYPES.LINE,
   },
   {
-    name: "turn_right",
+    name: SHAPES_OPTIONS.TURN_RIGHT,
     icon: "r_turn_right",
-    group: SHAPE_TYPES.line,
+    group: SHAPE_TYPES.LINE,
     disabled: true,
   },
 
@@ -33,46 +35,46 @@ export const SHAPES = [
    * simple shapes
    */
   {
-    name: "circle",
+    name: SHAPES_OPTIONS.CIRCLE,
     icon: "o_circle",
-    group: SHAPE_TYPES.simpleShape,
+    group: SHAPE_TYPES.SIMPLE_SHAPE,
   },
   {
-    name: "rectangle",
+    name: SHAPES_OPTIONS.RECT,
     icon: "o_square",
-    group: SHAPE_TYPES.simpleShape,
+    group: SHAPE_TYPES.SIMPLE_SHAPE,
   },
   {
-    name: "triangle",
+    name: SHAPES_OPTIONS.TRIANGLE,
     icon: "icon-triangle",
-    group: SHAPE_TYPES.simpleShape,
+    group: SHAPE_TYPES.SIMPLE_SHAPE,
   },
   {
-    name: "star",
+    name: SHAPES_OPTIONS.STAR,
     icon: "o_grade",
-    group: SHAPE_TYPES.simpleShape,
+    group: SHAPE_TYPES.SIMPLE_SHAPE,
   },
   {
-    name: "polygon",
+    name: SHAPES_OPTIONS.POLYGON,
     icon: "o_hexagon",
-    group: SHAPE_TYPES.simpleShape,
+    group: SHAPE_TYPES.SIMPLE_SHAPE,
   },
   {
-    name: "label",
+    name: SHAPES_OPTIONS.LABEL,
     icon: "o_label",
-    group: SHAPE_TYPES.simpleShape,
+    group: SHAPE_TYPES.SIMPLE_SHAPE,
     disabled: true,
   },
   {
-    name: "label_important",
+    name: SHAPES_OPTIONS.LABEL_IMPORTANT,
     icon: "icon-label_important",
-    group: SHAPE_TYPES.simpleShape,
+    group: SHAPE_TYPES.SIMPLE_SHAPE,
     disabled: true,
   },
   {
-    name: "heart",
+    name: SHAPES_OPTIONS.HEART,
     icon: "icon-heart",
-    group: SHAPE_TYPES.simpleShape,
+    group: SHAPE_TYPES.SIMPLE_SHAPE,
     disabled: true,
   },
 ];

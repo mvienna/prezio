@@ -3,7 +3,7 @@
     <div
       class="room_data row no-wrap items-center justify-center"
       :class="`text-${
-        slide?.color_scheme === COLOR_SCHEME_OPTIONS.light ? 'black' : 'white'
+        slide?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT ? 'black' : 'white'
       }`"
     >
       <!-- reactions -->
@@ -114,21 +114,21 @@ watch(
   () => presentation.value?.room?.reactions?.like,
   () => {
     animate("like");
-  }
+  },
 );
 
 watch(
   () => presentation.value?.room?.reactions?.love,
   () => {
     animate("love");
-  }
+  },
 );
 
 watch(
   () => slide.value?.answers?.length,
   () => {
     animate("pin");
-  }
+  },
 );
 </script>
 

@@ -763,7 +763,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * circle
          */
-        case SHAPES_OPTIONS.circle:
+        case SHAPES_OPTIONS.CIRCLE:
           this.ctx.arc(
             element.x + element.width / 2,
             element.y + element.height / 2,
@@ -779,7 +779,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * rectangle
          */
-        case SHAPES_OPTIONS.rectangle:
+        case SHAPES_OPTIONS.RECT:
           this.ctx.rect(element.x, element.y, element.width, element.height);
 
           fillShape();
@@ -789,7 +789,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * triangle
          */
-        case SHAPES_OPTIONS.triangle:
+        case SHAPES_OPTIONS.TRIANGLE:
           const triangleX1 = element.x + element.width / 2;
           const triangleX2 = element.x;
           const triangleX3 = element.x + element.width;
@@ -811,7 +811,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * star
          */
-        case SHAPES_OPTIONS.star:
+        case SHAPES_OPTIONS.STAR:
           const size = element.width;
           const cx = element.x + size / 2;
           const cy = element.y + size / 2;
@@ -840,7 +840,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * line
          */
-        case SHAPES_OPTIONS.line:
+        case SHAPES_OPTIONS.LINE:
           const x1 = element.x;
           const y1 = element.y + element.height / 2;
           const x2 = element.x + element.width;
@@ -854,7 +854,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * arrow
          */
-        case SHAPES_OPTIONS.arrow:
+        case SHAPES_OPTIONS.ARROW:
           const arrowBaseX = element.x;
           const arrowBaseY = element.y + element.height / 2;
           const arrowTipX = element.x + element.width;
@@ -972,7 +972,7 @@ export const useCanvasStore = defineStore("canvas", {
             element.y,
             element.width,
             element.height,
-            [SHAPES_OPTIONS.circle, SHAPES_OPTIONS.star].includes(element.type)
+            [SHAPES_OPTIONS.CIRCLE, SHAPES_OPTIONS.STAR].includes(element.type)
               ? ["top-left", "top-right", "bottom-right", "bottom-left"]
               : undefined,
             true,

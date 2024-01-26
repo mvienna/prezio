@@ -58,11 +58,12 @@
           <!-- shape customization -->
           <PresentationStudioToolbarTopCustomizationShape
             v-if="
-              transformer.default?.nodes()?.length &&
-              transformer.default
-                ?.nodes()
-                .filter((node) => node.getAttr('name') === MODE_OPTIONS.shape)
-                ?.length === transformer.default?.nodes()?.length
+              (transformer.default?.nodes()?.length &&
+                transformer.default
+                  ?.nodes()
+                  .filter((node) => node.getAttr('name') === MODE_OPTIONS.shape)
+                  ?.length === transformer.default?.nodes()?.length) ||
+              transformer.custom.shape.node
             "
           />
 
@@ -144,7 +145,11 @@ const switchMode = (value) => {
 };
 
 const showModes = computed(() => {
-  return !mode.value && !transformer.value.default?.nodes()?.length;
+  return (
+    !mode.value &&
+    !transformer.value.default?.nodes()?.length &&
+    !transformer.value.custom.shape.node
+  );
 });
 
 /*

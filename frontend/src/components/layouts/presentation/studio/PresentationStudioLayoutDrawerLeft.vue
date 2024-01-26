@@ -121,7 +121,10 @@
             }`"
             @mouseover="hoveredSlideIndex = index"
             @mouseleave="hoveredSlideIndex = null"
-            @click="presentationsStore.setSlide(element)"
+            @click="
+              studioStore.deselectElements();
+              presentationsStore.setSlide(element);
+            "
             @contextmenu.prevent="
               showSlideContextMenu[index] = !showSlideContextMenu[index]
             "
@@ -141,7 +144,7 @@
                   :src="`/assets/icons/slide/types/${element.type}.svg`"
                   style="width: 36px; height: 36px; background: transparent"
                   :style="
-                    element.color_scheme >= COLOR_SCHEME_OPTIONS.light
+                    element.color_scheme >= COLOR_SCHEME_OPTIONS.LIGHT
                       ? ''
                       : 'filter: invert(100%) grayscale(100%) brightness(200%);'
                   "
@@ -151,7 +154,7 @@
               <div
                 class="text-semibold text-center text-caption text-no-wrap"
                 :class="
-                  element.color_scheme >= COLOR_SCHEME_OPTIONS.light
+                  element.color_scheme >= COLOR_SCHEME_OPTIONS.LIGHT
                     ? 'text-grey-7'
                     : 'text-white'
                 "
@@ -172,7 +175,7 @@
                 flat
                 size="8px"
                 :color="
-                  element.color_scheme >= COLOR_SCHEME_OPTIONS.light
+                  element.color_scheme >= COLOR_SCHEME_OPTIONS.LIGHT
                     ? 'black'
                     : 'white'
                 "
@@ -356,7 +359,6 @@ import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import draggable from "vuedraggable/src/vuedraggable";
-import { useCanvasStore } from "stores/canvas";
 import { useQuasar } from "quasar";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
 import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
@@ -365,6 +367,7 @@ import {
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
 import { useI18n } from "vue-i18n";
+import { useStudioStore } from "stores/studio";
 
 /*
  * variables
@@ -383,8 +386,7 @@ const presentationsStore = usePresentationsStore();
 const { presentation, slide, backgroundBrightnessThreshold } =
   storeToRefs(presentationsStore);
 
-const canvasStore = useCanvasStore();
-const { elements, MODE_OPTIONS, canvas } = storeToRefs(canvasStore);
+const studioStore = useStudioStore();
 
 /*
  * slide context menu
@@ -438,6 +440,9 @@ const handleSlideDeletion = async (item) => {
     await Promise.all(deletePromises);
   }
 
+  // deselect elements
+  studioStore.deselectElements();
+
   // change slide
   const currentSlideIndex = presentation.value.slides.findIndex(
     (presentationSlide) => presentationSlide.id === item.id,
@@ -452,6 +457,7 @@ const handleSlideDeletion = async (item) => {
     );
   }
 
+  // delete slide
   await presentationsStore.deleteSlide(item);
 };
 
@@ -634,7 +640,7 @@ const hoveredSlideIndex = ref(null);
 //     mode: MODE_OPTIONS.value.baseFill,
 //     isVisible: true,
 //     isLocked: true,
-//     type: SHAPES_OPTIONS.rectangle,
+//     type: SHAPES_OPTIONS.RECT,
 //     x: 0,
 //     y: 0,
 //     width: 2560,

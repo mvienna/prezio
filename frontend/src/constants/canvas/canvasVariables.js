@@ -52,14 +52,18 @@ export const ALIGNMENT = {
 };
 
 export const SHAPES_OPTIONS = {
-  circle: "circle",
-  rectangle: "rectangle",
-  triangle: "triangle",
-  star: "star",
-  line: "line",
-  arrow: "arrow",
-  doubleArrow: "double_arrow",
-  polygon: "polygon",
+  CIRCLE: "Circle",
+  RECT: "Rect",
+  TRIANGLE: "Triangle",
+  STAR: "Star",
+  LINE: "Line",
+  ARROW: "Arrow",
+  ARROW_DOUBLE: "ArrowDouble",
+  POLYGON: "Polygon",
+  TURN_RIGHT: "TurnRight",
+  LABEL: "Label",
+  LABEL_IMPORTANT: "LabelImportant",
+  HEART: "Heart",
 };
 
 export const CROP_POSITION_OPTIONS = {
@@ -88,6 +92,6 @@ export const BASE_FILL_COLOR_OPTIONS = [
 ];
 
 export const COLOR_SCHEME_OPTIONS = {
-  light: "light",
-  dark: "dark",
+  LIGHT: "light",
+  DARK: "dark",
 };

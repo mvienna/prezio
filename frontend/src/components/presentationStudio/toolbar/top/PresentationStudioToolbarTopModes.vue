@@ -154,7 +154,7 @@
         >
           <q-btn
             v-for="shape in SHAPES.filter(
-              (item) => item.group === SHAPE_TYPES.line,
+              (item) => item.group === SHAPE_TYPES.LINE,
             )"
             :key="shape.name"
             unelevated
@@ -187,7 +187,7 @@
         >
           <q-btn
             v-for="shape in SHAPES.filter(
-              (item) => item.group === SHAPE_TYPES.simpleShape,
+              (item) => item.group === SHAPE_TYPES.SIMPLE_SHAPE,
             )"
             :key="shape.name"
             unelevated
