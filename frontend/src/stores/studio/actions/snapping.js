@@ -180,16 +180,13 @@ export function handleSnappingDragMove(event) {
     return;
 
   if (
-    [
+    ![
       SHAPES_OPTIONS.LINE,
       SHAPES_OPTIONS.ARROW,
       SHAPES_OPTIONS.ARROW_DOUBLE,
-    ].includes(event.target.getClassName())
+    ].includes(event.target.getClassName()) &&
+    !this.transformer.default.nodes()?.length
   ) {
-    if (this.transformer.custom.shape.node?._id !== event.target._id) {
-      this.setCustomShapeTransformer(event.target);
-    }
-  } else if (!this.transformer.default.nodes()?.length) {
     const nodes = this.transformer.default.nodes().concat([event.target]);
     this.transformer.default.nodes(nodes);
   }

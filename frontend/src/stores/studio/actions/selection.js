@@ -221,6 +221,9 @@ export function deselectElements() {
  * transformers
  */
 export function setCustomShapeTransformer(node) {
+  this.layers.default
+    .find(".customTransformer")
+    .forEach((node) => node.destroy());
   this.transformer.custom.shape.node = node;
   this.transformer.default.nodes([]);
 
