@@ -65,8 +65,6 @@ export function handleSelection() {
   this.layers.default.add(this.selection.rect);
 
   this.stages.default.on("mousedown", this.handleSelectionMouseDown);
-  this.stages.default.on("mousemove", this.handleSelectionMouseMove);
-  this.stages.default.on("mouseup", this.handleSelectionMouseUp);
   this.stages.default.on("click", this.handleSelectionClick);
 }
 
@@ -99,17 +97,22 @@ export function handleSelectionMouseDown(event) {
   this.selection.rect.width(0);
   this.selection.rect.height(0);
   this.selection.isSelecting = true;
+
+  // Register global event listeners
+  window.addEventListener("mousemove", this.handleSelectionMouseMove);
+  window.addEventListener("mouseup", this.handleSelectionMouseUp);
 }
 
 export function handleSelectionMouseMove(event) {
   if (!this.selection.isSelecting) return;
 
-  event.evt.preventDefault();
-
-  const stageTransform = this.stages.default.getAbsoluteTransform().copy();
-  const position = stageTransform
-    .invert()
-    .point(this.stages.default.getPointerPosition());
+  // Convert the global mouse position to the stage's local coordinates
+  const stageBox = this.stages.default.container().getBoundingClientRect();
+  const scale = this.stages.default.scaleX(); // Assuming scaleX and scaleY are the same
+  const position = {
+    x: (event.clientX - stageBox.left) / scale,
+    y: (event.clientY - stageBox.top) / scale,
+  };
 
   this.selection.x2 = position.x;
   this.selection.y2 = position.y;
@@ -128,7 +131,6 @@ export function handleSelectionMouseUp(event) {
   if (!this.selection.rect.visible()) {
     return;
   }
-  event.evt.preventDefault();
 
   this.selection.rect.visible(false);
 
@@ -148,6 +150,9 @@ export function handleSelectionMouseUp(event) {
   this.transformer.default.nodes(selected);
 
   this.applyTransformerCustomization();
+
+  window.removeEventListener("mousemove", this.handleSelectionMouseMove);
+  window.removeEventListener("mouseup", this.handleSelectionMouseUp);
 }
 
 export function handleSelectionClick(event) {

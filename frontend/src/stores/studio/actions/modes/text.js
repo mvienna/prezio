@@ -43,9 +43,7 @@ export function processText(textNode) {
     // at first lets find position of text node relative to the stage:
     var textPosition = textNode.absolutePosition();
 
-    const box = this.stages.default
-      .getAttr("container")
-      .getBoundingClientRect();
+    const box = this.stages.default.container().getBoundingClientRect();
 
     // so position of textarea will be the sum of positions above:
     var areaPosition = {

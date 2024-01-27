@@ -290,9 +290,7 @@ const transformerPosition = computed(() => {
       y: transformer.value.default.y() + 80,
     };
   } else {
-    const box = stages.value.default
-      .getAttr("container")
-      .getBoundingClientRect();
+    const box = stages.value.default.container().getBoundingClientRect();
 
     const scaleX = box.width / scene.value.width;
     const scaleY = box.height / scene.value.height;
