@@ -63,22 +63,7 @@
             <!-- layer name -->
             <span
               class="text-semibold q-ml-sm q-py-xs"
-              @click="
-                element.draggable
-                  ? transformer.default
-                      ?.nodes()
-                      ?.filter((node) => node._id === element._id)?.length
-                    ? transformer.default?.nodes(
-                        transformer.default
-                          ?.nodes()
-                          ?.filter((node) => node._id !== element._id),
-                      )
-                    : transformer.default?.nodes([
-                        ...transformer.default?.nodes(),
-                        element,
-                      ])
-                  : ''
-              "
+              @click="handleLayerSelection($event, element)"
             >
               {{
                 $t(
@@ -277,6 +262,29 @@ const handleEndDragging = () => {
       ?.findOne((item) => item._id === node._id)
       ?.zIndex(nodes.value.length - 1 - index);
   });
+};
+
+const handleLayerSelection = (event, element) => {
+  if (!element.draggable()) return;
+
+  if (event.shiftKey) {
+    if (
+      transformer.value.default
+        ?.nodes()
+        ?.filter((node) => node._id === element._id)?.length
+    ) {
+      transformer.value.default?.nodes(
+        transformer.value.default
+          ?.nodes()
+          ?.filter((node) => node._id !== element._id),
+      );
+    } else {
+      const nodes = transformer.value.default?.nodes()?.concat([element]);
+      transformer.value.default?.nodes(nodes);
+    }
+  } else {
+    transformer.value.default.nodes([element]);
+  }
 };
 </script>
 
