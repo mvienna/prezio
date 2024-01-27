@@ -21,6 +21,7 @@ import * as selection from "./actions/selection";
 import * as nodes from "./actions/nodes";
 import * as shortcuts from "./actions/shortcuts";
 
+import * as customization from "./actions/modes/customization";
 import * as image from "./actions/modes/image";
 import * as drawing from "./actions/modes/drawing";
 import * as shape from "./actions/modes/shape";
@@ -200,6 +201,7 @@ export const useStudioStore = defineStore("studio", {
     /*
      * modes
      */
+    ...customization,
     ...image,
     ...drawing,
     ...shape,
