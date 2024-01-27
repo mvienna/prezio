@@ -1,6 +1,7 @@
 export function handleShortcuts(event) {
   const activeElement = document.activeElement;
   if (activeElement && activeElement.tagName === "INPUT") return;
+  if (this.mode === this.MODE_OPTIONS.TEXT_EDITING) return;
 
   if (event.key === "Delete" || event.key === "Backspace") {
     event.preventDefault();

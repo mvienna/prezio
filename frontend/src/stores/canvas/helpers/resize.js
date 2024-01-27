@@ -57,7 +57,7 @@ export const getResizeHandle = () => {
     /*
      * text
      */
-    case MODE_OPTIONS.value.text:
+    case MODE_OPTIONS.value.TEXT:
       allowedHandles = [
         RESIZE_HANDLES_OPTIONS.value.centerLeft,
         RESIZE_HANDLES_OPTIONS.value.centerRight,
@@ -67,7 +67,7 @@ export const getResizeHandle = () => {
     /*
      * shapes
      */
-    case MODE_OPTIONS.value.shape:
+    case MODE_OPTIONS.value.SHAPE:
       allowedHandles = [SHAPES_OPTIONS.CIRCLE, SHAPES_OPTIONS.STAR].includes(
         selectedElement.value.type,
       )
@@ -83,7 +83,7 @@ export const getResizeHandle = () => {
     /*
      * drawing
      */
-    case MODE_OPTIONS.value.drawing:
+    case MODE_OPTIONS.value.DRAWING:
       allowedHandles = [];
       break;
 

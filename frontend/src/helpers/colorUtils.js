@@ -8,7 +8,7 @@ const { MODE_OPTIONS } = storeToRefs(canvasStore);
 
 export const textColorOnAColoredBackground = (
   backgroundColor,
-  isReturnHex = true
+  isReturnHex = true,
 ) => {
   backgroundColor = colors.hexToRgb(backgroundColor);
 
@@ -40,17 +40,17 @@ export const wordCloudTextColors = [
 
 export const computeAverageBrightness = async (elements) => {
   let background = elements?.find(
-    (element) => element.mode === MODE_OPTIONS.value.backgroundPreview
+    (element) => element.mode === MODE_OPTIONS.value.BACKGROUND_PREVIEW,
   );
 
   if (!background) {
     background = elements?.find(
-      (element) => element.mode === MODE_OPTIONS.value.background
+      (element) => element.mode === MODE_OPTIONS.value.BACKGROUND,
     );
   }
 
   const baseFill = elements?.find(
-    (element) => element.mode === MODE_OPTIONS.value.baseFill
+    (element) => element.mode === MODE_OPTIONS.value.BASE_FILL,
   );
 
   /*

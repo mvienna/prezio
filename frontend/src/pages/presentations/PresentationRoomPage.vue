@@ -4,8 +4,8 @@
       isHost
         ? 'background: black;'
         : roomBaseFill
-        ? `background: ${roomBaseFill.fillColor};`
-        : 'background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));'
+          ? `background: ${roomBaseFill.fillColor};`
+          : 'background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));'
     "
   >
     <!-- websockets connection interrupted -->
@@ -160,7 +160,7 @@
               v-if="
                 !isHost &&
                 ![SLIDE_TYPES.CONTENT, SLIDE_TYPES.LEADERBOARD].includes(
-                  slide?.type
+                  slide?.type,
                 )
               "
             >
@@ -174,7 +174,7 @@
                 v-if="
                   !isHost &&
                   [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
-                    slide?.type
+                    slide?.type,
                   )
                 "
               />
@@ -221,7 +221,7 @@
                 :cancel-btn-text="
                   $t('presentationRoom.quizCountdown.inProgressWarning.stay') +
                   ` (${quizInProgressWarningAutoCloseCountdown} ${$t(
-                    'presentationRoom.quizCountdown.inProgressWarning.sec'
+                    'presentationRoom.quizCountdown.inProgressWarning.sec',
                   )})`
                 "
                 :confirm-btn-text="
@@ -344,11 +344,11 @@ const isParticipantRequiredInfoCollected = computed(() => {
   // require to fill in the data
   if (presentation.value?.settings?.require_participants_info) {
     const participantData = Object.keys(
-      JSON.parse(participant.value.user_data)
+      JSON.parse(participant.value.user_data),
     );
 
     const fields = JSON.parse(
-      presentation.value?.settings?.participants_info_form_fields_data
+      presentation.value?.settings?.participants_info_form_fields_data,
     )
       .filter((field) => field.isMandatory)
       ?.map((field) => field.name);
@@ -540,7 +540,7 @@ watch(
   () => {
     connectToRoomChannels();
   },
-  { deep: true }
+  { deep: true },
 );
 
 watch(
@@ -568,7 +568,7 @@ watch(
     } else {
       window.removeEventListener("resize", resizeCanvas);
     }
-  }
+  },
 );
 
 onUnmounted(() => {
@@ -590,7 +590,7 @@ const connectToRoomChannels = async () => {
       auth: {
         headers: {
           Authorization: `Bearer ${localStorage.getItem(
-            isHost.value ? "token" : "participantToken"
+            isHost.value ? "token" : "participantToken",
           )}`,
           "X-CSRF-Token": "CSRF_TOKEN",
         },
@@ -600,7 +600,7 @@ const connectToRoomChannels = async () => {
     window.Echo.join(`presence.room.${room.value.id}`)
       .here((users) => {
         participants.value = users.filter(
-          (item) => item.id !== user.value?.id && item.room_id
+          (item) => item.id !== user.value?.id && item.room_id,
         );
       })
       .joining((userJoined) => {
@@ -614,7 +614,7 @@ const connectToRoomChannels = async () => {
                 participant_id: userJoined.id,
                 message: "joined",
                 type: "system",
-              }
+              },
             )
             .catch((error) => {
               console.log(error);
@@ -623,7 +623,7 @@ const connectToRoomChannels = async () => {
       })
       .leaving((userLeft) => {
         participants.value = participants.value.filter(
-          (item) => item.id !== userLeft?.id && item.room_id
+          (item) => item.id !== userLeft?.id && item.room_id,
         );
 
         if (isHost.value && !userLeft.is_guest) {
@@ -634,7 +634,7 @@ const connectToRoomChannels = async () => {
                 participant_id: userLeft.id,
                 message: "left",
                 type: "system",
-              }
+              },
             )
             .catch((error) => {
               console.log(error);
@@ -662,7 +662,7 @@ const connectToRoomChannels = async () => {
     if (router.currentRoute.value.params.token !== room.value.token) {
       return await router.push(
         clearRoutePathFromProps(ROUTE_PATHS.PRESENTATION_ROOM.HOST) +
-          room.value.token
+          room.value.token,
       );
     }
 
@@ -674,7 +674,7 @@ const connectToRoomChannels = async () => {
 
       const endTime = new Date().toISOString();
       const roundTripTime = parseFloat(
-        ((new Date(endTime) - new Date(startTime)) / 1000).toFixed(1)
+        ((new Date(endTime) - new Date(startTime)) / 1000).toFixed(1),
       );
 
       console.log("SERVER TIME REQUEST DELAY: ", roundTripTime);
@@ -715,7 +715,7 @@ const connectToRoomChannels = async () => {
           setTimeout(async () => {
             if (event.slide) {
               const response = await presentationsStore.fetchSlideData(
-                event.slide.id
+                event.slide.id,
               );
               slide.value = response.data;
             }
@@ -738,7 +738,7 @@ const connectToRoomChannels = async () => {
 
         if (event.slide) {
           const response = await presentationsStore.fetchSlideData(
-            event.slide.id
+            event.slide.id,
           );
           slide.value = response.data;
         }
@@ -804,7 +804,7 @@ const connectToRoomChannels = async () => {
       // remove duplicates
       const idMap = new Map();
       room.value.messages = room.value.messages.filter(
-        (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1)
+        (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1),
       );
     } else {
       room.value.messages = [event.message];
@@ -821,7 +821,7 @@ const connectToRoomChannels = async () => {
     // remove duplicates
     const idMap = new Map();
     slide.value.answers = slide.value.answers.filter(
-      (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1)
+      (obj) => !idMap.has(obj.id) && idMap.set(obj.id, 1),
     );
     presentationsStore.syncCurrentSlideWithPresentationSlides();
 
@@ -836,12 +836,12 @@ const connectToRoomChannels = async () => {
         .filter(
           (answer) =>
             slide.value.type === answer.slide_type &&
-            participantsIds.includes(answer.participant_id)
+            participantsIds.includes(answer.participant_id),
         )
         .filter(
           (obj) =>
             !participantIdMap.has(obj.participant_id) &&
-            participantIdMap.set(obj.participant_id, 1)
+            participantIdMap.set(obj.participant_id, 1),
         );
 
       if (participantsAnswers.length === participantsIds.length) {
@@ -864,7 +864,7 @@ const connectToRoomChannels = async () => {
               {
                 message: "allParticipantsSubmittedAnswers",
                 type: "system",
-              }
+              },
             )
             .catch((error) => {
               console.log(error);
@@ -882,7 +882,7 @@ const connectToRoomChannels = async () => {
 
   channel.listen("PresentationRoomAnswerUpdatedEvent", (event) => {
     const answerIndex = slide.value.answers.findIndex(
-      (answer) => answer.id === event.data.id
+      (answer) => answer.id === event.data.id,
     );
     slide.value.answers[answerIndex] = event.data;
   });
@@ -951,7 +951,7 @@ const handleKeyDownEvent = (event) => {
 const handleSlideChange = async (direction) => {
   // find new slide
   const slideIndex = presentation.value?.slides?.findIndex(
-    (item) => item.id === slide.value?.id
+    (item) => item.id === slide.value?.id,
   );
   const newSlide =
     presentation.value.slides?.[
@@ -983,7 +983,7 @@ const handleSlideChange = async (direction) => {
 const handleRoomUpdateOnSlideChange = async (
   isOnLoad = false,
   direction,
-  newSlide = slide.value
+  newSlide = slide.value,
 ) => {
   const newSlideSettings = newSlide.settings_data
     ? JSON.parse(newSlide.settings_data)
@@ -1029,7 +1029,7 @@ const handleRoomUpdateOnSlideChange = async (
       if (room.value.is_quiz_started) {
         return await presentationsStore.handleQuizStart(
           newSlide.id,
-          newSlideSettings
+          newSlideSettings,
         );
       } else {
         return await presentationsStore.handleQuizStop({
@@ -1112,13 +1112,13 @@ const clearIsMouseActiveTimeout = () => {
  */
 const roomBackground = computed(() => {
   return elements.value?.find(
-    (element) => element.mode === MODE_OPTIONS.value.background
+    (element) => element.mode === MODE_OPTIONS.value.BACKGROUND,
   );
 });
 
 const roomBaseFill = computed(() => {
   return elements.value?.find(
-    (element) => element.mode === MODE_OPTIONS.value.baseFill
+    (element) => element.mode === MODE_OPTIONS.value.BASE_FILL,
   );
 });
 
@@ -1126,9 +1126,9 @@ watch(
   () => elements.value,
   async () => {
     averageBackgroundBrightness.value = await computeAverageBrightness(
-      elements.value
+      elements.value,
     );
-  }
+  },
 );
 
 /*
@@ -1136,9 +1136,9 @@ watch(
  */
 const filterElements = () => {
   elements.value = elements.value.filter((element) =>
-    [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
-      element.mode
-    )
+    [MODE_OPTIONS.value.BACKGROUND, MODE_OPTIONS.value.BASE_FILL].includes(
+      element.mode,
+    ),
   );
 };
 
@@ -1152,12 +1152,12 @@ watch(
     if (
       timeLeft.value === 0.0 &&
       [...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(
-        slide.value?.type
+        slide.value?.type,
       )
     ) {
       room.value.is_submission_locked = true;
     }
-  }
+  },
 );
 
 /*

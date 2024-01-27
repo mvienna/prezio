@@ -533,7 +533,7 @@ const hoveredSlideIndex = ref(null);
 //    * default elements
 //    */
 //   const layoutDefaultElementProps = {
-//     mode: MODE_OPTIONS.value.text,
+//     mode: MODE_OPTIONS.value.TEXT,
 //     isVisible: true,
 //     isLocked: false,
 //     fontFamily: customization.value.font,
@@ -637,7 +637,7 @@ const hoveredSlideIndex = ref(null);
 //    */
 //   const baseFill = {
 //     id: generateUniqueId(undefined, []),
-//     mode: MODE_OPTIONS.value.baseFill,
+//     mode: MODE_OPTIONS.value.BASE_FILL,
 //     isVisible: true,
 //     isLocked: true,
 //     type: SHAPES_OPTIONS.RECT,

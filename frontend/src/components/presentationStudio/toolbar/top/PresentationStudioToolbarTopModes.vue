@@ -36,26 +36,26 @@
       text-color="black"
       round
       size="12px"
-      @click="$emit('switchMode', MODE_OPTIONS.drawing)"
+      @click="$emit('switchMode', MODE_OPTIONS.DRAWING)"
     >
       <q-tooltip>
         {{ $t("presentationStudio.toolbar.drawing.title") }}
       </q-tooltip>
     </q-btn>
 
-    <!--    &lt;!&ndash; text &ndash;&gt;-->
-    <!--    <q-btn-->
-    <!--      icon="icon-insert_text"-->
-    <!--      unelevated-->
-    <!--      text-color="black"-->
-    <!--      round-->
-    <!--      size="12px"-->
-    <!--    >-->
-    <!--      &lt;!&ndash;      @click="textStore.addNewText(undefined, t)" &ndash;&gt;-->
-    <!--      <q-tooltip>-->
-    <!--        {{ $t("presentationStudio.toolbar.text.title") }}-->
-    <!--      </q-tooltip>-->
-    <!--    </q-btn>-->
+    <!-- text -->
+    <q-btn
+      icon="icon-insert_text"
+      unelevated
+      text-color="black"
+      round
+      size="12px"
+      @click="studioStore.addText(t)"
+    >
+      <q-tooltip>
+        {{ $t("presentationStudio.toolbar.text.title") }}
+      </q-tooltip>
+    </q-btn>
 
     <!-- image -->
     <q-btn
@@ -93,7 +93,7 @@
     <!--      text-color="black"-->
     <!--      round-->
     <!--      size="12px"-->
-    <!--      @click="$emit('switchMode', MODE_OPTIONS.mediaEmoji)"-->
+    <!--      @click="$emit('switchMode', MODE_OPTIONS.EMOJI)"-->
     <!--    >-->
     <!--      <q-tooltip>-->
     <!--        {{ $t("presentationStudio.toolbar.emoji.title") }}-->

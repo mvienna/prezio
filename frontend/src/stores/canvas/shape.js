@@ -64,12 +64,12 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
       width = null,
       height = null,
       layer = "top",
-      mode = MODE_OPTIONS.value.shape,
+      mode = MODE_OPTIONS.value.SHAPE,
       isLocked = false,
       strokeColor = this.customization.default.strokeColor,
       fillColor = this.customization.default.fillColor,
       lineWidth = this.customization.default.lineWidth,
-      isForceSelectCreatedElement = true
+      isForceSelectCreatedElement = true,
     ) {
       width =
         typeof width === "number"
@@ -113,9 +113,9 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
         elements.value.push(shape);
       }
 
-      if (mode === MODE_OPTIONS.value.baseFill) {
+      if (mode === MODE_OPTIONS.value.BASE_FILL) {
         averageBackgroundBrightness.value = await computeAverageBrightness(
-          elements.value
+          elements.value,
         );
         slide.value.previewAverageBrightness =
           averageBackgroundBrightness.value;
@@ -135,7 +135,7 @@ export const useCanvasShapeStore = defineStore("canvasShape", {
     applyStyles() {
       if (
         selectedElement.value &&
-        selectedElement.value.mode === MODE_OPTIONS.value.shape
+        selectedElement.value.mode === MODE_OPTIONS.value.SHAPE
       ) {
         selectedElement.value.strokeColor = this.customization.strokeColor;
         selectedElement.value.fillColor = this.customization.fillColor;

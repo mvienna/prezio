@@ -56,14 +56,14 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
       width = null,
       height = null,
       layer = "top",
-      mode = MODE_OPTIONS.value.media,
+      mode = MODE_OPTIONS.value.MEDIA,
       isLocked = false,
       opacity = this.customization.default.opacity,
       blur = 0,
       contrast = 100,
       brightness = 100,
       invert = 0,
-      grayscale = 0
+      grayscale = 0,
     ) {
       const image = new Image();
 
@@ -118,24 +118,24 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
           elements.value.unshift(imageData);
         } else {
           const isBaseFillElementExists = elements.value.find(
-            (element) => element.mode === MODE_OPTIONS.value.baseFill
+            (element) => element.mode === MODE_OPTIONS.value.BASE_FILL,
           );
 
           elements.value.splice(
             elements.value.length - (isBaseFillElementExists ? 1 : 0),
             0,
-            imageData
+            imageData,
           );
         }
 
         if (
           [
-            MODE_OPTIONS.value.backgroundPreview,
-            MODE_OPTIONS.value.background,
+            MODE_OPTIONS.value.BACKGROUND_PREVIEW,
+            MODE_OPTIONS.value.BACKGROUND,
           ].includes(mode)
         ) {
           averageBackgroundBrightness.value = await computeAverageBrightness(
-            elements.value
+            elements.value,
           );
           slide.value.previewAverageBrightness =
             averageBackgroundBrightness.value;
@@ -143,7 +143,9 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
         }
 
         ctx.value.drawImage(image, x, y, newImageWidth, newImageHeight);
-        canvasStore.redrawCanvas(mode !== MODE_OPTIONS.value.backgroundPreview);
+        canvasStore.redrawCanvas(
+          mode !== MODE_OPTIONS.value.BACKGROUND_PREVIEW,
+        );
       };
     },
 
@@ -153,7 +155,7 @@ export const useCanvasMediaStore = defineStore("canvasMedia", {
     applyStyles() {
       if (
         selectedElement.value &&
-        selectedElement.value.mode === MODE_OPTIONS.value.media
+        selectedElement.value.mode === MODE_OPTIONS.value.MEDIA
       ) {
         selectedElement.value.shadowColor = this.customization.shadowColor;
         selectedElement.value.shadowOpacity = this.customization.shadowOpacity;

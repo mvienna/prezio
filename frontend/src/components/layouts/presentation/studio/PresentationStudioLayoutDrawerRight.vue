@@ -289,7 +289,7 @@ const prepareElementsForNewSlide = (type) => {
    * default elements
    */
   const layoutDefaultElementProps = {
-    mode: MODE_OPTIONS.value.text,
+    mode: MODE_OPTIONS.value.TEXT,
     isVisible: true,
     isLocked: false,
     fontFamily: customization.value.font,
@@ -392,7 +392,7 @@ const prepareElementsForNewSlide = (type) => {
    */
   if (slide.value) {
     const designElements = elements.value.filter((element) =>
-      [MODE_OPTIONS.value.background, MODE_OPTIONS.value.baseFill].includes(
+      [MODE_OPTIONS.value.BACKGROUND, MODE_OPTIONS.value.BASE_FILL].includes(
         element.mode,
       ),
     );
@@ -401,7 +401,7 @@ const prepareElementsForNewSlide = (type) => {
   } else {
     const baseFill = {
       id: generateUniqueId(undefined, []),
-      mode: MODE_OPTIONS.value.baseFill,
+      mode: MODE_OPTIONS.value.BASE_FILL,
       isVisible: true,
       isLocked: true,
       type: SHAPES_OPTIONS.RECT,

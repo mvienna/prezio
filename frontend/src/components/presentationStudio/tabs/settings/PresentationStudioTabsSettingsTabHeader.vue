@@ -35,10 +35,10 @@
             layoutTitle?.textAlign === 'left'
               ? 'r_format_align_left'
               : layoutTitle?.textAlign === 'center'
-              ? 'r_format_align_center'
-              : layoutTitle?.textAlign === 'right'
-              ? 'r_format_align_right'
-              : 'r_format_align_left'
+                ? 'r_format_align_center'
+                : layoutTitle?.textAlign === 'right'
+                  ? 'r_format_align_right'
+                  : 'r_format_align_left'
           "
         >
           <q-menu
@@ -107,7 +107,7 @@
           <div class="q-item__label link">
             {{
               $t(
-                "presentationLayout.rightDrawer.tabs.settings.info.description.label"
+                "presentationLayout.rightDrawer.tabs.settings.info.description.label",
               )
             }}
           </div>
@@ -119,14 +119,14 @@
       <div class="text-black q-mt-sm">
         {{
           $t(
-            "presentationLayout.rightDrawer.tabs.settings.info.description.title"
+            "presentationLayout.rightDrawer.tabs.settings.info.description.title",
           )
         }}
       </div>
       <div class="text-grey text-caption q-mt-xs">
         {{
           $t(
-            "presentationLayout.rightDrawer.tabs.settings.info.description.caption"
+            "presentationLayout.rightDrawer.tabs.settings.info.description.caption",
           )
         }}
       </div>
@@ -135,7 +135,7 @@
         v-model="slideSettings.description"
         :placeholder="
           $t(
-            'presentationLayout.rightDrawer.tabs.settings.info.description.placeholder'
+            'presentationLayout.rightDrawer.tabs.settings.info.description.placeholder',
           )
         "
         outlined
@@ -195,7 +195,7 @@ watch(
   () => layoutTitle.value,
   () => {
     question.value = layoutTitle.value?.text;
-  }
+  },
 );
 
 onBeforeMount(() => {
@@ -204,12 +204,12 @@ onBeforeMount(() => {
 
 const handleQuestionInput = (textAlign = null) => {
   const index = elements.value.findIndex(
-    (element) => element.id === layoutTitle.value?.id
+    (element) => element.id === layoutTitle.value?.id,
   );
 
   if (index === -1) {
     const layoutDefaultElementProps = {
-      mode: MODE_OPTIONS.value.text,
+      mode: MODE_OPTIONS.value.TEXT,
       isVisible: true,
       isLocked: false,
       fontFamily: customization.value.font,
@@ -231,14 +231,14 @@ const handleQuestionInput = (textAlign = null) => {
       color: customization.value.color,
 
       x: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100
+        (canvasStore.canvasRect().width * 5) / 100,
       ),
       y: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100
+        (canvasStore.canvasRect().width * 5) / 100,
       ),
 
       width: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 90) / 100
+        (canvasStore.canvasRect().width * 90) / 100,
       ),
       height: canvasStore.computeAdjustedSize(30),
     };

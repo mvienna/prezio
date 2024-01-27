@@ -3,9 +3,8 @@ import { useCanvasStore } from "stores/canvas/index";
 import { generateUniqueId } from "src/helpers/generationUtils";
 import { syncSelectedElementWithStoredElements } from "stores/canvas/helpers/select";
 
-const { ctx, elements, mouse, MODE_OPTIONS, selectedElement } = storeToRefs(
-  useCanvasStore()
-);
+const { ctx, elements, mouse, MODE_OPTIONS, selectedElement } =
+  storeToRefs(useCanvasStore());
 const canvasStore = useCanvasStore();
 
 export const useCanvasDrawingStore = defineStore("canvasDrawing", {
@@ -90,7 +89,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
             this.last.y,
             currentX,
             currentY,
-            step
+            step,
           );
           for (const point of simplifiedPoints) {
             this.drawPoint(point.x, point.y);
@@ -124,7 +123,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
         const d = this.perpendicularDistance(
           points[i],
           points[0],
-          points[points.length - 1]
+          points[points.length - 1],
         );
         if (d > dMax) {
           index = i;
@@ -135,11 +134,11 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       if (dMax > epsilon) {
         const firstPart = this.ramerDouglasPeucker(
           points.slice(0, index + 1),
-          epsilon
+          epsilon,
         );
         const secondPart = this.ramerDouglasPeucker(
           points.slice(index),
-          epsilon
+          epsilon,
         );
         return firstPart.slice(0, -1).concat(secondPart);
       } else {
@@ -153,7 +152,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       const { x: endX, y: endY } = end;
 
       const n = Math.abs(
-        (endX - startX) * (startY - pY) - (startX - pX) * (endY - startY)
+        (endX - startX) * (startY - pY) - (startX - pX) * (endY - startY),
       );
       const d = Math.sqrt((endX - startX) ** 2 + (endY - startY) ** 2);
 
@@ -168,7 +167,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
       if (!this.currentLine) {
         this.currentLine = {
           id: generateUniqueId(undefined, elements.value),
-          mode: MODE_OPTIONS.value.drawing,
+          mode: MODE_OPTIONS.value.DRAWING,
           isVisible: true,
           isLocked: false,
           color: this.eraserMode ? "white" : this.customization.color,
@@ -204,7 +203,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
 
     erase() {
       elements.value.forEach((element, index) => {
-        if (element.mode === MODE_OPTIONS.value.drawing) {
+        if (element.mode === MODE_OPTIONS.value.DRAWING) {
           element.points.forEach((point, pointIndex) => {
             if (
               Math.round(mouse.value.x) >=
@@ -235,7 +234,7 @@ export const useCanvasDrawingStore = defineStore("canvasDrawing", {
     applyStyles() {
       if (
         selectedElement.value &&
-        selectedElement.value.mode === MODE_OPTIONS.value.drawing
+        selectedElement.value.mode === MODE_OPTIONS.value.DRAWING
       ) {
         selectedElement.value.color = this.customization.color;
         selectedElement.value.brushSize = this.customization.brushSize;

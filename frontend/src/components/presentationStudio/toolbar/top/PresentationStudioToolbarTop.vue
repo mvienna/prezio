@@ -40,20 +40,26 @@
           <!-- drawing customization -->
           <PresentationStudioToolbarTopCustomizationDrawing
             v-if="
-              mode === MODE_OPTIONS.drawing ||
+              mode === MODE_OPTIONS.DRAWING ||
               (transformer.default?.nodes()?.length &&
                 transformer.default
                   ?.nodes()
                   .filter(
-                    (node) => node.getAttr('name') === MODE_OPTIONS.drawing,
+                    (node) => node.getAttr('name') === MODE_OPTIONS.DRAWING,
                   )?.length === transformer.default?.nodes()?.length)
             "
           />
 
-          <!--          &lt;!&ndash; text customization &ndash;&gt;-->
-          <!--          <PresentationStudioToolbarTopCustomizationText-->
-          <!--            v-if="[MODE_OPTIONS.text, MODE_OPTIONS.textEditing].includes(mode)"-->
-          <!--          />-->
+          <!-- text customization -->
+          <PresentationStudioToolbarTopCustomizationText
+            v-if="
+              transformer.default?.nodes()?.length &&
+              transformer.default
+                ?.nodes()
+                ?.filter((node) => node.getAttr('name') === MODE_OPTIONS.TEXT)
+                ?.length === transformer.default?.nodes()?.length
+            "
+          />
 
           <!-- shape customization -->
           <PresentationStudioToolbarTopCustomizationShape
@@ -61,8 +67,9 @@
               (transformer.default?.nodes()?.length &&
                 transformer.default
                   ?.nodes()
-                  .filter((node) => node.getAttr('name') === MODE_OPTIONS.shape)
-                  ?.length === transformer.default?.nodes()?.length) ||
+                  ?.filter(
+                    (node) => node.getAttr('name') === MODE_OPTIONS.SHAPE,
+                  )?.length === transformer.default?.nodes()?.length) ||
               transformer.custom.shape.node
             "
           />
@@ -73,7 +80,7 @@
               transformer.default?.nodes()?.length &&
               transformer.default
                 ?.nodes()
-                .filter((node) => node.getAttr('name') === MODE_OPTIONS.image)
+                .filter((node) => node.getAttr('name') === MODE_OPTIONS.IMAGE)
                 ?.length === transformer.default?.nodes()?.length
             "
           />
@@ -86,8 +93,8 @@
       <!--          slide?.type === SLIDE_TYPES.CONTENT &&-->
       <!--          !(-->
       <!--            mode &&-->
-      <!--            (![MODE_OPTIONS.mediaEmoji, MODE_OPTIONS.media].includes(mode) ||-->
-      <!--              (MODE_OPTIONS.media === mode && selectedElement))-->
+      <!--            (![MODE_OPTIONS.EMOJI, MODE_OPTIONS.MEDIA].includes(mode) ||-->
+      <!--              (MODE_OPTIONS.MEDIA === mode && selectedElement))-->
       <!--          )-->
       <!--        "-->
       <!--      >-->
@@ -124,6 +131,7 @@ import { usePresentationsStore } from "stores/presentations";
 import { useStudioStore } from "stores/studio";
 import PresentationStudioToolbarTopCustomizationImage from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationImage.vue";
 import PresentationStudioToolbarTopCustomizationShape from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationShape.vue";
+import PresentationStudioToolbarTopCustomizationText from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationText.vue";
 
 /*
  * variables
@@ -172,16 +180,5 @@ const isMac = computed(() => {
   left: 0;
   height: 55px;
   border-bottom: 1px solid $grey-2;
-}
-
-::v-deep(.q-field--dense .q-field__marginal) {
-  height: 36px;
-}
-
-::v-deep(.q-field--auto-height.q-field--dense) {
-  .q-field__control,
-  .q-field__native {
-    min-height: 36px;
-  }
 }
 </style>

@@ -167,7 +167,7 @@ export function handleSnappingDrawGuides(guides) {
 
 export function handleSnappingDragMove(event) {
   // disable dragging while in drawing mode
-  if (this.mode === this.MODE_OPTIONS.drawing) return;
+  if (this.mode === this.MODE_OPTIONS.DRAWING) return;
 
   // disable for transformer
   if (
@@ -190,10 +190,8 @@ export function handleSnappingDragMove(event) {
       this.setCustomShapeTransformer(event.target);
     }
   } else if (!this.transformer.default.nodes()?.length) {
-    this.transformer.default.nodes([
-      ...this.transformer.default.nodes(),
-      event.target,
-    ]);
+    const nodes = this.transformer.default.nodes().concat([event.target]);
+    this.transformer.default.nodes(nodes);
   }
 
   // clear all previous lines on the screen

@@ -125,7 +125,7 @@ export async function addImage(url) {
     const x = (canvasWidth - newWidth) / 2;
     const y = (canvasHeight - newHeight) / 2;
 
-    const image = new Konva.Image({
+    const imageNode = new Konva.Image({
       x: x,
       y: y,
       image: imageObj,
@@ -133,12 +133,12 @@ export async function addImage(url) {
       height: newHeight,
       draggable: true,
       cornerRadius: 6,
-      name: this.MODE_OPTIONS.image,
+      name: this.MODE_OPTIONS.IMAGE,
     });
 
-    this.layers.default.add(image);
+    this.layers.default.add(imageNode);
 
-    this.processImageNode(image, url);
+    this.processImageNode(imageNode, url);
 
     // save slide on new image added
     this.handleSlideUpdate();
@@ -208,4 +208,51 @@ export async function replaceImage(
 
     this.handleSlideUpdate();
   };
+}
+
+export function setImageCustomization(node) {
+  this.image = {
+    ...this.image,
+    opacity: node.opacity(),
+    stroke: node.stroke(),
+    shadowColor: node.shadowColor(),
+    shadowBlur: node.shadowBlur(),
+    shadowOffset: node.shadowOffset(),
+    shadowOpacity: node.shadowOpacity(),
+    clipPosition: node.getAttr("lastCropUsed"),
+    cornerRadius: Math.round(
+      (node.cornerRadius() / Math.min(node.width(), node.height())) * 100,
+    ),
+    strokeWidth:
+      !node.strokeWidth() || node.strokeWidth() === 0.1
+        ? 0
+        : node.strokeWidth(),
+  };
+}
+
+export function applyImageCustomization(node) {
+  const crop = this.getCrop(
+    node.image(),
+    { width: node.width(), height: node.height() },
+    this.image.clipPosition,
+  );
+
+  node.setAttrs({
+    opacity: this.image.opacity,
+    cornerRadius:
+      Math.min(node.width(), node.height()) * (this.image.cornerRadius / 100),
+    stroke: !this.image.strokeWidth ? "transparent" : this.image.stroke,
+    strokeWidth: !this.image.strokeWidth ? 0.1 : Number(this.image.strokeWidth),
+    shadowColor: this.image.shadowColor,
+    shadowBlur: this.image.shadowBlur,
+    shadowOffset: this.image.shadowOffset,
+    shadowOpacity: this.image.shadowOpacity,
+    scaleX: 1,
+    scaleY: 1,
+    width: node.width() * node.scaleX(),
+    height: node.height() * node.scaleY(),
+    lastCropUsed: this.image.clipPosition,
+  });
+
+  node.setAttrs(crop);
 }

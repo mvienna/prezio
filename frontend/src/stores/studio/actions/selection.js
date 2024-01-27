@@ -11,48 +11,46 @@ const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);
 
 export function handleSelection() {
-  this.transformer.default = this.stages.default.findOne("Transformer");
+  this.stages.default.findOne("Transformer")?.destroy();
 
-  if (!this.transformer.default) {
-    this.transformer.default = new Konva.Transformer({
-      nodes: [],
-      rotationSnaps: [0, 90, 180, 270],
-      anchorStroke:
-        slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
-          ? COLOR_PALETTE.BLACK
-          : COLOR_PALETTE.WHITE,
-      anchorFill:
-        slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
-          ? COLOR_PALETTE.WHITE
-          : COLOR_PALETTE.BLACK,
-      borderStroke:
-        slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
-          ? COLOR_PALETTE.BLACK
-          : COLOR_PALETTE.WHITE,
-      anchorSize: 12,
-      keepRatio: false,
-      boundBoxFunc: (oldBox, newBox) => {
-        if (Math.abs(newBox.width) < 10 || Math.abs(newBox.height) < 10) {
-          return oldBox;
-        }
-        return newBox;
-      },
-      anchorStyleFunc: (anchor) => {
-        if (anchor.hasName("rotater")) {
-          const size = 14;
-          anchor.width(size);
-          anchor.height(size);
-          anchor.offsetY(size / 2);
-          anchor.offsetX(size / 2);
-          anchor.cornerRadius(size);
-        } else {
-          anchor.cornerRadius(2);
-        }
-      },
-    });
-    this.layers.default.add(this.transformer.default);
-  }
+  this.transformer.default = new Konva.Transformer({
+    nodes: [],
+    rotationSnaps: [0, 90, 180, 270],
+    anchorStroke:
+      slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
+        ? COLOR_PALETTE.BLACK
+        : COLOR_PALETTE.WHITE,
+    anchorFill:
+      slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
+        ? COLOR_PALETTE.WHITE
+        : COLOR_PALETTE.BLACK,
+    borderStroke:
+      slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
+        ? COLOR_PALETTE.BLACK
+        : COLOR_PALETTE.WHITE,
+    anchorSize: 12,
+    keepRatio: false,
+    boundBoxFunc: (oldBox, newBox) => {
+      if (Math.abs(newBox.width) < 10 || Math.abs(newBox.height) < 10) {
+        return oldBox;
+      }
+      return newBox;
+    },
+    anchorStyleFunc: (anchor) => {
+      if (anchor.hasName("rotater")) {
+        const size = 14;
+        anchor.width(size);
+        anchor.height(size);
+        anchor.offsetY(size / 2);
+        anchor.offsetX(size / 2);
+        anchor.cornerRadius(size);
+      } else {
+        anchor.cornerRadius(2);
+      }
+    },
+  });
 
+  this.layers.default.add(this.transformer.default);
   this.transformer.default.moveToTop();
 
   this.layers.default.find(".selectionRect")?.forEach((node) => node.destroy());
@@ -75,10 +73,10 @@ export function handleSelection() {
 export function handleSelectionMouseDown(event) {
   // disable selection if mouse is not on the stage
   // gives ability to start dragging an element right away, otherwise it would start selecting
-  if (event.target._id !== this.stages.default._id) return;
+  if (event.target.getClassName() !== "Stage") return;
 
   // disable selecting in drawing mode
-  if (this.mode === this.MODE_OPTIONS.drawing) return;
+  if (this.mode === this.MODE_OPTIONS.DRAWING) return;
 
   event.evt.preventDefault();
 
@@ -162,7 +160,7 @@ export function handleSelectionClick(event) {
     return;
   }
 
-  if (event.target.getAttr("name") === this.MODE_OPTIONS.shape) {
+  if (event.target.getAttr("name") === this.MODE_OPTIONS.SHAPE) {
     if (
       [
         SHAPES_OPTIONS.LINE,
@@ -205,7 +203,6 @@ export function handleSelectionClick(event) {
   }
 
   this.applyTransformerCustomization();
-
   this.setCustomization();
 }
 
@@ -215,6 +212,8 @@ export function deselectElements() {
     .forEach((node) => node.destroy());
   this.transformer.custom.shape.node = null;
 
+  this.mode = null;
+
   this.transformer.default.nodes([]);
 }
 
@@ -223,6 +222,7 @@ export function deselectElements() {
  */
 export function setCustomShapeTransformer(node) {
   this.transformer.custom.shape.node = node;
+  this.transformer.default.nodes([]);
 
   this.transformer.custom.shape.anchor1 = new Konva.Circle({
     x:
@@ -299,38 +299,62 @@ export function setCustomShapeTransformer(node) {
 }
 
 export function applyTransformerCustomization() {
-  this.transformer.default.anchorStroke(
-    slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
-      ? COLOR_PALETTE.BLACK
-      : COLOR_PALETTE.WHITE,
-  );
-  this.transformer.default.anchorFill(
-    slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
-      ? COLOR_PALETTE.WHITE
-      : COLOR_PALETTE.BLACK,
-  );
-  this.transformer.default.borderStroke(
-    slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
-      ? COLOR_PALETTE.BLACK
-      : COLOR_PALETTE.WHITE,
-  );
-  this.transformer.default.anchorStyleFunc((anchor) => {
-    if (anchor.hasName("rotater")) {
-      const size = 14;
-      anchor.width(size);
-      anchor.height(size);
-      anchor.offsetY(size / 2);
-      anchor.offsetX(size / 2);
-      anchor.cornerRadius(size);
-    } else {
-      anchor.cornerRadius(2);
-    }
-  });
-  this.transformer.default.keepRatio(
-    this.transformer.default
+  this.transformer.default.setAttrs({
+    anchorStroke:
+      slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
+        ? COLOR_PALETTE.BLACK
+        : COLOR_PALETTE.WHITE,
+    anchorFill:
+      slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
+        ? COLOR_PALETTE.WHITE
+        : COLOR_PALETTE.BLACK,
+    borderStroke:
+      slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
+        ? COLOR_PALETTE.BLACK
+        : COLOR_PALETTE.WHITE,
+    anchorStyleFunc: function (anchor) {
+      if (anchor.hasName("rotater")) {
+        const size = 14;
+        anchor.width(size);
+        anchor.height(size);
+        anchor.offsetY(size / 2);
+        anchor.offsetX(size / 2);
+        anchor.cornerRadius(size);
+      } else {
+        anchor.cornerRadius(2);
+      }
+    },
+    keepRatio: this.transformer.default
       .nodes()
       .filter((node) =>
-        [this.MODE_OPTIONS.shape].includes(node.getAttr("name")),
-      ).length > 0,
-  );
+        [this.MODE_OPTIONS.SHAPE].includes(node.getAttr("name")),
+      ).length,
+    enabledAnchors: this.transformer.default
+      .nodes()
+      .filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT).length
+      ? ["middle-left", "middle-right"]
+      : [
+          "top-left",
+          "top-center",
+          "top-right",
+          "middle-right",
+          "middle-left",
+          "bottom-left",
+          "bottom-center",
+          "bottom-right",
+        ],
+  });
+
+  if (
+    this.transformer.default
+      .nodes()
+      .filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT).length
+  ) {
+    this.transformer.default.setAttrs({
+      boundBoxFunc: function (oldBox, newBox) {
+        newBox.width = Math.max(30, newBox.width);
+        return newBox;
+      },
+    });
+  }
 }

@@ -9,7 +9,7 @@ export function handleDrawing() {
 
 export function handleMouseDown() {
   // disable drawing in other modes
-  if (this.mode !== this.MODE_OPTIONS.drawing) return;
+  if (this.mode !== this.MODE_OPTIONS.DRAWING) return;
 
   // disable drawing while there're selected elements
   if (this.transformer.default?.nodes()?.length) return;
@@ -32,7 +32,7 @@ export function handleMouseDown() {
     lineJoin: "round",
     points: [position.x, position.y, position.x, position.y],
     draggable: true,
-    name: this.MODE_OPTIONS.drawing,
+    name: this.MODE_OPTIONS.DRAWING,
   });
   this.layers.default.add(this.drawing.lastLine);
 }
@@ -41,7 +41,7 @@ export function handleMouseUp() {
   this.drawing.isPainting = false;
 
   // save drawing
-  if (this.mode === this.MODE_OPTIONS.drawing) {
+  if (this.mode === this.MODE_OPTIONS.DRAWING) {
     this.handleSlideUpdate();
   }
 }
@@ -61,4 +61,19 @@ export function handleMouseMove(event) {
     .points()
     .concat([position.x, position.y]);
   this.drawing.lastLine.points(newPoints);
+}
+
+export function setDrawingCustomization(node) {
+  this.drawing = {
+    ...this.drawing,
+    stroke: node.stroke(),
+    strokeWidth: node.strokeWidth(),
+  };
+}
+
+export function applyDrawingCustomization(node) {
+  node.setAttrs({
+    stroke: this.drawing.stroke,
+    strokeWidth: this.drawing.strokeWidth,
+  });
 }

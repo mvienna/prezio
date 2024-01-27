@@ -28,6 +28,7 @@ export default {
           font: "Шрифт",
           fontSize: "Размер шрифта",
           newText: "Новое поле",
+          color: "Цвет",
 
           formatting: {
             bold: "Жирный шрифт",

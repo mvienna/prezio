@@ -69,7 +69,7 @@ const { customization } = storeToRefs(textStore);
  * layout default element props
  */
 const layoutDefaultElementProps = {
-  mode: MODE_OPTIONS.value.text,
+  mode: MODE_OPTIONS.value.TEXT,
   isVisible: true,
   isLocked: false,
   fontFamily: customization.value.font,
@@ -91,14 +91,14 @@ const layoutDefaultElementProps = {
   color: customization.value.color,
 
   x: canvasStore.computeAdjustedSize(
-    (canvasStore.canvasRect().width * 5) / 100
+    (canvasStore.canvasRect().width * 5) / 100,
   ),
   y: canvasStore.computeAdjustedSize(
-    (canvasStore.canvasRect().width * 5) / 100
+    (canvasStore.canvasRect().width * 5) / 100,
   ),
 
   width: canvasStore.computeAdjustedSize(
-    (canvasStore.canvasRect().width * 90) / 100
+    (canvasStore.canvasRect().width * 90) / 100,
   ),
 };
 
@@ -121,7 +121,7 @@ const layoutElements = {
     textAlign: ALIGNMENT.horizontal.left,
 
     y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100
+      (canvasStore.canvasRect().width * 5) / 100,
     ),
   },
 
@@ -141,7 +141,7 @@ const layoutElements = {
 
     y:
       canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 50) / 100
+        (canvasStore.canvasRect().height * 50) / 100,
       ) -
       ((48 / 2 + 48 / 8) * canvas.value.width) / canvasStore.canvasRect().width,
   },
@@ -163,7 +163,7 @@ const layoutElements = {
 
     y:
       canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 50) / 100
+        (canvasStore.canvasRect().height * 50) / 100,
       ) -
       (48 * canvas.value.width) / canvasStore.canvasRect().width,
   },
@@ -182,7 +182,7 @@ const layoutElements = {
     textAlign: ALIGNMENT.horizontal.center,
 
     y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().height * 50) / 100
+      (canvasStore.canvasRect().height * 50) / 100,
     ),
   },
 
@@ -200,7 +200,7 @@ const layoutElements = {
     textAlign: ALIGNMENT.horizontal.left,
 
     y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100 + 48
+      (canvasStore.canvasRect().width * 5) / 100 + 48,
     ),
   },
 
@@ -218,10 +218,10 @@ const layoutElements = {
     textAlign: ALIGNMENT.horizontal.left,
 
     y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100 + 48
+      (canvasStore.canvasRect().width * 5) / 100 + 48,
     ),
     width: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 45) / 100
+      (canvasStore.canvasRect().width * 45) / 100,
     ),
   },
 
@@ -239,14 +239,14 @@ const layoutElements = {
     textAlign: ALIGNMENT.horizontal.left,
 
     x: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * (45 + 5)) / 100
+      (canvasStore.canvasRect().width * (45 + 5)) / 100,
     ),
     y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100 + 48
+      (canvasStore.canvasRect().width * 5) / 100 + 48,
     ),
 
     width: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 45) / 100
+      (canvasStore.canvasRect().width * 45) / 100,
     ),
   },
 };
@@ -313,10 +313,10 @@ const layouts = [
  */
 const handleLayoutSelection = (layout) => {
   const previousLayoutElements = elements.value.filter((element) =>
-    element.id.includes("layout-")
+    element.id.includes("layout-"),
   );
   const previousLayoutTitle = previousLayoutElements.find((element) =>
-    element.id.includes("-title-")
+    element.id.includes("-title-"),
   );
 
   layout.elements = layout.elements.map((element) => {
@@ -327,7 +327,7 @@ const handleLayoutSelection = (layout) => {
   });
 
   elements.value = elements.value.filter(
-    (element) => !element.id.includes("layout-")
+    (element) => !element.id.includes("layout-"),
   );
 
   elements.value = [...elements.value, ...layout.elements];

@@ -25,6 +25,7 @@ import * as customization from "./actions/modes/customization";
 import * as image from "./actions/modes/image";
 import * as drawing from "./actions/modes/drawing";
 import * as shape from "./actions/modes/shape";
+import * as text from "./actions/modes/text";
 
 const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);
@@ -96,7 +97,7 @@ export const useStudioStore = defineStore("studio", {
       y2: null,
     },
     snapping: {
-      GUIDELINE_OFFSET: 5,
+      GUIDELINE_OFFSET: 10,
     },
     copiedNodes: [],
 
@@ -105,11 +106,12 @@ export const useStudioStore = defineStore("studio", {
      */
     mode: null,
     MODE_OPTIONS: {
-      drawing: "Drawing",
-      image: "Image",
-      shape: "Shape",
-      text: "Text",
-      emoji: "Emoji",
+      DRAWING: "Drawing",
+      IMAGE: "Image",
+      SHAPE: "Shape",
+      TEXT: "Text",
+      TEXT_EDITING: "Text-Editing",
+      EMOJI: "Emoji",
     },
 
     /*
@@ -158,7 +160,7 @@ export const useStudioStore = defineStore("studio", {
     },
 
     /*
-     * shapes
+     * shape
      */
     shape: {
       fill: COLOR_PALETTE.PRIMARY,
@@ -185,6 +187,57 @@ export const useStudioStore = defineStore("studio", {
         pointerSize: 75,
       },
     },
+
+    /*
+     * text
+     */
+    text: {
+      // DONE
+      fontFamily: "Arial",
+      // DONE
+      fontSize: 38,
+      // DONE
+      fontStyle: "normal", // normal, italic, bold (can be combined by ' ')
+      // DONE
+      textDecoration: "", // line-through, underline
+      // DONE
+      align: "left", // left, center, right
+      verticalAlign: "", // top, middle, bottom
+      padding: 16,
+      lineHeight: 1,
+      wrap: "word", // word, char, none
+      ellipsis: false,
+      // DONE
+      fill: COLOR_PALETTE.BLACK,
+      stroke: COLOR_PALETTE.BLACK,
+      strokeWidth: 0,
+      shadowColor: COLOR_PALETTE.BLACK,
+      shadowBlur: 0,
+      shadowOffset: { x: 0, y: 0 },
+      shadowOpacity: 0,
+      opacity: 1,
+
+      default: {
+        fontFamily: "Arial",
+        fontSize: 38,
+        fontStyle: "normal", // normal, italic, bold (can be combined by ' ')
+        textDecoration: "", // line-through, underline
+        align: "left", // left, center, right
+        verticalAlign: "", // top, middle, bottom
+        padding: 16,
+        lineHeight: 1,
+        wrap: "word", // word, char, none
+        ellipsis: false,
+        fill: COLOR_PALETTE.BLACK,
+        stroke: COLOR_PALETTE.BLACK,
+        strokeWidth: 0,
+        shadowColor: COLOR_PALETTE.BLACK,
+        shadowBlur: 0,
+        shadowOffset: { x: 0, y: 0 },
+        shadowOpacity: 0,
+        opacity: 1,
+      },
+    },
   }),
 
   actions: {
@@ -205,6 +258,7 @@ export const useStudioStore = defineStore("studio", {
     ...image,
     ...drawing,
     ...shape,
+    ...text,
 
     loadStudio() {
       /*
@@ -221,34 +275,48 @@ export const useStudioStore = defineStore("studio", {
         this.layers.default = this.stages.default.findOne(".defaultLayer");
         this.layers.base = this.stages.default.findOne(".baseLayer");
 
-        // load images
-        this.stages.default.find("Image").forEach(async (node) => {
-          const imageObj = new Image();
-          const url = node.getAttr("source");
+        // load & process images
+        this.stages.default
+          .find(this.MODE_OPTIONS.IMAGE)
+          .forEach(async (node) => {
+            const imageObj = new Image();
+            const url = node.getAttr("source");
 
-          let base64;
+            let base64;
 
-          if (url.includes("http")) {
-            base64 = await fetchAndConvertToBase64Image(url);
-            imageObj.src = base64;
-          } else {
-            imageObj.src = url;
-          }
-
-          imageObj.onload = () => {
-            node.image(imageObj);
-
-            if (node.getLayer().attrs.name === "defaultLayer") {
-              this.processImageNode(node, url, node.getAttr("lastCropUsed"));
+            if (url.includes("http")) {
+              base64 = await fetchAndConvertToBase64Image(url);
+              imageObj.src = base64;
             } else {
-              this.applyBaseBackgroundFilters(node);
+              imageObj.src = url;
             }
-          };
-        });
 
-        this.layers.default.getChildren().forEach((node) => {
-          node.on("transformend", this.handleSlideUpdate);
-        });
+            imageObj.onload = () => {
+              node.image(imageObj);
+
+              if (node.getLayer().attrs.name === "defaultLayer") {
+                this.processImageNode(node, url, node.getAttr("lastCropUsed"));
+              } else {
+                this.applyBaseBackgroundFilters(node);
+              }
+            };
+          });
+
+        // process text
+        this.stages.default
+          .find(this.MODE_OPTIONS.TEXT)
+          .forEach(async (node) => {
+            this.processText(node);
+          });
+
+        this.layers.default
+          .getChildren()
+          .filter((node) =>
+            Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
+          )
+          .forEach((node) => {
+            node.on("transformend", this.handleSlideUpdate);
+          });
 
         /*
          * new slide

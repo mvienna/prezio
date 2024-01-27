@@ -47,15 +47,15 @@ export const useCanvasStore = defineStore("canvas", {
      */
     mode: null,
     MODE_OPTIONS: {
-      drawing: "drawing",
-      text: "text",
-      textEditing: "textEditing",
-      media: "media",
-      mediaEmoji: "mediaEmoji",
-      shape: "shape",
-      background: "background",
-      backgroundPreview: "backgroundPreview",
-      baseFill: "baseFill",
+      DRAWING: "drawing",
+      TEXT: "text",
+      TEXT_EDITING: "textEditing",
+      MEDIA: "media",
+      EMOJI: "mediaEmoji",
+      SHAPE: "shape",
+      BACKGROUND: "background",
+      BACKGROUND_PREVIEW: "backgroundPreview",
+      BASE_FILL: "baseFill",
     },
 
     /*
@@ -201,10 +201,10 @@ export const useCanvasStore = defineStore("canvas", {
       const loadImage = (element) => {
         return new Promise(async (resolve, reject) => {
           switch (element.mode) {
-            case this.MODE_OPTIONS.media:
-            case this.MODE_OPTIONS.mediaEmoji:
-            case this.MODE_OPTIONS.background:
-            case this.MODE_OPTIONS.backgroundPreview:
+            case this.MODE_OPTIONS.MEDIA:
+            case this.MODE_OPTIONS.EMOJI:
+            case this.MODE_OPTIONS.BACKGROUND:
+            case this.MODE_OPTIONS.BACKGROUND_PREVIEW:
               if (!element?.image?.nodeType) {
                 const image = new Image();
                 if (element.imageBase64) {
@@ -295,7 +295,7 @@ export const useCanvasStore = defineStore("canvas", {
     reorderDesignLayers(elements) {
       // background preview to the bottom of layers list
       const backgroundPreviewElementIndex = elements.findIndex(
-        (element) => element.mode === this.MODE_OPTIONS.backgroundPreview,
+        (element) => element.mode === this.MODE_OPTIONS.BACKGROUND_PREVIEW,
       );
       if (backgroundPreviewElementIndex !== -1) {
         const backgroundPreviewElement =
@@ -306,7 +306,7 @@ export const useCanvasStore = defineStore("canvas", {
 
       // background to the bottom of layers list
       const backgroundElementIndex = elements.findIndex(
-        (element) => element.mode === this.MODE_OPTIONS.background,
+        (element) => element.mode === this.MODE_OPTIONS.BACKGROUND,
       );
       if (backgroundElementIndex !== -1) {
         const backgroundElement = elements[backgroundElementIndex];
@@ -316,7 +316,7 @@ export const useCanvasStore = defineStore("canvas", {
 
       // base fill to the bottom of layers list
       const baseFillElementIndex = elements.findIndex(
-        (element) => element.mode === this.MODE_OPTIONS.baseFill,
+        (element) => element.mode === this.MODE_OPTIONS.BASE_FILL,
       );
       if (baseFillElementIndex !== -1) {
         const backgroundElement = this.elements[baseFillElementIndex];
@@ -343,7 +343,7 @@ export const useCanvasStore = defineStore("canvas", {
       reversedElements.forEach((element) => {
         if (
           element.isVisible === false &&
-          element.mode !== this.MODE_OPTIONS.text
+          element.mode !== this.MODE_OPTIONS.TEXT
         )
           return;
 
@@ -361,14 +361,14 @@ export const useCanvasStore = defineStore("canvas", {
           /*
            * drawing
            */
-          case this.MODE_OPTIONS.drawing:
+          case this.MODE_OPTIONS.DRAWING:
             this.renderLine(element);
             break;
 
           /*
            * text
            */
-          case this.MODE_OPTIONS.text:
+          case this.MODE_OPTIONS.TEXT:
             this.renderText(element);
             break;
 
@@ -376,10 +376,10 @@ export const useCanvasStore = defineStore("canvas", {
            * media
            * background
            */
-          case this.MODE_OPTIONS.media:
-          case this.MODE_OPTIONS.mediaEmoji:
-          case this.MODE_OPTIONS.background:
-          case this.MODE_OPTIONS.backgroundPreview:
+          case this.MODE_OPTIONS.MEDIA:
+          case this.MODE_OPTIONS.EMOJI:
+          case this.MODE_OPTIONS.BACKGROUND:
+          case this.MODE_OPTIONS.BACKGROUND_PREVIEW:
             this.renderImage(element);
             break;
 
@@ -387,8 +387,8 @@ export const useCanvasStore = defineStore("canvas", {
            * shape
            * base fill
            */
-          case this.MODE_OPTIONS.shape:
-          case this.MODE_OPTIONS.baseFill:
+          case this.MODE_OPTIONS.SHAPE:
+          case this.MODE_OPTIONS.BASE_FILL:
             this.renderShape(element);
             break;
         }
@@ -428,7 +428,7 @@ export const useCanvasStore = defineStore("canvas", {
       if (
         this.selectedElement &&
         (this.selectedElement.isVisible ||
-          this.selectedElement.mode === this.MODE_OPTIONS.text)
+          this.selectedElement.mode === this.MODE_OPTIONS.TEXT)
       ) {
         this.renderBorderForElement();
       }
@@ -642,7 +642,7 @@ export const useCanvasStore = defineStore("canvas", {
 
       this.applyElementFilters(
         element,
-        element.mode !== this.MODE_OPTIONS.media,
+        element.mode !== this.MODE_OPTIONS.MEDIA,
       );
 
       this.ctx.strokeStyle = element.borderColor;
@@ -938,7 +938,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * drawing
          */
-        case this.MODE_OPTIONS.drawing:
+        case this.MODE_OPTIONS.DRAWING:
           this.drawBorder(
             element.x,
             element.y,
@@ -952,7 +952,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * text
          */
-        case this.MODE_OPTIONS.text:
+        case this.MODE_OPTIONS.TEXT:
           this.drawBorder(
             element.x,
             element.y,
@@ -966,7 +966,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * shape
          */
-        case this.MODE_OPTIONS.shape:
+        case this.MODE_OPTIONS.SHAPE:
           this.drawBorder(
             element.x,
             element.y,

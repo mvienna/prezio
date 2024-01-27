@@ -69,7 +69,7 @@ export const dragElement = () => {
 export const moveElement = (newX, newY) => {
   let deltaX, deltaY;
 
-  if (selectedElement.value.mode === MODE_OPTIONS.value.drawing) {
+  if (selectedElement.value.mode === MODE_OPTIONS.value.DRAWING) {
     deltaX = newX - dragStart.value.x;
     deltaY = newY - dragStart.value.y;
     selectedElement.value.points.forEach((point) => {

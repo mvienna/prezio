@@ -3,7 +3,7 @@
     <draggable
       v-if="
         nodes?.filter((node) =>
-          Object.values(MODE_OPTIONS).includes(node.getAttr('name'))
+          Object.values(MODE_OPTIONS).includes(node.getAttr('name')),
         )?.length
       "
       v-model="nodes"
@@ -44,17 +44,17 @@
             <!-- layer mode icon -->
             <q-icon
               :name="
-                element.getAttr('name') === MODE_OPTIONS.drawing
+                element.getAttr('name') === MODE_OPTIONS.DRAWING
                   ? 'r_gesture'
-                  : element.getAttr('name') === MODE_OPTIONS.text
-                  ? 'icon-insert_text'
-                  : element.getAttr('name') === MODE_OPTIONS.image
-                  ? 'o_add_photo_alternate'
-                  : element.getAttr('name') === MODE_OPTIONS.emoji
-                  ? 'icon-add_reaction'
-                  : element.getAttr('name') === MODE_OPTIONS.shape
-                  ? 'icon-shape_line'
-                  : ''
+                  : element.getAttr('name') === MODE_OPTIONS.TEXT
+                    ? 'icon-insert_text'
+                    : element.getAttr('name') === MODE_OPTIONS.IMAGE
+                      ? 'o_add_photo_alternate'
+                      : element.getAttr('name') === MODE_OPTIONS.emoji
+                        ? 'icon-add_reaction'
+                        : element.getAttr('name') === MODE_OPTIONS.SHAPE
+                          ? 'icon-shape_line'
+                          : ''
               "
               size="1.25rem"
               class="q-ml-sm"
@@ -71,7 +71,7 @@
                     ? transformer.default?.nodes(
                         transformer.default
                           ?.nodes()
-                          ?.filter((node) => node._id !== element._id)
+                          ?.filter((node) => node._id !== element._id),
                       )
                     : transformer.default?.nodes([
                         ...transformer.default?.nodes(),
@@ -84,7 +84,7 @@
                 $t(
                   `presentationLayout.rightDrawer.tabs.layers.names.${element
                     .getAttr("name")
-                    .toLowerCase()}`
+                    .toLowerCase()}`,
                 )
               }}
             </span>
@@ -106,7 +106,7 @@
                   $t(
                     `presentationLayout.rightDrawer.tabs.layers.layer.visibility.${
                       element.visible() ? "on" : "off"
-                    }`
+                    }`,
                   )
                 }}
               </q-tooltip>
@@ -127,7 +127,7 @@
                   $t(
                     `presentationLayout.rightDrawer.tabs.layers.layer.lock.${
                       element.draggable ? "on" : "off"
-                    }`
+                    }`,
                   )
                 }}
               </q-tooltip>
@@ -250,7 +250,7 @@ watch(
   () => layers.value.default?.getChildren(),
   () => {
     nodes.value = layers.value.default?.getChildren()?.reverse();
-  }
+  },
 );
 
 /*

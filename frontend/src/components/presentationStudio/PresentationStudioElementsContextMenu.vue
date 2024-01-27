@@ -107,7 +107,7 @@
           v-if="
             transformer.default
               ?.nodes()
-              .filter((node) => node.getAttr('name') === MODE_OPTIONS.image)
+              .filter((node) => node.getAttr('name') === MODE_OPTIONS.IMAGE)
               ?.length
           "
         >

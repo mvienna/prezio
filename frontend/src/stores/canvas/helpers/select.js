@@ -37,7 +37,7 @@ export const getHoveredElement = () => {
     const inverseMatrix = ctx.value.getTransform().invertSelf();
     const rotatedMouse = new DOMPoint(
       mouse.value.x,
-      mouse.value.y
+      mouse.value.y,
     ).matrixTransform(inverseMatrix);
     const rotatedMouseX = rotatedMouse.x;
     const rotatedMouseY = rotatedMouse.y;
@@ -62,10 +62,10 @@ export const selectElement = (element = null) => {
   if (element) {
     selectedElement.value = element;
     selectedElementIndex.value = elements.value.findIndex(
-      (item) => item.id === element.id
+      (item) => item.id === element.id,
     );
   } else {
-    if (mode.value === MODE_OPTIONS.value.text && selectedElement.value) return;
+    if (mode.value === MODE_OPTIONS.value.TEXT && selectedElement.value) return;
 
     const isSelectedElementExisted = !!selectedElement.value;
 
@@ -107,8 +107,8 @@ export const doubleSelectElement = () => {
 
     if (previousSelectedElementIndex === selectedElementIndex.value)
       switch (mode.value) {
-        case MODE_OPTIONS.value.text:
-          canvasStore.switchMode(MODE_OPTIONS.value.textEditing);
+        case MODE_OPTIONS.value.TEXT:
+          canvasStore.switchMode(MODE_OPTIONS.value.TEXT_EDITING);
           break;
       }
   } else {

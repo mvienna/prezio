@@ -387,8 +387,8 @@ const showMenu = ref({
 });
 </script>
 
-<style lang="scss">
-.q-field--dense .q-field__control {
+<style scoped lang="scss">
+::v-deep(.q-field--dense .q-field__control) {
   height: 30px !important;
 
   .q-field__suffix {

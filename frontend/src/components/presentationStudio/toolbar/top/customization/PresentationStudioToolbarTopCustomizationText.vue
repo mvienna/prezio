@@ -7,11 +7,17 @@
     :ripple="false"
     icon="icon-format_bold"
     text-color="black"
-    :class="{ 'bg-grey-2': customization.formatting.isBold }"
+    :class="{ 'bg-grey-2': text.fontStyle.includes('bold') }"
     @click="
       () => {
-        customization.formatting.isBold = !customization.formatting.isBold;
-        textStore.applyStyles();
+        text.fontStyle = (
+          text.fontStyle.includes('bold')
+            ? text.fontStyle.replace('bold', '')
+            : text.fontStyle.replace('normal', '') + ' bold'
+        )
+          .replace(/\s+/g, ' ')
+          .trim();
+        studioStore.applyCustomization();
       }
     "
   >
@@ -39,12 +45,13 @@
     :ripple="false"
     icon="icon-format_underlined"
     text-color="black"
-    :class="{ 'bg-grey-2': customization.formatting.isUnderline }"
+    :class="{ 'bg-grey-2': text.textDecoration.includes('underline') }"
     @click="
       () => {
-        customization.formatting.isUnderline =
-          !customization.formatting.isUnderline;
-        textStore.applyStyles();
+        text.textDecoration = text.textDecoration.includes('underline')
+          ? text.textDecoration.replace('underline', '')
+          : text.textDecoration + 'underline';
+        studioStore.applyCustomization();
       }
     "
   >
@@ -72,12 +79,13 @@
     :ripple="false"
     icon="icon-format_strikethough_s"
     text-color="black"
-    :class="{ 'bg-grey-2': customization.formatting.isLineThrough }"
+    :class="{ 'bg-grey-2': text.textDecoration.includes('line-through') }"
     @click="
       () => {
-        customization.formatting.isLineThrough =
-          !customization.formatting.isLineThrough;
-        textStore.applyStyles();
+        text.textDecoration = text.textDecoration.includes('line-through')
+          ? text.textDecoration.replace('line-through', '')
+          : text.textDecoration + 'line-through';
+        studioStore.applyCustomization();
       }
     "
   >
@@ -108,11 +116,17 @@
     :ripple="false"
     icon="icon-format_italic"
     text-color="black"
-    :class="{ 'bg-grey-2': customization.formatting.isItalic }"
+    :class="{ 'bg-grey-2': text.fontStyle.includes('italic') }"
     @click="
       () => {
-        customization.formatting.isItalic = !customization.formatting.isItalic;
-        textStore.applyStyles();
+        text.fontStyle = (
+          text.fontStyle.includes('italic')
+            ? text.fontStyle.replace('italic', '')
+            : text.fontStyle.replace('normal', '') + ' italic'
+        )
+          .replace(/\s+/g, ' ')
+          .trim();
+        studioStore.applyCustomization();
       }
     "
   >
@@ -139,13 +153,13 @@
     round
     color="black"
     :icon="
-      customization.formatting.textAlign === ALIGNMENT.horizontal.left
+      text.align === ALIGNMENT.horizontal.left
         ? 'r_format_align_left'
-        : customization.formatting.textAlign === ALIGNMENT.horizontal.right
-        ? 'r_format_align_right'
-        : customization.formatting.textAlign === ALIGNMENT.horizontal.center
-        ? 'r_format_align_center'
-        : ''
+        : text.align === ALIGNMENT.horizontal.right
+          ? 'r_format_align_right'
+          : text.align === ALIGNMENT.horizontal.center
+            ? 'r_format_align_center'
+            : ''
     "
   >
     <q-tooltip>
@@ -169,24 +183,20 @@
             :ripple="false"
             size="12px"
             round
-            :class="
-              item === customization.formatting.textAlign
-                ? 'text-black bg-grey-2'
-                : 'text-grey'
-            "
+            :class="item === text.align ? 'text-black bg-grey-2' : 'text-grey'"
             :icon="
               item === ALIGNMENT.horizontal.left
                 ? 'r_format_align_left'
                 : item === ALIGNMENT.horizontal.right
-                ? 'r_format_align_right'
-                : item === ALIGNMENT.horizontal.center
-                ? 'r_format_align_center'
-                : 'r_format_align_left'
+                  ? 'r_format_align_right'
+                  : item === ALIGNMENT.horizontal.center
+                    ? 'r_format_align_center'
+                    : 'r_format_align_left'
             "
             @click="
               () => {
-                customization.formatting.textAlign = item;
-                textStore.applyStyles();
+                text.align = item;
+                studioStore.applyCustomization();
               }
             "
           />
@@ -235,7 +245,7 @@
       <q-icon name="icon-mdi_format_color_top" class="absolute-center" />
       <q-icon
         name="icon-mdi_format_color_bottom"
-        :style="`color: ${customization.color}`"
+        :style="`color: ${text.fill}`"
         class="absolute-center"
       />
     </div>
@@ -252,19 +262,19 @@
         format-model="hex"
         no-header-tabs
         default-view="palette"
-        v-model="customization.color"
-        @change="textStore.applyStyles()"
+        v-model="text.fill"
+        @change="studioStore.applyCustomization()"
       />
     </q-menu>
 
     <q-tooltip :offset="[0, 4]">
-      {{ $t("presentationStudio.toolbar.drawing.options.color") }}
+      {{ $t("presentationStudio.toolbar.text.options.color") }}
     </q-tooltip>
   </q-btn>
 
   <!-- font -->
   <q-select
-    v-model="customization.font"
+    v-model="text.fontFamily"
     :options="FONT_OPTIONS"
     emit-value
     borderless
@@ -272,14 +282,14 @@
     dense
     options-dense
     class="text-no-wrap"
-    @update:model-value="textStore.applyStyles()"
+    @update:model-value="studioStore.applyCustomization()"
   >
     <template #option="scope">
       <q-item v-bind="scope.itemProps">
         <q-item-section>
-          <q-item-label :style="`font-family: ${scope.opt}`">{{
-            scope.opt
-          }}</q-item-label>
+          <q-item-label :style="`font-family: ${scope.opt}`">
+            {{ scope.opt }}
+          </q-item-label>
         </q-item-section>
       </q-item>
     </template>
@@ -291,18 +301,13 @@
 
   <!-- font size -->
   <q-input
-    v-model="fontSizeNumber"
+    v-model.number="text.fontSize"
     type="number"
     color="primary"
     dense
     borderless
     style="width: 64px; min-width: 64px; max-width: 64px"
-    @update:model-value="
-      () => {
-        customization.fontSize = fontSizeNumber + 'px';
-        textStore.applyStyles();
-      }
-    "
+    @update:model-value="studioStore.applyCustomization()"
   >
     <template #after> <div class="text-caption">px</div> </template>
 
@@ -321,15 +326,18 @@
     size="12px"
     :label="
       $t(
-        'presentationStudio.toolbar.text.options.formatting.clearFormatting.title'
+        'presentationStudio.toolbar.text.options.formatting.clearFormatting.title',
       )
     "
-    @click="textStore.clearFormatting()"
+    @click="
+      text = { default: text.default, ...text.default };
+      studioStore.applyCustomization();
+    "
   >
     <q-tooltip :offset="[0, 4]">
       {{
         $t(
-          "presentationStudio.toolbar.text.options.formatting.clearFormatting.tooltip"
+          "presentationStudio.toolbar.text.options.formatting.clearFormatting.tooltip",
         )
       }}
     </q-tooltip>
@@ -342,6 +350,7 @@ import { useCanvasTextStore } from "stores/canvas/text";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { computed } from "vue";
+import { useStudioStore } from "stores/studio";
 
 /*
  * variables
@@ -351,8 +360,8 @@ const $q = useQuasar();
 /*
  * stores
  */
-const textStore = useCanvasTextStore();
-const { customization, fontSizeNumber } = storeToRefs(textStore);
+const studioStore = useStudioStore();
+const { text } = storeToRefs(studioStore);
 
 /*
  * shortcuts
@@ -367,10 +376,6 @@ const isMac = computed(() => {
 </script>
 
 <style scoped lang="scss">
-::v-deep(.q-field__control) {
-  height: 36px;
-}
-
 ::v-deep(input) {
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
