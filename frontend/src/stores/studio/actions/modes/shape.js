@@ -118,7 +118,7 @@ export function addShape(shapeName) {
 
   this.handleSlideUpdate();
 
-  shape.on("transformend", this.handleSlideUpdate);
+  shapeNode.on("transformend", this.handleSlideUpdate);
 }
 
 export function setShapeCustomization(node) {
@@ -138,12 +138,15 @@ export function setShapeCustomization(node) {
             (node.cornerRadius() / Math.min(node.width(), node.height())) * 100,
           )
         : null,
-    pointerSize: [SHAPES_OPTIONS.ARROW, SHAPES_OPTIONS.ARROW_DOUBLE].includes(
+  };
+
+  if (
+    [SHAPES_OPTIONS.ARROW, SHAPES_OPTIONS.ARROW_DOUBLE].includes(
       node.getClassName(),
     )
-      ? node.pointerWidth()
-      : null,
-  };
+  ) {
+    this.shape.shapepointerSize = node.pointerWidth();
+  }
 }
 
 export function applyShapeCustomization(node) {
@@ -173,7 +176,7 @@ export function applyShapeCustomization(node) {
       node.getClassName(),
     )
   ) {
-    this.node.pointerLength(this.shape.pointerSize);
-    this.node.pointerWidth(this.shape.pointerSize);
+    node.pointerLength(this.shape.pointerSize);
+    node.pointerWidth(this.shape.pointerSize);
   }
 }
