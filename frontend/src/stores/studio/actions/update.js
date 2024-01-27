@@ -33,8 +33,9 @@ export async function handleSlideUpdate() {
   this.stages.default.scale({ x: currentScale, y: currentScale });
   this.stages.default.position(currentPosition);
 
-  // compute color scheme & save stage
+  // compute color scheme & save and capture stage
   slide.value.color_scheme = await this.defineColorScheme();
+  this.captureState();
   slide.value.canvas_data = this.stages.default.toJSON();
 
   // show transformers
@@ -44,4 +45,40 @@ export async function handleSlideUpdate() {
   this.applyTransformerCustomization();
 
   await presentationsStore.saveSlide();
+}
+
+export function captureState() {
+  this.history.undo.push(slide.value.canvas_data);
+  if (this.history.undo.length > 10) {
+    this.history.undo.shift();
+  }
+  this.history.redo = [];
+}
+
+export function undo() {
+  if (this.history.undo.length) {
+    let previousState = this.history.undo.pop();
+    this.history.redo.push(slide.value.canvas_data);
+
+    if (this.history.redo.length > this.history.STACK_LIMIT) {
+      this.history.redo.shift();
+    }
+
+    slide.value.canvas_data = previousState;
+    this.loadStudio();
+  }
+}
+
+export function redo() {
+  if (this.history.redo.length) {
+    let nextState = this.history.redo.pop();
+    this.history.undo.push(slide.value.canvas_data);
+
+    if (this.history.undo.length > this.history.STACK_LIMIT) {
+      this.history.undo.shift();
+    }
+
+    slide.value.canvas_data = nextState;
+    this.loadStudio();
+  }
 }

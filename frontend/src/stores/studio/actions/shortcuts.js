@@ -57,5 +57,24 @@ export function handleShortcuts(event) {
       event.preventDefault();
       this.cutNodes();
     }
+
+    // undo & redo
+    if (event.key === "z") {
+      event.preventDefault();
+
+      // redo
+      if (event.shiftKey) {
+        this.redo();
+
+        // undo
+      } else {
+        this.undo();
+      }
+    }
+
+    if (event.key === "y") {
+      event.preventDefault();
+      this.redo();
+    }
   }
 }

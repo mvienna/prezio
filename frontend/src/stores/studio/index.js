@@ -38,16 +38,28 @@ export const useStudioStore = defineStore("studio", {
       default: null,
       // preview: null,
     },
+
+    /*
+     * zoom
+     */
     zoom: {
       coefficient: 1.2,
       min: null,
       max: 3,
     },
+
+    /*
+     * layers
+     */
     layers: {
       default: null, // default stage
       base: null, // default stage
       // preview: null, // preview stage
     },
+
+    /*
+     * transformer
+     */
     transformer: {
       default: null,
       custom: {
@@ -57,6 +69,15 @@ export const useStudioStore = defineStore("studio", {
           anchor2: null,
         },
       },
+    },
+
+    /*
+     * history
+     */
+    history: {
+      STACK_LIMIT: 20,
+      undo: [],
+      redo: [],
     },
 
     /*

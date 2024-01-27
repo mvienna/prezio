@@ -59,21 +59,23 @@
       <!-- undo / redo -->
       <div class="row no-wrap items-center">
         <q-btn
+          :disable="!history.undo.length"
           icon="r_undo"
           flat
           round
-          disable
-          text-color="grey-5"
+          :text-color="history.undo.length ? 'black' : 'grey'"
           size="12px"
+          @click="studioStore.undo()"
         />
 
         <q-btn
+          :disable="!history.redo.length"
           icon="r_redo"
           flat
           round
-          disable
-          text-color="grey-5"
+          :text-color="history.redo.length ? 'black' : 'grey'"
           size="12px"
+          @click="studioStore.redo()"
         />
       </div>
 
@@ -105,7 +107,7 @@
                     ? $t("presentationLayout.errors.somethingWentWrong")
                     : date.formatDate(
                         lastSavedAt || new Date(presentation.updated_at),
-                        "DD.MM.YYYY HH:mm"
+                        "DD.MM.YYYY HH:mm",
                       )
                 }}
               </q-tooltip>
@@ -260,14 +262,14 @@
                   <q-item-label>
                     {{
                       $t(
-                        "presentationLayout.header.present.fromBeginning.title"
+                        "presentationLayout.header.present.fromBeginning.title",
                       )
                     }}
                   </q-item-label>
                   <q-item-label caption>
                     {{
                       $t(
-                        "presentationLayout.header.present.fromBeginning.description"
+                        "presentationLayout.header.present.fromBeginning.description",
                       )
                     }}
                   </q-item-label>
@@ -284,7 +286,7 @@
                   <span>
                     {{
                       $t(
-                        "presentationLayout.header.present.withBackstage.title"
+                        "presentationLayout.header.present.withBackstage.title",
                       )
                     }}
                   </span>
@@ -297,7 +299,7 @@
                 <q-item-label caption>
                   {{
                     $t(
-                      "presentationLayout.header.present.withBackstage.description"
+                      "presentationLayout.header.present.withBackstage.description",
                     )
                   }}
                 </q-item-label>
@@ -343,24 +345,24 @@
             icon-color="primary"
             :title="
               $t(
-                'presentationLayout.header.present.privacySettingsWarning.title'
+                'presentationLayout.header.present.privacySettingsWarning.title',
               )
             "
             :message="
               $t(
-                'presentationLayout.header.present.privacySettingsWarning.message'
+                'presentationLayout.header.present.privacySettingsWarning.message',
               )
             "
             cancel-btn-color="grey"
             :cancel-btn-text="
               $t(
-                'presentationLayout.header.present.privacySettingsWarning.presentAnyway'
+                'presentationLayout.header.present.privacySettingsWarning.presentAnyway',
               )
             "
             confirm-btn-color="primary"
             :confirm-btn-text="
               $t(
-                'presentationLayout.header.present.privacySettingsWarning.switchToPublic'
+                'presentationLayout.header.present.privacySettingsWarning.switchToPublic',
               )
             "
             @cancel="
@@ -391,7 +393,7 @@
             confirm-btn-color="primary"
             :confirm-btn-text="
               $t(
-                'presentationLayout.header.present.quizSettingsWarning.presentAnyway'
+                'presentationLayout.header.present.quizSettingsWarning.presentAnyway',
               )
             "
             @cancel="
@@ -416,7 +418,7 @@
                   <b>
                     {{
                       $t(
-                        "presentationLayout.header.present.quizSettingsWarning.message"
+                        "presentationLayout.header.present.quizSettingsWarning.message",
                       )
                     }}
                     №{{ slide.index + 1 }}:
@@ -430,7 +432,7 @@
                   v-model="presentation.settings.quiz_warning_dismissed"
                   :label="
                     $t(
-                      'presentationLayout.header.present.quizSettingsWarning.dismiss'
+                      'presentationLayout.header.present.quizSettingsWarning.dismiss',
                     )
                   "
                   color="primary"
@@ -493,13 +495,14 @@ const {
 } = storeToRefs(presentationsStore);
 
 const studioStore = useStudioStore();
+const { history } = storeToRefs(studioStore);
 
 /*
  * slide index
  */
 const slideIndex = computed(() => {
   return presentation.value.slides.findIndex(
-    (item) => item.id === slide.value.id
+    (item) => item.id === slide.value.id,
   );
 });
 
@@ -541,7 +544,7 @@ const handleStartPresenting = async () => {
 
         if (
           ([SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
-            slide.type
+            slide.type,
           ) &&
             slideSettings?.answerOptions &&
             !slideSettings.answerOptions.filter((option) => option.isCorrect)
@@ -564,7 +567,7 @@ const handleStartPresenting = async () => {
 
     if (quizSlidesWithoutCorrectAnswers.value.length) {
       presentation.value.settings.quiz_warning_dismissed = Boolean(
-        presentation.value.settings.quiz_warning_dismissed
+        presentation.value.settings.quiz_warning_dismissed,
       );
       showStartPresentingWithQuizWithoutCorrectAnswer.value = true;
       return;
