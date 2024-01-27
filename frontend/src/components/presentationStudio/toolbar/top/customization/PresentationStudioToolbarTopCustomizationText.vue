@@ -48,9 +48,13 @@
     :class="{ 'bg-grey-2': text.textDecoration.includes('underline') }"
     @click="
       () => {
-        text.textDecoration = text.textDecoration.includes('underline')
-          ? text.textDecoration.replace('underline', '')
-          : text.textDecoration + 'underline';
+        text.textDecoration = (
+          text.textDecoration.includes('underline')
+            ? text.textDecoration.replace('underline', '')
+            : text.textDecoration + ' underline'
+        )
+          .replace(/\s+/g, ' ')
+          .trim();
         studioStore.applyCustomization();
       }
     "
@@ -82,9 +86,13 @@
     :class="{ 'bg-grey-2': text.textDecoration.includes('line-through') }"
     @click="
       () => {
-        text.textDecoration = text.textDecoration.includes('line-through')
-          ? text.textDecoration.replace('line-through', '')
-          : text.textDecoration + 'line-through';
+        text.textDecoration = (
+          text.textDecoration.includes('line-through')
+            ? text.textDecoration.replace('line-through', '')
+            : text.textDecoration + ' line-through'
+        )
+          .replace(/\s+/g, ' ')
+          .trim();
         studioStore.applyCustomization();
       }
     "

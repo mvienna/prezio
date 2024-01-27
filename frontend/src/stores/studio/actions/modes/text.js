@@ -80,6 +80,14 @@ export function processText(textNode) {
     textarea.style.background = "none";
     textarea.style.outline = "none";
     textarea.style.resize = "none";
+    textarea.style.fontWeight = textNode.fontStyle().includes("bold")
+      ? "bold"
+      : "normal";
+    textarea.style.fontStyle = textNode.fontStyle().includes("italic")
+      ? "italic"
+      : "normal";
+    textarea.style.textDecoration = textNode.textDecoration();
+    console.log(textNode.textDecoration());
     textarea.style.lineHeight = textNode.lineHeight();
     textarea.style.fontFamily = textNode.fontFamily();
     textarea.style.transformOrigin = "left top";
