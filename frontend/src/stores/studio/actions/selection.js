@@ -53,6 +53,13 @@ export function handleSelection() {
   this.layers.default.add(this.transformer.default);
   this.transformer.default.moveToTop();
 
+  this.transformer.default.on("transform", () => {
+    this.isTransforming = true;
+  });
+  this.transformer.default.on("transformend", () => {
+    this.isTransforming = false;
+  });
+
   this.layers.default.find(".selectionRect")?.forEach((node) => node.destroy());
   this.selection.rect = new Konva.Rect({
     fill:

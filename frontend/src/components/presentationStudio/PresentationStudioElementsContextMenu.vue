@@ -1,5 +1,6 @@
 <template>
   <q-card
+    v-if="!isTransforming"
     :style="`top: ${transformerPosition?.y}px; left: ${transformerPosition?.x}px; z-index: 999; position: fixed;`"
     bordered
     flat
@@ -278,17 +279,76 @@ const showSelectMediaDialog = ref(false);
  * stores
  */
 const studioStore = useStudioStore();
-const { MODE_OPTIONS, transformer, stages, scene } = storeToRefs(studioStore);
+const { MODE_OPTIONS, transformer, stages, scene, isTransforming } =
+  storeToRefs(studioStore);
 
 /*
  * position
  */
 const transformerPosition = computed(() => {
   if (transformer.value.default.nodes()?.length) {
-    return {
-      x: transformer.value.default.x() + 215,
-      y: transformer.value.default.y() + 80,
-    };
+    const box = stages.value.default.container().getBoundingClientRect();
+
+    const x = box.left + transformer.value.default.getAbsolutePosition().x;
+    const y = box.top + transformer.value.default.getAbsolutePosition().y;
+    const width = transformer.value.default.width();
+    const height = transformer.value.default.height();
+    let rotation = transformer.value.default.rotation();
+    if (rotation < 0) rotation += 360;
+
+    const menuWidth = 93;
+    const menuHeight = 33;
+    const menuOffset = 67;
+
+    if (rotation >= 0 && rotation <= 45)
+      return {
+        x: x + width / 2 - menuWidth / 2,
+        y: y - menuHeight - menuOffset,
+      };
+
+    if (rotation > 45 && rotation <= 90)
+      return {
+        x: x - width / 2 - menuWidth / 2,
+        y: y - menuOffset,
+      };
+
+    if (rotation > 90 && rotation <= 135)
+      return {
+        x: x - width / 2 - menuWidth / 2,
+        y: y - menuHeight * 2 - menuOffset,
+      };
+
+    if (rotation > 135 && rotation <= 180)
+      return {
+        x: x - width / 2 - menuWidth / 2,
+        y: y - menuOffset - height,
+      };
+
+    if (rotation > 180 && rotation <= 225)
+      return {
+        x: x - width / 2 - menuWidth / 2,
+        y: y - menuHeight - menuOffset - height,
+      };
+
+    if (rotation > 225 && rotation <= 270)
+      return {
+        x: x + width / 2 - menuWidth / 2,
+        y: y - menuOffset - height,
+      };
+
+    if (rotation > 270 && rotation <= 315)
+      return {
+        x: x + width / 2 - menuWidth / 2,
+        y: y - menuHeight - height,
+      };
+
+    if (rotation > 315 && rotation <= 360)
+      return {
+        x: x + width / 2 - menuWidth / 2,
+        y: y - menuHeight * 2 - menuOffset,
+      };
+
+    return { x: x + width / 2 - menuWidth / 2, y: y - menuOffset - menuHeight };
   } else {
     const box = stages.value.default.container().getBoundingClientRect();
 

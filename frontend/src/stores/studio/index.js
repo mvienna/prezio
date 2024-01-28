@@ -96,6 +96,7 @@ export const useStudioStore = defineStore("studio", {
       x2: null,
       y2: null,
     },
+    isTransforming: false,
     snapping: {
       GUIDELINE_OFFSET: 10,
     },
