@@ -182,9 +182,7 @@
         </div>
 
         <!-- preview -->
-        <!-- TODO: make preview work -->
         <q-btn
-          disable
           unelevated
           no-caps
           no-wrap
@@ -197,7 +195,10 @@
           <q-tooltip> В процессе </q-tooltip>
         </q-btn>
 
-        <q-dialog v-model="isPresentationPreview">
+        <q-dialog
+          v-model="isPresentationPreview"
+          @hide="studioStore.loadStudio()"
+        >
           <PresentationStudioPreviewPresentation
             @cancel="isPresentationPreview = false"
           />

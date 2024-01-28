@@ -385,10 +385,10 @@ export const usePresentationsStore = defineStore("presentations", {
     /*
      * SLIDE - LOCAL
      */
-    async setSlide(newSlide) {
+    async setSlide(newSlide, isSaveSlide = true) {
       if (!newSlide || this.slide?.id === newSlide.id) return;
 
-      if (this.slide) {
+      if (isSaveSlide && this.slide) {
         this.saveSlide(this.slide, newSlide);
       }
 

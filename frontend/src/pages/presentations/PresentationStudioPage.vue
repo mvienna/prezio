@@ -11,21 +11,26 @@
 
     <!-- slide -->
     <div class="slide__wrapper row justify-center items-start q-pa-md fit">
-      <div class="slide__wrapper__inner row items-start" style="">
-        <div class="slide relative-position" id="stage-parent">
-          <div id="container"></div>
-
-          <!-- context menu-->
-          <PresentationStudioElementsContextMenu
-            v-if="
-              (transformer.default?.nodes()?.length ||
-                transformer.custom.shape.node) &&
-              slide?.type === SLIDE_TYPES.CONTENT
-            "
-          />
-        </div>
+      <div class="slide__wrapper__inner row items-start">
+        <teleport
+          :disabled="!isPresentationPreview"
+          :to="isPresentationPreview ? '#presentationPreview' : 'body'"
+        >
+          <div class="slide relative-position" id="stage-parent">
+            <div id="container"></div>
+          </div>
+        </teleport>
       </div>
     </div>
+
+    <!-- context menu-->
+    <PresentationStudioElementsContextMenu
+      v-if="
+        (transformer.default?.nodes()?.length ||
+          transformer.custom.shape.node) &&
+        slide?.type === SLIDE_TYPES.CONTENT
+      "
+    />
 
     <!-- slide data (reactions, answers, participants online) -->
     <PresentationStudioRoomData />
@@ -74,13 +79,14 @@ const router = useRouter();
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, participants } = storeToRefs(presentationsStore);
+const { presentation, slide, participants, isPresentationPreview } =
+  storeToRefs(presentationsStore);
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 
 const studioStore = useStudioStore();
-const { layers, selection, mode, MODE_OPTIONS, transformer, stages, scene } =
+const { layers, selection, mode, MODE_OPTIONS, transformer } =
   storeToRefs(studioStore);
 
 /*
@@ -246,7 +252,7 @@ if (window.location.host === process.env.STAGING_HOST) {
 useMeta(metaOptions);
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .slide__wrapper {
   .slide__wrapper__inner {
     flex: 1;

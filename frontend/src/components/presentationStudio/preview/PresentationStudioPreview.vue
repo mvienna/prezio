@@ -24,10 +24,7 @@
     <!-- content -->
     <q-card-section class="q-pa-none q-mx-md relative-position">
       <!-- slide preview -->
-      <div
-        id="presentationPreview"
-        class="presentation_preview__slide column no-wrap justify-center"
-      ></div>
+      <div id="presentationPreview"></div>
 
       <!-- previous slide -->
       <div class="absolute-left column no-wrap justify-center q-ml-md">
@@ -111,9 +108,10 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { computed, onBeforeMount, onUnmounted } from "vue";
+import { computed, onBeforeMount, onMounted, onUnmounted } from "vue";
 import { useCanvasStore } from "stores/canvas";
 import { useQuasar } from "quasar";
+import { useStudioStore } from "stores/studio";
 
 /*
  * variables
@@ -131,15 +129,14 @@ defineEmits(["cancel"]);
 const presentationsStore = usePresentationsStore();
 const { presentation, slide } = storeToRefs(presentationsStore);
 
-const canvasStore = useCanvasStore();
-const { elements } = storeToRefs(canvasStore);
+const studioStore = useStudioStore();
 
 /*
  * slide index
  */
 const slideIndex = computed(() => {
   return presentation.value.slides.findIndex(
-    (item) => item.id === slide.value.id
+    (item) => item.id === slide.value.id,
   );
 });
 
@@ -148,6 +145,10 @@ const slideIndex = computed(() => {
  */
 onBeforeMount(() => {
   document.addEventListener("keydown", handleKeyDownEvent);
+});
+
+onMounted(() => {
+  studioStore.loadStudio();
 });
 
 onUnmounted(() => {
@@ -173,22 +174,9 @@ const handleSlideChange = async (direction) => {
     ];
   if (!newSlide) return;
 
-  await presentationsStore.setSlide(newSlide, elements.value, false);
-  await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(false, undefined, false);
+  presentationsStore.setSlide(newSlide, false);
 };
 </script>
-
-<style lang="scss">
-.presentation_preview__slide {
-  height: 100%;
-  canvas {
-    width: 100%;
-    border-radius: 12px;
-    border: 3px solid $grey-2;
-  }
-}
-</style>
 
 <style scoped lang="scss">
 .q-card {
