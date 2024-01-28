@@ -116,6 +116,86 @@
       <!--          </q-tooltip>-->
       <!--        </q-btn>-->
       <!--      </template>-->
+
+      <q-space />
+
+      <div class="row no-wrap">
+        <!-- zoom out -->
+        <q-btn
+          icon="r_zoom_out"
+          round
+          size="12px"
+          unelevated
+          @click="
+            studioStore.setZoom(
+              ((stages.default.scale().x /
+                stages.default.container().getBoundingClientRect().width) *
+                scene.width) /
+                zoom.coefficient,
+            )
+          "
+        >
+          <q-tooltip>
+            {{ $t("presentationStudio.toolbar.zoom.out") }}
+          </q-tooltip>
+        </q-btn>
+
+        <!-- current zoom -->
+        <q-btn
+          :label="`${Math.round(stages.default.scale().x * 100)}%`"
+          unelevated
+        >
+          <q-tooltip>
+            {{ $t("presentationStudio.toolbar.zoom.select") }}
+          </q-tooltip>
+
+          <q-menu
+            anchor="top middle"
+            self="bottom middle"
+            transition-show="jump-down"
+            transition-hide="jump-up"
+            :offset="[0, 8]"
+          >
+            <q-item
+              v-for="option in zoom.OPTIONS"
+              :key="option"
+              clickable
+              dense
+              class="items-center justify-center"
+              @click="studioStore.setZoom(option)"
+            >
+              {{
+                Math.round(
+                  ((option *
+                    stages.default.container().getBoundingClientRect().width) /
+                    scene.width) *
+                    100,
+                )
+              }}%
+            </q-item>
+          </q-menu>
+        </q-btn>
+
+        <!-- zoom in -->
+        <q-btn
+          icon="r_zoom_in"
+          round
+          size="12px"
+          unelevated
+          @click="
+            studioStore.setZoom(
+              (stages.default.scale().x /
+                stages.default.container().getBoundingClientRect().width) *
+                scene.width *
+                zoom.coefficient,
+            )
+          "
+        >
+          <q-tooltip>
+            {{ $t("presentationStudio.toolbar.zoom.in") }}
+          </q-tooltip>
+        </q-btn>
+      </div>
     </template>
   </div>
 </template>
@@ -142,7 +222,8 @@ const $q = useQuasar();
  * stores
  */
 const studioStore = useStudioStore();
-const { mode, MODE_OPTIONS, transformer } = storeToRefs(studioStore);
+const { mode, MODE_OPTIONS, transformer, zoom, stages, scene } =
+  storeToRefs(studioStore);
 
 const presentationsStore = usePresentationsStore();
 const { presentation, slide, isDrawerRightPanelExpanded } =

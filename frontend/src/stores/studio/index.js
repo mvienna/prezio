@@ -51,6 +51,7 @@ export const useStudioStore = defineStore("studio", {
       coefficient: 1.2,
       min: null,
       max: 3,
+      OPTIONS: [1, 1.25, 1.5, 2, 2.5, 3],
     },
 
     /*

@@ -9,6 +9,37 @@ export function fitStageIntoParentContainer() {
   this.zoom.min = scale;
 }
 
+export function setZoom(newScale) {
+  if (!this.stages.default) return;
+  if (newScale === 1) this.fitStageIntoParentContainer();
+
+  newScale =
+    (newScale * this.stages.default.container().getBoundingClientRect().width) /
+    this.scene.width;
+
+  const oldScale = this.stages.default.scaleX();
+  const container = document.querySelector("#stage-parent");
+
+  newScale = Math.max(this.zoom.min, Math.min(newScale, this.zoom.max));
+
+  const containerCenter = {
+    x: container.offsetWidth / 2,
+    y: container.offsetHeight / 2,
+  };
+
+  const scaleRatio = newScale / oldScale;
+
+  const oldPosition = this.stages.default.position();
+
+  const newPosition = {
+    x: containerCenter.x - (containerCenter.x - oldPosition.x) * scaleRatio,
+    y: containerCenter.y - (containerCenter.y - oldPosition.y) * scaleRatio,
+  };
+
+  this.stages.default.scale({ x: newScale, y: newScale });
+  this.stages.default.position(newPosition);
+}
+
 export function handleZoom(event) {
   event.evt.preventDefault();
 
