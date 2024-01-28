@@ -138,7 +138,7 @@ export const useStudioStore = defineStore("studio", {
      */
     image: {
       opacity: 1,
-      cornerRadius: 6,
+      cornerRadius: 0,
       stroke: COLOR_PALETTE.PRIMARY,
       strokeWidth: 0.1,
       shadowColor: COLOR_PALETTE.BLACK,
@@ -149,7 +149,7 @@ export const useStudioStore = defineStore("studio", {
 
       default: {
         opacity: 1,
-        cornerRadius: 6,
+        cornerRadius: 0,
         stroke: COLOR_PALETTE.PRIMARY,
         strokeWidth: 0.1,
         shadowColor: COLOR_PALETTE.BLACK,
@@ -172,8 +172,8 @@ export const useStudioStore = defineStore("studio", {
       shadowBlur: 0,
       shadowOffset: { x: 0, y: 0 },
       shadowOpacity: 0,
-      cornerRadius: 6,
-      pointerSize: 75,
+      cornerRadius: 0,
+      pointerSize: 12,
 
       default: {
         fill: COLOR_PALETTE.PRIMARY,
@@ -184,8 +184,8 @@ export const useStudioStore = defineStore("studio", {
         shadowBlur: 0,
         shadowOffset: { x: 0, y: 0 },
         shadowOpacity: 0,
-        cornerRadius: 6,
-        pointerSize: 75,
+        cornerRadius: 0,
+        pointerSize: 12,
       },
     },
 

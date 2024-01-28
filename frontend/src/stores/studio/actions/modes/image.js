@@ -132,7 +132,7 @@ export async function addImage(url) {
       width: newWidth,
       height: newHeight,
       draggable: true,
-      cornerRadius: 6,
+      cornerRadius: 0,
       name: this.MODE_OPTIONS.IMAGE,
     });
 

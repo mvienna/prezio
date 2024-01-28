@@ -10,8 +10,6 @@ export function addShape(shapeName) {
     fill: this.shape.default.fill,
     stroke: this.shape.default.stroke,
     strokeWidth: this.shape.default.strokeWidth,
-    lineCap: "round",
-    lineJoin: "round",
     draggable: true,
     name: this.MODE_OPTIONS.SHAPE,
   };
@@ -26,7 +24,7 @@ export function addShape(shapeName) {
         x: this.scene.width / 4,
         y: this.scene.height / 2,
         points: [0, 0, this.scene.width / 2, 0],
-        strokeWidth: 25,
+        strokeWidth: 8,
       });
       break;
 
@@ -36,9 +34,9 @@ export function addShape(shapeName) {
         x: this.scene.width / 4,
         y: this.scene.height / 2,
         points: [0, 0, this.scene.width / 2, 0],
-        pointerLength: this.shape.pointerSize,
-        pointerWidth: this.shape.pointerSize,
-        strokeWidth: 25,
+        pointerLength: this.shape.default.pointerSize,
+        pointerWidth: this.shape.default.pointerSize,
+        strokeWidth: 8,
         pointerAtEnding: true,
       });
       break;
@@ -49,9 +47,9 @@ export function addShape(shapeName) {
         x: this.scene.width / 4,
         y: this.scene.height / 2,
         points: [0, 0, this.scene.width / 2, 0],
-        pointerLength: this.shape.pointerSize,
-        pointerWidth: this.shape.pointerSize,
-        strokeWidth: 25,
+        pointerLength: this.shape.default.pointerSize,
+        pointerWidth: this.shape.default.pointerSize,
+        strokeWidth: 8,
         pointerAtBeginning: true,
         pointerAtEnding: true,
       });

@@ -65,10 +65,19 @@
     flat
     round
     size="12px"
-    icon="r_border_outer"
     :class="{ 'bg-grey-2': showMenu.stroke }"
     :ripple="false"
+    class="relative-position"
   >
+    <div>
+      <q-icon name="icon-mdi_border_outer_dots" class="absolute-center" />
+      <q-icon
+        name="icon-mdi_border_outer_stroke"
+        :style="`color: ${shape.stroke}`"
+        class="absolute-center"
+      />
+    </div>
+
     <q-menu
       v-model="showMenu.stroke"
       anchor="bottom left"
@@ -87,7 +96,7 @@
         @change="studioStore.applyCustomization()"
       />
 
-      <!-- line width -->
+      <!-- stroke width -->
       <div class="q-py-md q-px-md">
         <div class="text-caption text-grey">
           {{ $t("presentationStudio.toolbar.shape.stroke.width") }}
@@ -97,7 +106,7 @@
           <q-slider
             v-model="shape.strokeWidth"
             :min="0"
-            :max="200"
+            :max="20"
             label
             thumb-size="14px"
             :label-value="shape.strokeWidth + 'px'"
@@ -107,7 +116,7 @@
           <q-input
             v-model.number="shape.strokeWidth"
             :min="0"
-            :max="200"
+            :max="20"
             type="number"
             placeholder="0"
             suffix="px"
@@ -118,7 +127,13 @@
           />
         </div>
 
-        <template v-if="transformer.custom.shape.node">
+        <template
+          v-if="
+            [SHAPES_OPTIONS.ARROW, SHAPES_OPTIONS.ARROW_DOUBLE].includes(
+              transformer.custom.shape?.node?.getClassName(),
+            )
+          "
+        >
           <div class="text-caption text-grey q-mt-md">
             {{ $t("presentationStudio.toolbar.shape.stroke.pointerSize") }}
           </div>

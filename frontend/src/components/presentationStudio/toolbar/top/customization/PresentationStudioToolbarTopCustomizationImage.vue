@@ -250,7 +250,7 @@
         @change="studioStore.applyCustomization()"
       />
 
-      <!-- line width -->
+      <!-- stroke width -->
       <div class="q-py-md q-px-md">
         <div class="text-caption text-grey">
           {{ $t("presentationStudio.toolbar.image.stroke.width") }}
@@ -260,7 +260,7 @@
           <q-slider
             v-model="image.strokeWidth"
             :min="0"
-            :max="200"
+            :max="20"
             label
             thumb-size="14px"
             :label-value="image.strokeWidth + 'px'"
@@ -270,7 +270,7 @@
           <q-input
             v-model.number="image.strokeWidth"
             :min="0"
-            :max="200"
+            :max="20"
             type="number"
             placeholder="0"
             suffix="px"

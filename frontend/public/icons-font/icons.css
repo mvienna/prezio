@@ -1,7 +1,7 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.woff?9e2974e02bed006d52c3317c10ed62bd") format("woff"),
-url("./icons.woff2?9e2974e02bed006d52c3317c10ed62bd") format("woff2");
+    src: url("./icons.woff?dda9ef1cec798ef33496ec41ac284b7f") format("woff"),
+url("./icons.woff2?dda9ef1cec798ef33496ec41ac284b7f") format("woff2");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -108,48 +108,54 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
 .icon-mdi_border_color_top:before {
     content: "\f11f";
 }
-.icon-mdi_format_color_bottom:before {
+.icon-mdi_border_outer_dots:before {
     content: "\f120";
 }
-.icon-mdi_format_color_fill_bottom:before {
+.icon-mdi_border_outer_stroke:before {
     content: "\f121";
 }
-.icon-mdi_format_color_fill_top:before {
+.icon-mdi_format_color_bottom:before {
     content: "\f122";
 }
-.icon-mdi_format_color_top:before {
+.icon-mdi_format_color_fill_bottom:before {
     content: "\f123";
 }
-.icon-olive-branches-award:before {
+.icon-mdi_format_color_fill_top:before {
     content: "\f124";
 }
-.icon-page_info:before {
+.icon-mdi_format_color_top:before {
     content: "\f125";
 }
-.icon-presentation:before {
+.icon-olive-branches-award:before {
     content: "\f126";
 }
-.icon-profile_group:before {
+.icon-page_info:before {
     content: "\f127";
 }
-.icon-shadow:before {
+.icon-presentation:before {
     content: "\f128";
 }
-.icon-shape_line:before {
+.icon-profile_group:before {
     content: "\f129";
 }
-.icon-space_dashboard:before {
+.icon-shadow:before {
     content: "\f12a";
 }
-.icon-thumb-down-circular:before {
+.icon-shape_line:before {
     content: "\f12b";
 }
-.icon-triangle:before {
+.icon-space_dashboard:before {
     content: "\f12c";
 }
-.icon-unsplash:before {
+.icon-thumb-down-circular:before {
     content: "\f12d";
 }
-.icon-upload:before {
+.icon-triangle:before {
     content: "\f12e";
+}
+.icon-unsplash:before {
+    content: "\f12f";
+}
+.icon-upload:before {
+    content: "\f130";
 }

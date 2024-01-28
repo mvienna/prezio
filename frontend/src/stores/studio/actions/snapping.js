@@ -135,9 +135,9 @@ export function handleSnappingDrawGuides(guides) {
           slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
             ? COLOR_PALETTE.BLACK
             : COLOR_PALETTE.WHITE,
-        strokeWidth: 2,
+        strokeWidth: 1,
         name: "guid-line",
-        dash: [10, 10],
+        dash: [20, 20],
       });
       this.layers.default.add(line);
 
@@ -152,9 +152,9 @@ export function handleSnappingDrawGuides(guides) {
           slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
             ? COLOR_PALETTE.BLACK
             : COLOR_PALETTE.WHITE,
-        strokeWidth: 2,
+        strokeWidth: 1,
         name: "guid-line",
-        dash: [10, 10],
+        dash: [20, 20],
       });
       this.layers.default.add(line);
       line.absolutePosition({
