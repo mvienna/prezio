@@ -1,7 +1,6 @@
 import { defineStore, storeToRefs } from "pinia";
 import {
   ALIGNMENT,
-  BRUSH_TYPES,
   SHAPES_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import { usePresentationsStore } from "stores/presentations";
@@ -449,10 +448,10 @@ export const useCanvasStore = defineStore("canvas", {
       this.ctx.lineWidth = element.brushSize;
 
       switch (element.brushType) {
-        case BRUSH_TYPES[0].value:
+        case "pen":
           break;
 
-        case BRUSH_TYPES[1].value:
+        case "pencil":
           this.ctx.globalAlpha = 0.1;
           break;
       }

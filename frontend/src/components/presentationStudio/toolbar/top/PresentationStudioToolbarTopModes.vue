@@ -1,33 +1,33 @@
 <template>
   <div class="row no-wrap q-gutter-sm">
     <!-- layouts -->
-    <!--    <q-btn-->
-    <!--      icon="icon-space_dashboard"-->
-    <!--      unelevated-->
-    <!--      text-color="black"-->
-    <!--      :class="showLayoutsMenu ? 'bg-grey-2' : ''"-->
-    <!--      round-->
-    <!--      size="12px"-->
-    <!--    >-->
-    <!--      <q-tooltip>-->
-    <!--        {{ $t("presentationStudio.toolbar.layouts.placeholder") }}-->
-    <!--      </q-tooltip>-->
+    <q-btn
+      icon="icon-space_dashboard"
+      unelevated
+      text-color="black"
+      :class="showLayoutsMenu ? 'bg-grey-2' : ''"
+      round
+      size="12px"
+    >
+      <q-tooltip>
+        {{ $t("presentationStudio.toolbar.layouts.placeholder") }}
+      </q-tooltip>
 
-    <!--      <q-menu-->
-    <!--        v-model="showLayoutsMenu"-->
-    <!--        anchor="top left"-->
-    <!--        self="bottom left"-->
-    <!--        transition-show="jump-down"-->
-    <!--        transition-hide="jump-up"-->
-    <!--        :offset="[0, 16]"-->
-    <!--        class="q-pa-sm bg-white scroll&#45;&#45;hidden"-->
-    <!--        style="width: 384px; max-height: 100%"-->
-    <!--      >-->
-    <!--        <PresentationStudioToolbarTopLayouts v-close-popup />-->
-    <!--      </q-menu>-->
-    <!--    </q-btn>-->
+      <q-menu
+        v-model="showLayoutsMenu"
+        anchor="top left"
+        self="bottom left"
+        transition-show="jump-down"
+        transition-hide="jump-up"
+        :offset="[0, 16]"
+        class="q-pa-sm bg-white hide-scrollbar"
+        style="width: 384px; max-height: 100%"
+      >
+        <PresentationStudioToolbarTopLayouts v-close-popup />
+      </q-menu>
+    </q-btn>
 
-    <!--    <q-separator vertical />-->
+    <q-separator vertical />
 
     <!-- drawing -->
     <q-btn

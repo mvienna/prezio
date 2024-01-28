@@ -1,5 +1,9 @@
 import Konva from "konva";
 import { i18n } from "src/boot/i18n";
+import {
+  COLOR_PALETTE,
+  LAYOUT_ELEMENT_OPTIONS,
+} from "src/constants/canvas/canvasVariables";
 
 export function addText(config = {}, isSave = true) {
   const textNode = new Konva.Text({
@@ -21,6 +25,10 @@ export function addText(config = {}, isSave = true) {
     fill: config.fill || this.text.default.fill,
   });
 
+  if (config.layout) {
+    textNode.setAttrs({ layout: config.layout });
+  }
+
   this.layers.default.add(textNode);
 
   textNode.on("transformend", this.handleSlideUpdate);
@@ -29,6 +37,117 @@ export function addText(config = {}, isSave = true) {
   if (isSave) {
     this.handleSlideUpdate();
   }
+}
+
+export function setLayout(layout) {
+  this.layers.default.find(this.MODE_OPTIONS.TEXT).forEach((node) => {
+    if (node.getAttr("layout")) {
+      node.destroy();
+    }
+  });
+
+  layout.elements.forEach((element) => {
+    let options = { layout: layout.name };
+
+    switch (element) {
+      case LAYOUT_ELEMENT_OPTIONS.titleCenterAbove:
+        options = {
+          ...options,
+          text: i18n.global.t("presentationStudio.layouts.defaultTexts.title"),
+          x: 64,
+          y: this.scene.height / 2 - 70 * this.text.default.lineHeight,
+          fontSize: 70,
+          align: "center",
+          width: this.scene.width - 64 * 2,
+          fontStyle: "bold",
+        };
+        break;
+
+      case LAYOUT_ELEMENT_OPTIONS.subtitleCenterBelow:
+        options = {
+          ...options,
+          text: i18n.global.t(
+            "presentationStudio.layouts.defaultTexts.subtitle",
+          ),
+          x: 64,
+          y: this.scene.height / 2,
+          fontSize: 54,
+          align: "center",
+          width: this.scene.width - 64 * 2,
+          fontStyle: "bold",
+        };
+        break;
+
+      case LAYOUT_ELEMENT_OPTIONS.title:
+        options = {
+          ...options,
+          text: i18n.global.t("presentationStudio.layouts.defaultTexts.title"),
+          x: 64,
+          y: 100,
+          fontSize: 70,
+          align: "left",
+          width: this.scene.width - 64 * 2,
+          fontStyle: "bold",
+        };
+        break;
+
+      case LAYOUT_ELEMENT_OPTIONS.body:
+        options = {
+          ...options,
+          text: i18n.global.t("presentationStudio.layouts.defaultTexts.body"),
+          x: 64,
+          y: 100 + 100,
+          fontSize: this.text.default.fontSize,
+          align: "left",
+          width: this.scene.width - 64 * 2,
+          fill: COLOR_PALETTE.GREY,
+        };
+        break;
+
+      case LAYOUT_ELEMENT_OPTIONS.bodyLeft:
+        options = {
+          ...options,
+          text: i18n.global.t("presentationStudio.layouts.defaultTexts.body"),
+          x: 64,
+          y: 100 + 100,
+          fontSize: this.text.default.fontSize,
+          align: "left",
+          width: this.scene.width / 2 - 64 - 64 / 2,
+          fill: COLOR_PALETTE.GREY,
+        };
+        break;
+
+      case LAYOUT_ELEMENT_OPTIONS.bodyRight:
+        options = {
+          ...options,
+          text: i18n.global.t("presentationStudio.layouts.defaultTexts.body"),
+          x: 64 + this.scene.width / 2 + 64 / 2,
+          y: 100 + 100,
+          fontSize: this.text.default.fontSize,
+          align: "left",
+          width: this.scene.width / 2 - 64 - 64 / 2,
+          fill: COLOR_PALETTE.GREY,
+        };
+        break;
+
+      case LAYOUT_ELEMENT_OPTIONS.titleCenterCenter:
+        options = {
+          ...options,
+          text: i18n.global.t("presentationStudio.layouts.defaultTexts.title"),
+          x: 64,
+          y: this.scene.height / 2 - (70 * this.text.default.lineHeight) / 2,
+          fontSize: 70,
+          align: "center",
+          width: this.scene.width - 64 * 2,
+          fontStyle: "bold",
+        };
+        break;
+    }
+
+    this.addText(options, false);
+  });
+
+  this.handleSlideUpdate();
 }
 
 export function processText(textNode) {

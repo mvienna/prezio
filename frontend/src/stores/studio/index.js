@@ -2,6 +2,7 @@ import { defineStore, storeToRefs } from "pinia";
 import {
   COLOR_PALETTE,
   DRAWING_MODES,
+  LAYOUT_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import Konva from "konva";
 import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
@@ -39,7 +40,6 @@ export const useStudioStore = defineStore("studio", {
     },
     stages: {
       default: null,
-      // preview: null,
     },
 
     isLoaded: false,
@@ -59,7 +59,6 @@ export const useStudioStore = defineStore("studio", {
     layers: {
       default: null, // default stage
       base: null, // default stage
-      // preview: null, // preview stage
     },
 
     /*
@@ -364,35 +363,7 @@ export const useStudioStore = defineStore("studio", {
 
         // add default nodes for content-type slide
         if (slide.value.type === SLIDE_TYPES.CONTENT) {
-          this.addText(
-            {
-              text: i18n.global.t(
-                "presentationStudio.layouts.defaultTexts.title",
-              ),
-              x: 64,
-              y: 100,
-              fontSize: 70,
-              align: "left",
-              width: this.scene.width - 64 * 2,
-              fontStyle: "bold",
-            },
-            false,
-          );
-
-          this.addText(
-            {
-              text: i18n.global.t(
-                "presentationStudio.layouts.defaultTexts.body",
-              ),
-              x: 64,
-              y: 100 + 100,
-              fontSize: this.text.default.fontSize,
-              align: "left",
-              width: this.scene.width - 64 * 2,
-              fill: COLOR_PALETTE.GREY,
-            },
-            false,
-          );
+          this.setLayout(LAYOUT_OPTIONS.titleAndBody);
         }
 
         // add default nodes for leaderboard or quiz type slide

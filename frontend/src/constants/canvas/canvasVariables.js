@@ -3,15 +3,6 @@ export const DRAWING_MODES = {
   ERASER: "eraser",
 };
 
-// TODO: REMOVE! canvas/update.js
-export const BRUSH_TYPES = [
-  { label: "presentationStudio.toolbar.drawing.BRUSH_TYPES.pen", value: "pen" },
-  {
-    label: "presentationStudio.toolbar.drawing.BRUSH_TYPES.pencil",
-    value: "pencil",
-  },
-];
-
 export const FONT_OPTIONS = [
   "Arial",
   "Helvetica",
@@ -95,4 +86,48 @@ export const BASE_FILL_COLOR_OPTIONS = [
 export const COLOR_SCHEME_OPTIONS = {
   LIGHT: "light",
   DARK: "dark",
+};
+
+export const LAYOUT_ELEMENT_OPTIONS = {
+  titleCenterAbove: "title-center-above",
+  subtitleCenterBelow: "subtitle-center-below",
+  title: "title",
+  body: "body",
+  bodyLeft: "body-left",
+  bodyRight: "body-right",
+  titleCenterCenter: "title-center-center",
+};
+
+export const LAYOUT_OPTIONS = {
+  blank: {
+    name: "blank",
+    elements: [],
+  },
+  titleSlide: {
+    name: "titleSlide",
+    elements: [
+      LAYOUT_ELEMENT_OPTIONS.titleCenterAbove,
+      LAYOUT_ELEMENT_OPTIONS.subtitleCenterBelow,
+    ],
+  },
+  title: {
+    name: "title",
+    elements: [LAYOUT_ELEMENT_OPTIONS.title],
+  },
+  titleAndBody: {
+    name: "titleAndBody",
+    elements: [LAYOUT_ELEMENT_OPTIONS.title, LAYOUT_ELEMENT_OPTIONS.body],
+  },
+  titleAndTwoColumns: {
+    name: "titleAndTwoColumns",
+    elements: [
+      LAYOUT_ELEMENT_OPTIONS.title,
+      LAYOUT_ELEMENT_OPTIONS.bodyLeft,
+      LAYOUT_ELEMENT_OPTIONS.bodyRight,
+    ],
+  },
+  titleOnly: {
+    name: "titleOnly",
+    elements: [LAYOUT_ELEMENT_OPTIONS.titleCenterCenter],
+  },
 };
