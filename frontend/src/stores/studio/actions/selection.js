@@ -51,12 +51,12 @@ export function handleSelection() {
   });
 
   this.layers.default.add(this.transformer.default);
-  this.transformer.default.moveToTop();
+  this.transformer.default?.moveToTop();
 
-  this.transformer.default.on("transform", () => {
+  this.transformer.default?.on("transform", () => {
     this.isTransforming = true;
   });
-  this.transformer.default.on("transformend", () => {
+  this.transformer.default?.on("transformend", () => {
     this.isTransforming = false;
   });
 
@@ -154,7 +154,7 @@ export function handleSelectionMouseUp(event) {
     Konva.Util.haveIntersection(box, shape.getClientRect()),
   );
 
-  this.transformer.default.nodes(selected);
+  this.transformer.default?.nodes(selected);
 
   this.applyTransformerCustomization();
 
@@ -195,23 +195,23 @@ export function handleSelectionClick(event) {
   const metaPressed =
     event.evt.shiftKey || event.evt.ctrlKey || event.evt.metaKey;
   const isSelected =
-    this.transformer.default.nodes().indexOf(event.target) >= 0;
+    this.transformer.default?.nodes().indexOf(event.target) >= 0;
 
   if (!metaPressed && !isSelected) {
     // if no key pressed and the node is not selected
     // select just one
-    this.transformer.default.nodes([event.target]);
+    this.transformer.default?.nodes([event.target]);
   } else if (metaPressed && isSelected) {
     // if we pressed keys and node was selected
     // we need to remove it from selection:
-    const nodes = this.transformer.default.nodes().slice(); // use slice to have new copy of array
+    const nodes = this.transformer.default?.nodes().slice(); // use slice to have new copy of array
     // remove node from array
     nodes.splice(nodes.indexOf(event.target), 1);
-    this.transformer.default.nodes(nodes);
+    this.transformer.default?.nodes(nodes);
   } else if (metaPressed && !isSelected) {
     // add the node into selection
-    const nodes = this.transformer.default.nodes().concat([event.target]);
-    this.transformer.default.nodes(nodes);
+    const nodes = this.transformer.default?.nodes().concat([event.target]);
+    this.transformer.default?.nodes(nodes);
   }
 
   this.applyTransformerCustomization();
@@ -226,7 +226,7 @@ export function deselectElements() {
 
   this.mode = null;
 
-  this.transformer.default.nodes([]);
+  this.transformer.default?.nodes([]);
 }
 
 /*
@@ -237,7 +237,7 @@ export function setCustomShapeTransformer(node) {
     .find(".customTransformer")
     .forEach((node) => node.destroy());
   this.transformer.custom.shape.node = node;
-  this.transformer.default.nodes([]);
+  this.transformer.default?.nodes([]);
 
   this.transformer.custom.shape.anchor1 = new Konva.Circle({
     x:
@@ -314,7 +314,9 @@ export function setCustomShapeTransformer(node) {
 }
 
 export function applyTransformerCustomization() {
-  this.transformer.default.setAttrs({
+  if (!this.transformer.default) return;
+
+  this.transformer.default?.setAttrs({
     anchorStroke:
       slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
         ? COLOR_PALETTE.BLACK
@@ -365,7 +367,7 @@ export function applyTransformerCustomization() {
       .nodes()
       .filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT).length
   ) {
-    this.transformer.default.setAttrs({
+    this.transformer.default?.setAttrs({
       boundBoxFunc: function (oldBox, newBox) {
         newBox.width = Math.max(30, newBox.width);
         return newBox;

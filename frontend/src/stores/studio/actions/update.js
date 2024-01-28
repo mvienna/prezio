@@ -41,7 +41,7 @@ export async function handleSlideUpdate() {
   // show transformers
   this.transformer.default?.show();
   this.layers.default.find(".customTransformer").forEach((node) => node.show());
-  this.transformer.default.moveToTop();
+  this.transformer.default?.moveToTop();
   this.applyTransformerCustomization();
 
   await presentationsStore.saveSlide();

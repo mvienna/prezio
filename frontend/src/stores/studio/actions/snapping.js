@@ -185,10 +185,10 @@ export function handleSnappingDragMove(event) {
       SHAPES_OPTIONS.ARROW,
       SHAPES_OPTIONS.ARROW_DOUBLE,
     ].includes(event.target.getClassName()) &&
-    !this.transformer.default.nodes()?.length
+    !this.transformer.default?.nodes()?.length
   ) {
-    const nodes = this.transformer.default.nodes().concat([event.target]);
-    this.transformer.default.nodes(nodes);
+    const nodes = this.transformer.default?.nodes().concat([event.target]);
+    this.transformer.default?.nodes(nodes);
   }
 
   // clear all previous lines on the screen

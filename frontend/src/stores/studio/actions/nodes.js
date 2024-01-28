@@ -1,7 +1,7 @@
 export function copyNodes(
   nodes = this.transformer.custom.shape.node
     ? [this.transformer.custom.shape.node]
-    : this.transformer.default.nodes(),
+    : this.transformer.default?.nodes(),
 ) {
   this.copiedNodes = nodes;
   this.deselectElements();
@@ -23,7 +23,7 @@ export function pasteNodes(nodes = this.copiedNodes) {
     return clone;
   });
 
-  this.transformer.default.nodes(nodes);
+  this.transformer.default?.nodes(nodes);
   this.copyNodes(nodes);
 
   this.handleSlideUpdate();
@@ -32,7 +32,7 @@ export function pasteNodes(nodes = this.copiedNodes) {
 export function duplicateNodes(
   nodes = this.transformer.custom.shape.node
     ? [this.transformer.custom.shape.node]
-    : this.transformer.default.nodes(),
+    : this.transformer.default?.nodes(),
 ) {
   this.pasteNodes(nodes);
   this.handleSlideUpdate();
@@ -41,7 +41,7 @@ export function duplicateNodes(
 export function cutNodes(
   nodes = this.transformer.custom.shape.node
     ? [this.transformer.custom.shape.node]
-    : this.transformer.default.nodes(),
+    : this.transformer.default?.nodes(),
 ) {
   this.copyNodes(nodes);
   this.deleteNodes(nodes);
@@ -50,7 +50,7 @@ export function cutNodes(
 export function deleteNodes(
   nodes = this.transformer.custom.shape.node
     ? [this.transformer.custom.shape.node]
-    : this.transformer.default.nodes(),
+    : this.transformer.default?.nodes(),
 ) {
   this.deselectElements();
   nodes.forEach((node) => node.destroy());
@@ -60,7 +60,7 @@ export function deleteNodes(
 export function moveUp(
   nodes = this.transformer.custom.shape.node
     ? [this.transformer.custom.shape.node]
-    : this.transformer.default.nodes(),
+    : this.transformer.default?.nodes(),
 ) {
   nodes.forEach((node) => node.moveUp());
   this.handleSlideUpdate();
@@ -69,7 +69,7 @@ export function moveUp(
 export function moveDown(
   nodes = this.transformer.custom.shape.node
     ? [this.transformer.custom.shape.node]
-    : this.transformer.default.nodes(),
+    : this.transformer.default?.nodes(),
 ) {
   nodes.forEach((node) => node.moveDown());
   this.handleSlideUpdate();
@@ -78,7 +78,7 @@ export function moveDown(
 export function moveToTop(
   nodes = this.transformer.custom.shape.node
     ? [this.transformer.custom.shape.node]
-    : this.transformer.default.nodes(),
+    : this.transformer.default?.nodes(),
 ) {
   nodes.forEach((node) => node.moveToTop());
   this.handleSlideUpdate();
@@ -87,7 +87,7 @@ export function moveToTop(
 export function moveToBottom(
   nodes = this.transformer.custom.shape.node
     ? [this.transformer.custom.shape.node]
-    : this.transformer.default.nodes(),
+    : this.transformer.default?.nodes(),
 ) {
   nodes.forEach((node) => node.moveToBottom());
   this.handleSlideUpdate();
