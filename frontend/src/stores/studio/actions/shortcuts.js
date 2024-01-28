@@ -1,4 +1,13 @@
+import { handleSlideUpdate } from "stores/studio/actions/update";
+
 export function handleShortcuts(event) {
+  if (event.ctrlKey || event.metaKey) {
+    if (event.key === "s") {
+      event.preventDefault();
+      this.handleSlideUpdate();
+    }
+  }
+
   const activeElement = document.activeElement;
   if (activeElement && activeElement.tagName === "INPUT") return;
   if (this.mode === this.MODE_OPTIONS.TEXT_EDITING) return;
