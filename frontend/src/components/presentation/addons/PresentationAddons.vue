@@ -1,70 +1,74 @@
 <template>
   <!-- title description -->
-  <transition
-    appear
-    enter-active-class="animated fadeInDown"
-    leave-active-class="animated fadeOutUp"
-  >
-    <div
-      v-if="hoveredElement && slideSettings?.description"
-      ref="tooltip"
-      :style="`top: ${
-        canvasStore.canvasRect().top +
-        canvasStore.computeRealSize(hoveredElement.y) +
-        canvasStore.computeRealSize(hoveredElement.height) +
-        16
-      }px; left: ${
-        canvasStore.canvasRect().left +
-        canvasStore.computeRealSize(hoveredElement.x) +
-        canvasStore.computeRealSize(hoveredElement.width) / 2 -
-        tooltipWidth / 2
-      }px;`"
-      class="tooltip text-12"
-    >
-      {{ slideSettings.description }}
-    </div>
-  </transition>
+  <!--  <transition-->
+  <!--    appear-->
+  <!--    enter-active-class="animated fadeInDown"-->
+  <!--    leave-active-class="animated fadeOutUp"-->
+  <!--  >-->
+  <!--    <div-->
+  <!--      v-if="hoveredElement && slideSettings?.description"-->
+  <!--      ref="tooltip"-->
+  <!--      :style="`top: ${-->
+  <!--        canvasStore.canvasRect().top +-->
+  <!--        canvasStore.computeRealSize(hoveredElement.y) +-->
+  <!--        canvasStore.computeRealSize(hoveredElement.height) +-->
+  <!--        16-->
+  <!--      }px; left: ${-->
+  <!--        canvasStore.canvasRect().left +-->
+  <!--        canvasStore.computeRealSize(hoveredElement.x) +-->
+  <!--        canvasStore.computeRealSize(hoveredElement.width) / 2 - -->
+  <!--        tooltipWidth / 2-->
+  <!--      }px;`"-->
+  <!--      class="tooltip text-12"-->
+  <!--    >-->
+  <!--      {{ slideSettings.description }}-->
+  <!--    </div>-->
+  <!--  </transition>-->
 
-  <!-- words cloud -->
-  <PresentationStudioWordCloud
-    v-if="
-      slide?.type === SLIDE_TYPES.WORD_CLOUD &&
-      wordCloudData?.length &&
-      !slideSettings?.isResultsHidden
-    "
-    :key="'addons__word_cloud__' + slide?.id"
-    :words="wordCloudData"
-    :style="isPresentationPreview ? 'z-index: 6001;' : ''"
-    @remove-word="handleRemovingAnswer($event)"
-  />
+  <template v-if="box">
+    <!-- words cloud -->
+    <PresentationStudioWordCloud
+      v-if="
+        slide?.type === SLIDE_TYPES.WORD_CLOUD &&
+        wordCloudData?.length &&
+        !slideSettings?.isResultsHidden
+      "
+      :key="'addons__word_cloud__' + slide?.id"
+      :words="wordCloudData"
+      :style="isPresentationPreview ? 'z-index: 6001;' : ''"
+      @remove-word="handleRemovingAnswer($event)"
+    />
 
-  <!-- bar chart -->
-  <PresentationAddonsBarChart
-    v-if="
-      SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
-      (!room ||
-        (room &&
-          room.is_quiz_started &&
-          (!room.is_submission_locked ||
-            (room.is_submission_locked && timeLeft === -1))))
-    "
-    :key="'addons__bar_chart__' + slide?.id"
-    :data="
-      [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
-        ? computeQuizPickAnswerBarChartData()
-        : computeQuizTypeAnswerBarChartData()
-    "
-  />
+    <!-- bar chart -->
+    <PresentationAddonsBarChart
+      v-if="
+        SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
+        (!room ||
+          (room &&
+            room.is_quiz_started &&
+            (!room.is_submission_locked ||
+              (room.is_submission_locked && timeLeft === -1))))
+      "
+      :box="box"
+      :key="'addons__bar_chart__' + slide?.id"
+      :data="
+        [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
+          ? computeQuizPickAnswerBarChartData()
+          : computeQuizTypeAnswerBarChartData()
+      "
+    />
 
-  <!-- leaderboard -->
-  <PresentationAddonsLeaderboard
-    v-if="slide?.type === SLIDE_TYPES.LEADERBOARD"
-    :key="'addons__leaderboard__' + slide?.id"
-  />
+    <!-- leaderboard -->
+    <PresentationAddonsLeaderboard
+      v-if="slide?.type === SLIDE_TYPES.LEADERBOARD"
+      :key="'addons__leaderboard__' + slide?.id"
+      :box="box"
+    />
+  </template>
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import PresentationStudioWordCloud from "components/presentation/addons/PresentationAddonsWordCloud.vue";
@@ -78,24 +82,40 @@ import PresentationAddonsBarChart from "components/presentation/addons/Presentat
 import { timeLeft } from "src/helpers/countdown";
 import PresentationAddonsLeaderboard from "components/presentation/addons/PresentationAddonsLeaderboard.vue";
 import { useI18n } from "vue-i18n";
-
-/*
- * variables
- */
-defineProps({
-  hoveredElement: { type: Object },
-});
+import { useStudioStore } from "stores/studio";
 
 const { t } = useI18n({ useScope: "global" });
 
 /*
  * stores
  */
-const canvasStore = useCanvasStore();
+const studioStore = useStudioStore();
+const { stages } = storeToRefs(studioStore);
 
 const presentationsStore = usePresentationsStore();
 const { room, slide, slideSettings, isPresentationPreview, participants } =
   storeToRefs(presentationsStore);
+
+/*
+ * resize
+ */
+const box = ref();
+const resizeObserverCanvas = ref();
+
+onMounted(() => {
+  box.value = stages.value.default.container().getBoundingClientRect();
+
+  resizeObserverCanvas.value = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      box.value = stages.value.default.container().getBoundingClientRect();
+    }
+  });
+  resizeObserverCanvas.value.observe(stages.value.default.container());
+});
+
+onUnmounted(() => {
+  resizeObserverCanvas.value.disconnect();
+});
 
 /*
  * slide answers
@@ -152,7 +172,7 @@ const computeQuizPickAnswerBarChartData = () => {
     const answers = slide.value.answers.filter(
       (answer) =>
         JSON.parse(answer.answer_data)?.text === option.value &&
-        answer.slide_type === slide.value?.type
+        answer.slide_type === slide.value?.type,
     );
 
     return {
@@ -183,7 +203,7 @@ const computeQuizTypeAnswerBarChartData = () => {
       [
         slideSettings.value.correctAnswer.value,
         ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
-      ].includes(JSON.parse(answer.answer_data)?.text)
+      ].includes(JSON.parse(answer.answer_data)?.text),
   );
 
   const incorrectAnswers = slide.value.answers.filter(
@@ -192,7 +212,7 @@ const computeQuizTypeAnswerBarChartData = () => {
       ![
         slideSettings.value.correctAnswer.value,
         ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
-      ].includes(JSON.parse(answer.answer_data)?.text)
+      ].includes(JSON.parse(answer.answer_data)?.text),
   );
 
   return [
@@ -225,7 +245,7 @@ const computeQuizTypeAnswerBarChartData = () => {
           ? incorrectAnswers.length
           : 0,
       tooltipData: incorrectAnswers.map(
-        (answer) => JSON.parse(answer.answer_data)?.text
+        (answer) => JSON.parse(answer.answer_data)?.text,
       ),
       isCorrect: false,
     },

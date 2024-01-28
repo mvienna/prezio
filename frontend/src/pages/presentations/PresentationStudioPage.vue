@@ -32,6 +32,11 @@
       "
     />
 
+    <!-- addons -->
+    <PresentationAddons
+      v-if="isLoaded && slide?.type !== SLIDE_TYPES.CONTENT"
+    />
+
     <!-- slide data (reactions, answers, participants online) -->
     <PresentationStudioRoomData />
 
@@ -65,6 +70,7 @@ import PresentationStudioRoomActions from "components/presentationStudio/toolbar
 import PresentationStudioElementsContextMenu from "components/presentationStudio/PresentationStudioElementsContextMenu.vue";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import PresentationStudioRoomData from "components/presentationStudio/PresentationStudioRoomData.vue";
+import PresentationAddons from "components/presentation/addons/PresentationAddons.vue";
 
 /*
  * variables
@@ -86,7 +92,7 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 
 const studioStore = useStudioStore();
-const { layers, selection, mode, MODE_OPTIONS, transformer } =
+const { layers, selection, mode, MODE_OPTIONS, transformer, isLoaded } =
   storeToRefs(studioStore);
 
 /*

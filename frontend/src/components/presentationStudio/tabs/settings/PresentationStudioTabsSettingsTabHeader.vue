@@ -19,7 +19,7 @@
       dense
       class="q-mt-sm"
       debounce="500"
-      @update:model-value="handleQuestionInput()"
+      @update:model-value="title.text(question)"
     >
       <template #append>
         <!-- length -->
@@ -32,11 +32,11 @@
           size="10px"
           color="black"
           :icon="
-            layoutTitle?.textAlign === 'left'
+            title?.align() === 'left'
               ? 'r_format_align_left'
-              : layoutTitle?.textAlign === 'center'
+              : title?.align() === 'center'
                 ? 'r_format_align_center'
-                : layoutTitle?.textAlign === 'right'
+                : title?.align() === 'right'
                   ? 'r_format_align_right'
                   : 'r_format_align_left'
           "
@@ -47,49 +47,40 @@
             transition-show="jump-down"
             transition-hide="jump-up"
             style="border: 1px solid #13123a4c"
+            class="no-padding"
           >
             <q-btn-group outline>
               <!-- align left -->
               <q-btn
                 unelevated
-                :text-color="
-                  layoutTitle?.textAlign === 'left' ? 'dark' : 'grey'
-                "
-                :color="layoutTitle?.textAlign === 'left' ? 'grey-4' : 'grey-1'"
+                :text-color="title?.align() === 'left' ? 'dark' : 'grey'"
+                :color="title?.align() === 'left' ? 'grey-4' : 'grey-1'"
                 icon="r_format_align_left"
                 size="10px"
                 round
-                @click="handleQuestionInput('left')"
+                @click="title.align('left')"
               />
 
               <!-- align center -->
               <q-btn
                 unelevated
-                :text-color="
-                  layoutTitle?.textAlign === 'center' ? 'dark' : 'grey'
-                "
-                :color="
-                  layoutTitle?.textAlign === 'center' ? 'grey-4' : 'grey-1'
-                "
+                :text-color="title?.align() === 'center' ? 'dark' : 'grey'"
+                :color="title?.align() === 'center' ? 'grey-4' : 'grey-1'"
                 icon="r_format_align_center"
                 size="10px"
                 round
-                @click="handleQuestionInput('center')"
+                @click="title.align('center')"
               />
 
               <!-- align right -->
               <q-btn
                 unelevated
-                :text-color="
-                  layoutTitle?.textAlign === 'right' ? 'dark' : 'grey'
-                "
-                :color="
-                  layoutTitle?.textAlign === 'right' ? 'grey-4' : 'grey-1'
-                "
+                :text-color="title?.align() === 'right' ? 'dark' : 'grey'"
+                :color="title?.align() === 'right' ? 'grey-4' : 'grey-1'"
                 icon="r_format_align_right"
                 size="10px"
                 round
-                @click="handleQuestionInput('right')"
+                @click="title.align('right')"
               />
             </q-btn-group>
           </q-menu>
@@ -151,7 +142,6 @@
 </template>
 
 <script setup>
-import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 import { computed, onBeforeMount, ref, watch } from "vue";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { storeToRefs } from "pinia";
@@ -159,6 +149,7 @@ import { useCanvasStore } from "stores/canvas";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { useStudioStore } from "stores/studio";
 
 /*
  * emits
@@ -174,7 +165,10 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const canvasStore = useCanvasStore();
-const { elements, MODE_OPTIONS } = storeToRefs(canvasStore);
+const { elements } = storeToRefs(canvasStore);
+
+const studioStore = useStudioStore();
+const { MODE_OPTIONS, layers } = storeToRefs(studioStore);
 
 const textStore = useCanvasTextStore();
 const { customization } = storeToRefs(textStore);
@@ -187,87 +181,21 @@ const { slide, slideSettings } = storeToRefs(presentationsStore);
  */
 const question = ref();
 
-const layoutTitle = computed(() => {
-  return elements.value.find((element) => element.id.includes("-title-top-"));
+const title = computed(() => {
+  return layers.value.default?.findOne(MODE_OPTIONS.value.TEXT);
 });
 
 watch(
-  () => layoutTitle.value,
+  () => title.value,
   () => {
-    question.value = layoutTitle.value?.text;
+    question.value = title.value?.text();
   },
+  { deep: true },
 );
 
 onBeforeMount(() => {
-  question.value = layoutTitle.value?.text;
+  question.value = title.value?.text();
 });
-
-const handleQuestionInput = (textAlign = null) => {
-  const index = elements.value.findIndex(
-    (element) => element.id === layoutTitle.value?.id,
-  );
-
-  if (index === -1) {
-    const layoutDefaultElementProps = {
-      mode: MODE_OPTIONS.value.TEXT,
-      isVisible: true,
-      isLocked: false,
-      fontFamily: customization.value.font,
-      lineHeight: customization.value.lineHeight,
-      fontWeight: "normal",
-      textDecoration: "none",
-      fontStyle: "normal",
-      textAlign: ALIGNMENT.horizontal.left,
-      verticalAlign: ALIGNMENT.vertical.top,
-      rotationAngle: 0,
-
-      /*
-       * editable
-       */
-      id: "layout-",
-      text: "",
-
-      fontSize: "68px",
-      color: customization.value.color,
-
-      x: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100,
-      ),
-      y: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 5) / 100,
-      ),
-
-      width: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().width * 90) / 100,
-      ),
-      height: canvasStore.computeAdjustedSize(30),
-    };
-
-    const titleElement = {
-      ...layoutDefaultElementProps,
-
-      id: "layout-title-top-titleAndBody",
-      text: question.value.length
-        ? question.value
-        : t("presentationStudio.layouts.defaultTexts.question"),
-      textAlign: "center",
-
-      color: "#313232",
-      fontSize: "68px",
-      fontWeight: "bold",
-    };
-
-    elements.value.unshift(titleElement);
-  } else {
-    elements.value[index].text = question.value;
-  }
-
-  if (textAlign) {
-    elements.value[index].textAlign = textAlign;
-  }
-
-  canvasStore.redrawCanvas();
-};
 </script>
 
 <style scoped lang="scss">

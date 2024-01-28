@@ -3,7 +3,7 @@
     <div
       class="bar_chart"
       ref="barChart"
-      :style="`top: ${top}; left: ${left};`"
+      :style="`top: ${top}px; left: ${left}px;`"
     ></div>
   </div>
 </template>
@@ -12,8 +12,16 @@
 import * as d3 from "d3";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import { useCanvasStore } from "stores/canvas";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
+import { useStudioStore } from "stores/studio";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * stores
@@ -23,24 +31,23 @@ const {
   room,
   slide,
   slideSettings,
-  showRoomInvitationPanel,
   averageBackgroundBrightness,
   backgroundBrightnessThreshold,
 } = storeToRefs(presentationStore);
 
-const canvasStore = useCanvasStore();
-const { canvas, scale } = storeToRefs(canvasStore);
+const studioStore = useStudioStore();
+const { stages } = storeToRefs(studioStore);
 
 /*
  * data
  */
 const props = defineProps({
   data: { type: Array },
+  box: { type: Object, default: null },
 });
 
 const color = computed(() => {
-  return averageBackgroundBrightness.value >=
-    backgroundBrightnessThreshold.value
+  return slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
     ? "black"
     : "white";
 });
@@ -55,86 +62,38 @@ const y = ref();
 const yAxis = ref();
 const tooltip = ref();
 
-const canvasRect = ref(canvasStore.canvasRect());
-
 const width = ref(0);
 const height = ref(0);
-
-const left = computed(() => {
-  return (
-    canvasRect.value.left +
-    canvasRect.value.width / 2 -
-    width.value / 2 -
-    margin.value.left +
-    "px"
-  );
-});
-
-const top = computed(() => {
-  return (
-    canvasRect.value.top +
-    canvasRect.value.height / 2 -
-    height.value / 2 -
-    margin.value.top +
-    "px"
-  );
-});
-
-const margin = computed(() => {
-  return {
-    top: (canvasRect.value.height * 15) / 100,
-    right: (canvasRect.value.width * 10) / 100,
-    bottom: (canvasRect.value.height * 30) / 100,
-    left: (canvasRect.value.width * 10) / 100,
-  };
-});
+const left = ref(0);
+const top = ref(0);
 
 /*
  * hooks
  */
-const resizeObserverCanvas = ref();
-const resizeObserverPage = ref();
-
-onMounted(() => {
-  const canvas = document.getElementById("canvas");
-  resizeObserverCanvas.value = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      canvasRect.value = canvasStore.canvasRect();
-
-      width.value = (canvasRect.value.width * 80) / 100;
-      height.value = (canvasRect.value.height * 30) / 100;
-
-      if (canvasRect.value.width > 0 && canvasRect.value.height > 0) {
-        update();
-      }
-    }
-  });
-  resizeObserverCanvas.value.observe(canvas);
-
-  const page = document.getElementsByClassName("q-page-container")[0];
-  resizeObserverPage.value = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      if (
-        window.screen.width > canvasStore.canvasRect().width &&
-        !showRoomInvitationPanel.value
-      ) {
-        canvasRect.value = canvasStore.canvasRect();
-      }
-    }
-  });
-  resizeObserverPage.value.observe(page);
-});
-
-onUnmounted(() => {
-  resizeObserverCanvas.value.disconnect();
-  resizeObserverPage.value.disconnect();
-});
-
 watch(
   () => props.data,
   () => {
     update();
-  }
+  },
+);
+
+watch(
+  () => color.value,
+  () => {
+    update();
+  },
+);
+
+onMounted(() => {
+  update();
+});
+
+watch(
+  () => props.box,
+  () => {
+    update();
+  },
+  { deep: true },
 );
 
 /*
@@ -181,7 +140,7 @@ const generate = () => {
             d.target.__data__.value +
             "</b></br><div>" +
             d.target.__data__.tooltipData.join(", ") +
-            "</div>"
+            "</div>",
         )
         .style("left", d.offsetX + "px")
         .style("top", d.offsetY + "px");
@@ -197,24 +156,24 @@ const generate = () => {
   // yAxis.value = svg.value.append("g");
 
   isBarChartGenerated.value = true;
-  update(true);
+  update();
 };
 
-const update = (isOnLoad = false) => {
+const update = () => {
+  width.value = (props.box?.width * 80) / 100;
+  height.value = (props.box?.height * 70) / 100;
+  left.value = props.box?.left + (props.box?.width - width.value) / 2;
+  top.value = props.box?.top + (props.box?.height - height.value) / 2;
+
   if (!isBarChartGenerated.value) return generate();
 
   svg.value = d3
     .select(barChart.value)
     .select("svg")
-    .attr("width", width.value + margin.value.left + margin.value.right)
-    .attr("height", height.value + margin.value.top + margin.value.bottom)
-    .select("g")
-    .attr(
-      "transform",
-      `translate(${margin.value.left}, ${
-        margin.value.top + margin.value.bottom / 2
-      })`
-    );
+    .attr("width", width.value)
+    .attr("height", height.value + (height.value * 15) / 100)
+    .select("g");
+  // .attr("transform", `translate(${0}, ${(height.value * 15) / 100})`);
 
   svg.value.selectAll("image").remove();
 
@@ -286,7 +245,7 @@ const update = (isOnLoad = false) => {
     .data(props.data)
     .join("rect")
     .transition()
-    .duration(isOnLoad ? 0 : 200)
+    .duration(0)
     .attr("x", (d) => x.value(d.group) + xOffset)
     .attr("y", (d) => y.value(d.value) + 0.5)
     .attr("width", barSize)
@@ -321,13 +280,6 @@ const update = (isOnLoad = false) => {
     .attr("y", (d) => y.value(d.value) - barSize)
     .attr("preserveAspectRatio", "xMidYMid slice");
 };
-
-watch(
-  () => averageBackgroundBrightness.value,
-  () => {
-    update();
-  }
-);
 </script>
 
 <style scoped lang="scss">

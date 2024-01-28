@@ -19,16 +19,18 @@ function ruPluralRule(choice, choicesLength, orgRule) {
   return choicesLength < 4 ? 2 : 3;
 }
 
-export default boot(({ app }) => {
-  const i18n = createI18n({
-    locale: process.env.LANG,
-    globalInjection: true,
-    warnHtmlMessage: false,
-    pluralRules: {
-      ["ru-RU"]: ruPluralRule,
-    },
-    messages,
-  });
+const i18n = createI18n({
+  locale: process.env.LANG,
+  globalInjection: true,
+  warnHtmlMessage: false,
+  pluralRules: {
+    ["ru-RU"]: ruPluralRule,
+  },
+  messages,
+});
 
+export default boot(({ app }) => {
   app.use(i18n);
 });
+
+export { i18n };

@@ -50,7 +50,7 @@
       text-color="black"
       round
       size="12px"
-      @click="studioStore.addText(t)"
+      @click="studioStore.addText()"
     >
       <q-tooltip>
         {{ $t("presentationStudio.toolbar.text.title") }}

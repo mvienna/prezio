@@ -23,7 +23,7 @@
             $t(
               `presentationLayout.rightDrawer.tabs.types.options.${
                 Object.keys(types)[index]
-              }`
+              }`,
             )
           }}
         </span>
@@ -55,7 +55,7 @@
           >
             {{
               $t(
-                `presentationLayout.rightDrawer.tabs.types.options.${type.name}`
+                `presentationLayout.rightDrawer.tabs.types.options.${type.name}`,
               )
             }}
           </div>
@@ -138,7 +138,6 @@ const types = computed(() => {
     quizzesAndGames: [
       {
         name: SLIDE_TYPES.PICK_ANSWER,
-        disable: true, // TODO:
       },
       // {
       //   name: SLIDE_TYPES.PICK_IMAGE,
@@ -146,7 +145,6 @@ const types = computed(() => {
       // },
       {
         name: SLIDE_TYPES.TYPE_ANSWER,
-        disable: true, // TODO:
       },
       {
         name: SLIDE_TYPES.MATCH_PAIRS,
@@ -163,7 +161,6 @@ const types = computed(() => {
         //     SLIDE_TYPES_OF_QUIZ.includes(item.type) &&
         //     (!props.disableLayoutSelection ? item.id !== slide.value?.id : true)
         // )?.length,
-        disable: true, // TODO:
       },
     ],
 

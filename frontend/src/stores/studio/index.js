@@ -10,6 +10,7 @@ import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
+import { i18n } from "src/boot/i18n";
 
 import * as design from "./actions/design";
 import * as update from "./actions/update";
@@ -40,6 +41,8 @@ export const useStudioStore = defineStore("studio", {
       default: null,
       // preview: null,
     },
+
+    isLoaded: false,
 
     /*
      * zoom
@@ -262,6 +265,11 @@ export const useStudioStore = defineStore("studio", {
     ...text,
 
     loadStudio() {
+      this.history.undo = [];
+      this.history.redo = [];
+      this.copiedNodes = [];
+      this.isLoaded = false;
+
       /*
        * load slide
        */
@@ -354,19 +362,62 @@ export const useStudioStore = defineStore("studio", {
         });
         this.stages.default.add(this.layers.default);
 
-        // TODO:
         // add default nodes for content-type slide
         if (slide.value.type === SLIDE_TYPES.CONTENT) {
+          this.addText(
+            {
+              text: i18n.global.t(
+                "presentationStudio.layouts.defaultTexts.title",
+              ),
+              x: 64,
+              y: 100,
+              fontSize: 70,
+              align: "left",
+              width: this.scene.width - 64 * 2,
+              fontStyle: "bold",
+            },
+            false,
+          );
+
+          this.addText(
+            {
+              text: i18n.global.t(
+                "presentationStudio.layouts.defaultTexts.body",
+              ),
+              x: 64,
+              y: 100 + 100,
+              fontSize: this.text.default.fontSize,
+              align: "left",
+              width: this.scene.width - 64 * 2,
+              fill: COLOR_PALETTE.GREY,
+            },
+            false,
+          );
         }
 
-        // TODO:
-        // add default nodes for leaderboard-type slide
-        if (slide.value.type === SLIDE_TYPES.LEADERBOARD) {
-        }
-
-        // TODO:
-        // add default nodes for quiz-type slide
-        if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
+        // add default nodes for leaderboard or quiz type slide
+        if (
+          [
+            ...SLIDE_TYPES_OF_QUIZ,
+            SLIDE_TYPES.WORD_CLOUD,
+            SLIDE_TYPES.LEADERBOARD,
+          ].includes(slide.value.type)
+        ) {
+          this.addText(
+            {
+              text: i18n.global.t(
+                `presentationStudio.layouts.defaultTexts.${slide.value.type === SLIDE_TYPES.LEADERBOARD ? "leaderboard" : "question"}`,
+              ),
+              x: 64,
+              y: 100,
+              fontSize: 70,
+              align: "center",
+              width: this.scene.width - 64 * 2,
+              fontStyle: "bold",
+              draggable: false,
+            },
+            false,
+          );
         }
       }
 
@@ -382,10 +433,14 @@ export const useStudioStore = defineStore("studio", {
       document.removeEventListener("keydown", this.handleShortcuts);
       document.addEventListener("keydown", this.handleShortcuts);
 
-      this.handleSelection();
-      this.handleSnapping();
+      if (slide.value.type === SLIDE_TYPES.CONTENT) {
+        this.handleSelection();
+        this.handleSnapping();
 
-      this.handleDrawing();
+        this.handleDrawing();
+      }
+
+      this.isLoaded = true;
     },
   },
 });

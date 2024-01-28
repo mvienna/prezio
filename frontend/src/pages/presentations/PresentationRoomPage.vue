@@ -135,7 +135,7 @@
             ></canvas>
 
             <!-- HOST - addons (word cloud, charts) -->
-            <PresentationStudioAddons
+            <PresentationAddons
               v-if="isHost && slide?.type !== SLIDE_TYPES.CONTENT"
             />
 
@@ -266,7 +266,7 @@ import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
-import PresentationStudioAddons from "components/presentation/addons/PresentationAddons.vue";
+import PresentationAddons from "components/presentation/addons/PresentationAddons.vue";
 import { startCountdown, stopCountdown, timeLeft } from "src/helpers/countdown";
 import PresentationRoomParticipantFormsBaseInfo from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsAuthBaseInfo.vue";
 import PresentationRoomHostInvitationPanel from "components/presentationRoom/host/PresentationRoomHostInvitationPanel.vue";

@@ -1,15 +1,24 @@
 import Konva from "konva";
+import { i18n } from "src/boot/i18n";
 
-export function addText(t) {
+export function addText(config = {}, isSave = true) {
   const textNode = new Konva.Text({
-    text: t("presentationStudio.layouts.defaultTexts.body"),
-    x: this.scene.width / 4,
-    y: this.scene.height / 2,
-    fontSize: this.text.default.fontSize,
+    text:
+      config.text ||
+      i18n.global.t("presentationStudio.layouts.defaultTexts.body"),
+    x: config.x || this.scene.width / 4,
+    y:
+      config.y ||
+      this.scene.height / 2 -
+        this.text.default.fontSize * this.text.default.lineHeight,
+    fontSize: config.fontSize || this.text.default.fontSize,
     padding: this.text.default.padding,
-    draggable: true,
-    width: this.scene.width / 2,
+    draggable: config.draggable !== false,
+    fontStyle: config.fontStyle || this.text.default.fontStyle,
+    align: config.align || "center",
+    width: config.width || this.scene.width / 2,
     name: this.MODE_OPTIONS.TEXT,
+    fill: config.fill || this.text.default.fill,
   });
 
   this.layers.default.add(textNode);
@@ -17,7 +26,9 @@ export function addText(t) {
   textNode.on("transformend", this.handleSlideUpdate);
   this.processText(textNode);
 
-  this.handleSlideUpdate();
+  if (isSave) {
+    this.handleSlideUpdate();
+  }
 }
 
 export function processText(textNode) {
@@ -32,7 +43,7 @@ export function processText(textNode) {
   textNode.on("dblclick dbltap", () => {
     // hide text node and transformer:
     textNode.hide();
-    this.transformer.default.hide();
+    this.transformer.default?.hide();
 
     this.mode = this.MODE_OPTIONS.TEXT_EDITING;
 
@@ -85,7 +96,6 @@ export function processText(textNode) {
       ? "italic"
       : "normal";
     textarea.style.textDecoration = textNode.textDecoration();
-    console.log(textNode.textDecoration());
     textarea.style.lineHeight = textNode.lineHeight();
     textarea.style.fontFamily = textNode.fontFamily();
     textarea.style.transformOrigin = "left top";
@@ -119,8 +129,8 @@ export function processText(textNode) {
       textarea.parentNode.removeChild(textarea);
       window.removeEventListener("click", handleOutsideClick);
       textNode.show();
-      this.transformer.default.show();
-      this.transformer.default.forceUpdate();
+      this.transformer.default?.show();
+      this.transformer.default?.forceUpdate();
     };
 
     const setTextareaWidth = (newWidth) => {

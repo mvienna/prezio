@@ -3,23 +3,23 @@
     <Vue3Lottie
       v-if="results?.length"
       :animation-data="confettiJSON"
-      :height="(canvasRect.height * 65) / 100"
-      :width="canvasRect.width"
+      :height="(box?.height * 65) / 100"
+      :width="box?.width"
       class="fixed"
       :scale="2"
       style="z-index: 1"
       :style="`top: ${
-        canvasRect.top + (canvasRect.height * 20) / 100
-      }px; left: ${canvasRect.left}px;`"
+        box?.top + (box?.height * 20) / 100
+      }px; left: ${box?.left}px;`"
     />
 
     <div
       class="leaderboard hide-scrollbar q-pa-sm"
       :style="`top: ${
-        canvasRect.top + (canvasRect.height * 20) / 100
-      }px; left: ${canvasRect.left + (canvasRect.width * 10) / 100}px; width: ${
-        (canvasRect.width * 80) / 100
-      }px; height: ${(canvasRect.height * 65) / 100}px`"
+        box?.top + (box?.height * 20) / 100
+      }px; left: ${box?.left + (box?.width * 10) / 100}px; width: ${
+        (box?.width * 80) / 100
+      }px; height: ${(box?.height * 65) / 100}px`"
     >
       <div v-if="results?.length" class="row no-wrap justify-center">
         <div class="column no-wrap q-gutter-md full-width">
@@ -31,7 +31,7 @@
             <div
               class="q-mr-md"
               :class="
-                averageBackgroundBrightness >= backgroundBrightnessThreshold
+                slide.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
                   ? 'text-black'
                   : 'text-white'
               "
@@ -79,7 +79,7 @@
             <div
               class="text-no-wrap column justify-center q-ml-md"
               :class="
-                averageBackgroundBrightness >= backgroundBrightnessThreshold
+                slide.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
                   ? 'text-black'
                   : 'text-white'
               "
@@ -95,11 +95,12 @@
         v-else
         class="text-center column no-wrap justify-center full-height"
         :class="
-          averageBackgroundBrightness >= backgroundBrightnessThreshold
+          slide.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
             ? 'text-black'
             : 'text-white'
         "
       >
+        <!-- TODO: translate -->
         <div class="text-h5 text-semibold">Результатов пока нет</div>
         <div class="q-mt-sm" style="opacity: 0.5">
           Тут появится таблица лидеров, когда появятся результаты
@@ -112,28 +113,26 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import { useCanvasStore } from "stores/canvas";
+import { computed } from "vue";
 import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
 import { colors } from "quasar";
 import { Vue3Lottie } from "vue3-lottie";
 import confettiJSON from "src/assets/animations/confetti.json";
+import { useStudioStore } from "stores/studio";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * stores
  */
 const presentationStore = usePresentationsStore();
-const {
-  slide,
-  slideSettings,
-  showRoomInvitationPanel,
-  presentation,
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-} = storeToRefs(presentationStore);
+const { slide, slideSettings, presentation } = storeToRefs(presentationStore);
 
-const canvasStore = useCanvasStore();
-const { canvas, scale } = storeToRefs(canvasStore);
+const studioStore = useStudioStore();
+const { stages } = storeToRefs(studioStore);
+
+defineProps({
+  box: { type: Object, default: null },
+});
 
 /*
  * results
@@ -178,42 +177,6 @@ const maxScore = computed(() => {
     (max, obj) => (obj.score > max ? obj.score : max),
     results.value[0].score,
   );
-});
-
-/*
- * canvas size
- */
-const canvasRect = ref(canvasStore.canvasRect());
-
-const resizeObserverCanvas = ref();
-const resizeObserverPage = ref();
-
-onMounted(() => {
-  const canvas = document.getElementById("canvas");
-  resizeObserverCanvas.value = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      canvasRect.value = canvasStore.canvasRect();
-    }
-  });
-  resizeObserverCanvas.value.observe(canvas);
-
-  const page = document.getElementsByClassName("q-page-container")[0];
-  resizeObserverPage.value = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      if (
-        window.screen.width > canvasStore.canvasRect().width &&
-        !showRoomInvitationPanel.value
-      ) {
-        canvasRect.value = canvasStore.canvasRect();
-      }
-    }
-  });
-  resizeObserverPage.value.observe(page);
-});
-
-onUnmounted(() => {
-  resizeObserverCanvas.value.disconnect();
-  resizeObserverPage.value.disconnect();
 });
 </script>
 
