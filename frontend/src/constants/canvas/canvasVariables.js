@@ -35,6 +35,7 @@ export const COLOR_PALETTE = {
   SECONDARY: "#113B98",
   WHITE_TRANSPARENT: "rgba(255, 255, 255, 0.1)",
   BLACK_TRANSPARENT: "rgba(0, 0, 0, 0.1)",
+  GREY: "#A3A2A6",
 };
 
 export const ALIGNMENT = {
