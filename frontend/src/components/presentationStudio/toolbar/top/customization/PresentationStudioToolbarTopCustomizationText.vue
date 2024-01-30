@@ -323,33 +323,6 @@
       {{ $t("presentationStudio.toolbar.text.options.fontSize") }}
     </q-tooltip>
   </q-input>
-
-  <q-separator vertical class="q-ml-md" />
-
-  <!-- clear formatting -->
-  <q-btn
-    icon="r_restart_alt"
-    flat
-    no-caps
-    size="12px"
-    :label="
-      $t(
-        'presentationStudio.toolbar.text.options.formatting.clearFormatting.title',
-      )
-    "
-    @click="
-      text = { default: text.default, ...text.default };
-      studioStore.applyCustomization();
-    "
-  >
-    <q-tooltip :offset="[0, 4]">
-      {{
-        $t(
-          "presentationStudio.toolbar.text.options.formatting.clearFormatting.tooltip",
-        )
-      }}
-    </q-tooltip>
-  </q-btn>
 </template>
 
 <script setup>

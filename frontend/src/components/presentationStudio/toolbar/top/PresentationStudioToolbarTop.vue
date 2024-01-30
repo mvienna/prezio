@@ -89,6 +89,25 @@
 
       <q-space />
 
+      <!-- clear formatting -->
+      <template v-if="transformer.default?.nodes()?.length">
+        <q-btn
+          icon="r_restart_alt"
+          flat
+          no-caps
+          no-wrap
+          size="12px"
+          :label="$t('presentationStudio.toolbar.resetCustomization.title')"
+          @click="handleCustomizationReset()"
+        >
+          <q-tooltip :offset="[0, 4]">
+            {{ $t("presentationStudio.toolbar.resetCustomization.tooltip") }}
+          </q-tooltip>
+        </q-btn>
+
+        <q-separator vertical class="q-mx-sm" />
+      </template>
+
       <!-- open design tab & choose wallpaper dialog -->
       <q-btn
         icon="r_wallpaper"
@@ -214,8 +233,18 @@ const $q = useQuasar();
  * stores
  */
 const studioStore = useStudioStore();
-const { mode, MODE_OPTIONS, transformer, zoom, stages, scene } =
-  storeToRefs(studioStore);
+const {
+  mode,
+  MODE_OPTIONS,
+  transformer,
+  zoom,
+  stages,
+  scene,
+  text,
+  drawing,
+  image,
+  shape,
+} = storeToRefs(studioStore);
 
 const presentationsStore = usePresentationsStore();
 const {
@@ -239,15 +268,34 @@ const showModes = computed(() => {
 });
 
 /*
- * shortcuts
+ * reset customization
  */
-const showShortcuts = computed(() => {
-  return $q.platform.is.desktop;
-});
+const handleCustomizationReset = () => {
+  transformer.value.default.nodes().forEach((node) => {
+    switch (node.getAttr("name")) {
+      case MODE_OPTIONS.value.TEXT:
+        text.value = { default: text.value.default, ...text.value.default };
+        break;
 
-const isMac = computed(() => {
-  return $q.platform.is.platform === "mac";
-});
+      case MODE_OPTIONS.value.IMAGE:
+        image.value = { default: image.value.default, ...image.value.default };
+        break;
+
+      case MODE_OPTIONS.value.SHAPE:
+        shape.value = { default: shape.value.default, ...shape.value.default };
+        break;
+
+      case MODE_OPTIONS.value.DRAWING:
+        drawing.value = {
+          default: drawing.value.default,
+          ...drawing.value.default,
+        };
+        break;
+    }
+  });
+
+  studioStore.applyCustomization();
+};
 </script>
 
 <style scoped lang="scss">

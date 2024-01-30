@@ -4,7 +4,6 @@ export default {
      * toolbar
      */
     toolbar: {
-      // drawing
       drawing: {
         title: "Рисование",
 
@@ -20,7 +19,6 @@ export default {
         },
       },
 
-      // text
       text: {
         title: "Текст",
 
@@ -36,18 +34,12 @@ export default {
             underline: "Подчеркивание",
             strikeThrough: "Зачеркивание",
             alignment: "Выравнивание",
-
-            clearFormatting: {
-              title: "Очистить",
-              tooltip: "Очистить форматирование",
-            },
           },
         },
 
         newTextValue: "Начните вводить сюда текст",
       },
 
-      // media
       image: {
         title: "Фотографии",
 
@@ -95,12 +87,10 @@ export default {
         },
       },
 
-      // emoji
       emoji: {
         title: "Эмодзи",
       },
 
-      // shape
       shape: {
         title: "Формы",
 
@@ -135,6 +125,11 @@ export default {
           lines: "Линии",
           simpleShapes: "Простые формы",
         },
+      },
+
+      resetCustomization: {
+        title: "Очистить",
+        tooltip: "По умолчанию",
       },
 
       // zoom
