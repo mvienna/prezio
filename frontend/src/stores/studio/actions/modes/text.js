@@ -160,6 +160,8 @@ export function processText(textNode) {
   });
 
   textNode.on("dblclick dbltap", () => {
+    if (!textNode.draggable()) return;
+
     // hide text node and transformer:
     textNode.hide();
     this.transformer.default?.hide();
