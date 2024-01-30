@@ -139,19 +139,12 @@ import PresentationStudioTabsLayersManagementTab from "components/presentationSt
 import PresentationStudioTabsDesignTab from "components/presentationStudio/tabs/design/PresentationStudioTabsDesignTab.vue";
 import PresentationStudioTabsTemplatesTab from "components/presentationStudio/tabs/templates/PresentationStudioTabsTemplatesTab.vue";
 import PresentationStudioTabsTypesTab from "components/presentationStudio/tabs/types/PresentationStudioTabsTypesTab.vue";
-import { useCanvasStore } from "stores/canvas";
 import {
   PRESENTATION_TABS,
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
-import {
-  ALIGNMENT,
-  SHAPES_OPTIONS,
-} from "src/constants/canvas/canvasVariables";
-import { useCanvasTextStore } from "stores/canvas/text";
 import PresentationStudioTabsSettingsTab from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTab.vue";
-import { generateUniqueId } from "src/helpers/generationUtils";
 import { useStudioStore } from "stores/studio";
 
 /*
@@ -168,13 +161,7 @@ const presentationsStore = usePresentationsStore();
 const { presentation, slide, drawerRightTab, isDrawerRightPanelExpanded } =
   storeToRefs(presentationsStore);
 
-const canvasStore = useCanvasStore();
-const { elements, MODE_OPTIONS } = storeToRefs(canvasStore);
-
 const studioStore = useStudioStore();
-
-const textStore = useCanvasTextStore();
-const { customization } = storeToRefs(textStore);
 
 /*
  * tabs
@@ -267,158 +254,11 @@ watch(
  */
 const handleChangingSlideType = async (type) => {
   if (type === slide.value?.type) return;
-  const newElements = prepareElementsForNewSlide(type);
 
-  slide.value = {
-    ...slide.value,
-    type: type,
-    canvas_data: JSON.stringify(newElements),
-    settings_data: null,
-  };
-  presentationsStore.syncCurrentSlideWithPresentationSlides();
-  await presentationsStore.saveSlide(slide.value, newElements);
-
-  await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(false, undefined, false);
-};
-
-const prepareElementsForNewSlide = (type) => {
-  let preparedElements = [];
-
-  /*
-   * default elements
-   */
-  const layoutDefaultElementProps = {
-    mode: MODE_OPTIONS.value.TEXT,
-    isVisible: true,
-    isLocked: false,
-    fontFamily: customization.value.font,
-    lineHeight: customization.value.lineHeight,
-    fontWeight: "normal",
-    textDecoration: "none",
-    fontStyle: "normal",
-    textAlign: ALIGNMENT.horizontal.left,
-    verticalAlign: ALIGNMENT.vertical.top,
-    rotationAngle: 0,
-
-    /*
-     * editable
-     */
-    id: "layout-",
-    text: "",
-
-    fontSize: "68px",
-    color: customization.value.color,
-
-    x: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100,
-    ),
-    y: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 5) / 100,
-    ),
-
-    width: canvasStore.computeAdjustedSize(
-      (canvasStore.canvasRect().width * 90) / 100,
-    ),
-    height: canvasStore.computeAdjustedSize(30),
-  };
-
-  /*
-   * element:
-   * content
-   */
-  if (type === SLIDE_TYPES.CONTENT) {
-    const titleElement = {
-      ...layoutDefaultElementProps,
-
-      id: "layout-title-top-titleAndBody",
-      text: t("presentationStudio.layouts.defaultTexts.title"),
-
-      color: "#313232",
-      fontSize: "68px",
-      fontWeight: "bold",
-    };
-
-    const bodyElement = {
-      ...layoutDefaultElementProps,
-
-      id: "layout-body",
-      text: t("presentationStudio.layouts.defaultTexts.body"),
-
-      fontSize: "38px",
-      color: "#808080",
-
-      y: titleElement.y + titleElement.height,
-
-      height: canvasStore.computeAdjustedSize(
-        (canvasStore.canvasRect().height * 65) / 100,
-      ),
-    };
-
-    preparedElements = [titleElement, bodyElement];
-  }
-
-  /*
-   * quiz
-   * word cloud
-   */
-  if (
-    [
-      ...SLIDE_TYPES_OF_QUIZ,
-      SLIDE_TYPES.WORD_CLOUD,
-      SLIDE_TYPES.LEADERBOARD,
-    ].includes(type)
-  ) {
-    const titleElement = {
-      ...layoutDefaultElementProps,
-
-      id: "layout-title-top-titleAndBody",
-      text:
-        type === SLIDE_TYPES.LEADERBOARD
-          ? t("presentationStudio.layouts.defaultTexts.leaderboard")
-          : t("presentationStudio.layouts.defaultTexts.question"),
-      textAlign: "center",
-
-      color: "#313232",
-      fontSize: "68px",
-      fontWeight: "bold",
-    };
-
-    preparedElements = [titleElement];
-  }
-
-  /*
-   * add base fill
-   */
-  if (slide.value) {
-    const designElements = elements.value.filter((element) =>
-      [MODE_OPTIONS.value.BACKGROUND, MODE_OPTIONS.value.BASE_FILL].includes(
-        element.mode,
-      ),
-    );
-
-    preparedElements = [...preparedElements, ...designElements];
-  } else {
-    const baseFill = {
-      id: generateUniqueId(undefined, []),
-      mode: MODE_OPTIONS.value.BASE_FILL,
-      isVisible: true,
-      isLocked: true,
-      type: SHAPES_OPTIONS.RECT,
-      x: 0,
-      y: 0,
-      width: 2560,
-      height: 1440,
-      rotationAngle: 0,
-      strokeColor: "#FFFFFF",
-      fillColor: "#FFFFFF",
-      lineWidth: "4px",
-    };
-
-    preparedElements.push(baseFill);
-  }
-
-  return preparedElements;
+  slide.value.type = type;
+  slide.value.canvas_data = null;
+  await studioStore.loadStudio();
+  await studioStore.handleSlideUpdate();
 };
 </script>
 
