@@ -16,6 +16,7 @@ export function addText(config = {}, isSave = true) {
       this.scene.height / 2 -
         this.text.default.fontSize * this.text.default.lineHeight,
     fontSize: config.fontSize || this.text.default.fontSize,
+    fontFamily: config.fontFamily || this.text.default.fontFamily,
     padding: this.text.default.padding,
     draggable: config.draggable !== false,
     fontStyle: config.fontStyle || this.text.default.fontStyle,

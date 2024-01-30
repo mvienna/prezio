@@ -30,7 +30,7 @@ import * as shape from "./actions/modes/shape";
 import * as text from "./actions/modes/text";
 
 const presentationsStore = usePresentationsStore();
-const { slide } = storeToRefs(presentationsStore);
+const { slide, slideSettings } = storeToRefs(presentationsStore);
 
 export const useStudioStore = defineStore("studio", {
   state: () => ({
@@ -196,23 +196,19 @@ export const useStudioStore = defineStore("studio", {
      * text
      */
     text: {
-      // DONE
       fontFamily: "Arial",
-      // DONE
       fontSize: 38,
-      // DONE
       fontStyle: "normal", // normal, italic, bold (can be combined by ' ')
-      // DONE
       textDecoration: "", // line-through, underline
-      // DONE
       align: "left", // left, center, right
       verticalAlign: "", // top, middle, bottom
+      fill: COLOR_PALETTE.BLACK,
+
+      // todo: add customization to toolbar
       padding: 16,
       lineHeight: 1,
       wrap: "word", // word, char, none
       ellipsis: false,
-      // DONE
-      fill: COLOR_PALETTE.BLACK,
       stroke: COLOR_PALETTE.BLACK,
       strokeWidth: 0,
       shadowColor: COLOR_PALETTE.BLACK,
@@ -326,6 +322,11 @@ export const useStudioStore = defineStore("studio", {
           .forEach((node) => {
             node.on("transformend", this.handleSlideUpdate);
           });
+
+        // set default text customization
+        if (slideSettings.value.defaultTextCustomization) {
+          this.text.default = slideSettings.value.defaultTextCustomization;
+        }
 
         /*
          * new slide

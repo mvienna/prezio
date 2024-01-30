@@ -3,14 +3,14 @@
     <div class="q-mb-sm">
       {{
         $t(
-          "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.font.title"
+          "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.font.title",
         )
       }}
     </div>
 
     <!-- font -->
     <q-select
-      v-model="customization.default.font"
+      v-model="text.default.fontFamily"
       :options="FONT_OPTIONS"
       emit-value
       outlined
@@ -19,7 +19,7 @@
       options-dense
       style="width: 100%"
       class="text-no-wrap"
-      @update:model-value="customization.font = customization.default.font"
+      @update:model-value="handleDefaultTextFormattingUpdate()"
     >
       <template #prepend>
         <q-icon
@@ -32,9 +32,9 @@
       <template #option="scope">
         <q-item v-bind="scope.itemProps">
           <q-item-section>
-            <q-item-label :style="`font-family: ${scope.opt}`">{{
-              scope.opt
-            }}</q-item-label>
+            <q-item-label :style="`font-family: ${scope.opt}`">
+              {{ scope.opt }}
+            </q-item-label>
           </q-item-section>
         </q-item>
       </template>
@@ -47,7 +47,7 @@
     <div class="q-mt-md q-mb-sm">
       {{
         $t(
-          "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.color.title"
+          "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.color.title",
         )
       }}
     </div>
@@ -58,11 +58,11 @@
         v-for="color in defaultTextColors"
         :key="color"
         class="text_color_box"
-        :class="color === customization.color ? 'text_color_box--active' : ''"
+        :class="color === text.default.fill ? 'text_color_box--active' : ''"
         :style="`background: ${color};`"
         @click="
-          customization.default.color = color;
-          customization.color = customization.default.color;
+          text.default.fill = color;
+          handleDefaultTextFormattingUpdate();
         "
       ></div>
 
@@ -71,7 +71,7 @@
       <div class="text-13">
         {{
           $t(
-            "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.color.set"
+            "presentationLayout.rightDrawer.tabs.design.defaultTextCustomization.color.set",
           )
         }}
       </div>
@@ -80,12 +80,12 @@
       <div
         class="text_color_box relative-position"
         :style="{
-          background: !defaultTextColors.includes(customization.default.color)
-            ? customization.default.color
+          background: !defaultTextColors.includes(text.default.fill)
+            ? text.default.fill
             : '',
         }"
         :class="
-          !defaultTextColors.includes(customization.default.color)
+          !defaultTextColors.includes(text.default.fill)
             ? 'text_color_box--active'
             : ''
         "
@@ -94,8 +94,8 @@
           name="r_colorize"
           class="absolute-center"
           :style="`color: ${
-            !defaultTextColors.includes(customization.default.color)
-              ? textColorOnAColoredBackground(customization.default.color)
+            !defaultTextColors.includes(text.default.fill)
+              ? textColorOnAColoredBackground(text.default.fill)
               : 'black'
           };`"
         />
@@ -112,8 +112,8 @@
             format-model="hex"
             no-header-tabs
             default-view="palette"
-            v-model="customization.default.color"
-            @change="customization.color = customization.default.color"
+            v-model="text.default.fill"
+            @change="handleDefaultTextFormattingUpdate()"
           />
         </q-menu>
       </div>
@@ -123,14 +123,27 @@
 
 <script setup>
 import { FONT_OPTIONS } from "src/constants/canvas/canvasVariables";
-import { useCanvasTextStore } from "stores/canvas/text";
 import { storeToRefs } from "pinia";
 import { textColorOnAColoredBackground } from "src/helpers/colorUtils";
+import { useStudioStore } from "stores/studio";
+import { usePresentationsStore } from "stores/presentations";
 
-const textStore = useCanvasTextStore();
-const { customization } = storeToRefs(textStore);
+/*
+ * stores
+ */
+const studioStore = useStudioStore();
+const { text } = storeToRefs(studioStore);
+
+const presentationsStore = usePresentationsStore();
+const { slideSettings } = storeToRefs(presentationsStore);
 
 const defaultTextColors = ["#0A090B", "#ffffff"];
+
+const handleDefaultTextFormattingUpdate = () => {
+  slideSettings.value.defaultTextCustomization = text.value.default;
+  presentationsStore.syncCurrentSlideWithPresentationSlides();
+  presentationsStore.saveSlide();
+};
 </script>
 
 <style scoped lang="scss">
