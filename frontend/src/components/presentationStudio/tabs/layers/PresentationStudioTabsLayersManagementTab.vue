@@ -281,8 +281,7 @@ const handleLayerSelection = (event, element) => {
       transformer.value.default?.nodes(nodes);
     }
   } else {
-    console.log(element);
-    transformer.value.default.nodes([element]);
+    transformer.value.default?.nodes([element]);
   }
 
   transformer.value.default.moveToTop();

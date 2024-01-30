@@ -286,7 +286,7 @@ const { MODE_OPTIONS, transformer, stages, scene, isTransforming } =
  * position
  */
 const transformerPosition = computed(() => {
-  if (transformer.value.default.nodes()?.length) {
+  if (transformer.value.default?.nodes()?.length) {
     const box = stages.value.default.container().getBoundingClientRect();
 
     const x = box.left + transformer.value.default.getAbsolutePosition().x;

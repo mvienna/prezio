@@ -44,14 +44,14 @@ export function handleDrawingMouseDown() {
 }
 
 export function handleDrawingMouseUp() {
-  // revert temp disabled drag for nodes
-  this.layers.default.getChildren().forEach((node) => {
-    node.draggable(node.getAttr("draggable--saved"));
-  });
-
   this.drawing.isPainting = false;
 
   if (this.mode === this.MODE_OPTIONS.DRAWING) {
+    // revert temp disabled drag for nodes
+    this.layers.default.getChildren().forEach((node) => {
+      node.draggable(node.getAttr("draggable--saved"));
+    });
+
     this.handleSlideUpdate();
   }
 }

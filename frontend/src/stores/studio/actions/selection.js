@@ -224,10 +224,8 @@ export function deselectElements() {
   this.layers.default
     .find(".customTransformer")
     .forEach((node) => node.destroy());
-  this.transformer.custom.shape.node = null;
-
   this.mode = null;
-
+  this.transformer.custom.shape.node = null;
   this.transformer.default?.nodes([]);
 }
 
@@ -235,11 +233,8 @@ export function deselectElements() {
  * transformers
  */
 export function setCustomShapeTransformer(node) {
-  this.layers.default
-    .find(".customTransformer")
-    .forEach((node) => node.destroy());
+  this.deselectElements();
   this.transformer.custom.shape.node = node;
-  this.transformer.default?.nodes([]);
 
   this.transformer.custom.shape.anchor1 = new Konva.Circle({
     x:
@@ -316,6 +311,11 @@ export function setCustomShapeTransformer(node) {
 }
 
 export function applyTransformerCustomization() {
+  this.layers.default
+    .find(".customTransformer")
+    .forEach((node) => node.destroy());
+  this.transformer.custom.shape.node = null;
+
   if (!this.transformer.default) return;
 
   this.transformer.default?.setAttrs({

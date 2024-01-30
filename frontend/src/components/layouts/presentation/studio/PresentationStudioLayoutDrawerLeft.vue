@@ -490,7 +490,7 @@ const handleSlideMenuKeyDownEvent = (event, slide, index) => {
 };
 
 const handleKeyDownEvent = (event) => {
-  if (transformer.value.default.nodes().length) return;
+  if (transformer.value.default?.nodes()?.length) return;
 
   // change slide
   if (["ArrowDown", "ArrowUp"].includes(event.key)) {
