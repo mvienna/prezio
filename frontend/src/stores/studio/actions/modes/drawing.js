@@ -2,17 +2,23 @@ import Konva from "konva";
 import { DRAWING_MODES } from "src/constants/canvas/canvasVariables";
 
 export function handleDrawing() {
-  this.stages.default.on("mousedown touchstart", this.handleMouseDown);
-  this.stages.default.on("mouseup touchend", this.handleMouseUp);
-  this.stages.default.on("mousemove touchmove", this.handleMouseMove);
+  this.stages.default.on("mousedown touchstart", this.handleDrawingMouseDown);
+  this.stages.default.on("mouseup touchend", this.handleDrawingMouseUp);
+  this.stages.default.on("mousemove touchmove", this.handleDrawingMouseMove);
 }
 
-export function handleMouseDown() {
+export function handleDrawingMouseDown() {
   // disable drawing in other modes
   if (this.mode !== this.MODE_OPTIONS.DRAWING) return;
 
   // disable drawing while there're selected elements
   if (this.transformer.default?.nodes()?.length) return;
+
+  // temp disable dragging for all elements
+  this.layers.default.getChildren().forEach((node) => {
+    node.setAttr("draggable--saved", node.draggable());
+    node.draggable(false);
+  });
 
   this.drawing.isPainting = true;
 
@@ -37,16 +43,20 @@ export function handleMouseDown() {
   this.layers.default.add(this.drawing.lastLine);
 }
 
-export function handleMouseUp() {
+export function handleDrawingMouseUp() {
+  // revert temp disabled drag for nodes
+  this.layers.default.getChildren().forEach((node) => {
+    node.draggable(node.getAttr("draggable--saved"));
+  });
+
   this.drawing.isPainting = false;
 
-  // save drawing
   if (this.mode === this.MODE_OPTIONS.DRAWING) {
     this.handleSlideUpdate();
   }
 }
 
-export function handleMouseMove(event) {
+export function handleDrawingMouseMove(event) {
   if (!this.drawing.isPainting) return;
 
   // prevent scrolling on touch devices
