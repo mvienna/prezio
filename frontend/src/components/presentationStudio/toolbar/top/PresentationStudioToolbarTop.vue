@@ -87,37 +87,26 @@
         </div>
       </template>
 
-      <!--      &lt;!&ndash; open design tab & choose wallpaper dialog &ndash;&gt;-->
-      <!--      <template-->
-      <!--        v-if="-->
-      <!--          slide?.type === SLIDE_TYPES.CONTENT &&-->
-      <!--          !(-->
-      <!--            mode &&-->
-      <!--            (![MODE_OPTIONS.EMOJI, MODE_OPTIONS.MEDIA].includes(mode) ||-->
-      <!--              (MODE_OPTIONS.MEDIA === mode && selectedElement))-->
-      <!--          )-->
-      <!--        "-->
-      <!--      >-->
-      <!--        <q-separator vertical class="q-mx-sm" />-->
-
-      <!--        <q-btn-->
-      <!--          icon="r_wallpaper"-->
-      <!--          unelevated-->
-      <!--          text-color="black"-->
-      <!--          round-->
-      <!--          size="12px"-->
-      <!--          @click="-->
-      <!--            drawerRightTab = PRESENTATION_TABS.DESIGN;-->
-      <!--            showSelectBackgroundDialog = true;-->
-      <!--          "-->
-      <!--        >-->
-      <!--          <q-tooltip>-->
-      <!--            {{ $t("presentationStudio.toolbar.changeBackground.title") }}-->
-      <!--          </q-tooltip>-->
-      <!--        </q-btn>-->
-      <!--      </template>-->
-
       <q-space />
+
+      <!-- open design tab & choose wallpaper dialog -->
+      <q-btn
+        icon="r_wallpaper"
+        unelevated
+        text-color="black"
+        round
+        size="12px"
+        @click="
+          drawerRightTab = PRESENTATION_TABS.DESIGN;
+          showSelectBackgroundDialog = true;
+        "
+      >
+        <q-tooltip>
+          {{ $t("presentationStudio.toolbar.changeBackground.title") }}
+        </q-tooltip>
+      </q-btn>
+
+      <q-separator vertical class="q-mx-sm" />
 
       <div class="row no-wrap">
         <!-- zoom out -->
@@ -206,7 +195,10 @@ import { storeToRefs } from "pinia";
 import PresentationStudioToolbarTopCustomizationDrawing from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationDrawing.vue";
 import PresentationStudioToolbarTopModes from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopModes.vue";
 import { useQuasar } from "quasar";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import {
+  PRESENTATION_TABS,
+  SLIDE_TYPES,
+} from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
 import { useStudioStore } from "stores/studio";
 import PresentationStudioToolbarTopCustomizationImage from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationImage.vue";
@@ -226,8 +218,13 @@ const { mode, MODE_OPTIONS, transformer, zoom, stages, scene } =
   storeToRefs(studioStore);
 
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, isDrawerRightPanelExpanded } =
-  storeToRefs(presentationsStore);
+const {
+  presentation,
+  slide,
+  isDrawerRightPanelExpanded,
+  drawerRightTab,
+  showSelectBackgroundDialog,
+} = storeToRefs(presentationsStore);
 
 const switchMode = (value) => {
   mode.value = value;
