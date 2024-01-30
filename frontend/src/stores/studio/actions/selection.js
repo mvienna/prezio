@@ -11,7 +11,7 @@ const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);
 
 export function handleSelection() {
-  this.stages.default.findOne("Transformer")?.destroy();
+  this.stages.default.find("Transformer")?.forEach((node) => node.destroy());
 
   this.transformer.default = new Konva.Transformer({
     nodes: [],
@@ -145,7 +145,8 @@ export function handleSelectionMouseUp(event) {
     return (
       Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")) &&
       node.getLayer().attrs.name === "defaultLayer" &&
-      node.draggable()
+      node.draggable() &&
+      node.visible()
     );
   });
   const box = this.selection.rect.getClientRect();
@@ -187,7 +188,8 @@ export function handleSelectionClick(event) {
 
   if (
     !Object.values(this.MODE_OPTIONS).includes(event.target.getAttr("name")) ||
-    !event.target.draggable()
+    !event.target.draggable() ||
+    !event.target.visible()
   )
     return;
 
