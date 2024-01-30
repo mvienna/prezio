@@ -383,10 +383,10 @@ const showNewSlideTypeSelectionMenu = ref([false, false, false]);
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, backgroundBrightnessThreshold } =
-  storeToRefs(presentationsStore);
+const { presentation, slide } = storeToRefs(presentationsStore);
 
 const studioStore = useStudioStore();
+const { transformer } = storeToRefs(studioStore);
 
 /*
  * slide context menu
@@ -490,6 +490,8 @@ const handleSlideMenuKeyDownEvent = (event, slide, index) => {
 };
 
 const handleKeyDownEvent = (event) => {
+  if (transformer.value.default.nodes().length) return;
+
   // change slide
   if (["ArrowDown", "ArrowUp"].includes(event.key)) {
     const currentSlideIndex = presentation.value.slides.findIndex(
