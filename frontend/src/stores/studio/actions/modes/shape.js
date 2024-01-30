@@ -112,6 +112,10 @@ export function addShape(shapeName) {
       break;
   }
 
+  shapeNode.setAttrs({
+    shape: shapeName,
+  });
+
   this.layers.default.add(shapeNode);
 
   this.handleSlideUpdate();

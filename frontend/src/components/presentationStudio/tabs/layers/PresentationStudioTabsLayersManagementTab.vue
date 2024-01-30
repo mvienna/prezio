@@ -1,11 +1,7 @@
 <template>
   <div>
     <draggable
-      v-if="
-        nodes?.filter((node) =>
-          Object.values(MODE_OPTIONS).includes(node.getAttr('name')),
-        )?.length
-      "
+      v-if="nodes?.length"
       v-model="nodes"
       :component-data="{
         tag: 'ul',
@@ -13,8 +9,8 @@
         class: 'column no-wrap q-gutter-sm',
       }"
       v-bind="layersDraggingOptions"
-      item-key="id"
-      handle=".layer_handle"
+      item-key="_id"
+      handle=".layer__handle"
       @start="handleStartDragging"
       @end="handleEndDragging"
     >
@@ -22,7 +18,7 @@
         <q-card
           v-if="Object.values(MODE_OPTIONS).includes(element.getAttr('name'))"
           flat
-          class="layer cursor-pointer no-scroll"
+          class="layer layer__handle cursor-pointer no-scroll"
           :class="`${
             transformer.default
               ?.nodes()
@@ -30,16 +26,12 @@
               ? 'layer--active'
               : ''
           }`"
+          :style="!element.visible() ? 'opacity: 0.5;' : ''"
         >
           <q-card-section
             class="row no-wrap items-center q-py-none q-px-sm relative-position"
           >
-            <q-icon
-              name="r_drag_indicator"
-              color="black"
-              size="1.25rem"
-              class="layer_handle"
-            />
+            <q-icon name="r_drag_indicator" color="black" size="1.25rem" />
 
             <!-- layer mode icon -->
             <q-icon
@@ -50,10 +42,13 @@
                     ? 'icon-insert_text'
                     : element.getAttr('name') === MODE_OPTIONS.IMAGE
                       ? 'o_add_photo_alternate'
-                      : element.getAttr('name') === MODE_OPTIONS.emoji
+                      : element.getAttr('name') === MODE_OPTIONS.EMOJI
                         ? 'icon-add_reaction'
                         : element.getAttr('name') === MODE_OPTIONS.SHAPE
-                          ? 'icon-shape_line'
+                          ? SHAPES.find(
+                              (shape) =>
+                                shape.name === element.getAttr('shape'),
+                            )?.icon || 'icon-shape_line'
                           : ''
               "
               size="1.25rem"
@@ -126,16 +121,13 @@
               size="10px"
               class="round-borders q-ml-xs"
               color="black"
-              disable
               @click="studioStore.deleteNodes([element])"
             >
-              <!--              <q-tooltip :offset="[0, 4]">-->
-              <!--                {{-->
-              <!--                  $t("presentationLayout.rightDrawer.tabs.layers.layer.delete")-->
-              <!--                }}-->
-              <!--              </q-tooltip>-->
-
-              <q-tooltip :offset="[0, 4]"> В процессе </q-tooltip>
+              <q-tooltip :offset="[0, 4]">
+                {{
+                  $t("presentationLayout.rightDrawer.tabs.layers.layer.delete")
+                }}
+              </q-tooltip>
             </q-btn>
           </q-card-section>
         </q-card>
@@ -201,10 +193,11 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
-import { onBeforeMount, ref, watch } from "vue";
+import { onBeforeMount, ref } from "vue";
 import draggable from "vuedraggable/src/vuedraggable";
 import { usePresentationsStore } from "stores/presentations";
 import { useStudioStore } from "stores/studio";
+import { SHAPES } from "src/constants/assets/shapes";
 
 /*
  * variables
@@ -225,18 +218,23 @@ const { slide, averageBackgroundBrightness, backgroundBrightnessThreshold } =
 /*
  * elements
  */
-const nodes = ref();
+const nodes = ref([]);
 
 onBeforeMount(() => {
-  nodes.value = layers.value.default?.getChildren()?.reverse();
-});
+  nodes.value = layers.value.default
+    .getChildren(function (node) {
+      return Object.values(MODE_OPTIONS.value).includes(node.getAttr("name"));
+    })
+    .reverse();
 
-watch(
-  () => layers.value.default?.getChildren(),
-  () => {
-    nodes.value = layers.value.default?.getChildren()?.reverse();
-  },
-);
+  layers.value.default.on("draw", () => {
+    nodes.value = layers.value.default
+      .getChildren((node) =>
+        Object.values(MODE_OPTIONS.value).includes(node.getAttr("name")),
+      )
+      .reverse();
+  });
+});
 
 /*
  * drag
@@ -258,10 +256,10 @@ const handleEndDragging = () => {
   isLayerDragging.value = false;
 
   nodes.value.forEach((node, index) => {
-    layers.value.default
-      ?.findOne((item) => item._id === node._id)
-      ?.zIndex(nodes.value.length - 1 - index);
+    node.setZIndex(nodes.value.length - 1 - index); // reverse the reversed index of nodes array
   });
+
+  transformer.value.default.moveToTop();
 };
 
 const handleLayerSelection = (event, element) => {
@@ -283,8 +281,11 @@ const handleLayerSelection = (event, element) => {
       transformer.value.default?.nodes(nodes);
     }
   } else {
+    console.log(element);
     transformer.value.default.nodes([element]);
   }
+
+  transformer.value.default.moveToTop();
 };
 </script>
 
@@ -304,7 +305,7 @@ const handleLayerSelection = (event, element) => {
     line-height: 30px;
   }
 
-  .layer_handle {
+  .layer__handle {
     cursor: grab;
   }
 
