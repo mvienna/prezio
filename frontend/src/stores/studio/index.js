@@ -101,7 +101,7 @@ export const useStudioStore = defineStore("studio", {
     },
     isTransforming: false,
     snapping: {
-      GUIDELINE_OFFSET: 10,
+      GUIDELINE_OFFSET: 5,
     },
     copiedNodes: [],
 

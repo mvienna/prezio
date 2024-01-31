@@ -48,7 +48,7 @@
           >
             <PresentationStudioTabsTypesTab
               @select="
-                handleChangingSlideType($event);
+                handleSlideTypeChange($event);
                 handleTabSelect();
               "
             />
@@ -252,7 +252,7 @@ watch(
 /*
  * change slide type
  */
-const handleChangingSlideType = async (type) => {
+const handleSlideTypeChange = async (type) => {
   if (type === slide.value?.type) return;
 
   slide.value.type = type;

@@ -146,7 +146,12 @@ export function handleSelectionMouseUp(event) {
       Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")) &&
       node.getLayer().attrs.name === "defaultLayer" &&
       node.draggable() &&
-      node.visible()
+      node.visible() &&
+      ![
+        SHAPES_OPTIONS.LINE,
+        SHAPES_OPTIONS.ARROW,
+        SHAPES_OPTIONS.ARROW_DOUBLE,
+      ].includes(node.getClassName())
     );
   });
   const box = this.selection.rect.getClientRect();
@@ -243,9 +248,15 @@ export function setCustomShapeTransformer(node) {
     y:
       this.transformer.custom.shape.node.y() +
       this.transformer.custom.shape.node.points()[1],
-    radius: 10,
-    fill: COLOR_PALETTE.PRIMARY,
-    stroke: COLOR_PALETTE.WHITE,
+    radius: 12,
+    fill:
+      slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
+        ? COLOR_PALETTE.WHITE
+        : COLOR_PALETTE.BLACK,
+    stroke:
+      slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
+        ? COLOR_PALETTE.BLACK
+        : COLOR_PALETTE.WHITE,
     strokeWidth: 4,
     draggable: true,
     name: "customTransformer",
@@ -259,9 +270,15 @@ export function setCustomShapeTransformer(node) {
     y:
       this.transformer.custom.shape.node.y() +
       this.transformer.custom.shape.node.points()[3],
-    radius: 10,
-    fill: COLOR_PALETTE.PRIMARY,
-    stroke: COLOR_PALETTE.WHITE,
+    radius: 12,
+    fill:
+      slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
+        ? COLOR_PALETTE.WHITE
+        : COLOR_PALETTE.BLACK,
+    stroke:
+      slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
+        ? COLOR_PALETTE.BLACK
+        : COLOR_PALETTE.WHITE,
     strokeWidth: 4,
     draggable: true,
     name: "customTransformer",

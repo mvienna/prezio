@@ -2,7 +2,6 @@ import Konva from "konva";
 import {
   COLOR_PALETTE,
   COLOR_SCHEME_OPTIONS,
-  SHAPES_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
@@ -33,6 +32,7 @@ export function handleSnappingGetLineGuideStops(skipShape) {
       Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
     )
     .filter((node) => node._id !== skipShape._id)
+    .filter((node) => this.transformer?.custom.shape?.node?._id !== node._id)
     .forEach((guideItem) => {
       if (guideItem === skipShape) {
         return;
@@ -91,10 +91,11 @@ export function handleSnappingGetObjectEdges(node) {
   };
 }
 
-// find all snapping possibilities
+// find all snapping possibilities and then filter to keep only the nearest guides
 export function handleSnappingGetGuides(lineGuideStops, itemBounds) {
   let guides = [];
 
+  // Existing logic to find all possible guides
   lineGuideStops.vertical.forEach((lineGuide) => {
     itemBounds.vertical.forEach((itemBound) => {
       const diff = Math.abs(lineGuide - itemBound.guide);
@@ -123,7 +124,50 @@ export function handleSnappingGetGuides(lineGuideStops, itemBounds) {
     });
   });
 
-  return guides;
+  // Function to find the nearest guide lines for snapping, considering elements of the same size
+  function findNearestGuides(guides, currentPosition, itemBounds) {
+    let vGuides = { start: null, center: null, end: null };
+    let hGuides = { start: null, center: null, end: null };
+
+    guides.forEach((guide) => {
+      if (guide.orientation === "V") {
+        const vGuideKey = guide.snap; // 'start', 'center', or 'end'
+        if (
+          !vGuides[vGuideKey] ||
+          Math.abs(vGuides[vGuideKey].lineGuide - currentPosition.x) >
+            Math.abs(guide.lineGuide - currentPosition.x)
+        ) {
+          vGuides[vGuideKey] = guide;
+        }
+      } else if (guide.orientation === "H") {
+        const hGuideKey = guide.snap; // 'start', 'center', or 'end'
+        if (
+          !hGuides[hGuideKey] ||
+          Math.abs(hGuides[hGuideKey].lineGuide - currentPosition.y) >
+            Math.abs(guide.lineGuide - currentPosition.y)
+        ) {
+          hGuides[hGuideKey] = guide;
+        }
+      }
+    });
+
+    // Flatten the guides and filter out the null values
+    return [...Object.values(vGuides), ...Object.values(hGuides)].filter(
+      (guide) => guide !== null,
+    );
+  }
+
+  // Determine the position of the currently dragged element
+  const currentPosition = {
+    x: itemBounds.vertical[0] ? itemBounds.vertical[0].guide : 0,
+    y: itemBounds.horizontal[0] ? itemBounds.horizontal[0].guide : 0,
+  };
+
+  // Filter to find the nearest guides, including top, middle, and bottom
+  const nearestGuides = findNearestGuides(guides, currentPosition, itemBounds);
+
+  // Return only the nearest guides
+  return nearestGuides;
 }
 
 export function handleSnappingDrawGuides(guides) {
@@ -170,26 +214,7 @@ export function handleSnappingDragMove(event) {
   if (this.mode === this.MODE_OPTIONS.DRAWING) return;
 
   // disable for transformer
-  if (
-    [
-      this.transformer.default?._id,
-      this.transformer.custom.shape.anchor1?._id,
-      this.transformer.custom.shape.anchor2?._id,
-    ].includes(event.target._id)
-  )
-    return;
-
-  if (
-    ![
-      SHAPES_OPTIONS.LINE,
-      SHAPES_OPTIONS.ARROW,
-      SHAPES_OPTIONS.ARROW_DOUBLE,
-    ].includes(event.target.getClassName()) &&
-    !this.transformer.default?.nodes()?.length
-  ) {
-    const nodes = this.transformer.default?.nodes().concat([event.target]);
-    this.transformer.default?.nodes(nodes);
-  }
+  if ([this.transformer.default?._id].includes(event.target._id)) return;
 
   // clear all previous lines on the screen
   this.layers.default.find(".guid-line").forEach((l) => l.destroy());
