@@ -129,10 +129,7 @@
               showSlideContextMenu[index] = !showSlideContextMenu[index]
             "
           >
-            <img
-              :src="element.preview"
-              :id="element.id === slide.id ? 'preview' : ''"
-            />
+            <img :src="element.preview" />
 
             <!-- slide type -->
             <div

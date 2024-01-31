@@ -25,9 +25,7 @@ export async function handleSlideUpdate() {
   this.stages.default.position({ x: 0, y: 0 });
 
   // save preview with initial zoom
-  const preview = this.generatePreviewForStage();
-  document.getElementById("preview").src = preview;
-  slide.value.preview = preview;
+  slide.value.preview = this.generatePreviewForStage();
 
   // Restore original scale and position
   this.stages.default.scale({ x: currentScale, y: currentScale });
