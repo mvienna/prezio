@@ -96,8 +96,13 @@ const categories = {
  * preview background on hover
  */
 const isThemesHovered = ref([]);
+const baseBackgroundUrl = computed(() => {
+  return layers.value.base.findOne(".baseBackground")?.getAttr("source");
+});
 
 const handleBackgroundMouseOver = (theme, themeIndex) => {
+  if (theme.src === baseBackgroundUrl.value) return;
+
   isThemesHovered.value[themeIndex] = true;
 
   setTimeout(() => {
@@ -106,10 +111,6 @@ const handleBackgroundMouseOver = (theme, themeIndex) => {
     }
   }, 500);
 };
-
-const baseBackgroundUrl = computed(() => {
-  return layers.value.base.findOne(".baseBackground")?.getAttr("source");
-});
 
 const handleBackgroundMouseLeave = (themeIndex) => {
   isThemesHovered.value[themeIndex] = false;
