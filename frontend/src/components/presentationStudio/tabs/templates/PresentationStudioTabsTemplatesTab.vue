@@ -41,7 +41,7 @@
         filteredTemplates.length
           ? $t("presentationLayout.rightDrawer.tabs.templates.title")
           : $t(
-              "presentationLayout.rightDrawer.tabs.templates.search.noResults.title"
+              "presentationLayout.rightDrawer.tabs.templates.search.noResults.title",
             )
       }}
     </div>
@@ -113,7 +113,7 @@
         <div class="text-center q-py-xs ellipsis">
           {{
             $t(
-              "presentationLayout.rightDrawer.tabs.templates.search.noResults.template"
+              "presentationLayout.rightDrawer.tabs.templates.search.noResults.template",
             )
           }}
         </div>
@@ -131,7 +131,7 @@
         color="primary"
         :label="
           $t(
-            'presentationLayout.rightDrawer.tabs.templates.createOrEdit.create'
+            'presentationLayout.rightDrawer.tabs.templates.createOrEdit.create',
           )
         "
         class="full-width q-py-sm"
@@ -142,17 +142,17 @@
         <PresentationStudioTabsTemplatesTabCreateOrEditTemplateDialog
           :title="
             $t(
-              'presentationLayout.rightDrawer.tabs.templates.createOrEdit.create'
+              'presentationLayout.rightDrawer.tabs.templates.createOrEdit.create',
             )
           "
           :cancel-btn-text="
             $t(
-              'presentationLayout.rightDrawer.tabs.templates.createOrEdit.cancel'
+              'presentationLayout.rightDrawer.tabs.templates.createOrEdit.cancel',
             )
           "
           :submit-btn-text="
             $t(
-              'presentationLayout.rightDrawer.tabs.templates.createOrEdit.submit'
+              'presentationLayout.rightDrawer.tabs.templates.createOrEdit.submit',
             )
           "
           :categories="categories"
@@ -170,7 +170,7 @@
           color="primary"
           :label="
             $t(
-              'presentationLayout.rightDrawer.tabs.templates.createOrEdit.edit'
+              'presentationLayout.rightDrawer.tabs.templates.createOrEdit.edit',
             )
           "
           style="width: 100%"
@@ -186,17 +186,17 @@
             :is-private="!!slide.template.is_private"
             :title="
               $t(
-                'presentationLayout.rightDrawer.tabs.templates.createOrEdit.edit'
+                'presentationLayout.rightDrawer.tabs.templates.createOrEdit.edit',
               )
             "
             :cancel-btn-text="
               $t(
-                'presentationLayout.rightDrawer.tabs.templates.createOrEdit.cancel'
+                'presentationLayout.rightDrawer.tabs.templates.createOrEdit.cancel',
               )
             "
             :submit-btn-text="
               $t(
-                'presentationLayout.rightDrawer.tabs.templates.createOrEdit.submit'
+                'presentationLayout.rightDrawer.tabs.templates.createOrEdit.submit',
               )
             "
             :categories="categories"
@@ -244,6 +244,7 @@ const $q = useQuasar();
 /*
  * stores
  */
+// todo: refactor using studio store and konva
 const canvasStore = useCanvasStore();
 const { elements } = storeToRefs(canvasStore);
 
@@ -272,7 +273,7 @@ const categories = [
   {
     name: "holidays",
     label: t(
-      "presentationLayout.rightDrawer.tabs.templates.categories.holidays"
+      "presentationLayout.rightDrawer.tabs.templates.categories.holidays",
     ),
     icon: "r_redeem",
   },
@@ -297,7 +298,7 @@ const search = ref("");
 
 const filteredTemplates = computed(() => {
   return templates.value.filter(
-    (item) => item.category === selectedTemplateCategory.value
+    (item) => item.category === selectedTemplateCategory.value,
   );
 });
 
@@ -407,7 +408,7 @@ const handleTemplateDeletion = (template) => {
     .delete(`/slide-template/${template.id}`)
     .then(() => {
       templates.value = templates.value.filter(
-        (item) => item.id !== template.id
+        (item) => item.id !== template.id,
       );
 
       slide.value.template = null;

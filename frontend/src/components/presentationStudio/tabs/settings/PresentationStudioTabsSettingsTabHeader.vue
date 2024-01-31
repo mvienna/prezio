@@ -143,9 +143,7 @@
 
 <script setup>
 import { computed, onBeforeMount, ref, watch } from "vue";
-import { useCanvasTextStore } from "stores/canvas/text";
 import { storeToRefs } from "pinia";
-import { useCanvasStore } from "stores/canvas";
 import { usePresentationsStore } from "stores/presentations";
 import { useI18n } from "vue-i18n";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
@@ -164,14 +162,8 @@ const { t } = useI18n({ useScope: "global" });
 /*
  * stores
  */
-const canvasStore = useCanvasStore();
-const { elements } = storeToRefs(canvasStore);
-
 const studioStore = useStudioStore();
 const { MODE_OPTIONS, layers } = storeToRefs(studioStore);
-
-const textStore = useCanvasTextStore();
-const { customization } = storeToRefs(textStore);
 
 const presentationsStore = usePresentationsStore();
 const { slide, slideSettings } = storeToRefs(presentationsStore);

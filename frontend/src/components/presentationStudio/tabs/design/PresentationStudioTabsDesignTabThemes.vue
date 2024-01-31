@@ -8,7 +8,7 @@
       <div class="themes_grid">
         <div
           v-for="(theme, themeIndex) in THEMES.filter(
-            (item) => item.group === category.name
+            (item) => item.group === category.name,
           )"
           :key="themeIndex"
           class="theme relative-position"
@@ -54,7 +54,6 @@
 import { computed, ref } from "vue";
 import { THEMES } from "src/constants/assets/themes";
 import { useI18n } from "vue-i18n";
-import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { useStudioStore } from "stores/studio";
 
@@ -66,9 +65,6 @@ const { t } = useI18n({ useScope: "global" });
 /*
  * stores
  */
-const canvasStore = useCanvasStore();
-const { elements, MODE_OPTIONS, canvas } = storeToRefs(canvasStore);
-
 const studioStore = useStudioStore();
 const { layers } = storeToRefs(studioStore);
 
@@ -79,13 +75,13 @@ const categories = {
   prezio: {
     name: "prezio",
     label: t(
-      "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.prezio"
+      "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.prezio",
     ),
   },
   gradients: {
     name: "gradients",
     label: t(
-      "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.gradients"
+      "presentationLayout.rightDrawer.tabs.design.slideBackground.categories.gradients",
     ),
   },
   // stock: {
