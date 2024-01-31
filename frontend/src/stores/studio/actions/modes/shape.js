@@ -1,4 +1,7 @@
-import { SHAPE_OPTIONS } from "src/constants/canvas/canvasVariables";
+import {
+  SHAPE_OPTIONS,
+  SHAPE_TYPES,
+} from "src/constants/canvas/canvasVariables";
 import Konva from "konva";
 
 export function addShape(shapeName) {
@@ -21,8 +24,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.LINE.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 4,
-        y: this.scene.height / 2,
         points: [0, 0, this.scene.width / 2, 0],
         strokeWidth: 8,
       });
@@ -31,8 +32,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ARROW.name:
       shapeNode = new Konva.Arrow({
         ...shapeDefaultConfig,
-        x: this.scene.width / 4,
-        y: this.scene.height / 2,
         points: [0, 0, this.scene.width / 2, 0],
         pointerLength: this.shape.default.pointerSize,
         pointerWidth: this.shape.default.pointerSize,
@@ -44,8 +43,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ARROW_DOUBLE.name:
       shapeNode = new Konva.Arrow({
         ...shapeDefaultConfig,
-        x: this.scene.width / 4,
-        y: this.scene.height / 2,
         points: [0, 0, this.scene.width / 2, 0],
         pointerLength: this.shape.default.pointerSize,
         pointerWidth: this.shape.default.pointerSize,
@@ -61,8 +58,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.CIRCLE.name:
       shapeNode = new Konva.Circle({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         radius: size / 2,
       });
       break;
@@ -70,8 +65,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.RECT.name:
       shapeNode = new Konva.Rect({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2 - size / 2,
-        y: this.scene.height / 2 - size / 2,
         width: size,
         height: size,
         cornerRadius: this.shape.cornerRadius,
@@ -81,8 +74,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.STAR.name:
       shapeNode = new Konva.Star({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         numPoints: 5,
         innerRadius: size / 3,
         outerRadius: size - size / 3,
@@ -92,8 +83,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.TRIANGLE.name:
       shapeNode = new Konva.RegularPolygon({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         radius: size / 2,
         sides: 3,
       });
@@ -103,8 +92,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.POLYGON.name:
       shapeNode = new Konva.RegularPolygon({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         radius: size / 2,
         sides: 6,
         rotation: -90,
@@ -117,8 +104,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ABSTRACT_1.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         points: [
           187, 75, 175, 100, 150, 121, 119, 105, 117, 75, 128, 53, 150, 31, 177,
           47,
@@ -131,8 +116,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ABSTRACT_2.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         points: [
           197, 75, 178, 103, 150, 121, 123, 101, 109, 75, 128, 53, 150, 32, 185,
           39,
@@ -145,8 +128,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ABSTRACT_3.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         points: [
           193, 75, 183, 108, 150, 109, 124, 100, 104, 75, 124, 49, 150, 36, 174,
           50,
@@ -159,8 +140,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ABSTRACT_4.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         points: [
           192, 75, 178, 103, 150, 116, 124, 100, 102, 75, 117, 42, 150, 28, 182,
           42,
@@ -173,8 +152,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ABSTRACT_5.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         points: [
           195, 75, 171, 96, 150, 111, 119, 105, 101, 75, 124, 49, 150, 33, 172,
           52,
@@ -187,8 +164,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ABSTRACT_6.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         points: [
           180, 75, 182, 107, 150, 107, 117, 107, 109, 75, 122, 47, 150, 25, 181,
           43,
@@ -201,8 +176,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ABSTRACT_7.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         points: [
           181, 75, 184, 109, 150, 117, 125, 99, 104, 75, 126, 51, 150, 32, 179,
           45,
@@ -215,8 +188,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ABSTRACT_8.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         points: [
           186, 75, 184, 109, 150, 111, 114, 110, 111, 75, 118, 43, 150, 40, 174,
           50,
@@ -229,8 +200,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ABSTRACT_9.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         points: [
           193, 75, 179, 104, 150, 111, 125, 99, 110, 75, 126, 51, 150, 34, 183,
           41,
@@ -243,8 +212,6 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ABSTRACT_10.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        x: this.scene.width / 2,
-        y: this.scene.height / 2,
         points: [
           182, 75, 179, 104, 150, 123, 117, 107, 118, 75, 120, 45, 150, 36, 173,
           51,
@@ -257,6 +224,8 @@ export function addShape(shapeName) {
 
   shapeNode.setAttrs({
     shape: shapeName,
+    x: this.scene.width / 2 - shapeNode.width() / 2,
+    y: this.scene.height / 2 - shapeNode.height() / 2,
   });
 
   this.layers.default.add(shapeNode);
@@ -270,7 +239,6 @@ export function setShapeCustomization(node) {
   this.shape = {
     ...this.shape,
     opacity: node.opacity(),
-    fill: node.fill(),
     stroke: node.stroke(),
     strokeWidth: node.strokeWidth(),
     shadowColor: node.shadowColor(),
@@ -283,6 +251,12 @@ export function setShapeCustomization(node) {
             (node.cornerRadius() / Math.min(node.width(), node.height())) * 100,
           )
         : null,
+    fillLinearGradientColorStops: node.fillLinearGradientColorStops()
+      ? node.fillLinearGradientColorStops()
+      : null,
+    fill: node.fillLinearGradientColorStops()
+      ? node.fillLinearGradientColorStops()[1]
+      : node.fill(),
   };
 
   if (
@@ -297,11 +271,6 @@ export function setShapeCustomization(node) {
 export function applyShapeCustomization(node) {
   node.setAttrs({
     opacity: this.shape.opacity,
-    fill: [SHAPE_OPTIONS.ARROW.name, SHAPE_OPTIONS.ARROW_DOUBLE.name].includes(
-      node.getAttr("shape"),
-    )
-      ? this.shape.stroke
-      : this.shape.fill,
     stroke: this.shape.stroke,
     strokeWidth: this.shape.strokeWidth,
     shadowColor: this.shape.shadowColor,
@@ -323,5 +292,37 @@ export function applyShapeCustomization(node) {
   ) {
     node.pointerLength(this.shape.pointerSize);
     node.pointerWidth(this.shape.pointerSize);
+  }
+
+  if (this.shape.fillLinearGradientColorStops) {
+    // const isAbstract = Object.values(SHAPE_OPTIONS)
+    //   .filter((item) => item.group === SHAPE_TYPES.ABSTRACT)
+    //   .map((item) => item.name)
+    //   .includes(node.getAttr("shape"));
+
+    node.setAttrs({
+      fill: undefined,
+      fillLinearGradientColorStops: this.shape.fillLinearGradientColorStops,
+      fillLinearGradientStartPoint: {
+        x: 0,
+        y: 0,
+      },
+      fillLinearGradientEndPoint: {
+        x: node.width(),
+        y: node.height(),
+      },
+    });
+  } else {
+    node.setAttrs({
+      fillLinearGradientColorStops: undefined,
+      fillLinearGradientStartPoint: undefined,
+      fillLinearGradientEndPoint: undefined,
+      fill: [
+        SHAPE_OPTIONS.ARROW.name,
+        SHAPE_OPTIONS.ARROW_DOUBLE.name,
+      ].includes(node.getAttr("shape"))
+        ? this.shape.stroke
+        : this.shape.fill,
+    });
   }
 }

@@ -177,6 +177,12 @@ export const useStudioStore = defineStore("studio", {
       shadowOpacity: 0,
       cornerRadius: 0,
       pointerSize: 12,
+      fillLinearGradientColorStops: [
+        0,
+        COLOR_PALETTE.PRIMARY,
+        1,
+        COLOR_PALETTE.SECONDARY,
+      ],
 
       default: {
         fill: COLOR_PALETTE.PRIMARY,
@@ -189,6 +195,12 @@ export const useStudioStore = defineStore("studio", {
         shadowOpacity: 0,
         cornerRadius: 0,
         pointerSize: 12,
+        fillLinearGradientColorStops: [
+          0,
+          COLOR_PALETTE.PRIMARY,
+          1,
+          COLOR_PALETTE.SECONDARY,
+        ],
       },
     },
 

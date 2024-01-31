@@ -11,7 +11,20 @@
   >
     <div>
       <q-icon name="icon-mdi_format_color_fill_top" class="absolute-center" />
+
+      <div
+        v-if="shape.fillLinearGradientColorStops"
+        class="absolute-bottom q-mb-sm relative-position"
+        style="height: 3.5px; width: 100%; padding: 0 10px"
+      >
+        <div
+          class="full-width full-height rounded-md"
+          :style="`background: linear-gradient(45deg, ${shape.fillLinearGradientColorStops[1]}, ${shape.fillLinearGradientColorStops[3]});`"
+        ></div>
+      </div>
+
       <q-icon
+        v-else
         name="icon-mdi_format_color_fill_bottom"
         :style="`color: ${shape.fill}`"
         class="absolute-center"
@@ -27,12 +40,102 @@
       :offset="[0, 8]"
       class="no-padding"
     >
+      <!-- fill mode -->
+      <q-tabs
+        v-if="
+          !transformer.default.nodes().filter((node) =>
+            Object.values(SHAPE_OPTIONS)
+              .filter((item) => item.group === SHAPE_TYPES.ABSTRACT)
+              .map((item) => item.name)
+              .includes(node.getAttr('shape')),
+          ).length
+        "
+        v-model="fillMode"
+        dense
+        no-caps
+        @update:model-value="handleFillModeUpdate()"
+      >
+        <q-tab :name="FILL_MODE_OPTIONS.SOLID" icon="r_square" />
+        <q-tab :name="FILL_MODE_OPTIONS.LINEAR_GRADIENT" icon="r_blur_linear" />
+      </q-tabs>
+
+      <!-- gradient -->
+      <q-slide-transition>
+        <div v-if="fillMode === 'linearGradient'">
+          <div class="q-px-sm q-py-md">
+            <div class="row no-wrap justify-between q-px-md">
+              <!-- from -->
+              <div class="column no-wrap items-center">
+                <q-icon
+                  name="r_circle"
+                  class="rounded-lg cursor-pointer"
+                  style="border: 1px solid transparent"
+                  :style="`color: ${shape.fillLinearGradientColorStops[1]}; ${
+                    selectedLinearGradientStop ===
+                    shape.fillLinearGradientColorStops[0]
+                      ? 'outline: 2px solid var(--q-primary);'
+                      : ''
+                  }`"
+                  size="1.5rem"
+                  @click="
+                    selectedLinearGradientStop =
+                      shape.fillLinearGradientColorStops[0]
+                  "
+                />
+
+                <div>
+                  <q-separator vertical style="height: 2rem" />
+                </div>
+              </div>
+
+              <!-- to -->
+              <div class="column no-wrap items-center">
+                <q-icon
+                  name="r_circle"
+                  class="rounded-lg cursor-pointer"
+                  style="border: 1px solid transparent"
+                  :style="`color: ${shape.fillLinearGradientColorStops[3]}; ${
+                    selectedLinearGradientStop ===
+                    shape.fillLinearGradientColorStops[2]
+                      ? 'outline: 2px solid var(--q-primary);'
+                      : ''
+                  }`"
+                  size="1.5rem"
+                  @click="
+                    selectedLinearGradientStop =
+                      shape.fillLinearGradientColorStops[2]
+                  "
+                />
+
+                <div>
+                  <q-separator vertical style="height: 2rem" />
+                </div>
+              </div>
+            </div>
+
+            <div
+              :style="{ 'background-image': `url(${chessboard})` }"
+              style="width: 100%; height: 20px"
+              class="rounded-sm relative-position overflow-hidden"
+            >
+              <div
+                class="absolute-center"
+                style="width: 100%; height: 100%"
+                :style="`background: linear-gradient(45deg, ${shape.fillLinearGradientColorStops[1]}, ${shape.fillLinearGradientColorStops[3]});`"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </q-slide-transition>
+
+      <!-- color picker -->
       <q-color
+        v-model="shape.fill"
         format-model="hex"
         no-header-tabs
         default-view="palette"
-        v-model="shape.fill"
-        @change="studioStore.applyCustomization()"
+        style="border-radius: 0"
+        @change="handleFillColorPickerChange()"
       />
 
       <!-- remove fill -->
@@ -385,10 +488,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useStudioStore } from "stores/studio";
 import { storeToRefs } from "pinia";
-import { SHAPE_OPTIONS } from "src/constants/canvas/canvasVariables";
+import {
+  SHAPE_OPTIONS,
+  SHAPE_TYPES,
+} from "src/constants/canvas/canvasVariables";
 
 /*
  * stores
@@ -402,6 +508,57 @@ const showMenu = ref({
   opacity: false,
   cornerRadius: false,
 });
+
+/*
+ * fill mode
+ */
+const FILL_MODE_OPTIONS = {
+  LINEAR_GRADIENT: "linearGradient",
+  SOLID: "solid",
+};
+const fillMode = ref(
+  shape.value.fillLinearGradientColorStops
+    ? FILL_MODE_OPTIONS.LINEAR_GRADIENT
+    : FILL_MODE_OPTIONS.SOLID,
+);
+watch(
+  () => transformer.value.default.nodes(),
+  () => {
+    fillMode.value = shape.value.fillLinearGradientColorStops
+      ? FILL_MODE_OPTIONS.LINEAR_GRADIENT
+      : FILL_MODE_OPTIONS.SOLID;
+  },
+);
+
+const chessboard =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAH0lEQVQoU2NkYGAwZkAFZ5G5jPRRgOYEVDeB3EBjBQBOZwTVugIGyAAAAABJRU5ErkJggg==";
+
+const selectedLinearGradientStop = ref(0);
+
+const handleFillColorPickerChange = () => {
+  if (fillMode.value === FILL_MODE_OPTIONS.LINEAR_GRADIENT) {
+    shape.value.fillLinearGradientColorStops[
+      selectedLinearGradientStop.value === 0 ? 1 : 3
+    ] = shape.value.fill;
+  }
+
+  studioStore.applyCustomization();
+};
+
+const handleFillModeUpdate = () => {
+  if (fillMode.value === FILL_MODE_OPTIONS.SOLID) {
+    shape.value.fill = shape.value.fillLinearGradientColorStops[1];
+    shape.value.fillLinearGradientColorStops = null;
+  }
+
+  if (fillMode.value === FILL_MODE_OPTIONS.LINEAR_GRADIENT) {
+    shape.value.fillLinearGradientColorStops =
+      shape.value.default.fillLinearGradientColorStops;
+    shape.value.fillLinearGradientColorStops[1] = shape.value.fill;
+  }
+
+  studioStore.applyCustomization();
+};
 </script>
 
 <style scoped lang="scss">
@@ -410,6 +567,46 @@ const showMenu = ref({
 
   .q-field__suffix {
     padding: 0;
+  }
+}
+
+/*
+ * gradient
+ */
+.chessboard {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  opacity: 0.1;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      $black 0,
+      $black 5px,
+      $white 5px,
+      $white 10px
+    );
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      90deg,
+      $black 0,
+      $black 5px,
+      $white 5px,
+      $white 10px
+    );
+    mix-blend-mode: difference;
   }
 }
 </style>
