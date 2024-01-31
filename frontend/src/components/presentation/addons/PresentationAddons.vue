@@ -34,6 +34,7 @@
         wordCloudData?.length &&
         !slideSettings?.isResultsHidden
       "
+      :box="box"
       :key="'addons__word_cloud__' + slide?.id"
       :words="wordCloudData"
       :style="isPresentationPreview ? 'z-index: 6001;' : ''"

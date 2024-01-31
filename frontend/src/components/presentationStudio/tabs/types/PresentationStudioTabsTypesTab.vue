@@ -178,7 +178,6 @@ const types = computed(() => {
       },
       {
         name: SLIDE_TYPES.WORD_CLOUD,
-        disable: true, // TODO:
       },
       {
         name: SLIDE_TYPES.QNA,

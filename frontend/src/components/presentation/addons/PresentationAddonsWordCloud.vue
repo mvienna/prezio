@@ -1,5 +1,5 @@
 <template>
-  <div class="word_cloud" :style="`left: ${left}; top: ${top};`">
+  <div class="word_cloud" :style="`left: ${left}px; top: ${top}px;`">
     <div ref="wordCloud"></div>
   </div>
 </template>
@@ -15,10 +15,7 @@ import {
   ref,
   watch,
 } from "vue";
-import { useCanvasStore } from "stores/canvas";
-import { storeToRefs } from "pinia";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
-import { usePresentationsStore } from "stores/presentations";
 
 /*
  * emits
@@ -26,49 +23,20 @@ import { usePresentationsStore } from "stores/presentations";
 const emit = defineEmits(["removeWord"]);
 
 /*
- * stores
- */
-const canvasStore = useCanvasStore();
-
-const presentationsStore = usePresentationsStore();
-const { showRoomInvitationPanel } = storeToRefs(presentationsStore);
-
-/*
  * data
  */
 const props = defineProps({
   words: { type: Array, default: null },
+  box: { type: Object, default: null },
 });
 
 const wordCloud = ref();
 const isWordCloudGenerated = ref(false);
 
-const canvasRect = ref(canvasStore.canvasRect());
-
 const width = ref(0);
 const height = ref(0);
-
-const left = computed(() => {
-  if (width.value > canvasRect.value.width && !showRoomInvitationPanel.value) {
-    return canvasRect.value.left;
-  }
-
-  return (
-    canvasRect.value.left + canvasRect.value.width / 2 - width.value / 2 + "px"
-  );
-});
-
-const top = computed(() => {
-  return (
-    canvasRect.value.y +
-    canvasRect.value.height / 2 -
-    (width.value > canvasRect.value.width
-      ? d3.select(wordCloud.value).select("svg").node().getBoundingClientRect()
-          .height / 2
-      : height.value / 2) +
-    "px"
-  );
-});
+const left = ref(0);
+const top = ref(0);
 
 const settings = {
   size: (group) => group.length, // given a grouping of words, returns the size factor for that word
@@ -97,61 +65,28 @@ const data = computed(() => {
 /*
  * hooks
  */
-const resizeObserverCanvas = ref();
-const resizeObserverPage = ref();
-
 onMounted(() => {
-  const canvas = document.getElementById("canvas");
-  resizeObserverCanvas.value = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      canvasRect.value = canvasStore.canvasRect();
-
-      if (
-        !isWordCloudGenerated.value &&
-        canvasRect.value.width > 0 &&
-        canvasRect.value.height > 0
-      ) {
-        width.value = (canvasRect.value.width * 80) / 100;
-        height.value = (canvasRect.value.height * 50) / 100;
-        generate();
-      }
-    }
-  });
-  resizeObserverCanvas.value.observe(canvas);
-
-  const page = document.getElementsByClassName("q-page-container")[0];
-  resizeObserverPage.value = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      if (
-        window.screen.width > canvasStore.canvasRect().width &&
-        !showRoomInvitationPanel.value
-      ) {
-        canvasRect.value = canvasStore.canvasRect();
-      }
-    }
-  });
-  resizeObserverPage.value.observe(page);
-});
-
-onUnmounted(() => {
-  resizeObserverCanvas.value.disconnect();
-  resizeObserverPage.value.disconnect();
+  generate();
 });
 
 watch(
   () => props.words,
   () => {
-    // TODO: restore update() and fix the whole word cloud disappearing on word deletion
+    // todo: restore update() and fix the whole word cloud disappearing on word deletion
     generate();
-  }
+  },
 );
 
 /*
  * d3 cloud
  */
 const generate = () => {
-  if (!wordCloud.value || !width.value || !height.value) return;
   d3.select(wordCloud.value).selectAll("svg").remove();
+
+  width.value = (props.box?.width * 80) / 100;
+  height.value = (props.box?.height * 60) / 100;
+  left.value = props.box?.left + (props.box?.width - width.value) / 2;
+  top.value = props.box?.top + (props.box?.height - height.value) / 2;
 
   const svg = d3
     .create("svg")
@@ -181,7 +116,7 @@ const generate = () => {
           () =>
             wordCloudTextColors[
               Math.floor(Math.random() * wordCloudTextColors.length)
-            ]
+            ],
         )
         .text(text);
     });
@@ -231,7 +166,7 @@ const update = () => {
           () =>
             wordCloudTextColors[
               Math.floor(Math.random() * wordCloudTextColors.length)
-            ]
+            ],
         )
         .text(text);
 
