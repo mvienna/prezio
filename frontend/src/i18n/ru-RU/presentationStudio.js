@@ -124,6 +124,7 @@ export default {
         groups: {
           lines: "Линии",
           simpleShapes: "Простые формы",
+          abstract: "Абстрактные формы",
         },
       },
 

@@ -1,8 +1,5 @@
 import { defineStore, storeToRefs } from "pinia";
-import {
-  ALIGNMENT,
-  SHAPES_OPTIONS,
-} from "src/constants/canvas/canvasVariables";
+import { ALIGNMENT, SHAPE_OPTIONS } from "src/constants/canvas/canvasVariables";
 import { usePresentationsStore } from "stores/presentations";
 import {
   SLIDE_TYPES,
@@ -762,7 +759,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * circle
          */
-        case SHAPES_OPTIONS.CIRCLE:
+        case SHAPE_OPTIONS.CIRCLE:
           this.ctx.arc(
             element.x + element.width / 2,
             element.y + element.height / 2,
@@ -778,7 +775,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * rectangle
          */
-        case SHAPES_OPTIONS.RECT:
+        case SHAPE_OPTIONS.RECT:
           this.ctx.rect(element.x, element.y, element.width, element.height);
 
           fillShape();
@@ -788,7 +785,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * triangle
          */
-        case SHAPES_OPTIONS.TRIANGLE:
+        case SHAPE_OPTIONS.TRIANGLE:
           const triangleX1 = element.x + element.width / 2;
           const triangleX2 = element.x;
           const triangleX3 = element.x + element.width;
@@ -810,7 +807,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * star
          */
-        case SHAPES_OPTIONS.STAR:
+        case SHAPE_OPTIONS.STAR:
           const size = element.width;
           const cx = element.x + size / 2;
           const cy = element.y + size / 2;
@@ -839,7 +836,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * line
          */
-        case SHAPES_OPTIONS.LINE:
+        case SHAPE_OPTIONS.LINE:
           const x1 = element.x;
           const y1 = element.y + element.height / 2;
           const x2 = element.x + element.width;
@@ -853,7 +850,7 @@ export const useCanvasStore = defineStore("canvas", {
         /*
          * arrow
          */
-        case SHAPES_OPTIONS.ARROW:
+        case SHAPE_OPTIONS.ARROW:
           const arrowBaseX = element.x;
           const arrowBaseY = element.y + element.height / 2;
           const arrowTipX = element.x + element.width;
@@ -971,7 +968,7 @@ export const useCanvasStore = defineStore("canvas", {
             element.y,
             element.width,
             element.height,
-            [SHAPES_OPTIONS.CIRCLE, SHAPES_OPTIONS.STAR].includes(element.type)
+            [SHAPE_OPTIONS.CIRCLE, SHAPE_OPTIONS.STAR].includes(element.type)
               ? ["top-left", "top-right", "bottom-right", "bottom-left"]
               : undefined,
             true,

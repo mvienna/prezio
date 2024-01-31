@@ -153,7 +153,7 @@
           class="q-px-sm"
         >
           <q-btn
-            v-for="shape in SHAPES.filter(
+            v-for="shape in Object.values(SHAPE_OPTIONS).filter(
               (item) => item.group === SHAPE_TYPES.LINE,
             )"
             :key="shape.name"
@@ -186,7 +186,7 @@
           class="q-pa-sm"
         >
           <q-btn
-            v-for="shape in SHAPES.filter(
+            v-for="shape in Object.values(SHAPE_OPTIONS).filter(
               (item) => item.group === SHAPE_TYPES.SIMPLE_SHAPE,
             )"
             :key="shape.name"
@@ -200,6 +200,39 @@
             @click="studioStore.addShape(shape.name)"
           >
             <q-icon :name="shape.icon" />
+
+            <q-tooltip v-if="shape.disabled">
+              {{ $t("tooltips.comingSoon") }}
+            </q-tooltip>
+          </q-btn>
+        </div>
+
+        <q-separator class="q-mt-sm q-mb-md" />
+
+        <!-- abstract shapes -->
+        <div class="text-grey q-px-md">
+          {{ $t("presentationStudio.toolbar.shape.groups.abstract") }}
+        </div>
+
+        <div
+          style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px"
+          class="q-pa-sm"
+        >
+          <q-btn
+            v-for="shape in Object.values(SHAPE_OPTIONS).filter(
+              (item) => item.group === SHAPE_TYPES.ABSTRACT,
+            )"
+            :key="shape.name"
+            unelevated
+            round
+            size="12px"
+            class="q-pa-sm"
+            text-color="grey-9"
+            :disable="shape.disabled"
+            v-close-popup
+            @click="studioStore.addShape(shape.name)"
+          >
+            <q-img :src="`/assets/icons/shapes/${shape.name}.png`" />
 
             <q-tooltip v-if="shape.disabled">
               {{ $t("tooltips.comingSoon") }}
@@ -222,7 +255,10 @@ import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import PresentationStudioToolbarTopLayouts from "components/presentationStudio/toolbar/top/PresentationStudioToolbarTopLayouts.vue";
 import { useStudioStore } from "stores/studio";
-import { SHAPE_TYPES, SHAPES } from "src/constants/assets/shapes";
+import {
+  SHAPE_OPTIONS,
+  SHAPE_TYPES,
+} from "src/constants/canvas/canvasVariables";
 
 /*
  * variables

@@ -2,7 +2,7 @@ import Konva from "konva";
 import {
   COLOR_PALETTE,
   COLOR_SCHEME_OPTIONS,
-  SHAPES_OPTIONS,
+  SHAPE_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
@@ -148,10 +148,10 @@ export function handleSelectionMouseUp(event) {
       node.draggable() &&
       node.visible() &&
       ![
-        SHAPES_OPTIONS.LINE,
-        SHAPES_OPTIONS.ARROW,
-        SHAPES_OPTIONS.ARROW_DOUBLE,
-      ].includes(node.getClassName())
+        SHAPE_OPTIONS.LINE.name,
+        SHAPE_OPTIONS.ARROW.name,
+        SHAPE_OPTIONS.ARROW_DOUBLE.name,
+      ].includes(node.getAttr("shape"))
     );
   });
   const box = this.selection.rect.getClientRect();
@@ -181,10 +181,10 @@ export function handleSelectionClick(event) {
   if (event.target.getAttr("name") === this.MODE_OPTIONS.SHAPE) {
     if (
       [
-        SHAPES_OPTIONS.LINE,
-        SHAPES_OPTIONS.ARROW,
-        SHAPES_OPTIONS.ARROW_DOUBLE,
-      ].includes(event.target.getClassName())
+        SHAPE_OPTIONS.LINE.name,
+        SHAPE_OPTIONS.ARROW.name,
+        SHAPE_OPTIONS.ARROW_DOUBLE.name,
+      ].includes(event.target.getAttr("shape"))
     ) {
       this.setCustomShapeTransformer(event.target);
       return;

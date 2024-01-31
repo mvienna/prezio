@@ -129,9 +129,10 @@
 
         <template
           v-if="
-            [SHAPES_OPTIONS.ARROW, SHAPES_OPTIONS.ARROW_DOUBLE].includes(
-              transformer.custom.shape?.node?.getClassName(),
-            )
+            [
+              SHAPE_OPTIONS.ARROW.name,
+              SHAPE_OPTIONS.ARROW_DOUBLE.name,
+            ].includes(transformer.custom.shape?.node?.getAttr('shape'))
           "
         >
           <div class="text-caption text-grey q-mt-md">
@@ -325,7 +326,8 @@
     v-if="
       transformer.default
         .nodes()
-        .filter((node) => node.getClassName() === SHAPES_OPTIONS.RECT).length
+        .filter((node) => node.getAttr('shape') === SHAPE_OPTIONS.RECT.name)
+        .length
     "
     flat
     round
@@ -386,7 +388,7 @@
 import { ref } from "vue";
 import { useStudioStore } from "stores/studio";
 import { storeToRefs } from "pinia";
-import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
+import { SHAPE_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * stores

@@ -45,7 +45,7 @@
                       : element.getAttr('name') === MODE_OPTIONS.EMOJI
                         ? 'icon-add_reaction'
                         : element.getAttr('name') === MODE_OPTIONS.SHAPE
-                          ? SHAPES.find(
+                          ? Object.values(SHAPE_OPTIONS).find(
                               (shape) =>
                                 shape.name === element.getAttr('shape'),
                             )?.icon || 'icon-shape_line'
@@ -197,7 +197,7 @@ import { onBeforeMount, ref } from "vue";
 import draggable from "vuedraggable/src/vuedraggable";
 import { usePresentationsStore } from "stores/presentations";
 import { useStudioStore } from "stores/studio";
-import { SHAPES } from "src/constants/assets/shapes";
+import { SHAPE_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * variables

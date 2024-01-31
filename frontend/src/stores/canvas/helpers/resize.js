@@ -2,7 +2,7 @@ import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { syncSelectedElementWithStoredElements } from "stores/canvas/helpers/select";
 import { removeMagnet, useMagnet } from "stores/canvas/helpers/magnet";
-import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
+import { SHAPE_OPTIONS } from "src/constants/canvas/canvasVariables";
 import { useCanvasTextStore } from "stores/canvas/text";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
@@ -68,7 +68,7 @@ export const getResizeHandle = () => {
      * shapes
      */
     case MODE_OPTIONS.value.SHAPE:
-      allowedHandles = [SHAPES_OPTIONS.CIRCLE, SHAPES_OPTIONS.STAR].includes(
+      allowedHandles = [SHAPE_OPTIONS.CIRCLE, SHAPE_OPTIONS.STAR].includes(
         selectedElement.value.type,
       )
         ? [

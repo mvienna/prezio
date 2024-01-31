@@ -1,4 +1,4 @@
-import { SHAPES_OPTIONS } from "src/constants/canvas/canvasVariables";
+import { SHAPE_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 export function setCustomization() {
   const nodes = this.transformer.custom.shape.node
