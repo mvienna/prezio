@@ -224,9 +224,7 @@
 import { computed, onBeforeMount, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { api } from "boot/axios";
-import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
-import { deselectElement } from "stores/canvas/helpers/select";
 import { usePresentationsStore } from "stores/presentations";
 import { useQuasar } from "quasar";
 import PresentationStudioTabsTemplatesTabCreateOrEditTemplateDialog from "components/presentationStudio/tabs/templates/PresentationStudioTabsTemplatesTabCreateOrEditTemplateDialog.vue";
@@ -244,10 +242,6 @@ const $q = useQuasar();
 /*
  * stores
  */
-// todo: refactor using studio store and konva
-const canvasStore = useCanvasStore();
-const { elements } = storeToRefs(canvasStore);
-
 const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);
 
@@ -321,17 +315,17 @@ onBeforeMount(() => {
  * apply template
  */
 const handleApplyTemplate = async (template) => {
-  deselectElement();
-
-  slide.value.canvas_data = template.slide.canvas_data;
-  await canvasStore.setElementsFromSlide();
-  canvasStore.redrawCanvas(undefined, undefined, false);
-  canvasStore.saveSlidePreview();
-
-  $q.notify({
-    message: t("presentationLayout.rightDrawer.tabs.templates.applied"),
-    icon: "r_done",
-  });
+  // deselectElement();
+  //
+  // slide.value.canvas_data = template.slide.canvas_data;
+  // await canvasStore.setElementsFromSlide();
+  // canvasStore.redrawCanvas(undefined, undefined, false);
+  // canvasStore.saveSlidePreview();
+  //
+  // $q.notify({
+  //   message: t("presentationLayout.rightDrawer.tabs.templates.applied"),
+  //   icon: "r_done",
+  // });
 };
 
 /*
