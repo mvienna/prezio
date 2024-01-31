@@ -46,12 +46,14 @@ export function handleDrawingMouseDown() {
 export function handleDrawingMouseUp() {
   this.drawing.isPainting = false;
 
-  if (this.mode === this.MODE_OPTIONS.DRAWING) {
-    // revert temp disabled drag for nodes
-    this.layers.default.getChildren().forEach((node) => {
+  this.layers.default.getChildren().forEach((node) => {
+    if (!!node.getAttr("draggable--saved")) {
       node.draggable(node.getAttr("draggable--saved"));
-    });
+      node.setAttr("draggable--saved", undefined);
+    }
+  });
 
+  if (this.mode === this.MODE_OPTIONS.DRAWING) {
     this.handleSlideUpdate();
   }
 }
@@ -61,6 +63,13 @@ export function handleDrawingMouseMove(event) {
 
   // prevent scrolling on touch devices
   event.evt.preventDefault();
+
+  this.layers.default.getChildren().forEach((node) => {
+    if (!!node.getAttr("draggable--saved")) {
+      node.draggable(node.getAttr("draggable--saved"));
+      node.setAttr("draggable--saved", undefined);
+    }
+  });
 
   const stageTransform = this.stages.default.getAbsoluteTransform().copy();
   const position = stageTransform
