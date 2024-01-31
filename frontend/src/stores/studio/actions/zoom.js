@@ -1,3 +1,10 @@
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { usePresentationsStore } from "stores/presentations";
+import { storeToRefs } from "pinia";
+
+const presentationsStore = usePresentationsStore();
+const { slide } = storeToRefs(presentationsStore);
+
 export function fitStageIntoParentContainer() {
   if (!this.stages.default) return;
   const container = document.querySelector("#stage-parent");
@@ -42,6 +49,8 @@ export function setZoom(newScale) {
 
 export function handleZoom(event) {
   event.evt.preventDefault();
+
+  if (slide.value.type !== SLIDE_TYPES.CONTENT) return;
 
   const oldScale = this.stages.default.scaleX();
 
