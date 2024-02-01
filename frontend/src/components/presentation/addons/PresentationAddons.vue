@@ -53,6 +53,7 @@
       "
       :box="box"
       :key="'addons__bar_chart__' + slide?.id"
+      :style="isPresentationPreview ? 'z-index: 6001;' : ''"
       :data="
         [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(slide?.type)
           ? computeQuizPickAnswerBarChartData()
@@ -65,6 +66,7 @@
       v-if="slide?.type === SLIDE_TYPES.LEADERBOARD"
       :key="'addons__leaderboard__' + slide?.id"
       :box="box"
+      :style="isPresentationPreview ? 'z-index: 9001;' : ''"
     />
   </template>
 </template>
@@ -110,6 +112,10 @@ onMounted(() => {
   resizeObserverCanvas.value = new ResizeObserver((entries) => {
     for (const entry of entries) {
       box.value = stages.value.default.container().getBoundingClientRect();
+
+      setTimeout(() => {
+        box.value = stages.value.default.container().getBoundingClientRect();
+      }, 1000);
     }
   });
   resizeObserverCanvas.value.observe(stages.value.default.container());

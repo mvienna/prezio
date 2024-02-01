@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <div
-      class="bar_chart"
-      ref="barChart"
-      :style="`top: ${top}px; left: ${left}px;`"
-    ></div>
-  </div>
+  <div
+    class="bar_chart"
+    ref="barChart"
+    :style="`top: ${top}px; left: ${left}px;`"
+  ></div>
 </template>
 
 <script setup>

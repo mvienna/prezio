@@ -191,9 +191,7 @@
           :label="$t('presentationLayout.header.preview')"
           class="q-ml-sm q-btn--md"
           @click="isPresentationPreview = true"
-        >
-          <q-tooltip> В процессе </q-tooltip>
-        </q-btn>
+        />
 
         <q-dialog
           v-model="isPresentationPreview"
