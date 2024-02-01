@@ -255,13 +255,19 @@ export async function applyDesignToAllSlides() {
     document.body.appendChild(tempDiv);
 
     // load stage
-    const stage = Konva.Node.create(item.canvas_data, "tempContainer");
+    const stage = item.canvas_data
+      ? Konva.Node.create(item.canvas_data, "tempContainer")
+      : new Konva.Stage({
+          container: "tempContainer",
+          width: this.scene.width,
+          height: this.scene.height,
+        });
 
     // replace base layer
     const baseLayer = this.layers.base.clone();
-    stage.findOne(".baseLayer").destroy();
+    stage.findOne(".baseLayer")?.destroy();
     stage.add(baseLayer);
-    stage.findOne(".baseLayer").moveToBottom();
+    stage.findOne(".baseLayer")?.moveToBottom();
 
     // load images
     const loadImagePromises = [];
