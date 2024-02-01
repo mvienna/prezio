@@ -275,7 +275,6 @@ export const useStudioStore = defineStore("studio", {
     loadStudio() {
       this.history.undo = [];
       this.history.redo = [];
-      this.copiedNodes = [];
       this.isLoaded = false;
 
       /*

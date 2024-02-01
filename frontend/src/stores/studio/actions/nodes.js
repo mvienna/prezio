@@ -1,13 +1,21 @@
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { usePresentationsStore } from "stores/presentations";
+import { storeToRefs } from "pinia";
+
+const presentationsStore = usePresentationsStore();
+const { slide } = storeToRefs(presentationsStore);
+
 export function copyNodes(
   nodes = this.transformer.custom.shape.node
     ? [this.transformer.custom.shape.node]
     : this.transformer.default?.nodes(),
 ) {
   this.copiedNodes = nodes;
-  this.deselectElements();
 }
 
 export function pasteNodes(nodes = this.copiedNodes) {
+  if (slide.value.type !== SLIDE_TYPES.CONTENT) return;
+
   nodes = nodes.map((node) => {
     let clone = node.clone();
     clone.x(clone.x() + 100);

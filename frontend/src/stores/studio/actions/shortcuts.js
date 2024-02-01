@@ -13,68 +13,67 @@ export function handleShortcuts(event) {
   if (activeElement && activeElement.tagName === "INPUT") return;
   if (this.mode === this.MODE_OPTIONS.TEXT_EDITING) return;
 
-  /*
-   * delete
-   */
-  if (event.key === "Delete" || event.key === "Backspace") {
-    event.preventDefault();
-    this.deleteNodes();
-  }
+  const isTextSelected = this.transformer.default
+    ?.nodes()
+    ?.filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT).length;
 
-  if (event.ctrlKey || event.metaKey) {
-    /*
-     * text formatting
-     */
-    if (
-      this.transformer.default
-        ?.nodes()
-        ?.filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT)
-        .length
-    ) {
-      // bold
-      if (event.key === "b") {
-        event.preventDefault();
-        this.text.fontStyle = (
-          this.text.fontStyle.includes("bold")
-            ? this.text.fontStyle.replace("bold", "")
-            : this.text.fontStyle.replace("normal", "") + " bold"
-        )
-          .replace(/\s+/g, " ")
-          .trim();
-        this.applyCustomization();
-        return;
-      }
+  switch (event.key) {
+    // delete
+    case "Delete":
+    case "Backspace":
+      event.preventDefault();
+      this.deleteNodes();
+      break;
 
-      // underline
-      if (event.key === "u") {
-        event.preventDefault();
-        this.text.textDecoration = (
-          this.text.textDecoration.includes("underline")
-            ? this.text.textDecoration.replace("underline", "")
-            : this.text.textDecoration + " underline"
-        )
-          .replace(/\s+/g, " ")
-          .trim();
-        this.applyCustomization();
-        return;
-      }
+    // bold
+    case "b":
+      if (!isTextSelected) return;
 
-      // italic
-      if (event.key === "i") {
-        event.preventDefault();
-        this.text.fontStyle = (
-          this.text.fontStyle.includes("italic")
-            ? this.text.fontStyle.replace("italic", "")
-            : this.text.fontStyle.replace("normal", "") + " italic"
-        )
-          .replace(/\s+/g, " ")
-          .trim();
-        this.applyCustomization();
-        return;
-      }
+      event.preventDefault();
+      this.text.fontStyle = (
+        this.text.fontStyle.includes("bold")
+          ? this.text.fontStyle.replace("bold", "")
+          : this.text.fontStyle.replace("normal", "") + " bold"
+      )
+        .replace(/\s+/g, " ")
+        .trim();
+      this.applyCustomization();
+      break;
 
-      // strike-through
-      if (event.key === "x" && event.shiftKey) {
+    // underline
+    case "u":
+      if (!isTextSelected) return;
+
+      event.preventDefault();
+      this.text.textDecoration = (
+        this.text.textDecoration.includes("underline")
+          ? this.text.textDecoration.replace("underline", "")
+          : this.text.textDecoration + " underline"
+      )
+        .replace(/\s+/g, " ")
+        .trim();
+      this.applyCustomization();
+      break;
+
+    // italic
+    case "i":
+      if (!isTextSelected) return;
+
+      event.preventDefault();
+      this.text.fontStyle = (
+        this.text.fontStyle.includes("italic")
+          ? this.text.fontStyle.replace("italic", "")
+          : this.text.fontStyle.replace("normal", "") + " italic"
+      )
+        .replace(/\s+/g, " ")
+        .trim();
+      this.applyCustomization();
+      break;
+
+    // cut
+    // strike-through
+    case "x":
+      if (event.shiftKey) {
         event.preventDefault();
         this.text.textDecoration = (
           this.text.textDecoration.includes("line-through")
@@ -84,14 +83,51 @@ export function handleShortcuts(event) {
           .replace(/\s+/g, " ")
           .trim();
         this.applyCustomization();
-        return;
+      } else {
+        event.preventDefault();
+        this.cutNodes();
       }
-    }
+      break;
+
+    // copy
+    case "c":
+      event.preventDefault();
+      this.copyNodes();
+      break;
+
+    // paste
+    case "v":
+      event.preventDefault();
+      this.pasteNodes();
+      break;
+
+    // duplicate
+    case "d":
+      event.preventDefault();
+      this.duplicateNodes();
+      break;
 
     /*
-     * z-index
+     * undo / redo
      */
-    if (event.key === "ArrowDown") {
+    case "z":
+      event.preventDefault();
+      if (event.shiftKey) {
+        this.redo();
+      } else {
+        this.undo();
+      }
+      break;
+
+    case "y":
+      event.preventDefault();
+      this.redo();
+      break;
+
+    /*
+     * move up || down || top || bottom
+     */
+    case "ArrowDown":
       event.preventDefault();
 
       // move to bottom
@@ -102,9 +138,9 @@ export function handleShortcuts(event) {
       } else {
         this.moveDown();
       }
-    }
+      break;
 
-    if (event.key === "ArrowUp") {
+    case "ArrowUp":
       event.preventDefault();
 
       // move to top
@@ -115,62 +151,6 @@ export function handleShortcuts(event) {
       } else {
         this.moveUp();
       }
-
-      return;
-    }
-
-    // copy
-    if (event.key === "c") {
-      event.preventDefault();
-      this.copyNodes();
-      return;
-    }
-
-    // paste
-    if (event.key === "v") {
-      event.preventDefault();
-      this.pasteNodes();
-      return;
-    }
-
-    // duplicate
-    if (event.key === "d") {
-      event.preventDefault();
-      this.duplicateNodes();
-      return;
-    }
-
-    // cut
-    if (event.key === "x") {
-      event.preventDefault();
-      this.cutNodes();
-      return;
-    }
-
-    /*
-     * undo & redo
-     */
-    if (event.key === "z") {
-      event.preventDefault();
-
-      // redo
-      if (event.shiftKey) {
-        this.redo();
-
-        // undo
-      } else {
-        this.undo();
-      }
-
-      return;
-    }
-
-    // redo
-    if (event.key === "y") {
-      event.preventDefault();
-      this.redo();
-
-      return;
-    }
+      break;
   }
 }
