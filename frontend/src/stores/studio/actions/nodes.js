@@ -1,6 +1,7 @@
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
+import { processText } from "stores/studio/actions/modes/text";
 
 const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);
@@ -21,12 +22,17 @@ export function pasteNodes(nodes = this.copiedNodes) {
     clone.x(clone.x() + 100);
     clone.y(clone.y() + 100);
     this.layers.default.add(clone);
-    if (clone.getClassName() === "Image") {
-      this.processImageNode(
-        clone,
-        clone.getAttr("source"),
-        clone.getAttr("lastCropUsed"),
-      );
+    switch (clone.getClassName()) {
+      case this.MODE_OPTIONS.IMAGE:
+        this.processImageNode(
+          clone,
+          clone.getAttr("source"),
+          clone.getAttr("lastCropUsed"),
+        );
+        break;
+      case this.MODE_OPTIONS.TEXT:
+        this.processText(clone);
+        break;
     }
     return clone;
   });
