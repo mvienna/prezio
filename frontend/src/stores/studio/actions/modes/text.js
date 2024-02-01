@@ -4,6 +4,12 @@ import {
   COLOR_PALETTE,
   LAYOUT_ELEMENT_OPTIONS,
 } from "src/constants/canvas/canvasVariables";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
+import { usePresentationsStore } from "stores/presentations";
+import { storeToRefs } from "pinia";
+
+const presentationsStore = usePresentationsStore();
+const { slide } = storeToRefs(presentationsStore);
 
 export function addText(config = {}, isSave = true) {
   const textNode = new Konva.Text({
@@ -161,7 +167,8 @@ export function processText(textNode) {
   });
 
   textNode.on("dblclick dbltap", () => {
-    if (!textNode.draggable()) return;
+    if (!textNode.draggable() && slide.value.type === SLIDE_TYPES.CONTENT)
+      return;
 
     // hide text node and transformer:
     textNode.hide();
