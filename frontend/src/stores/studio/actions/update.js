@@ -40,7 +40,9 @@ export async function handleSlideUpdate() {
   this.transformer.default?.show();
   this.layers.default.find(".customTransformer").forEach((node) => node.show());
   this.transformer.default?.moveToTop();
-  this.applyTransformerCustomization();
+  if (this.transformer.default?.nodes()?.length) {
+    this.applyTransformerCustomization();
+  }
 
   await presentationsStore.saveSlide();
 }
