@@ -9,25 +9,22 @@ Stack:
 - [Quasar Framework](https://quasar.dev/)
 - [Laravel - The PHP Framework](https://laravel.com/)
 
-
-Project assets:
-- [Trello tasks](https://trello.com/b/uPN6x14I/prezio)
-- [Figma design](https://www.figma.com/file/1C8H55WvAZWarn3oSsQUzp/Prezio?type=design&mode=design)
-- [Doc](https://trello.com/c/8OE5yfdG/1-%D1%82%D0%B7)
-
 <br/>
 
 ## Setting up
 
 > ‼️ Don't forget to setup .env for your development environment
 
-### 🔒️ Backend
+```
+git clone git@github.com:mvienna/prezio.git prezio
+cd prezio
+```
+
+
+### Backend
 
 ```
 PHP 8.2
-
-git clone git@gitlab.com:nomadicsoft/ru/prezio.git prezio
-cd prezio
 
 cp .env.example .env
 ln .env ./frontend/.env
@@ -36,15 +33,16 @@ composer install
 
 php artisan key:gen
 
-# or use valet
+# or use [laravel valet (for macos)](https://laravel.com/docs/10.x/valet)
 - php artisan serve
 
+# manually run these commands
 - php artisan websockets:serve
 - php artisan schedule:word
 - php artisan queue:work
 ```
 
-### 🌐 Frontend
+### Frontend
 
 ```
 Node v18
