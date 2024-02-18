@@ -49,7 +49,7 @@
             class="bg-grey-2"
             :label="
               $t(
-                'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.title'
+                'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.title',
               )
             "
             @click="showApplyDesignToAllSlidesDialog = true"
@@ -62,12 +62,12 @@
             icon-color="primary"
             :title="
               $t(
-                'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.confirmation.title'
+                'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.confirmation.title',
               )
             "
             :message="
               $t(
-                'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.confirmation.message'
+                'presentationLayout.rightDrawer.tabs.design.applyToAllSlides.confirmation.message',
               )
             "
             confirm-btn-color="primary"
@@ -93,12 +93,12 @@
             icon-color="primary"
             :title="
               $t(
-                'presentationLayout.rightDrawer.tabs.design.reset.confirmation.title'
+                'presentationLayout.rightDrawer.tabs.design.reset.confirmation.title',
               )
             "
             :message="
               $t(
-                'presentationLayout.rightDrawer.tabs.design.reset.confirmation.message'
+                'presentationLayout.rightDrawer.tabs.design.reset.confirmation.message',
               )
             "
             confirm-btn-color="primary"
@@ -141,8 +141,7 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const { presentation, slide, averageBackgroundBrightness } =
-  storeToRefs(presentationsStore);
+const { presentation, slide } = storeToRefs(presentationsStore);
 
 const studioStore = useStudioStore();
 const { layers } = storeToRefs(studioStore);

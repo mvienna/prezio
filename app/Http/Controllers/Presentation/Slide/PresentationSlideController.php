@@ -125,6 +125,8 @@ class PresentationSlideController extends Controller
 
     public function show(Presentation $presentation, PresentationSlide $slide): JsonResponse
     {
+        // todo: check permission
+
         $slide->load('template', 'answers', 'answers.participant');
         return $this->jsonResponse($slide->toArray());
     }

@@ -25,9 +25,6 @@ export const usePresentationsStore = defineStore("presentations", {
 
     beforeQuizTimeout: null,
 
-    averageBackgroundBrightness: 0,
-    backgroundBrightnessThreshold: 128,
-
     /*
      * folders
      */

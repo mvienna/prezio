@@ -3,7 +3,7 @@
     <div
       class="container"
       :class="
-        averageBackgroundBrightness >= backgroundBrightnessThreshold
+        slide?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
           ? 'container--black'
           : 'container--white'
       "
@@ -66,6 +66,8 @@ import { usePresentationsStore } from "stores/presentations";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "boot/axios";
+import { useStudioStore } from "stores/studio";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * variables
@@ -76,20 +78,14 @@ const router = useRouter();
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const {
-  participant,
-  room,
-  presentation,
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-} = storeToRefs(presentationsStore);
+const { participant, room, presentation, slide } =
+  storeToRefs(presentationsStore);
 
 /*
  * logo
  */
 const logo = computed(() => {
-  return averageBackgroundBrightness.value >=
-    backgroundBrightnessThreshold.value
+  return slide.value?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
     ? "/prezio.svg"
     : "/prezio--white.svg";
 });
@@ -112,10 +108,10 @@ const computeFields = () => {
   });
 
   const requiredFields = JSON.parse(
-    presentation.value?.settings?.participants_info_form_fields_data
+    presentation.value?.settings?.participants_info_form_fields_data,
   ).map((field) => {
     const filledField = participantFields.find(
-      (item) => item.name === field.name
+      (item) => item.name === field.name,
     );
     if (filledField) {
       field.value = filledField.value;
@@ -135,12 +131,12 @@ watch(
   () => presentation.value?.settings?.participants_info_form_fields_data,
   () => {
     computeFields();
-  }
+  },
 );
 
 const isValid = computed(() => {
   return !fields.value.find(
-    (field) => field.isMandatory && !field?.value?.length
+    (field) => field.isMandatory && !field?.value?.length,
   );
 });
 

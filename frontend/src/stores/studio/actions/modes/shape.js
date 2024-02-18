@@ -1,7 +1,4 @@
-import {
-  SHAPE_OPTIONS,
-  SHAPE_TYPES,
-} from "src/constants/canvas/canvasVariables";
+import { SHAPE_OPTIONS } from "src/constants/canvas/canvasVariables";
 import Konva from "konva";
 
 export function addShape(shapeName) {

@@ -109,7 +109,6 @@
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { computed, onBeforeMount, onMounted, onUnmounted } from "vue";
-import { useCanvasStore } from "stores/canvas";
 import { useQuasar } from "quasar";
 import { useStudioStore } from "stores/studio";
 

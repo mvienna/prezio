@@ -36,7 +36,7 @@
     <PresentationRoomDataSubmissions
       v-if="
         [...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.WORD_CLOUD].includes(
-          slide?.type
+          slide?.type,
         ) && isHost
       "
       :stage="stage.pin"
@@ -77,26 +77,20 @@ import {
   SLIDE_TYPES,
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const {
-  room,
-  slide,
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-  isHost,
-  participants,
-} = storeToRefs(presentationsStore);
+const { room, slide, isHost, participants } = storeToRefs(presentationsStore);
 
 /*
  * text color
  */
 const textColor = computed(() => {
   return !isHost.value && slide?.type !== SLIDE_TYPES.CONTENT
-    ? averageBackgroundBrightness.value >= backgroundBrightnessThreshold.value
+    ? slide.value?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
       ? "black"
       : "white"
     : "white";
@@ -139,21 +133,21 @@ watch(
   () => room.value?.reactions?.like,
   () => {
     animate("like");
-  }
+  },
 );
 
 watch(
   () => room.value?.reactions?.love,
   () => {
     animate("love");
-  }
+  },
 );
 
 watch(
   () => slide.value?.answers?.length,
   () => {
     animate("pin");
-  }
+  },
 );
 </script>
 
@@ -170,7 +164,7 @@ watch(
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
     position: absolute;
-    right: 24px;
+    right: calc(16px + 24px);
     bottom: 24px;
     transition: 0.2s;
   }

@@ -13,13 +13,13 @@
     @submit.prevent="handleSubmittingAnswers()"
   >
     <PresentationRoomParticipantQuizLayout
-      :layout-title-element="layoutTitleElement"
+      :title="title"
       :has-already-answered="hasAlreadyAnswered"
     >
       <template #default>
         <!-- question title -->
         <div class="text-h6 text-semibold text-center">
-          {{ layoutTitleElement?.text }}
+          {{ title }}
         </div>
 
         <!-- question description -->
@@ -232,36 +232,29 @@
 import { computed, onBeforeMount, ref, watch } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { useCanvasStore } from "stores/canvas";
 import { countdown, stopCountdown, timeLeft } from "src/helpers/countdown";
 import { shuffleArray } from "src/helpers/arrayUtils";
 import PresentationRoomParticipantQuizLayout from "components/presentationRoom/participant/quiz/PresentationRoomParticipantQuizLayout.vue";
 import PresentationRoomQuizProgressBar from "components/presentationRoom/participant/quiz/PresentationRoomQuizProgressBar.vue";
 import PresentationRoomParticipantQuizFooter from "components/presentationRoom/participant/quiz/PresentationRoomParticipantQuizFooter.vue";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
+import { useStudioStore } from "stores/studio";
 
 /*
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const {
-  presentation,
-  room,
-  slide,
-  slideSettings,
-  participant,
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-} = storeToRefs(presentationsStore);
+const { presentation, room, slide, slideSettings, participant } =
+  storeToRefs(presentationsStore);
 
-const canvasStore = useCanvasStore();
-const { elements } = storeToRefs(canvasStore);
+const studioStore = useStudioStore();
+const { layers, MODE_OPTIONS } = storeToRefs(studioStore);
 
 /*
  * text color
  */
 const textColor = computed(() => {
-  return averageBackgroundBrightness.value >=
-    backgroundBrightnessThreshold.value
+  return slide.value.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
     ? "black"
     : "white";
 });
@@ -269,8 +262,8 @@ const textColor = computed(() => {
 /*
  * title
  */
-const layoutTitleElement = computed(() => {
-  return elements.value?.find((element) => element.id.includes("-title-top-"));
+const title = computed(() => {
+  return layers.value.default?.find("." + MODE_OPTIONS.value.TEXT)[0]?.text();
 });
 
 /*

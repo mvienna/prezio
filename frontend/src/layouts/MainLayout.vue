@@ -11,6 +11,7 @@
             <img
               :src="$q.screen.lt.md ? '/logo.svg' : '/prezio.svg'"
               style="height: 32px"
+              alt="Prezio logo"
             />
 
             <div class="q-ml-sm column">

@@ -16,9 +16,6 @@
         "
       />
 
-      <!-- spice things up with effect -->
-      <PresentationRoomHostActionsEffects />
-
       <!-- hide results -->
       <PresentationRoomHostActionsHideResultsSettings
         v-if="slide?.type === SLIDE_TYPES.WORD_CLOUD && slideSettings"
@@ -95,7 +92,6 @@ import {
 } from "src/constants/presentationStudio";
 import { timeLeft } from "src/helpers/countdown";
 import PresentationRoomHostActionsMenu from "components/presentationRoom/host/actions/PresentationRoomHostActionsMenu.vue";
-import PresentationRoomHostActionsEffects from "components/presentationRoom/host/actions/PresentationRoomHostActionsEffects.vue";
 import PresentationRoomHostActionsHideResultsSettings from "components/presentationRoom/host/actions/PresentationRoomHostActionsHideResultsSetting.vue";
 import PresentationRoomHostActionsSubmissionLockSetting from "components/presentationRoom/host/actions/PresentationRoomHostActionsSubmissionLockSetting.vue";
 import PresentationRoomHostActionsFinishQuiz from "components/presentationRoom/host/actions/PresentationRoomHostActionsFinishQuiz.vue";
@@ -114,7 +110,7 @@ const { room, slide, slideSettings, presentation } =
 <style scoped lang="scss">
 .room_actions {
   position: absolute;
-  left: 24px;
+  left: calc(16px + 24px);
   bottom: 24px;
   z-index: 2;
 

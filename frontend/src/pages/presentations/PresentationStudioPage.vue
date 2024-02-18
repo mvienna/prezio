@@ -121,7 +121,10 @@ onMounted(async () => {
       router.push(ROUTE_PATHS.PRESENTATIONS_BROWSER);
     });
 
-  studioStore.loadStudio();
+  /*
+   * load studio
+   */
+  await studioStore.loadStudio();
 
   /*
    * establish connection to room channels

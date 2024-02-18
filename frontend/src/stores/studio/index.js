@@ -15,7 +15,7 @@ import { i18n } from "src/boot/i18n";
 
 import * as design from "./actions/design";
 import * as update from "./actions/update";
-import * as zoom from "./actions/zoom";
+import * as scale from "./actions/scale";
 
 import * as snapping from "./actions/snapping";
 import * as selection from "./actions/selection";
@@ -43,6 +43,7 @@ export const useStudioStore = defineStore("studio", {
     },
 
     isLoaded: false,
+    isListening: true,
 
     /*
      * zoom
@@ -255,7 +256,7 @@ export const useStudioStore = defineStore("studio", {
   actions: {
     ...design,
     ...update,
-    ...zoom,
+    ...scale,
 
     ...snapping,
     ...selection,
@@ -272,159 +273,170 @@ export const useStudioStore = defineStore("studio", {
     ...shape,
     ...text,
 
-    loadStudio() {
-      this.history.undo = [];
-      this.history.redo = [];
-      this.isLoaded = false;
-
-      /*
-       * load slide
-       */
-      if (slide.value?.canvas_data) {
-        // load stage
-        this.stages.default = Konva.Node.create(
-          slide.value.canvas_data,
-          "container",
-        );
-
-        // load layers
-        this.layers.default = this.stages.default.findOne(".defaultLayer");
-        this.layers.base = this.stages.default.findOne(".baseLayer");
-
-        // load & process images
-        this.stages.default
-          .find(this.MODE_OPTIONS.IMAGE)
-          .forEach(async (node) => {
-            const imageObj = new Image();
-            const url = node.getAttr("source");
-
-            let base64;
-
-            if (url.includes("http")) {
-              base64 = await fetchAndConvertToBase64Image(url);
-              imageObj.src = base64;
-            } else {
-              imageObj.src = url;
-            }
-
-            imageObj.onload = () => {
-              node.image(imageObj);
-
-              if (node.getLayer().attrs.name === "defaultLayer") {
-                this.processImageNode(node, url, node.getAttr("lastCropUsed"));
-              } else {
-                this.applyBaseBackgroundFilters(node);
-              }
-            };
-          });
-
-        // process text
-        this.stages.default
-          .find(this.MODE_OPTIONS.TEXT)
-          .forEach(async (node) => {
-            this.processText(node);
-          });
-
-        this.layers.default
-          .getChildren()
-          .filter((node) =>
-            Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
-          )
-          .forEach((node) => {
-            node.on("transformend", this.handleSlideUpdate);
-          });
-
-        // set default text customization
-        if (slideSettings.value.defaultTextCustomization) {
-          this.text.default = slideSettings.value.defaultTextCustomization;
-        }
+    async loadStudio() {
+      return await new Promise((resolve) => {
+        this.history.undo = [];
+        this.history.redo = [];
+        this.isLoaded = false;
 
         /*
-         * new slide
+         * load slide
          */
-      } else {
-        // create stage
-        this.stages.default = new Konva.Stage({
-          container: "container",
-          width: this.scene.width,
-          height: this.scene.height,
-        });
-
-        // create base layer
-        this.layers.base = new Konva.Layer({
-          name: "baseLayer",
-        });
-        this.stages.default.add(this.layers.base);
-
-        // create base fill rect
-        const baseFill = new Konva.Rect({
-          x: 0,
-          y: 0,
-          width: this.scene.width,
-          height: this.scene.height,
-          fill: COLOR_PALETTE.WHITE,
-          listening: false,
-          name: "baseFill",
-        });
-        this.layers.base.add(baseFill);
-
-        // create default layer
-        this.layers.default = new Konva.Layer({
-          name: "defaultLayer",
-        });
-        this.stages.default.add(this.layers.default);
-
-        // add default nodes for content-type slide
-        if (slide.value.type === SLIDE_TYPES.CONTENT) {
-          this.setLayout(LAYOUT_OPTIONS.titleAndBody);
-        }
-
-        // add default nodes for leaderboard or quiz type slide
-        if (
-          [
-            ...SLIDE_TYPES_OF_QUIZ,
-            SLIDE_TYPES.WORD_CLOUD,
-            SLIDE_TYPES.LEADERBOARD,
-          ].includes(slide.value.type)
-        ) {
-          this.addText(
-            {
-              text: i18n.global.t(
-                `presentationStudio.layouts.defaultTexts.${slide.value.type === SLIDE_TYPES.LEADERBOARD ? "leaderboard" : "question"}`,
-              ),
-              x: 64,
-              y: 100,
-              fontSize: 70,
-              align: "center",
-              width: this.scene.width - 64 * 2,
-              fontStyle: "bold",
-              draggable: false,
-            },
-            false,
+        if (slide.value?.canvas_data) {
+          // load stage
+          this.stages.default = Konva.Node.create(
+            slide.value.canvas_data,
+            "container",
           );
+
+          // load layers
+          this.layers.default = this.stages.default.findOne(".defaultLayer");
+          this.layers.base = this.stages.default.findOne(".baseLayer");
+
+          // load & process images
+          this.stages.default
+            .find(this.MODE_OPTIONS.IMAGE)
+            .forEach(async (node) => {
+              const imageObj = new Image();
+              const url = node.getAttr("source");
+
+              let base64;
+
+              if (url.includes("http")) {
+                base64 = await fetchAndConvertToBase64Image(url);
+                imageObj.src = base64;
+              } else {
+                imageObj.src = url;
+              }
+
+              imageObj.onload = () => {
+                node.image(imageObj);
+
+                if (node.getLayer().attrs.name === "defaultLayer") {
+                  this.processImageNode(
+                    node,
+                    url,
+                    node.getAttr("lastCropUsed"),
+                  );
+                } else {
+                  this.applyBaseBackgroundFilters(node);
+                }
+              };
+            });
+
+          // process text
+          this.stages.default
+            .find(this.MODE_OPTIONS.TEXT)
+            .forEach(async (node) => {
+              this.processText(node);
+            });
+
+          this.layers.default
+            .getChildren()
+            .filter((node) =>
+              Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
+            )
+            .forEach((node) => {
+              node.on("transformend", this.handleSlideUpdate);
+            });
+
+          // set default text customization
+          if (slideSettings.value.defaultTextCustomization) {
+            this.text.default = slideSettings.value.defaultTextCustomization;
+          }
+
+          /*
+           * new slide
+           */
+        } else {
+          // create stage
+          this.stages.default = new Konva.Stage({
+            container: "container",
+            width: this.scene.width,
+            height: this.scene.height,
+          });
+
+          // create base layer
+          this.layers.base = new Konva.Layer({
+            name: "baseLayer",
+          });
+          this.stages.default.add(this.layers.base);
+
+          // create base fill rect
+          const baseFill = new Konva.Rect({
+            x: 0,
+            y: 0,
+            width: this.scene.width,
+            height: this.scene.height,
+            fill: COLOR_PALETTE.WHITE,
+            listening: false,
+            name: "baseFill",
+          });
+          this.layers.base.add(baseFill);
+
+          // create default layer
+          this.layers.default = new Konva.Layer({
+            name: "defaultLayer",
+          });
+          this.stages.default.add(this.layers.default);
+
+          // add default nodes for content-type slide
+          if (slide.value.type === SLIDE_TYPES.CONTENT) {
+            this.setLayout(LAYOUT_OPTIONS.titleAndBody);
+          }
+
+          // add default nodes for leaderboard or quiz type slide
+          if (
+            [
+              ...SLIDE_TYPES_OF_QUIZ,
+              SLIDE_TYPES.WORD_CLOUD,
+              SLIDE_TYPES.LEADERBOARD,
+            ].includes(slide.value.type)
+          ) {
+            this.addText(
+              {
+                text: i18n.global.t(
+                  `presentationStudio.layouts.defaultTexts.${slide.value.type === SLIDE_TYPES.LEADERBOARD ? "leaderboard" : "question"}`,
+                ),
+                x: 64,
+                y: 100,
+                fontSize: 70,
+                align: "center",
+                width: this.scene.width - 64 * 2,
+                fontStyle: "bold",
+                draggable: false,
+              },
+              false,
+            );
+          }
         }
-      }
 
-      // fit canvas
-      window.addEventListener("resize", this.fitStageIntoParentContainer);
-      this.fitStageIntoParentContainer();
+        this.stages.default.listening(this.isListening);
 
-      // handlers
-      this.stages.default.on("dragend", this.handleSlideUpdate);
+        // fit canvas
+        window.addEventListener("resize", this.fitStageIntoParentContainer);
+        this.fitStageIntoParentContainer();
 
-      this.stages.default.on("wheel", this.handleZoom);
+        if (this.isListening) {
+          // handlers
+          this.stages.default.on("dragend", this.handleSlideUpdate);
 
-      document.removeEventListener("keydown", this.handleShortcuts);
-      document.addEventListener("keydown", this.handleShortcuts);
+          this.stages.default.on("wheel", this.handleZoom);
 
-      if (slide.value.type === SLIDE_TYPES.CONTENT) {
-        this.handleSelection();
-        this.handleSnapping();
+          document.removeEventListener("keydown", this.handleShortcuts);
+          document.addEventListener("keydown", this.handleShortcuts);
 
-        this.handleDrawing();
-      }
+          if (slide.value.type === SLIDE_TYPES.CONTENT) {
+            this.handleSelection();
+            this.handleSnapping();
 
-      this.isLoaded = true;
+            this.handleDrawing();
+          }
+        }
+
+        this.isLoaded = true;
+        resolve();
+      });
     },
   },
 });

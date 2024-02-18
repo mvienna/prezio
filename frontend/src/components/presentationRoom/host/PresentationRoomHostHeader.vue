@@ -123,7 +123,7 @@
               $t(
                 `presentationRoom.header.roomLink.${
                   isCopied ? "copied" : "copyToClipboard"
-                }`
+                }`,
               )
             }}
           </q-tooltip>
@@ -144,7 +144,7 @@
               $t(
                 `presentationRoom.header.invitationPanel.${
                   showRoomInvitationPanel ? "hide" : "show"
-                }`
+                }`,
               )
             }}
           </q-tooltip>
@@ -183,6 +183,7 @@ import { computed, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { copyToClipboard, useQuasar } from "quasar";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * variables
@@ -203,21 +204,14 @@ defineProps({
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const {
-  room,
-  presentation,
-  showRoomInvitationPanel,
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-  isHost,
-} = storeToRefs(presentationsStore);
+const { room, presentation, showRoomInvitationPanel, isHost, slide } =
+  storeToRefs(presentationsStore);
 
 /*
  * logo
  */
 const logo = computed(() => {
-  return averageBackgroundBrightness.value >=
-    backgroundBrightnessThreshold.value
+  return slide.value?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
     ? "/prezio.svg"
     : "/prezio--white.svg";
 });

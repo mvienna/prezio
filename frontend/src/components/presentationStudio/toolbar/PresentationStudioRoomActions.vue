@@ -54,10 +54,10 @@
             :label="
               isResetPresentation
                 ? $t(
-                    'presentationStudio.toolbar.resetResults.confirmation.options.resetPresentation'
+                    'presentationStudio.toolbar.resetResults.confirmation.options.resetPresentation',
                   )
                 : $t(
-                    'presentationStudio.toolbar.resetResults.confirmation.options.resetSlide'
+                    'presentationStudio.toolbar.resetResults.confirmation.options.resetSlide',
                   )
             "
             color="primary"
@@ -72,7 +72,6 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { useCanvasStore } from "stores/canvas";
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import { api } from "boot/axios";
 import { ref } from "vue";

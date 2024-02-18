@@ -6,7 +6,7 @@
     "
     :tooltip="
       $t(
-        'presentationLayout.rightDrawer.tabs.settings.filterProfanity.description'
+        'presentationLayout.rightDrawer.tabs.settings.filterProfanity.description',
       )
     "
   >
@@ -21,7 +21,6 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import PresentationStudioTabsSettingsTabOptionLayout from "components/presentationStudio/tabs/settings/options/PresentationStudioTabsSettingsTabOptionLayout.vue";
 
 /*

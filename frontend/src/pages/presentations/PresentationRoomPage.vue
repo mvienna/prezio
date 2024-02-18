@@ -3,8 +3,8 @@
     :style="
       isHost
         ? 'background: black;'
-        : roomBaseFill
-          ? `background: ${roomBaseFill.fillColor};`
+        : baseFill
+          ? `background: ${baseFill.fill()};`
           : 'background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));'
     "
   >
@@ -26,16 +26,10 @@
       "
       :style="
         !isHost
-          ? roomBackground
-            ? `background-image: url(${
-                roomBackground.imageSrc
-              }); filter: blur(${roomBackground.blur || 0}px) contrast(${
-                roomBackground.contrast >= 0 ? roomBackground.contrast : 100
-              }%) brightness(${
-                roomBackground.brightness >= 0 ? roomBackground.brightness : 100
-              }%) invert(${roomBackground.invert || 0}%) grayscale(${
-                roomBackground.grayscale || 0
-              }%); opacity: ${roomBackground.opacity / 100};`
+          ? baseBackground
+            ? `background-image: url(${baseBackground.getAttr('source')}); filter: blur(${baseBackground.getAttr('blurRadius')}px) contrast(${100 + baseBackground.getAttr('contrast')}%) brightness(${
+                100 + baseBackground.getAttr('brightness') * 100
+              }%); opacity: ${baseBackground.getAttr('opacity')};`
             : ''
           : ''
       "
@@ -74,9 +68,14 @@
 
         <!-- ALL - content -->
         <div
-          v-show="isLoaded && isAuthenticated"
-          class="row no-wrap justify-center items-center"
-          style="transition: 0.5s"
+          v-show="isAuthenticated"
+          class="justify-center items-center"
+          style="display: grid"
+          :style="
+            showRoomInvitationPanel
+              ? 'grid-template-columns: 291px 1fr;'
+              : 'grid-template-columns: 1fr;'
+          "
           :class="
             showRoomInvitationPanel ||
             (!isHost &&
@@ -91,23 +90,17 @@
           "
         >
           <!-- HOST - invitation panel -->
-          <transition
-            appear
-            enter-active-class="animated fadeIn"
-            leave-active-class="animated fadeOut"
-          >
-            <PresentationRoomHostInvitationPanel
-              v-if="showRoomInvitationPanel"
-              :qr="qr"
-            />
-          </transition>
+          <PresentationRoomHostInvitationPanel
+            v-if="showRoomInvitationPanel"
+            :qr="qr"
+          />
 
           <!-- ALL - slide -->
           <div
             class="relative-position column no-wrap justify-center"
-            :class="showRoomInvitationPanel ? 'q-ml-md' : ''"
-            style="transition: 0.5s"
-            :style="`${!isHost ? 'max-width: 100vh; width: 100%;' : ''} ${
+            :class="showRoomInvitationPanel ? 'q-px-md' : ''"
+            style="width: 100%; height: 100%"
+            :style="`${!isHost ? 'max-width: 100vh;' : ''} ${
               showRoomInvitationPanel || !isHost
                 ? 'border-radius: 12px; overflow: hidden;'
                 : ''
@@ -121,31 +114,40 @@
             />
 
             <!-- ALL - canvas slide -->
-            <canvas
+            <div
               v-show="
                 isHost || (!isHost && slide?.type === SLIDE_TYPES.CONTENT)
               "
-              ref="canvasRef"
-              id="canvas"
+              class="slide relative-position"
+              id="stage-parent"
+              style="width: 100%"
               :style="
                 showRoomInvitationPanel || !isHost
                   ? 'border-radius: 12px; overflow: hidden;'
                   : ''
               "
-            ></canvas>
+            >
+              <div id="container"></div>
+            </div>
 
             <!-- HOST - addons (word cloud, charts) -->
             <PresentationAddons
-              v-if="isHost && slide?.type !== SLIDE_TYPES.CONTENT"
+              v-if="isHost && isLoaded && slide?.type !== SLIDE_TYPES.CONTENT"
             />
 
             <!-- HOST - quiz -->
             <template
-              v-if="isHost && SLIDE_TYPES_OF_QUIZ.includes(slide?.type) && room"
+              v-if="
+                isHost &&
+                SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
+                room &&
+                box
+              "
             >
               <!-- HOST - waiting for participants (word cloud) -->
               <PresentationRoomHostQuizWaitingForParticipants
                 v-if="!room.is_quiz_started"
+                :box="box"
                 :key="'word_cloud__participants__' + slide.id"
               />
 
@@ -257,7 +259,6 @@ import { QSpinnerIos, useMeta, useQuasar } from "quasar";
 import { ROUTE_PATHS, SUBDOMAINS } from "src/constants/routes";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { useCanvasStore } from "stores/canvas";
 import { useAuthStore } from "stores/auth";
 import { clearRoutePathFromProps } from "src/helpers/routeUtils";
 import Echo from "laravel-echo";
@@ -283,10 +284,10 @@ import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
 import PresentationRoomParticipantActions from "components/presentationRoom/participant/actions/PresentationRoomParticipantActions.vue";
 import PresentationRoomParticipantLeaderboard from "components/presentationRoom/participant/PresentationRoomParticipantLeaderboard.vue";
 import { generateQrCode } from "src/helpers/qrUtils";
-import { computeAverageBrightness } from "src/helpers/colorUtils";
 import PresentationRoomParticipantFormsSubmissionsTypeAnswer from "components/presentationRoom/participant/forms/submissions/PresentationRoomParticipantFormsSubmissionsTypeAnswer.vue";
 import PresentationRoomParticipantFormsAuthCollectData from "components/presentationRoom/participant/forms/auth/PresentationRoomParticipantFormsAuthCollectData.vue";
 import WebSocketsConnectionInterrupted from "components/WebSocketsConnectionInterrupted.vue";
+import { useStudioStore } from "stores/studio";
 
 /*
  * variables
@@ -309,14 +310,13 @@ const {
   participant,
   isHost,
   showRoomInvitationPanel,
-  averageBackgroundBrightness,
   showRoomChat,
   beforeQuizTimeout,
   isLoading,
 } = storeToRefs(presentationsStore);
 
-const canvasStore = useCanvasStore();
-const { canvas, ctx, scale, elements, MODE_OPTIONS } = storeToRefs(canvasStore);
+const studioStore = useStudioStore();
+const { MODE_OPTIONS, layers, stages, isListening } = storeToRefs(studioStore);
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -373,33 +373,13 @@ const isParticipantBaseInfoCollected = computed(() => {
 /*
  * canvas slide
  */
-const canvasRef = ref();
-
-const initCanvas = () => {
-  canvas.value = canvasRef.value;
-  ctx.value = canvas.value.getContext("2d");
-  ctx.value.imageSmoothingEnabled = true;
-};
-
 const initSlide = async () => {
   const newSlide =
     presentation.value.slides.find((item) => item.id === room.value.slide_id) ||
     presentation.value.slides[0];
 
-  await presentationsStore.setSlide(newSlide);
-  presentationsStore.syncCurrentSlideWithPresentationSlides();
-
-  await canvasStore.setElementsFromSlide();
-  return true;
-};
-
-const resizeCanvas = () => {
-  canvas.value.width = 2560;
-  canvas.value.height = 1440;
-
-  ctx.value.scale(scale.value, scale.value);
-
-  canvasStore.redrawCanvas(false, undefined, false);
+  return await presentationsStore.setSlide(newSlide);
+  // presentationsStore.syncCurrentSlideWithPresentationSlides();
 };
 
 /*
@@ -409,6 +389,9 @@ const resizeCanvas = () => {
  * establish connection to room channels
  */
 const isLoaded = ref(false);
+
+const box = ref();
+const resizeObserverCanvas = ref();
 
 onBeforeMount(() => {
   $q.loading.show({
@@ -440,16 +423,27 @@ onMounted(async () => {
   /*
    * render slide
    */
+  isListening.value = false;
+
   if (isHost.value || !presentation.value?.is_private) {
-    /*
-     * init canvas slide
-     */
-    initCanvas();
     await initSlide();
+    await studioStore.loadStudio();
+
+    box.value = stages.value.default.container().getBoundingClientRect();
+    resizeObserverCanvas.value = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        box.value = stages.value.default.container().getBoundingClientRect();
+
+        setTimeout(() => {
+          box.value = stages.value.default.container().getBoundingClientRect();
+        }, 1000);
+      }
+    });
+    resizeObserverCanvas.value.observe(stages.value.default.container());
 
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
-      // leave only background & base fill
-      filterElements();
+      // hide layers other than base layers
+      layers.value.default.hide();
 
       // auto-show invitations panel
       if (isHost.value) {
@@ -468,16 +462,6 @@ onMounted(async () => {
         }, invitationPanelAnimationDuration);
       }
     }
-
-    /*
-     * resize canvas
-     */
-    resizeCanvas();
-    // TODO: get rid of timeout by making canvasStore.redrawCanvas() async function (add promise)
-    setTimeout(() => {
-      canvasStore.redrawCanvas(false, undefined, false);
-    }, 100);
-    window.addEventListener("resize", resizeCanvas);
   }
 
   /*
@@ -524,6 +508,8 @@ onMounted(async () => {
     }
   }
 
+  await studioStore.loadStudio();
+
   /*
    * hide loader
    */
@@ -554,27 +540,27 @@ watch(
       setTimeout(async () => {
         isLoaded.value = false;
 
-        initCanvas();
         await initSlide();
-
-        resizeCanvas();
-        // TODO: get rid of timeout by making canvasStore.redrawCanvas() async function (add promise)
-        setTimeout(() => {
-          canvasStore.redrawCanvas(false, undefined, false);
-          isLoaded.value = true;
-        }, 100);
-        window.addEventListener("resize", resizeCanvas);
+        studioStore.loadStudio();
       });
-    } else {
-      window.removeEventListener("resize", resizeCanvas);
     }
   },
 );
 
 onUnmounted(() => {
-  window.removeEventListener("resize", resizeCanvas);
   document.removeEventListener("keydown", handleKeyDownEvent);
+  resizeObserverCanvas.value.disconnect();
 });
+
+// fix canvas into parent container on room invitation panel toggle
+watch(
+  () => showRoomInvitationPanel.value,
+  () => {
+    setTimeout(() => {
+      studioStore.fitStageIntoParentContainer();
+    });
+  },
+);
 
 /*
  * webhooks
@@ -677,12 +663,12 @@ const connectToRoomChannels = async () => {
         ((new Date(endTime) - new Date(startTime)) / 1000).toFixed(1),
       );
 
-      console.log("SERVER TIME REQUEST DELAY: ", roundTripTime);
+      // console.log("SERVER TIME REQUEST DELAY: ", roundTripTime);
 
       const countdownDifference =
         serverTimeResponse.data.time - room.value.countdown_started_at;
 
-      console.log("DIFFERENCE: ", countdownDifference);
+      // console.log("DIFFERENCE: ", countdownDifference);
 
       const updatedCountdown =
         room.value.countdown +
@@ -720,13 +706,13 @@ const connectToRoomChannels = async () => {
               slide.value = response.data;
             }
 
-            await canvasStore.setElementsFromSlide(slide.value.canvas_data);
-            canvasStore.redrawCanvas(false);
+            // todo: ???
+            // await canvasStore.setElementsFromSlide(slide.value.canvas_data);
           }, timeout / 2);
         }
       } else {
         startCountdown(updatedCountdown);
-        console.log("TIMER: ", timeLeft.value);
+        // console.log("TIMER: ", timeLeft.value);
 
         if (isHost.value) {
           presentationsStore.updateRoom(undefined, undefined, {
@@ -743,8 +729,8 @@ const connectToRoomChannels = async () => {
           slide.value = response.data;
         }
 
-        await canvasStore.setElementsFromSlide(slide.value.canvas_data);
-        canvasStore.redrawCanvas(false);
+        // todo: ???
+        // await canvasStore.setElementsFromSlide(slide.value.canvas_data);
       }
     } else {
       stopCountdown();
@@ -774,14 +760,12 @@ const connectToRoomChannels = async () => {
 
     presentationsStore.syncCurrentSlideWithPresentationSlides();
 
-    await canvasStore.setElementsFromSlide();
+    await studioStore.loadStudio();
 
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
-      // leave only background & base fill
-      filterElements();
+      // hide layers other than base
+      layers.value.default.hide();
     }
-
-    canvasStore.redrawCanvas(false, undefined, false);
   });
 
   /*
@@ -964,7 +948,7 @@ const handleSlideChange = async (direction) => {
   const quizInProgressWarning = warnAboutQuizInProgress(direction);
   if (!quizInProgressWarning) return;
 
-  // instant slide change (local)
+  // todo: instant slide change (local)
   // slide.value = newSlide;
   // slideSettings.value = slide.value.settings_data
   //   ? JSON.parse(slide.value.settings_data)
@@ -1108,39 +1092,15 @@ const clearIsMouseActiveTimeout = () => {
 };
 
 /*
- * room background
+ * room base elements
  */
-const roomBackground = computed(() => {
-  return elements.value?.find(
-    (element) => element.mode === MODE_OPTIONS.value.BACKGROUND,
-  );
+const baseBackground = computed(() => {
+  return layers.value?.base?.findOne(".baseBackground");
 });
 
-const roomBaseFill = computed(() => {
-  return elements.value?.find(
-    (element) => element.mode === MODE_OPTIONS.value.BASE_FILL,
-  );
+const baseFill = computed(() => {
+  return layers.value?.base?.findOne(".baseFill");
 });
-
-watch(
-  () => elements.value,
-  async () => {
-    averageBackgroundBrightness.value = await computeAverageBrightness(
-      elements.value,
-    );
-  },
-);
-
-/*
- * leave only background & base fill
- */
-const filterElements = () => {
-  elements.value = elements.value.filter((element) =>
-    [MODE_OPTIONS.value.BACKGROUND, MODE_OPTIONS.value.BASE_FILL].includes(
-      element.mode,
-    ),
-  );
-};
 
 /*
  * lock submissions locally when time's up
@@ -1232,60 +1192,62 @@ useMeta(metaOptions);
   z-index: 1;
 }
 
-canvas {
-  background-color: $white;
-  z-index: 1;
+.slide {
   width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: $white;
+  overflow-x: hidden;
 }
 
 /*
  * toggle invitation panel smooth transition
  */
-.animated.fadeIn {
-  animation-name: fadeIn;
-  animation-duration: 0.5s;
-}
-
-@keyframes fadeIn {
-  0% {
-    min-width: 0;
-    width: 0;
-    opacity: 0;
-    transform: scale(0);
-  }
-  40% {
-    opacity: 0;
-  }
-  100% {
-    min-width: 291px;
-    width: 291px;
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animated.fadeOut {
-  animation-name: fadeOut;
-  animation-duration: 0.5s;
-}
-
-@keyframes fadeOut {
-  0% {
-    min-width: 291px;
-    width: 291px;
-    opacity: 1;
-    transform: scale(1);
-  }
-  40% {
-    opacity: 0;
-  }
-  100% {
-    min-width: 0;
-    width: 0;
-    opacity: 0;
-    transform: scale(0);
-  }
-}
+//.animated.fadeIn {
+//  animation-name: fadeIn;
+//  animation-duration: 0.5s;
+//}
+//
+//@keyframes fadeIn {
+//  0% {
+//    min-width: 0;
+//    width: 0;
+//    opacity: 0;
+//    transform: scale(0);
+//  }
+//  40% {
+//    opacity: 0;
+//  }
+//  100% {
+//    min-width: 291px;
+//    width: 291px;
+//    opacity: 1;
+//    transform: scale(1);
+//  }
+//}
+//
+//.animated.fadeOut {
+//  animation-name: fadeOut;
+//  animation-duration: 0.5s;
+//}
+//
+//@keyframes fadeOut {
+//  0% {
+//    min-width: 291px;
+//    width: 291px;
+//    opacity: 1;
+//    transform: scale(1);
+//  }
+//  40% {
+//    opacity: 0;
+//  }
+//  100% {
+//    min-width: 0;
+//    width: 0;
+//    opacity: 0;
+//    transform: scale(0);
+//  }
+//}
 </style>
 
 <style lang="scss">

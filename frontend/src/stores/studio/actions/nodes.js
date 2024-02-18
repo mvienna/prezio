@@ -1,7 +1,6 @@
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { processText } from "stores/studio/actions/modes/text";
 
 const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);

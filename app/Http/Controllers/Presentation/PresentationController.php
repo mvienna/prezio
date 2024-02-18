@@ -71,7 +71,6 @@ class PresentationController extends Controller
             'available_reactions' => $request->settings['available_reactions'],
         ]);
 
-        // send event to room channel to inform about privacy setting change
         $presentation->load('room', 'settings');
         if ($presentation->room) {
             event(new PresentationUpdatedEvent($presentation->room, $presentation));

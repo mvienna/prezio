@@ -205,7 +205,6 @@
         <!-- room -->
         <q-btn-dropdown
           split
-          disable
           no-caps
           color="primary"
           unelevated

@@ -10,14 +10,7 @@
 import * as d3 from "d3";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import {
-  computed,
-  onBeforeMount,
-  onMounted,
-  onUnmounted,
-  ref,
-  watch,
-} from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useStudioStore } from "stores/studio";
 import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
@@ -25,13 +18,7 @@ import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
  * stores
  */
 const presentationStore = usePresentationsStore();
-const {
-  room,
-  slide,
-  slideSettings,
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-} = storeToRefs(presentationStore);
+const { room, slide, slideSettings } = storeToRefs(presentationStore);
 
 const studioStore = useStudioStore();
 const { stages } = storeToRefs(studioStore);

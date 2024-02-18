@@ -46,7 +46,7 @@
           <div class="text-center" style="opacity: 0.7">
             {{
               $t(
-                "presentationRoom.quizCountdown.hasAlreadyAnswered.description"
+                "presentationRoom.quizCountdown.hasAlreadyAnswered.description",
               )
             }}
           </div>
@@ -70,7 +70,7 @@
             {{ $t("presentationRoom.quizCountdown.questionIndex.outOf") }}
             {{
               presentation.slides.filter((item) =>
-                SLIDE_TYPES_OF_QUIZ.includes(item.type)
+                SLIDE_TYPES_OF_QUIZ.includes(item.type),
               ).length
             }}
           </div>
@@ -79,7 +79,7 @@
             <div class="text-center">
               {{
                 $t(
-                  "presentationRoom.quizCountdown.scoreDependsOnTime.true.title"
+                  "presentationRoom.quizCountdown.scoreDependsOnTime.true.title",
                 )
               }}
             </div>
@@ -92,14 +92,14 @@
             <div>
               {{
                 $t(
-                  "presentationRoom.quizCountdown.scoreDependsOnTime.false.title"
+                  "presentationRoom.quizCountdown.scoreDependsOnTime.false.title",
                 )
               }}
             </div>
             <div class="text-grey q-mt-xs">
               {{
                 $t(
-                  "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle"
+                  "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle",
                 )
               }}
             </div>
@@ -110,7 +110,7 @@
         <div v-else-if="timeLeft !== -1">
           <!-- question title -->
           <div class="text-h6 text-semibold text-center q-mb-lg">
-            {{ layoutTitleElement?.text }}
+            {{ title }}
           </div>
 
           <div class="row no-wrap justify-center">
@@ -126,10 +126,10 @@
                 timeLeftPercentage * 2 - 100 < 25
                   ? 'positive'
                   : timeLeftPercentage * 2 - 100 < 50
-                  ? 'yellow-10'
-                  : timeLeftPercentage * 2 - 100 < 75
-                  ? 'orange'
-                  : 'red'
+                    ? 'yellow-10'
+                    : timeLeftPercentage * 2 - 100 < 75
+                      ? 'orange'
+                      : 'red'
               "
               track-color="white"
             />
@@ -153,7 +153,6 @@
 import { countdown, timeLeft, timeLeftPercentage } from "src/helpers/countdown";
 import { SLIDE_TYPES_OF_QUIZ } from "src/constants/presentationStudio";
 import { storeToRefs } from "pinia";
-import { useCanvasStore } from "stores/canvas";
 import { usePresentationsStore } from "stores/presentations";
 import { computed } from "vue";
 
@@ -161,7 +160,7 @@ import { computed } from "vue";
  * variables
  */
 defineProps({
-  layoutTitleElement: { type: Object, default: null },
+  title: { type: String, default: null },
   hasAlreadyAnswered: { type: Boolean },
 });
 
@@ -171,9 +170,6 @@ defineProps({
 const presentationsStore = usePresentationsStore();
 const { presentation, room, slide, slideSettings, participant } =
   storeToRefs(presentationsStore);
-
-const canvasStore = useCanvasStore();
-const { elements } = storeToRefs(canvasStore);
 
 /*
  * participant data

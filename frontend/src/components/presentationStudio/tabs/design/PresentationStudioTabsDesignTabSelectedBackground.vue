@@ -3,7 +3,7 @@
     <div class="q-mb-sm q-mt-lg">
       {{
         $t(
-          "presentationLayout.rightDrawer.tabs.design.slideBackground.select.title"
+          "presentationLayout.rightDrawer.tabs.design.slideBackground.select.title",
         )
       }}
     </div>
@@ -12,6 +12,9 @@
       <q-img
         :src="baseBackground.getAttr('source')"
         class="selected_background"
+        :style="`filter: blur(${baseBackgroundFilters.blurRadius}px) contrast(${100 + baseBackgroundFilters.contrast}%) brightness(${
+          100 + baseBackgroundFilters.brightness * 100
+        }%); opacity: ${baseBackgroundFilters.opacity};`"
       />
 
       <!-- background filters -->
@@ -44,7 +47,7 @@
                 <div>
                   {{
                     $t(
-                      "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.title"
+                      "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.title",
                     )
                   }}
                 </div>
@@ -60,7 +63,7 @@
                   <q-tooltip>
                     {{
                       $t(
-                        "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.reset"
+                        "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.reset",
                       )
                     }}
                   </q-tooltip>
@@ -82,7 +85,7 @@
               <div class="text-caption text-grey">
                 {{
                   $t(
-                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.opacity"
+                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.opacity",
                   )
                 }}
               </div>
@@ -107,7 +110,7 @@
               <div class="text-caption text-grey q-mb-sm">
                 {{
                   $t(
-                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.blur"
+                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.blur",
                   )
                 }}
               </div>
@@ -129,7 +132,7 @@
               <div class="text-caption text-grey q-mb-sm">
                 {{
                   $t(
-                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.contrast"
+                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.contrast",
                   )
                 }}
               </div>
@@ -151,7 +154,7 @@
               <div class="text-caption text-grey q-mb-sm">
                 {{
                   $t(
-                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.brightness"
+                    "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.brightness",
                   )
                 }}
               </div>
@@ -178,7 +181,7 @@
       <div class="text-caption text-grey q-mt-md">
         {{
           $t(
-            "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.opacity"
+            "presentationLayout.rightDrawer.tabs.design.slideBackground.filters.opacity",
           )
         }}
       </div>
@@ -200,7 +203,7 @@
       <q-btn
         :label="
           $t(
-            'presentationLayout.rightDrawer.tabs.design.slideBackground.select.open'
+            'presentationLayout.rightDrawer.tabs.design.slideBackground.select.open',
           )
         "
         icon="icon-image_add"
@@ -220,7 +223,7 @@
               $event?.preview_url ||
                 $event?.original_url ||
                 $event?.urls?.regular,
-              baseBackgroundFilters
+              baseBackgroundFilters,
             );
 
             showSelectBackgroundDialog = false;
@@ -294,7 +297,7 @@ const handleBaseBackgroundFiltersUpdate = () => {
   studioStore.updateBaseLayer(
     undefined,
     undefined,
-    baseBackgroundFilters.value
+    baseBackgroundFilters.value,
   );
 };
 </script>

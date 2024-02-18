@@ -54,7 +54,7 @@
             $t(
               `presentationRoom.footer.menu.fullscreen.${
                 isFullscreen ? 'off' : 'on'
-              }`
+              }`,
             )
           "
           :icon="isFullscreen ? 'r_fullscreen_exit' : 'r_fullscreen'"
@@ -73,7 +73,7 @@
             $t(
               `presentationRoom.footer.menu.invitationPanel.${
                 showRoomInvitationPanel ? 'hide' : 'show'
-              }`
+              }`,
             )
           "
           icon="r_qr_code"
@@ -94,7 +94,7 @@
                 presentation?.settings?.show_joining_instructions_bar
                   ? 'hide'
                   : 'show'
-              }`
+              }`,
             )
           "
           icon="r_help"
@@ -116,7 +116,7 @@
             $t(
               `presentationRoom.footer.menu.privacy.${
                 presentation.is_private ? 'public' : 'private'
-              }`
+              }`,
             )
           "
           :icon="presentation.is_private ? 'r_visibility_off' : 'r_visibility'"
@@ -137,7 +137,6 @@
 </template>
 
 <script setup>
-import { api } from "boot/axios";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, onUnmounted, ref } from "vue";

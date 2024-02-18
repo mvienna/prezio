@@ -83,10 +83,7 @@
 import { useI18n } from "vue-i18n";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import {
-  SLIDE_TYPES,
-  SLIDE_TYPES_OF_QUIZ,
-} from "src/constants/presentationStudio";
+import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { computed } from "vue";
 
 /*

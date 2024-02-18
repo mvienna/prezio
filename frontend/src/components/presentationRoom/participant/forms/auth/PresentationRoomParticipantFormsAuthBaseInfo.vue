@@ -3,7 +3,7 @@
     <div
       class="container"
       :class="
-        averageBackgroundBrightness >= backgroundBrightnessThreshold
+        slide?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
           ? 'container--black'
           : 'container--white'
       "
@@ -134,6 +134,7 @@ import "vue3-emoji-picker/css";
 import { useI18n } from "vue-i18n";
 import { randomUsernames } from "src/constants/mock";
 import { wordCloudTextColors } from "src/helpers/colorUtils";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * variables
@@ -146,19 +147,13 @@ const { t, locale } = useI18n({ useScope: "global" });
  * stores
  */
 const presentationsStore = usePresentationsStore();
-const {
-  participant,
-  room,
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-} = storeToRefs(presentationsStore);
+const { participant, room, slide } = storeToRefs(presentationsStore);
 
 /*
  * logo
  */
 const logo = computed(() => {
-  return averageBackgroundBrightness.value >=
-    backgroundBrightnessThreshold.value
+  return slide.value?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
     ? "/prezio.svg"
     : "/prezio--white.svg";
 });
@@ -219,7 +214,7 @@ onMounted(() => {
     randomUsernames.nouns[locale.value === "ru-RU" ? "ru" : "en"][
       Math.floor(
         Math.random() *
-          randomUsernames.nouns[locale.value === "ru-RU" ? "ru" : "en"].length
+          randomUsernames.nouns[locale.value === "ru-RU" ? "ru" : "en"].length,
       )
     ];
 

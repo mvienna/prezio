@@ -126,7 +126,7 @@
 
 <script setup>
 import ConfirmationDialog from "components/dialogs/ConfirmationDialog.vue";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { getFolderIconName } from "src/helpers/generationUtils";

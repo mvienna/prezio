@@ -19,7 +19,7 @@
         <div
           class="text-center"
           :class="`${
-            averageBackgroundBrightness >= backgroundBrightnessThreshold
+            slide?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
               ? 'text-black'
               : 'text-white'
           }`"
@@ -61,12 +61,12 @@
                   flat
                   style="border-radius: 50%; backdrop-filter: blur(4px)"
                   :class="
-                    averageBackgroundBrightness >= backgroundBrightnessThreshold
+                    slide?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
                       ? 'text-black'
                       : 'text-white'
                   "
                   :style="
-                    averageBackgroundBrightness >= backgroundBrightnessThreshold
+                    slide?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
                       ? `background: rgba(255, 255, 255, 0.5)`
                       : 'background: rgba(0, 0, 0, 0.5)'
                   "
@@ -120,7 +120,7 @@
               <div
                 class="text-no-wrap column justify-center q-ml-md"
                 :class="
-                  averageBackgroundBrightness >= backgroundBrightnessThreshold
+                  slide?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
                     ? 'text-black'
                     : 'text-white'
                 "
@@ -137,7 +137,7 @@
         v-else
         class="text-center column no-wrap justify-center full-height"
         :class="
-          averageBackgroundBrightness >= backgroundBrightnessThreshold
+          slide?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
             ? 'text-black'
             : 'text-white'
         "
@@ -159,18 +159,13 @@ import { storeToRefs } from "pinia";
 import { colors } from "quasar";
 import confettiJSON from "assets/animations/confetti.json";
 import { Vue3Lottie } from "vue3-lottie";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * stores
  */
 const presentationsStudio = usePresentationsStore();
-const {
-  presentation,
-  slide,
-  participant,
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-} = storeToRefs(presentationsStudio);
+const { presentation, slide, participant } = storeToRefs(presentationsStudio);
 
 /*
  * results

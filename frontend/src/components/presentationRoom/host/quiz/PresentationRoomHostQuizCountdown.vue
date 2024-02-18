@@ -28,7 +28,7 @@
             {{ $t("presentationRoom.quizCountdown.questionIndex.outOf") }}
             {{
               presentation.slides.filter((item) =>
-                SLIDE_TYPES_OF_QUIZ.includes(item.type)
+                SLIDE_TYPES_OF_QUIZ.includes(item.type),
               ).length
             }}
           </div>
@@ -38,7 +38,7 @@
             <div class="text-center text-h5">
               {{
                 $t(
-                  "presentationRoom.quizCountdown.scoreDependsOnTime.true.title"
+                  "presentationRoom.quizCountdown.scoreDependsOnTime.true.title",
                 )
               }}
             </div>
@@ -53,14 +53,14 @@
             <div class="text-h5">
               {{
                 $t(
-                  "presentationRoom.quizCountdown.scoreDependsOnTime.false.title"
+                  "presentationRoom.quizCountdown.scoreDependsOnTime.false.title",
                 )
               }}
             </div>
             <div class="q-mt-sm" style="opacity: 0.5">
               {{
                 $t(
-                  "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle"
+                  "presentationRoom.quizCountdown.scoreDependsOnTime.false.subtitle",
                 )
               }}
             </div>
@@ -82,10 +82,10 @@
                 timeLeftPercentage * 2 - 100 < 25
                   ? 'positive'
                   : timeLeftPercentage * 2 - 100 < 50
-                  ? 'yellow-10'
-                  : timeLeftPercentage * 2 - 100 < 75
-                  ? 'orange'
-                  : 'red'
+                    ? 'yellow-10'
+                    : timeLeftPercentage * 2 - 100 < 75
+                      ? 'orange'
+                      : 'red'
               "
               track-color="white"
             />
@@ -181,7 +181,6 @@
 
 <script setup>
 import { computed, ref, watch } from "vue";
-import { useCanvasStore } from "stores/canvas";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
 import { countdown, timeLeft, timeLeftPercentage } from "src/helpers/countdown";
@@ -190,30 +189,20 @@ import {
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
 import PresentationRoomHostQuizCountdownAcceptOtherAnswers from "components/presentationRoom/host/quiz/PresentationRoomHostQuizCountdownAcceptOtherAnswers.vue";
+import { COLOR_SCHEME_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * stores
  */
-const canvasStore = useCanvasStore();
-const { canvas } = storeToRefs(canvasStore);
-
 const presentationsStore = usePresentationsStore();
-const {
-  room,
-  slide,
-  presentation,
-  slideSettings,
-  participants,
-  averageBackgroundBrightness,
-  backgroundBrightnessThreshold,
-} = storeToRefs(presentationsStore);
+const { room, slide, presentation, slideSettings, participants } =
+  storeToRefs(presentationsStore);
 
 /*
  * text color
  */
 const textColor = computed(() => {
-  return averageBackgroundBrightness.value >=
-    backgroundBrightnessThreshold.value
+  return slide.value?.color_scheme === COLOR_SCHEME_OPTIONS.LIGHT
     ? "black"
     : "white";
 });
@@ -285,7 +274,7 @@ watch(
         isFinished.value = false;
       }
     }
-  }
+  },
 );
 
 /*
@@ -326,7 +315,7 @@ const otherAnswersToAccept = computed(() => {
         ![
           slideSettings.value.correctAnswer.value,
           ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
-        ].includes(answer.answer_data.text)
+        ].includes(answer.answer_data.text),
     );
 });
 </script>

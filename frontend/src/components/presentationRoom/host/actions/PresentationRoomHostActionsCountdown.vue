@@ -8,10 +8,10 @@
         timeLeftPercentage < 25
           ? 'positive'
           : timeLeftPercentage < 50
-          ? 'yellow-10'
-          : timeLeftPercentage < 75
-          ? 'orange'
-          : 'red'
+            ? 'yellow-10'
+            : timeLeftPercentage < 75
+              ? 'orange'
+              : 'red'
       "
       track-color="white"
     />
@@ -48,8 +48,8 @@
             n === 1
               ? 'border-radius: 16px 16px 8px 8px;'
               : n === 4
-              ? 'border-radius: 8px 8px 16px 16px;'
-              : ''
+                ? 'border-radius: 8px 8px 16px 16px;'
+                : ''
           "
         >
           <q-item-label>
@@ -66,7 +66,6 @@
 import { countdown, timeLeftPercentage } from "src/helpers/countdown";
 import { storeToRefs } from "pinia";
 import { usePresentationsStore } from "stores/presentations";
-import { useCanvasStore } from "stores/canvas";
 
 /*
  * variables
@@ -78,9 +77,6 @@ const multiplier = 10;
  */
 const presentationsStore = usePresentationsStore();
 const { room, slideSettings } = storeToRefs(presentationsStore);
-
-const canvasStore = useCanvasStore();
-const { elements } = storeToRefs(canvasStore);
 
 /*
  * set new countdown time

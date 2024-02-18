@@ -212,8 +212,7 @@ const { layers, transformer, selection, MODE_OPTIONS } =
   storeToRefs(studioStore);
 
 const presentationsStore = usePresentationsStore();
-const { slide, averageBackgroundBrightness, backgroundBrightnessThreshold } =
-  storeToRefs(presentationsStore);
+const { slide } = storeToRefs(presentationsStore);
 
 /*
  * elements

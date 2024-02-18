@@ -81,7 +81,6 @@ import {
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
 import { api } from "boot/axios";
-import { useCanvasStore } from "stores/canvas";
 import PresentationAddonsBarChart from "components/presentation/addons/PresentationAddonsBarChart.vue";
 import { timeLeft } from "src/helpers/countdown";
 import PresentationAddonsLeaderboard from "components/presentation/addons/PresentationAddonsLeaderboard.vue";

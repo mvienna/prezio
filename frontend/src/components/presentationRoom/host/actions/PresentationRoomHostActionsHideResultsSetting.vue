@@ -19,7 +19,7 @@
         $t(
           `presentationRoom.footer.hideResults.tooltip.${
             slideSettings.isResultsHidden ? "off" : "on"
-          }`
+          }`,
         )
       }}
     </q-tooltip>
@@ -29,7 +29,6 @@
 <script setup>
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
-import { useCanvasStore } from "stores/canvas";
 
 /*
  * stores
@@ -37,15 +36,12 @@ import { useCanvasStore } from "stores/canvas";
 const presentationsStore = usePresentationsStore();
 const { slideSettings } = storeToRefs(presentationsStore);
 
-const canvasStore = useCanvasStore();
-const { elements } = storeToRefs(canvasStore);
-
 /*
  * toggle results hidden settings
  */
 const toggleResultsHiddenSetting = async () => {
   slideSettings.value.isResultsHidden = !slideSettings.value.isResultsHidden;
   await presentationsStore.syncCurrentSlideWithPresentationSlides();
-  await presentationsStore.saveSlide(undefined, elements.value);
+  await presentationsStore.saveSlide();
 };
 </script>

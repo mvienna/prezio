@@ -6,7 +6,7 @@
           <q-toolbar class="q-pa-md row no-wrap items-center">
             <!-- logo -->
             <div class="row no-wrap">
-              <img src="/prezio.svg" style="height: 38px" />
+              <img src="/prezio.svg" style="height: 38px" alt="Prezio logo" />
 
               <div class="q-ml-sm column">
                 <q-badge
@@ -1172,7 +1172,7 @@
       <div class="q-py-xl">
         <!-- logo -->
         <div class="row justify-center no-wrap">
-          <img src="/prezio.svg" style="height: 30px" />
+          <img src="/prezio.svg" style="height: 30px" alt="Prezio logo" />
 
           <div class="q-ml-sm column">
             <q-badge class="bg-grey-2 text-grey-7 text-8" :label="VERSION" />
