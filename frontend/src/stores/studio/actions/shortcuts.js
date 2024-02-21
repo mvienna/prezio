@@ -25,6 +25,13 @@ export function handleShortcuts(event) {
       this.deleteNodes();
       break;
 
+    // deselect elements
+    case "Escape":
+    case "Enter":
+      event.preventDefault();
+      this.deselectElements();
+      break;
+
     // bold
     case "b":
       if (!isTextSelected) return;
