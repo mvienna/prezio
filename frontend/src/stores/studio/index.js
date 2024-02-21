@@ -380,35 +380,8 @@ export const useStudioStore = defineStore("studio", {
           });
           this.stages.default.add(this.layers.default);
 
-          // add default nodes for content-type slide
-          if (slide.value.type === SLIDE_TYPES.CONTENT) {
-            this.setLayout(LAYOUT_OPTIONS.titleAndBody);
-          }
-
-          // add default nodes for leaderboard or quiz type slide
-          if (
-            [
-              ...SLIDE_TYPES_OF_QUIZ,
-              SLIDE_TYPES.WORD_CLOUD,
-              SLIDE_TYPES.LEADERBOARD,
-            ].includes(slide.value.type)
-          ) {
-            this.addText(
-              {
-                text: i18n.global.t(
-                  `presentationStudio.layouts.defaultTexts.${slide.value.type === SLIDE_TYPES.LEADERBOARD ? "leaderboard" : "question"}`,
-                ),
-                x: 64,
-                y: 100,
-                fontSize: 70,
-                align: "center",
-                width: this.scene.width - 64 * 2,
-                fontStyle: "bold",
-                draggable: false,
-              },
-              false,
-            );
-          }
+          // create default nodes for slide
+          this.createDefaultNodesForSlide();
         }
 
         this.stages.default.listening(this.isListening);
@@ -437,6 +410,38 @@ export const useStudioStore = defineStore("studio", {
         this.isLoaded = true;
         resolve();
       });
+    },
+
+    createDefaultNodesForSlide() {
+      // add default nodes for content-type slide
+      if (slide.value.type === SLIDE_TYPES.CONTENT) {
+        this.setLayout(LAYOUT_OPTIONS.titleAndBody);
+      }
+
+      // add default nodes for leaderboard or quiz type slide
+      if (
+        [
+          ...SLIDE_TYPES_OF_QUIZ,
+          SLIDE_TYPES.WORD_CLOUD,
+          SLIDE_TYPES.LEADERBOARD,
+        ].includes(slide.value.type)
+      ) {
+        this.addText(
+          {
+            text: i18n.global.t(
+              `presentationStudio.layouts.defaultTexts.${slide.value.type === SLIDE_TYPES.LEADERBOARD ? "leaderboard" : "question"}`,
+            ),
+            x: 64,
+            y: 100,
+            fontSize: 70,
+            align: "center",
+            width: this.scene.width - 64 * 2,
+            fontStyle: "bold",
+            draggable: false,
+          },
+          false,
+        );
+      }
     },
   },
 });

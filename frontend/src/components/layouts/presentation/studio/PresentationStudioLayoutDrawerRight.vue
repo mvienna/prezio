@@ -146,6 +146,7 @@ import {
 } from "src/constants/presentationStudio";
 import PresentationStudioTabsSettingsTab from "components/presentationStudio/tabs/settings/PresentationStudioTabsSettingsTab.vue";
 import { useStudioStore } from "stores/studio";
+import Konva from "konva";
 
 /*
  * variables
@@ -162,6 +163,7 @@ const { presentation, slide, drawerRightTab, isDrawerRightPanelExpanded } =
   storeToRefs(presentationsStore);
 
 const studioStore = useStudioStore();
+const { stages, layers } = storeToRefs(studioStore);
 
 /*
  * tabs
@@ -255,9 +257,20 @@ watch(
 const handleSlideTypeChange = async (type) => {
   if (type === slide.value?.type) return;
 
+  // change type
   slide.value.type = type;
-  slide.value.canvas_data = null;
-  await studioStore.loadStudio();
+
+  // reset default layer
+  layers.value.default.destroy();
+  layers.value.default = new Konva.Layer({
+    name: "defaultLayer",
+  });
+  stages.value.default.add(layers.value.default);
+
+  // create default nodes for slide (default layer)
+  await studioStore.createDefaultNodesForSlide();
+
+  // save updated slide
   await studioStore.handleSlideUpdate();
 };
 </script>

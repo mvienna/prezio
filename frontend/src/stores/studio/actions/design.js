@@ -22,7 +22,7 @@ export async function defineColorScheme(
       /*
        * no background image
        */
-      if (!baseBackground) {
+      if (!baseBackground || !baseBackground.image()) {
         /*
          * base fill exists
          */
