@@ -176,7 +176,7 @@ const computeQuizPickAnswerBarChartData = () => {
       };
     }
 
-    const answers = slide.value.answers.filter(
+    const answers = slide.value.answers?.filter(
       (answer) =>
         JSON.parse(answer.answer_data)?.text === option.value &&
         answer.slide_type === slide.value?.type,
@@ -190,8 +190,8 @@ const computeQuizPickAnswerBarChartData = () => {
             : "❌ "
           : "") + option.value,
       value:
-        !room.value || room.value?.is_answers_revealed ? answers.length : 0,
-      tooltipData: answers.map((answer) => {
+        !room.value || room.value?.is_answers_revealed ? answers?.length : 0,
+      tooltipData: answers?.map((answer) => {
         if (answer.participant.user_data) {
           const participantData = JSON.parse(answer.participant.user_data);
           return `${participantData.avatar} ${participantData.name}`;
@@ -209,7 +209,7 @@ const computeQuizTypeAnswerBarChartData = () => {
       answer.slide_type === slide.value?.type &&
       [
         slideSettings.value.correctAnswer.value,
-        ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
+        ...slideSettings.value.otherAcceptedAnswers?.map((item) => item.value),
       ].includes(JSON.parse(answer.answer_data)?.text),
   );
 
@@ -218,7 +218,7 @@ const computeQuizTypeAnswerBarChartData = () => {
       answer.slide_type === slide.value?.type &&
       ![
         slideSettings.value.correctAnswer.value,
-        ...slideSettings.value.otherAcceptedAnswers.map((item) => item.value),
+        ...slideSettings.value.otherAcceptedAnswers?.map((item) => item.value),
       ].includes(JSON.parse(answer.answer_data)?.text),
   );
 
@@ -230,9 +230,9 @@ const computeQuizTypeAnswerBarChartData = () => {
           : "",
       value:
         !room.value || room.value?.is_answers_revealed
-          ? correctAnswers.length
+          ? correctAnswers?.length
           : 0,
-      tooltipData: correctAnswers.map((answer) => {
+      tooltipData: correctAnswers?.map((answer) => {
         let participantName = "";
 
         if (answer.participant.user_data) {
@@ -249,9 +249,9 @@ const computeQuizTypeAnswerBarChartData = () => {
       group: t("presentationRoom.quiz.typeAnswer.otherAnswers"),
       value:
         !room.value || room.value?.is_answers_revealed
-          ? incorrectAnswers.length
+          ? incorrectAnswers?.length
           : 0,
-      tooltipData: incorrectAnswers.map(
+      tooltipData: incorrectAnswers?.map(
         (answer) => JSON.parse(answer.answer_data)?.text,
       ),
       isCorrect: false,
