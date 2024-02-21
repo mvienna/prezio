@@ -443,7 +443,7 @@ onMounted(async () => {
 
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
       // hide layers other than base layers
-      layers.value.default.hide();
+      layers.value.default.visible(false);
 
       // auto-show invitations panel
       if (isHost.value) {
@@ -508,7 +508,12 @@ onMounted(async () => {
     }
   }
 
-  await studioStore.loadStudio();
+  // todo:
+  // for some reason on participant's side without loadStudio() here the canvas is blank
+  // probably we need to reorder functions here, in onMounted()
+  if (!isHost.value) {
+    await studioStore.loadStudio();
+  }
 
   /*
    * hide loader
@@ -706,8 +711,7 @@ const connectToRoomChannels = async () => {
               slide.value = response.data;
             }
 
-            // todo: ???
-            // await canvasStore.setElementsFromSlide(slide.value.canvas_data);
+            layers.value.default.visible(true);
           }, timeout / 2);
         }
       } else {
@@ -729,8 +733,7 @@ const connectToRoomChannels = async () => {
           slide.value = response.data;
         }
 
-        // todo: ???
-        // await canvasStore.setElementsFromSlide(slide.value.canvas_data);
+        layers.value.default.visible(true);
       }
     } else {
       stopCountdown();
@@ -764,7 +767,7 @@ const connectToRoomChannels = async () => {
 
     if (SLIDE_TYPES_OF_QUIZ.includes(slide.value.type)) {
       // hide layers other than base
-      layers.value.default.hide();
+      layers.value.default.visible(false);
     }
   });
 
