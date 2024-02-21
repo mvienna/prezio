@@ -466,6 +466,7 @@ import {
   SLIDE_TYPES_OF_QUIZ,
 } from "src/constants/presentationStudio";
 import { useStudioStore } from "stores/studio";
+import { handleSlideUpdate } from "stores/studio/actions/update";
 
 /*
  * variables
@@ -523,6 +524,7 @@ const handleStartPresenting = async () => {
     return;
   }
 
+  await studioStore.handleSlideUpdate();
   await presentationsStore.updatePresentation();
 
   /*
