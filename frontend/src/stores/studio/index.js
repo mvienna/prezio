@@ -275,8 +275,6 @@ export const useStudioStore = defineStore("studio", {
 
     async loadStudio() {
       return await new Promise((resolve) => {
-        this.history.undo = [];
-        this.history.redo = [];
         this.isLoaded = false;
 
         /*
