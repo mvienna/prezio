@@ -20,16 +20,16 @@ export async function handleSlideUpdate() {
   this.transformer.default?.hide();
   this.layers.default.find(".customTransformer").forEach((node) => node.hide());
 
-  // Reset zoom and position to initial state
+  // reset zoom and position to initial state
   this.stages.default.scale({ x: this.zoom.min, y: this.zoom.min });
   this.stages.default.position({ x: 0, y: 0 });
 
-  // save preview with initial zoom
-  slide.value.preview = this.generatePreviewForStage();
-
-  // Restore original scale and position
+  // restore original scale and position
   this.stages.default.scale({ x: currentScale, y: currentScale });
   this.stages.default.position(currentPosition);
+
+  // save preview
+  slide.value.preview = this.generatePreviewForStage();
 
   // compute color scheme & save and capture stage
   slide.value.color_scheme = await this.defineColorScheme();
