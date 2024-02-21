@@ -264,7 +264,7 @@ const handleEndDragging = () => {
 const handleLayerSelection = (event, element) => {
   if (!element.draggable()) return;
 
-  if (event.shiftKey) {
+  if (event.shiftKey || event.ctrlKey || event.metaKey) {
     if (
       transformer.value.default
         ?.nodes()
