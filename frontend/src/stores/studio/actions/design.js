@@ -109,6 +109,7 @@ export async function updateBaseLayer(
   baseBackgroundUrl = null,
   baseBackgroundFilters = null,
   baseBackgroundPreviewUrl = null,
+  clipPosition = null,
 ) {
   // base fill
   if (baseFill) {
@@ -218,12 +219,24 @@ export async function updateBaseLayer(
     };
   }
 
-  // base background filters
-  if (baseBackgroundFilters) {
+  // base background customization
+  if (baseBackgroundFilters || clipPosition) {
     const baseBackground = this.layers.base.findOne(".baseBackground");
     if (!baseBackground) return;
 
-    this.applyBaseBackgroundFilters(baseBackground, baseBackgroundFilters);
+    if (baseBackgroundFilters) {
+      this.applyBaseBackgroundFilters(baseBackground, baseBackgroundFilters);
+    }
+
+    if (clipPosition) {
+      baseBackground.setAttr("lastCropUsed", clipPosition);
+      const crop = this.getCrop(
+        baseBackground.image(),
+        { width: baseBackground.width(), height: baseBackground.height() },
+        baseBackground.getAttr("lastCropUsed"),
+      );
+      baseBackground.setAttrs(crop);
+    }
 
     await this.handleSlideUpdate();
   }

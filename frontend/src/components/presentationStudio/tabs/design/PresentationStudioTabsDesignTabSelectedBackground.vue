@@ -196,6 +196,66 @@
         :label-value="Math.round(baseBackgroundFilters.opacity * 100) + '%'"
         @change="handleBaseBackgroundFiltersUpdate()"
       />
+
+      <!-- clip position -->
+      <q-btn
+        flat
+        icon="r_crop"
+        :label="
+          $t(
+            `presentationStudio.toolbar.image.clipPosition.${clipPosition || 'title'}`,
+          )
+        "
+        no-caps
+        :class="{ 'bg-grey-2': showMenu.clipPosition }"
+        class="q-mb-md"
+        :ripple="false"
+      >
+        <q-menu
+          v-model="showMenu.clipPosition"
+          anchor="bottom left"
+          self="top left"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :offset="[0, 8]"
+          class="no-padding hide-scrollbar no-padding"
+        >
+          <div class="column no-wrap q-py-sm">
+            <q-item
+              v-for="item in Object.values(CROP_POSITION_OPTIONS)"
+              :key="item"
+              :active="clipPosition === item"
+              clickable
+              dense
+              @click="
+                clipPosition = item;
+                studioStore.updateBaseLayer(
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  clipPosition,
+                );
+              "
+            >
+              <q-item-section avatar style="min-width: 20px">
+                <q-icon :name="`icon-clipPosition-${item}`" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>
+                  {{
+                    $t(`presentationStudio.toolbar.image.clipPosition.${item}`)
+                  }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+        </q-menu>
+
+        <q-tooltip :offset="[0, 4]">
+          {{ $t("presentationStudio.toolbar.image.clipPosition.title") }}
+        </q-tooltip>
+      </q-btn>
     </div>
 
     <div class="row no-wrap q-mt-sm">
@@ -251,6 +311,7 @@ import { computed, onMounted, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import { useStudioStore } from "stores/studio";
+import { CROP_POSITION_OPTIONS } from "src/constants/canvas/canvasVariables";
 
 /*
  * stores
@@ -276,6 +337,8 @@ onMounted(() => {
       brightness: baseBackground.value.brightness(),
       contrast: baseBackground.value.contrast(),
     };
+
+    clipPosition.value = baseBackground.value.getAttr("lastCropUsed");
   }
 });
 
@@ -300,6 +363,15 @@ const handleBaseBackgroundFiltersUpdate = () => {
     baseBackgroundFilters.value,
   );
 };
+
+/*
+ * background clip position
+ */
+const showMenu = ref({
+  clipPosition: false,
+});
+
+const clipPosition = ref();
 </script>
 
 <style scoped lang="scss">
