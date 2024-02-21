@@ -92,8 +92,15 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 
 const studioStore = useStudioStore();
-const { layers, selection, mode, MODE_OPTIONS, transformer, isLoaded } =
-  storeToRefs(studioStore);
+const {
+  layers,
+  selection,
+  mode,
+  MODE_OPTIONS,
+  transformer,
+  isLoaded,
+  history,
+} = storeToRefs(studioStore);
 
 /*
  * canvas setup
@@ -141,6 +148,8 @@ watch(
   () => slide.value,
   () => {
     studioStore.loadStudio();
+    history.value.undo = [];
+    history.value.redo = [];
   },
 );
 
