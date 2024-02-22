@@ -29,6 +29,7 @@ export function handleSelection() {
         ? COLOR_PALETTE.BLACK
         : COLOR_PALETTE.WHITE,
     anchorSize: 12,
+    rotateAnchorOffset: 35,
     keepRatio: false,
     boundBoxFunc: (oldBox, newBox) => {
       if (Math.abs(newBox.width) < 10 || Math.abs(newBox.height) < 10) {
