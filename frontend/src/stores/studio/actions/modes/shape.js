@@ -21,18 +21,18 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.LINE.name:
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
-        points: [0, 0, this.scene.width / 2, 0],
-        strokeWidth: 8,
+        points: [0, 0, (20 * this.scene.width) / 100, 0],
+        strokeWidth: 10,
       });
       break;
 
     case SHAPE_OPTIONS.ARROW.name:
       shapeNode = new Konva.Arrow({
         ...shapeDefaultConfig,
-        points: [0, 0, this.scene.width / 2, 0],
+        points: [0, 0, (20 * this.scene.width) / 100, 0],
         pointerLength: this.shape.default.pointerSize,
         pointerWidth: this.shape.default.pointerSize,
-        strokeWidth: 8,
+        strokeWidth: 10,
         pointerAtEnding: true,
       });
       break;
@@ -40,10 +40,10 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.ARROW_DOUBLE.name:
       shapeNode = new Konva.Arrow({
         ...shapeDefaultConfig,
-        points: [0, 0, this.scene.width / 2, 0],
+        points: [0, 0, (20 * this.scene.width) / 100, 0],
         pointerLength: this.shape.default.pointerSize,
         pointerWidth: this.shape.default.pointerSize,
-        strokeWidth: 8,
+        strokeWidth: 10,
         pointerAtBeginning: true,
         pointerAtEnding: true,
       });
