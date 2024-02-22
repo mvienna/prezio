@@ -26,7 +26,7 @@ export function addText(config = {}, isSave = true) {
     padding: this.text.default.padding,
     draggable: config.draggable !== false,
     fontStyle: config.fontStyle || this.text.default.fontStyle,
-    align: config.align || "center",
+    align: config.align || this.text.default.align,
     width: config.width || this.scene.width / 2,
     name: this.MODE_OPTIONS.TEXT,
     fill: config.fill || this.text.default.fill,
