@@ -158,6 +158,8 @@ export function setLayout(layout) {
 }
 
 export function processText(textNode) {
+  textNode.on("dragstart", this.handleSelectionDragStart);
+
   textNode.on("transform", function () {
     // reset scale, so only with is changing by transformer
     textNode.setAttrs({

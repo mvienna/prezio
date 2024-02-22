@@ -229,7 +229,12 @@ export function addShape(shapeName) {
 
   this.handleSlideUpdate();
 
-  shapeNode.on("transformend", this.handleSlideUpdate);
+  this.processShape(shapeNode);
+}
+
+export function processShape(shape) {
+  shape.on("transformend", this.handleSlideUpdate);
+  shape.on("dragstart", this.handleSelectionDragStart);
 }
 
 export function setShapeCustomization(node) {

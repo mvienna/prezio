@@ -43,21 +43,6 @@ export function handleDrawingMouseDown() {
   this.layers.default.add(this.drawing.lastLine);
 }
 
-export function handleDrawingMouseUp() {
-  this.drawing.isPainting = false;
-
-  this.layers.default.getChildren().forEach((node) => {
-    if (!!node.getAttr("draggable--saved")) {
-      node.draggable(node.getAttr("draggable--saved"));
-      node.setAttr("draggable--saved", undefined);
-    }
-  });
-
-  if (this.mode === this.MODE_OPTIONS.DRAWING) {
-    this.handleSlideUpdate();
-  }
-}
-
 export function handleDrawingMouseMove(event) {
   if (!this.drawing.isPainting) return;
 
@@ -80,6 +65,28 @@ export function handleDrawingMouseMove(event) {
     .points()
     .concat([position.x, position.y]);
   this.drawing.lastLine.points(newPoints);
+}
+
+export function handleDrawingMouseUp() {
+  this.drawing.isPainting = false;
+
+  this.layers.default.getChildren().forEach((node) => {
+    if (!!node.getAttr("draggable--saved")) {
+      node.draggable(node.getAttr("draggable--saved"));
+      node.setAttr("draggable--saved", undefined);
+    }
+  });
+
+  if (this.mode === this.MODE_OPTIONS.DRAWING) {
+    this.handleSlideUpdate();
+  }
+
+  // console.log(this.drawing.lastLine);
+  // this.processDrawing(this.drawing.lastLine);
+}
+
+export function processDrawing(drawing) {
+  drawing.on("dragstart", this.handleSelectionDragStart);
 }
 
 export function setDrawingCustomization(node) {

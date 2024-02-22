@@ -182,6 +182,7 @@ export function processImageNode(
   };
 
   image.on("transform", handleTransform);
+  image.on("dragstart", this.handleSelectionDragStart);
 }
 
 export async function replaceImage(

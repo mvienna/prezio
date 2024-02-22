@@ -105,7 +105,7 @@ export function handleSelectionMouseDown(event) {
   this.selection.rect.height(0);
   this.selection.isSelecting = true;
 
-  // Register global event listeners
+  // register global event listeners
   window.addEventListener("mousemove", this.handleSelectionMouseMove);
   window.addEventListener("mouseup", this.handleSelectionMouseUp);
 }
@@ -113,7 +113,7 @@ export function handleSelectionMouseDown(event) {
 export function handleSelectionMouseMove(event) {
   if (!this.selection.isSelecting) return;
 
-  // Convert the global mouse position to the stage's local coordinates
+  // convert the global mouse position to the stage's local coordinates
   const stageBox = this.stages.default.container().getBoundingClientRect();
   const scale = this.stages.default.scaleX(); // Assuming scaleX and scaleY are the same
   const position = {
@@ -393,4 +393,22 @@ export function applyTransformerCustomization() {
       },
     });
   }
+}
+
+// todo: add line, arrow and double arrow support
+export function handleSelectionDragStart(event) {
+  if (
+    this.transformer.default
+      .nodes()
+      .find((node) => node._id === event.target._id)
+  )
+    return;
+
+  if (this.transformer.default.nodes().length) {
+    this.transformer.default?.nodes([event.target]);
+    return;
+  }
+
+  const nodes = this.transformer.default?.nodes().concat([event.target]);
+  this.transformer.default?.nodes(nodes);
 }
