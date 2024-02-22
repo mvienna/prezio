@@ -64,7 +64,7 @@ export function addShape(shapeName) {
         ...shapeDefaultConfig,
         width: size,
         height: size,
-        cornerRadius: this.shape.cornerRadius,
+        cornerRadius: this.shape.default.cornerRadius,
       });
       break;
 
