@@ -360,11 +360,9 @@ export function applyTransformerCustomization() {
         anchor.cornerRadius(2);
       }
     },
-    keepRatio: this.transformer.default
+    keepRatio: !this.transformer.default
       .nodes()
-      .filter((node) =>
-        [this.MODE_OPTIONS.SHAPE].includes(node.getAttr("name")),
-      ).length,
+      .find((node) => [this.MODE_OPTIONS.SHAPE].includes(node.getAttr("name"))),
     enabledAnchors: this.transformer.default
       .nodes()
       .filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT).length
