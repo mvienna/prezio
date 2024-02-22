@@ -51,9 +51,9 @@ export function handleZoom(event) {
   event.evt.preventDefault();
 
   if (slide.value.type !== SLIDE_TYPES.CONTENT) return;
+  if (!event.evt.ctrlKey && !event.evt.metaKey) return;
 
   const oldScale = this.stages.default.scaleX();
-
   const position = this.stages.default.getPointerPosition();
 
   const mousePointTo = {
