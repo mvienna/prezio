@@ -13,9 +13,12 @@ export function handleShortcuts(event) {
   if (activeElement && activeElement.tagName === "INPUT") return;
   if (this.mode === this.MODE_OPTIONS.TEXT_EDITING) return;
 
-  const isTextSelected = this.transformer.default
-    ?.nodes()
-    ?.filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT).length;
+  const isTextSelected = () => {
+    return this.transformer.default
+      ?.nodes()
+      ?.filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT)
+      .length;
+  };
 
   switch (event.key) {
     // delete
@@ -32,9 +35,26 @@ export function handleShortcuts(event) {
       this.deselectElements();
       break;
 
+    // deselect elements
+    case "a":
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+
+        this.transformer.default?.nodes(
+          this.layers.default
+            .getChildren()
+            .filter((node) =>
+              Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
+            ),
+        );
+
+        this.applyTransformerCustomization();
+      }
+      break;
+
     // bold
     case "b":
-      if (!isTextSelected) return;
+      if (!isTextSelected()) return;
 
       event.preventDefault();
       this.text.fontStyle = (
@@ -49,7 +69,7 @@ export function handleShortcuts(event) {
 
     // underline
     case "u":
-      if (!isTextSelected) return;
+      if (!isTextSelected()) return;
 
       event.preventDefault();
       this.text.textDecoration = (
@@ -64,7 +84,7 @@ export function handleShortcuts(event) {
 
     // italic
     case "i":
-      if (!isTextSelected) return;
+      if (!isTextSelected()) return;
 
       event.preventDefault();
       this.text.fontStyle = (
