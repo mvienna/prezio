@@ -102,8 +102,8 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
         points: [
-          187, 75, 175, 100, 150, 121, 119, 105, 117, 75, 128, 53, 150, 31, 177,
-          47,
+          748, 300, 700, 400, 600, 484, 476, 420, 468, 300, 512, 212, 600, 124,
+          708, 188,
         ],
         closed: true,
         tension: 0.3,
@@ -114,8 +114,8 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
         points: [
-          197, 75, 178, 103, 150, 121, 123, 101, 109, 75, 128, 53, 150, 32, 185,
-          39,
+          788, 300, 712, 412, 600, 484, 492, 404, 436, 300, 512, 212, 600, 128,
+          740, 156,
         ],
         closed: true,
         tension: 0.3,
@@ -126,8 +126,8 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
         points: [
-          193, 75, 183, 108, 150, 109, 124, 100, 104, 75, 124, 49, 150, 36, 174,
-          50,
+          772, 300, 732, 432, 600, 436, 496, 400, 416, 300, 496, 196, 600, 144,
+          696, 200,
         ],
         closed: true,
         tension: 0.3,
@@ -138,8 +138,8 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
         points: [
-          192, 75, 178, 103, 150, 116, 124, 100, 102, 75, 117, 42, 150, 28, 182,
-          42,
+          768, 300, 712, 412, 600, 464, 496, 400, 408, 300, 468, 168, 600, 112,
+          728, 168,
         ],
         closed: true,
         tension: 0.3,
@@ -150,8 +150,8 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
         points: [
-          195, 75, 171, 96, 150, 111, 119, 105, 101, 75, 124, 49, 150, 33, 172,
-          52,
+          780, 300, 684, 384, 600, 444, 476, 420, 404, 300, 496, 196, 600, 132,
+          688, 208,
         ],
         closed: true,
         tension: 0.3,
@@ -162,8 +162,8 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
         points: [
-          180, 75, 182, 107, 150, 107, 117, 107, 109, 75, 122, 47, 150, 25, 181,
-          43,
+          720, 300, 728, 428, 600, 428, 468, 428, 436, 300, 488, 188, 600, 100,
+          724, 172,
         ],
         closed: true,
         tension: 0.3,
@@ -174,8 +174,8 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
         points: [
-          181, 75, 184, 109, 150, 117, 125, 99, 104, 75, 126, 51, 150, 32, 179,
-          45,
+          724, 300, 736, 436, 600, 468, 500, 396, 416, 300, 504, 204, 600, 128,
+          716, 180,
         ],
         closed: true,
         tension: 0.3,
@@ -186,8 +186,8 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
         points: [
-          186, 75, 184, 109, 150, 111, 114, 110, 111, 75, 118, 43, 150, 40, 174,
-          50,
+          744, 300, 736, 436, 600, 444, 456, 440, 444, 300, 472, 172, 600, 160,
+          696, 200,
         ],
         closed: true,
         tension: 0.3,
@@ -198,8 +198,8 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
         points: [
-          193, 75, 179, 104, 150, 111, 125, 99, 110, 75, 126, 51, 150, 34, 183,
-          41,
+          772, 300, 716, 416, 600, 444, 500, 396, 440, 300, 504, 204, 600, 136,
+          732, 164,
         ],
         closed: true,
         tension: 0.3,
@@ -210,8 +210,8 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Line({
         ...shapeDefaultConfig,
         points: [
-          182, 75, 179, 104, 150, 123, 117, 107, 118, 75, 120, 45, 150, 36, 173,
-          51,
+          728, 300, 716, 416, 600, 492, 468, 428, 472, 300, 480, 180, 600, 144,
+          692, 204,
         ],
         closed: true,
         tension: 0.3,
@@ -219,10 +219,48 @@ export function addShape(shapeName) {
       break;
   }
 
+  if (
+    [
+      SHAPE_OPTIONS.ABSTRACT_1.name,
+      SHAPE_OPTIONS.ABSTRACT_2.name,
+      SHAPE_OPTIONS.ABSTRACT_3.name,
+      SHAPE_OPTIONS.ABSTRACT_4.name,
+      SHAPE_OPTIONS.ABSTRACT_5.name,
+      SHAPE_OPTIONS.ABSTRACT_6.name,
+      SHAPE_OPTIONS.ABSTRACT_7.name,
+      SHAPE_OPTIONS.ABSTRACT_8.name,
+      SHAPE_OPTIONS.ABSTRACT_9.name,
+      SHAPE_OPTIONS.ABSTRACT_10.name,
+    ].includes(shapeName)
+  ) {
+    let minX = Infinity,
+      maxX = -Infinity,
+      minY = Infinity,
+      maxY = -Infinity;
+    for (let i = 0; i < shapeNode.points().length; i += 2) {
+      const x = shapeNode.points()[i];
+      const y = shapeNode.points()[i + 1];
+      minX = Math.min(minX, x);
+      maxX = Math.max(maxX, x);
+      minY = Math.min(minY, y);
+      maxY = Math.max(maxY, y);
+    }
+    const shapeWidth = maxX - minX;
+    const shapeHeight = maxY - minY;
+
+    shapeNode.setAttrs({
+      x: this.scene.width / 2 - shapeWidth / 2 - minX,
+      y: this.scene.height / 2 - shapeHeight / 2 - minY,
+    });
+  } else {
+    shapeNode.setAttrs({
+      x: this.scene.width / 2 - shapeNode.width() / 2,
+      y: this.scene.height / 2 - shapeNode.height() / 2,
+    });
+  }
+
   shapeNode.setAttrs({
     shape: shapeName,
-    x: this.scene.width / 2 - shapeNode.width() / 2,
-    y: this.scene.height / 2 - shapeNode.height() / 2,
   });
 
   this.layers.default.add(shapeNode);
