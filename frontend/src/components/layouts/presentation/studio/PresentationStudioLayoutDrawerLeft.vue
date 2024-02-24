@@ -490,7 +490,10 @@ const handleKeyDownEvent = (event) => {
   if (transformer.value.default?.nodes()?.length) return;
 
   // change slide
-  if (["ArrowDown", "ArrowUp"].includes(event.key)) {
+  if (
+    ["ArrowDown", "ArrowUp"].includes(event.key) &&
+    (event.ctrlKey || event.metaKey)
+  ) {
     const currentSlideIndex = presentation.value.slides.findIndex(
       (item) => item.id === slide.value.id,
     );
