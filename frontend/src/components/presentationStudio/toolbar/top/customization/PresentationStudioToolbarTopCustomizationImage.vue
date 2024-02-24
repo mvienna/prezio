@@ -251,35 +251,93 @@
       />
 
       <!-- stroke width -->
-      <div class="q-py-md q-px-md">
+      <div class="q-pt-md q-px-md">
         <div class="text-caption text-grey">
           {{ $t("presentationStudio.toolbar.image.stroke.width") }}
         </div>
 
-        <div class="row no-wrap items-center q-gutter-md q-pt-sm">
-          <q-slider
-            v-model="image.strokeWidth"
-            :min="0"
-            :max="20"
-            label
-            thumb-size="14px"
-            :label-value="image.strokeWidth + 'px'"
-            @change="studioStore.applyCustomization()"
-          />
+        <q-slider
+          v-model="image.strokeWidth"
+          :min="0"
+          :max="20"
+          label
+          thumb-size="14px"
+          :label-value="image.strokeWidth + 'px'"
+          @change="studioStore.applyCustomization()"
+        />
 
-          <q-input
-            v-model.number="image.strokeWidth"
-            :min="0"
-            :max="20"
-            type="number"
-            placeholder="0"
-            suffix="px"
-            style="min-width: 90px; width: 80px"
-            outlined
-            dense
-            @change="studioStore.applyCustomization()"
-          />
+        <q-input
+          v-model.number="image.strokeWidth"
+          :min="0"
+          :max="20"
+          type="number"
+          placeholder="0"
+          suffix="px"
+          style="min-width: 90px; width: 80px"
+          outlined
+          dense
+          @change="studioStore.applyCustomization()"
+        />
+      </div>
+
+      <!-- dash width -->
+      <div class="q-py-md q-px-md">
+        <div class="text-caption text-grey">
+          {{ $t("presentationStudio.toolbar.image.stroke.dash.width") }}
         </div>
+
+        <q-slider
+          v-model="image.dash[0]"
+          :min="0"
+          :max="100"
+          label
+          thumb-size="14px"
+          :label-value="image.dash[0] + 'px'"
+          @change="studioStore.applyCustomization()"
+        />
+
+        <q-input
+          v-model.number="image.dash[0]"
+          :min="0"
+          :max="100"
+          type="number"
+          placeholder="0"
+          suffix="px"
+          style="min-width: 90px; width: 80px"
+          outlined
+          dense
+          @change="studioStore.applyCustomization()"
+        />
+      </div>
+
+      <!-- dash gap -->
+      <div class="q-pb-md q-px-md">
+        <div class="text-caption text-grey">
+          {{ $t("presentationStudio.toolbar.image.stroke.dash.gap") }}
+        </div>
+
+        <q-slider
+          v-model="image.dash[1]"
+          :min="0"
+          :max="50"
+          label
+          thumb-size="14px"
+          :label-value="image.dash[1] + 'px'"
+          @change="studioStore.applyCustomization()"
+        />
+
+        <q-input
+          v-model.number="image.dash[1]"
+          :min="0"
+          :max="50"
+          type="number"
+          placeholder="0"
+          suffix="px"
+          style="min-width: 90px; width: 80px"
+          outlined
+          dense
+          @change="studioStore.applyCustomization()"
+        />
       </div>
     </q-menu>
 

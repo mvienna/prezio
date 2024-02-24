@@ -216,6 +216,11 @@ export function setImageCustomization(node) {
     ...this.image,
     opacity: node.opacity(),
     stroke: node.stroke(),
+    strokeWidth:
+      !node.strokeWidth() || node.strokeWidth() === 0.1
+        ? 0
+        : node.strokeWidth(),
+    dash: node.dash() || this.image.default.dash,
     shadowColor: node.shadowColor(),
     shadowBlur: node.shadowBlur(),
     shadowOffset: node.shadowOffset(),
@@ -224,10 +229,6 @@ export function setImageCustomization(node) {
     cornerRadius: Math.round(
       (node.cornerRadius() / Math.min(node.width(), node.height())) * 100,
     ),
-    strokeWidth:
-      !node.strokeWidth() || node.strokeWidth() === 0.1
-        ? 0
-        : node.strokeWidth(),
   };
 }
 
@@ -244,6 +245,7 @@ export function applyImageCustomization(node) {
       Math.min(node.width(), node.height()) * (this.image.cornerRadius / 100),
     stroke: !this.image.strokeWidth ? "transparent" : this.image.stroke,
     strokeWidth: !this.image.strokeWidth ? 0.1 : Number(this.image.strokeWidth),
+    dash: this.image.dash,
     shadowColor: this.image.shadowColor,
     shadowBlur: this.image.shadowBlur,
     shadowOffset: this.image.shadowOffset,

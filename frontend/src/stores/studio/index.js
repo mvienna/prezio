@@ -150,6 +150,7 @@ export const useStudioStore = defineStore("studio", {
       shadowOffset: { x: 0, y: 0 },
       shadowOpacity: 0,
       clipPosition: "centerMiddle",
+      dash: [10, 0],
 
       default: {
         opacity: 1,
@@ -161,6 +162,7 @@ export const useStudioStore = defineStore("studio", {
         shadowOffset: { x: 0, y: 0 },
         shadowOpacity: 0,
         clipPosition: "centerMiddle",
+        dash: [10, 0],
       },
     },
 
@@ -184,6 +186,7 @@ export const useStudioStore = defineStore("studio", {
         1,
         COLOR_PALETTE.SECONDARY,
       ],
+      dash: [10, 0],
 
       default: {
         fill: COLOR_PALETTE.PRIMARY,
@@ -202,6 +205,7 @@ export const useStudioStore = defineStore("studio", {
           1,
           COLOR_PALETTE.SECONDARY,
         ],
+        dash: [10, 0],
       },
     },
 

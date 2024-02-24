@@ -62,6 +62,10 @@ export default {
         stroke: {
           title: "Обводка",
           width: "Толщина обводки",
+          dash: {
+            width: "Длинна пунктирной линии",
+            gap: "Промежуток между линиями",
+          },
         },
 
         cornerRadius: {
@@ -103,6 +107,10 @@ export default {
           title: "Обводка",
           width: "Толщина обводки",
           pointerSize: "Размер указателя",
+          dash: {
+            width: "Длинна пунктирной линии",
+            gap: "Промежуток между линиями",
+          },
         },
 
         opacity: {
