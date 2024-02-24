@@ -24,7 +24,6 @@ export function handleShortcuts(event) {
     // delete
     case "Delete":
     case "Backspace":
-      event.preventDefault();
       this.deleteNodes();
       break;
 
@@ -100,37 +99,36 @@ export function handleShortcuts(event) {
     // cut
     // strike-through
     case "x":
-      if (event.shiftKey) {
-        event.preventDefault();
-        this.text.textDecoration = (
-          this.text.textDecoration.includes("line-through")
-            ? this.text.textDecoration.replace("line-through", "")
-            : this.text.textDecoration + " line-through"
-        )
-          .replace(/\s+/g, " ")
-          .trim();
-        this.applyCustomization();
-      } else {
-        event.preventDefault();
-        this.cutNodes();
+      if (event.ctrlKey || event.metaKey) {
+        if (event.shiftKey) {
+          event.preventDefault();
+          this.text.textDecoration = (
+            this.text.textDecoration.includes("line-through")
+              ? this.text.textDecoration.replace("line-through", "")
+              : this.text.textDecoration + " line-through"
+          )
+            .replace(/\s+/g, " ")
+            .trim();
+          this.applyCustomization();
+        } else {
+          event.preventDefault();
+          this.cutNodes();
+        }
       }
       break;
 
     // copy
     case "c":
-      event.preventDefault();
       this.copyNodes();
       break;
 
     // paste
     case "v":
-      event.preventDefault();
       this.pasteNodes();
       break;
 
     // duplicate
     case "d":
-      event.preventDefault();
       this.duplicateNodes();
       break;
 
@@ -138,45 +136,52 @@ export function handleShortcuts(event) {
      * undo / redo
      */
     case "z":
-      event.preventDefault();
-      if (event.shiftKey) {
-        this.redo();
-      } else {
-        this.undo();
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        if (event.shiftKey) {
+          this.redo();
+        } else {
+          this.undo();
+        }
       }
       break;
 
     case "y":
-      event.preventDefault();
-      this.redo();
+      if (event.ctrlKey || event.metaKey) {
+        this.redo();
+      }
       break;
 
     /*
      * move up || down || top || bottom
      */
     case "ArrowDown":
-      event.preventDefault();
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
 
-      // move to bottom
-      if (event.shiftKey) {
-        this.moveToBottom();
+        // move to bottom
+        if (event.shiftKey) {
+          this.moveToBottom();
 
-        // move down
-      } else {
-        this.moveDown();
+          // move down
+        } else {
+          this.moveDown();
+        }
       }
       break;
 
     case "ArrowUp":
-      event.preventDefault();
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
 
-      // move to top
-      if (event.shiftKey) {
-        this.moveToTop();
+        // move to top
+        if (event.shiftKey) {
+          this.moveToTop();
 
-        // move up
-      } else {
-        this.moveUp();
+          // move up
+        } else {
+          this.moveUp();
+        }
       }
       break;
   }
