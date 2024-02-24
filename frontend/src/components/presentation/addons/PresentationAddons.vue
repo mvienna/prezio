@@ -1,30 +1,12 @@
 <template>
-  <!-- todo: title description -->
   <!-- title description -->
-  <!--  <transition-->
-  <!--    appear-->
-  <!--    enter-active-class="animated fadeInDown"-->
-  <!--    leave-active-class="animated fadeOutUp"-->
-  <!--  >-->
-  <!--    <div-->
-  <!--      v-if="hoveredElement && slideSettings?.description"-->
-  <!--      ref="tooltip"-->
-  <!--      :style="`top: ${-->
-  <!--        canvasStore.canvasRect().top +-->
-  <!--        canvasStore.computeRealSize(hoveredElement.y) +-->
-  <!--        canvasStore.computeRealSize(hoveredElement.height) +-->
-  <!--        16-->
-  <!--      }px; left: ${-->
-  <!--        canvasStore.canvasRect().left +-->
-  <!--        canvasStore.computeRealSize(hoveredElement.x) +-->
-  <!--        canvasStore.computeRealSize(hoveredElement.width) / 2 - -->
-  <!--        tooltipWidth / 2-->
-  <!--      }px;`"-->
-  <!--      class="tooltip text-12"-->
-  <!--    >-->
-  <!--      {{ slideSettings.description }}-->
-  <!--    </div>-->
-  <!--  </transition>-->
+  <div
+    v-if="showTitleTooltip && slideSettings?.description"
+    :style="`top: ${mouse.y}px; left: ${mouse.x + 20}px;`"
+    class="tooltip text-12"
+  >
+    {{ slideSettings.description }}
+  </div>
 
   <template v-if="box">
     <!-- words cloud -->
@@ -72,7 +54,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 import PresentationStudioWordCloud from "components/presentation/addons/PresentationAddonsWordCloud.vue";
@@ -93,14 +75,14 @@ const { t } = useI18n({ useScope: "global" });
  * stores
  */
 const studioStore = useStudioStore();
-const { stages } = storeToRefs(studioStore);
+const { stages, showTitleTooltip } = storeToRefs(studioStore);
 
 const presentationsStore = usePresentationsStore();
 const { room, slide, slideSettings, isPresentationPreview, participants } =
   storeToRefs(presentationsStore);
 
 /*
- * resize
+ * canvas container
  */
 const box = ref();
 const resizeObserverCanvas = ref();
@@ -125,7 +107,18 @@ onUnmounted(() => {
 });
 
 /*
- * slide answers
+ * tooltip
+ */
+const mouse = ref({ x: 0, y: 0 });
+onBeforeMount(() => {
+  document.addEventListener("mousemove", (event) => {
+    mouse.value.x = event.clientX;
+    mouse.value.y = event.clientY;
+  });
+});
+
+/*
+ * word cloud
  */
 const wordCloudData = computed(() => {
   return (
@@ -157,13 +150,8 @@ const handleRemovingAnswer = (text) => {
 };
 
 /*
- * tooltip
+ * pick answer
  */
-const tooltip = ref();
-const tooltipWidth = computed(() => {
-  return tooltip.value?.offsetWidth;
-});
-
 const computeQuizPickAnswerBarChartData = () => {
   return slideSettings.value.answerOptions?.map((option) => {
     if (!slide.value?.answers) {
@@ -203,6 +191,9 @@ const computeQuizPickAnswerBarChartData = () => {
   });
 };
 
+/*
+ * type answer
+ */
 const computeQuizTypeAnswerBarChartData = () => {
   const correctAnswers = slide.value.answers.filter(
     (answer) =>
@@ -264,11 +255,11 @@ const computeQuizTypeAnswerBarChartData = () => {
 .tooltip {
   z-index: 999;
   position: fixed;
-  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.05);
-  background: rgba(0, 0, 0, 0.8);
-  color: $white;
-  border-radius: 8px;
-  padding: 8px;
+  background: $white;
+  border: 1px solid $grey;
+  color: $black;
+  border-radius: 6px;
+  padding: 6px;
   max-width: 400px;
 }
 </style>

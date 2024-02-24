@@ -251,6 +251,7 @@ export const useStudioStore = defineStore("studio", {
         opacity: 1,
       },
     },
+    showTitleTooltip: false,
   }),
 
   actions: {

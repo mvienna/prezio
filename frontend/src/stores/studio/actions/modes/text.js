@@ -168,6 +168,14 @@ export function processText(textNode) {
     });
   });
 
+  textNode.on("mouseover", () => {
+    this.showTitleTooltip = true;
+  });
+
+  textNode.on("mouseout", () => {
+    this.showTitleTooltip = false;
+  });
+
   textNode.on("dblclick dbltap", () => {
     if (!textNode.draggable() && slide.value.type === SLIDE_TYPES.CONTENT)
       return;
