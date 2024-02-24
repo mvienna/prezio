@@ -10,6 +10,7 @@ export function addShape(shapeName) {
     fill: this.shape.default.fill,
     stroke: this.shape.default.stroke,
     strokeWidth: this.shape.default.strokeWidth,
+    dash: this.shape.default.dash,
     draggable: true,
     name: this.MODE_OPTIONS.SHAPE,
   };
@@ -281,7 +282,7 @@ export function setShapeCustomization(node) {
     opacity: node.opacity(),
     stroke: node.stroke(),
     strokeWidth: node.strokeWidth(),
-    dash: node.dash(),
+    dash: node.dash() || this.image.default.dash,
     shadowColor: node.shadowColor(),
     shadowBlur: node.shadowBlur(),
     shadowOffset: node.shadowOffset(),

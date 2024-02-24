@@ -81,7 +81,7 @@ export function handleDrawingMouseUp() {
     this.handleSlideUpdate();
   }
 
-  // console.log(this.drawing.lastLine);
+  // todo: process drawing (on drag it should auto-select the element)
   // this.processDrawing(this.drawing.lastLine);
 }
 

@@ -245,7 +245,7 @@ export function applyImageCustomization(node) {
       Math.min(node.width(), node.height()) * (this.image.cornerRadius / 100),
     stroke: !this.image.strokeWidth ? "transparent" : this.image.stroke,
     strokeWidth: !this.image.strokeWidth ? 0.1 : Number(this.image.strokeWidth),
-    dash: this.image.dash,
+    dash: this.image.dash || this.image.default.dash,
     shadowColor: this.image.shadowColor,
     shadowBlur: this.image.shadowBlur,
     shadowOffset: this.image.shadowOffset,
