@@ -55,53 +55,60 @@ export function handleShortcuts(event) {
     case "b":
       if (!isTextSelected()) return;
 
-      event.preventDefault();
-      this.text.fontStyle = (
-        this.text.fontStyle.includes("bold")
-          ? this.text.fontStyle.replace("bold", "")
-          : this.text.fontStyle.replace("normal", "") + " bold"
-      )
-        .replace(/\s+/g, " ")
-        .trim();
-      this.applyCustomization();
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        this.text.fontStyle = (
+          this.text.fontStyle.includes("bold")
+            ? this.text.fontStyle.replace("bold", "")
+            : this.text.fontStyle.replace("normal", "") + " bold"
+        )
+          .replace(/\s+/g, " ")
+          .trim();
+        this.applyCustomization();
+      }
       break;
 
     // underline
     case "u":
       if (!isTextSelected()) return;
 
-      event.preventDefault();
-      this.text.textDecoration = (
-        this.text.textDecoration.includes("underline")
-          ? this.text.textDecoration.replace("underline", "")
-          : this.text.textDecoration + " underline"
-      )
-        .replace(/\s+/g, " ")
-        .trim();
-      this.applyCustomization();
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        this.text.textDecoration = (
+          this.text.textDecoration.includes("underline")
+            ? this.text.textDecoration.replace("underline", "")
+            : this.text.textDecoration + " underline"
+        )
+          .replace(/\s+/g, " ")
+          .trim();
+        this.applyCustomization();
+      }
       break;
 
     // italic
     case "i":
       if (!isTextSelected()) return;
 
-      event.preventDefault();
-      this.text.fontStyle = (
-        this.text.fontStyle.includes("italic")
-          ? this.text.fontStyle.replace("italic", "")
-          : this.text.fontStyle.replace("normal", "") + " italic"
-      )
-        .replace(/\s+/g, " ")
-        .trim();
-      this.applyCustomization();
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        this.text.fontStyle = (
+          this.text.fontStyle.includes("italic")
+            ? this.text.fontStyle.replace("italic", "")
+            : this.text.fontStyle.replace("normal", "") + " italic"
+        )
+          .replace(/\s+/g, " ")
+          .trim();
+        this.applyCustomization();
+      }
       break;
 
     // cut
     // strike-through
     case "x":
       if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+
         if (event.shiftKey) {
-          event.preventDefault();
           this.text.textDecoration = (
             this.text.textDecoration.includes("line-through")
               ? this.text.textDecoration.replace("line-through", "")
@@ -111,7 +118,6 @@ export function handleShortcuts(event) {
             .trim();
           this.applyCustomization();
         } else {
-          event.preventDefault();
           this.cutNodes();
         }
       }
@@ -119,17 +125,26 @@ export function handleShortcuts(event) {
 
     // copy
     case "c":
-      this.copyNodes();
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        this.copyNodes();
+      }
       break;
 
     // paste
     case "v":
-      this.pasteNodes();
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        this.pasteNodes();
+      }
       break;
 
     // duplicate
     case "d":
-      this.duplicateNodes();
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        this.duplicateNodes();
+      }
       break;
 
     /*
@@ -138,6 +153,7 @@ export function handleShortcuts(event) {
     case "z":
       if (event.ctrlKey || event.metaKey) {
         event.preventDefault();
+
         if (event.shiftKey) {
           this.redo();
         } else {
@@ -148,6 +164,7 @@ export function handleShortcuts(event) {
 
     case "y":
       if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
         this.redo();
       }
       break;
