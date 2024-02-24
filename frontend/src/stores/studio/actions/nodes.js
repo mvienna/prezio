@@ -34,6 +34,9 @@ export function pasteNodes(nodes = this.copiedNodes) {
       case this.MODE_OPTIONS.TEXT:
         this.processText(clone);
         break;
+      case this.MODE_OPTIONS.SHAPE:
+        this.processShape(clone);
+        break;
     }
     return clone;
   });
