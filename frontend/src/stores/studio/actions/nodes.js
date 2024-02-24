@@ -10,11 +10,13 @@ export function copyNodes(
     ? [this.transformer.custom.shape.node]
     : this.transformer.default?.nodes(),
 ) {
+  if (!nodes?.length) return;
   this.copiedNodes = nodes;
 }
 
 export function pasteNodes(nodes = this.copiedNodes) {
   if (slide.value.type !== SLIDE_TYPES.CONTENT) return;
+  if (!nodes?.length) return;
 
   nodes = nodes.map((node) => {
     let clone = node.clone();
@@ -47,6 +49,7 @@ export function duplicateNodes(
     ? [this.transformer.custom.shape.node]
     : this.transformer.default?.nodes(),
 ) {
+  if (!nodes?.length) return;
   this.pasteNodes(nodes);
   this.handleSlideUpdate();
 }
@@ -56,6 +59,7 @@ export function cutNodes(
     ? [this.transformer.custom.shape.node]
     : this.transformer.default?.nodes(),
 ) {
+  if (!nodes?.length) return;
   this.copyNodes(nodes);
   this.deleteNodes(nodes);
 }
@@ -65,6 +69,7 @@ export function deleteNodes(
     ? [this.transformer.custom.shape.node]
     : this.transformer.default?.nodes(),
 ) {
+  if (!nodes?.length) return;
   this.deselectElements();
   nodes.forEach((node) => node.destroy());
   this.handleSlideUpdate();
@@ -75,6 +80,7 @@ export function moveUp(
     ? [this.transformer.custom.shape.node]
     : this.transformer.default?.nodes(),
 ) {
+  if (!nodes?.length) return;
   nodes.forEach((node) => node.moveUp());
   this.handleSlideUpdate();
 }
@@ -84,6 +90,7 @@ export function moveDown(
     ? [this.transformer.custom.shape.node]
     : this.transformer.default?.nodes(),
 ) {
+  if (!nodes?.length) return;
   nodes.forEach((node) => node.moveDown());
   this.handleSlideUpdate();
 }
@@ -93,6 +100,7 @@ export function moveToTop(
     ? [this.transformer.custom.shape.node]
     : this.transformer.default?.nodes(),
 ) {
+  if (!nodes?.length) return;
   nodes.forEach((node) => node.moveToTop());
   this.handleSlideUpdate();
 }
@@ -102,6 +110,7 @@ export function moveToBottom(
     ? [this.transformer.custom.shape.node]
     : this.transformer.default?.nodes(),
 ) {
+  if (!nodes?.length) return;
   nodes.forEach((node) => node.moveToBottom());
   this.handleSlideUpdate();
 }
