@@ -164,7 +164,7 @@ watch(
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
     position: absolute;
-    right: calc(16px + 24px);
+    right: calc(24px);
     bottom: 24px;
     transition: 0.2s;
   }

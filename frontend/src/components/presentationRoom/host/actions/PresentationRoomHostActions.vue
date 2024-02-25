@@ -110,7 +110,7 @@ const { room, slide, slideSettings, presentation } =
 <style scoped lang="scss">
 .room_actions {
   position: absolute;
-  left: calc(16px + 24px);
+  left: calc(24px);
   bottom: 24px;
   z-index: 2;
 

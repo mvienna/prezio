@@ -99,7 +99,7 @@
           <div
             class="relative-position column no-wrap justify-center"
             :class="showRoomInvitationPanel ? 'q-px-md' : ''"
-            style="width: 100%; height: 100%"
+            style="width: 100%; height: 100%; margin: 0 auto"
             :style="`${!isHost ? 'max-width: 100vh;' : ''} ${
               showRoomInvitationPanel || !isHost
                 ? 'border-radius: 12px; overflow: hidden;'
@@ -107,12 +107,6 @@
             }`"
             @mousemove="handleCanvasMouseMoveEvent"
           >
-            <!-- HOST - header -->
-            <PresentationRoomHostHeader
-              :is-mouse-active="isMouseActive"
-              @mouseover="clearIsMouseActiveTimeout()"
-            />
-
             <!-- ALL - canvas slide -->
             <div
               v-show="
@@ -127,116 +121,126 @@
                   : ''
               "
             >
+              <!-- HOST - header -->
+              <PresentationRoomHostHeader
+                :is-mouse-active="isMouseActive"
+                @mouseover="clearIsMouseActiveTimeout()"
+              />
+
               <div id="container"></div>
-            </div>
 
-            <!-- HOST - addons (word cloud, charts) -->
-            <PresentationAddons
-              v-if="isHost && isLoaded && slide?.type !== SLIDE_TYPES.CONTENT"
-            />
-
-            <!-- HOST - quiz -->
-            <template
-              v-if="
-                isHost &&
-                SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
-                room &&
-                box
-              "
-            >
-              <!-- HOST - waiting for participants (word cloud) -->
-              <PresentationRoomHostQuizWaitingForParticipants
-                v-if="!room.is_quiz_started"
-                :box="box"
-                :key="'word_cloud__participants__' + slide.id"
+              <!-- HOST - addons (word cloud, charts) -->
+              <PresentationAddons
+                v-if="isHost && isLoaded && slide?.type !== SLIDE_TYPES.CONTENT"
               />
 
-              <!-- HOST - quiz countdown  -->
-              <PresentationRoomHostQuizCountdown
-                v-if="room.is_quiz_started"
-                :key="'quiz_countdown__' + slide?.id"
-              />
-            </template>
+              <!-- HOST - quiz -->
+              <template
+                v-if="
+                  isHost &&
+                  SLIDE_TYPES_OF_QUIZ.includes(slide?.type) &&
+                  room &&
+                  box
+                "
+              >
+                <!-- HOST - waiting for participants (word cloud) -->
+                <PresentationRoomHostQuizWaitingForParticipants
+                  v-if="!room.is_quiz_started"
+                  :box="box"
+                  :key="'word_cloud__participants__' + slide.id"
+                />
 
-            <template
-              v-if="
-                !isHost &&
-                ![SLIDE_TYPES.CONTENT, SLIDE_TYPES.LEADERBOARD].includes(
-                  slide?.type,
-                )
-              "
-            >
-              <!-- PARTICIPANT - submission form - word cloud -->
-              <PresentationRoomParticipantFormsSubmissionsWordCloud
-                v-if="!isHost && slide?.type === SLIDE_TYPES.WORD_CLOUD"
-              />
+                <!-- HOST - quiz countdown  -->
+                <PresentationRoomHostQuizCountdown
+                  v-if="room.is_quiz_started"
+                  :key="'quiz_countdown__' + slide?.id"
+                />
+              </template>
 
-              <!-- PARTICIPANT - submission form - pick answer -->
-              <PresentationRoomParticipantFormsSubmissionsPickAnswer
+              <template
                 v-if="
                   !isHost &&
-                  [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
+                  ![SLIDE_TYPES.CONTENT, SLIDE_TYPES.LEADERBOARD].includes(
                     slide?.type,
                   )
                 "
+              >
+                <!-- PARTICIPANT - submission form - word cloud -->
+                <PresentationRoomParticipantFormsSubmissionsWordCloud
+                  v-if="!isHost && slide?.type === SLIDE_TYPES.WORD_CLOUD"
+                />
+
+                <!-- PARTICIPANT - submission form - pick answer -->
+                <PresentationRoomParticipantFormsSubmissionsPickAnswer
+                  v-if="
+                    !isHost &&
+                    [SLIDE_TYPES.PICK_ANSWER, SLIDE_TYPES.PICK_IMAGE].includes(
+                      slide?.type,
+                    )
+                  "
+                />
+
+                <!-- PARTICIPANT - submission form - type answer -->
+                <PresentationRoomParticipantFormsSubmissionsTypeAnswer
+                  v-if="!isHost && SLIDE_TYPES.TYPE_ANSWER === slide?.type"
+                />
+              </template>
+
+              <!-- PARTICIPANT - leaderboard -->
+              <PresentationRoomParticipantLeaderboard
+                v-if="!isHost && slide?.type === SLIDE_TYPES.LEADERBOARD"
+                :key="'leaderboard__' + slide?.id"
               />
 
-              <!-- PARTICIPANT - submission form - type answer -->
-              <PresentationRoomParticipantFormsSubmissionsTypeAnswer
-                v-if="!isHost && SLIDE_TYPES.TYPE_ANSWER === slide?.type"
+              <!-- HOST - actions -->
+              <PresentationRoomHostActions v-if="isHost" />
+
+              <!-- PARTICIPANT - actions -->
+              <PresentationRoomParticipantActions v-else />
+
+              <!-- ALL - room data (participants count, reactions, answers count) -->
+              <PresentationRoomHostData />
+
+              <!-- HOST - controls (← / →) -->
+              <PresentationRoomHostSlideControls
+                :is-mouse-active="isMouseActive"
+                @change-slide="handleSlideChange($event)"
+                @hover="clearIsMouseActiveTimeout()"
               />
-            </template>
 
-            <!-- PARTICIPANT - leaderboard -->
-            <PresentationRoomParticipantLeaderboard
-              v-if="!isHost && slide?.type === SLIDE_TYPES.LEADERBOARD"
-              :key="'leaderboard__' + slide?.id"
-            />
-
-            <!-- HOST - actions -->
-            <PresentationRoomHostActions v-if="isHost" />
-
-            <!-- PARTICIPANT - actions -->
-            <PresentationRoomParticipantActions v-else />
-
-            <!-- ALL - room data (participants count, reactions, answers count) -->
-            <PresentationRoomHostData />
-
-            <!-- HOST - controls (← / →) -->
-            <PresentationRoomHostSlideControls
-              :is-mouse-active="isMouseActive"
-              @change-slide="handleSlideChange($event)"
-              @hover="clearIsMouseActiveTimeout()"
-            />
-
-            <!-- HOST - quiz in progress warning  -->
-            <q-dialog v-model="showQuizInProgressWarning">
-              <ConfirmationDialog
-                icon="r_pending"
-                icon-color="primary"
-                :title="
-                  $t('presentationRoom.quizCountdown.inProgressWarning.title')
-                "
-                :message="
-                  $t('presentationRoom.quizCountdown.inProgressWarning.message')
-                "
-                :cancel-btn-text="
-                  $t('presentationRoom.quizCountdown.inProgressWarning.stay') +
-                  ` (${quizInProgressWarningAutoCloseCountdown} ${$t(
-                    'presentationRoom.quizCountdown.inProgressWarning.sec',
-                  )})`
-                "
-                :confirm-btn-text="
-                  $t('presentationRoom.quizCountdown.inProgressWarning.leave')
-                "
-                confirm-btn-color="primary"
-                @cancel="showQuizInProgressWarning = false"
-                @confirm="
-                  room.is_quiz_started = false;
-                  handleSlideChange(slideChangeDirection);
-                "
-              />
-            </q-dialog>
+              <!-- HOST - quiz in progress warning  -->
+              <q-dialog v-model="showQuizInProgressWarning">
+                <ConfirmationDialog
+                  icon="r_pending"
+                  icon-color="primary"
+                  :title="
+                    $t('presentationRoom.quizCountdown.inProgressWarning.title')
+                  "
+                  :message="
+                    $t(
+                      'presentationRoom.quizCountdown.inProgressWarning.message',
+                    )
+                  "
+                  :cancel-btn-text="
+                    $t(
+                      'presentationRoom.quizCountdown.inProgressWarning.stay',
+                    ) +
+                    ` (${quizInProgressWarningAutoCloseCountdown} ${$t(
+                      'presentationRoom.quizCountdown.inProgressWarning.sec',
+                    )})`
+                  "
+                  :confirm-btn-text="
+                    $t('presentationRoom.quizCountdown.inProgressWarning.leave')
+                  "
+                  confirm-btn-color="primary"
+                  @cancel="showQuizInProgressWarning = false"
+                  @confirm="
+                    room.is_quiz_started = false;
+                    handleSlideChange(slideChangeDirection);
+                  "
+                />
+              </q-dialog>
+            </div>
           </div>
         </div>
       </div>
