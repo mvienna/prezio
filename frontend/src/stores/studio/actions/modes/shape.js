@@ -299,6 +299,9 @@ export function setShapeCustomization(node) {
     fill: node.fillLinearGradientColorStops()
       ? node.fillLinearGradientColorStops()[1]
       : node.fill(),
+    linearGradientDegrees:
+      node.getAttr("linearGradientDegrees") ||
+      this.shape.default.linearGradientDegrees,
   };
 
   if (
@@ -320,6 +323,7 @@ export function applyShapeCustomization(node) {
     shadowBlur: this.shape.shadowBlur,
     shadowOffset: this.shape.shadowOffset,
     shadowOpacity: this.shape.shadowOpacity,
+    linearGradientDegrees: this.shape.linearGradientDegrees,
   });
 
   if (node.getAttr("shape") === SHAPE_OPTIONS.RECT.name) {
@@ -338,21 +342,38 @@ export function applyShapeCustomization(node) {
   }
 
   if (this.shape.fillLinearGradientColorStops) {
-    // const isAbstract = Object.values(SHAPE_OPTIONS)
-    //   .filter((item) => item.group === SHAPE_TYPES.ABSTRACT)
-    //   .map((item) => item.name)
-    //   .includes(node.getAttr("shape"));
+    const radians = ((-45 + this.shape.linearGradientDegrees) * Math.PI) / 180;
+
+    const centerX = node.width() / 2;
+    const centerY = node.height() / 2;
+
+    const rotatedStartX =
+      Math.cos(radians) * (0 - centerX) -
+      Math.sin(radians) * (0 - centerY) +
+      centerX;
+    const rotatedStartY =
+      Math.sin(radians) * (0 - centerX) +
+      Math.cos(radians) * (0 - centerY) +
+      centerY;
+    const rotatedEndX =
+      Math.cos(radians) * (node.width() - centerX) -
+      Math.sin(radians) * (node.height() - centerY) +
+      centerX;
+    const rotatedEndY =
+      Math.sin(radians) * (node.width() - centerX) +
+      Math.cos(radians) * (node.height() - centerY) +
+      centerY;
 
     node.setAttrs({
       fill: undefined,
       fillLinearGradientColorStops: this.shape.fillLinearGradientColorStops,
       fillLinearGradientStartPoint: {
-        x: 0,
-        y: 0,
+        x: rotatedStartX,
+        y: rotatedStartY,
       },
       fillLinearGradientEndPoint: {
-        x: node.width(),
-        y: node.height(),
+        x: rotatedEndX,
+        y: rotatedEndY,
       },
     });
   } else {

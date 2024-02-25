@@ -63,6 +63,7 @@
       <q-slide-transition>
         <div v-if="fillMode === 'linearGradient'">
           <div class="q-px-sm q-py-md">
+            <!-- color selection -->
             <div class="row no-wrap justify-between q-px-md">
               <!-- from -->
               <div class="column no-wrap items-center">
@@ -113,6 +114,7 @@
               </div>
             </div>
 
+            <!-- gradient preview -->
             <div
               :style="{ 'background-image': `url(${chessboard})` }"
               style="width: 100%; height: 20px"
@@ -121,9 +123,17 @@
               <div
                 class="absolute-center"
                 style="width: 100%; height: 100%"
-                :style="`background: linear-gradient(45deg, ${shape.fillLinearGradientColorStops[1]}, ${shape.fillLinearGradientColorStops[3]});`"
+                :style="`background: linear-gradient(${shape.linearGradientDegrees || shape.linearGradientDegrees === 0 ? 90 + shape.linearGradientDegrees : shape.default.linearGradientDegrees}deg, ${shape.fillLinearGradientColorStops[1]}, ${shape.fillLinearGradientColorStops[3]});`"
               ></div>
             </div>
+
+            <!-- degrees slider -->
+            <DegreesSlider
+              @update="
+                shape.linearGradientDegrees = $event;
+                studioStore.applyCustomization();
+              "
+            />
           </div>
         </div>
       </q-slide-transition>
@@ -544,13 +554,14 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useStudioStore } from "stores/studio";
 import { storeToRefs } from "pinia";
 import {
   SHAPE_OPTIONS,
   SHAPE_TYPES,
 } from "src/constants/canvas/canvasVariables";
+import DegreesSlider from "components/DegreesSlider.vue";
 
 /*
  * stores

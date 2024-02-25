@@ -186,6 +186,7 @@ export const useStudioStore = defineStore("studio", {
         1,
         COLOR_PALETTE.SECONDARY,
       ],
+      linearGradientDegrees: 0,
       dash: [10, 0],
 
       default: {
@@ -205,6 +206,7 @@ export const useStudioStore = defineStore("studio", {
           1,
           COLOR_PALETTE.SECONDARY,
         ],
+        linearGradientDegrees: 0,
         dash: [10, 0],
       },
     },
