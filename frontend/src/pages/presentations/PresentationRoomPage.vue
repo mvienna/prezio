@@ -1203,7 +1203,6 @@ useMeta(metaOptions);
   width: 100%;
   height: auto;
   aspect-ratio: 16 / 9;
-  background: $white;
   overflow-x: hidden;
 }
 
