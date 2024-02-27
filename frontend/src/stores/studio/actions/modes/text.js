@@ -271,6 +271,7 @@ export function processText(textNode) {
       this.transformer.default?.show();
       this.transformer.default?.forceUpdate();
       this.mode = null;
+      this.handleSlideUpdate();
     };
 
     const setTextareaWidth = (newWidth) => {
