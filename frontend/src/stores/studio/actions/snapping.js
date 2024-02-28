@@ -10,12 +10,12 @@ const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);
 
 export function handleSnapping() {
-  this.layers.default.on("dragmove", this.handleSnappingDragMove);
-  this.layers.default.on("dragend", this.handleSnappingDragEnd);
+  this.layers.default.on("dragmove", this.handleSnappingOnDrag);
+  this.layers.default.on("dragend", this.handleSnappingEnd);
 }
 
 // where can we snap our objects?
-export function handleSnappingGetLineGuideStops(skipShape) {
+export function getSnappingLineGuideStops(skipShape) {
   let vertical = [
     0,
     this.stages.default.width() / 2,
@@ -46,10 +46,8 @@ export function handleSnappingGetLineGuideStops(skipShape) {
   return { vertical, horizontal };
 }
 
-// what points of the object will trigger to snapping?
-// it can be just center of the object
-// but we will enable all edges and center
-export function handleSnappingGetObjectEdges(node) {
+// what points of the object will trigger to snapping? it can be just center of the object, but we will enable all edges and center
+export function getSnappingObjectEdges(node) {
   const box = node.getClientRect();
   const absPos = node.absolutePosition();
 
@@ -92,7 +90,7 @@ export function handleSnappingGetObjectEdges(node) {
 }
 
 // find all snapping possibilities and then filter to keep only the nearest guides
-export function handleSnappingGetGuides(lineGuideStops, itemBounds) {
+export function getSnappingGuides(lineGuideStops, itemBounds) {
   let guides = [];
 
   // Existing logic to find all possible guides
@@ -124,7 +122,7 @@ export function handleSnappingGetGuides(lineGuideStops, itemBounds) {
     });
   });
 
-  // Function to find the nearest guide lines for snapping, considering elements of the same size
+  // function to find the nearest guidelines for snapping, considering elements of the same size
   function findNearestGuides(guides, currentPosition, itemBounds) {
     let vGuides = { start: null, center: null, end: null };
     let hGuides = { start: null, center: null, end: null };
@@ -157,20 +155,17 @@ export function handleSnappingGetGuides(lineGuideStops, itemBounds) {
     );
   }
 
-  // Determine the position of the currently dragged element
+  // determine the position of the currently dragged element
   const currentPosition = {
     x: itemBounds.vertical[0] ? itemBounds.vertical[0].guide : 0,
     y: itemBounds.horizontal[0] ? itemBounds.horizontal[0].guide : 0,
   };
 
-  // Filter to find the nearest guides, including top, middle, and bottom
-  const nearestGuides = findNearestGuides(guides, currentPosition, itemBounds);
-
-  // Return only the nearest guides
-  return nearestGuides;
+  // filter to find the nearest guides, including top, middle, and bottom
+  return findNearestGuides(guides, currentPosition, itemBounds);
 }
 
-export function handleSnappingDrawGuides(guides) {
+export function drawSnappingGuides(guides) {
   guides.forEach((lg) => {
     if (lg.orientation === "H") {
       const line = new Konva.Line({
@@ -209,7 +204,7 @@ export function handleSnappingDrawGuides(guides) {
   });
 }
 
-export function handleSnappingDragMove(event) {
+export function handleSnappingOnDrag(event) {
   // disable dragging while in drawing mode
   if (this.mode === this.MODE_OPTIONS.DRAWING) return;
 
@@ -217,22 +212,22 @@ export function handleSnappingDragMove(event) {
   if ([this.transformer.default?._id].includes(event.target._id)) return;
 
   // clear all previous lines on the screen
-  this.layers.default.find(".guid-line").forEach((l) => l.destroy());
+  this.handleSnappingEnd();
 
   // find possible snapping lines
-  const lineGuideStops = this.handleSnappingGetLineGuideStops(event.target);
+  const lineGuideStops = this.getSnappingLineGuideStops(event.target);
   // find snapping points of current object
-  const itemBounds = this.handleSnappingGetObjectEdges(event.target);
+  const itemBounds = this.getSnappingObjectEdges(event.target);
 
   // now find where can we snap current object
-  const guides = this.handleSnappingGetGuides(lineGuideStops, itemBounds);
+  const guides = this.getSnappingGuides(lineGuideStops, itemBounds);
 
   // do nothing of no snapping
   if (!guides.length) {
     return;
   }
 
-  this.handleSnappingDrawGuides(guides);
+  this.drawSnappingGuides(guides);
 
   const absPos = event.target.absolutePosition();
   // now force object position
@@ -282,7 +277,7 @@ export function handleSnappingDragMove(event) {
   event.target.absolutePosition(absPos);
 }
 
-export function handleSnappingDragEnd() {
+export function handleSnappingEnd() {
   // clear all previous lines on the screen
   this.layers.default.find(".guid-line").forEach((l) => l.destroy());
 }

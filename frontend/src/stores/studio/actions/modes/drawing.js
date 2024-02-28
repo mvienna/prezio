@@ -87,6 +87,7 @@ export function handleDrawingMouseUp() {
 
 export function processDrawing(drawing) {
   drawing.on("dragstart", this.handleSelectionDragStart);
+  drawing.on("transformend", this.handleSnappingEnd);
 }
 
 export function setDrawingCustomization(node) {
