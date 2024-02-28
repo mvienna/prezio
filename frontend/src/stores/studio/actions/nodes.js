@@ -22,7 +22,17 @@ export function pasteNodes(nodes = this.copiedNodes) {
     let clone = node.clone();
     clone.x(clone.x() + 100);
     clone.y(clone.y() + 100);
+
+    // calculate new z-index for the cloned node
+    const originalZIndex = node.zIndex();
+    const newZIndex = originalZIndex + 1;
+
     this.layers.default.add(clone);
+
+    // ensure the clone is placed right above the original node
+    clone.moveToTop(); // temp. move to top to ensure it's above any node
+    clone.zIndex(newZIndex); // set its z-index to be right above the original
+
     switch (clone.getClassName()) {
       case this.MODE_OPTIONS.IMAGE:
         this.processImageNode(
