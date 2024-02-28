@@ -18,6 +18,9 @@
         >
           <div class="slide relative-position" id="stage-parent">
             <div id="container"></div>
+
+            <!-- slide data (reactions, answers, participants online) -->
+            <PresentationStudioRoomData />
           </div>
         </teleport>
       </div>
@@ -36,9 +39,6 @@
     <PresentationAddons
       v-if="isLoaded && slide?.type !== SLIDE_TYPES.CONTENT"
     />
-
-    <!-- slide data (reactions, answers, participants online) -->
-    <PresentationStudioRoomData />
 
     <!-- actions (results) -->
     <PresentationStudioRoomActions />

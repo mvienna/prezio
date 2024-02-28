@@ -138,7 +138,7 @@ watch(
   border-radius: 24px;
   z-index: 2;
   height: 24px;
-  margin-top: calc(-24px - 24px - 8px);
+  margin-top: calc(-24px - 24px);
   margin-right: 24px;
   transition: 0.2s;
 
