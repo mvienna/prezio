@@ -239,7 +239,7 @@
       transition-show="jump-down"
       transition-hide="jump-up"
       :offset="[0, 8]"
-      class="no-padding"
+      style="padding: 0; padding-bottom: 16px"
     >
       <!-- stroke color -->
       <q-color
@@ -249,6 +249,97 @@
         v-model="image.stroke"
         @change="studioStore.applyCustomization()"
       />
+
+      <!-- stroke types -->
+      <div class="row no-wrap justify-between q-px-md q-pt-md">
+        <!-- no border -->
+        <q-btn
+          round
+          flat
+          size="sm"
+          :class="{ 'bg-grey-2': image.strokeWidth === 0 }"
+          @click="
+            () => {
+              image.strokeWidth = 0;
+              image.dash[1] = 0;
+              studioStore.applyCustomization();
+            }
+          "
+        >
+          <q-icon name="hide_source" size="16px" />
+        </q-btn>
+
+        <!-- normal -->
+        <q-btn
+          icon="r_remove"
+          round
+          flat
+          size="sm"
+          :class="{
+            'bg-grey-2': image.strokeWidth !== 0 && image.dash[1] === 0,
+          }"
+          @click="
+            () => {
+              if (!image.strokeWidth) {
+                image.strokeWidth = 5;
+              }
+
+              image.dash[1] = 0;
+
+              studioStore.applyCustomization();
+            }
+          "
+        />
+
+        <!-- dashed -->
+        <q-btn
+          icon="icon-dashed"
+          round
+          flat
+          size="sm"
+          :class="{
+            'bg-grey-2':
+              image.strokeWidth !== 0 &&
+              image.dash[1] !== 0 &&
+              image.dash[0] !== image.strokeWidth,
+          }"
+          @click="
+            () => {
+              if (!image.strokeWidth) {
+                image.strokeWidth = 5;
+              }
+
+              image.dash[0] = 10;
+              image.dash[1] = 5;
+
+              studioStore.applyCustomization();
+            }
+          "
+        />
+
+        <!-- dashed dot -->
+        <q-btn
+          icon="icon-dashed__dot"
+          round
+          flat
+          size="sm"
+          :class="{
+            'bg-grey-2':
+              image.strokeWidth !== 0 && image.dash[0] === image.strokeWidth,
+          }"
+          @click="
+            () => {
+              if (!image.strokeWidth) {
+                image.strokeWidth = 5;
+              }
+
+              image.dash = [image.strokeWidth, image.strokeWidth];
+
+              studioStore.applyCustomization();
+            }
+          "
+        />
+      </div>
 
       <!-- stroke width -->
       <div class="q-pt-md q-px-md">
@@ -281,7 +372,7 @@
       </div>
 
       <!-- dash width -->
-      <div class="q-py-md q-px-md">
+      <div v-if="image.dash[1] !== 0" class="q-pt-md q-px-md">
         <div class="text-caption text-grey">
           {{ $t("presentationStudio.toolbar.image.stroke.dash.width") }}
         </div>
@@ -300,36 +391,6 @@
           v-model.number="image.dash[0]"
           :min="0"
           :max="100"
-          type="number"
-          placeholder="0"
-          suffix="px"
-          style="min-width: 90px; width: 80px"
-          outlined
-          dense
-          @change="studioStore.applyCustomization()"
-        />
-      </div>
-
-      <!-- dash gap -->
-      <div class="q-pb-md q-px-md">
-        <div class="text-caption text-grey">
-          {{ $t("presentationStudio.toolbar.image.stroke.dash.gap") }}
-        </div>
-
-        <q-slider
-          v-model="image.dash[1]"
-          :min="0"
-          :max="50"
-          label
-          thumb-size="14px"
-          :label-value="image.dash[1] + 'px'"
-          @change="studioStore.applyCustomization()"
-        />
-
-        <q-input
-          v-model.number="image.dash[1]"
-          :min="0"
-          :max="50"
           type="number"
           placeholder="0"
           suffix="px"
