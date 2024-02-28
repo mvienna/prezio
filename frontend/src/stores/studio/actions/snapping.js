@@ -27,6 +27,20 @@ export function getSnappingLineGuideStops(skipShape) {
     this.stages.default.height(),
   ];
 
+  if (this.transformer?.custom.shape?.node) {
+    this.stages.default
+      .find((node) =>
+        Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
+      )
+      .filter((node) => this.transformer?.custom.shape?.node?._id === node._id)
+      .forEach((guideItem) => {
+        const box = guideItem.getClientRect();
+
+        vertical.push(box.x + box.width / 2);
+        horizontal.push(box.y + box.height / 2);
+      });
+  }
+
   this.stages.default
     .find((node) =>
       Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
@@ -93,11 +107,15 @@ export function getSnappingObjectEdges(node) {
 export function getSnappingGuides(lineGuideStops, itemBounds) {
   let guides = [];
 
+  const offset = this.transformer?.custom.shape?.node
+    ? 2
+    : this.snapping.GUIDELINE_OFFSET;
+
   // Existing logic to find all possible guides
   lineGuideStops.vertical.forEach((lineGuide) => {
     itemBounds.vertical.forEach((itemBound) => {
       const diff = Math.abs(lineGuide - itemBound.guide);
-      if (diff < this.snapping.GUIDELINE_OFFSET) {
+      if (diff < offset) {
         guides.push({
           lineGuide: lineGuide,
           offset: itemBound.offset,
@@ -111,7 +129,7 @@ export function getSnappingGuides(lineGuideStops, itemBounds) {
   lineGuideStops.horizontal.forEach((lineGuide) => {
     itemBounds.horizontal.forEach((itemBound) => {
       const diff = Math.abs(lineGuide - itemBound.guide);
-      if (diff < this.snapping.GUIDELINE_OFFSET) {
+      if (diff < offset) {
         guides.push({
           lineGuide: lineGuide,
           offset: itemBound.offset,
