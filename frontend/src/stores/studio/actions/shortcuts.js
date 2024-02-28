@@ -1,205 +1,204 @@
 export function handleShortcuts(event) {
-  /*
-   * save
-   */
-  if (event.ctrlKey || event.metaKey) {
-    if (event.key === "s") {
-      event.preventDefault();
-      this.handleSlideUpdate();
-    }
-  }
-
+  // disable other shortcuts on text editing OR when focused on an input
   const activeElement = document.activeElement;
   if (activeElement && activeElement.tagName === "INPUT") return;
   if (this.mode === this.MODE_OPTIONS.TEXT_EDITING) return;
 
-  const isTextSelected = () => {
-    return this.transformer.default
-      ?.nodes()
-      ?.filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT)
-      .length;
-  };
+  // delete selected nodes
+  if (["Delete", "Backspace"].includes(event.key)) {
+    this.deleteNodes();
+    return;
+  }
 
-  switch (event.key) {
-    // delete
-    case "Delete":
-    case "Backspace":
-      this.deleteNodes();
-      break;
+  // remove selection
+  if (["Escape", "Enter"].includes(event.key)) {
+    event.preventDefault();
+    this.deselectElements();
+    return;
+  }
 
-    // deselect elements
-    case "Escape":
-    case "Enter":
+  const isTextSelected = this.transformer.default
+    ?.nodes()
+    ?.filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT).length;
+
+  if (event.ctrlKey || event.metaKey) {
+    /* * * * * * * * * */
+    /* text formatting */
+    /* * * * * * * * * */
+
+    // bold: ctrl/cmd + b
+    if (event.keyCode === 66) {
+      if (!isTextSelected) return;
       event.preventDefault();
-      this.deselectElements();
-      break;
 
-    // deselect elements
-    case "a":
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
+      this.text.fontStyle = (
+        this.text.fontStyle.includes("bold")
+          ? this.text.fontStyle.replace("bold", "")
+          : this.text.fontStyle.replace("normal", "") + " bold"
+      )
+        .replace(/\s+/g, " ")
+        .trim();
 
-        this.transformer.default?.nodes(
-          this.layers.default
-            .getChildren()
-            .filter((node) =>
-              Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
-            ),
-        );
+      this.applyCustomization();
+      return;
+    }
 
-        this.applyTransformerCustomization();
+    // underline: ctrl/cmd + u
+    if (event.keyCode === 85) {
+      if (!isTextSelected) return;
+      event.preventDefault();
+
+      this.text.textDecoration = (
+        this.text.textDecoration.includes("underline")
+          ? this.text.textDecoration.replace("underline", "")
+          : this.text.textDecoration + " underline"
+      )
+        .replace(/\s+/g, " ")
+        .trim();
+
+      this.applyCustomization();
+      return;
+    }
+
+    // italic: ctrl/cmd + i
+    if (event.keyCode === 73) {
+      if (!isTextSelected) return;
+      event.preventDefault();
+
+      this.text.fontStyle = (
+        this.text.fontStyle.includes("italic")
+          ? this.text.fontStyle.replace("italic", "")
+          : this.text.fontStyle.replace("normal", "") + " italic"
+      )
+        .replace(/\s+/g, " ")
+        .trim();
+
+      this.applyCustomization();
+      return;
+    }
+
+    // strike-through: ctrl/cmd + shift + x
+    if (event.keyCode === 88 && event.shiftKey) {
+      event.preventDefault();
+
+      this.text.textDecoration = (
+        this.text.textDecoration.includes("line-through")
+          ? this.text.textDecoration.replace("line-through", "")
+          : this.text.textDecoration + " line-through"
+      )
+        .replace(/\s+/g, " ")
+        .trim();
+
+      this.applyCustomization();
+      return;
+    }
+
+    /* * * * * * * * */
+    /* nodes actions */
+    /* * * * * * * * */
+
+    // select all nodes: ctrl/cmd + a
+    if (event.keyCode === 65) {
+      event.preventDefault();
+
+      this.transformer.default?.nodes(
+        this.layers.default
+          .getChildren()
+          .filter((node) =>
+            Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
+          ),
+      );
+
+      this.applyTransformerCustomization();
+      return;
+    }
+
+    // copy: ctrl/cmd + c
+    if (event.keyCode === 67) {
+      event.preventDefault();
+      this.copyNodes();
+      return;
+    }
+
+    // cut: ctrl/cmd + x
+    if (event.keyCode === 88) {
+      event.preventDefault();
+      this.cutNodes();
+      return;
+    }
+
+    // paste: ctrl/cmd + v
+    if (event.keyCode === 86) {
+      event.preventDefault();
+      this.pasteNodes();
+      return;
+    }
+
+    // duplicate: ctrl/cmd + d
+    if (event.keyCode === 68) {
+      event.preventDefault();
+      this.duplicateNodes();
+      return;
+    }
+
+    // move up: ctrl/cmd + ↑
+    // move to the top: ctrl/cmd + shift + ↑
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+
+      if (event.shiftKey) {
+        this.moveToTop();
+      } else {
+        this.moveUp();
       }
-      break;
 
-    // bold
-    case "b":
-      if (!isTextSelected()) return;
+      return;
+    }
 
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-        this.text.fontStyle = (
-          this.text.fontStyle.includes("bold")
-            ? this.text.fontStyle.replace("bold", "")
-            : this.text.fontStyle.replace("normal", "") + " bold"
-        )
-          .replace(/\s+/g, " ")
-          .trim();
-        this.applyCustomization();
+    // move down: ctrl/cmd + ↓
+    // move to the bottom: ctrl/cmd + shift + ↓
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+
+      if (event.shiftKey) {
+        this.moveToBottom();
+      } else {
+        this.moveDown();
       }
-      break;
 
-    // underline
-    case "u":
-      if (!isTextSelected()) return;
+      return;
+    }
 
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-        this.text.textDecoration = (
-          this.text.textDecoration.includes("underline")
-            ? this.text.textDecoration.replace("underline", "")
-            : this.text.textDecoration + " underline"
-        )
-          .replace(/\s+/g, " ")
-          .trim();
-        this.applyCustomization();
-      }
-      break;
+    /* * * * * * * * */
+    /* slide actions */
+    /* * * * * * * * */
 
-    // italic
-    case "i":
-      if (!isTextSelected()) return;
+    // save: ctrl/cmd + s
+    if (event.keyCode === 83) {
+      event.preventDefault();
+      this.handleSlideUpdate();
+      return;
+    }
 
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-        this.text.fontStyle = (
-          this.text.fontStyle.includes("italic")
-            ? this.text.fontStyle.replace("italic", "")
-            : this.text.fontStyle.replace("normal", "") + " italic"
-        )
-          .replace(/\s+/g, " ")
-          .trim();
-        this.applyCustomization();
-      }
-      break;
+    // undo: ctrl/cmd + z
+    // redo: ctrl/cmd + shift + z
+    if (event.keyCode === 90) {
+      event.preventDefault();
 
-    // cut
-    // strike-through
-    case "x":
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-
-        if (event.shiftKey) {
-          this.text.textDecoration = (
-            this.text.textDecoration.includes("line-through")
-              ? this.text.textDecoration.replace("line-through", "")
-              : this.text.textDecoration + " line-through"
-          )
-            .replace(/\s+/g, " ")
-            .trim();
-          this.applyCustomization();
-        } else {
-          this.cutNodes();
-        }
-      }
-      break;
-
-    // copy
-    case "c":
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-        this.copyNodes();
-      }
-      break;
-
-    // paste
-    case "v":
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-        this.pasteNodes();
-      }
-      break;
-
-    // duplicate
-    case "d":
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-        this.duplicateNodes();
-      }
-      break;
-
-    /*
-     * undo / redo
-     */
-    case "z":
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-
-        if (event.shiftKey) {
-          this.redo();
-        } else {
-          this.undo();
-        }
-      }
-      break;
-
-    case "y":
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
+      if (event.shiftKey) {
         this.redo();
+      } else {
+        this.undo();
       }
-      break;
 
-    /*
-     * move up || down || top || bottom
-     */
-    case "ArrowDown":
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
+      return;
+    }
 
-        // move to bottom
-        if (event.shiftKey) {
-          this.moveToBottom();
-
-          // move down
-        } else {
-          this.moveDown();
-        }
-      }
-      break;
-
-    case "ArrowUp":
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-
-        // move to top
-        if (event.shiftKey) {
-          this.moveToTop();
-
-          // move up
-        } else {
-          this.moveUp();
-        }
-      }
-      break;
+    // redo: ctrl/cmd + y
+    if (event.keyCode === 89) {
+      event.preventDefault();
+      this.redo();
+      return;
+    }
   }
 }

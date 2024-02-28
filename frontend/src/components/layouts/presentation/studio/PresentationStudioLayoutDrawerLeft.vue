@@ -476,9 +476,9 @@ const handleSlideMenuKeyDownEvent = (event, slide, index) => {
     handleSlideDeletion(slide);
   }
 
+  // duplicate: ctrl/cmd + d
   if (event.ctrlKey || event.metaKey) {
-    // duplicate
-    if (event.key === "d") {
+    if (event.keyCode === 68) {
       event.preventDefault();
       handleDuplicatingSlide(slide);
       showSlideContextMenu.value[index] = false;
