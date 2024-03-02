@@ -28,34 +28,26 @@ export function getSnappingLineGuideStops(skipShape) {
   ];
 
   if (this.transformer?.custom.shape?.node) {
+    const box = this.transformer?.custom.shape?.node.getClientRect();
+    vertical.push(box.x + box.width / 2);
+    horizontal.push(box.y + box.height / 2);
+  } else {
     this.stages.default
       .find((node) =>
         Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
       )
-      .filter((node) => this.transformer?.custom.shape?.node?._id === node._id)
+      .filter((node) => node._id !== skipShape._id)
+      .filter((node) => this.transformer?.custom.shape?.node?._id !== node._id)
       .forEach((guideItem) => {
+        if (guideItem === skipShape) {
+          return;
+        }
         const box = guideItem.getClientRect();
 
-        vertical.push(box.x + box.width / 2);
-        horizontal.push(box.y + box.height / 2);
+        vertical.push(box.x, box.x + box.width, box.x + box.width / 2);
+        horizontal.push(box.y, box.y + box.height, box.y + box.height / 2);
       });
   }
-
-  this.stages.default
-    .find((node) =>
-      Object.values(this.MODE_OPTIONS).includes(node.getAttr("name")),
-    )
-    .filter((node) => node._id !== skipShape._id)
-    .filter((node) => this.transformer?.custom.shape?.node?._id !== node._id)
-    .forEach((guideItem) => {
-      if (guideItem === skipShape) {
-        return;
-      }
-      const box = guideItem.getClientRect();
-
-      vertical.push(box.x, box.x + box.width, box.x + box.width / 2);
-      horizontal.push(box.y, box.y + box.height, box.y + box.height / 2);
-    });
 
   return { vertical, horizontal };
 }
@@ -65,57 +57,73 @@ export function getSnappingObjectEdges(node) {
   const box = node.getClientRect();
   const absPos = node.absolutePosition();
 
-  return {
-    vertical: [
-      {
+  const itemBounds = {
+    vertical: {
+      start: {
         guide: Math.round(box.x),
         offset: Math.round(absPos.x - box.x),
         snap: "start",
       },
-      {
+      center: {
         guide: Math.round(box.x + box.width / 2),
         offset: Math.round(absPos.x - box.x - box.width / 2),
         snap: "center",
       },
-      {
+      end: {
         guide: Math.round(box.x + box.width),
         offset: Math.round(absPos.x - box.x - box.width),
         snap: "end",
       },
-    ],
-    horizontal: [
-      {
+    },
+    horizontal: {
+      start: {
         guide: Math.round(box.y),
         offset: Math.round(absPos.y - box.y),
         snap: "start",
       },
-      {
+      center: {
         guide: Math.round(box.y + box.height / 2),
         offset: Math.round(absPos.y - box.y - box.height / 2),
         snap: "center",
       },
-      {
+      end: {
         guide: Math.round(box.y + box.height),
         offset: Math.round(absPos.y - box.y - box.height),
         snap: "end",
       },
-    ],
+    },
   };
+
+  const result = {
+    vertical: [itemBounds.vertical.center],
+    horizontal: [itemBounds.horizontal.center],
+  };
+
+  if (!this.transformer?.custom.shape?.node) {
+    result.vertical = [
+      ...result.vertical,
+      itemBounds.vertical.start,
+      itemBounds.vertical.end,
+    ];
+    result.horizontal = [
+      ...result.horizontal,
+      itemBounds.horizontal.start,
+      itemBounds.horizontal.end,
+    ];
+  }
+
+  return result;
 }
 
 // find all snapping possibilities and then filter to keep only the nearest guides
 export function getSnappingGuides(lineGuideStops, itemBounds) {
   let guides = [];
 
-  const offset = this.transformer?.custom.shape?.node
-    ? 2
-    : this.snapping.GUIDELINE_OFFSET;
-
   // Existing logic to find all possible guides
   lineGuideStops.vertical.forEach((lineGuide) => {
     itemBounds.vertical.forEach((itemBound) => {
       const diff = Math.abs(lineGuide - itemBound.guide);
-      if (diff < offset) {
+      if (diff < this.snapping.GUIDELINE_OFFSET) {
         guides.push({
           lineGuide: lineGuide,
           offset: itemBound.offset,
@@ -129,7 +137,7 @@ export function getSnappingGuides(lineGuideStops, itemBounds) {
   lineGuideStops.horizontal.forEach((lineGuide) => {
     itemBounds.horizontal.forEach((itemBound) => {
       const diff = Math.abs(lineGuide - itemBound.guide);
-      if (diff < offset) {
+      if (diff < this.snapping.GUIDELINE_OFFSET) {
         guides.push({
           lineGuide: lineGuide,
           offset: itemBound.offset,
