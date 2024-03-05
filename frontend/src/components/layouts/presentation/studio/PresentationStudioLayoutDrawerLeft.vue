@@ -256,10 +256,7 @@
                     clickable
                     dense
                     v-close-popup
-                    :disable="
-                      presentation.slides.length === 1 ||
-                      isDeletionAvailable(element) !== false
-                    "
+                    :disable="presentation.slides.length === 1"
                     @click="handleSlideDeletion(element)"
                   >
                     <q-icon
@@ -389,30 +386,6 @@ const { transformer } = storeToRefs(studioStore);
  * slide context menu
  */
 const showSlideContextMenu = ref([]);
-
-const isDeletionAvailable = (item) => {
-  const leaderboards = presentation.value.slides.filter(
-    (slideItem) => slideItem.type === SLIDE_TYPES.LEADERBOARD,
-  );
-
-  const quizTypeSlides = presentation.value.slides.filter((slideItem) =>
-    SLIDE_TYPES_OF_QUIZ.includes(slideItem.type),
-  );
-
-  const otherSlides = presentation.value.slides.filter(
-    (slideItem) =>
-      ![...SLIDE_TYPES_OF_QUIZ, SLIDE_TYPES.LEADERBOARD].includes(
-        slideItem.type,
-      ),
-  );
-
-  return (
-    quizTypeSlides.length === 1 &&
-    SLIDE_TYPES_OF_QUIZ.includes(item.type) &&
-    leaderboards.length &&
-    !otherSlides.length
-  );
-};
 
 const handleSlideDeletion = async (item) => {
   if (presentation.value.slides.length === 1) return;

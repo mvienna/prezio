@@ -162,8 +162,7 @@ export function processImageNode(
   );
   image.setAttrs(crop);
 
-  // on transform
-  const handleTransform = () => {
+  image.on("transform", (event) => {
     image.setAttrs({
       scaleX: 1,
       scaleY: 1,
@@ -179,9 +178,9 @@ export function processImageNode(
       this.image.clipPosition,
     );
     image.setAttrs(crop);
-  };
+  });
 
-  image.on("transform", handleTransform);
+  image.on("transformend", this.handleSnappingEnd);
   image.on("dragstart", this.handleSelectionDragStart);
 }
 

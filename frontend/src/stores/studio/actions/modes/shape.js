@@ -272,7 +272,10 @@ export function addShape(shapeName) {
 }
 
 export function processShape(shape) {
-  shape.on("transformend", this.handleSlideUpdate);
+  shape.on("transformend", () => {
+    this.handleSlideUpdate();
+    this.handleSnappingEnd();
+  });
   shape.on("dragstart", this.handleSelectionDragStart);
 }
 

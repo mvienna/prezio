@@ -38,7 +38,8 @@ export function addText(config = {}, isSave = true) {
 
   this.layers.default.add(textNode);
 
-  textNode.on("transformend", this.handleSlideUpdate);
+  // todo: does it really need to be here?
+  // textNode.on("transformend", this.handleSlideUpdate);
   this.processText(textNode);
 
   if (isSave) {
@@ -167,6 +168,8 @@ export function processText(textNode) {
       scaleX: 1,
     });
   });
+
+  textNode.on("transformend", this.handleSnappingEnd);
 
   textNode.on("mouseover", () => {
     this.showTitleTooltip = true;
