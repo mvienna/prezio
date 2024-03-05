@@ -1,7 +1,7 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.woff?5810da930be524db0b51a54e63fd4e3e") format("woff"),
-url("./icons.woff2?5810da930be524db0b51a54e63fd4e3e") format("woff2");
+    src: url("./icons.woff?0ef080111f594411c0433c36e9571f1b") format("woff"),
+url("./icons.woff2?0ef080111f594411c0433c36e9571f1b") format("woff2");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -105,63 +105,66 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
 .icon-leaderboard:before {
     content: "\f11e";
 }
-.icon-logout:before {
+.icon-letter_spacing:before {
     content: "\f11f";
 }
-.icon-mdi_border_color_bottom:before {
+.icon-logout:before {
     content: "\f120";
 }
-.icon-mdi_border_color_top:before {
+.icon-mdi_border_color_bottom:before {
     content: "\f121";
 }
-.icon-mdi_border_outer_dots:before {
+.icon-mdi_border_color_top:before {
     content: "\f122";
 }
-.icon-mdi_border_outer_stroke:before {
+.icon-mdi_border_outer_dots:before {
     content: "\f123";
 }
-.icon-mdi_format_color_bottom:before {
+.icon-mdi_border_outer_stroke:before {
     content: "\f124";
 }
-.icon-mdi_format_color_fill_bottom:before {
+.icon-mdi_format_color_bottom:before {
     content: "\f125";
 }
-.icon-mdi_format_color_fill_top:before {
+.icon-mdi_format_color_fill_bottom:before {
     content: "\f126";
 }
-.icon-mdi_format_color_top:before {
+.icon-mdi_format_color_fill_top:before {
     content: "\f127";
 }
-.icon-olive-branches-award:before {
+.icon-mdi_format_color_top:before {
     content: "\f128";
 }
-.icon-page_info:before {
+.icon-olive-branches-award:before {
     content: "\f129";
 }
-.icon-presentation:before {
+.icon-page_info:before {
     content: "\f12a";
 }
-.icon-profile_group:before {
+.icon-presentation:before {
     content: "\f12b";
 }
-.icon-shadow:before {
+.icon-profile_group:before {
     content: "\f12c";
 }
-.icon-shape_line:before {
+.icon-shadow:before {
     content: "\f12d";
 }
-.icon-space_dashboard:before {
+.icon-shape_line:before {
     content: "\f12e";
 }
-.icon-thumb-down-circular:before {
+.icon-space_dashboard:before {
     content: "\f12f";
 }
-.icon-triangle:before {
+.icon-thumb-down-circular:before {
     content: "\f130";
 }
-.icon-unsplash:before {
+.icon-triangle:before {
     content: "\f131";
 }
-.icon-upload:before {
+.icon-unsplash:before {
     content: "\f132";
+}
+.icon-upload:before {
+    content: "\f133";
 }

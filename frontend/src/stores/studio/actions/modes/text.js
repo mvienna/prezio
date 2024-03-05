@@ -8,10 +8,13 @@ import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 
+import Quill from "quill";
+import html2canvas from "html2canvas";
+
 const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);
 
-export function addText(config = {}, isSave = true) {
+export function addText(config = {}, isSave = true, $t) {
   const textNode = new Konva.Text({
     text:
       config.text ||
@@ -44,6 +47,7 @@ export function addText(config = {}, isSave = true) {
   if (isSave) {
     this.handleSlideUpdate();
   }
+
 }
 
 export function setLayout(layout) {
@@ -338,6 +342,9 @@ export function setTextCustomization(node) {
     textDecoration: node.textDecoration(),
     align: node.align(),
     fill: node.fill(),
+    lineHeight: node.lineHeight(),
+    letterSpacing: node.letterSpacing(),
+    verticalAlign: node.verticalAlign(),
   };
 }
 
@@ -349,5 +356,8 @@ export function applyTextCustomization(node) {
     textDecoration: this.text.textDecoration,
     align: this.text.align,
     fill: this.text.fill,
+    lineHeight: this.text.lineHeight,
+    letterSpacing: this.text.letterSpacing,
+    verticalAlign: this.text.verticalAlign,
   });
 }
