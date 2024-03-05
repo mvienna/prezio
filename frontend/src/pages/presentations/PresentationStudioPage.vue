@@ -17,7 +17,9 @@
           :to="isPresentationPreview ? '#presentationPreview' : 'body'"
         >
           <div class="slide relative-position" id="stage-parent">
-            <div id="container"></div>
+            <div id="container">
+              <!-- canvas -->
+            </div>
 
             <!-- slide data (reactions, answers, participants online) -->
             <PresentationStudioRoomData />

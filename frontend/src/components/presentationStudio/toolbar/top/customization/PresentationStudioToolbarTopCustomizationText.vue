@@ -370,7 +370,7 @@
     dense
     options-dense
     suffix="px"
-    style="max-width: 90px; min-width: 25px"
+    style="max-width: 95px; min-width: 25px"
     @update:model-value="
       () => {
         studioStore.applyCustomization();

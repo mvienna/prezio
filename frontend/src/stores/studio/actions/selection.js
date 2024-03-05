@@ -424,7 +424,16 @@ export function applyTransformerCustomization() {
     enabledAnchors: this.transformer.default
       .nodes()
       .filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT).length
-      ? ["middle-left", "middle-right", "top-center", "bottom-center"]
+      ? [
+          "top-left",
+          "top-center",
+          "top-right",
+          "middle-right",
+          "middle-left",
+          "bottom-left",
+          "bottom-center",
+          "bottom-right",
+        ]
       : [
           "top-left",
           "top-center",
