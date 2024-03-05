@@ -38,8 +38,7 @@ export function addText(config = {}, isSave = true) {
 
   this.layers.default.add(textNode);
 
-  // todo: does it really need to be here?
-  // textNode.on("transformend", this.handleSlideUpdate);
+  textNode.on("transformend", this.handleSlideUpdate);
   this.processText(textNode);
 
   if (isSave) {
@@ -165,7 +164,9 @@ export function processText(textNode) {
     // reset scale, so only with is changing by transformer
     textNode.setAttrs({
       width: textNode.width() * textNode.scaleX(),
+      height: textNode.height() * textNode.scaleY(),
       scaleX: 1,
+      scaleY: 1,
     });
   });
 
