@@ -350,6 +350,8 @@ export function setCustomShapeTransformer(node) {
       this.transformer.custom.shape.anchor2.y() -
         this.transformer.custom.shape.node.y(),
     ]);
+
+    this.transformer.custom.shape.isTransforming = true;
   };
   this.transformer.custom.shape.anchor1.on("dragmove", updateLine);
   this.transformer.custom.shape.anchor2.on("dragmove", updateLine);
@@ -375,6 +377,10 @@ export function setCustomShapeTransformer(node) {
     );
   };
   this.transformer.custom.shape.node.on("dragmove", updateAnchors);
+
+  this.transformer.custom.shape.node.on("dragend", () => {
+    this.transformer.custom.shape.isTransforming = false;
+  });
 
   this.setCustomization();
 }

@@ -73,6 +73,7 @@ export const useStudioStore = defineStore("studio", {
           node: null,
           anchor1: null,
           anchor2: null,
+          isTransforming: false,
         },
       },
     },
@@ -215,6 +216,8 @@ export const useStudioStore = defineStore("studio", {
      * text
      */
     text: {
+      editor: "",
+
       fontFamily: "Arial",
       fontSize: 38,
       fontStyle: "normal", // normal, italic, bold (can be combined by ' ')

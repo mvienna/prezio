@@ -110,6 +110,11 @@ export function getSnappingObjectEdges(node) {
       itemBounds.horizontal.start,
       itemBounds.horizontal.end,
     ];
+  } else if (!this.transformer?.custom.shape?.isTransforming) {
+    return {
+      vertical: [],
+      horizontal: [],
+    };
   }
 
   return result;
