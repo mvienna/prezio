@@ -39,11 +39,9 @@ export const ALIGNMENT = {
   },
 };
 
-export const LINE_HEIGHT_OPTIONS = [1, 1.2, 1.5, 1.7];
+export const LINE_HEIGHT_OPTIONS = [1, 1.15, 1.5, 2, 2.5, 3];
 
-export const LETTER_SPACING_OPTIONS = [0, 1, 2, 3];
-
-export const VERTICAL_ALIGN_OPTIONS = ["middle", "top", "bottom"];
+export const LETTER_SPACING_OPTIONS = [0, 1, 2, 4, 6, 10];
 
 /*
  * shape

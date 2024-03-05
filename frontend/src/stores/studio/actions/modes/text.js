@@ -8,13 +8,10 @@ import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
 
-import Quill from "quill";
-import html2canvas from "html2canvas";
-
 const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);
 
-export function addText(config = {}, isSave = true, $t) {
+export function addText(config = {}, isSave = true) {
   const textNode = new Konva.Text({
     text:
       config.text ||
@@ -47,7 +44,6 @@ export function addText(config = {}, isSave = true, $t) {
   if (isSave) {
     this.handleSlideUpdate();
   }
-
 }
 
 export function setLayout(layout) {

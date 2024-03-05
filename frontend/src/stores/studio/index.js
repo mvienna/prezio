@@ -214,66 +214,41 @@ export const useStudioStore = defineStore("studio", {
     /*
      * text
      */
-    // text: {
-    //   fontFamily: "Arial",
-    //   fontSize: 38,
-    //   fontStyle: "normal", // normal, italic, bold (can be combined by ' ')
-    //   textDecoration: "", // line-through, underline
-    //   align: "left", // left, center, right
-    //   verticalAlign: "", // top, middle, bottom
-    //   fill: COLOR_PALETTE.BLACK,
+    text: {
+      fontFamily: "Arial",
+      fontSize: 38,
+      fontStyle: "normal", // normal, italic, bold (can be combined by ' ')
+      textDecoration: "", // line-through, underline
+      align: "left", // left, center, right
+      verticalAlign: "top", // top, middle, bottom
+      fill: COLOR_PALETTE.BLACK,
 
-    //   // todo: add customization to toolbar
-    //   padding: 16,
-    //   lineHeight: 1,
-    //   wrap: "word", // word, char, none
-    //   ellipsis: false,
-    //   stroke: COLOR_PALETTE.BLACK,
-    //   strokeWidth: 0,
-    //   shadowColor: COLOR_PALETTE.BLACK,
-    //   shadowBlur: 0,
-    //   shadowOffset: { x: 0, y: 0 },
-    //   shadowOpacity: 0,
-    //   opacity: 1,
-    //   letterSpacing: 5,
+      // todo: add customization to toolbar
+      padding: 16,
+      lineHeight: 1,
+      wrap: "word", // word, char, none
+      ellipsis: false,
+      stroke: COLOR_PALETTE.BLACK,
+      strokeWidth: 0,
+      shadowColor: COLOR_PALETTE.BLACK,
+      shadowBlur: 0,
+      shadowOffset: { x: 0, y: 0 },
+      shadowOpacity: 0,
+      opacity: 1,
+      letterSpacing: 5,
 
-    //   default: {
-    //     fontFamily: "Arial",
-    //     fontSize: 38,
-    //     fontStyle: "normal", // normal, italic, bold (can be combined by ' ')
-    //     textDecoration: "", // line-through, underline
-    //     align: "left", // left, center, right
-    //     verticalAlign: "", // top, middle, bottom
-    //     padding: 16,
-    //     lineHeight: 1,
-    //     wrap: "word", // word, char, none
-    //     ellipsis: false,
-    //     fill: COLOR_PALETTE.BLACK,
-    //     stroke: COLOR_PALETTE.BLACK,
-    //     strokeWidth: 0,
-    //     shadowColor: COLOR_PALETTE.BLACK,
-    //     shadowBlur: 0,
-    //     shadowOffset: { x: 0, y: 0 },
-    //     shadowOpacity: 0,
-    //     opacity: 1,
-    //     letterSpacing: 5,
-    //   },
-    // },
-    text: [
-      {
+      default: {
         fontFamily: "Arial",
         fontSize: 38,
         fontStyle: "normal", // normal, italic, bold (can be combined by ' ')
         textDecoration: "", // line-through, underline
         align: "left", // left, center, right
-        verticalAlign: "", // top, middle, bottom
-        fill: COLOR_PALETTE.BLACK,
-
-        // todo: add customization to toolbar
+        verticalAlign: "top", // top, middle, bottom
         padding: 16,
         lineHeight: 1,
         wrap: "word", // word, char, none
         ellipsis: false,
+        fill: COLOR_PALETTE.BLACK,
         stroke: COLOR_PALETTE.BLACK,
         strokeWidth: 0,
         shadowColor: COLOR_PALETTE.BLACK,
@@ -282,30 +257,8 @@ export const useStudioStore = defineStore("studio", {
         shadowOpacity: 0,
         opacity: 1,
         letterSpacing: 5,
-
-        default: {
-          fontFamily: "Arial",
-          fontSize: 38,
-          fontStyle: "normal", // normal, italic, bold (can be combined by ' ')
-          textDecoration: "", // line-through, underline
-          align: "left", // left, center, right
-          verticalAlign: "", // top, middle, bottom
-          padding: 16,
-          lineHeight: 1,
-          wrap: "word", // word, char, none
-          ellipsis: false,
-          fill: COLOR_PALETTE.BLACK,
-          stroke: COLOR_PALETTE.BLACK,
-          strokeWidth: 0,
-          shadowColor: COLOR_PALETTE.BLACK,
-          shadowBlur: 0,
-          shadowOffset: { x: 0, y: 0 },
-          shadowOpacity: 0,
-          opacity: 1,
-          letterSpacing: 5,
-        },
       },
-    ],
+    },
     showTitleTooltip: false,
   }),
 

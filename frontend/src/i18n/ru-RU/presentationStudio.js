@@ -27,6 +27,8 @@ export default {
           fontSize: "Размер шрифта",
           newText: "Новое поле",
           color: "Цвет",
+          letterSpacing: "Интервал между буквами",
+          lineHeight: "Высота линии",
 
           formatting: {
             bold: "Жирный шрифт",
