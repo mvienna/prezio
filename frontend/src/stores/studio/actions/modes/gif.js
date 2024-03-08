@@ -39,13 +39,12 @@ export async function addGif(url) {
 
     const canvas = document.createElement("canvas");
     const onDrawFrame = (ctx, frame) => {
-      canvas.width = frame.width;
-      canvas.height = frame.height;
-      ctx.drawImage(frame.buffer, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(frame.buffer, frame.x, frame.y);
       this.layers.default.draw();
     };
 
-    gifler(url).frames(canvas, onDrawFrame);
+    gifler(url).frames(canvas, onDrawFrame, true);
 
     const gifNode = new Konva.Image({
       x: x,
@@ -71,12 +70,11 @@ export async function addGif(url) {
 export function processGif(gif, imageObj) {
   const canvas = document.createElement("canvas");
   const onDrawFrame = (ctx, frame) => {
-    canvas.width = frame.width;
-    canvas.height = frame.height;
-    ctx.drawImage(frame.buffer, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(frame.buffer, frame.x, frame.y);
     this.layers.default.draw();
   };
-  gifler(gif.getAttr("source")).frames(canvas, onDrawFrame);
+  gifler(gif.getAttr("source")).frames(canvas, onDrawFrame, true);
   gif.setAttr("image", canvas);
 
   gif.on("transformend", this.handleSnappingEnd);
