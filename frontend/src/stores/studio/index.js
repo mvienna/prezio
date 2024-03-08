@@ -28,6 +28,7 @@ import * as image from "./actions/modes/image";
 import * as drawing from "./actions/modes/drawing";
 import * as shape from "./actions/modes/shape";
 import * as text from "./actions/modes/text";
+import * as gif from "./actions/modes/gif";
 
 const presentationsStore = usePresentationsStore();
 const { slide, slideSettings } = storeToRefs(presentationsStore);
@@ -114,6 +115,7 @@ export const useStudioStore = defineStore("studio", {
     MODE_OPTIONS: {
       DRAWING: "Drawing",
       IMAGE: "Image",
+      GIF: "Gif",
       SHAPE: "Shape",
       TEXT: "Text",
       TEXT_EDITING: "Text-Editing",
@@ -284,6 +286,7 @@ export const useStudioStore = defineStore("studio", {
     ...drawing,
     ...shape,
     ...text,
+    ...gif,
 
     async loadStudio() {
       return await new Promise((resolve) => {
@@ -339,6 +342,28 @@ export const useStudioStore = defineStore("studio", {
             .find(this.MODE_OPTIONS.TEXT)
             .forEach(async (node) => {
               this.processText(node);
+            });
+
+          // process gifs
+          this.stages.default
+            .find("." + this.MODE_OPTIONS.GIF)
+            .forEach(async (node) => {
+              console.log(node);
+              const imageObj = new Image();
+              const url = node.getAttr("source");
+
+              let base64;
+
+              if (url.includes("http")) {
+                base64 = await fetchAndConvertToBase64Image(url);
+                imageObj.src = base64;
+              } else {
+                imageObj.src = url;
+              }
+
+              imageObj.onload = () => {
+                this.processGif(node, imageObj);
+              };
             });
 
           this.layers.default

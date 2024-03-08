@@ -257,8 +257,7 @@ export function handleSelectionClick(event) {
     this.transformer.default?.nodes().indexOf(event.target) >= 0;
 
   if (!metaPressed && !isSelected) {
-    // if no key pressed and the node is not selected
-    // select just one
+    // if no key pressed and the node is not selected - select just one
     this.transformer.default?.nodes([event.target]);
   } else if (metaPressed && isSelected) {
     // if we pressed keys and node was selected
@@ -421,29 +420,16 @@ export function applyTransformerCustomization() {
     keepRatio: !this.transformer.default
       .nodes()
       .find((node) => [this.MODE_OPTIONS.SHAPE].includes(node.getAttr("name"))),
-    enabledAnchors: this.transformer.default
-      .nodes()
-      .filter((node) => node.getAttr("name") === this.MODE_OPTIONS.TEXT).length
-      ? [
-          "top-left",
-          "top-center",
-          "top-right",
-          "middle-right",
-          "middle-left",
-          "bottom-left",
-          "bottom-center",
-          "bottom-right",
-        ]
-      : [
-          "top-left",
-          "top-center",
-          "top-right",
-          "middle-right",
-          "middle-left",
-          "bottom-left",
-          "bottom-center",
-          "bottom-right",
-        ],
+    enabledAnchors: [
+      "top-left",
+      "top-center",
+      "top-right",
+      "middle-right",
+      "middle-left",
+      "bottom-left",
+      "bottom-center",
+      "bottom-right",
+    ],
   });
 
   if (

@@ -53,6 +53,8 @@ module.exports = configure(function (ctx) {
         UNSPLASH_ACCESS_KEY: env.UNSPLASH_ACCESS_KEY,
         UNSPLASH_SECRET_KEY: env.UNSPLASH_SECRET_KEY,
 
+        GIPHY_API_KEY: env.GIPHY_API_KEY,
+
         PUSHER_APP_KEY: env.PUSHER_APP_KEY,
         PUSHER_APP_CLUSTER: env.PUSHER_APP_CLUSTER,
         PUSHER_APP_ENDPOINT: env.PUSHER_APP_ENDPOINT,

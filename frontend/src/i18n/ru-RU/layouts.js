@@ -125,6 +125,7 @@ export default {
             image: "Фотография",
             emoji: "Эмодзи",
             shape: "Форма",
+            gif: "GIF",
           },
         },
 

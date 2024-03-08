@@ -76,11 +76,13 @@
       <SelectMedia
         @cancel="showSelectMediaDialog = false"
         @select="
-          studioStore.addImage(
-            $event?.preview_url ||
-              $event?.original_url ||
-              $event?.urls?.regular,
-          );
+          $event.origin === MEDIA_ORIGIN_OPTIONS.GIPHY
+            ? studioStore.addGif($event.images.fixed_height_small.url)
+            : studioStore.addImage(
+                $event?.preview_url ||
+                  $event?.original_url ||
+                  $event?.urls?.regular,
+              );
           showSelectMediaDialog = false;
         "
       />
@@ -259,6 +261,8 @@ import {
   SHAPE_OPTIONS,
   SHAPE_TYPES,
 } from "src/constants/canvas/canvasVariables";
+import { MEDIA_ORIGIN_OPTIONS } from "src/constants/integrations";
+import { addGif } from "stores/studio/actions/modes/gif";
 
 /*
  * variables

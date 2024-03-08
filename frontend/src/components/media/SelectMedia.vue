@@ -58,9 +58,14 @@
             :src="
               selectedFile?.preview_url ||
               selectedFile?.original_url ||
-              selectedFile?.urls?.regular
+              selectedFile?.urls?.regular ||
+              selectedFile?.images?.fixed_height_small?.url
             "
-            :alt="selectedFile?.filename || selectedFile?.alt_description"
+            :alt="
+              selectedFile?.filename ||
+              selectedFile?.alt_description ||
+              selectedFile?.title
+            "
           />
         </div>
 
@@ -170,9 +175,7 @@
               >
                 <!-- added from unsplash -->
                 <img
-                  v-if="
-                    file?.origin === selectedStockImageOriginOptions.unsplash
-                  "
+                  v-if="file?.origin === MEDIA_ORIGIN_OPTIONS.UNSPLASH"
                   :src="file?.urls?.regular"
                   :alt="file?.alt_description"
                 />
@@ -212,7 +215,7 @@
             <!-- search on unsplash -->
             <div class="q-py-lg">
               <q-input
-                v-model="search"
+                v-model="unsplash.search"
                 clearable
                 outlined
                 dense
@@ -220,7 +223,7 @@
                 debounce="500"
                 color="primary"
                 :placeholder="$t('media.select.tabs.stock.search')"
-                @update:model-value="handleSearch()"
+                @update:model-value="handleUnsplashStore()"
               >
                 <template #append>
                   <q-icon
@@ -228,7 +231,7 @@
                     round
                     name="r_search"
                     class="q-ml-md q-mr-sm cursor-pointer"
-                    @click="handleSearch()"
+                    @click="handleUnsplashStore()"
                   />
                 </template>
               </q-input>
@@ -237,12 +240,13 @@
             <!-- results unsplash -->
             <div>
               <q-infinite-scroll
-                @load="stockImagesStore.fetchStockImages"
-                :offset="1000"
+                @load="unsplashStore.fetchUnsplashImages"
+                :disable="unsplash.isLoading"
+                :offset="0"
                 class="masonry"
               >
                 <q-card
-                  v-for="item in stockImages"
+                  v-for="item in unsplash.images"
                   :key="item.id"
                   class="masonry__item"
                   flat
@@ -253,10 +257,10 @@
                       : ''
                   "
                   @click="
-                    selectedFile =
-                      selectedFile?.id === item.id
-                        ? null
-                        : { ...item, origin: 'unsplash' }
+                    selectedFile = {
+                      ...item,
+                      origin: MEDIA_ORIGIN_OPTIONS.UNSPLASH,
+                    }
                   "
                 >
                   <!-- image -->
@@ -273,7 +277,7 @@
                     anchor="bottom start"
                     self="top start"
                     class="row no-wrap items-center bg-white q-pa-xs q-pr-sm"
-                    style="border-radius: 20px; border: 1px solid #f2f2f2"
+                    style="border: 1px solid #f2f2f2"
                     :offset="[0, 8]"
                   >
                     <q-avatar size="20px" class="q-mr-sm">
@@ -292,11 +296,12 @@
                     transition-show="jump-down"
                     transition-hide="jump-up"
                   >
-                    <!-- delete file -->
+                    <!-- open in new tab -->
                     <q-item
                       class="items-center"
                       :href="item.links.html"
                       target="_blank"
+                      dense
                     >
                       <q-icon name="r_link" class="q-mr-sm" size="xs" />
                       <div>
@@ -315,8 +320,120 @@
             </div>
           </q-tab-panel>
 
-          <!-- gifs and stickers-->
-          <q-tab-panel name="r_gifs_and_stickers"> </q-tab-panel>
+          <q-tab-panel name="giphy" class="q-pa-none">
+            <!-- search on giphy -->
+            <div class="q-py-lg">
+              <q-input
+                v-model="giphy.search"
+                clearable
+                outlined
+                dense
+                clear-icon="r_backspace"
+                debounce="500"
+                color="primary"
+                :placeholder="$t('media.select.tabs.stock.search')"
+                @update:model-value="handleGiphyStore()"
+              >
+                <template #append>
+                  <q-icon
+                    flat
+                    round
+                    name="r_search"
+                    class="q-ml-md q-mr-sm cursor-pointer"
+                    @click="handleGiphyStore()"
+                  />
+                </template>
+              </q-input>
+            </div>
+
+            <!-- results giphy -->
+            <div>
+              <q-infinite-scroll
+                @load="giphyStore.fetchGiphyGifs"
+                :disable="giphy.isLoading"
+                :offset="0"
+                class="masonry"
+              >
+                <q-card
+                  v-for="item in giphy.gifs"
+                  :key="item.id"
+                  class="masonry__item"
+                  flat
+                  bordered
+                  :class="
+                    selectedFile?.id === item.id
+                      ? 'masonry__item--selected'
+                      : ''
+                  "
+                  @click="
+                    selectedFile = {
+                      ...item,
+                      origin: MEDIA_ORIGIN_OPTIONS.GIPHY,
+                    }
+                  "
+                >
+                  <!-- gif -->
+                  <img
+                    :src="item?.images?.fixed_height_small?.url"
+                    alt="item"
+                    :style="`aspect-ratio: ${
+                      item.width / item.height
+                    }; width: 100%;`"
+                  />
+
+                  <!-- author -->
+                  <q-tooltip
+                    anchor="bottom start"
+                    self="top start"
+                    class="row no-wrap items-center bg-white q-pa-xs q-px-sm"
+                    style="border: 1px solid #f2f2f2"
+                    :offset="[0, 8]"
+                  >
+                    <q-avatar size="20px" class="q-mr-sm">
+                      <q-img :src="item?.user?.avatar_url" />
+                    </q-avatar>
+
+                    <div>
+                      <div class="text-caption">
+                        {{ item?.title }}
+                      </div>
+
+                      <div class="text-grey text-caption">
+                        {{ item?.user?.display_name }}
+                      </div>
+                    </div>
+                  </q-tooltip>
+
+                  <!-- context menu -->
+                  <q-menu
+                    touch-position
+                    context-menu
+                    transition-show="jump-down"
+                    transition-hide="jump-up"
+                  >
+                    <!-- open in new tab -->
+                    <q-item
+                      class="items-center"
+                      :href="item.url"
+                      target="_blank"
+                      dense
+                    >
+                      <q-icon name="r_link" class="q-mr-sm" size="xs" />
+                      <div>
+                        {{ $t("media.actions.open.title") }}
+                      </div>
+                    </q-item>
+                  </q-menu>
+                </q-card>
+
+                <template v-slot:loading>
+                  <div class="row justify-center q-my-md">
+                    <q-spinner-ios size="40px" />
+                  </div>
+                </template>
+              </q-infinite-scroll>
+            </div>
+          </q-tab-panel>
         </q-tab-panels>
       </div>
     </q-card-section>
@@ -329,7 +446,9 @@ import { useI18n } from "vue-i18n";
 import { api } from "boot/axios";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "stores/auth";
-import { useStockImagesStore } from "stores/stock-images";
+import { useUnsplashStore } from "stores/unsplash";
+import { useGiphyStore } from "stores/giphy";
+import { MEDIA_ORIGIN_OPTIONS } from "src/constants/integrations";
 
 /*
  * variables
@@ -347,8 +466,11 @@ const props = defineProps({
 /*
  * stores
  */
-const stockImagesStore = useStockImagesStore();
-const { stockImages, search } = storeToRefs(stockImagesStore);
+const unsplashStore = useUnsplashStore();
+const { unsplash } = storeToRefs(unsplashStore);
+
+const giphyStore = useGiphyStore();
+const { giphy } = storeToRefs(giphyStore);
 
 /*
  * fetch users media
@@ -386,9 +508,8 @@ const tabs = computed(() => {
       icon: "icon-unsplash",
     },
     gifsAndStickers: {
-      name: "gifs_and_stickers",
+      name: "giphy",
       label: t("media.select.tabs.gifsAndStickers.title"),
-      disabled: true,
     },
   };
 });
@@ -398,15 +519,20 @@ const tab = ref("upload");
  * select file
  */
 const selectedFile = ref();
-const selectedStockImageOriginOptions = { unsplash: "unsplash" };
 const isProcessing = ref(false);
 
 const handleFileSelection = async () => {
-  if (selectedFile.value.origin === selectedStockImageOriginOptions.unsplash) {
-    await saveStockImage(selectedFile.value);
+  const origin = selectedFile.value?.origin;
+
+  if (selectedFile.value.origin === MEDIA_ORIGIN_OPTIONS.UNSPLASH) {
+    await saveUnsplashImageToUserMedia(selectedFile.value);
   }
 
-  emit("select", selectedFile.value);
+  if (selectedFile.value.origin === MEDIA_ORIGIN_OPTIONS.GIPHY) {
+    // await saveGifToUserMedia(selectedFile.value);
+  }
+
+  emit("select", { ...selectedFile.value, origin: origin });
 };
 
 /*
@@ -459,7 +585,7 @@ const deleteFile = (file) => {
 /*
  * unsplash
  */
-const saveStockImage = async (data) => {
+const saveUnsplashImageToUserMedia = async (data) => {
   isProcessing.value = true;
 
   return await api
@@ -478,9 +604,36 @@ const saveStockImage = async (data) => {
     });
 };
 
-const handleSearch = () => {
-  stockImages.value = [];
-  stockImagesStore.fetchStockImages();
+const handleUnsplashStore = () => {
+  unsplash.value.images = [];
+  unsplashStore.fetchUnsplashImages();
+};
+
+/*
+ * giphy
+ */
+const saveGifToUserMedia = async (data) => {
+  isProcessing.value = true;
+
+  return await api
+    .post("/media", {
+      unsplash_image_data: data,
+      model_type: "App\\Models\\User",
+      model_id: user.value.id,
+      collection: props.collection,
+    })
+    .then((response) => {
+      media.value.push(response.data);
+      selectedFile.value = response.data;
+    })
+    .finally(() => {
+      isProcessing.value = false;
+    });
+};
+
+const handleGiphyStore = () => {
+  giphy.value.gifs = [];
+  giphyStore.fetchGiphyGifs();
 };
 
 /*
