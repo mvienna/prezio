@@ -2,12 +2,17 @@
   <q-toolbar
     v-if="isHost"
     class="cursor-pointer"
-    style="border-radius: 12px 12px 0 0; overflow: hidden"
+    style="overflow: hidden"
     :class="`${$q.screen.lt.lg ? 'q-pa-md' : 'q-pa-lg'} ${
       presentation?.settings?.show_joining_instructions_bar || isHovered
         ? 'q-toolbar--appear'
         : ''
     }`"
+    :style="
+      showRoomInvitationPanel || !isHost
+        ? 'border-radius: 12px 12px 0 0'
+        : 'border-radius: 0;'
+    "
     @click="
       (event) => {
         if (
