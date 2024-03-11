@@ -35,6 +35,7 @@ export function applyCustomization() {
     nodes.forEach((node) => {
       switch (node.getAttr("name")) {
         case this.MODE_OPTIONS.IMAGE:
+        case this.MODE_OPTIONS.GIF:
           this.applyImageCustomization(node);
           break;
 

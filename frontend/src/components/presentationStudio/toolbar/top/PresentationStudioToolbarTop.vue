@@ -80,8 +80,11 @@
               transformer.default?.nodes()?.length &&
               transformer.default
                 ?.nodes()
-                .filter((node) => node.getAttr('name') === MODE_OPTIONS.IMAGE)
-                ?.length === transformer.default?.nodes()?.length
+                .filter((node) =>
+                  [MODE_OPTIONS.IMAGE, MODE_OPTIONS.GIF].includes(
+                    node.getAttr('name'),
+                  ),
+                )?.length === transformer.default?.nodes()?.length
             "
           />
         </div>
