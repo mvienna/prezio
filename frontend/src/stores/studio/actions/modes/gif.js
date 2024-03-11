@@ -1,9 +1,10 @@
 import Konva from "konva";
-import "gifler";
+import SuperGif from "libgif";
 import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
 
 export async function addGif(url) {
   const imageObj = new Image();
+  document.body.appendChild(imageObj);
 
   let base64;
   if (url.includes("http")) {
@@ -37,19 +38,10 @@ export async function addGif(url) {
     const x = (canvasWidth - newWidth) / 2;
     const y = (canvasHeight - newHeight) / 2;
 
-    const canvas = document.createElement("canvas");
-    const onDrawFrame = (ctx, frame) => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(frame.buffer, frame.x, frame.y);
-      this.layers.default.draw();
-    };
-
-    gifler(url).frames(canvas, onDrawFrame, true);
-
     const gifNode = new Konva.Image({
       x: x,
       y: y,
-      image: canvas,
+      image: imageObj,
       width: newWidth,
       height: newHeight,
       draggable: true,
@@ -60,49 +52,41 @@ export async function addGif(url) {
 
     this.layers.default.add(gifNode);
 
-    this.processGif(gifNode, url);
+    this.processGif(gifNode, imageObj);
 
     // save slide on new image added
     this.handleSlideUpdate();
   };
 }
 
-export function processGif(gif, imageObj) {
-  const canvas = document.createElement("canvas");
-  const onDrawFrame = (ctx, frame) => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(frame.buffer, frame.x, frame.y);
+export function processGif(node, imageObj) {
+  let gif = new SuperGif({
+    gif: imageObj,
+    progressbar_height: 0,
+    auto_play: true,
+    loop_mode: true,
+    draw_while_loading: true,
+  });
+
+  gif.load();
+
+  let gif_canvas = gif.get_canvas();
+  let canvas = gif_canvas.cloneNode();
+  let context = canvas.getContext("2d");
+
+  const anim = (t) => {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(gif_canvas, 0, 0);
     this.layers.default.draw();
+    requestAnimationFrame(anim);
   };
-  gifler(gif.getAttr("source")).frames(canvas, onDrawFrame, true);
-  gif.setAttr("image", canvas);
 
-  gif.on("transformend", this.handleSnappingEnd);
-  gif.on("dragstart", this.handleSelectionDragStart);
+  anim();
+
+  node.setAttr("image", canvas);
+
+  document.querySelectorAll(".jsgif").forEach((el) => el.remove());
+
+  node.on("transformend", this.handleSnappingEnd);
+  node.on("dragstart", this.handleSelectionDragStart);
 }
-
-// export async function replaceImage(
-//   nodes = this.transformer.default?.nodes(),
-//   url,
-// ) {
-//   const imageObj = new Image();
-//
-//   let base64;
-//   if (url.includes("http")) {
-//     base64 = await fetchAndConvertToBase64Image(url);
-//     imageObj.src = base64;
-//   } else {
-//     imageObj.src = url;
-//   }
-//
-//   imageObj.onload = () => {
-//     nodes
-//       .filter((node) => node.getClassName() === "Image")
-//       .forEach((node) => {
-//         node.image(imageObj);
-//         this.processImageNode(node, url, node.getAttr("lastCropUsed"));
-//       });
-//
-//     this.handleSlideUpdate();
-//   };
-// }

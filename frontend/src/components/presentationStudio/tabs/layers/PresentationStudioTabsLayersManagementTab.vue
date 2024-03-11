@@ -42,14 +42,16 @@
                     ? 'icon-insert_text'
                     : element.getAttr('name') === MODE_OPTIONS.IMAGE
                       ? 'o_add_photo_alternate'
-                      : element.getAttr('name') === MODE_OPTIONS.EMOJI
-                        ? 'icon-add_reaction'
-                        : element.getAttr('name') === MODE_OPTIONS.SHAPE
-                          ? Object.values(SHAPE_OPTIONS).find(
-                              (shape) =>
-                                shape.name === element.getAttr('shape'),
-                            )?.icon || 'icon-shape_line'
-                          : ''
+                      : element.getAttr('name') === MODE_OPTIONS.GIF
+                        ? 'o_gif_box'
+                        : element.getAttr('name') === MODE_OPTIONS.EMOJI
+                          ? 'icon-add_reaction'
+                          : element.getAttr('name') === MODE_OPTIONS.SHAPE
+                            ? Object.values(SHAPE_OPTIONS).find(
+                                (shape) =>
+                                  shape.name === element.getAttr('shape'),
+                              )?.icon || 'icon-shape_line'
+                            : ''
               "
               size="1.25rem"
               class="q-ml-sm"

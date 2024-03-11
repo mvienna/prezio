@@ -348,8 +348,9 @@ export const useStudioStore = defineStore("studio", {
           this.stages.default
             .find("." + this.MODE_OPTIONS.GIF)
             .forEach(async (node) => {
-              console.log(node);
               const imageObj = new Image();
+              document.body.appendChild(imageObj);
+
               const url = node.getAttr("source");
 
               let base64;

@@ -25,7 +25,6 @@ export const useGiphyStore = defineStore("giphy", {
         this.giphy.search && this.giphy.search?.trim()?.length;
       this.giphy.pagination.offset = index * this.giphy.pagination.limit;
 
-      console.log(this.giphy.pagination);
       const request = isSearching
         ? "https://api.giphy.com/v1/gifs/search?" +
           new URLSearchParams({
@@ -47,8 +46,6 @@ export const useGiphyStore = defineStore("giphy", {
           return response.json();
         })
         .then((response) => {
-          console.log(response);
-
           this.giphy.gifs = [...this.giphy.gifs, ...response.data];
         })
         .catch((error) => {
