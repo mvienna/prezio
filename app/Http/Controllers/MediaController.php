@@ -18,15 +18,22 @@ class MediaController extends Controller
         $collection = $request->input('collection');
 
         $unsplash_image_data = $request->input('unsplash_image_data');
+        $giphy_gif_data = $request->input('giphy_gif_data');
 
         $model = $modelType::findOrFail($modelId);
         $media = $model;
 
-        // add from unsplash
+        // upload from unsplash
         if ($unsplash_image_data) {
             $media = $media
                 ->addMediaFromUrl($unsplash_image_data['urls']['regular'])
                 ->usingName($unsplash_image_data['slug']);
+
+        // upload from giphy
+        } else if ($giphy_gif_data) {
+            $media = $media
+                ->addMediaFromUrl($giphy_gif_data['images']['fixed_height']['url'])
+                ->usingName($giphy_gif_data['slug']);
 
         // upload from the computer
         } else {

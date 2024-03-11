@@ -77,7 +77,7 @@
         @cancel="showSelectMediaDialog = false"
         @select="
           $event.origin === MEDIA_ORIGIN_OPTIONS.GIPHY
-            ? studioStore.addGif($event.images.fixed_height_small.url)
+            ? studioStore.addGif($event?.preview_url || $event?.original_url)
             : studioStore.addImage(
                 $event?.preview_url ||
                   $event?.original_url ||

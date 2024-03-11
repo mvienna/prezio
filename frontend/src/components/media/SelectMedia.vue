@@ -59,7 +59,7 @@
               selectedFile?.preview_url ||
               selectedFile?.original_url ||
               selectedFile?.urls?.regular ||
-              selectedFile?.images?.fixed_height_small?.url
+              selectedFile?.images?.fixed_height?.url
             "
             :alt="
               selectedFile?.filename ||
@@ -374,7 +374,7 @@
                 >
                   <!-- gif -->
                   <img
-                    :src="item?.images?.fixed_height_small?.url"
+                    :src="item?.images?.fixed_height?.url"
                     alt="item"
                     :style="`aspect-ratio: ${
                       item.width / item.height
@@ -529,7 +529,7 @@ const handleFileSelection = async () => {
   }
 
   if (selectedFile.value.origin === MEDIA_ORIGIN_OPTIONS.GIPHY) {
-    // await saveGifToUserMedia(selectedFile.value);
+    await saveGifToUserMedia(selectedFile.value);
   }
 
   emit("select", { ...selectedFile.value, origin: origin });
@@ -617,7 +617,7 @@ const saveGifToUserMedia = async (data) => {
 
   return await api
     .post("/media", {
-      unsplash_image_data: data,
+      giphy_gif_data: data,
       model_type: "App\\Models\\User",
       model_id: user.value.id,
       collection: props.collection,
