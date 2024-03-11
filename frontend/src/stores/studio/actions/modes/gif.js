@@ -52,14 +52,16 @@ export async function addGif(url) {
 
     this.layers.default.add(gifNode);
 
-    this.processGif(gifNode, imageObj);
+    this.processGif(gifNode, url, imageObj);
 
     // save slide on new image added
     this.handleSlideUpdate();
   };
 }
 
-export function processGif(node, imageObj) {
+export async function processGif(node, url, imageObj) {
+  node.setAttr("source", url);
+
   let gif = new SuperGif({
     gif: imageObj,
     progressbar_height: 0,

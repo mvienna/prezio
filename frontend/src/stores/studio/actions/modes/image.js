@@ -202,8 +202,13 @@ export async function replaceImage(
     nodes
       .filter((node) => node.getClassName() === "Image")
       .forEach((node) => {
-        node.image(imageObj);
-        this.processImageNode(node, url, node.getAttr("lastCropUsed"));
+        if (node.getAttr("name") === this.MODE_OPTIONS.IMAGE) {
+          node.image(imageObj);
+          this.processImageNode(node, url, node.getAttr("lastCropUsed"));
+        } else if (node.getAttr("name") === this.MODE_OPTIONS.GIF) {
+          document.body.appendChild(imageObj);
+          this.processGif(node, url, imageObj);
+        }
       });
 
     this.handleSlideUpdate();

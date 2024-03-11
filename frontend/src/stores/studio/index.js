@@ -345,27 +345,30 @@ export const useStudioStore = defineStore("studio", {
             });
 
           // process gifs
-          this.stages.default
-            .find("." + this.MODE_OPTIONS.GIF)
-            .forEach(async (node) => {
+          const handleProcessGifs = async () => {
+            const nodes = this.stages.default.find("." + this.MODE_OPTIONS.GIF);
+
+            for (let node of nodes) {
               const imageObj = new Image();
               document.body.appendChild(imageObj);
 
               const url = node.getAttr("source");
 
-              let base64;
-
               if (url.includes("http")) {
-                base64 = await fetchAndConvertToBase64Image(url);
-                imageObj.src = base64;
+                imageObj.src = await fetchAndConvertToBase64Image(url);
               } else {
                 imageObj.src = url;
               }
 
-              imageObj.onload = () => {
-                this.processGif(node, imageObj);
-              };
-            });
+              await new Promise((resolve) => {
+                imageObj.onload = () => {
+                  this.processGif(node, url, imageObj);
+                  resolve();
+                };
+              });
+            }
+          };
+          handleProcessGifs();
 
           this.layers.default
             .getChildren()
