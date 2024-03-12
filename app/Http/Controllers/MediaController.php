@@ -33,6 +33,7 @@ class MediaController extends Controller
         } else if ($giphy_gif_data) {
             $media = $media
                 ->addMediaFromUrl($giphy_gif_data['images']['fixed_height']['url'])
+                ->usingFileName($giphy_gif_data['slug'])
                 ->usingName($giphy_gif_data['slug']);
 
         // upload from the computer
