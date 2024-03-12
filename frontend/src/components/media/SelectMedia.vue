@@ -242,7 +242,7 @@
               <q-infinite-scroll
                 @load="unsplashStore.fetchUnsplashImages"
                 :disable="unsplash.isLoading"
-                :offset="0"
+                :offset="100"
                 class="masonry"
               >
                 <q-card
@@ -351,7 +351,7 @@
               <q-infinite-scroll
                 @load="giphyStore.fetchGiphyGifs"
                 :disable="giphy.isLoading"
-                :offset="0"
+                :offset="100"
                 class="masonry"
               >
                 <q-card
@@ -377,7 +377,8 @@
                     :src="item?.images?.fixed_height?.url"
                     alt="item"
                     :style="`aspect-ratio: ${
-                      item.width / item.height
+                      item?.images?.fixed_height?.width /
+                      item?.images?.fixed_height?.height
                     }; width: 100%;`"
                   />
 
