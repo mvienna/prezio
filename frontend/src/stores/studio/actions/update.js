@@ -11,8 +11,8 @@ export function generatePreviewForStage(stage = this.stages.default) {
   });
 }
 
-export async function handleSlideUpdate() {
-  // Save current scale and position
+export function prepareCanvasForPreview() {
+  // save current scale and position
   const currentScale = this.stages.default.scaleX();
   const currentPosition = this.stages.default.position();
 
@@ -27,6 +27,21 @@ export async function handleSlideUpdate() {
   // restore original scale and position
   this.stages.default.scale({ x: currentScale, y: currentScale });
   this.stages.default.position(currentPosition);
+}
+
+export function restoreCanvasAfterPreview() {
+  // show transformers
+  this.transformer.default?.show();
+  this.layers.default.find(".customTransformer").forEach((node) => node.show());
+  this.transformer.default?.moveToTop();
+  if (this.transformer.default?.nodes()?.length) {
+    this.applyTransformerCustomization();
+  }
+}
+
+export async function handleSlideUpdate() {
+  // prepare canvas for preview: hide additional elements, reset zoom
+  this.prepareCanvasForPreview();
 
   // save preview
   slide.value.preview = this.generatePreviewForStage();
@@ -36,14 +51,10 @@ export async function handleSlideUpdate() {
   this.captureState();
   slide.value.canvas_data = this.stages.default.toJSON();
 
-  // show transformers
-  this.transformer.default?.show();
-  this.layers.default.find(".customTransformer").forEach((node) => node.show());
-  this.transformer.default?.moveToTop();
-  if (this.transformer.default?.nodes()?.length) {
-    this.applyTransformerCustomization();
-  }
+  // restore canvas additional elements after preview has been generated
+  this.restoreCanvasAfterPreview();
 
+  // save slide
   await presentationsStore.saveSlide();
 }
 

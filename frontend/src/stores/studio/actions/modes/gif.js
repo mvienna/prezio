@@ -1,6 +1,11 @@
 import Konva from "konva";
 import SuperGif from "libgif";
 import { fetchAndConvertToBase64Image } from "src/helpers/imageUtils";
+import { usePresentationsStore } from "stores/presentations";
+import { storeToRefs } from "pinia";
+
+const presentationsStore = usePresentationsStore();
+const { slide } = storeToRefs(presentationsStore);
 
 export async function addGif(url) {
   const imageObj = new Image();
@@ -81,6 +86,15 @@ export async function processGif(node, url, imageObj) {
     context.drawImage(gif_canvas, 0, 0);
     this.layers.default.draw();
     requestAnimationFrame(anim);
+
+    // prepare canvas for preview: hide additional elements, reset zoom
+    this.prepareCanvasForPreview();
+
+    // update slide preview
+    slide.value.preview = this.generatePreviewForStage();
+
+    // restore canvas additional elements after preview has been generated
+    this.restoreCanvasAfterPreview();
   };
 
   anim();
