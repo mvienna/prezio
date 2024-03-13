@@ -89,6 +89,7 @@
           <q-btn
             unelevated
             :label="$t('media.select.submit')"
+            :loading="isProcessing"
             no-caps
             color="primary"
             class="q-py-sm"
