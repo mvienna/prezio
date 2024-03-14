@@ -446,7 +446,6 @@ export function applyTransformerCustomization() {
   }
 }
 
-// todo: add line, arrow and double arrow support
 export function handleSelectionDragStart(event) {
   if (
     this.transformer.default
@@ -454,6 +453,18 @@ export function handleSelectionDragStart(event) {
       .find((node) => node._id === event.target._id)
   )
     return;
+
+  if (
+    event.target.getAttr("name") === this.MODE_OPTIONS.SHAPE &&
+    [
+      SHAPE_OPTIONS.LINE.name,
+      SHAPE_OPTIONS.ARROW.name,
+      SHAPE_OPTIONS.ARROW_DOUBLE.name,
+    ].includes(event.target.getAttr("shape"))
+  ) {
+    this.setCustomShapeTransformer(event.target);
+    return;
+  }
 
   if (this.transformer.default.nodes().length) {
     this.transformer.default?.nodes([event.target]);

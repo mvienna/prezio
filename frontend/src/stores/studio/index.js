@@ -344,6 +344,13 @@ export const useStudioStore = defineStore("studio", {
               this.processText(node);
             });
 
+          // process shape
+          this.stages.default
+            .find(this.MODE_OPTIONS.SHAPE)
+            .forEach(async (node) => {
+              this.processShape(node);
+            });
+
           // process gifs
           const handleProcessGifs = async () => {
             const nodes = this.stages.default.find("." + this.MODE_OPTIONS.GIF);
