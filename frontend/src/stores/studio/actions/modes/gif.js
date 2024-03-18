@@ -57,14 +57,14 @@ export async function addGif(url) {
 
     this.layers.default.add(gifNode);
 
-    this.processGif(gifNode, url, imageObj);
+    this.processGif(gifNode, url, imageObj, true);
 
     // save slide on new image added
     this.handleSlideUpdate();
   };
 }
 
-export async function processGif(node, url, imageObj) {
+export async function processGif(node, url, imageObj, isOnAddGif = false) {
   node.setAttr("source", url);
 
   let gif = new SuperGif({
@@ -81,20 +81,25 @@ export async function processGif(node, url, imageObj) {
   let canvas = gif_canvas.cloneNode();
   let context = canvas.getContext("2d");
 
+  let loopCount = 0;
   const anim = (t) => {
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(gif_canvas, 0, 0);
     this.layers.default.draw();
     requestAnimationFrame(anim);
 
-    // prepare canvas for preview: hide additional elements, reset zoom
-    this.prepareCanvasForPreview();
+    if (isOnAddGif && loopCount === 10) {
+      console.log("save!");
+      // prepare canvas for preview: hide additional elements, reset zoom
+      this.prepareCanvasForPreview();
 
-    // update slide preview
-    slide.value.preview = this.generatePreviewForStage();
+      // update slide preview
+      slide.value.preview = this.generatePreviewForStage();
 
-    // restore canvas additional elements after preview has been generated
-    this.restoreCanvasAfterPreview();
+      // restore canvas additional elements after preview has been generated
+      this.restoreCanvasAfterPreview();
+    }
+    loopCount++;
   };
 
   anim();
