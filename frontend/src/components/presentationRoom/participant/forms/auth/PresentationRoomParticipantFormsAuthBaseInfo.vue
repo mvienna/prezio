@@ -343,46 +343,4 @@ const submit = async () => {
     }
   }
 }
-
-/*
- * emojis
- */
-::v-deep(.v3-sticky) {
-  font-size: 1rem !important;
-}
-
-.v3-emoji-picker {
-  height: 400px !important;
-}
-
-::v-deep(.v3-spacing) {
-  height: 16px !important;
-}
-
-::v-deep(.v3-tone) {
-  .v3-icon {
-    border-radius: 4px !important;
-  }
-}
-
-::v-deep(.v3-skin-tones) {
-  .v3-skin-tone:first-child {
-    border-radius: 4px 0 0 4px !important;
-  }
-  .v3-skin-tone:last-child {
-    border-radius: 0 4px 4px 0 !important;
-  }
-}
-
-::v-deep(.v3-body-inner) {
-  h5 {
-    top: -1px !important;
-  }
-}
-
-::v-deep(.v3-emojis) {
-  button {
-    border-radius: 8px !important;
-  }
-}
 </style>

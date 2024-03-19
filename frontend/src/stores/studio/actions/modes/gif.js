@@ -89,7 +89,6 @@ export async function processGif(node, url, imageObj, isOnAddGif = false) {
     requestAnimationFrame(anim);
 
     if (isOnAddGif && loopCount === 10) {
-      console.log("save!");
       // prepare canvas for preview: hide additional elements, reset zoom
       this.prepareCanvasForPreview();
 

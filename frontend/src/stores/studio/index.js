@@ -29,6 +29,7 @@ import * as drawing from "./actions/modes/drawing";
 import * as shape from "./actions/modes/shape";
 import * as text from "./actions/modes/text";
 import * as gif from "./actions/modes/gif";
+import * as emoji from "./actions/modes/emoji";
 
 const presentationsStore = usePresentationsStore();
 const { slide, slideSettings } = storeToRefs(presentationsStore);
@@ -287,6 +288,7 @@ export const useStudioStore = defineStore("studio", {
     ...shape,
     ...text,
     ...gif,
+    ...emoji,
 
     async loadStudio() {
       return await new Promise((resolve) => {

@@ -89,46 +89,50 @@
       />
     </q-dialog>
 
-    <!--    &lt;!&ndash; emoji &ndash;&gt;-->
-    <!--    <q-btn-->
-    <!--      icon="icon-add_reaction"-->
-    <!--      unelevated-->
-    <!--      text-color="black"-->
-    <!--      round-->
-    <!--      size="12px"-->
-    <!--      @click="$emit('switchMode', MODE_OPTIONS.EMOJI)"-->
-    <!--    >-->
-    <!--      <q-tooltip>-->
-    <!--        {{ $t("presentationStudio.toolbar.emoji.title") }}-->
-    <!--      </q-tooltip>-->
+    <!-- emoji -->
+    <q-btn
+      icon="icon-add_reaction"
+      unelevated
+      text-color="black"
+      round
+      size="12px"
+    >
+      <q-tooltip>
+        {{ $t("presentationStudio.toolbar.emoji.title") }}
+      </q-tooltip>
 
-    <!--      <q-menu-->
-    <!--        anchor="bottom left"-->
-    <!--        self="top left"-->
-    <!--        transition-show="jump-down"-->
-    <!--        transition-hide="jump-up"-->
-    <!--        :offset="[0, 8]"-->
-    <!--        class="q-pa-sm"-->
-    <!--        style="width: 240px"-->
-    <!--      >-->
-    <!--        <div class="row q-gutter-sm">-->
-    <!--          <q-btn-->
-    <!--            v-for="emoji in EMOJIS"-->
-    <!--            :key="emoji.name"-->
-    <!--            unelevated-->
-    <!--            round-->
-    <!--            size="16px"-->
-    <!--            class="q-pa-sm"-->
-    <!--            v-close-popup-->
-    <!--            @click="$emit('addEmoji', emoji.src)"-->
-    <!--          >-->
-    <!--            <template #default>-->
-    <!--              <q-img :src="emoji.src" />-->
-    <!--            </template>-->
-    <!--          </q-btn>-->
-    <!--        </div>-->
-    <!--      </q-menu>-->
-    <!--    </q-btn>-->
+      <q-menu
+        anchor="bottom left"
+        self="top left"
+        transition-show="jump-down"
+        transition-hide="jump-up"
+        :offset="[0, 8]"
+        style="padding: 0"
+      >
+        <EmojiPicker
+          :native="true"
+          theme="light"
+          :offset="16"
+          style="box-shadow: none !important"
+          :static-texts="{
+            placeholder: $t('emoji.searchPlaceholder'),
+            skinTone: $t('emoji.skinTone'),
+          }"
+          :group-names="{
+            smileys_people: $t('emoji.smileys_people'),
+            animals_nature: $t('emoji.animals_nature'),
+            food_drink: $t('emoji.food_drink'),
+            activities: $t('emoji.activities'),
+            travel_places: $t('emoji.travel_places'),
+            objects: $t('emoji.objects'),
+            symbols: $t('emoji.symbols'),
+            flags: $t('emoji.flags'),
+          }"
+          v-close-popup
+          @select="studioStore.addEmoji($event.i)"
+        />
+      </q-menu>
+    </q-btn>
 
     <!-- shapes -->
     <q-btn
@@ -263,7 +267,8 @@ import {
   SHAPE_TYPES,
 } from "src/constants/canvas/canvasVariables";
 import { MEDIA_ORIGIN_OPTIONS } from "src/constants/integrations";
-import { addGif } from "stores/studio/actions/modes/gif";
+import EmojiPicker from "vue3-emoji-picker";
+import "vue3-emoji-picker/css";
 
 /*
  * variables
