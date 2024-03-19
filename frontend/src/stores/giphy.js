@@ -13,6 +13,9 @@ export const useGiphyStore = defineStore("giphy", {
 
       search: "",
 
+      tab: "gifs",
+      TAB_OPTIONS: ["gifs", "stickers"],
+
       isLoading: false,
     },
   }),
@@ -26,7 +29,7 @@ export const useGiphyStore = defineStore("giphy", {
       this.giphy.pagination.offset = index * this.giphy.pagination.limit;
 
       const request = isSearching
-        ? "https://api.giphy.com/v1/gifs/search?" +
+        ? `https://api.giphy.com/v1/${this.giphy.tab}/search?` +
           new URLSearchParams({
             api_key: process.env.GIPHY_API_KEY,
             lang: this.giphy.pagination.lang,
@@ -34,7 +37,7 @@ export const useGiphyStore = defineStore("giphy", {
             offset: this.giphy.pagination.offset,
             q: this.giphy.search,
           })
-        : "https://api.giphy.com/v1/gifs/trending?" +
+        : `https://api.giphy.com/v1/${this.giphy.tab}/trending?` +
           new URLSearchParams({
             api_key: process.env.GIPHY_API_KEY,
             limit: this.giphy.pagination.limit,

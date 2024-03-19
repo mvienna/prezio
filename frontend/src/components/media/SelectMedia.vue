@@ -343,6 +343,24 @@
                     class="q-ml-md q-mr-sm cursor-pointer"
                     @click="handleGiphyStore()"
                   />
+
+                  <q-tabs
+                    v-model="giphy.tab"
+                    align="justify"
+                    dense
+                    class="text-primary giphyTabs"
+                    inline-label
+                    @update:model-value="handleGiphyStore()"
+                  >
+                    <q-tab
+                      v-for="tab in giphy.TAB_OPTIONS"
+                      :key="tab"
+                      :label="tab"
+                      :name="tab"
+                      no-caps
+                    >
+                    </q-tab>
+                  </q-tabs>
                 </template>
               </q-input>
             </div>
@@ -766,5 +784,26 @@ const dropHandler = (event) => {
 
 #drop-area.hover {
   border-color: $primary;
+}
+
+::v-deep(.giphyTabs) {
+  .q-tab--active {
+    .q-tab__label {
+      color: $white !important;
+      z-index: 1;
+    }
+  }
+
+  .q-tab__indicator {
+    height: 100%;
+    background: $primary;
+    border-radius: 8px;
+  }
+
+  .q-tab {
+    border-radius: 8px;
+    min-height: 30px;
+    height: 30px;
+  }
 }
 </style>
