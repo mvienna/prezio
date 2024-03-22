@@ -276,6 +276,13 @@ export function processShape(shape) {
     this.handleSlideUpdate();
     this.handleSnappingEnd();
   });
+  shape.on("transform", () => {
+    shape.width(Math.max(5, shape.width() * shape.scaleX()));
+    shape.height(Math.max(5, shape.height() * shape.scaleY()));
+
+    shape.scaleX(1);
+    shape.scaleY(1);
+  });
   shape.on("dragstart", this.handleSelectionDragStart);
 }
 
