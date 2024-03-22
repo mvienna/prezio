@@ -266,6 +266,9 @@ export function addShape(shapeName) {
 
   this.layers.default.add(shapeNode);
 
+  this.setShapeCustomization(shapeNode);
+  this.applyShapeCustomization(shapeNode);
+
   this.handleSlideUpdate();
 
   this.processShape(shapeNode);
