@@ -341,21 +341,21 @@ export const useStudioStore = defineStore("studio", {
 
           // process text
           this.stages.default
-            .find(this.MODE_OPTIONS.TEXT)
+            .find(`.${this.MODE_OPTIONS.TEXT}`)
             .forEach(async (node) => {
               this.processText(node);
             });
 
           // process shape
           this.stages.default
-            .find(this.MODE_OPTIONS.SHAPE)
+            .find(`.${this.MODE_OPTIONS.SHAPE}`)
             .forEach(async (node) => {
               this.processShape(node);
             });
 
           // process gifs
           const handleProcessGifs = async () => {
-            const nodes = this.stages.default.find("." + this.MODE_OPTIONS.GIF);
+            const nodes = this.stages.default.find(`.${this.MODE_OPTIONS.GIF}`);
 
             for (let node of nodes) {
               const imageObj = new Image();
