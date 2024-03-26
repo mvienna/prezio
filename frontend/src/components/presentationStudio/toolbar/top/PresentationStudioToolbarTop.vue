@@ -95,7 +95,6 @@
       <!-- clear formatting -->
       <template v-if="transformer.default?.nodes()?.length">
         <q-btn
-          icon="r_restart_alt"
           flat
           no-caps
           no-wrap

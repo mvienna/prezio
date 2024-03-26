@@ -1,6 +1,7 @@
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
 import { usePresentationsStore } from "stores/presentations";
 import { storeToRefs } from "pinia";
+import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 
 const presentationsStore = usePresentationsStore();
 const { slide } = storeToRefs(presentationsStore);
@@ -126,4 +127,37 @@ export function moveToBottom(
   if (!nodes?.length) return;
   nodes.forEach((node) => node.moveToBottom());
   this.handleSlideUpdate();
+}
+
+export function repositionNode(
+  nodes = this.transformer.default.nodes(),
+  align,
+) {
+  nodes.forEach((node) => {
+    switch (align) {
+      case ALIGNMENT.horizontal.left:
+        node.x(0);
+        break;
+
+      case ALIGNMENT.horizontal.center:
+        node.x(this.scene.width / 2 - node.width() / 2);
+        break;
+
+      case ALIGNMENT.horizontal.right:
+        node.x(this.scene.width - node.width());
+        break;
+
+      case ALIGNMENT.vertical.top:
+        node.y(0);
+        break;
+
+      case ALIGNMENT.vertical.middle:
+        node.y(this.scene.height / 2 - node.height() / 2);
+        break;
+
+      case ALIGNMENT.vertical.bottom:
+        node.y(this.scene.height - node.height());
+        break;
+    }
+  });
 }

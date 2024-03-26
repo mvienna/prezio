@@ -688,22 +688,160 @@
   <q-checkbox
     v-if="!transformer.custom.shape.node"
     v-model="shape.keepRatio"
-    size="32px"
+    size="36px"
+    style="font-size: 12px"
     :class="shape.keepRatio ? 'text-primary' : ''"
     @update:model-value="transformer.default.keepRatio(shape.keepRatio)"
-    class="text-semibold"
   >
     <div>
       {{ $t("presentationStudio.toolbar.shape.keepRatio.title") }}
     </div>
   </q-checkbox>
+
+  <q-space />
+
+  <!-- position -->
+  <q-btn
+    flat
+    size="12px"
+    no-caps
+    :label="$t('presentationStudio.toolbar.shape.position.title')"
+    :class="{ 'bg-grey-2': showMenu.position }"
+    :ripple="false"
+  >
+    <q-menu
+      v-model="showMenu.position"
+      anchor="bottom left"
+      self="top left"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      :offset="[0, 8]"
+      class="hide-scrollbar no-padding"
+      style="width: 280px"
+    >
+      <div class="q-pa-md">
+        <div class="row justify-between q-pl-sm">
+          <div class="col-6 flex-col q-gutter-sm">
+            <!-- left -->
+            <q-btn
+              flat
+              class="bg-grey-2 col-3 full-width"
+              :label="
+                $t('presentationStudio.toolbar.shape.position.options.left')
+              "
+              align="left"
+              no-wrap
+              no-caps
+              icon="icon-align_justify_flex_start"
+              @click="
+                studioStore.repositionNode(undefined, ALIGNMENT.horizontal.left)
+              "
+            />
+
+            <!-- center -->
+            <q-btn
+              flat
+              class="bg-grey-2 full-width"
+              :label="
+                $t('presentationStudio.toolbar.shape.position.options.center')
+              "
+              align="left"
+              no-wrap
+              no-caps
+              icon="icon-align_horizontal_center"
+              @click="
+                studioStore.repositionNode(
+                  undefined,
+                  ALIGNMENT.horizontal.center,
+                )
+              "
+            />
+
+            <!-- right -->
+            <q-btn
+              flat
+              class="bg-grey-2 full-width"
+              :label="
+                $t('presentationStudio.toolbar.shape.position.options.right')
+              "
+              align="left"
+              no-wrap
+              no-caps
+              icon="icon-align_justify_flex_end"
+              @click="
+                studioStore.repositionNode(
+                  undefined,
+                  ALIGNMENT.horizontal.right,
+                )
+              "
+            />
+          </div>
+
+          <div class="col-6 flex-col q-gutter-sm">
+            <!-- top -->
+            <q-btn
+              flat
+              class="bg-grey-2 full-width"
+              :label="
+                $t('presentationStudio.toolbar.shape.position.options.top')
+              "
+              align="left"
+              no-wrap
+              no-caps
+              icon="icon-align_flex_start"
+              @click="
+                studioStore.repositionNode(undefined, ALIGNMENT.vertical.top)
+              "
+            />
+
+            <!-- center -->
+            <q-btn
+              flat
+              class="bg-grey-2 full-width"
+              :label="
+                $t('presentationStudio.toolbar.shape.position.options.middle')
+              "
+              align="left"
+              no-wrap
+              no-caps
+              icon="icon-align_vertical_center"
+              @click="
+                studioStore.repositionNode(undefined, ALIGNMENT.vertical.middle)
+              "
+            />
+
+            <!-- bottom -->
+            <q-btn
+              flat
+              class="bg-grey-2 full-width"
+              :label="
+                $t('presentationStudio.toolbar.shape.position.options.bottom')
+              "
+              align="left"
+              no-wrap
+              no-caps
+              icon="icon-align_flex_end"
+              @click="
+                studioStore.repositionNode(undefined, ALIGNMENT.vertical.bottom)
+              "
+            />
+          </div>
+        </div>
+      </div>
+    </q-menu>
+
+    <q-tooltip :offset="[0, 4]">
+      {{ $t("presentationStudio.toolbar.shape.size.title") }}
+    </q-tooltip>
+  </q-btn>
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useStudioStore } from "stores/studio";
 import { storeToRefs } from "pinia";
 import {
+  ALIGNMENT,
   SHAPE_OPTIONS,
   SHAPE_TYPES,
 } from "src/constants/canvas/canvasVariables";
@@ -720,6 +858,8 @@ const showMenu = ref({
   stroke: false,
   opacity: false,
   cornerRadius: false,
+  size: false,
+  position: false,
 });
 
 /*

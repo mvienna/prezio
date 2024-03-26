@@ -144,6 +144,18 @@ export default {
         keepRatio: {
           title: "Сохранять пропорции",
         },
+
+        position: {
+          title: "Позиция",
+          options: {
+            top: "Верх",
+            bottom: "Низ",
+            left: "Лево",
+            right: "Право",
+            center: "Центр",
+            middle: "Центр",
+          },
+        },
       },
 
       resetCustomization: {
