@@ -465,10 +465,10 @@ export const useStudioStore = defineStore("studio", {
     },
 
     createDefaultNodesForSlide() {
-      // add default nodes for content-type slide
-      if (slide.value.type === SLIDE_TYPES.CONTENT) {
-        this.setLayout(LAYOUT_OPTIONS.title);
-      }
+      // // add default nodes for content-type slide
+      // if (slide.value.type === SLIDE_TYPES.CONTENT) {
+      //   this.setLayout(LAYOUT_OPTIONS.title);
+      // }
 
       // add default nodes for leaderboard or quiz type slide
       if (
