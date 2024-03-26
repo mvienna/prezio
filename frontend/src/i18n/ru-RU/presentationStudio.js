@@ -90,6 +90,10 @@ export default {
           leftMiddle: "Лево-Середина",
           leftBottom: "Лево-Низ",
         },
+
+        mirror: {
+          title: "Отразить по горизонтали",
+        },
       },
 
       emoji: {

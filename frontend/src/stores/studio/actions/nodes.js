@@ -161,3 +161,17 @@ export function repositionNode(
     }
   });
 }
+
+export function mirrorNodeHorizontally(
+  nodes = this.transformer.default.nodes(),
+) {
+  nodes.forEach((node) => {
+    if (node.scaleX() > 0) {
+      node.scaleX(-1);
+      node.x(node.x() + node.width());
+    } else {
+      node.scaleX(1);
+      node.x(node.x() - node.width());
+    }
+  });
+}

@@ -462,6 +462,21 @@
       {{ $t("presentationStudio.toolbar.image.cornerRadius.title") }}
     </q-tooltip>
   </q-btn>
+
+  <q-space />
+
+  <!-- clip position -->
+  <q-btn
+    flat
+    round
+    size="12px"
+    icon="icon-mirror"
+    @click="studioStore.mirrorNodeHorizontally()"
+  >
+    <q-tooltip :offset="[0, 4]">
+      {{ $t("presentationStudio.toolbar.image.mirror.title") }}
+    </q-tooltip>
+  </q-btn>
 </template>
 
 <script setup>
@@ -470,6 +485,7 @@ import { useStudioStore } from "stores/studio";
 import SelectMedia from "components/media/SelectMedia.vue";
 import { ref } from "vue";
 import { CROP_POSITION_OPTIONS } from "src/constants/canvas/canvasVariables";
+import { mirrorNodeHorizontally } from "stores/studio/actions/nodes";
 
 /*
  * stores

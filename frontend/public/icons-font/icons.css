@@ -1,7 +1,7 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.woff?0901d7136c78ede9de68e8398b3df450") format("woff"),
-url("./icons.woff2?0901d7136c78ede9de68e8398b3df450") format("woff2");
+    src: url("./icons.woff?353b44307bf544b9693e98ee425ddecb") format("woff"),
+url("./icons.woff2?353b44307bf544b9693e98ee425ddecb") format("woff2");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -153,36 +153,39 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
 .icon-mdi_format_color_top:before {
     content: "\f12e";
 }
-.icon-olive-branches-award:before {
+.icon-mirror:before {
     content: "\f12f";
 }
-.icon-page_info:before {
+.icon-olive-branches-award:before {
     content: "\f130";
 }
-.icon-presentation:before {
+.icon-page_info:before {
     content: "\f131";
 }
-.icon-profile_group:before {
+.icon-presentation:before {
     content: "\f132";
 }
-.icon-shadow:before {
+.icon-profile_group:before {
     content: "\f133";
 }
-.icon-shape_line:before {
+.icon-shadow:before {
     content: "\f134";
 }
-.icon-space_dashboard:before {
+.icon-shape_line:before {
     content: "\f135";
 }
-.icon-thumb-down-circular:before {
+.icon-space_dashboard:before {
     content: "\f136";
 }
-.icon-triangle:before {
+.icon-thumb-down-circular:before {
     content: "\f137";
 }
-.icon-unsplash:before {
+.icon-triangle:before {
     content: "\f138";
 }
-.icon-upload:before {
+.icon-unsplash:before {
     content: "\f139";
+}
+.icon-upload:before {
+    content: "\f13a";
 }
