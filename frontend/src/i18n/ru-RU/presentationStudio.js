@@ -154,7 +154,14 @@ export default {
         keepRatio: {
           title: "Сохранять пропорции",
         },
+      },
 
+      resetCustomization: {
+        title: "Очистить",
+        tooltip: "По умолчанию",
+      },
+
+      node: {
         position: {
           title: "Позиция",
           options: {
@@ -166,11 +173,6 @@ export default {
             middle: "Центр",
           },
         },
-      },
-
-      resetCustomization: {
-        title: "Очистить",
-        tooltip: "По умолчанию",
       },
 
       // zoom

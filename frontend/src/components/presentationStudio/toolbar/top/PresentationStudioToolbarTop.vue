@@ -108,6 +108,158 @@
         </q-btn>
 
         <q-separator vertical class="q-mx-sm" />
+
+        <!-- position -->
+        <q-btn
+          flat
+          size="12px"
+          no-caps
+          class="q-mr-sm"
+          :label="$t('presentationStudio.toolbar.node.position.title')"
+          :ripple="false"
+        >
+          <q-menu
+            anchor="bottom left"
+            self="top left"
+            transition-show="jump-down"
+            transition-hide="jump-up"
+            :offset="[0, 8]"
+            class="hide-scrollbar no-padding"
+            style="width: 280px"
+          >
+            <div class="q-pa-md">
+              <div class="row justify-between q-pl-sm">
+                <div class="col-6 flex-col q-gutter-sm">
+                  <!-- left -->
+                  <q-btn
+                    flat
+                    class="bg-grey-2 col-3 full-width"
+                    :label="
+                      $t(
+                        'presentationStudio.toolbar.node.position.options.left',
+                      )
+                    "
+                    align="left"
+                    no-wrap
+                    no-caps
+                    icon="icon-align_justify_flex_start"
+                    @click="
+                      studioStore.repositionNode(
+                        undefined,
+                        ALIGNMENT.horizontal.left,
+                      )
+                    "
+                  />
+
+                  <!-- center -->
+                  <q-btn
+                    flat
+                    class="bg-grey-2 full-width"
+                    :label="
+                      $t(
+                        'presentationStudio.toolbar.node.position.options.center',
+                      )
+                    "
+                    align="left"
+                    no-wrap
+                    no-caps
+                    icon="icon-align_horizontal_center"
+                    @click="
+                      studioStore.repositionNode(
+                        undefined,
+                        ALIGNMENT.horizontal.center,
+                      )
+                    "
+                  />
+
+                  <!-- right -->
+                  <q-btn
+                    flat
+                    class="bg-grey-2 full-width"
+                    :label="
+                      $t(
+                        'presentationStudio.toolbar.node.position.options.right',
+                      )
+                    "
+                    align="left"
+                    no-wrap
+                    no-caps
+                    icon="icon-align_justify_flex_end"
+                    @click="
+                      studioStore.repositionNode(
+                        undefined,
+                        ALIGNMENT.horizontal.right,
+                      )
+                    "
+                  />
+                </div>
+
+                <div class="col-6 flex-col q-gutter-sm">
+                  <!-- top -->
+                  <q-btn
+                    flat
+                    class="bg-grey-2 full-width"
+                    :label="
+                      $t('presentationStudio.toolbar.node.position.options.top')
+                    "
+                    align="left"
+                    no-wrap
+                    no-caps
+                    icon="icon-align_flex_start"
+                    @click="
+                      studioStore.repositionNode(
+                        undefined,
+                        ALIGNMENT.vertical.top,
+                      )
+                    "
+                  />
+
+                  <!-- center -->
+                  <q-btn
+                    flat
+                    class="bg-grey-2 full-width"
+                    :label="
+                      $t(
+                        'presentationStudio.toolbar.node.position.options.middle',
+                      )
+                    "
+                    align="left"
+                    no-wrap
+                    no-caps
+                    icon="icon-align_vertical_center"
+                    @click="
+                      studioStore.repositionNode(
+                        undefined,
+                        ALIGNMENT.vertical.middle,
+                      )
+                    "
+                  />
+
+                  <!-- bottom -->
+                  <q-btn
+                    flat
+                    class="bg-grey-2 full-width"
+                    :label="
+                      $t(
+                        'presentationStudio.toolbar.node.position.options.bottom',
+                      )
+                    "
+                    align="left"
+                    no-wrap
+                    no-caps
+                    icon="icon-align_flex_end"
+                    @click="
+                      studioStore.repositionNode(
+                        undefined,
+                        ALIGNMENT.vertical.bottom,
+                      )
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+          </q-menu>
+        </q-btn>
       </template>
 
       <!-- open design tab & choose wallpaper dialog -->
@@ -225,6 +377,7 @@ import { useStudioStore } from "stores/studio";
 import PresentationStudioToolbarTopCustomizationImage from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationImage.vue";
 import PresentationStudioToolbarTopCustomizationShape from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationShape.vue";
 import PresentationStudioToolbarTopCustomizationText from "components/presentationStudio/toolbar/top/customization/PresentationStudioToolbarTopCustomizationText.vue";
+import { ALIGNMENT } from "src/constants/canvas/canvasVariables";
 
 /*
  * variables
