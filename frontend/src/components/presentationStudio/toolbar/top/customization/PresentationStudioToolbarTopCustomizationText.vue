@@ -371,7 +371,7 @@
     options-dense
     suffix="px"
     style="max-width: 95px; min-width: 25px"
-    @change="
+    @update:model-value="
       () => {
         studioStore.applyCustomization();
       }

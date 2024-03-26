@@ -266,7 +266,7 @@ export const useStudioStore = defineStore("studio", {
         shadowOffset: { x: 0, y: 0 },
         shadowOpacity: 0,
         opacity: 1,
-        letterSpacing: 5,
+        letterSpacing: 0,
       },
     },
     showTitleTooltip: false,
