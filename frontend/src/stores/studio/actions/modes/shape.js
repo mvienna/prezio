@@ -3,7 +3,6 @@ import Konva from "konva";
 
 export function addShape(shapeName) {
   let shapeNode;
-  const size = 200;
 
   const shapeDefaultConfig = {
     opacity: this.shape.default.opacity,
@@ -56,15 +55,15 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.CIRCLE.name:
       shapeNode = new Konva.Circle({
         ...shapeDefaultConfig,
-        radius: size / 2,
+        radius: this.shape.default.width / 2,
       });
       break;
 
     case SHAPE_OPTIONS.RECT.name:
       shapeNode = new Konva.Rect({
         ...shapeDefaultConfig,
-        width: size,
-        height: size,
+        width: this.shape.default.width,
+        height: this.shape.default.height,
         cornerRadius: this.shape.default.cornerRadius,
       });
       break;
@@ -73,15 +72,15 @@ export function addShape(shapeName) {
       shapeNode = new Konva.Star({
         ...shapeDefaultConfig,
         numPoints: 5,
-        innerRadius: size / 3,
-        outerRadius: size - size / 3,
+        innerRadius: this.shape.default.width / 3,
+        outerRadius: this.shape.default.width - this.shape.default.width / 3,
       });
       break;
 
     case SHAPE_OPTIONS.TRIANGLE.name:
       shapeNode = new Konva.RegularPolygon({
         ...shapeDefaultConfig,
-        radius: size / 2,
+        radius: this.shape.default.width / 2,
         sides: 3,
       });
 
@@ -90,7 +89,7 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.POLYGON.name:
       shapeNode = new Konva.RegularPolygon({
         ...shapeDefaultConfig,
-        radius: size / 2,
+        radius: this.shape.default.width / 2,
         sides: 6,
         rotation: -90,
       });
@@ -285,6 +284,8 @@ export function processShape(shape) {
 
     shape.scaleX(1);
     shape.scaleY(1);
+
+    this.setShapeCustomization(shape);
   });
   shape.on("dragstart", this.handleSelectionDragStart);
 }
@@ -292,6 +293,8 @@ export function processShape(shape) {
 export function setShapeCustomization(node) {
   this.shape = {
     ...this.shape,
+    width: node.width(),
+    height: node.height(),
     opacity: node.opacity(),
     stroke: node.stroke(),
     strokeWidth: node.strokeWidth(),
@@ -328,6 +331,8 @@ export function setShapeCustomization(node) {
 
 export function applyShapeCustomization(node) {
   node.setAttrs({
+    width: this.shape.width,
+    height: this.shape.height,
     opacity: this.shape.opacity,
     stroke: this.shape.stroke,
     strokeWidth: this.shape.strokeWidth,

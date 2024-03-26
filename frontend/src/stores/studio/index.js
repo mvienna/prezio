@@ -174,6 +174,8 @@ export const useStudioStore = defineStore("studio", {
      * shape
      */
     shape: {
+      width: 200,
+      height: 200,
       fill: COLOR_PALETTE.PRIMARY,
       stroke: COLOR_PALETTE.PRIMARY,
       strokeWidth: 0,
@@ -194,6 +196,8 @@ export const useStudioStore = defineStore("studio", {
       dash: [10, 0],
 
       default: {
+        width: 200,
+        height: 200,
         fill: COLOR_PALETTE.PRIMARY,
         stroke: COLOR_PALETTE.PRIMARY,
         strokeWidth: 0,

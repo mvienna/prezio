@@ -314,7 +314,7 @@
     dense
     borderless
     style="width: 64px; min-width: 64px; max-width: 64px"
-    @update:model-value="studioStore.applyCustomization()"
+    @change="studioStore.applyCustomization()"
   >
     <template #after>
       <div class="text-caption">px</div>
@@ -371,7 +371,7 @@
     options-dense
     suffix="px"
     style="max-width: 95px; min-width: 25px"
-    @update:model-value="
+    @change="
       () => {
         studioStore.applyCustomization();
       }

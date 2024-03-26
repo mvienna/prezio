@@ -134,6 +134,12 @@ export default {
           simpleShapes: "Простые формы",
           abstract: "Абстрактные формы",
         },
+
+        size: {
+          title: "Размеры",
+          width: "Ширина",
+          height: "Высота",
+        },
       },
 
       resetCustomization: {
