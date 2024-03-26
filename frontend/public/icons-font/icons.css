@@ -1,7 +1,7 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.woff?d78003121d476a5d8565cbc62fb33782") format("woff"),
-url("./icons.woff2?d78003121d476a5d8565cbc62fb33782") format("woff2");
+    src: url("./icons.woff?0901d7136c78ede9de68e8398b3df450") format("woff"),
+url("./icons.woff2?0901d7136c78ede9de68e8398b3df450") format("woff2");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -96,34 +96,34 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
 .icon-format_italic:before {
     content: "\f11b";
 }
-.icon-format_strikethough_s:before {
+.icon-format_letter_spacing_wide:before {
     content: "\f11c";
 }
-.icon-format_underlined:before {
+.icon-format_strikethough_s:before {
     content: "\f11d";
 }
-.icon-heart:before {
+.icon-format_underlined:before {
     content: "\f11e";
 }
-.icon-home:before {
+.icon-heart:before {
     content: "\f11f";
 }
-.icon-image_add:before {
+.icon-home:before {
     content: "\f120";
 }
-.icon-image_edit:before {
+.icon-image_add:before {
     content: "\f121";
 }
-.icon-insert_text:before {
+.icon-image_edit:before {
     content: "\f122";
 }
-.icon-label_important:before {
+.icon-insert_text:before {
     content: "\f123";
 }
-.icon-leaderboard:before {
+.icon-label_important:before {
     content: "\f124";
 }
-.icon-letter_spacing:before {
+.icon-leaderboard:before {
     content: "\f125";
 }
 .icon-logout:before {

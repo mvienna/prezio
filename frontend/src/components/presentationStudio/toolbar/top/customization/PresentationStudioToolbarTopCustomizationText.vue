@@ -325,7 +325,7 @@
     </q-tooltip>
   </q-input>
 
-  <!-- formatting - line hight -->
+  <!-- formatting - line height -->
   <q-select
     v-model="text.lineHeight"
     :options="LINE_HEIGHT_OPTIONS"
@@ -378,7 +378,7 @@
     "
   >
     <template #prepend>
-      <q-icon name="icon-letter_spacing" class="text-black" />
+      <q-icon name="icon-format_letter_spacing_wide" class="text-black" />
     </template>
 
     <template #option="scope">
