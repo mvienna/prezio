@@ -235,7 +235,7 @@ export const useStudioStore = defineStore("studio", {
 
       // todo: add customization to toolbar
       padding: 16,
-      lineHeight: 1,
+      lineHeight: 1.2,
       wrap: "word", // word, char, none
       ellipsis: false,
       stroke: COLOR_PALETTE.BLACK,
@@ -255,7 +255,7 @@ export const useStudioStore = defineStore("studio", {
         align: "left", // left, center, right
         verticalAlign: "top", // top, middle, bottom
         padding: 16,
-        lineHeight: 1,
+        lineHeight: 1.2,
         wrap: "word", // word, char, none
         ellipsis: false,
         fill: COLOR_PALETTE.BLACK,

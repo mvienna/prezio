@@ -23,6 +23,7 @@ export function addText(config = {}, isSave = true) {
         this.text.default.fontSize * this.text.default.lineHeight,
     fontSize: config.fontSize || this.text.default.fontSize,
     fontFamily: config.fontFamily || this.text.default.fontFamily,
+    lineHeight: config.lineHeight || this.text.default.lineHeight,
     padding: this.text.default.padding,
     draggable: config.draggable !== false,
     fontStyle: config.fontStyle || this.text.default.fontStyle,
