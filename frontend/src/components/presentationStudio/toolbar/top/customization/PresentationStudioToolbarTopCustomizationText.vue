@@ -314,6 +314,7 @@
     dense
     borderless
     style="width: 64px; min-width: 64px; max-width: 64px"
+    class="q-mr-sm"
     @change="studioStore.applyCustomization()"
   >
     <template #after>
@@ -342,7 +343,7 @@
     "
   >
     <template #prepend>
-      <q-icon name="r_height" class="text-black" />
+      <q-icon name="r_format_line_spacing" class="text-black" />
     </template>
 
     <template #option="scope">
