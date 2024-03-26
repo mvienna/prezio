@@ -614,7 +614,7 @@
     </q-tooltip>
   </q-btn>
 
-  <!-- corner radius -->
+  <!-- size -->
   <q-btn
     flat
     round
@@ -683,6 +683,20 @@
       {{ $t("presentationStudio.toolbar.shape.size.title") }}
     </q-tooltip>
   </q-btn>
+
+  <!-- keep ratio -->
+  <q-checkbox
+    v-if="!transformer.custom.shape.node"
+    v-model="shape.keepRatio"
+    size="32px"
+    :class="shape.keepRatio ? 'text-primary' : ''"
+    @update:model-value="transformer.default.keepRatio(shape.keepRatio)"
+    class="text-semibold"
+  >
+    <div>
+      {{ $t("presentationStudio.toolbar.shape.keepRatio.title") }}
+    </div>
+  </q-checkbox>
 </template>
 
 <script setup>

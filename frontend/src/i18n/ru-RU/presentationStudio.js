@@ -140,6 +140,10 @@ export default {
           width: "Ширина",
           height: "Высота",
         },
+
+        keepRatio: {
+          title: "Сохранять пропорции",
+        },
       },
 
       resetCustomization: {

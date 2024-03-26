@@ -318,6 +318,8 @@ export function setShapeCustomization(node) {
     linearGradientDegrees:
       node.getAttr("linearGradientDegrees") ||
       this.shape.default.linearGradientDegrees,
+
+    keepRatio: this.transformer.default.keepRatio(),
   };
 
   if (
