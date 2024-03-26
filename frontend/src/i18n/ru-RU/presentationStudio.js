@@ -94,6 +94,12 @@ export default {
         mirror: {
           title: "Отразить по горизонтали",
         },
+
+        size: {
+          title: "Размеры",
+          width: "Ширина",
+          height: "Высота",
+        },
       },
 
       emoji: {

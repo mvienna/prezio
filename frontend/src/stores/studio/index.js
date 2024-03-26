@@ -145,6 +145,8 @@ export const useStudioStore = defineStore("studio", {
      * image
      */
     image: {
+      width: null,
+      height: null,
       opacity: 1,
       cornerRadius: 0,
       stroke: COLOR_PALETTE.PRIMARY,

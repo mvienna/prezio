@@ -178,6 +178,8 @@ export function processImageNode(
       this.image.clipPosition,
     );
     image.setAttrs(crop);
+
+    this.setImageCustomization(image);
   });
 
   image.on("transformend", this.handleSnappingEnd);
@@ -218,6 +220,8 @@ export async function replaceImage(
 export function setImageCustomization(node) {
   this.image = {
     ...this.image,
+    width: node.width(),
+    height: node.height(),
     opacity: node.opacity(),
     stroke: node.stroke(),
     strokeWidth:
@@ -256,8 +260,13 @@ export function applyImageCustomization(node) {
     shadowOpacity: this.image.shadowOpacity,
     scaleX: 1,
     scaleY: 1,
-    width: node.width() * node.scaleX(),
-    height: node.height() * node.scaleY(),
+    width:
+      (node.width() !== this.image.width ? this.image.width : node.width()) *
+      node.scaleX(),
+    height:
+      (node.height() !== this.image.height
+        ? this.image.height
+        : node.height()) * node.scaleY(),
     lastCropUsed: this.image.clipPosition,
   });
 

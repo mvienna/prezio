@@ -463,6 +463,76 @@
     </q-tooltip>
   </q-btn>
 
+  <!-- size -->
+  <q-btn
+    flat
+    round
+    size="12px"
+    icon="r_crop_free"
+    :class="{ 'bg-grey-2': showMenu.size }"
+    :ripple="false"
+  >
+    <q-menu
+      v-model="showMenu.size"
+      anchor="bottom left"
+      self="top left"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      :offset="[0, 8]"
+      class="hide-scrollbar no-padding"
+      style="width: 250px"
+    >
+      <div class="q-pa-md">
+        <div class="text-caption text-grey q-mb-md">
+          {{ $t("presentationStudio.toolbar.shape.size.title") }}
+        </div>
+
+        <div class="row no-wrap q-gutter-md">
+          <!-- width -->
+          <q-input
+            v-model.number="image.width"
+            type="number"
+            color="primary"
+            :label="$t('presentationStudio.toolbar.image.size.width')"
+            outlined
+            class="q-mb-sm"
+            @change="studioStore.applyCustomization()"
+          >
+            <template #append>
+              <div
+                class="text-caption absolute-bottom-right q-mr-sm q-mb-sm q-pb-xs"
+              >
+                px
+              </div>
+            </template>
+          </q-input>
+
+          <!-- height -->
+          <q-input
+            v-model.number="image.height"
+            type="number"
+            color="primary"
+            :label="$t('presentationStudio.toolbar.image.size.height')"
+            outlined
+            @change="studioStore.applyCustomization()"
+          >
+            <template #append>
+              <div
+                class="text-caption absolute-bottom-right q-mr-sm q-mb-sm q-pb-xs"
+              >
+                px
+              </div>
+            </template>
+          </q-input>
+        </div>
+      </div>
+    </q-menu>
+
+    <q-tooltip :offset="[0, 4]">
+      {{ $t("presentationStudio.toolbar.image.size.title") }}
+    </q-tooltip>
+  </q-btn>
+
   <q-space />
 
   <!-- clip position -->
