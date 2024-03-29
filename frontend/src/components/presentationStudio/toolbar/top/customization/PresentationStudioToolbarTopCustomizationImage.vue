@@ -575,15 +575,13 @@
     </q-tooltip>
   </q-btn>
 
-  <q-space />
-
-  <!-- clip position -->
+  <!-- flip - horizontally -->
   <q-btn
     flat
     round
     size="12px"
-    icon="icon-mirror"
-    @click="studioStore.mirrorNodeHorizontally()"
+    icon="r_flip"
+    @click="studioStore.flipNodeHorizontally()"
   >
     <q-tooltip
       :offset="[0, 4]"
@@ -592,7 +590,22 @@
       transition-show="jump-up"
       transition-hide="jump-down"
     >
-      {{ $t("presentationStudio.toolbar.image.mirror.title") }}
+      {{ $t("presentationStudio.toolbar.image.flip.horizontally") }}
+    </q-tooltip>
+  </q-btn>
+
+  <!-- flip - vertically -->
+  <q-btn flat round size="12px" @click="studioStore.flipNodeVertically()">
+    <q-icon name="r_flip" class="rotate-270" />
+
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
+      {{ $t("presentationStudio.toolbar.image.flip.vertically") }}
     </q-tooltip>
   </q-btn>
 </template>
@@ -603,7 +616,6 @@ import { useStudioStore } from "stores/studio";
 import SelectMedia from "components/media/SelectMedia.vue";
 import { ref } from "vue";
 import { CROP_POSITION_OPTIONS } from "src/constants/canvas/canvasVariables";
-import { mirrorNodeHorizontally } from "stores/studio/actions/nodes";
 
 /*
  * stores

@@ -162,9 +162,7 @@ export function repositionNode(
   });
 }
 
-export function mirrorNodeHorizontally(
-  nodes = this.transformer.default.nodes(),
-) {
+export function flipNodeHorizontally(nodes = this.transformer.default.nodes()) {
   nodes.forEach((node) => {
     if (node.scaleX() > 0) {
       node.scaleX(-1);
@@ -172,6 +170,18 @@ export function mirrorNodeHorizontally(
     } else {
       node.scaleX(1);
       node.x(node.x() - node.width());
+    }
+  });
+}
+
+export function flipNodeVertically(nodes = this.transformer.default.nodes()) {
+  nodes.forEach((node) => {
+    if (node.scaleY() > 0) {
+      node.scaleY(-1);
+      node.y(node.y() + node.height());
+    } else {
+      node.scaleY(1);
+      node.y(node.y() - node.height());
     }
   });
 }

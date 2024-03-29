@@ -91,8 +91,9 @@ export default {
           leftBottom: "Лево-Низ",
         },
 
-        mirror: {
-          title: "Отразить по горизонтали",
+        flip: {
+          horizontally: "Отразить по горизонтали",
+          vertically: "Отразить по вертикали",
         },
 
         size: {
