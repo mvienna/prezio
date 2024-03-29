@@ -644,70 +644,21 @@
     </q-tooltip>
   </q-btn>
 
-  <!-- size -->
-  <q-btn
-    flat
-    round
-    size="12px"
-    icon="r_crop_free"
-    :class="{ 'bg-grey-2': showMenu.size }"
-    :ripple="false"
+  <!-- width -->
+  <q-input
+    v-model.number="shape.width"
+    type="number"
+    color="primary"
+    borderless
+    dense
+    style="width: 90px"
+    @change="studioStore.applyCustomization()"
   >
-    <q-menu
-      v-model="showMenu.size"
-      anchor="bottom left"
-      self="top left"
-      transition-show="jump-down"
-      transition-hide="jump-up"
-      :offset="[0, 8]"
-      class="hide-scrollbar no-padding"
-      style="width: 250px"
-    >
-      <div class="q-pa-md">
-        <div class="text-caption text-grey q-mb-md">
-          {{ $t("presentationStudio.toolbar.shape.size.title") }}
-        </div>
-
-        <div class="row no-wrap q-gutter-md">
-          <!-- width -->
-          <q-input
-            v-model.number="shape.width"
-            type="number"
-            color="primary"
-            :label="$t('presentationStudio.toolbar.shape.size.width')"
-            outlined
-            class="q-mb-sm"
-            @change="studioStore.applyCustomization()"
-          >
-            <template #append>
-              <div
-                class="text-caption absolute-bottom-right q-mr-sm q-mb-sm q-pb-xs"
-              >
-                px
-              </div>
-            </template>
-          </q-input>
-
-          <!-- height -->
-          <q-input
-            v-model.number="shape.height"
-            type="number"
-            color="primary"
-            :label="$t('presentationStudio.toolbar.shape.size.height')"
-            outlined
-            @change="studioStore.applyCustomization()"
-          >
-            <template #append>
-              <div
-                class="text-caption absolute-bottom-right q-mr-sm q-mb-sm q-pb-xs"
-              >
-                px
-              </div>
-            </template>
-          </q-input>
-        </div>
+    <template #append>
+      <div class="text-caption absolute-bottom-right q-mr-sm q-mb-sm q-pb-xs">
+        px
       </div>
-    </q-menu>
+    </template>
 
     <q-tooltip
       :offset="[0, 4]"
@@ -716,9 +667,36 @@
       transition-show="jump-up"
       transition-hide="jump-down"
     >
-      {{ $t("presentationStudio.toolbar.shape.size.title") }}
+      {{ $t("presentationStudio.toolbar.shape.size.width") }}
     </q-tooltip>
-  </q-btn>
+  </q-input>
+
+  <!-- height -->
+  <q-input
+    v-model.number="shape.height"
+    type="number"
+    color="primary"
+    style="width: 90px"
+    borderless
+    dense
+    @change="studioStore.applyCustomization()"
+  >
+    <template #append>
+      <div class="text-caption absolute-bottom-right q-mr-sm q-mb-sm q-pb-xs">
+        px
+      </div>
+    </template>
+
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
+      {{ $t("presentationStudio.toolbar.shape.size.height") }}
+    </q-tooltip>
+  </q-input>
 
   <!-- keep ratio -->
   <q-checkbox
@@ -727,7 +705,10 @@
     size="36px"
     style="font-size: 12px"
     :class="shape.keepRatio ? 'text-primary' : ''"
-    @update:model-value="transformer.default.keepRatio(shape.keepRatio)"
+    @update:model-value="
+      transformer.default.keepRatio(shape.keepRatio);
+      studioStore.applyCustomization();
+    "
   >
     <div>
       {{ $t("presentationStudio.toolbar.shape.keepRatio.title") }}

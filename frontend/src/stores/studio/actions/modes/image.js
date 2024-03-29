@@ -241,12 +241,6 @@ export function setImageCustomization(node) {
 }
 
 export function applyImageCustomization(node) {
-  const crop = this.getCrop(
-    node.image(),
-    { width: node.width(), height: node.height() },
-    this.image.clipPosition,
-  );
-
   node.setAttrs({
     opacity: this.image.opacity,
     cornerRadius:
@@ -269,6 +263,12 @@ export function applyImageCustomization(node) {
         : node.height()) * node.scaleY(),
     lastCropUsed: this.image.clipPosition,
   });
+
+  const crop = this.getCrop(
+    node.image(),
+    { width: node.width(), height: node.height() },
+    this.image.clipPosition,
+  );
 
   node.setAttrs(crop);
 }

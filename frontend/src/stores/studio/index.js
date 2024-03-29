@@ -196,6 +196,7 @@ export const useStudioStore = defineStore("studio", {
       ],
       linearGradientDegrees: 0,
       dash: [10, 0],
+      keepRatio: true,
 
       default: {
         width: 200,
@@ -218,6 +219,7 @@ export const useStudioStore = defineStore("studio", {
         ],
         linearGradientDegrees: 0,
         dash: [10, 0],
+        keepRatio: true,
       },
     },
 

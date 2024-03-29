@@ -97,7 +97,6 @@ export default {
         },
 
         size: {
-          title: "Размеры",
           width: "Ширина",
           height: "Высота",
         },
@@ -147,13 +146,12 @@ export default {
         },
 
         size: {
-          title: "Размеры",
           width: "Ширина",
           height: "Высота",
         },
 
         keepRatio: {
-          title: "Сохранять пропорции",
+          title: "Пропорции",
         },
       },
 

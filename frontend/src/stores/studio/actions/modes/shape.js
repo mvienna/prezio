@@ -318,9 +318,10 @@ export function setShapeCustomization(node) {
     linearGradientDegrees:
       node.getAttr("linearGradientDegrees") ||
       this.shape.default.linearGradientDegrees,
-
-    keepRatio: this.transformer.default.keepRatio(),
+    keepRatio: node.getAttr("keepRatio"),
   };
+
+  this.transformer.default?.keepRatio(this.shape.keepRatio);
 
   if (
     [SHAPE_OPTIONS.ARROW.name, SHAPE_OPTIONS.ARROW_DOUBLE.name].includes(
@@ -332,6 +333,20 @@ export function setShapeCustomization(node) {
 }
 
 export function applyShapeCustomization(node) {
+  if (this.shape.keepRatio) {
+    // on width change
+    if (node.width() !== this.shape.width) {
+      const aspectRatio = node.width() / this.shape.height;
+      this.shape.height = this.shape.width / aspectRatio;
+    }
+
+    // on height change
+    if (node.height() !== this.shape.height) {
+      const aspectRatio = node.width() / node.height();
+      this.shape.width = this.shape.height * aspectRatio;
+    }
+  }
+
   node.setAttrs({
     width: this.shape.width,
     height: this.shape.height,
@@ -344,6 +359,7 @@ export function applyShapeCustomization(node) {
     shadowOffset: this.shape.shadowOffset,
     shadowOpacity: this.shape.shadowOpacity,
     linearGradientDegrees: this.shape.linearGradientDegrees,
+    keepRatio: this.shape.keepRatio,
   });
 
   if (node.getAttr("shape") === SHAPE_OPTIONS.RECT.name) {
