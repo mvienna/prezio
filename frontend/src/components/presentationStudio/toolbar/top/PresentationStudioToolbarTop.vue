@@ -102,7 +102,13 @@
           :label="$t('presentationStudio.toolbar.resetCustomization.title')"
           @click="handleCustomizationReset()"
         >
-          <q-tooltip :offset="[0, 4]">
+          <q-tooltip
+            :offset="[0, 4]"
+            anchor="top middle"
+            self="bottom middle"
+            transition-show="jump-up"
+            transition-hide="jump-down"
+          >
             {{ $t("presentationStudio.toolbar.resetCustomization.tooltip") }}
           </q-tooltip>
         </q-btn>
@@ -274,7 +280,12 @@
           showSelectBackgroundDialog = true;
         "
       >
-        <q-tooltip>
+        <q-tooltip
+          anchor="top middle"
+          self="bottom middle"
+          transition-show="jump-up"
+          transition-hide="jump-down"
+        >
           {{ $t("presentationStudio.toolbar.changeBackground.title") }}
         </q-tooltip>
       </q-btn>
@@ -297,7 +308,12 @@
             )
           "
         >
-          <q-tooltip>
+          <q-tooltip
+            anchor="top middle"
+            self="bottom middle"
+            transition-show="jump-up"
+            transition-hide="jump-down"
+          >
             {{ $t("presentationStudio.toolbar.zoom.out") }}
           </q-tooltip>
         </q-btn>
@@ -307,7 +323,12 @@
           :label="`${Math.round(stages.default.scale().x * 100)}%`"
           unelevated
         >
-          <q-tooltip>
+          <q-tooltip
+            anchor="top middle"
+            self="bottom middle"
+            transition-show="jump-up"
+            transition-hide="jump-down"
+          >
             {{ $t("presentationStudio.toolbar.zoom.select") }}
           </q-tooltip>
 
@@ -353,7 +374,12 @@
             )
           "
         >
-          <q-tooltip>
+          <q-tooltip
+            anchor="top middle"
+            self="bottom middle"
+            transition-show="jump-up"
+            transition-hide="jump-down"
+          >
             {{ $t("presentationStudio.toolbar.zoom.in") }}
           </q-tooltip>
         </q-btn>

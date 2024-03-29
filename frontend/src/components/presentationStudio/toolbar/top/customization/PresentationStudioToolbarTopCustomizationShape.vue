@@ -166,7 +166,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       <div>
         {{ $t("presentationStudio.toolbar.shape.fill.title") }}
       </div>
@@ -398,7 +404,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.shape.stroke.title") }}
     </q-tooltip>
   </q-btn>
@@ -503,7 +515,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.shape.shadow.title") }}
     </q-tooltip>
   </q-btn>
@@ -547,7 +565,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.shape.opacity.title") }}
     </q-tooltip>
   </q-btn>
@@ -609,7 +633,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.shape.cornerRadius.title") }}
     </q-tooltip>
   </q-btn>
@@ -679,7 +709,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.shape.size.title") }}
     </q-tooltip>
   </q-btn>

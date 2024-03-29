@@ -9,7 +9,13 @@
     :ripple="false"
     @click="showSelectMediaDialog = true"
   >
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.image.replaceImage.title") }}
     </q-tooltip>
   </q-btn>
@@ -69,7 +75,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.image.clipPosition.title") }}
     </q-tooltip>
   </q-btn>
@@ -174,7 +186,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.image.shadow.title") }}
     </q-tooltip>
   </q-btn>
@@ -218,7 +236,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.image.opacity.title") }}
     </q-tooltip>
   </q-btn>
@@ -402,7 +426,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.image.stroke.title") }}
     </q-tooltip>
   </q-btn>
@@ -458,7 +488,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.image.cornerRadius.title") }}
     </q-tooltip>
   </q-btn>
@@ -528,7 +564,13 @@
       </div>
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.image.size.title") }}
     </q-tooltip>
   </q-btn>
@@ -543,7 +585,13 @@
     icon="icon-mirror"
     @click="studioStore.mirrorNodeHorizontally()"
   >
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.image.mirror.title") }}
     </q-tooltip>
   </q-btn>

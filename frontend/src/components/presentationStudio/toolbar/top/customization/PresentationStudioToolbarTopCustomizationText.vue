@@ -21,18 +21,25 @@
       }
     "
   >
-    <q-tooltip>
-      <div class="text-bold text-center">
-        {{ $t("presentationStudio.toolbar.text.options.formatting.bold") }}
-      </div>
+    <q-tooltip
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
+      <div class="row no-wrap items-center">
+        <div class="text-bold text-center q-mr-sm">
+          {{ $t("presentationStudio.toolbar.text.options.formatting.bold") }}
+        </div>
 
-      <div
-        v-if="showShortcuts"
-        class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-      >
-        <div v-if="isMac">⌘</div>
-        <div v-else>Ctrl</div>
-        <div>B</div>
+        <div
+          v-if="showShortcuts"
+          class="shortcut row no-wrap q-gutter-xs justify-center"
+        >
+          <div v-if="isMac">⌘</div>
+          <div v-else>Ctrl</div>
+          <div>B</div>
+        </div>
       </div>
     </q-tooltip>
   </q-btn>
@@ -59,18 +66,27 @@
       }
     "
   >
-    <q-tooltip>
-      <div style="text-decoration: underline" class="text-center">
-        {{ $t("presentationStudio.toolbar.text.options.formatting.underline") }}
-      </div>
+    <q-tooltip
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
+      <div class="row no-wrap items-center">
+        <div style="text-decoration: underline" class="text-center q-mr-sm">
+          {{
+            $t("presentationStudio.toolbar.text.options.formatting.underline")
+          }}
+        </div>
 
-      <div
-        v-if="showShortcuts"
-        class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-      >
-        <div v-if="isMac">⌘</div>
-        <div v-else>Ctrl</div>
-        <div>U</div>
+        <div
+          v-if="showShortcuts"
+          class="shortcut row no-wrap q-gutter-xs justify-center"
+        >
+          <div v-if="isMac">⌘</div>
+          <div v-else>Ctrl</div>
+          <div>U</div>
+        </div>
       </div>
     </q-tooltip>
   </q-btn>
@@ -97,21 +113,30 @@
       }
     "
   >
-    <q-tooltip>
-      <div style="text-decoration: line-through" class="text-center">
-        {{
-          $t("presentationStudio.toolbar.text.options.formatting.strikeThrough")
-        }}
-      </div>
+    <q-tooltip
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
+      <div class="row no-wrap items-center">
+        <div style="text-decoration: line-through" class="text-center q-mr-sm">
+          {{
+            $t(
+              "presentationStudio.toolbar.text.options.formatting.strikeThrough",
+            )
+          }}
+        </div>
 
-      <div
-        v-if="showShortcuts"
-        class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-      >
-        <div v-if="isMac">⌘</div>
-        <div v-else>Ctrl</div>
-        <div>⇧</div>
-        <div>X</div>
+        <div
+          v-if="showShortcuts"
+          class="shortcut row no-wrap q-gutter-xs justify-center"
+        >
+          <div v-if="isMac">⌘</div>
+          <div v-else>Ctrl</div>
+          <div>⇧</div>
+          <div>X</div>
+        </div>
       </div>
     </q-tooltip>
   </q-btn>
@@ -138,18 +163,25 @@
       }
     "
   >
-    <q-tooltip>
-      <div class="text-italic text-center">
-        {{ $t("presentationStudio.toolbar.text.options.formatting.italic") }}
-      </div>
+    <q-tooltip
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
+      <div class="row no-wrap items-center">
+        <div class="text-italic text-center q-mr-sm">
+          {{ $t("presentationStudio.toolbar.text.options.formatting.italic") }}
+        </div>
 
-      <div
-        v-if="showShortcuts"
-        class="shortcut row no-wrap q-gutter-xs justify-center q-pt-sm"
-      >
-        <div v-if="isMac">⌘</div>
-        <div v-else>Ctrl</div>
-        <div>I</div>
+        <div
+          v-if="showShortcuts"
+          class="shortcut row no-wrap q-gutter-xs justify-center"
+        >
+          <div v-if="isMac">⌘</div>
+          <div v-else>Ctrl</div>
+          <div>I</div>
+        </div>
       </div>
     </q-tooltip>
   </q-btn>
@@ -170,7 +202,12 @@
             : ''
     "
   >
-    <q-tooltip>
+    <q-tooltip
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.text.options.formatting.alignment") }}
     </q-tooltip>
 
@@ -274,7 +311,13 @@
       />
     </q-menu>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.text.options.color") }}
     </q-tooltip>
   </q-btn>
@@ -301,7 +344,13 @@
       </q-item>
     </template>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.text.options.font") }}
     </q-tooltip>
   </q-select>
@@ -321,7 +370,13 @@
       <div class="text-caption">px</div>
     </template>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.text.options.fontSize") }}
     </q-tooltip>
   </q-input>
@@ -356,7 +411,13 @@
       </q-item>
     </template>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.text.options.lineHeight") }}
     </q-tooltip>
   </q-select>
@@ -392,7 +453,13 @@
       </q-item>
     </template>
 
-    <q-tooltip :offset="[0, 4]">
+    <q-tooltip
+      :offset="[0, 4]"
+      anchor="top middle"
+      self="bottom middle"
+      transition-show="jump-up"
+      transition-hide="jump-down"
+    >
       {{ $t("presentationStudio.toolbar.text.options.letterSpacing") }}
     </q-tooltip>
   </q-select>

@@ -9,7 +9,12 @@
       round
       size="12px"
     >
-      <q-tooltip>
+      <q-tooltip
+        anchor="top middle"
+        self="bottom middle"
+        transition-show="jump-up"
+        transition-hide="jump-down"
+      >
         {{ $t("presentationStudio.toolbar.layouts.placeholder") }}
       </q-tooltip>
 
@@ -38,7 +43,12 @@
       size="12px"
       @click="$emit('switchMode', MODE_OPTIONS.DRAWING)"
     >
-      <q-tooltip>
+      <q-tooltip
+        anchor="top middle"
+        self="bottom middle"
+        transition-show="jump-up"
+        transition-hide="jump-down"
+      >
         {{ $t("presentationStudio.toolbar.drawing.title") }}
       </q-tooltip>
     </q-btn>
@@ -52,7 +62,12 @@
       size="12px"
       @click="studioStore.addText()"
     >
-      <q-tooltip>
+      <q-tooltip
+        anchor="top middle"
+        self="bottom middle"
+        transition-show="jump-up"
+        transition-hide="jump-down"
+      >
         {{ $t("presentationStudio.toolbar.text.title") }}
       </q-tooltip>
     </q-btn>
@@ -66,7 +81,12 @@
       size="12px"
       @click="showSelectMediaDialog = true"
     >
-      <q-tooltip>
+      <q-tooltip
+        anchor="top middle"
+        self="bottom middle"
+        transition-show="jump-up"
+        transition-hide="jump-down"
+      >
         {{ $t("presentationStudio.toolbar.image.title") }}
       </q-tooltip>
     </q-btn>
@@ -97,7 +117,12 @@
       round
       size="12px"
     >
-      <q-tooltip>
+      <q-tooltip
+        anchor="top middle"
+        self="bottom middle"
+        transition-show="jump-up"
+        transition-hide="jump-down"
+      >
         {{ $t("presentationStudio.toolbar.emoji.title") }}
       </q-tooltip>
 
@@ -248,7 +273,12 @@
         </div>
       </q-menu>
 
-      <q-tooltip>
+      <q-tooltip
+        anchor="top middle"
+        self="bottom middle"
+        transition-show="jump-up"
+        transition-hide="jump-down"
+      >
         {{ $t("presentationStudio.toolbar.shape.title") }}
       </q-tooltip>
     </q-btn>
