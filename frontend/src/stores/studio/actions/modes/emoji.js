@@ -1,4 +1,5 @@
 import Konva from "konva";
+import { processImageNode } from "stores/studio/actions/modes/image";
 
 export function addEmoji(emoji, size = 100) {
   const emojiText = new Konva.Text({
@@ -29,6 +30,7 @@ export function addEmoji(emoji, size = 100) {
         source: img.src,
       });
       this.layers.default.add(image);
+      this.processImageNode(image, image.src);
       this.handleSlideUpdate();
     },
   });
