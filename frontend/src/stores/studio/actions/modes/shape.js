@@ -12,6 +12,7 @@ export function addShape(shapeName) {
     dash: this.shape.default.dash,
     draggable: true,
     name: this.MODE_OPTIONS.SHAPE,
+    keepRatio: this.shape.default.keepRatio,
   };
 
   switch (shapeName) {
