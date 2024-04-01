@@ -97,8 +97,14 @@ export default {
         },
 
         size: {
-          width: "Ширина",
-          height: "Высота",
+          width: {
+            full: "Ширина",
+            short: "Ш",
+          },
+          height: {
+            full: "Высота",
+            short: "В",
+          },
         },
       },
 
@@ -146,8 +152,14 @@ export default {
         },
 
         size: {
-          width: "Ширина",
-          height: "Высота",
+          width: {
+            full: "Ширина",
+            short: "Ш",
+          },
+          height: {
+            full: "Высота",
+            short: "В",
+          },
         },
 
         keepRatio: {

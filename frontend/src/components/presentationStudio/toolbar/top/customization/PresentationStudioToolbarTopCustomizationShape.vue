@@ -651,15 +651,11 @@
     color="primary"
     borderless
     dense
-    style="width: 90px"
+    suffix="px"
+    :prefix="$t('presentationStudio.toolbar.shape.size.width.short')"
+    style="width: 86px"
     @change="studioStore.applyCustomization()"
   >
-    <template #append>
-      <div class="text-caption absolute-bottom-right q-mr-sm q-mb-sm q-pb-xs">
-        px
-      </div>
-    </template>
-
     <q-tooltip
       :offset="[0, 4]"
       anchor="top middle"
@@ -667,7 +663,7 @@
       transition-show="jump-up"
       transition-hide="jump-down"
     >
-      {{ $t("presentationStudio.toolbar.shape.size.width") }}
+      {{ $t("presentationStudio.toolbar.shape.size.width.full") }}
     </q-tooltip>
   </q-input>
 
@@ -676,17 +672,14 @@
     v-model.number="shape.height"
     type="number"
     color="primary"
-    style="width: 90px"
     borderless
     dense
+    suffix="px"
+    :prefix="$t('presentationStudio.toolbar.shape.size.height.short')"
+    style="width: 86px"
+    class="q-ml-md"
     @change="studioStore.applyCustomization()"
   >
-    <template #append>
-      <div class="text-caption absolute-bottom-right q-mr-sm q-mb-sm q-pb-xs">
-        px
-      </div>
-    </template>
-
     <q-tooltip
       :offset="[0, 4]"
       anchor="top middle"
@@ -694,7 +687,7 @@
       transition-show="jump-up"
       transition-hide="jump-down"
     >
-      {{ $t("presentationStudio.toolbar.shape.size.height") }}
+      {{ $t("presentationStudio.toolbar.shape.size.height.full") }}
     </q-tooltip>
   </q-input>
 
