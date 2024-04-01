@@ -238,6 +238,8 @@ export function setImageCustomization(node) {
       (node.cornerRadius() / Math.min(node.width(), node.height())) * 100,
     ),
   };
+
+  this.transformer.default?.keepRatio(false);
 }
 
 export function applyImageCustomization(node) {
