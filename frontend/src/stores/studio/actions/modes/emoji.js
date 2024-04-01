@@ -26,10 +26,10 @@ export function addEmoji(emoji, size = 100) {
         draggable: true,
         name: this.MODE_OPTIONS.IMAGE,
         image: img,
+        source: img.src,
       });
       this.layers.default.add(image);
+      this.handleSlideUpdate();
     },
   });
-
-  this.handleSlideUpdate();
 }
