@@ -280,12 +280,16 @@ export function processShape(shape) {
     this.handleSnappingEnd();
   });
   shape.on("transform", () => {
-    shape.width(Math.max(5, shape.width() * shape.scaleX()));
-    shape.height(Math.max(5, shape.height() * shape.scaleY()));
 
-    shape.scaleX(1);
-    shape.scaleY(1);
+    if (shape.getAttr("shape") !== SHAPE_OPTIONS.STAR.name && 
+        shape.getAttr("shape") !== SHAPE_OPTIONS.TRIANGLE.name &&
+        shape.getAttr("shape") !== SHAPE_OPTIONS.POLYGON.name) {
+          shape.width(Math.max(5, shape.width() * shape.scaleX()));
+          shape.height(Math.max(5, shape.height() * shape.scaleY()));
 
+          shape.scaleX(1);
+          shape.scaleY(1);
+        }
     this.setShapeCustomization(shape);
   });
   shape.on("dragstart", this.handleSelectionDragStart);
@@ -294,8 +298,7 @@ export function processShape(shape) {
 export function setShapeCustomization(node) {
   this.shape = {
     ...this.shape,
-    width: node.width(),
-    height: node.height(),
+
     opacity: node.opacity(),
     stroke: node.stroke(),
     strokeWidth: node.strokeWidth(),
@@ -322,6 +325,18 @@ export function setShapeCustomization(node) {
     keepRatio: node.getAttr("keepRatio"),
   };
 
+  if (node.getAttr("shape") === SHAPE_OPTIONS.STAR.name || 
+      node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name)
+      {
+        this.shape.width = node.scaleX() * this.shape.default.width;
+        this.shape.height = node.scaleY() * this.shape.default.height;
+
+      } else {
+        this.shape.width = node.width();
+        this.shape.height = node.height();
+      }
+
   this.transformer.default?.keepRatio(this.shape.keepRatio);
 
   if (
@@ -335,22 +350,39 @@ export function setShapeCustomization(node) {
 
 export function applyShapeCustomization(node) {
   if (this.shape.keepRatio) {
-    // on width change
-    if (node.width() !== this.shape.width) {
-      const aspectRatio = node.width() / this.shape.height;
-      this.shape.height = this.shape.width / aspectRatio;
-    }
 
-    // on height change
-    if (node.height() !== this.shape.height) {
-      const aspectRatio = node.width() / node.height();
-      this.shape.width = this.shape.height * aspectRatio;
+    if (node.getAttr("shape") === SHAPE_OPTIONS.STAR.name || 
+        node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
+        node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name)
+    {
+      let aspectRateX = this.shape.width/this.shape.default.width;
+      let aspectRateY = this.shape.height/this.shape.default.height;
+
+      if (aspectRateX !== node.scaleX()) {
+        let aspectX = aspectRateX / node.scaleX();
+        this.shape.height *=aspectX;
+      }
+      if (aspectRateY !== node.scaleY()) {
+        let aspectY = aspectRateY / node.scaleY();
+        this.shape.width *=aspectY;
+      }
+
+    } else {
+      // on width change
+      if (node.width() !== this.shape.width) {
+        const aspectRatio = node.width() / this.shape.height;
+        this.shape.height = this.shape.width / aspectRatio;
+      }
+
+      // on height change
+      if (node.height() !== this.shape.height) {
+        const aspectRatio = node.width() / node.height();
+        this.shape.width = this.shape.height * aspectRatio;
+      }
     }
   }
 
   node.setAttrs({
-    width: this.shape.width,
-    height: this.shape.height,
     opacity: this.shape.opacity,
     stroke: this.shape.stroke,
     strokeWidth: this.shape.strokeWidth,
@@ -362,6 +394,23 @@ export function applyShapeCustomization(node) {
     linearGradientDegrees: this.shape.linearGradientDegrees,
     keepRatio: this.shape.keepRatio,
   });
+
+  if (node.getAttr("shape") === SHAPE_OPTIONS.STAR.name || 
+      node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name) 
+      {
+
+        let rateX = this.shape.width/this.shape.default.width;
+        let rateY = this.shape.height/this.shape.default.height;
+        node.scaleX(rateX);
+        node.scaleY(rateY);
+
+      } else {
+        node.setAttrs({
+          width: this.shape.width,
+          height: this.shape.height,
+        });
+      }
 
   if (node.getAttr("shape") === SHAPE_OPTIONS.RECT.name) {
     node.cornerRadius(
