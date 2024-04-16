@@ -283,12 +283,13 @@ export function processShape(shape) {
 
     if (shape.getAttr("shape") !== SHAPE_OPTIONS.STAR.name && 
         shape.getAttr("shape") !== SHAPE_OPTIONS.TRIANGLE.name &&
-        shape.getAttr("shape") !== SHAPE_OPTIONS.POLYGON.name) {
-          shape.width(Math.max(5, shape.width() * shape.scaleX()));
-          shape.height(Math.max(5, shape.height() * shape.scaleY()));
+        shape.getAttr("shape") !== SHAPE_OPTIONS.POLYGON.name &&
+        shape.getAttr("shape") !== SHAPE_OPTIONS.CIRCLE.name) {
+          // shape.width(Math.max(5, shape.width() * shape.scaleX()));
+          // shape.height(Math.max(5, shape.height() * shape.scaleY()));
 
-          shape.scaleX(1);
-          shape.scaleY(1);
+          // shape.scaleX(1);
+          // shape.scaleY(1);
         }
     this.setShapeCustomization(shape);
   });
@@ -327,7 +328,8 @@ export function setShapeCustomization(node) {
 
   if (node.getAttr("shape") === SHAPE_OPTIONS.STAR.name || 
       node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
-      node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name)
+      node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name)
       {
         this.shape.width = node.scaleX() * this.shape.default.width;
         this.shape.height = node.scaleY() * this.shape.default.height;
@@ -353,7 +355,8 @@ export function applyShapeCustomization(node) {
 
     if (node.getAttr("shape") === SHAPE_OPTIONS.STAR.name || 
         node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
-        node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name)
+        node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
+        node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name)
     {
       let aspectRateX = this.shape.width/this.shape.default.width;
       let aspectRateY = this.shape.height/this.shape.default.height;
@@ -397,7 +400,8 @@ export function applyShapeCustomization(node) {
 
   if (node.getAttr("shape") === SHAPE_OPTIONS.STAR.name || 
       node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
-      node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name) 
+      node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name) 
       {
 
         let rateX = this.shape.width/this.shape.default.width;

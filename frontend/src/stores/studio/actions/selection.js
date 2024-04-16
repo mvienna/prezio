@@ -31,12 +31,12 @@ export function handleSelection() {
     anchorSize: 12,
     rotateAnchorOffset: 35,
     keepRatio: false,
-    boundBoxFunc: (oldBox, newBox) => {
-      if (Math.abs(newBox.width) < 10 || Math.abs(newBox.height) < 10) {
-        return oldBox;
-      }
-      return newBox;
-    },
+    // boundBoxFunc: (oldBox, newBox) => {
+    //   if (Math.abs(newBox.width) < 10 || Math.abs(newBox.height) < 10) {
+    //     return oldBox;
+    //   }
+    //   return newBox;
+    // },
     anchorStyleFunc: (anchor) => {
       if (anchor.hasName("rotater")) {
         const size = 14;
