@@ -314,21 +314,22 @@ export function setShapeCustomization(node) {
       this.shape.default.linearGradientDegrees,
     keepRatio: node.getAttr("keepRatio"),
   };
-    // new Konva.Star, new Konva.RegularPolygon(also Triangle) and new Konva.Circle are fixed sizes 
-    // and cannot be changed separately in width or length using settAttrs({width:}) and settAttrs({height:}). 
-    // Instead, for scaling logic is used scaleX() and scaleY().
-    // For shape.width and shape.height definition are used the shape default width and height values adjusted for the scaling factor
-  if (node.getAttr("shape") === SHAPE_OPTIONS.STAR.name || 
-      node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
-      node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
-      node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name) 
-      {
-        this.shape.width = node.scaleX() * this.shape.default.width;
-        this.shape.height = node.scaleY() * this.shape.default.height;
-      } else {
-        this.shape.width = node.width();
-        this.shape.height = node.height();
-      }
+  // new Konva.Star, new Konva.RegularPolygon(also Triangle) and new Konva.Circle are fixed sizes
+  // and cannot be changed separately in width or length using settAttrs({width:}) and settAttrs({height:}).
+  // Instead, for scaling logic is used scaleX() and scaleY().
+  // For shape.width and shape.height definition are used the shape default width and height values adjusted for the scaling factor
+  if (
+    node.getAttr("shape") === SHAPE_OPTIONS.STAR.name ||
+    node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
+    node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
+    node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name
+  ) {
+    this.shape.width = node.scaleX() * this.shape.default.width;
+    this.shape.height = node.scaleY() * this.shape.default.height;
+  } else {
+    this.shape.width = node.width();
+    this.shape.height = node.height();
+  }
 
   this.transformer.default?.keepRatio(this.shape.keepRatio);
 
@@ -343,28 +344,27 @@ export function setShapeCustomization(node) {
 
 export function applyShapeCustomization(node) {
   if (this.shape.keepRatio) {
+    // new Konva.Star, new Konva.RegularPolygon (also Triangle) and new Konva.Circle are fixed sizes
+    // and cannot be changed separately in width or length using settAttrs({width:}) and settAttrs({height:}).
+    // instead, for scaling logic use scaleX() and scaleY().
+    // for aspectRatio definition used ratio between the entered shape width(height) and the default shape width (height)
+    if (
+      node.getAttr("shape") === SHAPE_OPTIONS.STAR.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name
+    ) {
+      let aspectRatioX = this.shape.width / this.shape.default.width;
+      let aspectRatioY = this.shape.height / this.shape.default.height;
 
-    // new Konva.Star, new Konva.RegularPolygon(also Triangle) and new Konva.Circle are fixed sizes 
-    // and cannot be changed separately in width or length using settAttrs({width:}) and settAttrs({height:}). 
-    // Instead, for scaling logic is used scaleX() and scaleY().
-    // For aspectRatio definition used ratio between the entered shape width(height) and the default shape width(height)
-    if (node.getAttr("shape") === SHAPE_OPTIONS.STAR.name || 
-        node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
-        node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
-        node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name)
-    {
-      let aspectRateX = this.shape.width/this.shape.default.width;
-      let aspectRateY = this.shape.height/this.shape.default.height;
-
-      if (aspectRateX !== node.scaleX()) {
-        let aspectX = aspectRateX / node.scaleX();
-        this.shape.height *=aspectX;
+      if (aspectRatioX !== node.scaleX()) {
+        let aspectX = aspectRatioX / node.scaleX();
+        this.shape.height *= aspectX;
       }
-      if (aspectRateY !== node.scaleY()) {
-        let aspectY = aspectRateY / node.scaleY();
-        this.shape.width *=aspectY;
+      if (aspectRatioY !== node.scaleY()) {
+        let aspectY = aspectRatioY / node.scaleY();
+        this.shape.width *= aspectY;
       }
-
     } else {
       // on width change
       if (node.width() !== this.shape.width) {
@@ -393,27 +393,26 @@ export function applyShapeCustomization(node) {
     keepRatio: this.shape.keepRatio,
   });
 
-    // new Konva.Star, new Konva.RegularPolygon(also Triangle) and new Konva.Circle are fixed sizes 
-    // and cannot be changed separately in width or length using settAttrs({width:}) and settAttrs({height:}). 
-    // Instead, for scaling logic is used scaleX() and scaleY().
-    // For scaleFactorX and scaleFactorY definition used ratio between the entered shape width(height) 
-    // and the default shape width(height)
-  if (node.getAttr("shape") === SHAPE_OPTIONS.STAR.name || 
-      node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
-      node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
-      node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name) 
-      {
-        let scaleFactorX = this.shape.width/this.shape.default.width;
-        let scaleFactorY = this.shape.height/this.shape.default.height;
-        node.scaleX(scaleFactorX);
-        node.scaleY(scaleFactorY);
-
-      } else {
-        node.setAttrs({
-          width: this.shape.width,
-          height: this.shape.height,
-        });
-      }
+  // new Konva.Star, new Konva.RegularPolygon(also Triangle) and new Konva.Circle are fixed sizes
+  // and cannot be changed separately in width or length using settAttrs({width:}) and settAttrs({height:}).
+  // instead, for scaling logic use scaleX() and scaleY().
+  // for scaleFactorX and scaleFactorY definition is used ratio between the entered shape width (height) and the default shape width (height)
+  if (
+    node.getAttr("shape") === SHAPE_OPTIONS.STAR.name ||
+    node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
+    node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
+    node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name
+  ) {
+    let scaleFactorX = this.shape.width / this.shape.default.width;
+    let scaleFactorY = this.shape.height / this.shape.default.height;
+    node.scaleX(scaleFactorX);
+    node.scaleY(scaleFactorY);
+  } else {
+    node.setAttrs({
+      width: this.shape.width,
+      height: this.shape.height,
+    });
+  }
 
   if (node.getAttr("shape") === SHAPE_OPTIONS.RECT.name) {
     node.cornerRadius(
