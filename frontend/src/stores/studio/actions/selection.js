@@ -55,51 +55,51 @@ export function handleSelection() {
      * https://konvajs.org/docs/select_and_transform/Resize_Snaps.html
      * snapping wont work unless the mouse is positioned over the anchor
      */
-    anchorDragBoundFunc: (oldPos, newPos, event) => {
-      this.handleSnappingEnd();
+    // anchorDragBoundFunc: (oldPos, newPos, event) => {
+    //   this.handleSnappingEnd();
 
-      if (this.transformer.default.getActiveAnchor() === "rotater") {
-        return newPos;
-      }
+    //   if (this.transformer.default.getActiveAnchor() === "rotater") {
+    //     return newPos;
+    //   }
 
-      const lineGuideStops = this.getSnappingLineGuideStops(
-        this.transformer.default.nodes()[0],
-      );
-      const itemBounds = this.getSnappingObjectEdges(
-        this.transformer.default.nodes()[0],
-      );
-      const guides = this.getSnappingGuides(lineGuideStops, itemBounds);
+    //   const lineGuideStops = this.getSnappingLineGuideStops(
+    //     this.transformer.default.nodes()[0],
+    //   );
+    //   const itemBounds = this.getSnappingObjectEdges(
+    //     this.transformer.default.nodes()[0],
+    //   );
+    //   const guides = this.getSnappingGuides(lineGuideStops, itemBounds);
 
-      if (!guides.length) {
-        return newPos;
-      }
+    //   if (!guides.length) {
+    //     return newPos;
+    //   }
 
-      this.drawSnappingGuides(guides);
+    //   this.drawSnappingGuides(guides);
 
-      const dist = Math.hypot(newPos.x - oldPos.x, newPos.y - oldPos.y);
-      if (dist > this.snapping.GUIDELINE_OFFSET) {
-        return newPos;
-      }
+    //   const dist = Math.hypot(newPos.x - oldPos.x, newPos.y - oldPos.y);
+    //   if (dist > this.snapping.GUIDELINE_OFFSET) {
+    //     return newPos;
+    //   }
 
-      const closestX = guides.find((guide) => guide.orientation === "V");
-      const closestY = guides.find((guide) => guide.orientation === "H");
+    //   const closestX = guides.find((guide) => guide.orientation === "V");
+    //   const closestY = guides.find((guide) => guide.orientation === "H");
 
-      const snapPosition = { x: newPos.x, y: newPos.y };
-      if (
-        closestX &&
-        Math.abs(newPos.x - closestX.lineGuide) < this.snapping.GUIDELINE_OFFSET
-      ) {
-        snapPosition.x = closestX.lineGuide + closestX.offset;
-      }
-      if (
-        closestY &&
-        Math.abs(newPos.y - closestY.lineGuide) < this.snapping.GUIDELINE_OFFSET
-      ) {
-        snapPosition.y = closestY.lineGuide + closestY.offset;
-      }
+    //   const snapPosition = { x: newPos.x, y: newPos.y };
+    //   if (
+    //     closestX &&
+    //     Math.abs(newPos.x - closestX.lineGuide) < this.snapping.GUIDELINE_OFFSET
+    //   ) {
+    //     snapPosition.x = closestX.lineGuide + closestX.offset;
+    //   }
+    //   if (
+    //     closestY &&
+    //     Math.abs(newPos.y - closestY.lineGuide) < this.snapping.GUIDELINE_OFFSET
+    //   ) {
+    //     snapPosition.y = closestY.lineGuide + closestY.offset;
+    //   }
 
-      return snapPosition;
-    },
+    //   return snapPosition;
+    // },
   });
 
   this.layers.default.add(this.transformer.default);
