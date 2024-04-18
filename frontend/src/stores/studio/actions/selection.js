@@ -81,21 +81,33 @@ export function handleSelection() {
         return newPos;
       }
 
-      const closestX = guides.find((guide) => guide.orientation === "H");
-      const closestY = guides.find((guide) => guide.orientation === "V");
+      const closestX = guides.find((guide) => guide.orientation === "V");
+      const closestY = guides.find((guide) => guide.orientation === "H");
 
       const snapPosition = { x: newPos.x, y: newPos.y };
+
       if (
         closestX &&
         Math.abs(newPos.x - closestX.lineGuide) < this.snapping.GUIDELINE_OFFSET
       ) {
-        snapPosition.x = closestX.lineGuide + closestX.offset;
+        // while resizing not applied offset correction
+        if (this.isTransforming) {
+          snapPosition.x = closestX.lineGuide;
+        } else {
+          snapPosition.x = closestX.lineGuide + closestX.offset;
+        }
       }
+
       if (
         closestY &&
         Math.abs(newPos.y - closestY.lineGuide) < this.snapping.GUIDELINE_OFFSET
       ) {
-        snapPosition.y = closestY.lineGuide + closestY.offset;
+        // while resizing not applied offset correction
+        if (this.isTransforming) {
+          snapPosition.y = closestY.lineGuide;
+        } else {
+          snapPosition.y = closestY.lineGuide + closestY.offset;
+        }
       }
 
       return snapPosition;
