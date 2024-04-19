@@ -322,8 +322,29 @@ export function setShapeCustomization(node) {
     node.getAttr("shape") === SHAPE_OPTIONS.STAR.name ||
     node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
     node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
-    node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name
+    node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name ||
+    node.getAttr("shape") === SHAPE_OPTIONS.RECT.name
   ) {
+
+    if (this.shape.keepRatio) {
+      let initialScaleX = node.getAttr('initialScaleX');
+      let initialScaleY = node.getAttr('initialScaleY');
+      let scaleX = node.scaleX();
+      let scaleY = node.scaleY();
+      let aspectRatioX = scaleX / initialScaleX;
+      let aspectRatioY = scaleY / initialScaleY;
+        if (scaleX !== initialScaleX) {
+          node.scaleY(scaleY * aspectRatioX);
+        } 
+        if (scaleY !== initialScaleY) {
+          node.scaleX(scaleX * aspectRatioY);
+        } 
+          node.setAttrs({
+              initialScaleX: node.scaleX(),
+              initialScaleY: node.scaleY()
+          });
+    } 
+
     this.shape.width = node.scaleX() * this.shape.default.width;
     this.shape.height = node.scaleY() * this.shape.default.height;
   } else {
@@ -352,7 +373,8 @@ export function applyShapeCustomization(node) {
       node.getAttr("shape") === SHAPE_OPTIONS.STAR.name ||
       node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
       node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
-      node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name
+      node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.RECT.name
     ) {
       let aspectRatioX = this.shape.width / this.shape.default.width;
       let aspectRatioY = this.shape.height / this.shape.default.height;
@@ -401,12 +423,18 @@ export function applyShapeCustomization(node) {
     node.getAttr("shape") === SHAPE_OPTIONS.STAR.name ||
     node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
     node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
-    node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name
+    node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name ||
+    node.getAttr("shape") === SHAPE_OPTIONS.RECT.name
   ) {
     let scaleFactorX = this.shape.width / this.shape.default.width;
     let scaleFactorY = this.shape.height / this.shape.default.height;
     node.scaleX(scaleFactorX);
     node.scaleY(scaleFactorY);
+  // initial scale conditions for keepRatio
+    node.setAttrs({
+      initialScaleX: node.scaleX(),
+      initialScaleY: node.scaleY(),
+    });
   } else {
     node.setAttrs({
       width: this.shape.width,
