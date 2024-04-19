@@ -81,7 +81,7 @@ export function addShape(shapeName) {
     case SHAPE_OPTIONS.TRIANGLE.name:
       shapeNode = new Konva.RegularPolygon({
         ...shapeDefaultConfig,
-        radius: this.shape.default.width / 2,
+        radius: 2 * this.shape.default.width / 3,
         sides: 3,
       });
 
@@ -252,6 +252,26 @@ export function addShape(shapeName) {
     shapeNode.setAttrs({
       x: this.scene.width / 2 - shapeWidth / 2 - minX,
       y: this.scene.height / 2 - shapeHeight / 2 - minY,
+    });
+  } else if (
+    [
+      SHAPE_OPTIONS.TRIANGLE.name,
+      SHAPE_OPTIONS.POLYGON.name,
+    ].includes(shapeName)
+  ) {
+    shapeNode.setAttrs({
+      x: this.scene.width / 2,
+      y: this.scene.height / 2 + shapeNode.radius() - this.shape.default.height / 2,
+    });
+  } else if (
+    [
+      SHAPE_OPTIONS.STAR.name,
+      SHAPE_OPTIONS.CIRCLE.name,
+    ].includes(shapeName)
+  ) {
+    shapeNode.setAttrs({
+      x: this.scene.width / 2,
+      y: this.scene.height / 2,
     });
   } else {
     shapeNode.setAttrs({
