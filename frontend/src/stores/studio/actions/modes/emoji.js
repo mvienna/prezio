@@ -1,7 +1,10 @@
 import Konva from "konva";
-import { processImageNode } from "stores/studio/actions/modes/image";
 
 export function addEmoji(emoji, size = 100) {
+
+  // console.log(emoji.toDataURL());
+
+
   const emojiText = new Konva.Text({
     x: this.scene.width / 2 - size / 2,
     y: this.scene.height / 2 - size / 2,
@@ -15,23 +18,22 @@ export function addEmoji(emoji, size = 100) {
     name: this.MODE_OPTIONS.EMOJI,
   });
 
-  // this.layers.default.add(emojiText);
+  
 
-  emojiText.toImage({
-    callback: (img) => {
-      const image = new Konva.Image({
-        x: this.scene.width / 2 - size / 2,
-        y: this.scene.height / 2 - size / 2,
-        width: size,
-        height: size,
-        draggable: true,
-        name: this.MODE_OPTIONS.IMAGE,
-        image: img,
-        source: img.src,
-      });
-      this.layers.default.add(image);
-      this.processImageNode(image, image.src);
-      this.handleSlideUpdate();
-    },
+  Konva.Image.fromURL(emojiText.toDataURL(), (image) => {
+    
+    this.layers.default.add(image);
+    this.handleSlideUpdate();
+
+    image.setAttrs({
+      x: this.scene.width / 2 - size / 2,
+      y: this.scene.height / 2 - size / 2,
+      width: size,
+      height: size,
+      draggable: true,
+      name: this.MODE_OPTIONS.IMAGE,
+      source: emojiText.toDataURL(),
+    });
+
   });
 }
