@@ -322,4 +322,23 @@ const { mode, MODE_OPTIONS, layers } = storeToRefs(studioStore);
  * select media
  */
 const showSelectMediaDialog = ref(false);
+
+
+// function emojiToSVG(emoji) {
+//   const div = document.createElement('div');
+//   div.innerHTML = emoji;
+//   const svg = div.firstChild.outerHTML;
+//   console.log(svg);
+//   return svg;
+// }
 </script>
+
+<style>
+.v3-emoji-picker .v3-body .v3-body-inner.is-mac .v3-emojis button {
+
+  /* font-family: "Noto Color Emoji", sans-serif; */
+  font-family: "Apple Color Emoji";
+  /* font-weight: 400;
+  font-style: normal; */
+}
+</style>
