@@ -336,9 +336,9 @@ const showSelectMediaDialog = ref(false);
 <style>
 .v3-emoji-picker .v3-body .v3-body-inner.is-mac .v3-emojis button {
 
-  /* font-family: "Noto Color Emoji", sans-serif; */
-  font-family: "Apple Color Emoji";
-  /* font-weight: 400;
-  font-style: normal; */
+  font-family: "Noto Color Emoji", sans-serif;
+  /* font-family: "Apple Color Emoji"; */
+  font-weight: 400;
+  font-style: normal;
 }
 </style>

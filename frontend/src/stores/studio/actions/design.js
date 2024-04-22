@@ -40,6 +40,8 @@ export async function defineColorScheme(
       // define canvas
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
+      ctx.font = 'Noto Color Emoji';
+
 
       canvas.width = baseBackground.width();
       canvas.height = baseBackground.height();
