@@ -478,28 +478,54 @@ export function applyShapeCustomization(node) {
   }
 
   if (this.shape.fillLinearGradientColorStops) {
-    const radians = ((-45 + this.shape.linearGradientDegrees) * Math.PI) / 180;
 
-    const centerX = node.width() / 2;
-    const centerY = node.height() / 2;
+    let radians, centerX, centerY, rotatedStartX, rotatedStartY, rotatedEndX, rotatedEndY;
 
-    const rotatedStartX =
-      Math.cos(radians) * (0 - centerX) -
-      Math.sin(radians) * (0 - centerY) +
-      centerX;
-    const rotatedStartY =
-      Math.sin(radians) * (0 - centerX) +
-      Math.cos(radians) * (0 - centerY) +
-      centerY;
-    const rotatedEndX =
-      Math.cos(radians) * (node.width() - centerX) -
-      Math.sin(radians) * (node.height() - centerY) +
-      centerX;
-    const rotatedEndY =
-      Math.sin(radians) * (node.width() - centerX) +
-      Math.cos(radians) * (node.height() - centerY) +
-      centerY;
+    if (
+      node.getAttr("shape") === SHAPE_OPTIONS.STAR.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.TRIANGLE.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.POLYGON.name ||
+      node.getAttr("shape") === SHAPE_OPTIONS.CIRCLE.name
+    ) {
+      const radius = node.radius ? node.radius() : node.outerRadius();
+      radians = (this.shape.linearGradientDegrees) * Math.PI / 180;
 
+      centerX = 0;
+      centerY = 0;
+      rotatedStartX = centerX - radius * Math.cos(radians);
+      rotatedStartY = centerY - radius * Math.sin(radians);
+      rotatedEndX = centerX + radius * Math.cos(radians);
+      rotatedEndY = centerY + radius * Math.sin(radians);
+
+    } else {
+      radians = ((-45 + this.shape.linearGradientDegrees) * Math.PI) / 180;
+
+      centerX = node.width() / 2;
+      centerY = node.height() / 2;
+
+      rotatedStartX =
+        Math.cos(radians) * (0 - centerX) -
+        Math.sin(radians) * (0 - centerY) +
+        centerX;
+      rotatedStartY =
+        Math.sin(radians) * (0 - centerX) +
+        Math.cos(radians) * (0 - centerY) +
+        centerY;
+      rotatedEndX =
+        Math.cos(radians) * (node.width() - centerX) -
+        Math.sin(radians) * (node.height() - centerY) +
+        centerX;
+      rotatedEndY =
+        Math.sin(radians) * (node.width() - centerX) +
+        Math.cos(radians) * (node.height() - centerY) +
+        centerY;
+
+      // the coordinates of the gradients should not extend beyond of the shape boarders
+      rotatedStartX = Math.max(0, Math.min(rotatedStartX, node.width()));
+      rotatedStartY = Math.max(0, Math.min(rotatedStartY, node.height()));
+      rotatedEndX = Math.max(0, Math.min(rotatedEndX, node.width()));
+      rotatedEndY = Math.max(0, Math.min(rotatedEndY, node.height()));
+  }
     node.setAttrs({
       fill: undefined,
       fillLinearGradientColorStops: this.shape.fillLinearGradientColorStops,
