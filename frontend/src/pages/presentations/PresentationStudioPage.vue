@@ -46,7 +46,7 @@
     <PresentationStudioRoomActions />
 
     <!-- slide header (invitation link, open sharing modal) -->
-    <PresentationStudioSlideHeader />
+    <!-- <PresentationStudioSlideHeader /> -->
 
     <!-- bottom toolbar -->
     <PresentationStudioToolbarBottom />
@@ -67,7 +67,7 @@ import PresentationStudioToolbarTop from "components/presentationStudio/toolbar/
 import { useStudioStore } from "stores/studio";
 import { ROUTE_PATHS } from "src/constants/routes";
 import WebSocketsConnectionInterrupted from "components/WebSocketsConnectionInterrupted.vue";
-import PresentationStudioSlideHeader from "components/presentationStudio/PresentationStudioSlideHeader.vue";
+// import PresentationStudioSlideHeader from "components/presentationStudio/PresentationStudioSlideHeader.vue";
 import PresentationStudioRoomActions from "components/presentationStudio/toolbar/PresentationStudioRoomActions.vue";
 import PresentationStudioElementsContextMenu from "components/presentationStudio/PresentationStudioElementsContextMenu.vue";
 import { SLIDE_TYPES } from "src/constants/presentationStudio";
